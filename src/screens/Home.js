@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Platform,
+  Platform, BackHandler
 } from "react-native";
 import {
   Colors,
@@ -161,11 +161,12 @@ export default class Home extends Component {
   }
   componentDidMount() {
     // this.getnotification();
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     var that = this;
     PushNotification.configure({
       onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
-        if (!notification.userInteraction) {
+        if (notification.userInteraction) {
           // Handle notification click
           console.log("PushNotification.configure", notification);
 
@@ -225,6 +226,20 @@ export default class Home extends Component {
     this.props.navigation.addListener("focus", () => {
       this.getAllCount();
     });
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    console.log('Back button is pressed', this.props.route.name);
+    if(this.props.route.name == "Home"){
+      return true;
+    }else{
+      return false;
+    }
+    
   }
 
   getNotificationCall = async () => {
@@ -327,12 +342,12 @@ export default class Home extends Component {
       console.log("hello", JSON.stringify(remoteMessage));
       //alert(JSON.stringify(remoteMessage));
       // if (remoteMessage.data?.type !== "doctor_to_patient_video_call") {
-        PushNotification.localNotification({
-          channelId: "rootscares1", //his must be same with channelId in create channel
-          title: remoteMessage.data.title, //'Appointment Booking',
-          message: remoteMessage.data.body,
-          userInfo: remoteMessage.data,
-        });
+      PushNotification.localNotification({
+        channelId: "rootscares1", //his must be same with channelId in create channel
+        title: remoteMessage.data.title, //'Appointment Booking',
+        message: remoteMessage.data.body,
+        userInfo: remoteMessage.data,
+      });
       // }
       // msgProvider.showSuccess("yes call coming")
     });
@@ -466,7 +481,7 @@ export default class Home extends Component {
                   <Image
                     source={
                       this.state.profile_img == null ||
-                      this.state.profile_img == ""
+                        this.state.profile_img == ""
                         ? localimag.p1
                         : { uri: this.state.profile_img }
                     }
@@ -516,7 +531,7 @@ export default class Home extends Component {
                   />
                 </TouchableOpacity>
                 {this.state.address_old != null &&
-                this.state.address_old != "" ? (
+                  this.state.address_old != "" ? (
                   <Text
                     onPress={() => {
                       this.props.navigation.navigate("Show_currentlocation");

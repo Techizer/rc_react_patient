@@ -20,7 +20,7 @@ class App extends Component {
   }
   componentDidMount() {
     firebapushnotification.requestUserPermission();
-    firebapushnotification.NotificationsListener();
+    // firebapushnotification.NotificationsListener();
   }
   language_set = async () => {
     let languagecathc = await localStorage.getItemObject("languagecathc");
