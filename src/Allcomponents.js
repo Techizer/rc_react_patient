@@ -25,7 +25,7 @@ export function AppHeader(props) {
           flexDirection: "row",
           width: "95%",
           alignSelf: "center",
-          paddingTop: (mobileW * 3) / 100,
+          // paddingTop: (mobileW * 3) / 100,
           backgroundColor: Colors.white_color,
           alignItems: "center",
         }}

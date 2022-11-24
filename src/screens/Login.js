@@ -272,13 +272,13 @@ export default class Login extends Component {
 
     fetch(
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-        event.latitude +
-        "," +
-        event.longitude +
-        "&key=" +
-        config.mapkey +
-        "&language=" +
-        config.maplanguage
+      event.latitude +
+      "," +
+      event.longitude +
+      "&key=" +
+      config.mapkey +
+      "&language=" +
+      config.maplanguage
     )
       .then((response) => response.json())
       .then((resp) => {
@@ -437,8 +437,8 @@ export default class Login extends Component {
       .postApi(url, data)
       .then((obj) => {
         // alert('muskan')
-        consolepro.consolelog("obj", obj);
-        consolepro.consolelog("obj", obj.status);
+        consolepro.consolelog("loginAPI", obj);
+        consolepro.consolelog("loginAPI-Status", obj.status);
         if (obj.status == true) {
           // this.textinput.clear();
           // this.textinput_mobile.clear();
@@ -501,14 +501,14 @@ export default class Login extends Component {
           style={{ flex: 1 }}
           contentContainerStyle={{
             // paddingBottom: mobileW * 25 / 100,
-            height: mobileH + 30,
+            height: mobileH + 50,
           }}
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         >
           <KeyboardAwareScrollView>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: "#fff", }}>
               <SafeAreaView
                 style={{ backgroundColor: Colors.statusbarcolor, flex: 0 }}
               />
@@ -524,22 +524,21 @@ export default class Login extends Component {
               <View
                 style={{
                   paddingBottom: (mobileW * 6) / 100,
-                  backgroundColor: "#fff",
                 }}
               >
                 <View
                   style={[
                     Dimensions.get("window").height >= 700
                       ? {
-                          width: "90%",
-                          alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
-                        }
+                        width: "90%",
+                        alignSelf: "center",
+                        marginTop: (mobileW * 5) / 100,
+                      }
                       : {
-                          width: "90%",
-                          alignSelf: "center",
-                          marginTop: (mobileW * 2) / 100,
-                        },
+                        width: "90%",
+                        alignSelf: "center",
+                        marginTop: (mobileW * 2) / 100,
+                      },
                   ]}
                 >
                   <Image
@@ -552,19 +551,20 @@ export default class Login extends Component {
                     source={localimag.Forgotlogo}
                   ></Image>
                 </View>
+
                 <View
                   style={[
                     Dimensions.get("window").height >= 700
                       ? {
-                          width: "90%",
-                          alignSelf: "center",
-                          marginTop: (mobileW * 10) / 100,
-                        }
+                        width: "90%",
+                        alignSelf: "center",
+                        marginTop: (mobileW * 10) / 100,
+                      }
                       : {
-                          width: "90%",
-                          alignSelf: "center",
-                          marginTop: (mobileW * 3) / 100,
-                        },
+                        width: "90%",
+                        alignSelf: "center",
+                        marginTop: (mobileW * 3) / 100,
+                      },
                   ]}
                 >
                   {/* <Text
@@ -689,6 +689,7 @@ export default class Login extends Component {
                     </View>
                   )} */}
                 </View>
+
                 <View
                   style={{
                     width: "89%",
@@ -952,221 +953,234 @@ export default class Login extends Component {
                   </View>
                 </View>
 
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    this.loginbtn();
-                  }}
-                  style={{
-                    width: '90%',
-                    alignSelf: 'center',
-                    borderRadius: (mobileW * 2) / 100,
-                    backgroundColor: Colors.buttoncolorblue,
-                    paddingVertical: (mobileW * 4) / 100,
-                    marginTop: (mobileW * 8) / 100,
-                  }}>
-                  <Text
-                    style={{
-                      color: Colors.textwhite,
-                      fontFamily: Font.fontmedium,
-                      fontSize: Font.buttontextsize,
-                      textAlign: config.textalign,
-                      alignSelf: 'center',
-                    }}>
-                    {Lang_chg.Contiunebtn[config.language]}
-                  </Text>
-                </TouchableOpacity> */}
-
                 <Button
                   text={Lang_chg.Contiunebtn[config.language]}
                   // onLoading={this.state.loading}
-                  customStyles={
-                    {
-                      // mainContainer: styles.butonContainer
-                    }
-                  }
                   onPress={() => this.loginbtn()}
-                  // isBlank={false}
+                // isBlank={false}
                 />
+
+                <View
+                  style={{
+                    width: "90%",
+                    alignSelf: "center",
+                    marginTop: (mobileW * 7) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: Font.headinggray,
+                      fontFamily: Font.headingfontfamily,
+                      color: Colors.placeholdertextcolor,
+                      textAlign: config.textRotate,
+                      textDecorationLine: 'underline'
+                    }}
+                  >
+                    {Lang_chg.Trouble_SignIn[config.language]}
+                  </Text>
+                </View>
+
               </View>
 
-              {/* //--------------------------------------------------------------------------------gray */}
+
+              {/* //--------------------------------------------------------------------------------bottom */}
+
               <View
                 style={{
                   width: "100%",
-                  backgroundColor: "#eef0f2",
-                  paddingVertical: (mobileW * 3) / 100,
+                  // paddingVertical: (mobileW * 3) / 100,
                 }}
               >
-                <View
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    this.props.navigation.reset({
+                      index: 0,
+                      routes: [{ name: "Home" }],
+                    });
+                  }}
                   style={{
                     justifyContent: "space-between",
                     alignItems: "center",
-                    width: "89%",
-                    alignSelf: "center",
+                    width: "100%",
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    backgroundColor: Colors.buttoncolorblue,
+                    paddingVertical: (mobileW * 1) / 100,
+                    paddingHorizontal: (mobileW * 5) / 100
                   }}
                 >
                   <Text
                     style={[
                       {
-                        fontSize: (mobileW * 3.8) / 100,
-                        color: Colors.textblack,
+                        fontSize: (mobileW * 3.1) / 100,
+                        color: Colors.textwhite,
                         fontFamily: Font.ques_fontfamily,
-                      },
-                      Platform.OS == "ios"
-                        ? { textAlign: config.textalign }
-                        : null,
+                      }
                     ]}
                   >
-                    {Lang_chg.languagetxt[config.language]}{" "}
+                    {Lang_chg.Skip[config.language]}
                   </Text>
 
-                  <View
+                  <Image
+                    source={
+                      config.textalign == "right"
+                        ? localimag.backarrow : localimag.arabic_back
+                    }
                     style={{
-                      width: "40%",
-                      alignSelf: "flex-end",
-                      flexDirection: "row",
+                      resizeMode: "contain",
+                      width: (mobileW * 6) / 100,
+                      alignSelf: "center",
+                      height: (mobileW * 6) / 100,
+                      tintColor: Colors.white_color
                     }}
-                  >
-                    <View
-                      style={{
-                        width: "50%",
-                        alignSelf: "center",
-                        backgroundColor:
-                          this.state.langaugeme == 0
-                            ? Colors.buttonbackgoungcolorlightblue
-                            : "#fff",
-                        borderColor: "black",
-                        borderBottomWidth: 1,
-                        borderTopWidth: 1,
-                        borderLeftWidth: 1,
-                        paddingVertical: (mobileW * 1.5) / 100,
-                        borderBottomLeftRadius: (mobileW * 1) / 100,
-                        borderTopLeftRadius: (mobileW * 1) / 100,
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (this.state.langaugeme == 1) {
-                            this.launguage_setbtn(0),
-                              this.setState({ device_lang: "ENG" });
-                          } else {
-                            null;
-                          }
-                        }}
-                        style={{ width: "100%" }}
-                      >
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontSize: (mobileW * 3.5) / 100,
-                            color: Colors.textblack,
-                            fontFamily: Font.ques_fontfamily,
-                            alignSelf: "center",
-                          }}
-                        >
-                          {Lang_chg.ENG[config.language]}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View
-                      style={{
-                        width: "50%",
-                        alignSelf: "center",
-                        backgroundColor:
-                          this.state.langaugeme == 1
-                            ? Colors.buttonbackgoungcolorlightblue
-                            : "#fff",
-                        borderColor: "#fff",
-                        borderColor: "black",
-                        borderWidth: 1,
-                        paddingVertical: (mobileW * 1.5) / 100,
-                        borderTopRightRadius: (mobileW * 1) / 100,
-                        borderBottomRightRadius: (mobileW * 1) / 100,
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (this.state.langaugeme == 0) {
-                            this.launguage_setbtn(1),
-                              this.setState({ device_lang: "AR" });
-                          } else {
-                            null;
-                          }
-                        }}
-                        style={{ width: "100%" }}
-                      >
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontSize: (mobileW * 3.5) / 100,
-                            color: Colors.textblack,
-                            fontFamily: Font.ques_fontfamily,
-                            alignSelf: "center",
-                          }}
-                        >
-                          {Lang_chg.AR[config.language]}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
+                  />
+
+                </TouchableOpacity>
+
               </View>
+
+
               <View
                 style={{
-                  backgroundColor: Colors.backgroundcolorlight,
-                  paddingBottom: (mobileW * 15) / 100,
+                  width: "100%",
+                  paddingVertical: (mobileW * 6) / 100,
+                  paddingHorizontal: (mobileW * 6) / 100,
+                  backgroundColor: Colors.appointmentdetaillightblue
                 }}
               >
-                {/* backgroundColor:Colors.backgroundcolorlight, */}
-                <View
+
+                <Text
                   style={{
-                    width: "90%",
-                    alignSelf: "center",
-                    marginTop: (mobileW * 5) / 100,
+                    textAlign: config.textalign,
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.headinggray,
+                    color: Colors.regulartextcolor,
                   }}
                 >
-                  <Text
-                    style={{
-                      textAlign: config.textalign,
-                      fontFamily: Font.fontregular,
-                      fontSize: Font.Forgot,
-                      alignSelf: "center",
-                      color: Colors.regulartextcolor,
+                  {Lang_chg.donot[config.language]}
+                </Text>
+
+                <Text
+                  style={{
+                    textAlign: config.textalign,
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.headinggray,
+                    color: Colors.textblue,
+                    marginTop: (mobileW * 2) / 100,
+                  }}
+                >
+                  {Lang_chg.createnewaccountbtn[config.language]}
+                </Text>
+
+              </View>
+
+              {/* //--------------------------------------------------------------------------------Language */}
+
+              <View
+                style={{
+                  width: "100%",
+                  paddingVertical: (mobileW * 2) / 100,
+                  paddingHorizontal: (mobileW * 6) / 100,
+                }}
+              >
+                <Text
+                  style={[
+                    {
+                      fontSize: (mobileW * 3.8) / 100,
+                      color: Colors.textblack,
+                      fontFamily: Font.ques_fontfamily,
+                    },
+                    Platform.OS == "ios"
+                      ? { textAlign: config.textalign }
+                      : null,
+                  ]}
+                >
+                  {Lang_chg.languagetxt[config.language]}{" "}
+                </Text>
+
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: 'space-between',
+                    paddingVertical: (mobileW * 5) / 100,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.langaugeme == 1) {
+                        this.launguage_setbtn(0),
+                          this.setState({ device_lang: "ENG" });
+                      } else {
+                        null;
+                      }
                     }}
-                  >
-                    {Lang_chg.donot[config.language]}
-                    {/* {Lang_chg.donot[config.language]} */}
-                  </Text>
+                    style={{
+                      width: "47%",
+                      backgroundColor:
+                        this.state.langaugeme == 0
+                          ? Colors.buttonbackgoungcolorlightblue
+                          : "#fff",
+                      borderColor: Colors.textgray,
+                      borderWidth: 1,
+                      borderRadius: (mobileW * 2) / 100,
+                      paddingVertical: (mobileW * 2) / 100,
+                    }}>
+
+                    <Text
+                      style={{
+                        textAlign: config.textalign,
+                        fontSize: (mobileW * 3.5) / 100,
+                        color: Colors.textblack,
+                        fontFamily: Font.ques_fontfamily,
+                        alignSelf: "center",
+                      }}
+                    >
+                      {Lang_chg.ENG[config.language]}
+                    </Text>
+
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.langaugeme == 0) {
+                        this.launguage_setbtn(1),
+                          this.setState({ device_lang: "AR" });
+                      } else {
+                        null;
+                      }
+                    }}
+                    style={{
+                      width: "47%",
+                      alignSelf: "center",
+                      backgroundColor:
+                        this.state.langaugeme == 1
+                          ? Colors.buttonbackgoungcolorlightblue
+                          : "#fff",
+                      borderColor: Colors.textgray,
+                      borderWidth: 1,
+                      borderRadius: (mobileW * 2) / 100,
+                      paddingVertical: (mobileW * 2) / 100,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: config.textalign,
+                        fontSize: (mobileW * 3.5) / 100,
+                        color: Colors.textblack,
+                        fontFamily: Font.ques_fontfamily,
+                        alignSelf: "center",
+                      }}
+                    >
+                      {Lang_chg.AR[config.language]}
+                    </Text>
+                  </TouchableOpacity>
+
                 </View>
 
-                {/* <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Signup')}
-                  style={{
-                    width: '90%',
-                    alignSelf: 'center',
-                    borderColor: Colors.bordercolorblue,
-                    borderWidth: 2,
-                    borderRadius: (mobileW * 2) / 100,
-                    backgroundColor: Colors.buttoncolorlight,
-                    paddingVertical: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 4) / 100,
-                    marginBottom: (mobileW * 4) / 100,
-                  }}>
-                  <Text
-                    style={{
-                      color: Colors.textblue,
-                      fontFamily: Font.fontmedium,
-                      fontSize: Font.buttontextsize,
-                      textAlign: config.textalign,
-                      alignSelf: 'center',
-                    }}>
-                    {Lang_chg.createnewaccountbtn[config.language]}
-                  </Text>
-                </TouchableOpacity> */}
 
-                <Button
+
+                {/* <Button
                   text={Lang_chg.createnewaccountbtn[config.language]}
                   // onLoading={this.state.loading}
                   customStyles={
@@ -1197,8 +1211,10 @@ export default class Login extends Component {
                   >
                     {Lang_chg.swipe_text[config.language]}
                   </Text>
-                </View>
+                </View> */}
+
               </View>
+
             </View>
           </KeyboardAwareScrollView>
         </ScrollView>

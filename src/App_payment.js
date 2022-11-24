@@ -147,7 +147,8 @@
                      <Text style={styles.statusText}> Status: {statusNow}</Text>
                      <Text style={styles.resultText}>{this.state.result}</Text>
                      <View style={styles.bottom}>
-                         {Platform.OS == 'ios' ? (
+                         {
+                         Platform.OS == 'ios' ? (
                              <TouchableOpacity onPress={this.startSDK}>
                                  <View style={styles.payButtonBg}>
                                      <Text style={styles.payButtonText}>Start Payment</Text>
