@@ -39,14 +39,14 @@ const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
       ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      : "sk_live_Ectf8odVHCWTl3ymhz9IM6vD",
+      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
       ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      : "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg",
+      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   bundleID:
-    Platform.OS == "ios" ? "com.rootscare" : "com.rootscare",
+    Platform.OS == "ios" ? "com.patient.rootscare" : "com.rootscare",
 };
 
 export default class Cart extends Component {
@@ -80,15 +80,15 @@ export default class Cart extends Component {
           production_secrete_key:
             Platform.OS == "ios"
               ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-              : "sk_live_Ectf8odVHCWTl3ymhz9IM6vD",
+              : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
           language: Languages.EN,
           sandbox_secrete_key:
             Platform.OS == "ios"
               ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-              : "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg",
+              : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
           bundleID:
             Platform.OS == "ios"
-              ? "com.rootscare"
+              ? "com.patient.rootscare"
               : "com.rootscare",
         },
 
@@ -1004,35 +1004,35 @@ export default class Cart extends Component {
                         />
                         {show_data.display_task_type !==
                           "Online consultation" && (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                            }}
-                          >
-                            <Text
+                            <View
                               style={{
-                                fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 3.3) / 100,
-                                color: "#000",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                paddingVertical: (mobileW * 2) / 100,
+                                borderTopWidth: (mobileW * 0.3) / 100,
+                                borderColor: Colors.bordercolor,
                               }}
                             >
-                              {show_data.distance_fare_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 3.3) / 100,
-                                color: "#000",
-                              }}
-                            >
-                              {show_data.distance_fare}
-                            </Text>
-                          </View>
-                        )}
+                              <Text
+                                style={{
+                                  fontFamily: Font.fontregular,
+                                  fontSize: (mobileW * 3.3) / 100,
+                                  color: "#000",
+                                }}
+                              >
+                                {show_data.distance_fare_text}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontFamily: Font.fontregular,
+                                  fontSize: (mobileW * 3.3) / 100,
+                                  color: "#000",
+                                }}
+                              >
+                                {show_data.distance_fare}
+                              </Text>
+                            </View>
+                          )}
                         <View
                           style={{
                             flexDirection: "row",
@@ -1406,7 +1406,7 @@ export default class Cart extends Component {
           animationType="slide"
           transparent={true}
           visible={this.state.modalvisible}
-          onRequestClose={() => {}}
+          onRequestClose={() => { }}
         >
           <View
             style={{
@@ -1549,53 +1549,55 @@ export default class Cart extends Component {
             }}
           /> */}
         </HideWithKeyboard>
-        <View
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            backgroundColor: Colors.white_color,
-            paddingHorizontal: (mobileW * 5) / 100,
-            paddingVertical: (mobileW * 2) / 100,
-            height: 80,
-            justifyContent: "center", //Centered horizontally
-            alignItems: "center", //Centered vertically
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              if (this.state.payment_status == "true") {
-                this.startSDK();
-                //     this.get_payment(),this.setState({total_price:show_data.total_price})
-              } else {
-                this.submit_btn(),
-                  this.setState({ total_price: show_data.total_price });
-              }
-            }}
+        {this.state.cart_arr != "" && this.state.cart_arr != null && (
+          <View
             style={{
               width: "100%",
               alignSelf: "center",
-              borderRadius: (mobileW * 2) / 100,
-              backgroundColor: Colors.buttoncolorblue,
-              paddingVertical: (mobileW * 4) / 100,
-              position: "absolute",
-              bottom: 20,
-              marginBottom: (mobileW * 5) / 100,
+              backgroundColor: Colors.white_color,
+              paddingHorizontal: (mobileW * 5) / 100,
+              paddingVertical: (mobileW * 2) / 100,
+              height: 80,
+              justifyContent: "center", //Centered horizontally
+              alignItems: "center", //Centered vertically
             }}
           >
-            <Text
+            <TouchableOpacity
+              onPress={() => {
+                if (this.state.payment_status == "true") {
+                  this.startSDK();
+                  //     this.get_payment(),this.setState({total_price:show_data.total_price})
+                } else {
+                  this.submit_btn(),
+                    this.setState({ total_price: show_data.total_price });
+                }
+              }}
               style={{
-                color: Colors.textwhite,
-                fontFamily: Font.fontmedium,
-                fontSize: Font.buttontextsize,
-                alignSelf: "flex-end",
-                textAlign: config.textalign,
+                width: "100%",
                 alignSelf: "center",
+                borderRadius: (mobileW * 2) / 100,
+                backgroundColor: Colors.buttoncolorblue,
+                paddingVertical: (mobileW * 4) / 100,
+                position: "absolute",
+                bottom: 20,
+                marginBottom: (mobileW * 5) / 100,
               }}
             >
-              {Lang_chg.PROCEEDTOPAYMENT[config.language]}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text
+                style={{
+                  color: Colors.textwhite,
+                  fontFamily: Font.fontmedium,
+                  fontSize: Font.buttontextsize,
+                  alignSelf: "flex-end",
+                  textAlign: config.textalign,
+                  alignSelf: "center",
+                }}
+              >
+                {Lang_chg.PROCEEDTOPAYMENT[config.language]}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }

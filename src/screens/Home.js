@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Platform,
+  Platform, BackHandler
 } from "react-native";
 import {
   Colors,
@@ -161,11 +161,12 @@ export default class Home extends Component {
   }
   componentDidMount() {
     // this.getnotification();
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     var that = this;
     PushNotification.configure({
       onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
-        if (!notification.userInteraction) {
+        if (notification.userInteraction) {
           // Handle notification click
           console.log("PushNotification.configure", notification);
 
@@ -225,6 +226,20 @@ export default class Home extends Component {
     this.props.navigation.addListener("focus", () => {
       this.getAllCount();
     });
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    console.log('Back button is pressed', this.props.route.name);
+    if(this.props.route.name == "Home"){
+      return true;
+    }else{
+      return false;
+    }
+    
   }
 
   getNotificationCall = async () => {
