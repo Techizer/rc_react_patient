@@ -133,11 +133,12 @@ export default class Booking extends Component {
       this.state.pass_status === "lab"
         ? this.getLabServices()
         : this.state.pass_status === "doctor"
-        ? this.getDoctorServices()
-        : this.getServices();
+          ? this.getDoctorServices()
+          : this.getServices();
       this.getDay();
       this.getAllNotification();
-      this.state.pass_status === "lab" && this.getPerson();
+      // this.state.pass_status === "lab" && this.getPerson();
+      this.getPerson()
     });
   }
   getAllNotification = async () => {
@@ -334,7 +335,7 @@ export default class Booking extends Component {
                   real_total_show =
                     (parseFloat(
                       homeSubTotal +
-                        Number(this.state.booking_data.distance_fare)
+                      Number(this.state.booking_data.distance_fare)
                     ) /
                       100) *
                     vat_price_new;
@@ -1063,7 +1064,7 @@ export default class Booking extends Component {
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
                 parseFloat(obj.result.distance_fare) +
-                  parseFloat(real_total_final)
+                parseFloat(real_total_final)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             } else {
@@ -1318,7 +1319,7 @@ export default class Booking extends Component {
                 show_real_price = "";
                 homeSubTotal = parseFloat(
                   Number(obj.result.home_visit_task[0].task_price) +
-                    Number(obj.result.distance_fare)
+                  Number(obj.result.distance_fare)
                 ).toFixed(1);
                 console.log("sub_total home_visit_task :: ", homeSubTotal);
                 real_total_show =
@@ -1615,7 +1616,7 @@ export default class Booking extends Component {
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
                 parseFloat(obj.result.distance_fare) +
-                  parseFloat(real_total_final)
+                parseFloat(real_total_final)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             } else {
@@ -2146,8 +2147,8 @@ export default class Booking extends Component {
       ).toFixed(1);
       hour_add = parseFloat(
         parseInt(this.state.distance_fare_pass) +
-          parseInt(prize) +
-          parseFloat(this.state.vat_price_show)
+        parseInt(prize) +
+        parseFloat(this.state.vat_price_show)
       ).toFixed(1);
     } else {
       let vat_sum_per = prize;
@@ -2160,8 +2161,8 @@ export default class Booking extends Component {
       show_total_price = real_total;
       hour_add = parseFloat(
         parseInt(this.state.distance_fare_pass) +
-          parseInt(prize) +
-          parseFloat(show_total_price)
+        parseInt(prize) +
+        parseFloat(show_total_price)
       ).toFixed(1);
     }
     console.log("dnhcnfby", hour_add);
@@ -2402,8 +2403,8 @@ export default class Booking extends Component {
                     <Image
                       source={
                         item.image == "NA" ||
-                        item.image == null ||
-                        item.image == ""
+                          item.image == null ||
+                          item.image == ""
                           ? localimag.p1
                           : { uri: config.img_url3 + item.image }
                       }
@@ -2459,7 +2460,7 @@ export default class Booking extends Component {
                     )}
                   </View>
                   {this.state.pass_status === "lab" &&
-                  item.hospital_id !== "" ? (
+                    item.hospital_id !== "" ? (
                     <View
                       style={{
                         backgroundColor: "#FFA800",
@@ -2566,7 +2567,7 @@ export default class Booking extends Component {
                     <Image
                       source={
                         this.state.profile_img == "NA" ||
-                        this.state.profile_img == null
+                          this.state.profile_img == null
                           ? localimag.user_img
                           : { uri: config.img_url3 + this.state.profile_img }
                       }
@@ -2638,7 +2639,7 @@ export default class Booking extends Component {
                               <View
                                 style={{
                                   borderWidth: 2,
-                                  borderColor: Colors.theme_color,
+                                  borderColor: Colors.gainsboro,
                                   width: (mobileW * 14) / 100,
                                   alignItems: "center",
                                   marginLeft: (mobileW * 2.5) / 100,
@@ -3031,9 +3032,9 @@ export default class Booking extends Component {
                                 },
                                 item.status == true
                                   ? {
-                                      borderColor: Colors.theme_color,
-                                      borderWidth: 2,
-                                    }
+                                    borderColor: Colors.theme_color,
+                                    borderWidth: 2,
+                                  }
                                   : { borderColor: "#DFDFDF", borderWidth: 1 },
                               ]}
                             >
@@ -3283,12 +3284,12 @@ export default class Booking extends Component {
                                           onPress={() => {
                                             this.state.indexPosition === 0
                                               ? this.setState({
-                                                  time_take_data: item.time,
-                                                })
+                                                time_take_data: item.time,
+                                              })
                                               : this.setState({
-                                                  time_take_data_hour:
-                                                    item.time,
-                                                });
+                                                time_take_data_hour:
+                                                  item.time,
+                                              });
                                           }}
                                         >
                                           <Text
@@ -3306,20 +3307,20 @@ export default class Booking extends Component {
                                                   (mobileW * 3.3) / 100,
                                               },
                                               item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
+                                                (this.state.indexPosition === 0
+                                                  ? this.state.time_take_data
+                                                  : this.state
                                                     .time_take_data_hour)
                                                 ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
+                                                  backgroundColor:
+                                                    Colors.theme_color,
+                                                  color: "#fff",
+                                                }
                                                 : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
+                                                  backgroundColor:
+                                                    Colors.gray6,
+                                                  color: "#000",
+                                                },
                                             ]}
                                           >
                                             {item.time}
@@ -3340,12 +3341,12 @@ export default class Booking extends Component {
                                           onPress={() => {
                                             this.state.indexPosition === 0
                                               ? this.setState({
-                                                  time_take_data: item.time,
-                                                })
+                                                time_take_data: item.time,
+                                              })
                                               : this.setState({
-                                                  time_take_data_hour:
-                                                    item.time,
-                                                });
+                                                time_take_data_hour:
+                                                  item.time,
+                                              });
                                           }}
                                         >
                                           <Text
@@ -3363,20 +3364,20 @@ export default class Booking extends Component {
                                                   (mobileW * 3.3) / 100,
                                               },
                                               item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
+                                                (this.state.indexPosition === 0
+                                                  ? this.state.time_take_data
+                                                  : this.state
                                                     .time_take_data_hour)
                                                 ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
+                                                  backgroundColor:
+                                                    Colors.theme_color,
+                                                  color: "#fff",
+                                                }
                                                 : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
+                                                  backgroundColor:
+                                                    Colors.gray6,
+                                                  color: "#000",
+                                                },
                                             ]}
                                           >
                                             {item.time}
@@ -3953,17 +3954,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4004,17 +4005,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4082,17 +4083,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4132,17 +4133,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4411,21 +4412,21 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "taskbooking"
                                 ? {
-                                    color: Colors.textblue,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.textblue,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (mobileW * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (mobileW * 3) / 100,
+                                }
                                 : {
-                                    color: Colors.tablightcolo,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.tablightcolo,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (mobileW * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (mobileW * 3) / 100,
+                                }
                             }
                           >
                             {Lang_chg.TaskBooking[config.language]}
@@ -4435,23 +4436,23 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "taskbooking"
                                 ? {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: 1,
-                                    borderWidth: 1,
-                                    borderColor: Colors.bordercolorblue,
-                                    backgroundColor: Colors.bordercolorblue,
-                                    borderTopLeftRadius: (mobileW * 2) / 100,
-                                    borderTopRightRadius: (mobileW * 2) / 100,
-                                  }
+                                  width: (mobileW * 42) / 100,
+                                  alignSelf: "center",
+                                  paddingVertical: 1,
+                                  borderWidth: 1,
+                                  borderColor: Colors.bordercolorblue,
+                                  backgroundColor: Colors.bordercolorblue,
+                                  borderTopLeftRadius: (mobileW * 2) / 100,
+                                  borderTopRightRadius: (mobileW * 2) / 100,
+                                }
                                 : {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    borderWidth: 2,
-                                    borderColor: Colors.tab_background_color,
-                                    backgroundColor:
-                                      Colors.tab_background_color,
-                                  }
+                                  width: (mobileW * 42) / 100,
+                                  alignSelf: "center",
+                                  borderWidth: 2,
+                                  borderColor: Colors.tab_background_color,
+                                  backgroundColor:
+                                    Colors.tab_background_color,
+                                }
                             }
                           />
                         </View>
@@ -4469,22 +4470,22 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "hourlybooking"
                                 ? {
-                                    color: Colors.textblue,
+                                  color: Colors.textblue,
 
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (mobileW * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (mobileW * 3) / 100,
+                                }
                                 : {
-                                    color: Colors.tablightcolo,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.tablightcolo,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (mobileW * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (mobileW * 3) / 100,
+                                }
                             }
                           >
                             {Lang_chg.HourlyBooking[config.language]}
@@ -4494,23 +4495,23 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "hourlybooking"
                                 ? {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: 1,
-                                    borderWidth: 1,
-                                    borderColor: Colors.bordercolorblue,
-                                    backgroundColor: Colors.bordercolorblue,
-                                    borderTopLeftRadius: (mobileW * 2) / 100,
-                                    borderTopRightRadius: (mobileW * 2) / 100,
-                                  }
+                                  width: (mobileW * 42) / 100,
+                                  alignSelf: "center",
+                                  paddingVertical: 1,
+                                  borderWidth: 1,
+                                  borderColor: Colors.bordercolorblue,
+                                  backgroundColor: Colors.bordercolorblue,
+                                  borderTopLeftRadius: (mobileW * 2) / 100,
+                                  borderTopRightRadius: (mobileW * 2) / 100,
+                                }
                                 : {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    borderWidth: 2,
-                                    borderColor: Colors.tab_background_color,
-                                    backgroundColor:
-                                      Colors.tab_background_color,
-                                  }
+                                  width: (mobileW * 42) / 100,
+                                  alignSelf: "center",
+                                  borderWidth: 2,
+                                  borderColor: Colors.tab_background_color,
+                                  backgroundColor:
+                                    Colors.tab_background_color,
+                                }
                             }
                           />
                         </View>
@@ -4793,9 +4794,9 @@ export default class Booking extends Component {
                                 },
                                 item.status == true
                                   ? {
-                                      borderColor: Colors.theme_color,
-                                      borderWidth: 2,
-                                    }
+                                    borderColor: Colors.theme_color,
+                                    borderWidth: 2,
+                                  }
                                   : { borderColor: "#DFDFDF", borderWidth: 1 },
                               ]}
                             >
@@ -5108,17 +5109,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5159,17 +5160,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5236,17 +5237,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data_hour
+                                                  this.state.time_take_data_hour
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5287,17 +5288,17 @@ export default class Booking extends Component {
                                                     (mobileW * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data_hour
+                                                  this.state.time_take_data_hour
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.theme_color,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5771,7 +5772,7 @@ export default class Booking extends Component {
             </ScrollView>
 
             <Modal
-              animationType="slide"
+              animationType="fade"
               transparent={true}
               visible={this.state.modalVisible3}
               onRequestClose={() => {
@@ -5842,8 +5843,7 @@ export default class Booking extends Component {
                         }}
                         numberOfLines={2}
                       >
-                        {Lang_chg.DeleteMember[config.language]}{" "}
-                        {this.state.first_name} {this.state.last_name}
+                        {Lang_chg.DeleteMember[config.language]}{this.state.first_name} {this.state.last_name}
                       </Text>
                     </View>
 
@@ -5947,12 +5947,12 @@ export default class Booking extends Component {
                   this.state.pass_status === "doctor"
                     ? this.submitButtonForDoctor()
                     : this.state.pass_status === "lab"
-                    ? this.state.indexPosition === 0
-                      ? this.submit_btn()
-                      : this.submit_btn_hourly()
-                    : this.state.display == "hourlybooking"
-                    ? this.submit_btn_hourly()
-                    : this.submit_btn();
+                      ? this.state.indexPosition === 0
+                        ? this.submit_btn()
+                        : this.submit_btn_hourly()
+                      : this.state.display == "hourlybooking"
+                        ? this.submit_btn_hourly()
+                        : this.submit_btn();
                 }}
                 style={{
                   width: "100%",

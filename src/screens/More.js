@@ -436,7 +436,7 @@ export default class More extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate("Tremsandcondition", {
+            this.props.navigation.navigate("TermsAndConditions", {
               contantpage: 2,
               content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
               content_ar: config.term_url_ar,
@@ -493,7 +493,7 @@ export default class More extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate("Tremsandcondition", {
+            this.props.navigation.navigate("TermsAndConditions", {
               contantpage: 0,
               content: config.about_url_eng,
               content_ar: config.about_url_ar,
@@ -548,7 +548,7 @@ export default class More extends Component {
 
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate("Tremsandcondition", {
+            this.props.navigation.navigate("TermsAndConditions", {
               contantpage: 1,
               content: config.privacy_url_eng,
               content_ar: config.privacy_url_ar,

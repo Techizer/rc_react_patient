@@ -194,7 +194,7 @@ export default class AllServiceProviderListing extends Component {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", JSON.stringify(obj));
+        consolepro.consolelog("obj provider data: ", JSON.stringify(obj));
 
         if (obj.status == true) {
           console.log("obj.result", obj.result);
@@ -837,11 +837,15 @@ export default class AllServiceProviderListing extends Component {
               <View>
                 {this.state.nurse_data == "" ||
                   (this.state.nurse_data == null && (
-                    <View style={{ marginTop: (mobileW * 50) / 100 }}>
+                    <View style={{ 
+                      marginTop: (mobileW * 55) / 100,
+                      width: '75%',
+                      alignSelf: 'center'
+                      }}>
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize: Font.name,
+                          fontSize: Font.regulartext_size,
                           textAlign: "center",
                           color: Colors.theme_color,
                         }}

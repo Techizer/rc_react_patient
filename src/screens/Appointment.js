@@ -1547,7 +1547,8 @@ export default class Appointment extends Component {
                                     color: Colors.theme_color,
                                   }}
                                 >
-                                  {item.appointment_type}
+                                  {(item.appointment_type == "Online consultation") ?
+                                   "Online" : item.appointment_type}
                                 </Text>
                               </View>
                             </View>

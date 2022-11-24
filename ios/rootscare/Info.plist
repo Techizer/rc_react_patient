@@ -43,12 +43,12 @@
 	<string>Rootscare App  would like to access your location for address or near by nurses or doctors, it is safe and secure.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Rootscare App  would like to access your location for address or near by nurses or doctors, it is safe and secure.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Give $(PRODUCT_NAME) permission to use your microphone. Your record wont be shared without your permission.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Rootscare would like to access your Photos for profile or patient photos. Your photos won't be shared without your permission. It is safe and secure. </string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Rootscare would like to access your Photos for profile or patient photos. Your photos won't be shared without your permission. It is safe and secure.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to use your microphone. Your record wont be shared without your permission.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

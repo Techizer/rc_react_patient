@@ -666,7 +666,7 @@ export default class NeedSupport extends Component {
               <View style={{ width: "95%", alignSelf: "center" }}>
                 <TextInput
                   style={{
-                    // marginTop: (mobileW * 1) / 100,
+                    marginTop: (mobileW * 2) / 100,
                     backgroundColor: "#fff",
                     width: "100%",
                     color: Colors.textblack,

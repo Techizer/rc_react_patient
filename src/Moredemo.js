@@ -125,7 +125,7 @@ export default class Supportandmore extends Component {
 
 
 
-                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Tremsandcondition',{contantpage:0})}}
+                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('TermsAndConditions',{contantpage:0})}}
                       style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'95%',}}>
                        <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.textblack,fontFamily:Font.fontmedium,}}>{Lang_chg.aboutrootcare[config.language]} </Text> 
@@ -149,7 +149,7 @@ export default class Supportandmore extends Component {
 
 
 
-                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Tremsandcondition',{contantpage:2})}}
+                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('TermsAndConditions',{contantpage:2})}}
                      style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'95%',}}>
                        <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.textblack,fontFamily:Font.fontmedium,}}>{Lang_chg.privacy[config.language]} </Text> 
@@ -173,7 +173,7 @@ export default class Supportandmore extends Component {
 
                      
 
-                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Tremsandcondition',{contantpage:1})}}
+                     <TouchableOpacity onPress={()=>{this.props.navigation.navigate('TermsAndConditions',{contantpage:1})}}
                      style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'10%',alignSelf:'center',}}>
                             <TouchableOpacity style={{width:'100%',alignSelf:'center'}}>
