@@ -149,7 +149,7 @@ export const Font = {
   fontsizetermcondition: (windowWidth * 2.7) / 100,
   headerpeding: (windowWidth * 2) / 100,
 
-  buttontextsize: (windowWidth * 4) / 100,
+  buttontextsize: (windowWidth * 3.5) / 100,
 
   //28-02
   sregulartext_size: (windowWidth * 3) / 100,

@@ -595,11 +595,18 @@ export default class Home extends Component {
               </View>
             </View>
           </View>
+
+          {/* ------------------------Lists */}
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor }}
             showsVerticalScrollIndicator={false}
           >
-            <View style={{ width: "100%", alignSelf: "center" }}>
+            <View
+              style={{
+                width: "100%",
+                alignSelf: "center",
+                paddingTop: (mobileW * 1.7) / 100,
+              }}>
               <TouchableOpacity
                 onPress={() =>
                   this.props.navigation.navigate("CovidPackageDetails")
@@ -607,9 +614,11 @@ export default class Home extends Component {
                 style={{
                   paddingLeft: (mobileW * 5) / 100,
                   paddingRight: (mobileW * 5) / 100,
+                  height: (mobileW * 36.5) / 100,
+                  backgroundColor: Colors.white_color,
+                  alignItems: 'center',
                   width: "100%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 5) / 100,
                 }}
               >
                 <Image
@@ -625,106 +634,112 @@ export default class Home extends Component {
                   }}
                 />
               </TouchableOpacity>
+
               <View style={Styles.containerbody}>
                 {/* FlatList 1 */}
-                <Appheading
-                  title={
-                    Lang_chg.HomeHealthcareServiceAppointments[config.language]
-                  }
-                />
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={true}
-                  data={HomeHealthcareServiceAppointments}
-                  renderItem={({ item, index }) => {
-                    // consolepro.consolelog("item nurse ------", item);
-                    return (
-                      <View
-                        style={[
-                          { width: (mobileW * 36) / 100 },
-                          config.language == 1
-                            ? { marginLeft: (mobileW * 1) / 100 }
-                            : null,
-                        ]}
-                      >
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.props.navigation.navigate(
-                              "AllServiceProviderListing",
-                              { pass_status: item.pass_status }
-                            )
-                          }
-                          style={{
-                            width: (mobileW * 32.5) / 100,
-                            marginRight: (mobileW * 4) / 100,
-                            // shadowOpacity: 0.3,
-                            // shadowColor:'#000',
-                            // shadowOffset:{width:1,height:1},
-                            // elevation:5,
-                            // shadowRadius: 2,
-                            backgroundColor: "#fff",
-                            borderColor: "#DFDFDF",
-                            borderWidth: 1,
-                            borderRadius: (mobileW * 2) / 100,
-                            paddingBottom: (mobileW * 3) / 100,
-                            marginBottom: 3,
-                            // alignItems:'center'
-                          }}
+                <View style={{
+                  paddingTop: (mobileW * 1.7) / 100,
+                  
+                }}>
+                  <Appheading
+                    title={
+                      Lang_chg.HomeHealthcareServiceAppointments[config.language]
+                    }
+                  />
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    data={HomeHealthcareServiceAppointments}
+                    renderItem={({ item, index }) => {
+                      // consolepro.consolelog("item nurse ------", item);
+                      return (
+                        <View
+                          style={[
+                            { width: (mobileW * 36) / 100 },
+                            config.language == 1
+                              ? { marginLeft: (mobileW * 1) / 100 }
+                              : null,
+                          ]}
                         >
-                          <ImageBackground
-                            imageStyle={{
-                              borderTopLeftRadius: (mobileW * 1) / 100,
-                              borderTopRightRadius: (mobileW * 1) / 100,
-                            }}
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.props.navigation.navigate(
+                                "AllServiceProviderListing",
+                                { pass_status: item.pass_status }
+                              )
+                            }
                             style={{
+                              width: (mobileW * 32.5) / 100,
+                              marginRight: (mobileW * 4) / 100,
+                              // shadowOpacity: 0.3,
+                              // shadowColor:'#000',
+                              // shadowOffset:{width:1,height:1},
+                              // elevation:5,
+                              // shadowRadius: 2,
+                              backgroundColor: "#fff",
+                              borderColor: "#DFDFDF",
+                              borderWidth: 1,
                               borderRadius: (mobileW * 2) / 100,
-                              width: "100%",
-                              height: (mobileW * 28) / 100,
-                              alignSelf: "center",
-                            }}
-                            source={item.img}
-                          />
-                          <View
-                            style={{
-                              paddingTop: (mobileW * 2) / 100,
-                              paddingHorizontal: (mobileW * 3) / 100,
+                              paddingBottom: (mobileW * 3) / 100,
+                              marginBottom: 3,
+                              // alignItems:'center'
                             }}
                           >
-                            {config.language == 1 ? (
-                              <Text style={Styles.cardtitle}>
-                                {item.arabic_title}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.cardtitle}>{item.title}</Text>
-                            )}
-                            {item.status != 0 && (
-                              <View>
-                                {config.language != 1 && (
-                                  <Text style={Styles.cardtitle}>
-                                    {item.title2}
-                                  </Text>
-                                )}
-                                {config.language == 1 &&
-                                  item.arabic_status == 0 && (
+                            <ImageBackground
+                              imageStyle={{
+                                borderTopLeftRadius: (mobileW * 1) / 100,
+                                borderTopRightRadius: (mobileW * 1) / 100,
+                              }}
+                              style={{
+                                borderRadius: (mobileW * 2) / 100,
+                                width: "100%",
+                                height: (mobileW * 28) / 100,
+                                alignSelf: "center",
+                              }}
+                              source={item.img}
+                            />
+                            <View
+                              style={{
+                                paddingTop: (mobileW * 2) / 100,
+                                paddingHorizontal: (mobileW * 3) / 100,
+                              }}
+                            >
+                              {config.language == 1 ? (
+                                <Text style={Styles.cardtitle}>
+                                  {item.arabic_title}
+                                </Text>
+                              ) : (
+                                <Text style={Styles.cardtitle}>{item.title}</Text>
+                              )}
+                              {item.status != 0 && (
+                                <View>
+                                  {config.language != 1 && (
                                     <Text style={Styles.cardtitle}>
-                                      {item.arabic_title2}
+                                      {item.title2}
                                     </Text>
                                   )}
-                              </View>
-                            )}
-                            {config.language == 1 ? (
-                              <Text style={Styles.details}>
-                                {item.arabic_details}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.details}>{item.details}</Text>
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  }}
-                />
+                                  {config.language == 1 &&
+                                    item.arabic_status == 0 && (
+                                      <Text style={Styles.cardtitle}>
+                                        {item.arabic_title2}
+                                      </Text>
+                                    )}
+                                </View>
+                              )}
+                              {config.language == 1 ? (
+                                <Text style={Styles.details}>
+                                  {item.arabic_details}
+                                </Text>
+                              ) : (
+                                <Text style={Styles.details}>{item.details}</Text>
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    }}
+                  />
+                </View>
 
                 {/* FlatList 2 */}
                 <Appheading
@@ -982,10 +997,13 @@ export default class Home extends Component {
                   />
                 </View>
               </View>
+
             </View>
           </ScrollView>
         </View>
         {/* </ScrollView> */}
+
+
         <HideWithKeyboard>
           <Footer
             activepage="Home"

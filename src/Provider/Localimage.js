@@ -95,7 +95,7 @@ export const localimag = {
   dobimg: require("../icons/date.png"),
 
   rightimg: require("../icons/Group1336-22x.png"),
-  //--05-03-22 gunjan
+  //--05-03-22 gunjan 
   crossimg: require("../icons/Group10883x.png"),
   calendarimg: require("../icons/date.png"),
   arabic_back: require("../icons/next.png"),

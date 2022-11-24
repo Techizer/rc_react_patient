@@ -76,10 +76,11 @@ class Language_provider {
   Remember = ["Remember Me", "تذكرني  "];
   Forgotpassword = ["Forgot Password ?", "نسيت كلمة المرور؟"];
   Contiunebtn = ["CONTINUE", " استمرار "];
-  donot = ["Don't have an account?", "ليس لديك حساب؟ "];
-  createnewaccountbtn = ["CREATE A NEW ACCOUNT", "انشاء حساب جديد"];
+  donot = ["Don't have an account, click below?", "ليس لديك حساب ، انقر أدناه؟"];
+  createnewaccountbtn = ["Create a new account", "انشاء حساب جديد"];
   swipe_text = ["Swipe right to left", " اسحب من اليمين إلى اليسار  "];
-
+  Trouble_SignIn=["Trouble signing in? Get Help?", "هل تواجه مشكلة في تسجيل الدخول؟ احصل على مساعدة؟"];
+  Skip=["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
   //---------------------splash------------------
   Splashtext1 = [
     "The Best Company for Medicial Services & Home Healthcare",

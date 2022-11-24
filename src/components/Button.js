@@ -17,35 +17,6 @@ const Button = ({
 }) => {
   return (
     <>
-      {/* <TouchableOpacity
-        activeOpacity={0.5}
-        disabled={onLoading}
-        style={[styles.mainContainer, customStyles.mainContainer]}
-        onPress={onPress}
-      >
-        {onLoading ? (
-          <Spinner isVisible={true} size={25} type={"Wave"} color={"white"} />
-        ) : (
-          <>
-            {image ? (
-              <Image source={image} style={[styles.img, customStyles.img]} />
-            ) : null}
-            {isSingle ? (
-              <Text
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                style={[styles.buttonText, customStyles.buttonText]}
-              >
-                {text}
-              </Text>
-            ) : (
-              <Text style={[styles.buttonText, customStyles.buttonText]}>
-                {text}
-              </Text>
-            )}
-          </>
-        )}
-      </TouchableOpacity> */}
 
       {
         (isBlank != undefined && isBlank === true) ?
@@ -74,10 +45,13 @@ Button.defaultProps = { customStyles: {} };
 const styles = StyleSheet.create({
   mainContainer: {
     width: '90%',
+    height:40,
     alignSelf: 'center',
     borderRadius: (mobileW * 2) / 100,
     backgroundColor: Colors.buttoncolorblue,
-    paddingVertical: (mobileW * 4) / 100,
+    justifyContent:'center',
+    alignItems:'center',
+    // paddingVertical: (mobileW * 4) / 100,
     marginTop: (mobileW * 8) / 100,
   },
   mainContainer1: {
