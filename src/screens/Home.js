@@ -159,6 +159,17 @@ export default class Home extends Component {
     };
     screens = "Home";
   }
+  logout = async () => {
+    await localStorage.removeItem("user_arr");
+    await localStorage.removeItem("user_login");
+    // await localStorage.removeItem('password');
+    // await localStorage.clear();
+    // this.setState({ show: false });
+    this.props.navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
+  };
   componentDidMount() {
     // this.getnotification();
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -166,9 +177,15 @@ export default class Home extends Component {
     PushNotification.configure({
       onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
+        if (notification.data?.type == "Logout") {
+          that.logout();
+        }
+        
         if (notification.userInteraction) {
           // Handle notification click
           console.log("PushNotification.configure", notification);
+
+          
 
           if (notification.data?.type == "doctor_to_patient_video_call") {
             let data;
@@ -614,7 +631,7 @@ export default class Home extends Component {
                 style={{
                   paddingLeft: (mobileW * 5) / 100,
                   paddingRight: (mobileW * 5) / 100,
-                  height: (mobileW * 36.5) / 100,
+                  height: (mobileW * 42) / 100,
                   backgroundColor: Colors.white_color,
                   alignItems: 'center',
                   width: "100%",
@@ -630,7 +647,8 @@ export default class Home extends Component {
                   style={{
                     width: "100%",
                     resizeMode: "stretch",
-                    height: (mobileH * 17.9) / 100,
+                    height: (mobileH * 16.5) / 100,
+                    marginTop: 15
                   }}
                 />
               </TouchableOpacity>

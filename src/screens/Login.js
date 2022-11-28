@@ -960,7 +960,7 @@ export default class Login extends Component {
                 // isBlank={false}
                 />
 
-                <View
+                {/* <View
                   style={{
                     width: "90%",
                     alignSelf: "center",
@@ -978,14 +978,14 @@ export default class Login extends Component {
                   >
                     {Lang_chg.Trouble_SignIn[config.language]}
                   </Text>
-                </View>
+                </View> */}
 
               </View>
 
 
               {/* //--------------------------------------------------------------------------------bottom */}
 
-              <View
+              {/* <View
                 style={{
                   width: "100%",
                   // paddingVertical: (mobileW * 3) / 100,
@@ -1038,7 +1038,7 @@ export default class Login extends Component {
 
                 </TouchableOpacity>
 
-              </View>
+              </View> */}
 
 
               <View
@@ -1060,19 +1060,19 @@ export default class Login extends Component {
                 >
                   {Lang_chg.donot[config.language]}
                 </Text>
-
-                <Text
-                  style={{
-                    textAlign: config.textalign,
-                    fontFamily: Font.fontregular,
-                    fontSize: Font.headinggray,
-                    color: Colors.textblue,
-                    marginTop: (mobileW * 2) / 100,
-                  }}
-                >
-                  {Lang_chg.createnewaccountbtn[config.language]}
-                </Text>
-
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("Signup")}>
+                  <Text
+                    style={{
+                      textAlign: config.textalign,
+                      fontFamily: Font.fontregular,
+                      fontSize: Font.headinggray,
+                      color: Colors.textblue,
+                      marginTop: (mobileW * 2) / 100,
+                    }}
+                  >
+                    {Lang_chg.createnewaccountbtn[config.language]}
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               {/* //--------------------------------------------------------------------------------Language */}
