@@ -177,9 +177,9 @@ export default class Home extends Component {
     PushNotification.configure({
       onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
-        if (notification.data?.type == "Logout") {
-          that.logout();
-        }
+        // if (notification.data?.type == "Logout") {
+        //   that.logout();
+        // }
         
         if (notification.userInteraction) {
           // Handle notification click
@@ -355,8 +355,15 @@ export default class Home extends Component {
       },
       (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
     );
+    var that = this;
     messaging().onMessage(async (remoteMessage) => {
       console.log("hello", JSON.stringify(remoteMessage));
+      console.log('remoteMessage.data?.type', remoteMessage.data?.type)
+      //alert(JSON.stringify(remoteMessage));
+
+      if (remoteMessage.data?.type == "Logout") {
+        that.logout();
+      }
       //alert(JSON.stringify(remoteMessage));
       // if (remoteMessage.data?.type !== "doctor_to_patient_video_call") {
       PushNotification.localNotification({
