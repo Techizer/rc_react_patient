@@ -3,18 +3,18 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
   Modal,
   TouchableOpacity,
   Linking,
+  StatusBar,
 } from "react-native";
 import React, { Component } from "react";
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
   Lang_chg,
   apifuntion,
@@ -25,6 +25,9 @@ global.amount_total = 0;
 global.username = "NA";
 import HTMLView from "react-native-htmlview";
 import DeviceInfo from "react-native-device-info";
+import { SvgXml } from "react-native-svg";
+import { Logo, Splash_Logo } from "../icons/SvgIcons/Index";
+import { vs } from "react-native-size-matters";
 const appVersion = DeviceInfo.getVersion();
 
 export default class Splash extends Component {
@@ -46,7 +49,7 @@ export default class Splash extends Component {
 
     console.log("App Version", appVersion);
   }
-  componentDidMount() {}
+  componentDidMount() { }
   language_fun = async () => {
     let textalign = await localStorage.getItemObject("language");
 
@@ -182,7 +185,7 @@ export default class Splash extends Component {
 
             this.props.navigation.reset({
               index: 0,
-              routes: [{ name: "Home" }],
+              routes: [{ name: "DashboardStack" }],
             });
 
             // this.props.navigation.navigate("Home");
@@ -190,7 +193,7 @@ export default class Splash extends Component {
             // this.props.navigation.navigate("Login");
             this.props.navigation.reset({
               index: 0,
-              routes: [{ name: "Login" }],
+              routes: [{ name: "AuthStack" }],
             });
           }
         })
@@ -200,7 +203,7 @@ export default class Splash extends Component {
     } else {
       this.props.navigation.reset({
         index: 0,
-        routes: [{ name: "Login" }],
+        routes: [{ name: "AuthStack" }],
       });
       // this.props.navigation.navigate("Login");
     }
@@ -223,52 +226,34 @@ export default class Splash extends Component {
       <View
         style={{
           width: "100%",
-          alignSelf: "center",
           flex: 1,
-          backgroundColor: Colors.white_color,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: Colors.white,
         }}
       >
         <StatusBar
           barStyle="dark-content"
-          backgroundColor={Colors.statusbarcolor}
+          backgroundColor={Colors.white}
           hidden={false}
           translucent={false}
           networkActivityIndicatorVisible={true}
         />
+        <SvgXml xml={Splash_Logo} />
 
-        <Image
-          style={{
-            height: (mobileW * 80) / 100,
-            width: (mobileW * 95) / 100,
-            resizeMode: "contain",
-            alignSelf: "center",
-            marginTop: (mobileW * 15) / 100,
-          }}
-          source={localimag.splashlogo}
-        ></Image>
+        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
 
         <View
           style={{
             width: "50%",
             alignSelf: "center",
-            borderColor: Colors.bordercolor,
-            borderBottomWidth: (mobileW * 0.3) / 100,
-            marginTop: (mobileW * 6) / 100,
-          }}
-        ></View>
-
-        <View
-          style={{
-            width: "50%",
-            alignSelf: "center",
-            marginTop: (mobileW * 3) / 100,
           }}
         >
           <Text
             style={{
-              marginTop: (mobileW * 0.5) / 100,
-              fontSize: (mobileW * 4) / 100,
-              color: Colors.splashtextcolor,
+              paddingVertical: vs(14),
+              fontSize: Font.xlarge,
+              color: Colors.lightGrey,
               fontFamily: Font.fontregular,
               alignSelf: "center",
               textAlign: "center",
@@ -276,32 +261,21 @@ export default class Splash extends Component {
           >
             {Lang_chg.Splashtext1[this.state.language]}{" "}
           </Text>
-          {/* <Text style={{marginTop:mobileW*0.5/100,fontSize:mobileW*4/100,color:Colors.splashtextcolor,fontFamily:Font.fontregular,alignSelf:'center',textAlign:'center',marginTop:mobileW*4/100}}>{Lang_chg.Splashtext_two[this.state.language]} </Text> 
-              <Text style={{marginTop:mobileW*0.5/100,fontSize:mobileW*4/100,color:Colors.splashtextcolor,fontFamily:Font.fontregular,alignSelf:'center',textAlign:'center'}}>{Lang_chg.Splashtext_three[this.state.language]} </Text>  */}
         </View>
 
-        <View
-          style={{
-            width: "50%",
-            alignSelf: "center",
-            borderColor: Colors.bordercolor,
-            borderBottomWidth: (mobileW * 0.3) / 100,
-            marginTop: (mobileW * 6) / 100,
-          }}
-        ></View>
+        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(15) }}></View>
 
         <View
           style={{
             width: "63%",
             alignSelf: "center",
-            marginTop: (mobileW * 4) / 100,
+            marginTop: vs(35),
           }}
         >
           <Text
             style={{
-              marginTop: (mobileW * 0.5) / 100,
-              fontSize: (mobileW * 4) / 100,
-              color: Colors.splashtextcolor,
+              fontSize: Font.medium,
+              color: Colors.lightGrey,
               fontFamily: Font.fontregular,
               alignSelf: "center",
               textAlign: "center",
@@ -310,11 +284,7 @@ export default class Splash extends Component {
             {Lang_chg.Splashtext2[this.state.language]}{" "}
           </Text>
         </View>
-        {/* <View style={{alignSelf:'center',borderColor:Colors.bordercolor,borderWidth:0.5,paddingVertical:mobileW*8/100,marginTop:mobileW*2/100,marginBottom:mobileW*2/100}}>
 
-
-            </View>
-             <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,marginTop:mobileW*4/100,color:Colors.splashtextcolor,fontFamily:Font.fontmedium,alignSelf:'center',textAlign:'center'}}>V1.0</Text>  */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -338,17 +308,10 @@ export default class Splash extends Component {
               marginTop: -50,
             }}
           >
-            <StatusBar
-              backgroundColor={"#fff"}
-              barStyle="default"
-              hidden={false}
-              translucent={false}
-              networkActivityIndicatorVisible={true}
-            />
             <View
               style={{
                 borderRadius: 20,
-                width: (mobileW * 90) / 100,
+                width: (windowWidth * 90) / 100,
                 position: "absolute",
                 alignSelf: "center",
               }}
@@ -363,53 +326,53 @@ export default class Splash extends Component {
                 <View
                   style={{
                     alignSelf: "flex-start",
-                    width: (mobileW * 80) / 100,
-                    height: (mobileW * 14) / 100,
-                    paddingVertical: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 2) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
+                    width: (windowWidth * 80) / 100,
+                    height: (windowWidth * 14) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
+                    marginTop: (windowWidth * 2) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
                     flexDirection: "row",
                     //  backgroundColor: 'red'
                   }}
                 >
                   {/* <Image style={{ 
-                    width: mobileW * 6 / 100, 
-                    height: mobileW * 6 / 100 }} source={require('./icons/logo.png')}></Image> */}
-                  {/* <Text style={{ fontFamily: Font.fontmedium, color: '#000', fontSize: mobileW * 5 / 100, paddingLeft: mobileW * 4 / 100 }}>{this.state.updTitle}</Text> */}
+                    width: windowWidth * 6 / 100, 
+                    height: windowWidth * 6 / 100 }} source={require('./icons/logo.png')}></Image> */}
+                  {/* <Text style={{ fontFamily: Font.fontmedium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
                   <HTMLView
                     value={this.state.updTitle}
                     stylesheet={{
                       h3: {
                         fontFamily: Font.fontregular,
                         color: Colors.textblack, //'#000',
-                        fontSize: (mobileW * 4.8) / 100,
+                        fontSize: (windowWidth * 4.8) / 100,
                         opacity: 0.9,
                         // color: '#FF3366', // make links coloured pink
                       },
 
-                      paddingLeft: (mobileW * 4) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
                     }}
                   />
                 </View>
                 <View
                   style={{
                     alignSelf: "flex-start",
-                    paddingVertical: (mobileW * 1) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
-                    paddingRight: (mobileW * 4) / 100,
+                    paddingVertical: (windowWidth * 1) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
+                    paddingRight: (windowWidth * 4) / 100,
                     flexDirection: "row",
                     alignItems: "center",
                     // backgroundColor: 'red'
                   }}
                 >
-                  {/* <Text style={{ fontFamily: Font.fontregular, color: '#000', fontSize: mobileW * 4 / 100, }}>{Lang_chg.logut_msg[config.language]}</Text> */}
+                  {/* <Text style={{ fontFamily: Font.fontregular, color: '#000', fontSize: windowWidth * 4 / 100, }}>{Lang_chg.logut_msg[config.language]}</Text> */}
                   <HTMLView
                     value={this.state.updText}
                     stylesheet={{
                       p: {
                         fontFamily: Font.fontregular,
-                        color: Colors.textblack, //'#515C6F', //Colors.placeholder_text,
-                        fontSize: (mobileW * 4) / 100,
+                        color: Colors.textblack, //'#515C6F', //Colors.DarkGrey,
+                        fontSize: (windowWidth * 4) / 100,
                         textAlign: "left",
                         opacity: 0.9,
                         // color: '#FF3366', // make links coloured pink
@@ -425,8 +388,8 @@ export default class Splash extends Component {
                       ? "space-between"
                       : "flex-end",
                     width: "70%",
-                    paddingBottom: (mobileW * 5) / 100,
-                    marginTop: (mobileW * 9) / 100,
+                    paddingBottom: (windowWidth * 5) / 100,
+                    marginTop: (windowWidth * 9) / 100,
                     alignSelf: "flex-end",
                     right: 16,
                     // backgroundColor: 'red'
@@ -445,7 +408,7 @@ export default class Splash extends Component {
                         );
                       }}
                       style={{
-                        width: (mobileW * 35) / 100,
+                        width: (windowWidth * 35) / 100,
                         flexDirection: "row",
                         alignSelf: "center",
                         justifyContent: "flex-end",
@@ -455,8 +418,8 @@ export default class Splash extends Component {
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize: (mobileW * 3.8) / 100,
-                          color: Colors.terms_text_color_blue, //Colors.bordercolorblue,
+                          fontSize: (windowWidth * 3.8) / 100,
+                          color: Colors.Theme, //Colors.bordercolorblue,
                           alignSelf: "center",
                         }}
                       >
@@ -472,8 +435,8 @@ export default class Splash extends Component {
                     }}
                     activeOpacity={0.8}
                     style={{
-                      width: (mobileW * 22) / 100,
-                      height: (mobileW * 8) / 100,
+                      width: (windowWidth * 22) / 100,
+                      height: (windowWidth * 8) / 100,
                       justifyContent: "center",
                       backgroundColor: "#549E36",
                       alignSelf: "flex-end",
@@ -482,8 +445,8 @@ export default class Splash extends Component {
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 3.8) / 100,
-                        color: Colors.white_color,
+                        fontSize: (windowWidth * 3.8) / 100,
+                        color: Colors.white,
                         alignSelf: "center",
                       }}
                     >
@@ -496,7 +459,7 @@ export default class Splash extends Component {
                     style={{
                       borderTopWidth: 1,
                       borderTopColor: Colors.gray5,
-                      height: (mobileW * 15) / 100,
+                      height: (windowWidth * 15) / 100,
                       // backgroundColor: 'red',
                       // justifyContent: 'flex-start',
                       // alignContent: 'center',
@@ -504,14 +467,14 @@ export default class Splash extends Component {
                       alignItems: "center",
                       // alignContent:'center',
                       // flex:1,
-                      marginLeft: (mobileW * 4) / 100,
-                      marginRight: (mobileW * 4) / 100,
+                      marginLeft: (windowWidth * 4) / 100,
+                      marginRight: (windowWidth * 4) / 100,
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: Font.fontsemibold,
-                        fontSize: (mobileW * 3.5) / 100,
+                        fontSize: (windowWidth * 3.5) / 100,
                         color: Colors.placeholder_border,
                         // alignSelf: 'flex-start',
                         // justifyContent: 'flex-start',
@@ -522,8 +485,8 @@ export default class Splash extends Component {
                     <Text
                       style={{
                         fontFamily: Font.fontsemibold,
-                        fontSize: (mobileW * 3.5) / 100,
-                        color: Colors.terms_text_color_blue,
+                        fontSize: (windowWidth * 3.5) / 100,
+                        color: Colors.Theme,
                         marginLeft: 6,
                         // alignSelf: 'flex-start',
                         // justifyContent: 'flex-start',

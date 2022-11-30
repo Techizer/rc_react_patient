@@ -1,6 +1,6 @@
 import firebase from '../Chat/config1';
 import Firebase from 'firebase';
-import { msgProvider, msgText, msgTitle, localStorage, apifuntion, config, Lang_chg, AppProvider, Mapprovider, validation, Font, Colors, mobileH, consolepro } from './utilslib/Utils'
+import { msgProvider, msgText, msgTitle, localStorage, apifuntion, config, Lang_chg, AppProvider, Mapprovider, validation, Font, Colors, windowHeight, consolepro } from './utilslib/Utils'
 global.FirebaseUserJson = [];
 global.FirebaseGroupJson = [];
 global.FirebaseInboxJson = [];

@@ -14,8 +14,8 @@ import {
   mediaprovider,
   config,
   localStorage,
-  mobileW,
-  localimag,
+  windowWidth,
+  Icons,
   Currentltlg,
   Lang_chg,
 } from './utilslib/Utils';
@@ -47,7 +47,7 @@ export default class Otpprovider extends Component {
             style={{
               backgroundColor: Colors.whiteColor,
               borderRadius: 20,
-              width: (mobileW * 80) / 100,
+              width: (windowWidth * 80) / 100,
             }}>
             <TouchableOpacity
               activeOpacity={1}
@@ -57,7 +57,7 @@ export default class Otpprovider extends Component {
               <View
                 style={{
                   padding: 10,
-                  width: (mobileW * 80) / 100,
+                  width: (windowWidth * 80) / 100,
                   paddingHorizontal: 20,
                 }}>
                 <Text
@@ -80,7 +80,7 @@ export default class Otpprovider extends Component {
                 )}
                 <TextInput
                   placeholder={Lang_chg.Enter_otp[config.language]}
-                  placeholderTextColor="#d1d1d1"
+                  DarkGrey="#d1d1d1"
                   keyboardType="number-pad"
                   returnKeyLabel="done"
                   returnKeyType="done"
@@ -130,7 +130,7 @@ export default class Otpprovider extends Component {
                   <View style={{alignSelf: 'center'}}>
                     <CountDown
                       until={60 * 2}
-                      size={(mobileW * 4) / 100}
+                      size={(windowWidth * 4) / 100}
                       onFinish={() => {
                         this.props.hidecount();
                       }}

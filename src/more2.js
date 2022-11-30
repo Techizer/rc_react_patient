@@ -13,14 +13,14 @@ import {
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   Mapprovider,
   msgProvider,
   msgText,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   handleback,
   Lang_chg,
@@ -41,7 +41,7 @@ import HideWithKeyboard from 'react-native-hide-with-keyboard';
 const neworders = [
   {
     id: 1,
-    img: localimag.Nurse1,
+    img: Icons.Nurse1,
     rating: '4.5',
     personname: 'Sunidhi Sharma',
     description:
@@ -75,7 +75,7 @@ export default class More extends Component {
             <View
               style={{
                 backgroundColor: Colors.backgroundcolor,
-                paddingVertical: (mobileW * 3) / 100,
+                paddingVertical: (windowWidth * 3) / 100,
               }}></View>
 
 
@@ -86,7 +86,7 @@ export default class More extends Component {
                   <View style={{ width: '90%', alignSelf: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
                       <View style={{ flex: 1 }}>
-                        <Text style={{ color: Colors.regulartextcolor }}>
+                        <Text style={{ color: Colors.DarkGrey }}>
                           Experience
                         </Text>
                         <Text
@@ -100,11 +100,11 @@ export default class More extends Component {
                       <View
                         style={{
                           flex: 1,
-                          borderLeftWidth: (mobileW * 0.3) / 100,
-                          borderRightWidth: (mobileW * 0.3) / 100,
+                          borderLeftWidth: (windowWidth * 0.3) / 100,
+                          borderRightWidth: (windowWidth * 0.3) / 100,
                           borderColor: Colors.gainsboro,
                         }}>
-                        <Text style={{ color: Colors.regulartextcolor }}>
+                        <Text style={{ color: Colors.DarkGrey }}>
                           Booking
                         </Text>
                         <Text
@@ -121,11 +121,11 @@ export default class More extends Component {
                             alignSelf: 'flex-start',
                           }}>
                           <Image
-                            source={localimag.cross}
+                            source={Icons.cross}
                             style={{
                               tintColor: '#fff',
-                              width: (mobileW * 3.3) / 100,
-                              height: (mobileW * 3.3) / 100,
+                              width: (windowWidth * 3.3) / 100,
+                              height: (windowWidth * 3.3) / 100,
                               alignSelf: 'center',
                             }}></Image>
                         </View>
@@ -136,7 +136,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontsemibold,
                           fontSize: Font.headingfont,
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                         }}>
                         Appointment
                       </Text>
@@ -145,8 +145,8 @@ export default class More extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 3) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
                       }}>
                       <Text
@@ -170,8 +170,8 @@ export default class More extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 2) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
                       }}>
                       <Text
@@ -195,8 +195,8 @@ export default class More extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 2) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
                       }}>
                       <Text
@@ -222,8 +222,8 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontsemibold,
                           fontSize: Font.headingfont,
-                          color: Colors.theme_color,
-                          // borderTopWidth: (mobileW * 0.3) / 100,
+                          color: Colors.Theme,
+                          // borderTopWidth: (windowWidth * 0.3) / 100,
                           // borderColor: Colors.bordercolor,
                         }}>
                         Total
@@ -238,7 +238,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontsemibold,
                         fontSize: Font.headingfont,
-                        color: Colors.theme_color,
+                        color: Colors.Theme,
                       }}>
                       Payment
                     </Text>
@@ -247,8 +247,8 @@ export default class More extends Component {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      paddingVertical: (mobileW * 3) / 100,
-                      borderBottomWidth: (mobileW * 0.3) / 100,
+                      paddingVertical: (windowWidth * 3) / 100,
+                      borderBottomWidth: (windowWidth * 0.3) / 100,
                       borderColor: Colors.bordercolor,
                     }}>
                     <Text
@@ -272,8 +272,8 @@ export default class More extends Component {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      paddingVertical: (mobileW * 2) / 100,
-                      // borderBottomWidth: (mobileW * 0.3) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
+                      // borderBottomWidth: (windowWidth * 0.3) / 100,
                       borderColor: Colors.bordercolor,
                     }}>
                     <Text
@@ -297,8 +297,8 @@ export default class More extends Component {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      paddingVertical: (mobileW * 2) / 100,
-                      // borderBottomWidth: (mobileW * 0.3) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
+                      // borderBottomWidth: (windowWidth * 0.3) / 100,
                       borderColor: Colors.bordercolor,
                     }}>
                     <Text
@@ -323,15 +323,15 @@ export default class More extends Component {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      paddingVertical: (mobileW * 3) / 100,
-                      borderBottomWidth: (mobileW * 0.3) / 100,
+                      paddingVertical: (windowWidth * 3) / 100,
+                      borderBottomWidth: (windowWidth * 0.3) / 100,
                       borderColor: Colors.bordercolor,
                     }}>
                     <Text
                       style={{
                         fontFamily: Font.fontsemibold,
                         fontSize: Font.headingfont,
-                        color: Colors.theme_color,
+                        color: Colors.Theme,
                       }}>
                       Total
                     </Text>
@@ -339,7 +339,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontsemibold,
                         fontSize: Font.headingfont,
-                        color: Colors.theme_color,
+                        color: Colors.Theme,
                       }}>
                       450 SAR
                     </Text>
@@ -353,11 +353,11 @@ export default class More extends Component {
                 style={{
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: (mobileW * 2) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (mobileW * 4) / 100,
+                  borderRadius: (windowWidth * 2) / 100,
+                  backgroundColor: Colors.Theme,
+                  paddingVertical: (windowWidth * 4) / 100,
                   position: 'absolute',
-                  bottom: (mobileW * 20) / 100,
+                  bottom: (windowWidth * 20) / 100,
                 }}>
                 <Text
                   style={{
@@ -380,7 +380,7 @@ export default class More extends Component {
 
 
 
-        <HideWithKeyboard>
+        {/* <HideWithKeyboard>
           <Footer
             activepage="More"
             usertype={1}
@@ -388,39 +388,39 @@ export default class More extends Component {
               {
                 name: 'Home',
                 countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
+                image: Icons.Home,
+                activeimage: Icons.Home,
               },
               {
                 name: 'Appointment',
                 countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
+                image: Icons.Appointment,
+                activeimage: Icons.Appointment,
               },
               {
                 name: 'Cart',
                 countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
+                image: Icons.Cart,
+                activeimage: Icons.Cart,
               },
               {
                 name: 'More',
                 countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
+                image: Icons.More,
+                activeimage: Icons.More,
               },
             ]}
             navigation={this.props.navigation}
             imagestyle1={{
-              width: (mobileW * 4.7) / 100,
-              height: (mobileW * 4.7) / 100,
-              paddingBottom: (mobileW * 5.4) / 100,
+              width: (windowWidth * 4.7) / 100,
+              height: (windowWidth * 4.7) / 100,
+              paddingBottom: (windowWidth * 5.4) / 100,
               backgroundColor: 'white',
               countcolor: 'red',
               countbackground: 'red',
             }}
           />
-        </HideWithKeyboard>
+        </HideWithKeyboard> */}
       </View>
     );
   }

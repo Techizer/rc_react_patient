@@ -8,9 +8,9 @@ import {
   consolepro,
   Font,
   Lang_chg,
-  localimag,
+  Icons,
   localStorage,
-  mobileW,
+  windowWidth,
   msgProvider,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
@@ -59,19 +59,19 @@ const LabPackageListing = (props) => {
         <View
           style={{
             backgroundColor: "#fff",
-            paddingVertical: (mobileW * 2) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
             borderBottomWidth: 1,
-            borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+            borderBottomColor: Colors.Border,
           }}
         >
           <View
             style={{
-              padding: (mobileW * 2.5) / 100,
+              padding: (windowWidth * 2.5) / 100,
               flexDirection: "row",
               width: "99%",
               alignSelf: "center",
-              paddingTop: (mobileW * 3) / 100,
-              backgroundColor: Colors.white_color,
+              paddingTop: (windowWidth * 3) / 100,
+              backgroundColor: Colors.white,
               alignItems: "center",
             }}
           >
@@ -89,14 +89,14 @@ const LabPackageListing = (props) => {
                 <Image
                   source={
                     config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
+                      ? Icons.arabic_back
+                      : Icons.backarrow
                   }
                   style={{
                     resizeMode: "contain",
-                    width: (mobileW * 9) / 100,
+                    width: (windowWidth * 9) / 100,
                     alignSelf: "center",
-                    height: (mobileW * 9) / 100,
+                    height: (windowWidth * 9) / 100,
                   }}
                 />
               </TouchableOpacity>
@@ -111,7 +111,7 @@ const LabPackageListing = (props) => {
                 style={{
                   textAlign: "center",
                   fontFamily: Font.fontmedium,
-                  fontSize: (mobileW * 4) / 100,
+                  fontSize: (windowWidth * 4) / 100,
                 }}
               >
                 {Lang_chg.HealthPackages[config.language]}
@@ -119,20 +119,20 @@ const LabPackageListing = (props) => {
             </View>
           </View>
         </View>
-        {/* <View style={{ marginTop: (mobileW * 3) / 100, flex: 1 }}> */}
+        {/* <View style={{ marginTop: (windowWidth * 3) / 100, flex: 1 }}> */}
         <View>
           <View
             style={{
               backgroundColor: "#fff",
-              paddingBottom: (mobileW * 5) / 100,
-              paddingHorizontal: (mobileW * 4) / 100,
+              paddingBottom: (windowWidth * 5) / 100,
+              paddingHorizontal: (windowWidth * 4) / 100,
             }}
           >
             <View
               style={{
                 flexDirection: "row",
-                paddingVertical: (mobileW * 1) / 100,
-                marginTop: (mobileW * 2) / 100,
+                paddingVertical: (windowWidth * 1) / 100,
+                marginTop: (windowWidth * 2) / 100,
               }}
             >
               {/* image and store name */}
@@ -143,15 +143,15 @@ const LabPackageListing = (props) => {
                     labData.image == "NA" ||
                     labData.image == null ||
                     labData.image == ""
-                      ? localimag.p1
+                      ? Icons.p1
                       : { uri: config.img_url3 + labData.image }
                   }
                   style={{
-                    width: (mobileW * 20) / 100,
-                    height: (mobileW * 20) / 100,
+                    width: (windowWidth * 20) / 100,
+                    height: (windowWidth * 20) / 100,
                     borderWidth: 1,
                     borderColor: "#0888D1",
-                    borderRadius: (mobileW * 10) / 100,
+                    borderRadius: (windowWidth * 10) / 100,
                   }}
                 />
               </View>
@@ -173,10 +173,10 @@ const LabPackageListing = (props) => {
                 </Text>
                 <Text
                   style={{
-                    paddingVertical: (mobileW * 1.5) / 100,
+                    paddingVertical: (windowWidth * 1.5) / 100,
                     fontFamily: Font.fontregular,
                     fontSize: Font.subtext,
-                    color: Colors.theme_color,
+                    color: Colors.Theme,
                     textAlign: config.textRotate,
                   }}
                 >
@@ -190,7 +190,7 @@ const LabPackageListing = (props) => {
         <FlatList
           data={labData.package_base_task}
           contentContainerStyle={{
-            paddingBottom: (mobileW * 25) / 100,
+            paddingBottom: (windowWidth * 25) / 100,
           }}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => {
@@ -202,11 +202,11 @@ const LabPackageListing = (props) => {
               return (
                 <View
                   style={{
-                    width: (mobileW * 100) / 100,
+                    width: (windowWidth * 100) / 100,
                     backgroundColor: "#fff",
                     alignSelf: "center",
                     alignItems: "flex-start",
-                    marginTop: (mobileW * 2) / 100,
+                    marginTop: (windowWidth * 2) / 100,
                   }}
                 >
                   <TouchableOpacity
@@ -220,11 +220,11 @@ const LabPackageListing = (props) => {
                     <Text
                       style={{
                         width: "100%",
-                        marginTop: (mobileW * 3) / 100,
-                        paddingHorizontal: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 3) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         color: "#000",
                         fontFamily: Font.fontmedium,
-                        fontSize: (mobileW * 4.5) / 100,
+                        fontSize: (windowWidth * 4.5) / 100,
                         textAlign: "left",
                       }}
                     >
@@ -233,11 +233,11 @@ const LabPackageListing = (props) => {
 
                     <Text
                       style={{
-                        paddingVertical: (mobileW * 2) / 100,
-                        paddingHorizontal: (mobileW * 2) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         fontFamily: Font.fontregular,
                         textAlign: "left",
-                        color: Colors.tablightcolo,
+                        color: Colors.lightGrey,
                         fontSize: Font.sregulartext_size,
                       }}
                     >
@@ -245,11 +245,11 @@ const LabPackageListing = (props) => {
                     </Text>
                     <Text
                       style={{
-                        paddingVertical: (mobileW * 1.5) / 100,
-                        paddingHorizontal: (mobileW * 2) / 100,
+                        paddingVertical: (windowWidth * 1.5) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.theme_color,
+                        color: Colors.Theme,
                         textAlign: config.textRotate,
                       }}
                     >
@@ -257,12 +257,12 @@ const LabPackageListing = (props) => {
                     </Text>
                     <Text
                       style={{
-                        paddingHorizontal: (mobileW * 2) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         fontFamily: Font.fontregular,
                         textAlign: "left",
                         fontSize: Font.sregulartext_size,
-                        marginTop: (mobileW * 3) / 100,
-                        color: Colors.tablightcolo,
+                        marginTop: (windowWidth * 3) / 100,
+                        color: Colors.lightGrey,
                         textDecorationLine: "line-through",
                         textDecorationStyle: "solid",
                       }}
@@ -271,10 +271,10 @@ const LabPackageListing = (props) => {
                     </Text>
                     <View
                       style={{
-                        paddingVertical: (mobileW * 2) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
                         flexDirection: "row",
                         justifyContent: "flex-start",
-                        paddingHorizontal: (mobileW * 2) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         alignItem: "center",
                       }}
                     >
@@ -282,7 +282,7 @@ const LabPackageListing = (props) => {
                         style={{
                           textAlign: config.textalign,
                           fontFamily: Font.fontmedium,
-                          fontSize: (mobileW * 4) / 100,
+                          fontSize: (windowWidth * 4) / 100,
                         }}
                       >
                         {item.price}
@@ -290,9 +290,9 @@ const LabPackageListing = (props) => {
 
                       <View
                         style={{
-                          paddingVertical: (mobileW * 0.5) / 100,
-                          paddingHorizontal: (mobileW * 3) / 100,
-                          marginHorizontal: (mobileW * 4) / 100,
+                          paddingVertical: (windowWidth * 0.5) / 100,
+                          paddingHorizontal: (windowWidth * 3) / 100,
+                          marginHorizontal: (windowWidth * 4) / 100,
                           borderColor: Colors.buttoncolorhgreen,
                           color: Colors.buttoncolorhgreen,
                           borderRadius: 5,

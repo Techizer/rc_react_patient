@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { I18nManager } from "react-native";
+import { I18nManager, Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { AppProvider, AppConsumer } from "./src/Provider/context/AppProvider";
-import Stacknav from "./src/Provider/Routenavigation";
+import MainStack from "./src/Provider/Stacks/MainStack";
 import { firebapushnotification } from "./src/firbase_pushnotification";
 import {
   localStorage,
@@ -30,7 +30,7 @@ class App extends Component {
     if (languagecathc == 0) {
       if (languagesetenglish == 3) {
         if (I18nManager.isRTL) {
-          console.log("HI Vikas");
+          console.log("Right To Left");
           I18nManager.forceRTL(false);
           I18nManager.allowRTL(false);
         } else {
@@ -48,28 +48,31 @@ class App extends Component {
     // config.language = value;
   };
   render() {
+    ((Platform.OS === 'android') ? () => {
+      StatusBar.setTranslucent(true)
+      StatusBar.setBackgroundColor('transparent')
+      StatusBar.setBarStyle('dark-content')
+    } : () => { })()
     return (
-        <NavigationContainer>
-          <AppProvider {...this.props}>
-            <AppConsumer>
-              {(funcs) => {
-                global.props = { ...funcs };
-                return <Stacknav {...funcs} />;
-              }}
-            </AppConsumer>
-            <FlashMessage
-              // style={{
-              //   marginTop: Platform.OS == "ios" ? 0 : StatusBar.currentHeight,
-              // }}
-              position="top"
-              animated={true}
-              // titleStyle={{
-              //   fontFamily: Font.fontregular,
-              //   fontSize: 20
-              // }}
-            />
-          </AppProvider>
-        </NavigationContainer>
+      <AppProvider {...this.props}>
+        <AppConsumer>
+          {(funcs) => {
+            global.props = { ...funcs };
+            return <MainStack {...funcs} />;
+          }}
+        </AppConsumer>
+        <FlashMessage
+          // style={{
+          //   marginTop: Platform.OS == "ios" ? 0 : StatusBar.currentHeight,
+          // }}
+          position="top"
+          animated={true}
+        // titleStyle={{
+        //   fontFamily: Font.fontregular,
+        //   fontSize: 20
+        // }}
+        />
+      </AppProvider>
     );
   }
 }

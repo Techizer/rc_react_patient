@@ -125,7 +125,7 @@ class SearchPlaceScreen extends Component {
                                     //backgroundColor: 'red'
                                 }]}
                                 placeholder='Enter Postcode'
-                                placeholderTextColor="#7C7C7C"
+                                DarkGrey="#7C7C7C"
                                 minLength={2}
                                 autoFocus={true}
                                 returnKeyType={'default'}
@@ -153,7 +153,7 @@ class SearchPlaceScreen extends Component {
                                     // ref: (textInput) => {
                                     //     setTimeout(() => textInput && textInput.focus(), 100);
                                     //   },
-                                    placeholderTextColor: '#7C7C7C',
+                                    DarkGrey: '#7C7C7C',
                                     backgroundColor: Color.greyApp,
                                     height: 40,
                                     fontFamily: Fonts.regular,

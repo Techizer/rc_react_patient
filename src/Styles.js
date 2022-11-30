@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
+import { vs } from "react-native-size-matters";
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   Mapprovider,
   msgProvider,
   msgText,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
   consolepro,
   handleback,
@@ -19,12 +20,12 @@ import {
 export default Styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   container2: {
     flex: 1,
     backgroundColor: "#f1f2f4",
-    // paddingBottom: (mobileW * 90) / 100,
+    // paddingBottom: (windowWidth * 90) / 100,
   },
   container3: {
     flex: 1,
@@ -33,59 +34,66 @@ export default Styles = StyleSheet.create({
   container4: {
     flex: 1,
     backgroundColor: "#f1f2f4",
-    // paddinsssgBottom: (mobileW * 30) / 100,
+    // paddinsssgBottom: (windowWidth * 30) / 100,
   },
   containerbody: {
     // flex: 1,
     backgroundColor: "#fff",
     width: "100%",
     alignSelf: "center",
-    paddingLeft: (mobileW * 5) / 100,
+    paddingLeft: (windowWidth * 5) / 100,
   },
   headertext: {
     // color: Colors.whiteColor,
     textAlign: "center",
     fontFamily: Font.fontmedium,
-    fontSize: (mobileW * 4) / 100,
+    fontSize: (windowWidth * 4) / 100,
   },
   headingtext: {
     // color: Colors.whiteColor,
     textAlign: config.textalign,
     fontFamily: Font.fontmedium,
-    fontSize: (mobileW * 3.7) / 100,
+    fontSize: (windowWidth * 3.7) / 100,
   },
   cardtitle: {
     textAlign: config.textalign,
     fontFamily: Font.fontmedium,
-    fontSize: (mobileW * 3.3) / 100,
+    fontSize: Font.medium,
+    color: Colors.Black,
   },
   details: {
     textAlign: config.textalign,
-    fontSize: (mobileW * 2.7) / 100,
+    fontSize: Font.small,
     fontFamily: Font.fontregular,
-    color: Colors.placeholder_text,
-    lineHeight: (mobileW * 3.9) / 100,
-    paddingTop: (mobileW * 1) / 100,
+    color: Colors.Black,
+    lineHeight: (windowWidth * 3.9) / 100,
+    marginTop: vs(7),
+  },
+  subDetails: {
+    textAlign: config.textalign,
+    fontSize: Font.xsmall,
+    fontFamily: Font.fontregular,
+    
   },
 
   ///drawer style
   drawercardicon: {
     //  alignSelf: 'center',
     resizeMode: "contain",
-    width: (mobileW * 6.5) / 100,
-    height: (mobileW * 6.5) / 100,
-    marginTop: (mobileW * 1) / 100,
+    width: (windowWidth * 6.5) / 100,
+    height: (windowWidth * 6.5) / 100,
+    marginTop: (windowWidth * 1) / 100,
     alignSelf: "center",
-    // marginHorizontal: (mobileW * 15) / 100,
+    // marginHorizontal: (windowWidth * 15) / 100,
   },
   placeholder_style: {
     width: "100%",
     color: Colors.textblack,
     fontSize: Font.placeholdersize,
     textAlign: config.textRotate,
-    height: (mobileW * 12) / 100,
+    height: (windowWidth * 12) / 100,
     fontFamily: Font.placeholderfontfamily,
-    paddingLeft: (mobileW * 2.5) / 100,
-    borderRadius: (mobileW * 1) / 100,
+    paddingLeft: (windowWidth * 2.5) / 100,
+    borderRadius: (windowWidth * 1) / 100,
   },
 });

@@ -208,7 +208,7 @@ class BrandLstScreen extends Component {
             );
           }}
           placeholder={'search by brand name'}
-          placeholderTextColor="#000"
+          DarkGrey="#000"
           style={{
             //backgroundColor: 'red',
             width: '100%',
@@ -306,7 +306,7 @@ class BrandLstScreen extends Component {
                   );
                 }}
                 placeholder="Search By Brand Name"
-                placeholderTextColor="#000"
+                DarkGrey="#000"
                 style={{
                   color: '#000',
                   width: '100%',

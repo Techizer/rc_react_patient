@@ -1,4 +1,4 @@
-export const localimag = {
+export const Icons = {
   //----------------------------------------------by gunjan
   splashlogo: require("../icons/Logo2x.png"),
   logo: require("../icons/logo.png"),
@@ -27,13 +27,12 @@ export const localimag = {
   NurseAssistant: require("../icons/02fkwh543x.png"),
   Babysitter: require("../icons/ml0zextx3x.png"),
   Doctor: require("../icons/img_home_doc.jpg"),
-  Lab: require("../icons/img_home_lab.jpg"),
   InstantVideoConsultation: require("../icons/healthcare-medical-concept-male-ear-nose-throat-doctor3x.png"),
   HomeVisitConsultation: require("../icons/elderly-doctor-listening-young-patient3x.png"),
   BookaLabTest: require("../icons/woman-working-laborator23x.png"),
   HoptlInstantVideoConsultation: require("../icons/smiling-doctors-with-stethoscope3x.png"),
 
-  Home: require("../icons/Path48753x.png"),
+  
   Appointment: require("../icons/Component14813x.png"),
   Cart: require("../icons/Subtraction223x.png"),
   More: require("../icons/ic_more_horiz_24px3x.png"),
@@ -109,4 +108,14 @@ export const localimag = {
 
   filledStar: require("../icons/yellow_star.png"),
   unFilledStar: require("../icons/unfillstar.png"),
+
+
+  //--Ahsan
+  
 };
+
+export const Images = {
+  BannerOne: require('../icons/Banner01.png'),
+  BannerTwo: require('../icons/Banner02.png'),
+
+}

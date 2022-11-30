@@ -208,7 +208,7 @@ class WeightLstScreen extends Component {
             );
           }}
           placeholder={'search by weight title'}
-          placeholderTextColor="#000"
+          DarkGrey="#000"
           style={{
             //backgroundColor: 'red',
             width: '100%',
@@ -306,7 +306,7 @@ class WeightLstScreen extends Component {
                   );
                 }}
                 placeholder="Search by weight title"
-                placeholderTextColor="#000"
+                DarkGrey="#000"
                 style={{
                   color: '#000',
                   width: '100%',

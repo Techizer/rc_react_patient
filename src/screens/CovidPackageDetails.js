@@ -15,9 +15,9 @@ import {
   consolepro,
   Font,
   Lang_chg,
-  localimag,
+  Icons,
   localStorage,
-  mobileW,
+  windowWidth,
   msgProvider,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
@@ -87,12 +87,12 @@ const CovidPackageDetails = (props) => {
       <View style={{ backgroundColor: "#f1f2f4", flex: 1 }}>
         <View
           style={{
-            padding: (mobileW * 2.5) / 100,
+            padding: (windowWidth * 2.5) / 100,
             flexDirection: "row",
             width: "99%",
             alignSelf: "center",
-            paddingTop: (mobileW * 3) / 100,
-            backgroundColor: Colors.white_color,
+            paddingTop: (windowWidth * 3) / 100,
+            backgroundColor: Colors.white,
             alignItems: "center",
           }}
         >
@@ -110,14 +110,14 @@ const CovidPackageDetails = (props) => {
               <Image
                 source={
                   config.textalign == "right"
-                    ? localimag.arabic_back
-                    : localimag.backarrow
+                    ? Icons.arabic_back
+                    : Icons.backarrow
                 }
                 style={{
                   resizeMode: "contain",
-                  width: (mobileW * 9) / 100,
+                  width: (windowWidth * 9) / 100,
                   alignSelf: "center",
-                  height: (mobileW * 9) / 100,
+                  height: (windowWidth * 9) / 100,
                 }}
               />
             </TouchableOpacity>
@@ -131,7 +131,7 @@ const CovidPackageDetails = (props) => {
               style={{
                 textAlign: "center",
                 fontFamily: Font.fontmedium,
-                fontSize: (mobileW * 4) / 100,
+                fontSize: (windowWidth * 4) / 100,
               }}
             >
               {Lang_chg.PackageDetails[config.language]}
@@ -145,7 +145,7 @@ const CovidPackageDetails = (props) => {
                 <View
                   style={{
                     backgroundColor: "#fff",
-                    marginVertical: (mobileW * 3) / 100,
+                    marginVertical: (windowWidth * 3) / 100,
                   }}
                 >
                   <View
@@ -158,11 +158,11 @@ const CovidPackageDetails = (props) => {
                       <Text
                         style={{
                           width: "100%",
-                          marginTop: (mobileW * 3) / 100,
-                          paddingHorizontal: (mobileW * 4) / 100,
+                          marginTop: (windowWidth * 3) / 100,
+                          paddingHorizontal: (windowWidth * 4) / 100,
                           color: Colors.lightgraytext,
                           fontFamily: Font.fontmedium,
-                          fontSize: (mobileW * 4.5) / 100,
+                          fontSize: (windowWidth * 4.5) / 100,
                           textAlign: "left",
                         }}
                       >
@@ -172,8 +172,8 @@ const CovidPackageDetails = (props) => {
                         <Text
                           style={{
                             fontFamily: Font.fontregular,
-                            marginTop: (mobileW * 2) / 100,
-                            paddingHorizontal: (mobileW * 4) / 100,
+                            marginTop: (windowWidth * 2) / 100,
+                            paddingHorizontal: (windowWidth * 4) / 100,
                             fontSize: Font.buttontext_size,
                             textAlign: config.textRotate,
                             color: Colors.lightgraytext,
@@ -187,7 +187,7 @@ const CovidPackageDetails = (props) => {
                       style={{
                         width: "55%",
                         flexDirection: "row",
-                        marginTop: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     >
                       {/* image and store name */}
@@ -198,7 +198,7 @@ const CovidPackageDetails = (props) => {
                             covidTestDetailsData.lab_image == "NA" ||
                             covidTestDetailsData.lab_image == null ||
                             covidTestDetailsData.lab_image == ""
-                              ? localimag.p1
+                              ? Icons.p1
                               : {
                                   uri:
                                     config.img_url3 +
@@ -206,11 +206,11 @@ const CovidPackageDetails = (props) => {
                                 }
                           }
                           style={{
-                            width: (mobileW * 15) / 100,
-                            height: (mobileW * 15) / 100,
+                            width: (windowWidth * 15) / 100,
+                            height: (windowWidth * 15) / 100,
                             borderWidth: 1,
                             borderColor: "#0888D1",
-                            borderRadius: (mobileW * 10) / 100,
+                            borderRadius: (windowWidth * 10) / 100,
                           }}
                         />
                       </View>
@@ -233,10 +233,10 @@ const CovidPackageDetails = (props) => {
                         </Text>
                         <Text
                           style={{
-                            paddingVertical: (mobileW * 1.5) / 100,
+                            paddingVertical: (windowWidth * 1.5) / 100,
                             fontFamily: Font.fontregular,
                             fontSize: Font.subtext,
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             textAlign: config.textRotate,
                           }}
                         >
@@ -251,10 +251,10 @@ const CovidPackageDetails = (props) => {
                       stylesheet={{
                         p: {
                           fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
+                          paddingHorizontal: (windowWidth * 4) / 100,
                           color: Colors.lightgraytext,
-                          marginTop: (mobileW * 3) / 100,
-                          marginBottom: (mobileW * 3) / 100,
+                          marginTop: (windowWidth * 3) / 100,
+                          marginBottom: (windowWidth * 3) / 100,
                           fontFamily: Font.fontregular,
                         },
                       }}
@@ -265,7 +265,7 @@ const CovidPackageDetails = (props) => {
 
               <View
                 style={{
-                  width: (mobileW * 100) / 100,
+                  width: (windowWidth * 100) / 100,
                   alignSelf: "center",
                   alignItems: "flex-start",
                 }}
@@ -274,7 +274,7 @@ const CovidPackageDetails = (props) => {
                   data={taskDetails}
                   extraData={taskDetails}
                   contentContainerStyle={{
-                    paddingBottom: (mobileW * 10) / 100,
+                    paddingBottom: (windowWidth * 10) / 100,
                   }}
                   showsVerticalScrollIndicator={false}
                   renderItem={({ item, index }) => {
@@ -289,9 +289,9 @@ const CovidPackageDetails = (props) => {
                             style={{
                               width: "100%",
                               justifyContent: "flex-start",
-                              paddingTop: (mobileW * 3) / 100,
+                              paddingTop: (windowWidth * 3) / 100,
                               backgroundColor: "#fff",
-                              marginBottom: (mobileW * 3) / 100,
+                              marginBottom: (windowWidth * 3) / 100,
                             }}
                           >
                             <Text
@@ -300,7 +300,7 @@ const CovidPackageDetails = (props) => {
                                 fontSize: Font.subtext,
                                 color: Colors.lightgraytext,
                                 fontFamily: Font.fontmedium,
-                                paddingHorizontal: (mobileW * 2) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
                                 textAlign: "left",
                               }}
                             >
@@ -311,10 +311,10 @@ const CovidPackageDetails = (props) => {
                               style={{
                                 width: "90%",
                                 fontSize: Font.subtext,
-                                color: Colors.textgray,
-                                marginTop: (mobileW * 1) / 100,
+                                color: Colors.lightGrey,
+                                marginTop: (windowWidth * 1) / 100,
                                 fontFamily: Font.fontmedium,
-                                paddingHorizontal: (mobileW * 2) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
                                 textAlign: "left",
                               }}
                             >
@@ -326,8 +326,8 @@ const CovidPackageDetails = (props) => {
                                 width: "100%",
                                 flexDirection: "row",
                                 justifyContent: "flex-start",
-                                marginTop: (mobileW * 3) / 100,
-                                paddingHorizontal: (mobileW * 2) / 100,
+                                marginTop: (windowWidth * 3) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
                               }}
                             >
                               <View
@@ -340,8 +340,8 @@ const CovidPackageDetails = (props) => {
                                     fontFamily: Font.fontregular,
                                     textAlign: "left",
                                     fontSize: Font.sregulartext_size,
-                                    marginTop: (mobileW * 3) / 100,
-                                    color: Colors.tablightcolo,
+                                    marginTop: (windowWidth * 3) / 100,
+                                    color: Colors.lightGrey,
                                     textDecorationLine: "line-through",
                                     textDecorationStyle: "solid",
                                   }}
@@ -351,7 +351,7 @@ const CovidPackageDetails = (props) => {
 
                                 <View
                                   style={{
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     flexDirection: "row",
                                     justifyContent: "flex-start",
                                     alignItem: "center",
@@ -361,7 +361,7 @@ const CovidPackageDetails = (props) => {
                                     style={{
                                       textAlign: config.textalign,
                                       fontFamily: Font.fontmedium,
-                                      fontSize: (mobileW * 4) / 100,
+                                      fontSize: (windowWidth * 4) / 100,
                                     }}
                                   >
                                     {item.offerprice !== ""
@@ -372,9 +372,9 @@ const CovidPackageDetails = (props) => {
                                   {item.dis_off !== "" && (
                                     <View
                                       style={{
-                                        paddingVertical: (mobileW * 0.5) / 100,
-                                        paddingHorizontal: (mobileW * 3) / 100,
-                                        marginHorizontal: (mobileW * 4) / 100,
+                                        paddingVertical: (windowWidth * 0.5) / 100,
+                                        paddingHorizontal: (windowWidth * 3) / 100,
+                                        marginHorizontal: (windowWidth * 4) / 100,
                                         borderColor: Colors.buttoncolorhgreen,
                                         color: Colors.buttoncolorhgreen,
                                         borderRadius: 5,
@@ -407,8 +407,8 @@ const CovidPackageDetails = (props) => {
                                     fontFamily: Font.fontregular,
                                     textAlign: "left",
                                     fontSize: Font.sregulartext_size,
-                                    marginTop: (mobileW * 3) / 100,
-                                    color: Colors.tablightcolo,
+                                    marginTop: (windowWidth * 3) / 100,
+                                    color: Colors.lightGrey,
                                   }}
                                 >
                                   {item.result_text}
@@ -416,10 +416,10 @@ const CovidPackageDetails = (props) => {
 
                                 <Text
                                   style={{
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     textAlign: config.textalign,
                                     fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
+                                    fontSize: (windowWidth * 4) / 100,
                                   }}
                                 >
                                   {item.result_time}
@@ -445,9 +445,9 @@ const CovidPackageDetails = (props) => {
                                       fontFamily: Font.fontregular,
                                       fontSize: Font.headingfont_booking,
                                       color: Colors.precautionText,
-                                      // marginTop: (mobileW * 2) / 100,
-                                      paddingHorizontal: (mobileW * 2) / 100,
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      // marginTop: (windowWidth * 2) / 100,
+                                      paddingHorizontal: (windowWidth * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       textAlign: config.textRotate,
                                     }}
                                   >
@@ -456,7 +456,7 @@ const CovidPackageDetails = (props) => {
                                   {item.status && (
                                     <View
                                       style={{
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                       }}
                                     >
                                       <HTMLView
@@ -485,19 +485,19 @@ const CovidPackageDetails = (props) => {
                                   }}
                                   style={{
                                     width: "10%",
-                                    marginTop: (mobileW * 3) / 100,
-                                    // paddingVertical: (mobileW * 2) / 100,
+                                    marginTop: (windowWidth * 3) / 100,
+                                    // paddingVertical: (windowWidth * 2) / 100,
                                   }}
                                 >
                                   <Image
                                     style={{
-                                      height: (mobileW * 4.5) / 100,
-                                      width: (mobileW * 4.5) / 100,
+                                      height: (windowWidth * 4.5) / 100,
+                                      width: (windowWidth * 4.5) / 100,
                                     }}
                                     source={
                                       item.status
-                                        ? localimag.upArrow
-                                        : localimag.downarrow
+                                        ? Icons.upArrow
+                                        : Icons.downarrow
                                     }
                                   />
                                 </TouchableOpacity>
@@ -516,9 +516,9 @@ const CovidPackageDetails = (props) => {
               style={{
                 width: "100%",
                 alignSelf: "center",
-                backgroundColor: Colors.white_color,
-                paddingHorizontal: (mobileW * 5) / 100,
-                paddingVertical: (mobileW * 2) / 100,
+                backgroundColor: Colors.white,
+                paddingHorizontal: (windowWidth * 5) / 100,
+                paddingVertical: (windowWidth * 2) / 100,
                 height: 80,
                 justifyContent: "center", //Centered horizontally
                 alignItems: "center", //Centered vertically
@@ -534,9 +534,9 @@ const CovidPackageDetails = (props) => {
                 }}
                 style={{
                   width: "100%",
-                  borderRadius: (mobileW * 3) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (mobileW * 3) / 100,
+                  borderRadius: (windowWidth * 3) / 100,
+                  backgroundColor: Colors.Theme,
+                  paddingVertical: (windowWidth * 3) / 100,
                 }}
               >
                 <Text

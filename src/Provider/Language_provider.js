@@ -189,7 +189,9 @@ class Language_provider {
   BookaNurseAssistant = ["Book a Nurse Assistant", "حجز مساعد ممرض"];
   BookaNurseAssistant = ["Book a Nurse Assistant", "حجز مساعد ممرض"];
 
-  DoctorAppointment = ["Doctor Appointment", "موعد طبيب  "];
+  DoctorConsultation = ["Doctor Consultation", "استشارة الطبيب"];
+  Lab_Test_Booking = ["Lab Test Booking", "حجز الاختبارات المعملية"];
+  Find_Labs=["Find Labs","البحث عن المعامل"]
   MyAppointments = ["My Appointments", "واعيدي  "];
   CartItem = ["Cart Item", "عربة التسوق  "];
   BOOKNOW = ["BOOK NOW", "احجز الآن"];
@@ -332,10 +334,7 @@ class Language_provider {
   past_heading = ["Past Appointment", "الموعد السابق  "];
   past_text = ["Completed, Closed Or Cancelled.", ".مكتمل أو مغلق أو ملغى "];
 
-  acccount$more_heading = ["Account & More", "الحساب  & المزيد  "];
-  acccountsetting_heading = ["Account Settings", "إعدادت الحساب  "];
-  acccountsupport_heading = ["Support & More", " الدعم & المزيد "];
-  logout_text = ["Logout", "تسجيل الخروج  "];
+  
   drawerversion = ["RC Version 1.0(1)", "RC Version 1.0(1)"];
   titleexitapp = ["Exit app", "الخروج من التطبيق"];
   exitappmessage = ["Do you want to exit", "هل تريد الخروج"];
@@ -386,7 +385,6 @@ class Language_provider {
   Rating = ["Rating", "التقييم "];
   Bookings = ["Booking", "الحجوزات"];
   Booking = ["Booking", "حجز "];
-  heading = ["Appointments & Bookings", "التعيينات   & الحجوزات "];
   Experience = ["Experience", "الخبرة  "];
   ESTABLISHED = ["Established", "أنشئت"];
   AVAILABLE_TESTS = ["Available Tests", "الفحوصات المتاحة"];
@@ -575,5 +573,30 @@ class Language_provider {
   ];
   Delete_account = ["Delete Account", "حذف الحساب"];
   Are_you_sure = ["Are you sure ?", "هل أنت واثق ؟"];
+
+  // ---------------------Ahsan---------------------
+  Home = ["Home", "مسكن"];
+  Appointment = ["Appointment", "ميعاد"];
+  Consultation = ["Consultation", "التشاور"];
+  Lab_Test = ["Lab Test", "اختبار معمل"];
+  Profile = ["Profile", "الملف الشخصي"];
+  All_Consultations = ["All Consultations, Orders, & Bookings", "جميع الاستشارات والطلبات والحجوزات"];
+  Appointment_Bookings=['Appointment Bookings', 'حجوزات المواعيد'];
+  Appointment_Booking_Details=['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، ممرضة مؤخرة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
+  Doctor_Consultations=['Doctor Consultations', 'استشارات الطبيب'];
+  Doctor_Consultation_Details=['Doctor Consul, Ongoing, Past, etc.', 'طبيب قنصل ، مستمر ، سابق ، إلخ.'];
+  Lab_Test_Bookings=['Lab Test Bookings', 'حجوزات الاختبارات المعملية'];
+  Lab_Test_Booking_Details=['Completed, Closed, Or Cancelled.', 'مكتمل أو مغلق أو ملغى.'];
+  Orders=['Orders', 'ترتيب'];
+  Order_Details=['Medicines & Other Equipments', 'الأدوية والمعدات الأخرى'];
+  Acccount_and_More = ["Account & More", "الحساب  & المزيد  "];
+  Acccount_Setting = ['Account Settings', 'إعدادت الحساب'];
+  Manage_Address = ["Manage Address", "إدارة العنوان"];
+  Health_Record=['My Health Record', 'سجلي الصحي']
+  Support_and_More = ["Support & More", " الدعم & المزيد "];
+  Like_Us = ["Like Us? Give 5 Star Review", "مثلنا؟ أعط مراجعة 5 نجوم"];
+  SignOut = ["Sign Out", "خروج"];
+  About_App=['Making healthcare digital & easy', 'جعل الرعاية الصحية رقمية وسهلة'];
+  About_App_Details=['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة']
 }
 export const Lang_chg = new Language_provider();

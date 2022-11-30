@@ -15,7 +15,6 @@
      Button,
      Alert,
      Platform,
-     StatusBar,
      SafeAreaView,
      TouchableOpacity
  } from 'react-native';
@@ -52,7 +51,6 @@
              // 	return;
              // }
          } catch (error) {
-             console.log('i am here')
              console.log(error);
          }
          console.log(this.sdkModule);
@@ -136,13 +134,11 @@
      }
  
      render() {
-         const statusbar =
-             Platform.OS == 'ios' ? <StatusBar backgroundColor="blue" barStyle="light-content" /> : <View />;
+         
          const { statusNow } = this.state;
          return (
              <SafeAreaView style={styles.safeAreaView}>
                  <View style={styles.container}>
-                     {statusbar}
                      {/* <Header title="Plugin Example app" /> */}
                      <Text style={styles.statusText}> Status: {statusNow}</Text>
                      <Text style={styles.resultText}>{this.state.result}</Text>
@@ -171,9 +167,6 @@
      container: {
          flex: 1,
          backgroundColor: '#F5FCFF'
-     },
-     statusbar: {
-         height: 20
      },
      payButtonBg: {
          alignItems: 'center',

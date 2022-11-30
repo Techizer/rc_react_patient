@@ -213,7 +213,7 @@ class TransprtModeScreen extends Component {
                         );
                     }}
                     placeholder={'search by Mode name'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -306,7 +306,7 @@ class TransprtModeScreen extends Component {
                                     );
                                 }}
                                 placeholder="Search by Mode Name"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

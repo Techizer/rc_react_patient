@@ -9,9 +9,9 @@ import {
   consolepro,
   Font,
   Lang_chg,
-  localimag,
+  Icons,
   localStorage,
-  mobileW,
+  windowWidth,
   msgProvider,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
@@ -62,19 +62,19 @@ const LabPackageDetails = (props) => {
         <View
           style={{
             backgroundColor: "#fff",
-            paddingVertical: (mobileW * 2) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
             borderBottomWidth: 1,
-            borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+            borderBottomColor: Colors.Border,
           }}
         >
           <View
             style={{
-              padding: (mobileW * 2.5) / 100,
+              padding: (windowWidth * 2.5) / 100,
               flexDirection: "row",
               width: "99%",
               alignSelf: "center",
-              paddingTop: (mobileW * 3) / 100,
-              backgroundColor: Colors.white_color,
+              paddingTop: (windowWidth * 3) / 100,
+              backgroundColor: Colors.white,
               alignItems: "center",
             }}
           >
@@ -92,14 +92,14 @@ const LabPackageDetails = (props) => {
                 <Image
                   source={
                     config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
+                      ? Icons.arabic_back
+                      : Icons.backarrow
                   }
                   style={{
                     resizeMode: "contain",
-                    width: (mobileW * 9) / 100,
+                    width: (windowWidth * 9) / 100,
                     alignSelf: "center",
-                    height: (mobileW * 9) / 100,
+                    height: (windowWidth * 9) / 100,
                   }}
                 />
               </TouchableOpacity>
@@ -113,7 +113,7 @@ const LabPackageDetails = (props) => {
                 style={{
                   textAlign: "center",
                   fontFamily: Font.fontmedium,
-                  fontSize: (mobileW * 4) / 100,
+                  fontSize: (windowWidth * 4) / 100,
                 }}
               >
                 {Lang_chg.PackageDetails[config.language]}
@@ -132,11 +132,11 @@ const LabPackageDetails = (props) => {
                 <Text
                   style={{
                     width: "100%",
-                    marginTop: (mobileW * 3) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
+                    marginTop: (windowWidth * 3) / 100,
+                    paddingHorizontal: (windowWidth * 4) / 100,
                     color: "#000",
                     fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 4.5) / 100,
+                    fontSize: (windowWidth * 4.5) / 100,
                     textAlign: "left",
                   }}
                 >
@@ -144,11 +144,11 @@ const LabPackageDetails = (props) => {
                 </Text>
                 <Text
                   style={{
-                    paddingVertical: (mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
+                    paddingVertical: (windowWidth * 2) / 100,
+                    paddingHorizontal: (windowWidth * 4) / 100,
                     fontFamily: Font.fontregular,
                     textAlign: "left",
-                    color: Colors.theme_color,
+                    color: Colors.Theme,
                     fontSize: Font.sregulartext_size,
                   }}
                 >
@@ -156,11 +156,11 @@ const LabPackageDetails = (props) => {
                 </Text>
                 <Text
                   style={{
-                    paddingVertical: (mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
+                    paddingVertical: (windowWidth * 2) / 100,
+                    paddingHorizontal: (windowWidth * 4) / 100,
                     textAlign: config.textalign,
                     fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 5) / 100,
+                    fontSize: (windowWidth * 5) / 100,
                   }}
                 >
                   {labDetailsData.price}
@@ -168,11 +168,11 @@ const LabPackageDetails = (props) => {
                 <View
                   style={{
                     width: "100%",
-                    paddingHorizontal: (mobileW * 4) / 100,
+                    paddingHorizontal: (windowWidth * 4) / 100,
                     alignSelf: "center",
                     borderColor: Colors.bordercolor,
-                    borderBottomWidth: (mobileW * 0.2) / 100,
-                    marginTop: (mobileW * 1) / 100,
+                    borderBottomWidth: (windowWidth * 0.2) / 100,
+                    marginTop: (windowWidth * 1) / 100,
                   }}
                 />
                 {labDetailsData.task_content != null && (
@@ -180,8 +180,8 @@ const LabPackageDetails = (props) => {
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        marginTop: (mobileW * 2) / 100,
-                        paddingHorizontal: (mobileW * 4) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingHorizontal: (windowWidth * 4) / 100,
                         fontSize: Font.buttontext_size,
                         textAlign: config.textRotate,
                         color: Colors.lightgraytext,
@@ -194,9 +194,9 @@ const LabPackageDetails = (props) => {
                       stylesheet={{
                         p: {
                           fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
+                          paddingHorizontal: (windowWidth * 4) / 100,
                           color: Colors.lightgraytext,
-                          marginTop: (mobileW * 2) / 100,
+                          marginTop: (windowWidth * 2) / 100,
                           fontFamily: Font.fontregular,
                         },
                       }}
@@ -216,8 +216,8 @@ const LabPackageDetails = (props) => {
                         fontFamily: Font.fontregular,
                         fontSize: Font.headingfont_booking,
                         color: Colors.precautionText,
-                        paddingHorizontal: (mobileW * 4) / 100,
-                        marginTop: (mobileW * 2) / 100,
+                        paddingHorizontal: (windowWidth * 4) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                         textAlign: config.textRotate,
                       }}
                     >
@@ -228,9 +228,9 @@ const LabPackageDetails = (props) => {
                       stylesheet={{
                         p: {
                           fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
+                          paddingHorizontal: (windowWidth * 4) / 100,
                           color: Colors.lightgraytext,
-                          marginTop: (mobileW * 2) / 100,
+                          marginTop: (windowWidth * 2) / 100,
                           fontFamily: Font.fontregular,
                         },
                       }}
@@ -241,21 +241,21 @@ const LabPackageDetails = (props) => {
             </View>
             <View
               style={{
-                width: (mobileW * 100) / 100,
+                width: (windowWidth * 100) / 100,
                 backgroundColor: "#fff",
                 alignSelf: "center",
                 alignItems: "flex-start",
-                marginTop: (mobileW * 2) / 100,
+                marginTop: (windowWidth * 2) / 100,
               }}
             >
               <Text
                 style={{
                   width: "100%",
-                  marginTop: (mobileW * 3) / 100,
-                  paddingHorizontal: (mobileW * 2) / 100,
+                  marginTop: (windowWidth * 3) / 100,
+                  paddingHorizontal: (windowWidth * 2) / 100,
                   color: "#000",
                   fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 4) / 100,
+                  fontSize: (windowWidth * 4) / 100,
                   textAlign: "left",
                 }}
               >
@@ -264,7 +264,7 @@ const LabPackageDetails = (props) => {
               <FlatList
                 data={labDetailsData.task_name}
                 contentContainerStyle={{
-                  paddingBottom: (mobileW * 10) / 100,
+                  paddingBottom: (windowWidth * 10) / 100,
                 }}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -286,16 +286,16 @@ const LabPackageDetails = (props) => {
                             width: "100%",
                             flexDirection: "row",
                             justifyContent: "flex-start",
-                            // paddingVertical: (mobileW * 1) / 100,
-                            marginTop: (mobileW * 3) / 100,
-                            paddingHorizontal: (mobileW * 2) / 100,
+                            // paddingVertical: (windowWidth * 1) / 100,
+                            marginTop: (windowWidth * 3) / 100,
+                            paddingHorizontal: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text
                             style={{
                               width: "90%",
                               fontSize: Font.subtext,
-                              color: Colors.theme_color,
+                              color: Colors.Theme,
                               fontFamily: Font.fontmedium,
                               textAlign: "left",
                             }}
@@ -310,13 +310,13 @@ const LabPackageDetails = (props) => {
                             >
                               <Image
                                 style={{
-                                  height: (mobileW * 4.5) / 100,
-                                  width: (mobileW * 4.5) / 100,
+                                  height: (windowWidth * 4.5) / 100,
+                                  width: (windowWidth * 4.5) / 100,
                                 }}
                                 source={
                                   showTaskDetails
-                                    ? localimag.upArrow
-                                    : localimag.downarrow
+                                    ? Icons.upArrow
+                                    : Icons.downarrow
                                 }
                               />
                             </View>
@@ -325,8 +325,8 @@ const LabPackageDetails = (props) => {
                         {showTaskDetails && (
                           <Text
                             style={{
-                              paddingTop: (mobileW * 2) / 100,
-                              paddingHorizontal: (mobileW * 4) / 100,
+                              paddingTop: (windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 4) / 100,
                               fontFamily: Font.fontregular,
                               textAlign: "left",
                               color: Colors.subTaskColor,

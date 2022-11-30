@@ -1,4 +1,4 @@
-export const localimag={
+export const Icons={
     //-----------------------
      splash:require('./icon/splash-screen-ui.png'),
      welcomelogo:require('./icon/logo-256.png'),

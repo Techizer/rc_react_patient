@@ -15,30 +15,51 @@ import {
   Colors,
   Font,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
-  mobileH,
+  windowHeight,
 } from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
 import messaging from "@react-native-firebase/messaging";
-import { Appheading } from "../Allcomponents";
-import Footer from "../Footer";
 import PushNotification, { Importance } from "react-native-push-notification";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import { s, vs } from "react-native-size-matters"
+import { SvgXml, SvgUri } from "react-native-svg";
+;
+import Styles from "../Styles";
+import { Appheading } from "../Allcomponents";
+import { BannerOne, BannerTwo, dummyUser } from "../icons/SvgIcons/Index";
+import Footer from "../Footer";
+import { Images } from "../Provider/Localimage";
+import BannerCrousel from "../components/BannerCrousel";
+import ScreenHeader from "../components/ScreenHeader";
 global.current_lat_long = "NA";
 global.myLatitude = "NA";
 global.myLongitude = "NA";
 global.post_location = "NA";
 global.cart_customer = [];
+
+const bannersList = [
+  {
+    id: '1',
+    image: Images.BannerOne
+  },
+  {
+    id: '2',
+    image: Images.BannerTwo
+  },
+  {
+    id: '3',
+    image: Images.BannerTwo
+  },
+]
 const HomeHealthcareServiceAppointments = [
   {
     id: 1,
-    img: localimag.nurse,
+    img: Icons.nurse,
     star: " 5.0",
     arabic_title: "حجز ممرضة  ",
     title: "Book a Nurse",
@@ -50,7 +71,7 @@ const HomeHealthcareServiceAppointments = [
   },
   {
     id: 2,
-    img: localimag.Physiotherapist,
+    img: Icons.Physiotherapist,
     star: "4.7",
     title: "Book a ",
     arabic_title: "حجز علاج طبيعي  ",
@@ -64,7 +85,7 @@ const HomeHealthcareServiceAppointments = [
   },
   {
     id: 3,
-    img: localimag.NurseAssistant,
+    img: Icons.NurseAssistant,
     star: "4.3",
     title: "Book Nurse",
     arabic_title: "حجز مساعدة ممرضة ",
@@ -78,7 +99,7 @@ const HomeHealthcareServiceAppointments = [
   },
   {
     id: 4,
-    img: localimag.Babysitter,
+    img: Icons.Babysitter,
     star: "4.3",
     title: "Book a",
     arabic_title: "حجز ",
@@ -92,10 +113,10 @@ const HomeHealthcareServiceAppointments = [
   },
 ];
 
-const DoctorAppointment = [
+const DoctorConsultation = [
   {
     id: 1,
-    img: localimag.InstantVideoConsultation,
+    img: Icons.InstantVideoConsultation,
     star: "5.0",
     title: "Instant Video Consultation",
     arabic_title: "استشارة فيديو فورية",
@@ -105,7 +126,7 @@ const DoctorAppointment = [
   },
   {
     id: 2,
-    img: localimag.HomeVisitConsultation,
+    img: Icons.HomeVisitConsultation,
     star: "5.0",
     title: "Home Visit Consultation",
     arabic_title: "استشارة زيارة منزلية  ",
@@ -115,31 +136,29 @@ const DoctorAppointment = [
   },
 ];
 
-const HospitalAppointment = [
+const LabTest = [
   {
     id: 1,
-    img: localimag.HoptlInstantVideoConsultation,
-    star: "5.0",
-    title: "Instant Video Consultation",
-    arabic_title: " استشارة فيديو فورية  ",
-    details: "15-30 mins",
-    arabic_details: "30-15 دقيقة",
-    status: true,
-    pass_status: "hospital",
-  },
-  {
-    id: 2,
-    img: localimag.BookaLabTest,
+    img: Icons.BookaLabTest,
     star: "5.0",
     title: "Book a Lab Test",
-    arabic_title: "حجز فحص مختبر  ",
-    details: "Get the sample collected today",
-    arabic_details: "احجز لجمع العينات اليوم  ",
-    arabic_condition: "ونضمن لك الحصول على النتائج في نفس اليوم  ",
-    condition: "within 1 day report guaranteed",
-    status: false,
-    pass_status: "lab",
+    arabic_title: "احجز اختبارًا معمليًا",
+    details: "Get test report within 24 hours of sample collected. All Rootscare labs are 100% safe.",
+    arabic_details: "30-15 دقيقة",
+    status: '1 day report guaranteed.',
+    pass_status: "T&C Apply",
   },
+  // {
+  //   id: 2,
+  //   img: Icons.BookaLabTest,
+  //   star: "5.0",
+  //   title: "Book a Lab Test",
+  //   arabic_title: "احجز اختبارًا معمليًا",
+  //   details: "Get test report within 24 hours of sample collected. All Rootscare labs are 100% safe.",
+  //   arabic_details: "30-15 دقيقة",
+  //   status: '1 day report guaranteed.',
+  //   pass_status: "T&C Apply",
+  // },
 ];
 
 export default class Home extends Component {
@@ -161,8 +180,10 @@ export default class Home extends Component {
   }
   componentDidMount() {
     // this.getnotification();
+
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     var that = this;
+
     PushNotification.configure({
       onNotification: function (notification) {
         console.log("NOTIFICATION:", notification);
@@ -234,12 +255,12 @@ export default class Home extends Component {
 
   handleBackButton = () => {
     console.log('Back button is pressed', this.props.route.name);
-    if(this.props.route.name == "Home"){
+    if (this.props.route.name == "Home") {
       return true;
-    }else{
+    } else {
       return false;
     }
-    
+
   }
 
   getNotificationCall = async () => {
@@ -447,21 +468,21 @@ export default class Home extends Component {
   };
 
   render() {
-    // const height = (mobileH * 18) / 100;
-    // console.log("mobileH", height);
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <View style={Styles.container3}>
-          <View style={styles_new.headerstyle}>
+          
+          {/* <View style={styles_new.headerstyle}>
             <View
               style={{
-                padding: (mobileW * 2.5) / 100,
+                // padding: (windowWidth * 2.5) / 100,
                 flexDirection: "row",
                 width: "95%",
                 alignSelf: "center",
-                paddingTop: (mobileW * 3) / 100,
-                backgroundColor: Colors.white_color,
+                // paddingTop: (windowWidth * 3) / 100,
+                backgroundColor: Colors.white,
                 alignItems: "center",
+                backgroundColor:'pink'
               }}
             >
               <View
@@ -470,7 +491,7 @@ export default class Home extends Component {
                   backgroundColor: "#fff",
                   justifyContent: "center",
                   alignSelf: "center",
-                  paddingTop: (mobileW * 1.5) / 100,
+                  paddingTop: (windowWidth * 1.5) / 100,
                 }}
               >
                 <TouchableOpacity
@@ -478,27 +499,28 @@ export default class Home extends Component {
                     this.props.navigation.toggleDrawer();
                   }}
                 >
-                  <Image
-                    source={
-                      this.state.profile_img == null ||
-                        this.state.profile_img == ""
-                        ? localimag.p1
-                        : { uri: this.state.profile_img }
-                    }
-                    style={{
-                      // resizeMode: 'contain',
-                      width: (mobileW * 9) / 100,
-                      height: (mobileW * 9) / 100,
-                      borderRadius: (mobileW * 4.5) / 100,
-                    }}
-                  />
+
+                  {
+                    (this.state.profile_img == "NA" || this.state.profile_img == "" || this.state.profile_img == null) ?
+                      <SvgXml xml={dummyUser} height={s(29)} width={s(29)} />
+                      :
+                      // <SvgUri uri={this.state.profile_img} />
+                      <Image
+                        source={{ uri: this.state.profile_img }}
+                        style={{ height: s(29), width: s(29), borderRadius: s(29), backgroundColor: Colors.backgroundcolor, alignSelf: 'center' }}
+                      />
+
+
+                  }
+
+
                 </TouchableOpacity>
               </View>
               <View
                 style={{
                   width: "80%",
                   alignSelf: "center",
-                  paddingTop: (mobileW * 1.5) / 100,
+                  paddingTop: (windowWidth * 1.5) / 100,
                 }}
               >
                 <TouchableOpacity
@@ -509,13 +531,13 @@ export default class Home extends Component {
                     flexDirection: "row",
                     width: "25%",
                     alignItems: "center",
-                    marginLeft: (mobileW * 2) / 100,
+                    marginLeft: (windowWidth * 2) / 100,
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: Font.fontmedium,
-                      fontSize: (mobileW * 3.5) / 100,
+                      fontSize: (windowWidth * 3.5) / 100,
                     }}
                   >
                     {Lang_chg.MyDashboard[config.language]}
@@ -523,7 +545,7 @@ export default class Home extends Component {
                   <Image
                     source={require("../icons/back-svg.png")}
                     style={{
-                      marginLeft: (mobileW * 2) / 100,
+                      marginLeft: (windowWidth * 2) / 100,
                       width: 8.5,
                       height: 8.5,
                       tintColor: "#000",
@@ -542,7 +564,7 @@ export default class Home extends Component {
                       fontFamily: Font.fontregular,
                       fontSize: Font.sregulartext_size,
                       textAlign: config.textRotate,
-                      marginLeft: (mobileW * 2) / 100,
+                      marginLeft: (windowWidth * 2) / 100,
                       width: "50%",
                     }}
                   >
@@ -556,18 +578,16 @@ export default class Home extends Component {
                       fontFamily: Font.fontregular,
                       fontSize: Font.sregulartext_size,
                       textAlign: config.textRotate,
-                      marginLeft: (mobileW * 2) / 100,
+                      marginLeft: (windowWidth * 2) / 100,
                       width: "50%",
                     }}
-                  >
-                    NA
-                  </Text>
+                  >{'NA'}</Text>
                 )}
               </View>
               <View
                 style={{
                   width: "10%",
-                  paddingTop: (mobileW * 2) / 100,
+                  paddingTop: (windowWidth * 2) / 100,
                   justifyContent: "center",
                 }}
               >
@@ -576,230 +596,106 @@ export default class Home extends Component {
                     this.props.navigation.navigate("Notifications");
                   }}
                 >
-                  {/* <TouchableOpacity onPress={()=>{this.notificationfunctoion()}}> */}
                   <Image
                     // tintColor="#fff"
                     source={
                       this.state.notification_count > 0
-                        ? localimag.notifications
-                        : localimag.notifications_sec
+                        ? Icons.notifications
+                        : Icons.notifications_sec
                     }
                     style={{
                       alignSelf: "flex-end",
                       resizeMode: "contain",
-                      width: (mobileW * 6) / 100,
-                      height: (mobileW * 6) / 100,
+                      width: (windowWidth * 6) / 100,
+                      height: (windowWidth * 6) / 100,
                     }}
                   />
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </View> */}
+          <ScreenHeader
+          navigation={this.props.navigation}
+          title={'Home'}
+          leftIcon={this.state.profile_img }
+          rightIcon={true}
+          addressOld={this.state.address_old}
+          addressShow={this.state.address_show}
+          notiCount={this.state.notification_count}
+          />
 
-          {/* ------------------------Lists */}
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor }}
+            contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
             showsVerticalScrollIndicator={false}
           >
             <View
               style={{
                 width: "100%",
                 alignSelf: "center",
-                paddingTop: (mobileW * 1.7) / 100,
               }}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("CovidPackageDetails")
-                }
-                style={{
-                  paddingLeft: (mobileW * 5) / 100,
-                  paddingRight: (mobileW * 5) / 100,
-                  height: (mobileW * 36.5) / 100,
-                  backgroundColor: Colors.white_color,
-                  alignItems: 'center',
-                  width: "100%",
-                  alignSelf: "center",
-                }}
-              >
-                <Image
-                  source={
-                    config.language == 0
-                      ? localimag.covid_test_banner
-                      : localimag.covid_test_banner_ar
-                  }
-                  style={{
-                    width: "100%",
-                    resizeMode: "stretch",
-                    height: (mobileH * 17.9) / 100,
-                  }}
-                />
-              </TouchableOpacity>
+              {/* -----------------Header Banner----------------- */}
+              <BannerCrousel data={bannersList} navigation={this.props.navigation} />
 
-              <View style={Styles.containerbody}>
-                {/* FlatList 1 */}
-                <View style={{
-                  paddingTop: (mobileW * 1.7) / 100,
-                  
-                }}>
-                  <Appheading
-                    title={
-                      Lang_chg.HomeHealthcareServiceAppointments[config.language]
-                    }
-                  />
-                  <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    data={HomeHealthcareServiceAppointments}
-                    renderItem={({ item, index }) => {
-                      // consolepro.consolelog("item nurse ------", item);
-                      return (
-                        <View
-                          style={[
-                            { width: (mobileW * 36) / 100 },
-                            config.language == 1
-                              ? { marginLeft: (mobileW * 1) / 100 }
-                              : null,
-                          ]}
-                        >
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.props.navigation.navigate(
-                                "AllServiceProviderListing",
-                                { pass_status: item.pass_status }
-                              )
-                            }
-                            style={{
-                              width: (mobileW * 32.5) / 100,
-                              marginRight: (mobileW * 4) / 100,
-                              // shadowOpacity: 0.3,
-                              // shadowColor:'#000',
-                              // shadowOffset:{width:1,height:1},
-                              // elevation:5,
-                              // shadowRadius: 2,
-                              backgroundColor: "#fff",
-                              borderColor: "#DFDFDF",
-                              borderWidth: 1,
-                              borderRadius: (mobileW * 2) / 100,
-                              paddingBottom: (mobileW * 3) / 100,
-                              marginBottom: 3,
-                              // alignItems:'center'
-                            }}
-                          >
-                            <ImageBackground
-                              imageStyle={{
-                                borderTopLeftRadius: (mobileW * 1) / 100,
-                                borderTopRightRadius: (mobileW * 1) / 100,
-                              }}
-                              style={{
-                                borderRadius: (mobileW * 2) / 100,
-                                width: "100%",
-                                height: (mobileW * 28) / 100,
-                                alignSelf: "center",
-                              }}
-                              source={item.img}
-                            />
-                            <View
-                              style={{
-                                paddingTop: (mobileW * 2) / 100,
-                                paddingHorizontal: (mobileW * 3) / 100,
-                              }}
-                            >
-                              {config.language == 1 ? (
-                                <Text style={Styles.cardtitle}>
-                                  {item.arabic_title}
-                                </Text>
-                              ) : (
-                                <Text style={Styles.cardtitle}>{item.title}</Text>
-                              )}
-                              {item.status != 0 && (
-                                <View>
-                                  {config.language != 1 && (
-                                    <Text style={Styles.cardtitle}>
-                                      {item.title2}
-                                    </Text>
-                                  )}
-                                  {config.language == 1 &&
-                                    item.arabic_status == 0 && (
-                                      <Text style={Styles.cardtitle}>
-                                        {item.arabic_title2}
-                                      </Text>
-                                    )}
-                                </View>
-                              )}
-                              {config.language == 1 ? (
-                                <Text style={Styles.details}>
-                                  {item.arabic_details}
-                                </Text>
-                              ) : (
-                                <Text style={Styles.details}>{item.details}</Text>
-                              )}
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    }}
-                  />
-                </View>
-
-                {/* FlatList 2 */}
+              {/* FlatList 1 */}
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9) }}>
                 <Appheading
-                  title={Lang_chg.DoctorAppointment[config.language]}
+                  title={
+                    Lang_chg.HomeHealthcareServiceAppointments[config.language]
+                  }
                 />
                 <FlatList
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
-                  data={DoctorAppointment}
+                  data={HomeHealthcareServiceAppointments}
                   renderItem={({ item, index }) => {
-                    // consolepro.consolelog("item Doctor ------", item);
                     return (
-                      <View style={{ width: (mobileW * 36) / 100 }}>
+                      <View
+                        style={[
+                          { width: (windowWidth * 43) / 100 },
+                          config.language == 1
+                            ? { marginLeft: (windowWidth * 1) / 100 }
+                            : null,
+                        ]}
+                      >
                         <TouchableOpacity
-                          activeOpacity={0.9}
-                          onPress={() => {
+                          onPress={() =>
                             this.props.navigation.navigate(
                               "AllServiceProviderListing",
-                              {
-                                pass_status: item.pass_status,
-                                enableFor:
-                                  index === 0
-                                    ? "ONLINE_CONSULT"
-                                    : "HOME_VISIT_CONSULT",
-                              }
-                            );
-                          }}
+                              { pass_status: item.pass_status }
+                            )
+                          }
                           style={{
-                            width: (mobileW * 32.3) / 100,
-                            marginRight: (mobileW * 4) / 100,
+                            width: (windowWidth * 40) / 100,
+                            marginRight: (windowWidth * 4) / 100,
                             // shadowOpacity: 0.3,
                             // shadowColor:'#000',
                             // shadowOffset:{width:1,height:1},
                             // elevation:5,
+                            // shadowRadius: 2,
                             backgroundColor: "#fff",
-                            // shadowRadius:2,
-                            borderColor: Colors.LIGHT_CLIENT_BORDER,
+                            borderColor: "#DFDFDF",
                             borderWidth: 1,
-                            borderRadius: (mobileW * 2) / 100,
-                            paddingBottom: (mobileW * 3) / 100,
+                            borderRadius: (windowWidth * 2) / 100,
+                            paddingBottom: (windowWidth * 3) / 100,
                             marginBottom: 3,
+                            // alignItems:'center'
                           }}
                         >
-                          <ImageBackground
-                            imageStyle={{
-                              borderTopLeftRadius: (mobileW * 1.5) / 100,
-                              borderTopRightRadius: (mobileW * 1.5) / 100,
-                            }}
+                          <Image
+
                             style={{
-                              borderRadius: (mobileW * 2) / 100,
+                              borderTopLeftRadius: (windowWidth * 1.5) / 100,
+                              borderTopRightRadius: (windowWidth * 1.5) / 100,
                               width: "100%",
-                              height: (mobileW * 28) / 100,
+                              height: (windowWidth * 28) / 100,
                               alignSelf: "center",
                             }}
                             source={item.img}
                           />
                           <View
                             style={{
-                              paddingTop: (mobileW * 2) / 100,
-                              paddingHorizontal: (mobileW * 3) / 100,
+                              paddingTop: (windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 3) / 100,
                             }}
                           >
                             {config.language == 1 ? (
@@ -808,6 +704,21 @@ export default class Home extends Component {
                               </Text>
                             ) : (
                               <Text style={Styles.cardtitle}>{item.title}</Text>
+                            )}
+                            {item.status != 0 && (
+                              <View>
+                                {config.language != 1 && (
+                                  <Text style={Styles.cardtitle}>
+                                    {item.title2}
+                                  </Text>
+                                )}
+                                {config.language == 1 &&
+                                  item.arabic_status == 0 && (
+                                    <Text style={Styles.cardtitle}>
+                                      {item.arabic_title2}
+                                    </Text>
+                                  )}
+                              </View>
                             )}
                             {config.language == 1 ? (
                               <Text style={Styles.details}>
@@ -822,277 +733,255 @@ export default class Home extends Component {
                     );
                   }}
                 />
+              </View>
 
-                {/* FlatList 3 */}
+              {/* FlatList 2 */}
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9), }}>
                 <Appheading
-                  title={Lang_chg.HospitalAppointment[config.language]}
+                  title={
+                    Lang_chg.DoctorConsultation[config.language]
+                  }
                 />
-                <View>
-                  <FlatList
-                    contentContainerStyle={{
-                      paddingBottom: (mobileW * 30) / 100,
-                    }}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    data={HospitalAppointment}
-                    renderItem={({ item, index }) => {
-                      consolepro.consolelog("item hospital ------", item);
-                      return (
-                        <View
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}
+                  data={DoctorConsultation}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <View
+                        style={[
+                          { width: (windowWidth * 43) / 100 },
+                          config.language == 1
+                            ? { marginLeft: (windowWidth * 1) / 100 }
+                            : null,
+                        ]}
+                      >
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.props.navigation.navigate(
+                              "AllServiceProviderListing",
+                              { pass_status: item.pass_status }
+                            )
+                          }
                           style={{
-                            width:
-                              item.status == false
-                                ? (mobileW * 68) / 100
-                                : (mobileW * 33) / 100,
-                            marginRight: (mobileW * 4) / 100,
-                            backgroundColor: "#fff",
+                            width: (windowWidth * 40) / 100,
+                            marginRight: (windowWidth * 4) / 100,
                             // shadowOpacity: 0.3,
-                            // shadowColor: '#000',
+                            // shadowColor:'#000',
+                            // shadowOffset:{width:1,height:1},
+                            // elevation:5,
                             // shadowRadius: 2,
-                            paddingBottom: (mobileW * 1) / 100,
-                            borderColor: Colors.LIGHT_CLIENT_BORDER,
+                            backgroundColor: "#fff",
+                            borderColor: "#DFDFDF",
                             borderWidth: 1,
-                            // shadowOffset: {width: 2, height: 2},
-                            // elevation:2,
-                            alignItems: "center",
-                            borderRadius: (mobileW * 2) / 100,
+                            borderRadius: (windowWidth * 2) / 100,
+                            paddingBottom: (windowWidth * 3) / 100,
                             marginBottom: 3,
-                          }}
-                        >
-                          <TouchableOpacity
-                            activeOpacity={0.9}
-                            onPress={() => {
-                              this.props.navigation.navigate(
-                                "AllServiceProviderListing",
-                                {
-                                  pass_status: item.pass_status,
-                                }
-                              );
-                              // msgProvider.showSuccess(
-                              //   msgText.emptyComingsoon[config.language]
-                              // );
-                            }}
+                            // alignItems:'center'
+                          }}>
+                          <Image
                             style={{
-                              width:
-                                item.status == false
-                                  ? (mobileW * 67.5) / 100
-                                  : (mobileW * 32.5) / 100,
-
-                              borderRadius: (mobileW * 2) / 100,
+                              borderTopLeftRadius: (windowWidth * 1.5) / 100,
+                              borderTopRightRadius: (windowWidth * 1.5) / 100,
+                              width: "100%",
+                              height: (windowWidth * 28) / 100,
+                              alignSelf: "center",
+                            }}
+                            source={item.img}
+                          />
+                          <View
+                            style={{
+                              paddingTop: (windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 3) / 100,
                             }}
                           >
-                            <ImageBackground
-                              imageStyle={{
-                                borderTopLeftRadius: (mobileW * 1.5) / 100,
-                                borderTopRightRadius: (mobileW * 1.5) / 100,
-                              }}
-                              style={{
-                                width: "100%",
-                                height: (mobileW * 28) / 100,
-                                alignSelf: "center",
-                              }}
-                              source={item.img}
-                            >
-                              {item.status == true && (
-                                <View>
-                                  {config.language == 0 ? (
-                                    <View
-                                      style={{
-                                        backgroundColor: "#FFA800",
-                                        width: "50%",
-                                        borderTopLeftRadius:
-                                          (mobileW * 2) / 100,
-                                        paddingVertical: (mobileW * 0.5) / 100,
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          color: "#fff",
-                                          fontFamily: Font.fontmedium,
-                                          fontSize: (mobileW * 2.5) / 100,
-                                          alignSelf: "center",
-                                        }}
-                                      >
-                                        {Lang_chg.Hospital[config.language]}
-                                      </Text>
-                                    </View>
-                                  ) : (
-                                    <View
-                                      style={{
-                                        backgroundColor: "#FFA800",
-                                        width: "50%",
-                                        borderTopRightRadius:
-                                          (mobileW * 2) / 100,
-                                        paddingVertical: (mobileW * 0.5) / 100,
-                                        alignSelf: "flex-end",
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          color: "#fff",
-                                          fontFamily: Font.fontmedium,
-                                          fontSize: (mobileW * 2.5) / 100,
-                                          alignSelf: "center",
-                                        }}
-                                      >
-                                        {Lang_chg.Hospital[config.language]}
-                                      </Text>
-                                    </View>
+                            {config.language == 1 ? (
+                              <Text style={Styles.cardtitle}>
+                                {item.arabic_title}
+                              </Text>
+                            ) : (
+                              <Text style={Styles.cardtitle}>{item.title}</Text>
+                            )}
+                            {item.status != 0 && (
+                              <View>
+                                {config.language != 1 && (
+                                  <Text style={Styles.cardtitle}>
+                                    {item.title2}
+                                  </Text>
+                                )}
+                                {config.language == 1 &&
+                                  item.arabic_status == 0 && (
+                                    <Text style={Styles.cardtitle}>
+                                      {item.arabic_title2}
+                                    </Text>
                                   )}
-                                </View>
-                              )}
-                            </ImageBackground>
-                            <View
-                              style={{
-                                paddingTop: (mobileW * 2) / 100,
-                                paddingHorizontal: (mobileW * 3) / 100,
-                              }}
-                            >
-                              {config.language == 1 ? (
-                                <Text style={Styles.cardtitle}>
-                                  {item.arabic_title}
-                                </Text>
-                              ) : (
-                                <Text style={Styles.cardtitle}>
-                                  {item.title}
-                                </Text>
-                              )}
-                              {config.language == 1 ? (
-                                <Text style={Styles.details}>
-                                  {item.arabic_details}
-                                </Text>
-                              ) : (
-                                <Text style={Styles.details}>
-                                  {item.details}
-                                </Text>
-                              )}
-                              {config.language == 1 ? (
-                                <Text
-                                  style={{
-                                    color: Colors.textblue,
-                                    textAlign: config.textRotate,
-                                    fontSize: (mobileW * 2.7) / 100,
-                                    fontFamily: Font.fontregular,
+                              </View>
+                            )}
+                            {config.language == 1 ? (
+                              <Text style={Styles.details}>
+                                {item.arabic_details}
+                              </Text>
+                            ) : (
+                              <Text style={Styles.details}>{item.details}</Text>
+                            )}
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }}
+                />
+              </View>
 
-                                    lineHeight: (mobileW * 3.9) / 100,
-                                  }}
-                                >
-                                  {item.arabic_condition}
-                                </Text>
-                              ) : (
-                                <Text
-                                  style={{
-                                    color: Colors.textblue,
-                                    textAlign: config.textRotate,
-                                  }}
-                                >
-                                  {item.condition}
-                                </Text>
-                              )}
-                            </View>
+
+              {/* FlatList 3 */}
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
+                <Appheading
+                  title={
+                    Lang_chg.Lab_Test_Booking[config.language]
+                  }
+                />
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={true}
+                  data={LabTest}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() =>
+                          this.props.navigation.navigate(
+                            "AllServiceProviderListing",
+                            { pass_status: item.pass_status }
+                          )
+                        }
+                        style={[
+                          { width: windowWidth },
+                          // { backgroundColor: 'pink' },
+                          { flexDirection: 'row' },
+                          config.language == 1
+                            ? { marginLeft: (windowWidth * 1) / 100 }
+                            : null,
+                        ]}
+                      >
+
+
+                        <View style={{ width: '42%', justifyContent: 'center' }}>
+                          <Image
+                            style={{
+                              borderRadius: (windowWidth * 2) / 100,
+                              width: (windowWidth * 40) / 100,
+                              height: (windowWidth * 35) / 100,
+                            }}
+                            source={item.img}
+                          />
+                          <TouchableOpacity style={{
+                            borderRadius: (windowWidth * 2) / 100,
+                            width: (windowWidth * 40) / 100,
+                            height: (windowWidth * 9) / 100,
+                            marginTop: vs(8),
+                            marginHorizontal: s(1),
+                            marginBottom: vs(4),
+                            backgroundColor: Colors.white,
+                            borderWidth: 0.8,
+                            borderColor: Colors.ButtonBorder,
+                            shadowOpacity: 0.3,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 1, height: 1 },
+                            elevation: 2,
+                            shadowRadius: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                            <Text
+                              style={{
+                                fontSize: Font.small,
+                                fontFamily: Font.fontmedium,
+                                color: Colors.textblue
+                              }}
+                            >{Lang_chg.Find_Labs[config.language]}</Text>
                           </TouchableOpacity>
                         </View>
-                      );
-                    }}
-                  />
-                </View>
+
+                        <View style={{ width: '48%', }}>
+
+                          <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
+                            {config.language == 1 ? (
+                              <Text style={Styles.cardtitle}>
+                                {item.arabic_title}
+                              </Text>
+                            ) : (
+                              <Text style={Styles.cardtitle}>{item.title}</Text>
+                            )}
+
+                            {config.language == 1 ? (
+                              <Text style={Styles.details}>
+                                {item.arabic_details}
+                              </Text>
+                            ) : (
+                              <Text style={Styles.details}>{item.details}</Text>
+                            )}
+
+                            {config.language == 1 ? (
+                              <Text style={[Styles.subDetails, { color: Colors.textblue, marginTop: vs(8), }]}>
+                                {item.status}
+                              </Text>
+                            ) : (
+                              <Text style={[Styles.subDetails, { color: Colors.textblue, marginTop: vs(8), }]}>{item.status}</Text>
+                            )}
+
+                            {config.language == 1 ? (
+                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>
+                                {item.pass_status}
+                              </Text>
+                            ) : (
+                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>{item.pass_status}</Text>
+                            )}
+
+                          </View>
+                        </View>
+
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
               </View>
 
             </View>
+
+
           </ScrollView>
         </View>
-        {/* </ScrollView> */}
 
 
-        <HideWithKeyboard>
-          <Footer
-            activepage="Home"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: "white",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          />
-        </HideWithKeyboard>
+
+
+
       </View>
     );
   }
 }
 const styles_new = StyleSheet.create({
-  headerstyle: {
-    backgroundColor: "#fff",
-    paddingVertical: (mobileW * 2) / 100,
-    borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
-    borderBottomWidth: 1,
-    // shadowOpacity: 0.3,
-    // shadowColor:'#000',
-    // shadowOffset: {width:1,height:1},
-    // elevation:5,
-  },
-  headerstyle_new: {
-    backgroundColor: "red",
-    shadowOpacity: 0.3,
-    shadowColor: "#000",
-    shadowOffset: { width: 1, height: 1 },
-    elevation: 10,
-    width: "100%",
-    paddingVertical: (mobileW * 2) / 100,
-  },
+ 
   icons: {
-    width: (mobileW * 13) / 100,
-    height: (mobileW * 13) / 100,
-    borderRadius: (mobileW * 5) / 50,
+    width: (windowWidth * 13) / 100,
+    height: (windowWidth * 13) / 100,
+    borderRadius: (windowWidth * 5) / 50,
   },
   notebox: {
     backgroundColor: "#fff",
-    padding: (mobileW * 4) / 100,
-    marginTop: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    padding: (windowWidth * 4) / 100,
+    marginTop: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
     fontFamily: Font.fontregular,
-    lineHeight: (mobileW * 5) / 100,
+    lineHeight: (windowWidth * 5) / 100,
   },
   notecard: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   checkboxcontainer: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   allcheckbox: {
     width: "93%",
@@ -1100,32 +989,32 @@ const styles_new = StyleSheet.create({
   },
 
   checkboxview: {
-    // paddingVertical: (mobileW * 1.5) / 100,
+    // paddingVertical: (windowWidth * 1.5) / 100,
 
     alignItems: "center",
     alignSelf: "center",
     // backgroundColor: 'red',
-    paddingVertical: (mobileW * 1.3) / 100,
+    paddingVertical: (windowWidth * 1.3) / 100,
     flexDirection: "row",
     // alignItems: 'center',
     justifyContent: "space-between",
   },
   checkboximg: {
-    width: (mobileW * 7) / 100,
-    height: (mobileW * 7) / 100,
-    borderRadius: (mobileW * 0.4) / 100,
-    marginRight: (mobileW * 2) / 100,
+    width: (windowWidth * 7) / 100,
+    height: (windowWidth * 7) / 100,
+    borderRadius: (windowWidth * 0.4) / 100,
+    marginRight: (windowWidth * 2) / 100,
     resizeMode: "contain",
     alignSelf: "flex-start",
     flex: 0.1,
   },
   uncheckboximg: {
     resizeMode: "contain",
-    width: (mobileW * 6) / 100,
-    height: (mobileW * 6) / 100,
-    borderRadius: (mobileW * 0.4) / 100,
-    marginRight: (mobileW * 2.9) / 100,
-    marginLeft: (mobileW * 0.6) / 100,
+    width: (windowWidth * 6) / 100,
+    height: (windowWidth * 6) / 100,
+    borderRadius: (windowWidth * 0.4) / 100,
+    marginRight: (windowWidth * 2.9) / 100,
+    marginLeft: (windowWidth * 0.6) / 100,
     flex: 0.1,
   },
   checkboxtext: {
@@ -1139,46 +1028,46 @@ const styles_new = StyleSheet.create({
   buttonstyle: {
     width: "70%",
     alignSelf: "center",
-    marginVertical: (mobileW * 9) / 100,
+    marginVertical: (windowWidth * 9) / 100,
   },
   buttontext: {
-    paddingVertical: (mobileW * 3) / 100,
-    paddingHorizontal: (mobileW * 3) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    paddingVertical: (windowWidth * 3) / 100,
+    paddingHorizontal: (windowWidth * 3) / 100,
+    borderRadius: (windowWidth * 2) / 100,
     textAlign: "center",
     backgroundColor: "#4C94DB",
     textAlign: "center",
     color: Colors.whiteColor,
     fontFamily: Font.fontextrabold,
-    fontSize: (mobileW * 4.2) / 100,
+    fontSize: (windowWidth * 4.2) / 100,
   },
 
   profilecontainer: {
-    marginVertical: (mobileW * 1.2) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
   },
   profileinfo: {
     backgroundColor: "#fff",
-    marginVertical: (mobileW * 1.2) / 100,
-    padding: (mobileW * 3) / 100,
-    borderRadius: (mobileW * 1) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
+    padding: (windowWidth * 3) / 100,
+    borderRadius: (windowWidth * 1) / 100,
   },
   profileinfowithimg: {
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "center",
     backgroundColor: "#fff",
-    marginVertical: (mobileW * 1.2) / 100,
-    padding: (mobileW * 3) / 100,
-    paddingVertical: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 1) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
+    padding: (windowWidth * 3) / 100,
+    paddingVertical: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 1) / 100,
     // backgroundColor: 'red',
   },
   infoimgicon: {
     resizeMode: "contain",
-    width: (mobileW * 8) / 100,
-    height: (mobileW * 8) / 100,
-    borderRadius: (mobileW * 10) / 100,
-    marginRight: (mobileW * 2) / 100,
+    width: (windowWidth * 8) / 100,
+    height: (windowWidth * 8) / 100,
+    borderRadius: (windowWidth * 10) / 100,
+    marginRight: (windowWidth * 2) / 100,
     alignSelf: "center",
   },
   infosmalltext: {
@@ -1196,65 +1085,65 @@ const styles_new = StyleSheet.create({
   notes: {},
 
   icons: {
-    width: (mobileW * 13) / 100,
-    height: (mobileW * 13) / 100,
-    borderRadius: (mobileW * 5) / 50,
+    width: (windowWidth * 13) / 100,
+    height: (windowWidth * 13) / 100,
+    borderRadius: (windowWidth * 5) / 50,
   },
   notebox: {
     backgroundColor: "#fff",
-    padding: (mobileW * 6) / 100,
-    marginTop: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    padding: (windowWidth * 6) / 100,
+    marginTop: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
     fontFamily: Font.fontbold,
-    fontSize: (mobileW * 3.8) / 100,
-    lineHeight: (mobileW * 5) / 100,
+    fontSize: (windowWidth * 3.8) / 100,
+    lineHeight: (windowWidth * 5) / 100,
   },
   notecard: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   checkboxcontainer: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
 
   notecardheading: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  addoptioncontainer: { marginTop: (mobileW * 9) / 100 },
+  addoptioncontainer: { marginTop: (windowWidth * 9) / 100 },
 
   imgboxcontainer: {
-    borderRadius: (mobileW * 1) / 100,
+    borderRadius: (windowWidth * 1) / 100,
   },
   imgbox: {
-    height: (mobileW * 30) / 100,
-    width: (mobileW * 39) / 100,
-    padding: (mobileW * 2) / 100,
-    borderWidth: (mobileW * 0.6) / 100,
-    borderRadius: (mobileW * 3) / 100,
+    height: (windowWidth * 30) / 100,
+    width: (windowWidth * 39) / 100,
+    padding: (windowWidth * 2) / 100,
+    borderWidth: (windowWidth * 0.6) / 100,
+    borderRadius: (windowWidth * 3) / 100,
     borderColor: Colors.gainsboro,
     overflow: "hidden",
-    marginRight: (mobileW * 4) / 100,
-    marginBottom: (mobileW * 4) / 100,
+    marginRight: (windowWidth * 4) / 100,
+    marginBottom: (windowWidth * 4) / 100,
   },
-  imgboxstyle: { borderRadius: (mobileW * 3) / 100 },
+  imgboxstyle: { borderRadius: (windowWidth * 3) / 100 },
   insideview: {
-    marginTop: (mobileW * 2) / 100,
+    marginTop: (windowWidth * 2) / 100,
   },
   insideviewtext: {
     alignSelf: "flex-end",
     fontFamily: Font.fontextrabold,
     fontSize: Font.bigheadingfont,
     color: "#4B4B4B",
-    marginRight: (mobileW * 0.2) / 100,
+    marginRight: (windowWidth * 0.2) / 100,
   },
   insideviewimg: {
     alignSelf: "center",
-    height: (mobileW * 8.5) / 100,
-    width: (mobileW * 8.2) / 100,
+    height: (windowWidth * 8.5) / 100,
+    width: (windowWidth * 8.2) / 100,
     alignSelf: "center",
-    marginBottom: (mobileW * 2.5) / 100,
+    marginBottom: (windowWidth * 2.5) / 100,
     resizeMode: "center",
   },
   insideviewname: {

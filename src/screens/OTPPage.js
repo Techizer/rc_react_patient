@@ -2,7 +2,6 @@ import {
   Text,
   View,
   Modal,
-  StatusBar,
   BackHandler,
   Alert,
   SafeAreaView,
@@ -14,10 +13,10 @@ import React, { Component } from "react";
 import OTPTextInput from "react-native-otp-textinput";
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
+  windowWidth,
   Lang_chg,
   apifuntion,
   localStorage,
@@ -167,176 +166,163 @@ export default class OTPPage extends Component {
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          <SafeAreaView
-            style={{ backgroundColor: Colors.statusbar_color, flex: 0 }}
-          />
 
-          <StatusBar
-            barStyle="dark-content"
-            backgroundColor={Colors.statusbarcolor}
-            hidden={false}
-            translucent={false}
-            networkActivityIndicatorVisible={true}
-          />
-
-          <View style={{ paddingBottom: (mobileW * 8) / 100 }}>
-            <View
+        <View style={{ paddingBottom: (windowWidth * 8) / 100 }}>
+          <View
+            style={{
+              width: "50%",
+              alignSelf: "center",
+              marginTop: (windowWidth * 8) / 100,
+              marginBottom: (windowWidth * 10) / 100,
+            }}
+          >
+            <Image
               style={{
-                width: "50%",
+                width: (windowWidth * 50) / 100,
+                height: (windowWidth * 40) / 100,
                 alignSelf: "center",
-                marginTop: (mobileW * 8) / 100,
-                marginBottom: (mobileW * 10) / 100,
+                resizeMode: "contain",
+                alignItems: "center",
+              }}
+              source={Icons.Forgotlogo}
+            ></Image>
+          </View>
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              marginTop: (windowWidth * 1) / 100,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: (windowWidth * 5.3) / 100,
+                fontFamily: Font.blackheadingfontfamily,
+                textAlign: config.textRotate,
               }}
             >
-              <Image
-                style={{
-                  width: (mobileW * 50) / 100,
-                  height: (mobileW * 40) / 100,
-                  alignSelf: "center",
-                  resizeMode: "contain",
-                  alignItems: "center",
-                }}
-                source={localimag.Forgotlogo}
-              ></Image>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-              }}
-            >
+              {Lang_chg.opt[config.language]}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              marginTop: (windowWidth * 1) / 100,
+            }}
+          >
+            <View style={{ width: "90%" }}>
               <Text
                 style={{
-                  fontSize: (mobileW * 5.3) / 100,
-                  fontFamily: Font.blackheadingfontfamily,
+                  fontSize: Font.headinggray,
+                  fontFamily: Font.headingfontfamily,
+                  color: Colors.DarkGrey,
                   textAlign: config.textRotate,
                 }}
               >
-                {Lang_chg.opt[config.language]}
+                {Lang_chg.opttext[config.language]}
               </Text>
             </View>
-
-            <View
+          </View>
+          <View
+            style={{
+              width: "90%",
+              // backgroundColor: 'red',
+              //  paddingHorizontal:windowWidth*1/100,
+              paddingVertical: (windowWidth * 1) / 100,
+              marginTop: (windowWidth * 8) / 100,
+              marginLeft: (windowWidth * 5) / 100,
+            }}
+          >
+            <OTPTextInput
               style={{
-                width: "90%",
+                height: (windowWidth * 14) / 100,
+                width: (windowWidth * 20) / 100,
+                color: "#000",
                 alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
+                fontFamily: Font.fontregular,
+                fontSize: (windowWidth * 5) / 100,
+                borderWidth: 2,
+                borderColor: "#DFDFDF",
+                borderRadius: (windowWidth * 2) / 100,
+                textAlign: "center",
               }}
-            >
-              <View style={{ width: "90%" }}>
-                <Text
-                  style={{
-                    fontSize: Font.headinggray,
-                    fontFamily: Font.headingfontfamily,
-                    color: Colors.placeholder_text,
-                    textAlign: config.textRotate,
-                  }}
-                >
-                  {Lang_chg.opttext[config.language]}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                // backgroundColor: 'red',
-                //  paddingHorizontal:mobileW*1/100,
-                paddingVertical: (mobileW * 1) / 100,
-                marginTop: (mobileW * 8) / 100,
-                marginLeft: (mobileW * 5) / 100,
-              }}
-            >
-              <OTPTextInput
-                style={{
-                  height: (mobileW * 14) / 100,
-                  width: (mobileW * 20) / 100,
-                  color: "#000",
-                  alignSelf: "center",
-                  fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 5) / 100,
-                  borderWidth: 2,
-                  borderColor: "#DFDFDF",
-                  borderRadius: (mobileW * 2) / 100,
-                  textAlign: "center",
-                }}
-                ref={(e) => (this.otpInput = e)}
-                numberOfInputs={4}
-                cellTextLength={1}
-                handleTextChange={(text) => this.setState({ otp: text })}
-                tintColor="#f5f5ff"
-                offTintColor="#f5f5ff"
-                keyboardType={"number-pad"}
-              />
-            </View>
+              ref={(e) => (this.otpInput = e)}
+              numberOfInputs={4}
+              cellTextLength={1}
+              handleTextChange={(text) => this.setState({ otp: text })}
+              tintColor="#f5f5ff"
+              offTintColor="#f5f5ff"
+              keyboardType={"number-pad"}
+            />
+          </View>
 
-            <TouchableOpacity
+          <TouchableOpacity
+            onPress={() => {
+              this.otpVerify();
+            }}
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              borderRadius: (windowWidth * 2) / 100,
+              backgroundColor: Colors.Theme,
+              paddingVertical: (windowWidth * 4) / 100,
+              marginTop: (windowWidth * 6) / 100,
+              shadowColor: "#000",
+              shadowOffset: { width: 1, height: 1 },
+              shadowOpacity: 0.5,
+              shadowRadius: 2,
+              elevation: 3,
+            }}
+          >
+            <Text
+              style={{
+                color: Colors.textwhite,
+                fontFamily: Font.fontmedium,
+                fontSize: Font.buttontextsize,
+
+                textAlign: config.textalign,
+                alignSelf: "center",
+              }}
+            >
+              {Lang_chg.signupbtntext[config.language]}
+            </Text>
+          </TouchableOpacity>
+
+          <View
+            style={{
+              width: "89%",
+              alignSelf: "center",
+              marginTop: (windowWidth * 5) / 100,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: config.textalign,
+                fontSize: (windowWidth * 4) / 100,
+                fontFamily: Font.headingfontfamily,
+                color: Colors.lightGrey,
+              }}
+            >
+              {Lang_chg.notrectext[config.language]}
+            </Text>
+            <Text
               onPress={() => {
-                this.otpVerify();
+                this.sendagain();
               }}
               style={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 6) / 100,
-                shadowColor: "#000",
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 3,
+                textAlign: config.textalign,
+                fontSize: (windowWidth * 4) / 100,
+                fontFamily: Font.fontsemibold,
+                color: Colors.Theme,
               }}
             >
-              <Text
-                style={{
-                  color: Colors.textwhite,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.signupbtntext[config.language]}
-              </Text>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.notrectext[config.language]}
-              </Text>
-              <Text
-                onPress={() => {
-                  this.sendagain();
-                }}
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.fontsemibold,
-                  color: Colors.theme_color,
-                }}
-              >
-                {Lang_chg.sendagaintext[config.language]}
-              </Text>
-            </View>
+              {Lang_chg.sendagaintext[config.language]}
+            </Text>
           </View>
         </View>
         <Modal
@@ -357,17 +343,10 @@ export default class OTPPage extends Component {
               marginTop: -50,
             }}
           >
-            <StatusBar
-              backgroundColor={"#fff"}
-              barStyle="default"
-              hidden={false}
-              translucent={false}
-              networkActivityIndicatorVisible={true}
-            />
             <View
               style={{
                 borderRadius: 20,
-                width: (mobileW * 90) / 100,
+                width: (windowWidth * 90) / 100,
                 position: "absolute",
                 alignSelf: "center",
               }}
@@ -382,17 +361,17 @@ export default class OTPPage extends Component {
                 <View
                   style={{
                     alignSelf: "flex-start",
-                    paddingVertical: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 2) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
+                    marginTop: (windowWidth * 2) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
                     flexDirection: "row",
                     alignItems: "center",
                   }}
                 >
                   <Image
                     style={{
-                      width: (mobileW * 6) / 100,
-                      height: (mobileW * 6) / 100,
+                      width: (windowWidth * 6) / 100,
+                      height: (windowWidth * 6) / 100,
                     }}
                     source={require("../icons/logo.png")}
                   />
@@ -400,8 +379,8 @@ export default class OTPPage extends Component {
                     style={{
                       fontFamily: Font.fontmedium,
                       color: "#000",
-                      fontSize: (mobileW * 5) / 100,
-                      paddingLeft: (mobileW * 4) / 100,
+                      fontSize: (windowWidth * 5) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
                     }}
                   >
                     {Lang_chg.registration[config.language]}
@@ -410,7 +389,7 @@ export default class OTPPage extends Component {
 
                 <View
                   style={{
-                    paddingLeft: (mobileW * 4) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
                     width: "95%",
                     alignSelf: "center",
                   }}
@@ -419,7 +398,7 @@ export default class OTPPage extends Component {
                     style={{
                       fontFamily: Font.fontlight,
                       color: "#000",
-                      fontSize: (mobileW * 4) / 100,
+                      fontSize: (windowWidth * 4) / 100,
                     }}
                   >
                     {this.state.error_msg}
@@ -428,8 +407,8 @@ export default class OTPPage extends Component {
 
                 <View
                   style={{
-                    paddingBottom: (mobileW * 5) / 100,
-                    marginTop: (mobileW * 9) / 100,
+                    paddingBottom: (windowWidth * 5) / 100,
+                    marginTop: (windowWidth * 9) / 100,
                     alignSelf: "flex-end",
                   }}
                 >
@@ -441,7 +420,7 @@ export default class OTPPage extends Component {
                       }, 200);
                     }}
                     style={{
-                      width: (mobileW * 15) / 100,
+                      width: (windowWidth * 15) / 100,
                       flexDirection: "row",
                       alignSelf: "center",
                     }}
@@ -449,8 +428,8 @@ export default class OTPPage extends Component {
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
-                        color: Colors.theme_color,
+                        fontSize: (windowWidth * 4) / 100,
+                        color: Colors.Theme,
                         alignSelf: "center",
                         textAlign: config.textalign,
                       }}

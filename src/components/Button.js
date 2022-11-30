@@ -5,7 +5,7 @@ import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 // import { color } from "react-native-reanimated";
 // import { Color, Fonts } from "../utils";
 // import { RF } from "../utils/responsive";
-import { Colors, localimag, Font, mobileH, config, mobileW, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
 const Button = ({
   text,
   customStyles,
@@ -47,23 +47,23 @@ const styles = StyleSheet.create({
     width: '90%',
     height:40,
     alignSelf: 'center',
-    borderRadius: (mobileW * 2) / 100,
-    backgroundColor: Colors.buttoncolorblue,
+    borderRadius: (windowWidth * 2) / 100,
+    backgroundColor: Colors.Theme,
     justifyContent:'center',
     alignItems:'center',
-    // paddingVertical: (mobileW * 4) / 100,
-    marginTop: (mobileW * 8) / 100,
+    // paddingVertical: (windowWidth * 4) / 100,
+    marginTop: (windowWidth * 8) / 100,
   },
   mainContainer1: {
     width: '90%',
     alignSelf: 'center',
     borderColor: Colors.bordercolorblue,
     borderWidth: 2,
-    borderRadius: (mobileW * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
     backgroundColor: Colors.buttoncolorlight,
-    paddingVertical: (mobileW * 3) / 100,
-    marginTop: (mobileW * 4) / 100,
-    marginBottom: (mobileW * 4) / 100,
+    paddingVertical: (windowWidth * 3) / 100,
+    marginTop: (windowWidth * 4) / 100,
+    marginBottom: (windowWidth * 4) / 100,
   },
   buttonText: {
     color: Colors.textwhite,

@@ -5,7 +5,7 @@ import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 // import { color } from "react-native-reanimated";
 // import { Color, Fonts } from "../utils";
 // import { RF } from "../utils/responsive";
-import { Colors, localimag, Font, mobileH, config, mobileW, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
 const DrawerSubMenu = ({
   menuTitle,
   menuSubtitle,
@@ -26,7 +26,7 @@ const DrawerSubMenu = ({
               style={{
                 // backgroundColor:'red',
                 flexDirection: 'row',
-                paddingTop: (mobileW * 1) / 100,
+                paddingTop: (windowWidth * 1) / 100,
                 alignItems: 'center',
               }}>
               <View style={{ width: '15%' }}>
@@ -39,16 +39,16 @@ const DrawerSubMenu = ({
                   alignItems: 'center',
                   width: '85%',
                   flexDirection: 'row',
-                  marginLeft: mobileW * 1 / 100,
+                  marginLeft: windowWidth * 1 / 100,
                   borderBottomWidth: (isBorderBottom) ? 1 : 0,
                   borderColor: Colors.drawerblue,
-                  paddingVertical: (mobileW * 4) / 100,
+                  paddingVertical: (windowWidth * 4) / 100,
                   justifyContent: 'space-between',
                 }}>
                 <View style={{ width: '83%', }} >
                   <Text
                     style={{
-                      color: Colors.white_color,
+                      color: Colors.white,
                       fontFamily: Font.fontmedium,
                       fontSize: Font.headingfont_booking,
                       textAlign: config.textRotate,
@@ -62,10 +62,10 @@ const DrawerSubMenu = ({
                       tintColor: Colors.arrowcolor,
                       alignSelf: 'center',
                       resizeMode: 'contain',
-                      width: (mobileW * 3.5) / 100,
-                      height: (mobileW * 3.5) / 100,
+                      width: (windowWidth * 3.5) / 100,
+                      height: (windowWidth * 3.5) / 100,
                     }}
-                    source={config.textalign == 'right' ? localimag.arabic_next : localimag.rightarrow}></Image>
+                    source={config.textalign == 'right' ? Icons.arabic_next : Icons.rightarrow}></Image>
                 </View>
               </View>
             </TouchableOpacity>
@@ -75,7 +75,7 @@ const DrawerSubMenu = ({
               onPress={onPress}
               style={{
                 flexDirection: 'row',
-                paddingTop: (mobileW * 4) / 100,
+                paddingTop: (windowWidth * 4) / 100,
               }}>
               <View style={{ width: '15%' }}>
                 <Image
@@ -86,7 +86,7 @@ const DrawerSubMenu = ({
                 style={{
                   width: '85%',
                   flexDirection: 'row',
-                  marginLeft: mobileW * 1 / 100,
+                  marginLeft: windowWidth * 1 / 100,
                   justifyContent: 'space-between',
                   borderBottomWidth: (isBorderBottom) ? 1 : 0,
                   borderColor: Colors.drawerblue,
@@ -94,7 +94,7 @@ const DrawerSubMenu = ({
                 <View >
                   <Text
                     style={{
-                      color: Colors.white_color,
+                      color: Colors.white,
                       fontFamily: Font.fontmedium,
                       fontSize: Font.headingfont_booking,
                       textAlign: config.textRotate,
@@ -105,10 +105,10 @@ const DrawerSubMenu = ({
                     style={{
                       color: Colors.gainsboro,
                       fontFamily: Font.fontregular,
-                      fontSize: (mobileW * 2.9) / 100, //</View>Font.textsize,
+                      fontSize: (windowWidth * 2.9) / 100, //</View>Font.textsize,
                       textAlign: config.textRotate,
-                      marginVertical: (mobileW * 1) / 100,
-                      marginBottom: (mobileW * 4) / 100,
+                      marginVertical: (windowWidth * 1) / 100,
+                      marginBottom: (windowWidth * 4) / 100,
                     }}>
                     {menuSubtitle}
                   </Text>
@@ -119,11 +119,11 @@ const DrawerSubMenu = ({
                       tintColor: Colors.arrowcolor,
                       alignSelf: 'center',
                       resizeMode: 'contain',
-                      width: (mobileW * 3.5) / 100,
-                      height: (mobileW * 3.5) / 100,
-                      marginBottom: (mobileW * 2) / 100,
+                      width: (windowWidth * 3.5) / 100,
+                      height: (windowWidth * 3.5) / 100,
+                      marginBottom: (windowWidth * 2) / 100,
                     }}
-                    source={config.textalign == 'right' ? localimag.arabic_next : localimag.rightarrow}></Image>
+                    source={config.textalign == 'right' ? Icons.arabic_next : Icons.rightarrow}></Image>
                 </View>
               </View>
             </TouchableOpacity>
@@ -142,21 +142,21 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: '90%',
     alignSelf: 'center',
-    borderRadius: (mobileW * 2) / 100,
-    backgroundColor: Colors.buttoncolorblue,
-    paddingVertical: (mobileW * 4) / 100,
-    marginTop: (mobileW * 8) / 100,
+    borderRadius: (windowWidth * 2) / 100,
+    backgroundColor: Colors.Theme,
+    paddingVertical: (windowWidth * 4) / 100,
+    marginTop: (windowWidth * 8) / 100,
   },
   mainContainer1: {
     width: '90%',
     alignSelf: 'center',
     borderColor: Colors.bordercolorblue,
     borderWidth: 2,
-    borderRadius: (mobileW * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
     backgroundColor: Colors.buttoncolorlight,
-    paddingVertical: (mobileW * 3) / 100,
-    marginTop: (mobileW * 4) / 100,
-    marginBottom: (mobileW * 4) / 100,
+    paddingVertical: (windowWidth * 3) / 100,
+    marginTop: (windowWidth * 4) / 100,
+    marginBottom: (windowWidth * 4) / 100,
   },
   buttonText: {
     color: Colors.textwhite,
@@ -180,11 +180,11 @@ const styles = StyleSheet.create({
   drawercardicon: {
     //  alignSelf: 'center',
     resizeMode: 'contain',
-    width: (mobileW * 6.5) / 100,
-    height: (mobileW * 6.5) / 100,
-    marginTop: (mobileW * 1) / 100,
+    width: (windowWidth * 6.5) / 100,
+    height: (windowWidth * 6.5) / 100,
+    marginTop: (windowWidth * 1) / 100,
     alignSelf: 'center',
-    // marginHorizontal: (mobileW * 15) / 100, 
+    // marginHorizontal: (windowWidth * 15) / 100, 
   },
 });
 

@@ -17,9 +17,9 @@ import {
   msgProvider,
   msgText,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -210,8 +210,8 @@ export default class AddPatient extends Component {
             style={{
               backgroundColor: "#fff",
               width: "100%",
-              paddingVertical: (mobileW * 3) / 100,
-              borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+              paddingVertical: (windowWidth * 3) / 100,
+              borderBottomColor: Colors.Border,
               borderBottomWidth: 1,
               // shadowColor:'#000',
               // shadowOffset:{width:1,height:1},
@@ -226,7 +226,7 @@ export default class AddPatient extends Component {
                 width: "95%",
                 alignSelf: "center",
                 backgroundColor: "white",
-                //  height: (mobileW * 12) / 100,
+                //  height: (windowWidth * 12) / 100,
                 flexDirection: "row",
               }}
             >
@@ -239,15 +239,15 @@ export default class AddPatient extends Component {
                 <Image
                   source={
                     config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
+                      ? Icons.arabic_back
+                      : Icons.backarrow
                   }
                   style={{
-                    height: (mobileW * 8) / 100,
-                    width: (mobileW * 8) / 100,
+                    height: (windowWidth * 8) / 100,
+                    width: (windowWidth * 8) / 100,
                   }}
                 >
-                  {/* {localimag.backarrow} */}
+                  {/* {Icons.backarrow} */}
                 </Image>
               </TouchableOpacity>
 
@@ -274,12 +274,12 @@ export default class AddPatient extends Component {
                   <Image
                     source={
                       this.state.notification_count > 0
-                        ? localimag.notifications
-                        : localimag.notifications_sec
+                        ? Icons.notifications
+                        : Icons.notifications_sec
                     }
                     style={{
-                      height: (mobileW * 6) / 100,
-                      width: (mobileW * 6) / 100,
+                      height: (windowWidth * 6) / 100,
+                      width: (windowWidth * 6) / 100,
                       resizeMode: "contain",
                     }}
                   >
@@ -293,9 +293,9 @@ export default class AddPatient extends Component {
               flex: 1,
               width: "100%",
               alignSelf: "center",
-              backgroundColor: Colors.white_color,
-              marginTop: (mobileW * 3) / 100,
-              paddingBottom: (mobileW * 10) / 100,
+              backgroundColor: Colors.white,
+              marginTop: (windowWidth * 3) / 100,
+              paddingBottom: (windowWidth * 10) / 100,
               shadowColor: "#000",
               shadowOffset: { width: 1, height: 1 },
               shadowOpacity: 0.5,
@@ -328,14 +328,14 @@ export default class AddPatient extends Component {
                 style={{
                   width: "28%",
                   alignSelf: "center",
-                  paddingVertical: (mobileW * 5) / 100,
+                  paddingVertical: (windowWidth * 5) / 100,
                 }}
               >
                 <View
                   style={{
-                    width: (mobileW * 23) / 100,
-                    height: (mobileW * 23) / 100,
-                    borderRadius: (mobileW * 11.5) / 100,
+                    width: (windowWidth * 23) / 100,
+                    height: (windowWidth * 23) / 100,
+                    borderRadius: (windowWidth * 11.5) / 100,
                     borderWidth: 4,
                     borderColor: Colors.bordercolor_light_blue,
                     // backgroundColor:'red'
@@ -343,15 +343,15 @@ export default class AddPatient extends Component {
                 >
                   <Image
                     style={{
-                      width: (mobileW * 21) / 100,
-                      height: (mobileW * 21) / 100,
-                      borderRadius: (mobileW * 10.5) / 100,
+                      width: (windowWidth * 21) / 100,
+                      height: (windowWidth * 21) / 100,
+                      borderRadius: (windowWidth * 10.5) / 100,
                     }}
                     source={
                       this.state.profile_img == "NA" ||
                       this.state.profile_img == null ||
                       this.state.profile_img == ""
-                        ? localimag.profileimg
+                        ? Icons.profileimg
                         : { uri: this.state.profile_img }
                     }
                   />
@@ -362,7 +362,7 @@ export default class AddPatient extends Component {
                 style={{
                   width: "20%",
                   alignSelf: "center",
-                  marginTop: (mobileW * -15) / 100,
+                  marginTop: (windowWidth * -15) / 100,
                 }}
               >
                 <TouchableOpacity
@@ -370,9 +370,9 @@ export default class AddPatient extends Component {
                     this.setState({ mediamodal: true });
                   }}
                   style={{
-                    width: (mobileW * 8) / 100,
-                    height: (mobileW * 8) / 100,
-                    borderRadius: (mobileW * 4) / 100,
+                    width: (windowWidth * 8) / 100,
+                    height: (windowWidth * 8) / 100,
+                    borderRadius: (windowWidth * 4) / 100,
                     borderWidth: 2,
                     borderColor: Colors.bordercolor_light_blue,
                     backgroundColor: "white",
@@ -381,12 +381,12 @@ export default class AddPatient extends Component {
                 >
                   <Image
                     style={{
-                      height: (mobileW * 3.5) / 100,
-                      width: (mobileW * 3.5) / 100,
+                      height: (windowWidth * 3.5) / 100,
+                      width: (windowWidth * 3.5) / 100,
                       alignSelf: "center",
-                      marginTop: (mobileW * 1.8) / 100,
+                      marginTop: (windowWidth * 1.8) / 100,
                     }}
-                    source={localimag.camera}
+                    source={Icons.camera}
                   />
                 </TouchableOpacity>
               </View>
@@ -396,10 +396,10 @@ export default class AddPatient extends Component {
                 style={{
                   width: "90%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 3) / 100,
+                  marginTop: (windowWidth * 3) / 100,
                   // borderColor: this.state.PatientFirstNamefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (mobileW * 0.3) / 100,
-                  // borderRadius: (mobileW * 1) / 100, marginTop: mobileW * 10 / 100
+                  // borderWidth: (windowWidth * 0.3) / 100,
+                  // borderRadius: (windowWidth * 1) / 100, marginTop: windowWidth * 10 / 100
                 }}
               >
                 <AuthInputBoxSec
@@ -428,7 +428,7 @@ export default class AddPatient extends Component {
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
                       fontFamily: Font.fontlight,
-                      padding: mobileW * 0.5 / 100
+                      padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={50}
                     placeholder={
@@ -436,7 +436,7 @@ export default class AddPatient extends Component {
                         ? Lang_chg.PatientFirstName[config.language]
                         : null
                     }
-                    placeholderTextColor={Colors.placeholder_text}
+                    DarkGrey={Colors.DarkGrey}
                     onChangeText={txt => {
                       this.setState({ first_name: txt });
                     }}
@@ -460,9 +460,9 @@ export default class AddPatient extends Component {
                     style={{
                       position: 'absolute',
                       backgroundColor: 'white',
-                      left: (mobileW * 4) / 100,
-                      top: (-mobileW * 2.5) / 100,
-                      paddingHorizontal: (mobileW * 1) / 100,
+                      left: (windowWidth * 4) / 100,
+                      top: (-windowWidth * 2.5) / 100,
+                      paddingHorizontal: (windowWidth * 1) / 100,
                     }}>
                     <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientFirstName[config.language]}</Text>
                   </View>
@@ -474,10 +474,10 @@ export default class AddPatient extends Component {
                 style={{
                   width: "90%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 3) / 100,
+                  marginTop: (windowWidth * 3) / 100,
                   // borderColor: this.state.PatientLastNamefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (mobileW * 0.3) / 100,
-                  // borderRadius: (mobileW * 1) / 100,
+                  // borderWidth: (windowWidth * 0.3) / 100,
+                  // borderRadius: (windowWidth * 1) / 100,
                 }}
               >
                 <AuthInputBoxSec
@@ -506,7 +506,7 @@ export default class AddPatient extends Component {
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
                       fontFamily: Font.fontlight,
-                      padding: mobileW * 0.5 / 100
+                      padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={50}
                     placeholder={
@@ -514,7 +514,7 @@ export default class AddPatient extends Component {
                         ? Lang_chg.PatientLastName[config.language]
                         : null
                     }
-                    placeholderTextColor={Colors.placeholder_text}
+                    DarkGrey={Colors.DarkGrey}
                     onChangeText={txt => {
                       this.setState({ last_name: txt });
                     }}
@@ -538,9 +538,9 @@ export default class AddPatient extends Component {
                     style={{
                       position: 'absolute',
                       backgroundColor: 'white',
-                      left: (mobileW * 4) / 100,
-                      top: (-mobileW * 2.5) / 100,
-                      paddingHorizontal: (mobileW * 1) / 100,
+                      left: (windowWidth * 4) / 100,
+                      top: (-windowWidth * 2.5) / 100,
+                      paddingHorizontal: (windowWidth * 1) / 100,
                     }}>
                     <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientLastName[config.language]}</Text>
                   </View>
@@ -552,10 +552,10 @@ export default class AddPatient extends Component {
                 style={{
                   width: "90%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 3) / 100,
+                  marginTop: (windowWidth * 3) / 100,
                   // borderColor: this.state.PatientEmailfocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (mobileW * 0.3) / 100,
-                  // borderRadius: (mobileW * 1) / 100,
+                  // borderWidth: (windowWidth * 0.3) / 100,
+                  // borderRadius: (windowWidth * 1) / 100,
                 }}
               >
                 <AuthInputBoxSec
@@ -584,7 +584,7 @@ export default class AddPatient extends Component {
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
                       fontFamily: Font.fontlight,
-                      padding: mobileW * 0.5 / 100
+                      padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={100}
                     placeholder={
@@ -592,7 +592,7 @@ export default class AddPatient extends Component {
                         ? Lang_chg.PatientEmail[config.language]
                         : null
                     }
-                    placeholderTextColor={Colors.placeholder_text}
+                    DarkGrey={Colors.DarkGrey}
                     onChangeText={txt => {
                       this.setState({ email: txt });
                     }}
@@ -616,9 +616,9 @@ export default class AddPatient extends Component {
                     style={{
                       position: 'absolute',
                       backgroundColor: 'white',
-                      left: (mobileW * 4) / 100,
-                      top: (-mobileW * 2.5) / 100,
-                      paddingHorizontal: (mobileW * 1) / 100,
+                      left: (windowWidth * 4) / 100,
+                      top: (-windowWidth * 2.5) / 100,
+                      paddingHorizontal: (windowWidth * 1) / 100,
                     }}>
                     <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientEmail[config.language]}</Text>
                   </View>
@@ -630,10 +630,10 @@ export default class AddPatient extends Component {
                 style={{
                   width: "90%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 3) / 100,
+                  marginTop: (windowWidth * 3) / 100,
                   // borderColor: this.state.PatientAgefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (mobileW * 0.3) / 100,
-                  // borderRadius: (mobileW * 1) / 100,
+                  // borderWidth: (windowWidth * 0.3) / 100,
+                  // borderRadius: (windowWidth * 1) / 100,
                 }}
               >
                 <AuthInputBoxSec
@@ -663,7 +663,7 @@ export default class AddPatient extends Component {
 
                       height: Font.placeholder_height,
                       fontFamily: Font.fontlight,
-                      padding: mobileW * 0.5 / 100
+                      padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={3}
                     placeholder={
@@ -671,7 +671,7 @@ export default class AddPatient extends Component {
                         ? Lang_chg.PatientAge[config.language]
                         : null
                     }
-                    placeholderTextColor={Colors.placeholder_text}
+                    DarkGrey={Colors.DarkGrey}
                     onChangeText={txt => {
                       this.setState({ age: txt });
                     }}
@@ -695,9 +695,9 @@ export default class AddPatient extends Component {
                     style={{
                       position: 'absolute',
                       backgroundColor: 'white',
-                      left: (mobileW * 4) / 100,
-                      top: (-mobileW * 2.5) / 100,
-                      paddingHorizontal: (mobileW * 1) / 100,
+                      left: (windowWidth * 4) / 100,
+                      top: (-windowWidth * 2.5) / 100,
+                      paddingHorizontal: (windowWidth * 1) / 100,
                     }}>
                     <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientAge[config.language]}</Text>
                   </View>
@@ -710,7 +710,7 @@ export default class AddPatient extends Component {
                 style={{
                   width: "88%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 5) / 100,
+                  marginTop: (windowWidth * 5) / 100,
                   flexDirection: "row",
                   alignItems: "center",
                 }}
@@ -720,10 +720,10 @@ export default class AddPatient extends Component {
                     style={{
                       color: Colors.textGender,
                       fontFamily: Font.placeholderfontfamily,
-                      fontSize: (mobileW * 3.8) / 100,
+                      fontSize: (windowWidth * 3.8) / 100,
 
                       textAlign: config.textRotate,
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                     }}
                   >
                     {Lang_chg.Gender[config.language]}
@@ -734,9 +734,9 @@ export default class AddPatient extends Component {
                   style={{
                     width: "60%",
 
-                    marginTop: (mobileW * 3) / 100,
+                    marginTop: (windowWidth * 3) / 100,
                     flexDirection: "row",
-                    marginLeft: (mobileW * 2) / 100,
+                    marginLeft: (windowWidth * 2) / 100,
                     // justifyContent:'space-evenly',
                     alignItems: "center",
                   }}
@@ -756,7 +756,7 @@ export default class AddPatient extends Component {
                     <View style={{ width: "24%", alignSelf: "center" }}>
                       <View
                         style={{
-                          width: (mobileW * 5) / 100,
+                          width: (windowWidth * 5) / 100,
                           alignSelf: "center",
                           flexDirection: "row",
                         }}
@@ -782,8 +782,8 @@ export default class AddPatient extends Component {
                     <Text
                       style={{
                         color: Colors.textGender,
-                        marginLeft: (mobileW * 2) / 100,
-                        fontSize: (mobileW * 3.5) / 100,
+                        marginLeft: (windowWidth * 2) / 100,
+                        fontSize: (windowWidth * 3.5) / 100,
                         textAlign: "center",
                         fontFamily: Font.placeholderfontfamily,
                       }}
@@ -808,7 +808,7 @@ export default class AddPatient extends Component {
                     <View style={{ width: "24%", alignSelf: "center" }}>
                       <View
                         style={{
-                          width: (mobileW * 5) / 100,
+                          width: (windowWidth * 5) / 100,
                           alignSelf: "center",
                           flexDirection: "row",
                         }}
@@ -836,8 +836,8 @@ export default class AddPatient extends Component {
                         textAlign: "center",
                         fontFamily: Font.placeholderfontfamily,
                         alignSelf: "center",
-                        fontSize: (mobileW * 3.5) / 100,
-                        marginLeft: (mobileW * 2) / 100,
+                        fontSize: (windowWidth * 3.5) / 100,
+                        marginLeft: (windowWidth * 2) / 100,
                       }}
                     >
                       {Lang_chg.male[config.language]}
@@ -862,11 +862,12 @@ export default class AddPatient extends Component {
                 this.submit_click()
               }} 
               title={Lang_chg.SAVEPATIENT[config.language]} 
-              bgcolor={Colors.theme_color} /> */}
+              bgcolor={Colors.Theme} /> */}
             </View>
           </View>
         </ScrollView>
-        <HideWithKeyboard>
+
+        {/* <HideWithKeyboard>
           <Footer
             activepage="More"
             usertype={1}
@@ -875,42 +876,42 @@ export default class AddPatient extends Component {
                 name: "Home",
                 fname: Lang_chg.home_footer[config.language],
                 countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
+                image: Icons.Home,
+                activeimage: Icons.Home,
               },
               {
                 name: "Appointment",
                 fname: Lang_chg.Appointment_footer[config.language],
                 countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
+                image: Icons.Appointment,
+                activeimage: Icons.Appointment,
               },
               {
                 name: "Cart",
                 fname: Lang_chg.Cart_footer[config.language],
                 countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
+                image: Icons.Cart,
+                activeimage: Icons.Cart,
               },
               {
                 name: "More",
                 fname: Lang_chg.More_footer[config.language],
                 countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
+                image: Icons.More,
+                activeimage: Icons.More,
               },
             ]}
             navigation={this.props.navigation}
             imagestyle1={{
               width: 25,
               height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
+              paddingBottom: (windowWidth * 5.4) / 100,
               backgroundColor: "white",
               countcolor: "red",
               countbackground: "red",
             }}
           />
-        </HideWithKeyboard>
+        </HideWithKeyboard> */}
       </View>
     );
   }

@@ -6,9 +6,9 @@ import {
   apifuntion,
   config,
   consolepro,
-  localimag,
+  Icons,
   localStorage,
-  mobileW,
+  windowWidth,
 } from "../Provider/utilslib/Utils";
 
 const AppointmentSchedule = (props) => {
@@ -147,8 +147,8 @@ const AppointmentSchedule = (props) => {
         shadowOffset: { width: 2, height: 2 },
         elevation: 2,
         shadowRadius: 2,
-        marginTop: (mobileW * 1.5) / 100,
-        marginBottom: (mobileW * 1.5) / 100,
+        marginTop: (windowWidth * 1.5) / 100,
+        marginBottom: (windowWidth * 1.5) / 100,
         backgroundColor: "#fff",
       }}
     >
@@ -158,7 +158,7 @@ const AppointmentSchedule = (props) => {
           alignItems: "center",
           width: "93%",
           alignSelf: "center",
-          paddingTop: (mobileW * 4) / 100,
+          paddingTop: (windowWidth * 4) / 100,
         }}
       >
         <Text
@@ -167,7 +167,7 @@ const AppointmentSchedule = (props) => {
             fontSize: Font.name,
             width: "65%",
             textAlign: config.textRotate,
-            fontSize: (mobileW * 3.5) / 100,
+            fontSize: (windowWidth * 3.5) / 100,
           }}
         >
           {Lang_chg.Appointmentschedule[config.language]}
@@ -183,21 +183,21 @@ const AppointmentSchedule = (props) => {
           <View style={{ width: "20%", alignSelf: "center" }}>
             <Image
               style={{
-                width: (mobileW * 5) / 100,
-                height: (mobileW * 5) / 100,
+                width: (windowWidth * 5) / 100,
+                height: (windowWidth * 5) / 100,
                 alignSelf: "center",
               }}
-              source={localimag.calendarimg}
+              source={Icons.calendarimg}
             />
           </View>
 
           <Text
             style={{
-              color: Colors.theme_color,
+              color: Colors.Theme,
               fontFamily: Font.fontmedium,
               fontSize: Font.name,
               alignSelf: "center",
-              marginLeft: (mobileW * 1) / 100,
+              marginLeft: (windowWidth * 1) / 100,
               textAlign: "right",
             }}
           >
@@ -210,8 +210,8 @@ const AppointmentSchedule = (props) => {
           borderWidth: 1,
           borderColor: Colors.gainsboro,
           width: "100%",
-          marginTop: (mobileW * 1.5) / 100,
-          marginBottom: (mobileW * 1.5) / 100,
+          marginTop: (windowWidth * 1.5) / 100,
+          marginBottom: (windowWidth * 1.5) / 100,
         }}
       />
 
@@ -219,7 +219,7 @@ const AppointmentSchedule = (props) => {
         style={{
           width: "93%",
           alignSelf: "center",
-          paddingBottom: (mobileW * 3) / 100,
+          paddingBottom: (windowWidth * 3) / 100,
         }}
       >
         <Text
@@ -245,21 +245,21 @@ const AppointmentSchedule = (props) => {
                     getDoctorTimeDate();
                     props.sendData(item, index);
                   }}
-                  style={{ width: (mobileW * 15) / 100 }}
+                  style={{ width: (windowWidth * 15) / 100 }}
                 >
                   <Text
                     style={{
-                      marginRight: (mobileW * 3) / 100,
-                      marginTop: (mobileW * 3) / 100,
+                      marginRight: (windowWidth * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       backgroundColor:
                         item.tick == 1 ? "#0787D2" : Colors.gray6,
                       color: item.tick == 1 ? "white" : "black",
                       textAlign: "center",
-                      paddingVertical: (mobileW * 2) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
                       fontFamily: Font.ques_fontfamily,
                       fontSize: Font.sregulartext_size,
 
-                      lineHeight: (mobileW * 5) / 100,
+                      lineHeight: (windowWidth * 5) / 100,
                     }}
                   >
                     {item.day}
@@ -277,7 +277,7 @@ const AppointmentSchedule = (props) => {
         style={{
           width: "93%",
           alignSelf: "center",
-          paddingBottom: (mobileW * 3) / 100,
+          paddingBottom: (windowWidth * 3) / 100,
         }}
       >
         <Text
@@ -318,16 +318,16 @@ const AppointmentSchedule = (props) => {
                             <Text
                               style={[
                                 {
-                                  marginRight: (mobileW * 3) / 100,
-                                  marginTop: (mobileW * 3) / 100,
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
                                   fontFamily: Font.ques_fontfamily,
                                   fontSize: Font.sregulartext_size,
-                                  padding: (mobileW * 2) / 100,
-                                  paddingHorizontal: (mobileW * 3.3) / 100,
+                                  padding: (windowWidth * 2) / 100,
+                                  paddingHorizontal: (windowWidth * 3.3) / 100,
                                 },
                                 item.time == this.state.time_take_data
                                   ? {
-                                      backgroundColor: Colors.theme_color,
+                                      backgroundColor: Colors.Theme,
                                       color: "#fff",
                                     }
                                   : {
@@ -360,16 +360,16 @@ const AppointmentSchedule = (props) => {
                             <Text
                               style={[
                                 {
-                                  marginRight: (mobileW * 3) / 100,
-                                  marginTop: (mobileW * 3) / 100,
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
                                   fontFamily: Font.ques_fontfamily,
                                   fontSize: Font.sregulartext_size,
-                                  padding: (mobileW * 2) / 100,
-                                  paddingHorizontal: (mobileW * 3.3) / 100,
+                                  padding: (windowWidth * 2) / 100,
+                                  paddingHorizontal: (windowWidth * 3.3) / 100,
                                 },
                                 item.time == this.state.time_take_data
                                   ? {
-                                      backgroundColor: Colors.theme_color,
+                                      backgroundColor: Colors.Theme,
                                       color: "#fff",
                                     }
                                   : {
@@ -390,11 +390,11 @@ const AppointmentSchedule = (props) => {
                 <Text
                   style={{
                     fontFamily: Font.fontMediumItalic,
-                    fontSize: (mobileW * 4) / 100,
+                    fontSize: (windowWidth * 4) / 100,
                     alignSelf: "center",
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                     textAlign: "center",
-                    marginLeft: (mobileW * 32) / 100,
+                    marginLeft: (windowWidth * 32) / 100,
                   }}
                 >
                   {Lang_chg.no_data_Found[config.language]}

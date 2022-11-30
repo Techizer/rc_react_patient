@@ -25,7 +25,7 @@ class localStorageProvider {
             console.log('Error12',error);
         }
     }
-
+ 
     async getItemObject(key) {
         console.log('getItemObject key',key);
         var item = await AsyncStorage.getItem(key);

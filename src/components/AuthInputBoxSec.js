@@ -25,11 +25,11 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 // const { height, width } = Dimensions.get("window");
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
-  mobileH,
+  windowHeight,
   config,
-  mobileW,
+  windowWidth,
   Lang_chg,
   apifuntion,
   msgText,
@@ -125,18 +125,8 @@ const AuthInputBoxSec = ({
               }}
               label={lableText}
               mode="outlined"
-              outlineColor={Colors.field_border_color}
+              outlineColor={Colors.Border}
               activeOutlineColor={Colors.placholderactive}
-              // caretHidden={false}
-              // selectionColor="green"
-              // activeValueColor={Colors.textblack}
-              // activeBorderColor={Colors.placholderactive}
-              // activeLabelColor={Colors.placholderactive}
-              // passiveBorderColor={Colors.field_border_color}
-              // passiveLabelColor={Colors.gray4}
-              // passiveValueColor={Colors.gray4}
-              // height={48}
-              // width={'100%'}
               autoCapitalize="none"
               {...props}
               value={props.value}
@@ -147,55 +137,19 @@ const AuthInputBoxSec = ({
                     name={iconName}
                     onPress={iconPressAction}
                     forceTextInputFocus={false}
-                    color={Colors.regulartextcolor}
+                    color={Colors.DarkGrey}
                     style={{
-                      marginTop: 12,
+                      marginTop: 12
                     }}
                   />
                 )
               }
             />
           </View>
-          {/* {disableImg ? (
-            // <View style={[styles.imgView, imgView]}>
-            //     <Image
-            //         style={[styles.img, imgStyle]}
-            //         resizeMode="contain"
-            //         source={icon}
-            //     />
-            // </View>
-            <Icon
-              style={{
-                position: "absolute",
-                top: 6,
-                right: -35,
-                color: iconColor ? iconColor : "#7C7C7C",
-              }}
-              name={iconName}
-              size={25}
-              onPress={iconPressAction}
-            />
-          ) : null} */}
-
-          {/* <TouchableOpacity style={[styles.textStyle, textStyle]} {...props}>
-            {loading ?
-              <ActivityIndicator color="white" {...props} size={'small'} />
-              :
-              <Text style={{ color: THEME_WHITE }}>{buttin}</Text>
-            }
-          </TouchableOpacity> */}
+         
         </View>
       </View>
-      {/* {error ? (
-                <View style={[styles.errorLayout, errorLayout]}>
-                    <Text
-                        ellipsizeMode="tail"
-                        numberOfLines={3}
-                        style={[styles.errorTxt]}>
-                        {error}
-                    </Text>
-                </View>
-            ) : null} */}
+      
     </>
   );
 };
@@ -205,7 +159,6 @@ AuthInputBoxSec.defaultProps = { mainContainer: {} };
 const styles = StyleSheet.create({
   textStyle: {
     backgroundColor: "gray",
-    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -240,9 +193,9 @@ const styles = StyleSheet.create({
     color: Colors.textblack,
     fontSize: Font.placeholdersize,
     textAlign: config.textalign,
-    //height: (mobileW * 12) / 100,
+    //height: (windowWidth * 12) / 100,
     fontFamily: Font.placeholderfontfamily,
-    borderRadius: (mobileW * 1) / 100,
+    borderRadius: 80,
     padding: 0,
     margin: 0,
     includeFontPadding: false,
@@ -253,7 +206,7 @@ const styles = StyleSheet.create({
   errorLayout: {
     backgroundColor: "red",
     marginVertical: 6,
-    borderRadius: 5,
+    borderRadius: 8,
     padding: 5,
   },
   errorTxt: {

@@ -213,7 +213,7 @@ class GroceryTypeScreen extends Component {
                         );
                     }}
                     placeholder={'search by grocrey type name'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -306,7 +306,7 @@ class GroceryTypeScreen extends Component {
                                     );
                                 }}
                                 placeholder="Search by Grocrey Type"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

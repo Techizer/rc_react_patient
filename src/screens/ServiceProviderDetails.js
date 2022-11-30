@@ -15,12 +15,12 @@ import {
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   msgProvider,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -193,25 +193,25 @@ export default class ServiceProviderDetails extends Component {
             contentContainerStyle={{
               paddingBottom:
                 this.state.pass_status !== "lab"
-                  ? (mobileW * 20) / 100
-                  : (mobileW * 17) / 100,
+                  ? (windowWidth * 20) / 100
+                  : (windowWidth * 17) / 100,
             }}
           >
-            <View style={{ marginVertical: (mobileW * 3) / 100, flex: 1 }}>
+            <View style={{ marginVertical: (windowWidth * 3) / 100, flex: 1 }}>
               <View>
                 <View
                   style={{
                     backgroundColor: "#fff",
-                    paddingBottom: (mobileW * 5) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
+                    paddingBottom: (windowWidth * 5) / 100,
+                    paddingHorizontal: (windowWidth * 4) / 100,
                     // alignItems: "center",
                   }}
                 >
                   <View
                     style={{
                       flexDirection: "row",
-                      paddingVertical: (mobileW * 1) / 100,
-                      marginTop: (mobileW * 2) / 100,
+                      paddingVertical: (windowWidth * 1) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     {/* image and store name */}
@@ -222,15 +222,15 @@ export default class ServiceProviderDetails extends Component {
                           item.image == "NA" ||
                           item.image == null ||
                           item.image == ""
-                            ? localimag.p1
+                            ? Icons.p1
                             : { uri: config.img_url3 + item.image }
                         }
                         style={{
-                          width: (mobileW * 20) / 100,
-                          height: (mobileW * 20) / 100,
+                          width: (windowWidth * 20) / 100,
+                          height: (windowWidth * 20) / 100,
                           borderWidth: 1,
                           borderColor: "#0888D1",
-                          borderRadius: (mobileW * 10) / 100,
+                          borderRadius: (windowWidth * 10) / 100,
                         }}
                       />
                     </View>
@@ -255,7 +255,7 @@ export default class ServiceProviderDetails extends Component {
                         <>
                           <Text
                             style={{
-                              paddingVertical: (mobileW * 1.5) / 100,
+                              paddingVertical: (windowWidth * 1.5) / 100,
                               fontFamily: Font.fontregular,
                               fontSize: Font.subtext,
                               color: Colors.cardlighgray,
@@ -267,7 +267,7 @@ export default class ServiceProviderDetails extends Component {
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              color: Colors.theme_color,
+                              color: Colors.Theme,
                               fontSize: Font.subtext,
                               textAlign: config.textRotate,
                             }}
@@ -278,10 +278,10 @@ export default class ServiceProviderDetails extends Component {
                       ) : (
                         <Text
                           style={{
-                            paddingVertical: (mobileW * 1.5) / 100,
+                            paddingVertical: (windowWidth * 1.5) / 100,
                             fontFamily: Font.fontregular,
                             fontSize: Font.subtext,
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             textAlign: config.textRotate,
                           }}
                         >
@@ -298,7 +298,7 @@ export default class ServiceProviderDetails extends Component {
                           height: 20,
                           marginTop: -13,
                           marginLeft: 15,
-                          borderBottomLeftRadius: (mobileW * 2) / 100,
+                          borderBottomLeftRadius: (windowWidth * 2) / 100,
                           paddingVertical: 3,
                         }}
                       >
@@ -306,7 +306,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             color: "#fff",
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 2.5) / 100,
+                            fontSize: (windowWidth * 2.5) / 100,
                             alignSelf: "center",
                           }}
                         >
@@ -322,8 +322,8 @@ export default class ServiceProviderDetails extends Component {
                             height: 20,
                             marginTop: -13,
                             marginLeft: 15,
-                            // borderTopLeftRadius : (mobileW * 2) / 100,
-                            borderBottomLeftRadius: (mobileW * 2) / 100,
+                            // borderTopLeftRadius : (windowWidth * 2) / 100,
+                            borderBottomLeftRadius: (windowWidth * 2) / 100,
                             paddingVertical: 3,
                           }}
                         >
@@ -331,7 +331,7 @@ export default class ServiceProviderDetails extends Component {
                             style={{
                               color: "#fff",
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 2.5) / 100,
+                              fontSize: (windowWidth * 2.5) / 100,
                               alignSelf: "center",
                             }}
                           >
@@ -344,10 +344,10 @@ export default class ServiceProviderDetails extends Component {
                   <View
                     style={{
                       flexDirection: "row",
-                      borderBottomWidth: (mobileW * 0.3) / 100,
-                      paddingBottom: (mobileW * 4) / 100,
+                      borderBottomWidth: (windowWidth * 0.3) / 100,
+                      paddingBottom: (windowWidth * 4) / 100,
                       borderColor: Colors.gainsboro,
-                      paddingTop: (mobileW * 4) / 100,
+                      paddingTop: (windowWidth * 4) / 100,
                       width: "97%",
                       alignSelf: "center",
                     }}
@@ -369,7 +369,7 @@ export default class ServiceProviderDetails extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize: Font.regulartext_size,
-                          paddingTop: (mobileW * 2) / 100,
+                          paddingTop: (windowWidth * 2) / 100,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -391,7 +391,7 @@ export default class ServiceProviderDetails extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize: Font.regulartext_size,
-                          paddingTop: (mobileW * 2) / 100,
+                          paddingTop: (windowWidth * 2) / 100,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -412,15 +412,15 @@ export default class ServiceProviderDetails extends Component {
                       <View
                         style={{
                           flexDirection: "row",
-                          paddingTop: (mobileW * 2) / 100,
+                          paddingTop: (windowWidth * 2) / 100,
                         }}
                       >
                         <Image
-                          source={localimag.starrating}
+                          source={Icons.starrating}
                           style={{
                             // tintColor: '#fff',
-                            width: (mobileW * 3.3) / 100,
-                            height: (mobileW * 3.3) / 100,
+                            width: (windowWidth * 3.3) / 100,
+                            height: (windowWidth * 3.3) / 100,
                             alignSelf: "center",
                           }}
                         />
@@ -428,7 +428,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             fontFamily: Font.fontmedium,
                             fontSize: Font.regulartext_size,
-                            marginLeft: (mobileW * 2) / 100,
+                            marginLeft: (windowWidth * 2) / 100,
                             textAlign: config.textRotate,
                           }}
                         >
@@ -441,8 +441,8 @@ export default class ServiceProviderDetails extends Component {
                   {this.state.pass_status !== "lab" ? (
                     <View
                       style={{
-                        borderBottomWidth: (mobileW * 0.3) / 100,
-                        paddingVertical: (mobileW * 4) / 100,
+                        borderBottomWidth: (windowWidth * 0.3) / 100,
+                        paddingVertical: (windowWidth * 4) / 100,
                         borderColor: Colors.gainsboro,
                         width: "96%",
                         alignSelf: "center",
@@ -462,8 +462,8 @@ export default class ServiceProviderDetails extends Component {
                   ) : (
                     <View
                       style={{
-                        borderBottomWidth: (mobileW * 0.3) / 100,
-                        paddingVertical: (mobileW * 4) / 100,
+                        borderBottomWidth: (windowWidth * 0.3) / 100,
+                        paddingVertical: (windowWidth * 4) / 100,
                         borderColor: Colors.gainsboro,
                         width: "96%",
                         alignSelf: "center",
@@ -483,8 +483,8 @@ export default class ServiceProviderDetails extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.subtext,
-                          marginTop: (mobileW * 4) / 100,
-                          color: Colors.theme_color,
+                          marginTop: (windowWidth * 4) / 100,
+                          color: Colors.Theme,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -497,11 +497,11 @@ export default class ServiceProviderDetails extends Component {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      paddingVertical: (mobileW * 2) / 100,
-                      borderRadius: (mobileW * 1) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
+                      borderRadius: (windowWidth * 1) / 100,
                       width: "97%",
                       alignSelf: "center",
-                      paddingVertical: (mobileW * 2) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
                       justifyContent: "space-between",
                     }}
                   >
@@ -512,29 +512,29 @@ export default class ServiceProviderDetails extends Component {
                     >
                       {config.language == 0 ? (
                         <Image
-                          source={localimag.clock}
+                          source={Icons.clock}
                           style={{
                             resizeMode: "contain",
-                            width: (mobileW * 4) / 100,
-                            height: (mobileW * 4) / 100,
+                            width: (windowWidth * 4) / 100,
+                            height: (windowWidth * 4) / 100,
                           }}
                         />
                       ) : (
                         <Image
-                          source={localimag.clock_arabic_gray}
+                          source={Icons.clock_arabic_gray}
                           style={{
                             resizeMode: "contain",
-                            width: (mobileW * 4) / 100,
-                            height: (mobileW * 4) / 100,
+                            width: (windowWidth * 4) / 100,
+                            height: (windowWidth * 4) / 100,
                           }}
                         />
                       )}
                       <Text
                         style={{
-                          marginLeft: (mobileW * 1.5) / 100,
+                          marginLeft: (windowWidth * 1.5) / 100,
                           fontFamily: Font.fontregular,
                           fontSize: Font.subtext,
-                          color: Colors.regulartextcolor,
+                          color: Colors.DarkGrey,
                         }}
                       >
                         {item.bavi_text}
@@ -543,7 +543,7 @@ export default class ServiceProviderDetails extends Component {
                     <View>
                       <Text
                         style={{
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.subtext,
                         }}
@@ -558,8 +558,8 @@ export default class ServiceProviderDetails extends Component {
                       width: "100%",
                       alignSelf: "center",
                       borderColor: Colors.bordercolor,
-                      borderBottomWidth: (mobileW * 0.3) / 100,
-                      marginTop: (mobileW * 1) / 100,
+                      borderBottomWidth: (windowWidth * 0.3) / 100,
+                      marginTop: (windowWidth * 1) / 100,
                     }}
                   />
                   {this.state.isFromHospital ? (
@@ -631,7 +631,7 @@ export default class ServiceProviderDetails extends Component {
                           indexPosition: 1,
                         });
                       }}
-                      bgcolor={Colors.buttoncolorblue}
+                      bgcolor={Colors.Theme}
                       title={Lang_chg.BookHomeVisitAppointment[config.language]}
                     />
                   ) : (
@@ -644,7 +644,7 @@ export default class ServiceProviderDetails extends Component {
                             display: "hourlybooking",
                           });
                         }}
-                        bgcolor={Colors.buttoncolorblue}
+                        bgcolor={Colors.Theme}
                         title={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
                       />
                     )
@@ -656,18 +656,18 @@ export default class ServiceProviderDetails extends Component {
                           width: "120%",
                           alignSelf: "center",
                           borderColor: Colors.bordercolor,
-                          borderBottomWidth: (mobileW * 0.5) / 100,
-                          marginTop: (mobileW * 5) / 100,
+                          borderBottomWidth: (windowWidth * 0.5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                         }}
                       />
                       <View
                         style={{
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                           height:
                             item.available_package !== null
-                              ? (mobileW * 48) / 100
-                              : (mobileW * 20) / 100,
-                          // paddingVertical: (mobileW * 1) / 100,
+                              ? (windowWidth * 48) / 100
+                              : (windowWidth * 20) / 100,
+                          // paddingVertical: (windowWidth * 1) / 100,
                           elevation: 5,
                           shadowRadius: 2,
                           backgroundColor: "#fff",
@@ -685,7 +685,7 @@ export default class ServiceProviderDetails extends Component {
                               style={{
                                 textAlign: config.textalign,
                                 fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 4) / 100,
+                                fontSize: (windowWidth * 4) / 100,
                               }}
                             >
                               {Lang_chg.HealthPackages[config.language]}
@@ -702,7 +702,7 @@ export default class ServiceProviderDetails extends Component {
                                 style={{
                                   fontFamily: Font.fontregular,
                                   fontSize: Font.regulartext_size,
-                                  color: Colors.theme_color,
+                                  color: Colors.Theme,
                                 }}
                               >
                                 {Lang_chg.See_all[config.language]}
@@ -714,8 +714,8 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             width: "100%",
                             backgroundColor: "#fff",
-                            paddingVertical: (mobileW * 3) / 100,
-                            marginBottom: (mobileW * 1) / 100,
+                            paddingVertical: (windowWidth * 3) / 100,
+                            marginBottom: (windowWidth * 1) / 100,
                           }}
                         >
                           {item.available_package != null ? (
@@ -737,10 +737,10 @@ export default class ServiceProviderDetails extends Component {
                                     }}
                                     style={[
                                       {
-                                        borderRadius: (mobileW * 2) / 100,
-                                        marginLeft: (mobileW * 2) / 100,
-                                        width: (mobileW * 40) / 100,
-                                        height: (mobileW * 40) / 100,
+                                        borderRadius: (windowWidth * 2) / 100,
+                                        marginLeft: (windowWidth * 2) / 100,
+                                        width: (windowWidth * 40) / 100,
+                                        height: (windowWidth * 40) / 100,
                                         backgroundColor: "#fff",
                                         borderColor: "#DFDFDF",
                                         borderWidth: 1,
@@ -750,11 +750,11 @@ export default class ServiceProviderDetails extends Component {
                                     <Text
                                       style={{
                                         width: "100%",
-                                        paddingVertical: (mobileW * 1.5) / 100,
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingVertical: (windowWidth * 1.5) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                         color: "#000",
                                         fontFamily: Font.fontmedium,
-                                        fontSize: (mobileW * 3.5) / 100,
+                                        fontSize: (windowWidth * 3.5) / 100,
                                         textAlign: "left",
                                       }}
                                     >
@@ -763,8 +763,8 @@ export default class ServiceProviderDetails extends Component {
 
                                     <Text
                                       style={{
-                                        paddingVertical: (mobileW * 2) / 100,
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingVertical: (windowWidth * 2) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                         fontFamily: Font.fontregular,
                                         textAlign: "left",
                                         fontSize: Font.sregulartext_size,
@@ -778,14 +778,14 @@ export default class ServiceProviderDetails extends Component {
                                         alignSelf: "center",
                                         borderColor: Colors.bordercolor,
                                         borderBottomWidth:
-                                          (mobileW * 0.5) / 100,
-                                        marginTop: (mobileW * 1) / 100,
+                                          (windowWidth * 0.5) / 100,
+                                        marginTop: (windowWidth * 1) / 100,
                                       }}
                                     />
                                     <Text
                                       style={{
-                                        paddingVertical: (mobileW * 2) / 100,
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingVertical: (windowWidth * 2) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                         fontFamily: Font.fontregular,
                                         textAlign: "left",
                                         color: Colors.buttoncolorhgreen,
@@ -796,7 +796,7 @@ export default class ServiceProviderDetails extends Component {
                                     </Text>
                                     <Text
                                       style={{
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                         fontFamily: Font.fontregular,
                                         textAlign: "left",
                                         fontSize: Font.sregulartext_size,
@@ -808,10 +808,10 @@ export default class ServiceProviderDetails extends Component {
                                     </Text>
                                     <View
                                       style={{
-                                        paddingVertical: (mobileW * 2) / 100,
+                                        paddingVertical: (windowWidth * 2) / 100,
                                         flexDirection: "row",
                                         justifyContent: "space-between",
-                                        paddingHorizontal: (mobileW * 2) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
                                         alignItem: "center",
                                       }}
                                     >
@@ -819,7 +819,7 @@ export default class ServiceProviderDetails extends Component {
                                         style={{
                                           textAlign: config.textalign,
                                           fontFamily: Font.fontmedium,
-                                          fontSize: (mobileW * 4) / 100,
+                                          fontSize: (windowWidth * 4) / 100,
                                         }}
                                       >
                                         {item.price}
@@ -841,7 +841,7 @@ export default class ServiceProviderDetails extends Component {
                                         style={{
                                           fontFamily: Font.fontsemibold,
                                           fontSize: Font.regulartext_size,
-                                          color: Colors.theme_color,
+                                          color: Colors.Theme,
                                           textTransform: "uppercase",
                                         }}
                                       >
@@ -856,11 +856,11 @@ export default class ServiceProviderDetails extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 4) / 100,
+                                fontSize: (windowWidth * 4) / 100,
                                 alignSelf: "center",
-                                paddingVertical: (mobileW * 3) / 100,
+                                paddingVertical: (windowWidth * 3) / 100,
                                 textAlign: "center",
-                                color: Colors.theme_color,
+                                color: Colors.Theme,
                               }}
                             >
                               {Lang_chg.Packages_Unavailable[config.language]}
@@ -876,7 +876,7 @@ export default class ServiceProviderDetails extends Component {
                   style={{
                     width: "100%",
                     backgroundColor: Colors.orange,
-                    paddingVertical: (mobileW * 2) / 100,
+                    paddingVertical: (windowWidth * 2) / 100,
                   }}
                 >
                   <View
@@ -897,25 +897,25 @@ export default class ServiceProviderDetails extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <Image
                           style={{
-                            height: (mobileW * 6) / 100,
-                            width: (mobileW * 6) / 100,
+                            height: (windowWidth * 6) / 100,
+                            width: (windowWidth * 6) / 100,
                             alignSelf: "center",
-                            borderRadius: (mobileW * 3) / 100,
+                            borderRadius: (windowWidth * 3) / 100,
                           }}
                           source={
                             this.state.pass_status == "nurse"
-                              ? localimag.nurse
+                              ? Icons.nurse
                               : this.state.pass_status == "physiotherapy"
-                              ? localimag.Physiotherapist
+                              ? Icons.Physiotherapist
                               : this.state.pass_status == "caregiver"
-                              ? localimag.NurseAssistant
+                              ? Icons.NurseAssistant
                               : this.state.pass_status == "babysitter"
-                              ? localimag.Babysitter
+                              ? Icons.Babysitter
                               : this.state.pass_status == "doctor"
-                              ? localimag.Doctor
+                              ? Icons.Doctor
                               : this.state.pass_status == "lab"
-                              ? localimag.Lab
-                              : localimag.Doctor
+                              ? Icons.Lab
+                              : Icons.Doctor
                           }
                         />
                       </View>
@@ -924,9 +924,9 @@ export default class ServiceProviderDetails extends Component {
                           {this.state.pass_status == "nurse" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -937,9 +937,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "physiotherapy" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -950,9 +950,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "caregiver" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -963,9 +963,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "babysitter" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -976,9 +976,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "doctor" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -989,9 +989,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status === "lab" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1002,9 +1002,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1019,9 +1019,9 @@ export default class ServiceProviderDetails extends Component {
                           {this.state.pass_status == "nurse" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1032,9 +1032,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "physiotherapy" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1045,9 +1045,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "caregiver" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1058,9 +1058,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "babysitter" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1071,9 +1071,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status == "doctor" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1084,9 +1084,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : this.state.pass_status === "lab" ? (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1097,9 +1097,9 @@ export default class ServiceProviderDetails extends Component {
                           ) : (
                             <Text
                               style={{
-                                color: Colors.white_color,
+                                color: Colors.white,
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
+                                fontSize: (windowWidth * 3) / 100,
                                 textTransform: "capitalize",
                                 textAlign: config.textRotate,
                               }}
@@ -1112,7 +1112,7 @@ export default class ServiceProviderDetails extends Component {
                       )}
                       <View
                         style={{
-                          paddingVertical: (mobileW * 2) / 100,
+                          paddingVertical: (windowWidth * 2) / 100,
                           borderRightWidth: 1,
                           borderRightColor: "#fff",
                         }}
@@ -1128,10 +1128,10 @@ export default class ServiceProviderDetails extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.white_color,
+                          color: Colors.white,
                           fontFamily: Font.fontregular,
                           fontSize: Font.subtext,
-                          marginLeft: (mobileW * 3) / 100,
+                          marginLeft: (windowWidth * 3) / 100,
                           textAlign: "center",
                         }}
                       >
@@ -1140,7 +1140,7 @@ export default class ServiceProviderDetails extends Component {
                       <Text
                         onPress={() => this.setModalVisible(true)}
                         style={{
-                          color: Colors.white_color,
+                          color: Colors.white,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.subtext,
                         }}
@@ -1154,9 +1154,9 @@ export default class ServiceProviderDetails extends Component {
               {this.state.pass_status !== "lab" && (
                 <View
                   style={{
-                    marginVertical: (mobileW * 3) / 100,
-                    height: (mobileW * 65) / 100,
-                    paddingVertical: (mobileW * 3) / 100,
+                    marginVertical: (windowWidth * 3) / 100,
+                    height: (windowWidth * 65) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                     shadowOpacity: 0.3,
                     shadowColor: "#000",
                     shadowOffset: { width: 1, height: 1 },
@@ -1178,7 +1178,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.AvailableNurse[config.language]}
@@ -1188,7 +1188,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.Availablephysotharpst[config.language]}
@@ -1198,7 +1198,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.Availableassistent[config.language]}
@@ -1208,7 +1208,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.Availablebabysitter[config.language]}
@@ -1218,7 +1218,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.AvailableDoctor[config.language]}
@@ -1228,7 +1228,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.AvailableLab[config.language]}
@@ -1238,7 +1238,7 @@ export default class ServiceProviderDetails extends Component {
                           style={{
                             textAlign: config.textalign,
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.7) / 100,
+                            fontSize: (windowWidth * 3.7) / 100,
                           }}
                         >
                           {Lang_chg.AvailableDoctor[config.language]}
@@ -1252,7 +1252,7 @@ export default class ServiceProviderDetails extends Component {
                         style={{
                           fontFamily: Font.fontsemibold,
                           fontSize: Font.regulartext_size,
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                         }}
                       >
                         {Lang_chg.See_all[config.language]}
@@ -1262,7 +1262,7 @@ export default class ServiceProviderDetails extends Component {
                       <View
                         style={{
                           alignSelf: "flex-start",
-                          marginTop: (mobileW * 4) / 100,
+                          marginTop: (windowWidth * 4) / 100,
                         }}
                       >
                         <FlatList
@@ -1271,7 +1271,7 @@ export default class ServiceProviderDetails extends Component {
                           data={item.available_provider}
                           renderItem={({ item, index }) => {
                             return (
-                              <View style={{ width: (mobileW * 36) / 100 }}>
+                              <View style={{ width: (windowWidth * 36) / 100 }}>
                                 <TouchableOpacity
                                   activeOpacity={0.9}
                                   onPress={() => {
@@ -1282,10 +1282,10 @@ export default class ServiceProviderDetails extends Component {
                                       });
                                   }}
                                   style={{
-                                    width: (mobileW * 32) / 100,
-                                    marginRight: (mobileW * 4) / 100,
+                                    width: (windowWidth * 32) / 100,
+                                    marginRight: (windowWidth * 4) / 100,
                                     borderWidth: 1,
-                                    borderColor: Colors.LIGHT_CLIENT_BORDER,
+                                    borderColor: Colors.Border,
                                     // shadowOpacity: 0.3,
                                     // shadowColor:'#000',
                                     // shadowOffset:{width:1,height:1},
@@ -1294,8 +1294,8 @@ export default class ServiceProviderDetails extends Component {
                                     backgroundColor: "#fff",
                                     // borderColor:'#DFDFDF',
                                     // borderWidth:1,
-                                    borderRadius: (mobileW * 2) / 100,
-                                    paddingBottom: (mobileW * 3) / 100,
+                                    borderRadius: (windowWidth * 2) / 100,
+                                    paddingBottom: (windowWidth * 3) / 100,
                                     marginBottom: 3,
                                     // alignItems:'center'
                                   }}
@@ -1303,29 +1303,29 @@ export default class ServiceProviderDetails extends Component {
                                   <ImageBackground
                                     imageStyle={{
                                       backgroundColor:
-                                        Colors.LIGHT_CLIENT_BORDER,
+                                        Colors.Border,
                                       borderTopLeftRadius:
-                                        (mobileW * 1.7) / 100,
+                                        (windowWidth * 1.7) / 100,
                                       borderTopRightRadius:
-                                        (mobileW * 1.7) / 100,
+                                        (windowWidth * 1.7) / 100,
                                     }}
                                     style={{
-                                      borderRadius: (mobileW * 2) / 100,
+                                      borderRadius: (windowWidth * 2) / 100,
                                       width: "100%",
-                                      height: (mobileW * 28) / 100,
+                                      height: (windowWidth * 28) / 100,
                                       alignSelf: "center",
                                     }}
                                     source={
                                       item.image == "NA" || item.image == null
-                                        ? localimag.p1
+                                        ? Icons.p1
                                         : { uri: config.img_url3 + item.image }
                                     }
                                   >
                                     <View
                                       style={{
-                                        borderRadius: (mobileW * 1) / 100,
-                                        paddingHorizontal: (mobileW * 2) / 100,
-                                        paddingVertical: (mobileW * 1) / 100,
+                                        borderRadius: (windowWidth * 1) / 100,
+                                        paddingHorizontal: (windowWidth * 2) / 100,
+                                        paddingVertical: (windowWidth * 1) / 100,
                                         position: "absolute",
                                         bottom: 3,
                                         left: 5,
@@ -1337,7 +1337,7 @@ export default class ServiceProviderDetails extends Component {
                                       }}
                                     >
                                       <Image
-                                        source={localimag.starrating}
+                                        source={Icons.starrating}
                                         style={{
                                           tintColor: "#fff",
                                           width: 10,
@@ -1348,9 +1348,9 @@ export default class ServiceProviderDetails extends Component {
                                       <Text
                                         style={{
                                           fontFamily: Font.fontregular,
-                                          fontSize: (mobileW * 2.5) / 100,
-                                          color: Colors.white_color,
-                                          marginLeft: (mobileW * 1.2) / 100,
+                                          fontSize: (windowWidth * 2.5) / 100,
+                                          color: Colors.white,
+                                          marginLeft: (windowWidth * 1.2) / 100,
                                         }}
                                       >
                                         {item.avg_rating}.0
@@ -1359,7 +1359,7 @@ export default class ServiceProviderDetails extends Component {
                                   </ImageBackground>
                                   <View
                                     style={{
-                                      marginTop: (mobileW * 1) / 100,
+                                      marginTop: (windowWidth * 1) / 100,
                                       width: "90%",
                                       //  backgroundColor:'red',
                                       alignSelf: "center",
@@ -1368,8 +1368,8 @@ export default class ServiceProviderDetails extends Component {
                                     <Text
                                       style={{
                                         color: "#000",
-                                        fontSize: (mobileW * 3) / 100,
-                                        marginTop: (mobileW * 1) / 100,
+                                        fontSize: (windowWidth * 3) / 100,
+                                        marginTop: (windowWidth * 1) / 100,
                                         fontFamily: Font.fontmedium,
                                         textAlign: config.textRotate,
                                       }}
@@ -1380,8 +1380,8 @@ export default class ServiceProviderDetails extends Component {
                                     <Text
                                       style={{
                                         color: "#8F98A7",
-                                        fontSize: (mobileW * 3) / 100,
-                                        marginTop: (mobileW * 1) / 100,
+                                        fontSize: (windowWidth * 3) / 100,
+                                        marginTop: (windowWidth * 1) / 100,
                                         fontFamily: Font.fontregular,
                                         textAlign: config.textRotate,
                                       }}
@@ -1392,8 +1392,8 @@ export default class ServiceProviderDetails extends Component {
                                     <Text
                                       style={{
                                         color: "#0888D1",
-                                        fontSize: (mobileW * 3) / 100,
-                                        marginTop: (mobileW * 1) / 100,
+                                        fontSize: (windowWidth * 3) / 100,
+                                        marginTop: (windowWidth * 1) / 100,
                                         fontFamily: Font.fontregular,
                                         textAlign: config.textRotate,
                                       }}
@@ -1412,10 +1412,10 @@ export default class ServiceProviderDetails extends Component {
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize: (mobileW * 3.5) / 100,
-                          color: Colors.theme_color,
+                          fontSize: (windowWidth * 3.5) / 100,
+                          color: Colors.Theme,
                           textAlign: "center",
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                         }}
                       >
                         {Lang_chg.Not_available_for_booking[config.language]}
@@ -1450,7 +1450,7 @@ export default class ServiceProviderDetails extends Component {
             <View
               style={{
                 alignSelf: "center",
-                height: (mobileH * 85) / 100,
+                height: (windowHeight * 85) / 100,
               }}
             >
               <View
@@ -1458,19 +1458,19 @@ export default class ServiceProviderDetails extends Component {
                 style={{
                   width: "95%",
                   alignSelf: "center",
-                  backgroundColor: Colors.white_color,
-                  paddingHorizontal: (mobileW * 7) / 100,
-                  paddingVertical: (mobileW * 3) / 100,
-                  // borderRadius: (mobileW * 6) / 100,
-                  borderRadius: (mobileW * 4) / 100,
-                  height: (mobileH * 75) / 100,
+                  backgroundColor: Colors.white,
+                  paddingHorizontal: (windowWidth * 7) / 100,
+                  paddingVertical: (windowWidth * 3) / 100,
+                  // borderRadius: (windowWidth * 6) / 100,
+                  borderRadius: (windowWidth * 4) / 100,
+                  height: (windowHeight * 75) / 100,
                 }}
               >
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View
                     style={{
-                      paddingBottom: (mobileW * 15) / 100,
-                      paddingTop: (mobileW * 2) / 100,
+                      paddingBottom: (windowWidth * 15) / 100,
+                      paddingTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <HTMLView
@@ -1485,8 +1485,8 @@ export default class ServiceProviderDetails extends Component {
                     backgroundColor: "red",
                     width: "95%",
                     alignSelf: "flex-end",
-                    backgroundColor: Colors.white_color,
-                    paddingVertical: (mobileW * 2) / 100,
+                    backgroundColor: Colors.white,
+                    paddingVertical: (windowWidth * 2) / 100,
                   }}
                 >
                   <View
@@ -1496,9 +1496,9 @@ export default class ServiceProviderDetails extends Component {
 
                       borderWidth: 1,
                       borderColor: "#0888D1",
-                      borderRadius: (mobileW * 2.5) / 100,
-                      paddingVertical: (mobileW * 1.5) / 100,
-                      paddingHorizontal: (mobileW * 3) / 100,
+                      borderRadius: (windowWidth * 2.5) / 100,
+                      paddingVertical: (windowWidth * 1.5) / 100,
+                      paddingHorizontal: (windowWidth * 3) / 100,
                     }}
                   >
                     <Text
@@ -1516,7 +1516,8 @@ export default class ServiceProviderDetails extends Component {
             </View>
           </View>
         </Modal>
-        {this.state.nurse_data != null && this.state.nurse_data != "" && (
+
+        {/* {this.state.nurse_data != null && this.state.nurse_data != "" && (
           <HideWithKeyboard>
             <Footer
               activepage="Home"
@@ -1526,43 +1527,43 @@ export default class ServiceProviderDetails extends Component {
                   name: "Home",
                   fname: Lang_chg.home_footer[config.language],
                   countshow: false,
-                  image: localimag.Home,
-                  activeimage: localimag.Home,
+                  image: Icons.Home,
+                  activeimage: Icons.Home,
                 },
                 {
                   name: "Appointment",
                   fname: Lang_chg.Appointment_footer[config.language],
                   countshow: false,
-                  image: localimag.Appointment,
-                  activeimage: localimag.Appointment,
+                  image: Icons.Appointment,
+                  activeimage: Icons.Appointment,
                 },
                 {
                   name: "Cart",
                   fname: Lang_chg.Cart_footer[config.language],
                   countshow: false,
-                  image: localimag.Cart,
-                  activeimage: localimag.Cart,
+                  image: Icons.Cart,
+                  activeimage: Icons.Cart,
                 },
                 {
                   name: "More",
                   fname: Lang_chg.More_footer[config.language],
                   countshow: false,
-                  image: localimag.More,
-                  activeimage: localimag.More,
+                  image: Icons.More,
+                  activeimage: Icons.More,
                 },
               ]}
               navigation={this.props.navigation}
               imagestyle1={{
                 width: 25,
                 height: 25,
-                paddingBottom: (mobileW * 5.4) / 100,
+                paddingBottom: (windowWidth * 5.4) / 100,
                 backgroundColor: "white",
                 countcolor: "red",
                 countbackground: "red",
               }}
             />
           </HideWithKeyboard>
-        )}
+        )} */}
       </View>
     );
   }
@@ -1570,13 +1571,13 @@ export default class ServiceProviderDetails extends Component {
 const HTMLstyles = StyleSheet.create({
   h4: {
     color: "#0888D1",
-    fontSize: (mobileW * 4.5) / 100,
+    fontSize: (windowWidth * 4.5) / 100,
     //marginBottom:20,
     // make links coloured pink
   },
   h5: {
     color: "#0888D1", // make links coloured pink
-    fontSize: (mobileW * 4.3) / 100,
+    fontSize: (windowWidth * 4.3) / 100,
     fontFamily: Font.fontmedium,
     // paddingBottom:20,
   },

@@ -214,7 +214,7 @@ class ResturantTypeScreen extends Component {
                         );
                     }}
                     placeholder={'Search by Resturant Type'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -307,7 +307,7 @@ class ResturantTypeScreen extends Component {
                                     );
                                 }}
                                 placeholder="Search by Resturant Type"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

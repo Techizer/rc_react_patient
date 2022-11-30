@@ -78,7 +78,7 @@ export class AppProvider extends Component {
     return (
       <AppContext.Provider value={{ ...funcs }}>
         <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
-          <SafeAreaView
+          {/* <SafeAreaView
             style={{ flex: 0, backgroundColor: Colors.statusbarcolor }}
           />
           <StatusBar
@@ -87,7 +87,7 @@ export class AppProvider extends Component {
             backgroundColor={Colors.statusbarcolor}
             translucent={false}
             networkActivityIndicatorVisible={true}
-          />
+          /> */}
 
           {this.props.children}
 

@@ -17,7 +17,7 @@ import { localStorage } from "./localStorageProvider";
 import {
   msgTitle,
 } from "./Messageconsolevalidationprovider/messageProvider";
-import { mobileW } from "./utilslib/Utils";
+import { windowWidth } from "./utilslib/Utils";
 
 const screenHeight = Math.round(Dimensions.get("window").height);
 const screenWidth = Math.round(Dimensions.get("window").width);
@@ -275,11 +275,11 @@ export default class Footer extends Component {
                       {item.pagename == "Chat" && (
                         <View
                           style={{
-                            marginLeft: (mobileW * 4) / 100,
+                            marginLeft: (windowWidth * 4) / 100,
                             position: "absolute",
-                            borderRadius: (mobileW * 2) / 100,
-                            width: (mobileW * 3.2) / 100,
-                            height: (mobileW * 3.2) / 100,
+                            borderRadius: (windowWidth * 2) / 100,
+                            width: (windowWidth * 3.2) / 100,
+                            height: (windowWidth * 3.2) / 100,
                             backgroundColor: Colors.texttheme,
                             justifyContent: "center",
                           }}
@@ -287,7 +287,7 @@ export default class Footer extends Component {
                           <Text
                             style={{
                               bottom: 2,
-                              fontSize: (mobileW * 2.8) / 100,
+                              fontSize: (windowWidth * 2.8) / 100,
                               alignSelf: "center",
                               color: "#fff",
                             }}
@@ -300,7 +300,7 @@ export default class Footer extends Component {
                         style={{
                           fontFamily: "Inter-Regular",
                           color: "#d32323",
-                          fontSize: (mobileW * 2.8) / 100,
+                          fontSize: (windowWidth * 2.8) / 100,
                         }}
                       >
                         {item.pagename}
@@ -355,11 +355,11 @@ export default class Footer extends Component {
                       {item.pagename == "Chat" && (
                         <View
                           style={{
-                            marginLeft: (mobileW * 4) / 100,
+                            marginLeft: (windowWidth * 4) / 100,
                             position: "absolute",
-                            borderRadius: (mobileW * 2) / 100,
-                            width: (mobileW * 3.2) / 100,
-                            height: (mobileW * 3.2) / 100,
+                            borderRadius: (windowWidth * 2) / 100,
+                            width: (windowWidth * 3.2) / 100,
+                            height: (windowWidth * 3.2) / 100,
                             backgroundColor: Colors.texttheme,
                             justifyContent: "center",
                           }}
@@ -367,7 +367,7 @@ export default class Footer extends Component {
                           <Text
                             style={{
                               bottom: 2,
-                              fontSize: (mobileW * 2.8) / 100,
+                              fontSize: (windowWidth * 2.8) / 100,
                               alignSelf: "center",
                               color: "#fff",
                             }}
@@ -380,7 +380,7 @@ export default class Footer extends Component {
                         style={{
                           fontFamily: "Inter-Regular",
                           color: "gray",
-                          fontSize: (mobileW * 2.8) / 100,
+                          fontSize: (windowWidth * 2.8) / 100,
                         }}
                       >
                         {item.pagename}

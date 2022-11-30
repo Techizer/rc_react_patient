@@ -23,7 +23,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 // import Fonts, { fonts, fontSizes } from "../utils/Fonts";
 // import { Color } from "../utils";
 // const { height, width } = Dimensions.get("window");
-import { Colors, localimag, Font, mobileH, config, mobileW, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
 
 const DropDownboxSec = ({
   lableText,
@@ -58,19 +58,19 @@ const DropDownboxSec = ({
             width: '95%', alignSelf: 'center', justifyContent: 'center',
             justifyContent: 'center',
             textAlignVertical: 'center',
-            height: 48, //(mobileW * 12) / 100,
+            height: 48, //(windowWidth * 12) / 100,
           }}>
             {
               (isDisabled) ? null :
                 <Image
                   style={{
-                    height: (mobileW * 4) / 100,
-                    width: (mobileW * 4) / 100,
+                    height: (windowWidth * 4) / 100,
+                    width: (windowWidth * 4) / 100,
                     position: "absolute",
                     top: 15,
                     right: 5,
                   }}
-                  source={localimag.downarrow} />
+                  source={Icons.downarrow} />
             }
             <Text style={styles.textBoxStyle}>{lableText}</Text>
           </View>
@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: '90%',
     alignSelf: 'center',
-    marginTop: (mobileW * 2) / 100,
+    marginTop: (windowWidth * 2) / 100,
     backgroundColor: Colors.tab_background_color, //Colors.optboxcolor,
-    borderColor: Colors.field_border_color, //Colors.veriontextcolor,
-    borderWidth: mobileW * 0.3 / 100,
-    borderRadius: (mobileW * 1) / 100
+    borderColor: Colors.field_border_color, //Colors.Border,
+    borderWidth: windowWidth * 0.3 / 100,
+    borderRadius: (windowWidth * 1) / 100
   },
   imgView: {
     width: "15%",
@@ -113,16 +113,16 @@ const styles = StyleSheet.create({
   },
   textBoxStyle: {
     width: '100%',
-    color: Colors.placeholder_text_color,
+    color: Colors.DarkGrey_color,
     fontSize: Font.placeholdersize,
     textAlign: config.textalign,
     justifyContent: 'center',
     // alignItems: 'center',
     textAlignVertical: 'center',
-    // height: 48, //(mobileW * 12) / 100,
+    // height: 48, //(windowWidth * 12) / 100,
     fontFamily: Font.headingfontfamily,
-    borderRadius: (mobileW * 1) / 100,
-    // paddingTop: ((mobileW * 12) / 100) / 2.5,
+    borderRadius: (windowWidth * 1) / 100,
+    // paddingTop: ((windowWidth * 12) / 100) / 2.5,
     paddingLeft: 4,
     // backgroundColor: 'red'
   },

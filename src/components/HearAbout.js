@@ -209,7 +209,7 @@ class HearAboutScreen extends Component {
             );
           }}
           placeholder={"search by hear about name"}
-          placeholderTextColor="#000"
+          DarkGrey="#000"
           style={{
             //backgroundColor: 'red',
             width: "100%",
@@ -307,7 +307,7 @@ class HearAboutScreen extends Component {
                   );
                 }}
                 placeholder="Search by Hear About Name"
-                placeholderTextColor="#000"
+                DarkGrey="#000"
                 style={{
                   color: "#000",
                   width: "100%",

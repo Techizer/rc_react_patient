@@ -200,7 +200,7 @@ class CityListScreen extends Component {
                         );
                     }}
                     placeholder={'search by City name'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -293,7 +293,7 @@ class CityListScreen extends Component {
                                     );
                                 }}
                                 placeholder="Search by City Name"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

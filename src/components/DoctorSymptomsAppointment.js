@@ -19,9 +19,9 @@ import {
   Colors,
   config,
   Lang_chg,
-  localimag,
+  Icons,
   mediaprovider,
-  mobileW,
+  windowWidth,
 } from "../Provider/utilslib/Utils";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -69,7 +69,7 @@ const DoctorSymptomsAppointment = (props) => {
   const [audioFile, setAudioFile] = useState();
 
   useEffect(() => {
-    FontAwesome.getImageSource("circle", 20, Colors.theme_color).then(
+    FontAwesome.getImageSource("circle", 20, Colors.Theme).then(
       (source) => {
         setSliderIcon(source);
         // this.setState({ sliderIcon: source });
@@ -567,16 +567,16 @@ const DoctorSymptomsAppointment = (props) => {
       {...props}
       indicatorStyle={{
         backgroundColor: Colors.textblue,
-        height: (mobileW * 1) / 100,
+        height: (windowWidth * 1) / 100,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
       }}
       activeColor={Colors.textblue}
-      inactiveColor={Colors.tablightcolo}
+      inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{
         textTransform: "capitalize",
-        fontSize: (mobileW * 4) / 100,
+        fontSize: (windowWidth * 4) / 100,
         textAlign: config.textalign,
         fontFamily: Font.fontmedium,
         alignSelf: "center",
@@ -634,8 +634,8 @@ const DoctorSymptomsAppointment = (props) => {
           shadowOffset: { width: 2, height: 2 },
           elevation: 2,
           shadowRadius: 2,
-          // marginTop: (mobileW * 1.5) / 100,
-          marginBottom: (mobileW * 1.5) / 100,
+          // marginTop: (windowWidth * 1.5) / 100,
+          marginBottom: (windowWidth * 1.5) / 100,
           backgroundColor: "#fff",
         }}
       >
@@ -645,7 +645,7 @@ const DoctorSymptomsAppointment = (props) => {
             // alignItems: "center",
             // alignSelf: "center",
             justifyContent: "flex-start",
-            paddingTop: (mobileW * 4) / 100,
+            paddingTop: (windowWidth * 4) / 100,
           }}
         >
           <View
@@ -661,7 +661,7 @@ const DoctorSymptomsAppointment = (props) => {
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                fontSize: (mobileW * 3.5) / 100,
+                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.TalkToDoctor[config.language]}
@@ -673,7 +673,7 @@ const DoctorSymptomsAppointment = (props) => {
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
                 color: Colors.gray4,
-                fontSize: (mobileW * 3.5) / 100,
+                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.Optional[config.language]}
@@ -684,9 +684,9 @@ const DoctorSymptomsAppointment = (props) => {
                   width: "120%",
                   alignSelf: "center",
                   justifyContent: "center",
-                  borderBottomWidth: (mobileW * 0.3) / 100,
+                  borderBottomWidth: (windowWidth * 0.3) / 100,
                   borderColor: Colors.gainsboro,
-                  paddingVertical: (mobileW * 4.5) / 100,
+                  paddingVertical: (windowWidth * 4.5) / 100,
                   alignItems: "center",
                   alignContent: "center",
                   // flex: 1,
@@ -702,11 +702,11 @@ const DoctorSymptomsAppointment = (props) => {
                 >
                   <Image
                     source={
-                      playState == "paused" ? localimag.play : localimag.pause
+                      playState == "paused" ? Icons.play : Icons.pause
                     }
                     style={{
-                      width: (mobileW * 10) / 100,
-                      height: (mobileW * 10) / 100,
+                      width: (windowWidth * 10) / 100,
+                      height: (windowWidth * 10) / 100,
                     }}
                   />
                 </TouchableOpacity>
@@ -717,13 +717,13 @@ const DoctorSymptomsAppointment = (props) => {
                   value={playSeconds}
                   maximumValue={duration}
                   maximumTrackTintColor="gray"
-                  minimumTrackTintColor={Colors.theme_color}
+                  minimumTrackTintColor={Colors.Theme}
                   thumbImage={sliderIcon}
                   style={{
                     flex: 1,
                     alignSelf: "center",
                     marginHorizontal: Platform.select({ ios: 5 }),
-                    height: (mobileW * 10) / 100,
+                    height: (windowWidth * 10) / 100,
                     // transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
                   }}
                 />
@@ -734,7 +734,7 @@ const DoctorSymptomsAppointment = (props) => {
           <View
             style={{
               justifyContent: "center",
-              width: (mobileW * 16) / 100,
+              width: (windowWidth * 16) / 100,
               alignItems: "center",
               position: "absolute",
               right: 20,
@@ -746,10 +746,10 @@ const DoctorSymptomsAppointment = (props) => {
                 isRecording ? onStopRecord() : onStartRecord();
               }}
               style={{
-                height: (mobileW * 20) / 100,
-                borderRadius: (mobileW * 2) / 100,
-                borderColor: Colors.theme_color,
-                width: (mobileW * 20) / 100,
+                height: (windowWidth * 20) / 100,
+                borderRadius: (windowWidth * 2) / 100,
+                borderColor: Colors.Theme,
+                width: (windowWidth * 20) / 100,
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
@@ -760,23 +760,23 @@ const DoctorSymptomsAppointment = (props) => {
             >
               <Image
                 resizeMode="contain"
-                source={isRecording ? localimag.stop : localimag.mic}
+                source={isRecording ? Icons.stop : Icons.mic}
                 style={{
-                  width: (mobileW * 10) / 100,
-                  height: (mobileW * 10) / 100,
-                  marginLeft: (mobileW * 3) / 100,
-                  marginRight: (mobileW * 3) / 100,
-                  borderColor: Colors.theme_color,
+                  width: (windowWidth * 10) / 100,
+                  height: (windowWidth * 10) / 100,
+                  marginLeft: (windowWidth * 3) / 100,
+                  marginRight: (windowWidth * 3) / 100,
+                  borderColor: Colors.Theme,
                 }}
               />
             </TouchableOpacity>
             <Text
               style={{
                 fontFamily: Font.fontregular,
-                fontSize: (mobileW * 3) / 100,
+                fontSize: (windowWidth * 3) / 100,
                 alignSelf: "flex-end",
                 right: -5,
-                marginTop: (mobileW * 2) / 100,
+                marginTop: (windowWidth * 2) / 100,
               }}
             >
               {recordTime}
@@ -788,15 +788,15 @@ const DoctorSymptomsAppointment = (props) => {
             borderWidth: 1,
             borderColor: Colors.gainsboro,
             width: "100%",
-            marginTop: (mobileW * 1.5) / 100,
-            marginBottom: (mobileW * 1.5) / 100,
+            marginTop: (windowWidth * 1.5) / 100,
+            marginBottom: (windowWidth * 1.5) / 100,
           }}
         />
         <View
           style={{
             alignItems: "flex-start",
             alignSelf: "auto",
-            paddingTop: (mobileW * 4) / 100,
+            paddingTop: (windowWidth * 4) / 100,
           }}
         >
           <View
@@ -811,7 +811,7 @@ const DoctorSymptomsAppointment = (props) => {
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                fontSize: (mobileW * 3.5) / 100,
+                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.TalkToUs[config.language]}
@@ -823,7 +823,7 @@ const DoctorSymptomsAppointment = (props) => {
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
                 color: Colors.gray4,
-                fontSize: (mobileW * 3.5) / 100,
+                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.Optional[config.language]}
@@ -861,7 +861,7 @@ const DoctorSymptomsAppointment = (props) => {
               }}
               style={{
                 width: "100%",
-                height: (mobileW * 20) / 100,
+                height: (windowWidth * 20) / 100,
                 justifyContent: "flex-start",
                 flexDirection: "row",
                 alignSelf: "center",
@@ -869,18 +869,18 @@ const DoctorSymptomsAppointment = (props) => {
             >
               <Image
                 resizeMode="contain"
-                source={localimag.upload}
+                source={Icons.upload}
                 style={{
                   width: 20,
                   height: 20,
-                  marginRight: (mobileW * 3) / 100,
-                  borderColor: Colors.theme_color,
+                  marginRight: (windowWidth * 3) / 100,
+                  borderColor: Colors.Theme,
                 }}
               />
               <Text
                 style={{
                   fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 3) / 100,
+                  fontSize: (windowWidth * 3) / 100,
                   textAlign: "auto",
                   alignItems: "baseline",
                   marginTop: 5,
@@ -932,7 +932,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   textInputArea: {
-    fontSize: (mobileW * 4) / 100,
+    fontSize: (windowWidth * 4) / 100,
     fontFamily: Font.ques_fontfamily,
     color: "#8F98A7",
     height: 100,
@@ -942,7 +942,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     color: "#000",
     // paddingTop: 10,
-    paddingVertical: (mobileW * 2) / 100,
+    paddingVertical: (windowWidth * 2) / 100,
     textAlign: config.textalign,
   },
   viewBarWrapper: {

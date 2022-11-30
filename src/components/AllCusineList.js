@@ -234,7 +234,7 @@ class CusineListScreen extends Component {
             );
           }}
           placeholder={"Search by Cuisine Name"}
-          placeholderTextColor="#000"
+          DarkGrey="#000"
           style={{
             //backgroundColor: 'red',
             width: "100%",
@@ -332,7 +332,7 @@ class CusineListScreen extends Component {
                   );
                 }}
                 placeholder="Search by Cuisine Name"
-                placeholderTextColor="#000"
+                DarkGrey="#000"
                 style={{
                   color: "#000",
                   width: "100%",

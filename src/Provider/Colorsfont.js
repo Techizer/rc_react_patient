@@ -1,55 +1,38 @@
 import { Dimensions } from "react-native";
+import { s, vs, ms, mvs } from 'react-native-size-matters'
 const windowWidth = Dimensions.get("window").width;
-const themecolor = "#0168B3";
-const statusbar = "#fff";
+
 export const Colors = {
-  statusbarcolor: statusbar,
-  internetbackcolor: themecolor,
-  onlinebackcolor: themecolor,
   internettextcolor: "#FFFFFF",
   onlinetextcolor: "#fff",
   mediabackground: "#FFFFFF",
   mediatextcolor: "black",
   cancletextcolor: "black",
-  splashtextcolor: "#8F98A7",
   headingtextboldcolor: "black",
 
-  placeholdertextcolor: "#515C6F",
   textwhite: "white",
   textblack: "black",
 
   textblue: "#0888D1",
-  buttoncolorblue: "#0168B3",
   buttoncolorhgreen: "#4FB82A",
-  theme_color: themecolor,
-  placeholder_text: "#979ea9",
-  bordercolor: "#DFDFDF",
+  DarkGrey: "#979ea9",
   placeholder_border: "#707070",
   optboxcolor: "#F1F2F4",
   discountBox: "#D1ECC8",
   precautionText: "#041A27",
-  subTaskColor: "#6D737E",
 
   //26-02
-  statusbarcolor: statusbar,
 
   mediabackground: "#FFFFFF",
   mediatextcolor: "black",
   cancletextcolor: "black",
-  splashtextcolor: "#9EA6B2",
+  lightGrey: "#9EA6B2",
   headingtextboldcolor: "black",
-  regulartextcolor: "#515C6F",
   textwhite: "white",
-  textblack_new: "#515C6F",
-  textgray: "gray",
+  lightGrey: "gray",
   textblue: "#0888D1",
-  buttoncolorblue: "#0168B3",
-  buttoncolorblue2: "#0888d1",
+  Theme2: "#0888d1",
   buttoncolorhgreen: "#4FB82A",
-  // theme_color: themecolor,
-  placeholder_text: "#515C6F",
-  placeholder_textcolorlight: "#8F98A7",
-  white_color: "white",
 
   buttoncolorlight: "#F1F2F4",
   bordercolorblue: "#0888D1",
@@ -61,7 +44,7 @@ export const Colors = {
   // -------------------------r---------
   // txt_light: "#D0CECE",
   ligh_background: "#bcbcbc",
-  white_color: "#fff",
+  white: "#ffffff",
   white2: "#f8f8f8",
 
   blue2: "#d1e9f6",
@@ -79,7 +62,6 @@ export const Colors = {
   drawerblue: "#57A7DB",
   drawertextblue: "#7dbfe6",
   lbluebtn: "#84cbff",
-  darkgraytextheading: "#515c6f",
   gold: "#f9d800",
   arrowcolor: "#7dbfe6",
   searchPlaceholder: "#9baac4",
@@ -91,16 +73,12 @@ export const Colors = {
 
   //28 gunja
   backgroundcolorblue: "#0057A5",
-  veriontextcolor: "#DFDFDF",
   buttonbackgoungcolorlightblue: "#C5EAFF",
-  tablightcolo: "#8F98A7",
   textGreenColor: "#26720B",
 
   //----------------------------------------------gunajn(02-03-22)
 
   bordercolor_light_blue: "lightblue",
-  textbluecolordark: "#0168B3",
-  tabtextcolor: "#8F98A7",
   tab_background_color: "#F1F2F4",
   allergic_heading_color: "black",
   // yesnobtn_color:'gray',
@@ -108,14 +86,26 @@ export const Colors = {
   field_border_color: "#CCCCCC",
   textblue: "#0888D1",
   bordercolor_light_blue: "lightblue",
-  veriontextcolor: "#DFDFDF",
-  terms_text_color_blue: "#0168B3",
   //-------------------------------04/03 gunjan
-  textgray: "#8F98A7",
   textgray_que: "#354052",
-  regulartextcolor: "#515C6F",
-  LIGHT_CLIENT_BORDER: "#DFDFDF",
   textGender: "#63666b",
+
+  // ----------------------------Ahsan
+  Theme:'#0168B3',
+  Primary:'#38ABEC',
+  inActiveTab: '#505B6E',
+  tabBackground: '#E5F6FF',
+  DarkGrey:'#515C6F',
+  MediumGrey:'#6E7786',
+  lightGrey:'#8F98A7',
+  dullGrey:'#6D737E',
+  Border:'#DFDFDF',
+  Highlight:'#E2E7EE82',
+  Black: "black",
+  inActiveText:'#0C1016',
+  ButtonBorder:'#E2EBF0'
+
+
 };
 export const Font = {
   fontmedium: "Rubik-Medium",
@@ -135,6 +125,16 @@ export const Font = {
   fontSemiBoldItalic: "Rubik-SemiBoldItalic",
   placeholderstyle: "Rubik-Medium",
   button_font: "Rubik-SemiBold",
+
+  // ----------------------Font Sizes-----------------
+
+  xsmall: s(9),  //----10
+  small: s(11),  //----12
+  medium: s(13),  //----14
+  large: s(14),  //----15
+  xlarge: s(15),  //----16
+  xxlarge: s(19),  //----20
+
 
   headerfont: (windowWidth * 5) / 100,
   headingfont: (windowWidth * 4.5) / 100,
@@ -160,12 +160,10 @@ export const Font = {
 
   headinggray: (windowWidth * 3.5) / 100,
   headingfontfamily: "Rubik-Regular",
-  headfontcolor: "#515C6F",
 
-  textinputtextcolor: "#515C6F",
   placeholdersize: (windowWidth * 3.5) / 100,
   placeholderfontfamily: "Rubik-Light",
-  placeholderTextColor: "black",
+  DarkGrey: "black",
 
   terms_text_font_family: "Rubik-SemiBold",
 

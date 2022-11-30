@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, SafeAreaView, Text, View, StyleSheet, PermissionsAndroid, Alert, Platform, TouchableOpacity, Image } from 'react-native'
-import { Colors, mediaprovider, Font, config, localStorage, localimag, consolepro, Currentltlg, Lang_chg, mobileW, msgTitle } from './utilslib/Utils';
+import { Colors, mediaprovider, Font, config, localStorage, Icons, consolepro, Currentltlg, Lang_chg, windowWidth, msgTitle } from './utilslib/Utils';
 import Geolocation from '@react-native-community/geolocation';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import MapView, { Marker, PROVIDER_GOOGLE, } from 'react-native-maps';
@@ -292,7 +292,7 @@ getValue = () => {
                   description={'Your are here location'}
 
                 >
-                  <Image source={localimag.location_green} style={{ height: 30, width: 30, resizeMode: 'contain', }} />
+                  <Image source={Icons.location_green} style={{ height: 30, width: 30, resizeMode: 'contain', }} />
                 </Marker.Animated>
               </MapView>
               <View style={{ position: 'absolute', width: '100%', top: 20 }}>
@@ -306,7 +306,7 @@ getValue = () => {
 
               </View>
             </View>}
-          {/* <View style={{ position: 'absolute', bottom: 15, width: mobileW, paddingHorizontal: 30 }}>
+          {/* <View style={{ position: 'absolute', bottom: 15, width: windowWidth, paddingHorizontal: 30 }}>
             <View style={{ borderRadius: 10, height: 50, marginBottom: 10, backgroundColor: Colors.themecolor }} >
               <TouchableOpacity onPress={() => { this.props.canclemap(); }} style={{ justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: 50, }}>
                 <Text style={{ color: 'black', fontSize: 18, fontFamily: Font.bold_font }}>Continue</Text>

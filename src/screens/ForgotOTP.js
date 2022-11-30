@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  StatusBar,
   BackHandler,
   Alert,
   SafeAreaView,
@@ -14,10 +13,10 @@ import React, { Component } from "react";
 import OTPTextInput from "react-native-otp-textinput";
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
+  windowWidth,
   Lang_chg,
   apifuntion,
   msgProvider,
@@ -173,24 +172,13 @@ export default class ForgotOTP extends Component {
         showsVerticalScrollIndicator={false}
       >
         <View>
-          <SafeAreaView
-            style={{ backgroundColor: Colors.statusbar_color, flex: 0 }}
-          />
 
-          <StatusBar
-            barStyle="dark-content"
-            backgroundColor={Colors.statusbarcolor}
-            hidden={false}
-            translucent={false}
-            networkActivityIndicatorVisible={true}
-          />
-
-          <View style={{ paddingBottom: (mobileW * 8) / 100 }}>
+          <View style={{ paddingBottom: (windowWidth * 8) / 100 }}>
             <View
               style={{
                 width: "95%",
                 alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
+                marginTop: (windowWidth * 5) / 100,
                 flexDirection: "row",
               }}
             >
@@ -198,7 +186,7 @@ export default class ForgotOTP extends Component {
                 style={{
                   width: "10%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 25) / 100,
+                  marginTop: (windowWidth * 25) / 100,
                 }}
               >
                 <TouchableOpacity
@@ -209,14 +197,14 @@ export default class ForgotOTP extends Component {
                 >
                   <Image
                     style={{
-                      width: (mobileW * 10) / 100,
-                      height: (mobileW * 10) / 100,
+                      width: (windowWidth * 10) / 100,
+                      height: (windowWidth * 10) / 100,
                       resizeMode: "contain",
                     }}
                     source={
                       config.textalign == "right"
-                        ? localimag.arabic_back
-                        : localimag.backarrow
+                        ? Icons.arabic_back
+                        : Icons.backarrow
                     }
                   ></Image>
                 </TouchableOpacity>
@@ -224,12 +212,12 @@ export default class ForgotOTP extends Component {
               <View style={{ width: "80%", alignSelf: "center" }}>
                 <Image
                   style={{
-                    width: (mobileW * 50) / 100,
-                    height: (mobileW * 40) / 100,
+                    width: (windowWidth * 50) / 100,
+                    height: (windowWidth * 40) / 100,
                     alignSelf: "center",
                     resizeMode: "contain",
                   }}
-                  source={localimag.Forgotlogo}
+                  source={Icons.Forgotlogo}
                 ></Image>
               </View>
             </View>
@@ -237,7 +225,7 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (mobileW * 10) / 100,
+                marginTop: (windowWidth * 10) / 100,
               }}
             >
               <Text
@@ -255,7 +243,7 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
+                marginTop: (windowWidth * 1) / 100,
               }}
             >
               <View style={{ width: "90%" }}>
@@ -263,7 +251,7 @@ export default class ForgotOTP extends Component {
                   style={{
                     fontSize: Font.headinggray,
                     fontFamily: Font.headingfontfamily,
-                    color: Colors.placeholder_text,
+                    color: Colors.DarkGrey,
                     textAlign: config.textRotate,
                   }}
                 >
@@ -275,23 +263,23 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "70%",
 
-                //  paddingHorizontal:mobileW*1/100,
-                paddingVertical: (mobileW * 1) / 100,
-                marginTop: (mobileW * 10) / 100,
-                marginLeft: (mobileW * 5) / 100,
+                //  paddingHorizontal:windowWidth*1/100,
+                paddingVertical: (windowWidth * 1) / 100,
+                marginTop: (windowWidth * 10) / 100,
+                marginLeft: (windowWidth * 5) / 100,
               }}
             >
               <OTPTextInput
                 style={{
-                  height: (mobileW * 14) / 100,
-                  width: (mobileW * 14) / 100,
+                  height: (windowWidth * 14) / 100,
+                  width: (windowWidth * 14) / 100,
                   color: "#000",
                   alignSelf: "center",
                   fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 5) / 100,
+                  fontSize: (windowWidth * 5) / 100,
                   borderWidth: 2,
                   borderColor: "#DFDFDF",
-                  borderRadius: (mobileW * 2) / 100,
+                  borderRadius: (windowWidth * 2) / 100,
                   textAlign: "center",
                 }}
                 ref={(e) => (this.otpInput = e)}
@@ -305,14 +293,14 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (mobileW * 4) / 100,
+                marginTop: (windowWidth * 4) / 100,
                 flexDirection: "row",
                 borderColor:
                   this.state.passwordfocus == true
                     ? Colors.placholderactive
                     : Colors.placeholder_border,
-                borderWidth: (mobileW * 0.3) / 100,
-                borderRadius: (mobileW * 1) / 100,
+                borderWidth: (windowWidth * 0.3) / 100,
+                borderRadius: (windowWidth * 1) / 100,
               }}
             >
               <View style={{ width: "90%", alignSelf: "center" }}>
@@ -323,7 +311,7 @@ export default class ForgotOTP extends Component {
                     color: Colors.textblack,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
-                    height: (mobileW * 12) / 100,
+                    height: (windowWidth * 12) / 100,
                     fontFamily: Font.placeholderfontfamily,
                   }}
                   maxLength={50}
@@ -332,7 +320,7 @@ export default class ForgotOTP extends Component {
                       ? Lang_chg.create_new_pass[config.language]
                       : null
                   }
-                  placeholderTextColor={Colors.placeholder_text}
+                  DarkGrey={Colors.DarkGrey}
                   onChangeText={(txt) => {
                     this.setState({ password: txt });
                   }}
@@ -355,9 +343,9 @@ export default class ForgotOTP extends Component {
                   style={{
                     position: "absolute",
                     backgroundColor: "white",
-                    left: (mobileW * 4) / 100,
-                    top: (-mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 1) / 100,
+                    left: (windowWidth * 4) / 100,
+                    top: (-windowWidth * 2) / 100,
+                    paddingHorizontal: (windowWidth * 1) / 100,
                   }}
                 >
                   <Text
@@ -386,8 +374,8 @@ export default class ForgotOTP extends Component {
                   >
                     <Image
                       style={{
-                        height: (mobileW * 6) / 100,
-                        width: (mobileW * 6) / 100,
+                        height: (windowWidth * 6) / 100,
+                        width: (windowWidth * 6) / 100,
                       }}
                       source={require("../icons/eye-icon.png")}
                     ></Image>
@@ -402,8 +390,8 @@ export default class ForgotOTP extends Component {
                   >
                     <Image
                       style={{
-                        height: (mobileW * 6) / 100,
-                        width: (mobileW * 6) / 100,
+                        height: (windowWidth * 6) / 100,
+                        width: (windowWidth * 6) / 100,
                       }}
                       source={require("../icons/eye-icon02.png")}
                     />
@@ -415,7 +403,7 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "89%",
                 alignSelf: "center",
-                marginTop: (mobileW * 0.5) / 100,
+                marginTop: (windowWidth * 0.5) / 100,
               }}
             >
               <Text
@@ -423,7 +411,7 @@ export default class ForgotOTP extends Component {
                   textAlign: config.textRotate,
                   fontSize: Font.textsize,
                   fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
+                  color: Colors.lightGrey,
                 }}
               >
                 {Lang_chg.Signuptext3[config.language]}
@@ -437,10 +425,10 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 6) / 100,
+                borderRadius: (windowWidth * 2) / 100,
+                backgroundColor: Colors.Theme,
+                paddingVertical: (windowWidth * 4) / 100,
+                marginTop: (windowWidth * 6) / 100,
                 shadowColor: "#000",
                 shadowOffset: { width: 1, height: 1 },
                 shadowOpacity: 0.5,
@@ -466,7 +454,7 @@ export default class ForgotOTP extends Component {
               style={{
                 width: "89%",
                 alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
+                marginTop: (windowWidth * 5) / 100,
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -475,9 +463,9 @@ export default class ForgotOTP extends Component {
               <Text
                 style={{
                   textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
+                  fontSize: (windowWidth * 4) / 100,
                   fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
+                  color: Colors.lightGrey,
                 }}
               >
                 {Lang_chg.notrectext[config.language]}
@@ -488,9 +476,9 @@ export default class ForgotOTP extends Component {
                 }}
                 style={{
                   textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
+                  fontSize: (windowWidth * 4) / 100,
                   fontFamily: Font.fontsemibold,
-                  color: Colors.theme_color,
+                  color: Colors.Theme,
                 }}
               >
                 {Lang_chg.sendagaintext[config.language]}

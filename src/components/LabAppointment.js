@@ -7,7 +7,7 @@ import { TabBar, TabView } from "react-native-tab-view";
 import { Colors, Font } from "../Provider/Colorsfont";
 import { config } from "../Provider/configProvider";
 import { Lang_chg } from "../Provider/Language_provider";
-import { mobileW } from "../Provider/utilslib/Utils";
+import { windowWidth } from "../Provider/utilslib/Utils";
 const LabAppointment = (props) => {
   // console.log("sound ::::", sound);
   const { navigation, indexPosition, sendData, data } = props;
@@ -69,16 +69,16 @@ const LabAppointment = (props) => {
       {...props}
       indicatorStyle={{
         backgroundColor: Colors.textblue,
-        height: (mobileW * 1) / 100,
+        height: (windowWidth * 1) / 100,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
       }}
       activeColor={Colors.textblue}
-      inactiveColor={Colors.tablightcolo}
+      inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{
         textTransform: "capitalize",
-        fontSize: (mobileW * 4) / 100,
+        fontSize: (windowWidth * 4) / 100,
         textAlign: config.textalign,
         fontFamily: Font.fontmedium,
         alignSelf: "center",

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text,PermissionsAndroid, View,ScrollView, StyleSheet, SafeAreaView, Image, TouchableOpacity, ImageBackground, TextInput, FlatList, Keyboard} from 'react-native';
-import {Colors,Font,mobileH,Mapprovider,msgProvider,msgText,config,mobileW,localStorage,localimag, consolepro, handleback, Lang_chg, apifuntion, msgTitle,} from './Provider/utilslib/Utils';
+import {Colors,Font,windowHeight,Mapprovider,msgProvider,msgText,config,windowWidth,localStorage,Icons, consolepro, handleback, Lang_chg, apifuntion, msgTitle,} from './Provider/utilslib/Utils';
 import Geolocation from '@react-native-community/geolocation';
 import Styles from './Styles';
 
@@ -276,7 +276,7 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
          > */}
        
      
-         <View style={{backgroundColor: '#fff',flexDirection:'row',alignItems:'center',width:'95%',alignSelf:'center',marginTop:mobileW*4/100}}>
+         <View style={{backgroundColor: '#fff',flexDirection:'row',alignItems:'center',width:'95%',alignSelf:'center',marginTop:windowWidth*4/100}}>
          <TouchableOpacity
          style={{width:'10%',}}
             onPress={() => {
@@ -287,14 +287,14 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
                 resizeMode: 'contain',
                 width:20,
                 height:20,
-                marginLeft:mobileW*1/100
+                marginLeft:windowWidth*1/100
               }}></Image>:
               <Image   source={require('./icons/back-button.png') }
                style={{
                 resizeMode: 'contain',
                 width:20,
                 height:20,
-                marginLeft:mobileW*1/100
+                marginLeft:windowWidth*1/100
               }}></Image>}
             {/* <Image
             
@@ -311,11 +311,11 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
         style={{
           flexDirection: 'row',
           width: '90%',
-         paddingVertical:mobileW*2/100,
+         paddingVertical:windowWidth*2/100,
           alignSelf: 'center',
           backgroundColor:'#F1F2F4',
-          padding: (mobileW * 1) / 100,
-          borderRadius: (mobileW * 1) / 100,
+          padding: (windowWidth * 1) / 100,
+          borderRadius: (windowWidth * 1) / 100,
           alignItems:'center',
          
         }}>
@@ -324,9 +324,9 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
      
           <Text style={{
               color:Colors.searchPlaceholder,
-              fontSize:mobileW*4/100,
+              fontSize:windowWidth*4/100,
               width:'88%',
-              marginLeft:mobileW*1/100,
+              marginLeft:windowWidth*1/100,
               
             
               textAlign: config.textRotate,
@@ -339,12 +339,12 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
         <View style={{alignSelf: 'center'}}>
        
           <Image
-            source={localimag.searchiocn2}
+            source={Icons.searchiocn2}
             style={{
-              width: (mobileW *9.5) / 100,
-              height: (mobileW * 9.5) / 100,
-              // (mobileW * 5.5) / 100,
-              borderRadius: (mobileW * 1.5) / 100,
+              width: (windowWidth *9.5) / 100,
+              height: (windowWidth * 9.5) / 100,
+              // (windowWidth * 5.5) / 100,
+              borderRadius: (windowWidth * 1.5) / 100,
               alignSelf: 'center',
             }}></Image>
            
@@ -354,20 +354,20 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
     </View>
    
             
-         <TouchableOpacity onPress={()=>{this.getlatlong()}} style={{flexDirection:'row',width:'100%',marginTop:mobileW*6/100, alignSelf:'center'}}>
-<View style={{width:'9%',marginLeft:mobileW*4/100}}>
+         <TouchableOpacity onPress={()=>{this.getlatlong()}} style={{flexDirection:'row',width:'100%',marginTop:windowWidth*6/100, alignSelf:'center'}}>
+<View style={{width:'9%',marginLeft:windowWidth*4/100}}>
 <Image
              source={require('./icons/locations_current.png')}
             style={{
               width:18,
               height:18,
-              marginTop:mobileW*0.6/100
+              marginTop:windowWidth*0.6/100
          
             }}></Image>
 </View>
-<View style={{width:'90%',borderBottomWidth:1,borderBottomColor:Colors.bordercolor,paddingBottom:mobileW*3/100,}}>
-       <Text style={{textAlign:config.textRotate,fontSize:mobileW*3.8/100,fontFamily:Font.fontregular}}>{Lang_chg.Currentlocation[config.language]}</Text>
-       <Text style={{textAlign:config.textRotate,fontSize:mobileW*3/100,fontFamily:Font.fontregular,color:Colors.gray4}}>{Lang_chg.Using_gpsofyoudevice[config.language]}</Text>
+<View style={{width:'90%',borderBottomWidth:1,borderBottomColor:Colors.bordercolor,paddingBottom:windowWidth*3/100,}}>
+       <Text style={{textAlign:config.textRotate,fontSize:windowWidth*3.8/100,fontFamily:Font.fontregular}}>{Lang_chg.Currentlocation[config.language]}</Text>
+       <Text style={{textAlign:config.textRotate,fontSize:windowWidth*3/100,fontFamily:Font.fontregular,color:Colors.gray4}}>{Lang_chg.Using_gpsofyoudevice[config.language]}</Text>
        </View>
        
          </TouchableOpacity>

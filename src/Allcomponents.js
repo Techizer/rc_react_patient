@@ -3,8 +3,8 @@ import {
   Colors,
   Font,
   config,
-  mobileW,
-  localimag,
+  windowWidth,
+  Icons,
 } from "./Provider/utilslib/Utils";
 import {
   View,
@@ -21,12 +21,12 @@ export function AppHeader(props) {
     <View style={styles.headerstyle}>
       <View
         style={{
-          padding: (mobileW * 2.5) / 100,
+          padding: (windowWidth * 2.5) / 100,
           flexDirection: "row",
           width: "95%",
           alignSelf: "center",
-          // paddingTop: (mobileW * 3) / 100,
-          backgroundColor: Colors.white_color,
+          // paddingTop: (windowWidth * 3) / 100,
+          backgroundColor: Colors.white,
           alignItems: "center",
         }}
       >
@@ -36,16 +36,16 @@ export function AppHeader(props) {
             backgroundColor: "#fff",
             justifyContent: "center",
             alignSelf: "center",
-            paddingTop: (mobileW * 1.5) / 100,
+            paddingTop: (windowWidth * 1.5) / 100,
           }}
         >
           <TouchableOpacity onPress={props.onPressEditProfile}>
             <Image
-              source={localimag.p1}
+              source={Icons.p1}
               style={{
                 resizeMode: "contain",
-                width: (mobileW * 9) / 100,
-                height: (mobileW * 9) / 100,
+                width: (windowWidth * 9) / 100,
+                height: (windowWidth * 9) / 100,
               }}
             />
           </TouchableOpacity>
@@ -63,12 +63,12 @@ export function AppHeader(props) {
           <TouchableOpacity onPress={props.onPresshandler2}>
             <Image
               // tintColor="#fff"
-              source={localimag.notifications}
+              source={Icons.notifications}
               style={{
                 alignSelf: "flex-end",
                 resizeMode: "contain",
-                width: (mobileW * 6) / 100,
-                height: (mobileW * 6) / 100,
+                width: (windowWidth * 6) / 100,
+                height: (windowWidth * 6) / 100,
               }}
             />
           </TouchableOpacity>
@@ -83,12 +83,12 @@ export function AppHeader2(props) {
     <View style={styles.headerstyle}>
       <View
         style={{
-          padding: (mobileW * 2.5) / 100,
+          padding: (windowWidth * 2.5) / 100,
           flexDirection: "row",
           width: "99%",
           alignSelf: "center",
-          paddingTop: (mobileW * 3) / 100,
-          backgroundColor: Colors.white_color,
+          paddingTop: (windowWidth * 3) / 100,
+          backgroundColor: Colors.white,
           alignItems: "center",
         }}
       >
@@ -107,14 +107,14 @@ export function AppHeader2(props) {
             <Image
               source={
                 config.textalign == "right"
-                  ? localimag.arabic_back
-                  : localimag.backarrow
+                  ? Icons.arabic_back
+                  : Icons.backarrow
               }
               style={{
                 resizeMode: "contain",
-                width: (mobileW * 9) / 100,
+                width: (windowWidth * 9) / 100,
                 alignSelf: "center",
-                height: (mobileW * 9) / 100,
+                height: (windowWidth * 9) / 100,
               }}
             />
           </TouchableOpacity>
@@ -141,12 +141,12 @@ export function AppHeader2(props) {
           >
             <Image
               // tintColor="#fff"
-              source={localimag.notifications_sec}
+              source={Icons.notifications_sec}
               style={{
                 alignSelf: "center",
                 resizeMode: "contain",
-                width: (mobileW * 6) / 100,
-                height: (mobileW * 6) / 100,
+                width: (windowWidth * 6) / 100,
+                height: (windowWidth * 6) / 100,
               }}
             />
           </TouchableOpacity>
@@ -160,12 +160,12 @@ export function CarAppHeader2(props) {
     <View style={styles.headerstyle}>
       <View
         style={{
-          padding: (mobileW * 2.5) / 100,
+          padding: (windowWidth * 2.5) / 100,
           flexDirection: "row",
           width: "99%",
           alignSelf: "center",
-          paddingTop: (mobileW * 3) / 100,
-          backgroundColor: Colors.white_color,
+          paddingTop: (windowWidth * 3) / 100,
+          backgroundColor: Colors.white,
           alignItems: "center",
         }}
       >
@@ -184,14 +184,14 @@ export function CarAppHeader2(props) {
             <Image
               source={
                 config.textalign == "right"
-                  ? localimag.arabic_back
-                  : localimag.backarrow
+                  ? Icons.arabic_back
+                  : Icons.backarrow
               }
               style={{
                 resizeMode: "contain",
-                width: (mobileW * 9) / 100,
+                width: (windowWidth * 9) / 100,
                 alignSelf: "center",
-                height: (mobileW * 9) / 100,
+                height: (windowWidth * 9) / 100,
               }}
             />
           </TouchableOpacity>
@@ -223,8 +223,8 @@ export function AppHeader3(props) {
           flexDirection: "row",
           width: "95%",
           alignSelf: "center",
-          paddingVertical: (mobileW * 3) / 100,
-          backgroundColor: Colors.white_color,
+          paddingVertical: (windowWidth * 3) / 100,
+          backgroundColor: Colors.white,
           alignItems: "center",
           // backgroundColor: 'red',
         }}
@@ -240,14 +240,14 @@ export function AppHeader3(props) {
             <Image
               source={
                 config.textalign == "right"
-                  ? localimag.arabic_back
-                  : localimag.backarrow
+                  ? Icons.arabic_back
+                  : Icons.backarrow
               }
               style={{
                 resizeMode: "contain",
-                width: (mobileW * 9) / 100,
+                width: (windowWidth * 9) / 100,
                 alignSelf: "center",
-                height: (mobileW * 9) / 100,
+                height: (windowWidth * 9) / 100,
               }}
             />
           </TouchableOpacity>
@@ -274,12 +274,12 @@ export function AppHeader3(props) {
           >
             <Image
               // tintColor="#fff"
-              source={localimag.notifications}
+              source={Icons.notifications}
               style={{
                 alignSelf: "center",
                 resizeMode: "contain",
-                width: (mobileW * 6) / 100,
-                height: (mobileW * 6) / 100,
+                width: (windowWidth * 6) / 100,
+                height: (windowWidth * 6) / 100,
               }}
             />
           </TouchableOpacity>
@@ -299,8 +299,8 @@ export function AppHeader4(props) {
           flexDirection: "row",
           width: "95%",
           alignSelf: "center",
-          paddingVertical: (mobileW * 3) / 100,
-          backgroundColor: Colors.white_color,
+          paddingVertical: (windowWidth * 3) / 100,
+          backgroundColor: Colors.white,
           alignItems: "center",
           // backgroundColor: 'red',
         }}
@@ -316,14 +316,14 @@ export function AppHeader4(props) {
             <Image
               source={
                 config.textalign == "right"
-                  ? localimag.arabic_back
-                  : localimag.backarrow
+                  ? Icons.arabic_back
+                  : Icons.backarrow
               }
               style={{
                 resizeMode: "contain",
-                width: (mobileW * 9) / 100,
+                width: (windowWidth * 9) / 100,
                 alignSelf: "center",
-                height: (mobileW * 9) / 100,
+                height: (windowWidth * 9) / 100,
               }}
             />
           </TouchableOpacity>
@@ -354,8 +354,8 @@ export function AppHeader4(props) {
               style={{
                 alignSelf: "center",
                 resizeMode: "contain",
-                width: (mobileW * 6) / 100,
-                height: (mobileW * 6) / 100,
+                width: (windowWidth * 6) / 100,
+                height: (windowWidth * 6) / 100,
               }}
             />
           </TouchableOpacity>
@@ -372,10 +372,10 @@ export function Appbtn(props) {
       style={{
         width: "100%",
         alignSelf: "center",
-        borderRadius: (mobileW * 2) / 100,
-        backgroundColor: Colors.buttoncolorblue,
-        paddingVertical: (mobileW * 4) / 100,
-        marginTop: (mobileW * 6) / 100,
+        borderRadius: (windowWidth * 2) / 100,
+        backgroundColor: Colors.Theme,
+        paddingVertical: (windowWidth * 4) / 100,
+        marginTop: (windowWidth * 6) / 100,
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.5,
@@ -406,10 +406,10 @@ export function Appbtn2(props) {
       style={{
         width: "99%",
         alignSelf: "center",
-        borderRadius: (mobileW * 2) / 100,
+        borderRadius: (windowWidth * 2) / 100,
         backgroundColor: props.bgcolor,
-        paddingVertical: (mobileW * 2.8) / 100,
-        marginTop: (mobileW * 4) / 100,
+        paddingVertical: (windowWidth * 2.8) / 100,
+        marginTop: (windowWidth * 4) / 100,
       }}
     >
       <Text
@@ -435,11 +435,11 @@ export function Appbtn3(props) {
       style={{
         width: "90%",
         alignSelf: "center",
-        borderRadius: (mobileW * 2) / 100,
+        borderRadius: (windowWidth * 2) / 100,
         backgroundColor: "#0068b3",
-        paddingVertical: (mobileW * 3) / 100,
+        paddingVertical: (windowWidth * 3) / 100,
         alignItems: "center",
-        marginTop: (mobileW * 6) / 100,
+        marginTop: (windowWidth * 6) / 100,
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.5,
@@ -468,12 +468,12 @@ export function Searchbarandicon(props) {
         style={{
           flexDirection: "row",
           width: "90%",
-          marginTop: (mobileW * 1.5) / 100,
-          marginBottom: (mobileW * 2) / 100,
+          marginTop: (windowWidth * 1.5) / 100,
+          marginBottom: (windowWidth * 2) / 100,
           alignSelf: "center",
           backgroundColor: Colors.textwhite,
-          padding: (mobileW * 1) / 100,
-          borderRadius: (mobileW * 1) / 100,
+          padding: (windowWidth * 1) / 100,
+          borderRadius: (windowWidth * 1) / 100,
           alignItems: "center",
         }}
       >
@@ -481,13 +481,13 @@ export function Searchbarandicon(props) {
 
         <TextInput
           placeholder={props.placeholdervalue}
-          placeholderTextColor={Colors.gray2}
+          DarkGrey={Colors.gray2}
           style={{
             color: Colors.gray1,
             fontSize: Font.slightlymoresmallnormal,
             width: "90%",
 
-            paddingVertical: (mobileW * 2) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
 
             textAlign: config.textalign,
           }}
@@ -495,12 +495,12 @@ export function Searchbarandicon(props) {
 
         <View style={{ alignSelf: "center" }}>
           <Image
-            source={localimag.searchiocn2}
+            source={Icons.searchiocn2}
             style={{
-              width: (mobileW * 8) / 100,
-              height: (mobileW * 8) / 100,
-              // (mobileW * 5.5) / 100,
-              borderRadius: (mobileW * 1.5) / 100,
+              width: (windowWidth * 8) / 100,
+              height: (windowWidth * 8) / 100,
+              // (windowWidth * 5.5) / 100,
+              borderRadius: (windowWidth * 1.5) / 100,
               alignSelf: "center",
             }}
           />
@@ -514,8 +514,7 @@ export function Appheading(props) {
   return (
     <View
       style={{
-        marginTop: (mobileW * 3) / 100,
-        marginBottom: (mobileW * 3) / 100,
+        marginBottom: (windowWidth * 3) / 100,
         textalign: config.textRotate,
       }}
     >
@@ -528,22 +527,22 @@ export function Inactivecard(props) {
   return (
     <View
       style={{
-        width: (mobileW * 18) / 100,
-        height: (mobileW * 25) / 100,
-        borderRadius: (mobileW * 1) / 100,
-        borderColor: Colors.theme_color,
+        width: (windowWidth * 18) / 100,
+        height: (windowWidth * 25) / 100,
+        borderRadius: (windowWidth * 1) / 100,
+        borderColor: Colors.Theme,
         justifyContent: "center",
         //   backgroundColor: '#d1e9f6',
       }}
     >
       <Image
         resizeMode="contain"
-        source={localimag.p3}
+        source={Icons.p3}
         style={{
           alignSelf: "center",
-          width: (mobileW * 12) / 100,
-          height: (mobileW * 12) / 100,
-          borderColor: Colors.theme_color,
+          width: (windowWidth * 12) / 100,
+          height: (windowWidth * 12) / 100,
+          borderColor: Colors.Theme,
         }}
       />
       <Text style={{ alignSelf: "center" }}>{props.title}</Text>
@@ -558,7 +557,7 @@ export function Appcheckedbox(props) {
         alignItems: "center",
         alignSelf: "center",
         // backgroundColor: 'red',
-        paddingVertical: (mobileW * 1.3) / 100,
+        paddingVertical: (windowWidth * 1.3) / 100,
         flexDirection: "row",
         // alignItems: 'center',
         justifyContent: "space-between",
@@ -567,16 +566,16 @@ export function Appcheckedbox(props) {
       <View style={{ flex: 0.2, alignSelf: "center" }}>
         <Image
           style={{
-            width: (mobileW * 5) / 100,
-            height: (mobileW * 5) / 100,
-            borderRadius: (mobileW * 0.4) / 100,
-            marginRight: (mobileW * 2) / 100,
-            marginLeft: (mobileW * 3) / 100,
+            width: (windowWidth * 5) / 100,
+            height: (windowWidth * 5) / 100,
+            borderRadius: (windowWidth * 0.4) / 100,
+            marginRight: (windowWidth * 2) / 100,
+            marginLeft: (windowWidth * 3) / 100,
             resizeMode: "contain",
             alignSelf: "flex-start",
             flex: 0.1,
           }}
-          source={localimag.remembertick}
+          source={Icons.remembertick}
         />
       </View>
       <Text
@@ -606,7 +605,7 @@ export function Appcheckedbox(props) {
           // color: 'red',
           flex: 0.86,
           textAlign: "right",
-          marginRight: (mobileW * 3) / 100,
+          marginRight: (windowWidth * 3) / 100,
         }}
       >
         {props.price}
@@ -621,16 +620,16 @@ export function Appuncheckedbox(props) {
       <View style={{ flex: 0.2, alignSelf: "center" }}>
         <Image
           style={{
-            width: (mobileW * 5) / 100,
-            height: (mobileW * 5) / 100,
-            borderRadius: (mobileW * 0.4) / 100,
-            marginRight: (mobileW * 2) / 100,
-            marginLeft: (mobileW * 3) / 100,
+            width: (windowWidth * 5) / 100,
+            height: (windowWidth * 5) / 100,
+            borderRadius: (windowWidth * 0.4) / 100,
+            marginRight: (windowWidth * 2) / 100,
+            marginLeft: (windowWidth * 3) / 100,
             resizeMode: "contain",
             alignSelf: "flex-start",
             flex: 0.1,
           }}
-          source={localimag.rememberdeactivate}
+          source={Icons.rememberdeactivate}
         />
       </View>
       <Text
@@ -660,7 +659,7 @@ export function Appuncheckedbox(props) {
           // color: 'red',
           flex: 0.86,
           textAlign: "right",
-          marginRight: (mobileW * 3) / 100,
+          marginRight: (windowWidth * 3) / 100,
         }}
       >
         {props.price}
@@ -673,34 +672,34 @@ export function Taskbooking(props) {
   return (
     <View
       style={{
-        backgroundColor: Colors.theme_color,
-        paddingVertical: (mobileW * 0.8) / 100,
+        backgroundColor: Colors.Theme,
+        paddingVertical: (windowWidth * 0.8) / 100,
         flexDirection: "row",
-        paddingHorizontal: (mobileW * 1.5) / 100,
+        paddingHorizontal: (windowWidth * 1.5) / 100,
         // width: '30%',
         justifyContent: "space-between",
         alignItems: "center",
-        borderRadius: (mobileW * 1) / 100,
-        marginRight: (mobileW * 2) / 100,
+        borderRadius: (windowWidth * 1) / 100,
+        marginRight: (windowWidth * 2) / 100,
       }}
     >
       <Text
         style={{
-          color: Colors.white_color,
+          color: Colors.white,
           fontSize: Font.textsize,
           fontFamily: Font.fontlight,
-          // paddingHorizontal: (mobileW * 2) / 100,
+          // paddingHorizontal: (windowWidth * 2) / 100,
         }}
       >
         {props.title}
       </Text>
       <Image
-        source={localimag.cross2}
+        source={Icons.cross2}
         style={{
           alignSelf: "center",
-          width: (mobileW * 2) / 100,
-          height: (mobileW * 2) / 100,
-          marginLeft: (mobileW * 3) / 100,
+          width: (windowWidth * 2) / 100,
+          height: (windowWidth * 2) / 100,
+          marginLeft: (windowWidth * 3) / 100,
         }}
       />
     </View>
@@ -710,9 +709,9 @@ export function Taskbooking(props) {
 const styles = StyleSheet.create({
   headerstyle: {
     backgroundColor: "#fff",
-    paddingVertical: (mobileW * 2) / 100,
+    paddingVertical: (windowWidth * 2) / 100,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+    borderBottomColor: Colors.Border,
     // shadowOpacity: 0.3,
     // shadowColor:'#000',
     // shadowOffset: {width:1,height:1},
@@ -725,28 +724,28 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     elevation: 10,
     width: "100%",
-    paddingVertical: (mobileW * 2) / 100,
+    paddingVertical: (windowWidth * 2) / 100,
   },
   icons: {
-    width: (mobileW * 13) / 100,
-    height: (mobileW * 13) / 100,
-    borderRadius: (mobileW * 5) / 50,
+    width: (windowWidth * 13) / 100,
+    height: (windowWidth * 13) / 100,
+    borderRadius: (windowWidth * 5) / 50,
   },
   notebox: {
     backgroundColor: "#fff",
-    padding: (mobileW * 4) / 100,
-    marginTop: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    padding: (windowWidth * 4) / 100,
+    marginTop: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
     fontFamily: Font.fontregular,
-    lineHeight: (mobileW * 5) / 100,
+    lineHeight: (windowWidth * 5) / 100,
   },
   notecard: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   checkboxcontainer: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   allcheckbox: {
     width: "93%",
@@ -754,32 +753,32 @@ const styles = StyleSheet.create({
   },
 
   checkboxview: {
-    // paddingVertical: (mobileW * 1.5) / 100,
+    // paddingVertical: (windowWidth * 1.5) / 100,
 
     alignItems: "center",
     alignSelf: "center",
     // backgroundColor: 'red',
-    paddingVertical: (mobileW * 1.3) / 100,
+    paddingVertical: (windowWidth * 1.3) / 100,
     flexDirection: "row",
     // alignItems: 'center',
     justifyContent: "space-between",
   },
   checkboximg: {
-    width: (mobileW * 7) / 100,
-    height: (mobileW * 7) / 100,
-    borderRadius: (mobileW * 0.4) / 100,
-    marginRight: (mobileW * 2) / 100,
+    width: (windowWidth * 7) / 100,
+    height: (windowWidth * 7) / 100,
+    borderRadius: (windowWidth * 0.4) / 100,
+    marginRight: (windowWidth * 2) / 100,
     resizeMode: "contain",
     alignSelf: "flex-start",
     flex: 0.1,
   },
   uncheckboximg: {
     resizeMode: "contain",
-    width: (mobileW * 6) / 100,
-    height: (mobileW * 6) / 100,
-    borderRadius: (mobileW * 0.4) / 100,
-    marginRight: (mobileW * 2.9) / 100,
-    marginLeft: (mobileW * 0.6) / 100,
+    width: (windowWidth * 6) / 100,
+    height: (windowWidth * 6) / 100,
+    borderRadius: (windowWidth * 0.4) / 100,
+    marginRight: (windowWidth * 2.9) / 100,
+    marginLeft: (windowWidth * 0.6) / 100,
     flex: 0.1,
   },
   checkboxtext: {
@@ -793,46 +792,46 @@ const styles = StyleSheet.create({
   buttonstyle: {
     width: "70%",
     alignSelf: "center",
-    marginVertical: (mobileW * 9) / 100,
+    marginVertical: (windowWidth * 9) / 100,
   },
   buttontext: {
-    paddingVertical: (mobileW * 3) / 100,
-    paddingHorizontal: (mobileW * 3) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    paddingVertical: (windowWidth * 3) / 100,
+    paddingHorizontal: (windowWidth * 3) / 100,
+    borderRadius: (windowWidth * 2) / 100,
     textAlign: "center",
     backgroundColor: "#4C94DB",
     textAlign: "center",
     color: Colors.whiteColor,
     fontFamily: Font.fontextrabold,
-    fontSize: (mobileW * 4.2) / 100,
+    fontSize: (windowWidth * 4.2) / 100,
   },
 
   profilecontainer: {
-    marginVertical: (mobileW * 1.2) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
   },
   profileinfo: {
     backgroundColor: "#fff",
-    marginVertical: (mobileW * 1.2) / 100,
-    padding: (mobileW * 3) / 100,
-    borderRadius: (mobileW * 1) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
+    padding: (windowWidth * 3) / 100,
+    borderRadius: (windowWidth * 1) / 100,
   },
   profileinfowithimg: {
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "center",
     backgroundColor: "#fff",
-    marginVertical: (mobileW * 1.2) / 100,
-    padding: (mobileW * 3) / 100,
-    paddingVertical: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 1) / 100,
+    marginVertical: (windowWidth * 1.2) / 100,
+    padding: (windowWidth * 3) / 100,
+    paddingVertical: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 1) / 100,
     // backgroundColor: 'red',
   },
   infoimgicon: {
     resizeMode: "contain",
-    width: (mobileW * 8) / 100,
-    height: (mobileW * 8) / 100,
-    borderRadius: (mobileW * 10) / 100,
-    marginRight: (mobileW * 2) / 100,
+    width: (windowWidth * 8) / 100,
+    height: (windowWidth * 8) / 100,
+    borderRadius: (windowWidth * 10) / 100,
+    marginRight: (windowWidth * 2) / 100,
     alignSelf: "center",
   },
   infosmalltext: {
@@ -850,65 +849,65 @@ const styles = StyleSheet.create({
   notes: {},
 
   icons: {
-    width: (mobileW * 13) / 100,
-    height: (mobileW * 13) / 100,
-    borderRadius: (mobileW * 5) / 50,
+    width: (windowWidth * 13) / 100,
+    height: (windowWidth * 13) / 100,
+    borderRadius: (windowWidth * 5) / 50,
   },
   notebox: {
     backgroundColor: "#fff",
-    padding: (mobileW * 6) / 100,
-    marginTop: (mobileW * 2) / 100,
-    borderRadius: (mobileW * 2) / 100,
+    padding: (windowWidth * 6) / 100,
+    marginTop: (windowWidth * 2) / 100,
+    borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
     fontFamily: Font.fontbold,
-    fontSize: (mobileW * 3.8) / 100,
-    lineHeight: (mobileW * 5) / 100,
+    fontSize: (windowWidth * 3.8) / 100,
+    lineHeight: (windowWidth * 5) / 100,
   },
   notecard: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
   checkboxcontainer: {
-    paddingTop: (mobileW * 3) / 100,
+    paddingTop: (windowWidth * 3) / 100,
   },
 
   notecardheading: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  addoptioncontainer: { marginTop: (mobileW * 9) / 100 },
+  addoptioncontainer: { marginTop: (windowWidth * 9) / 100 },
 
   imgboxcontainer: {
-    borderRadius: (mobileW * 1) / 100,
+    borderRadius: (windowWidth * 1) / 100,
   },
   imgbox: {
-    height: (mobileW * 30) / 100,
-    width: (mobileW * 39) / 100,
-    padding: (mobileW * 2) / 100,
-    borderWidth: (mobileW * 0.6) / 100,
-    borderRadius: (mobileW * 3) / 100,
+    height: (windowWidth * 30) / 100,
+    width: (windowWidth * 39) / 100,
+    padding: (windowWidth * 2) / 100,
+    borderWidth: (windowWidth * 0.6) / 100,
+    borderRadius: (windowWidth * 3) / 100,
     borderColor: Colors.gainsboro,
     overflow: "hidden",
-    marginRight: (mobileW * 4) / 100,
-    marginBottom: (mobileW * 4) / 100,
+    marginRight: (windowWidth * 4) / 100,
+    marginBottom: (windowWidth * 4) / 100,
   },
-  imgboxstyle: { borderRadius: (mobileW * 3) / 100 },
+  imgboxstyle: { borderRadius: (windowWidth * 3) / 100 },
   insideview: {
-    marginTop: (mobileW * 2) / 100,
+    marginTop: (windowWidth * 2) / 100,
   },
   insideviewtext: {
     alignSelf: "flex-end",
     fontFamily: Font.fontextrabold,
     fontSize: Font.bigheadingfont,
     color: "#4B4B4B",
-    marginRight: (mobileW * 0.2) / 100,
+    marginRight: (windowWidth * 0.2) / 100,
   },
   insideviewimg: {
     alignSelf: "center",
-    height: (mobileW * 8.5) / 100,
-    width: (mobileW * 8.2) / 100,
+    height: (windowWidth * 8.5) / 100,
+    width: (windowWidth * 8.2) / 100,
     alignSelf: "center",
-    marginBottom: (mobileW * 2.5) / 100,
+    marginBottom: (windowWidth * 2.5) / 100,
     resizeMode: "center",
   },
   insideviewname: {
@@ -927,10 +926,10 @@ const styles = StyleSheet.create({
 style={{
   width: '90%',
   alignSelf: 'center',
-  marginTop: (mobileW * 3) / 100,
+  marginTop: (windowWidth * 3) / 100,
   borderColor: Colors.bordercolor,
-  borderWidth: (mobileW * 0.3) / 100,
-  borderRadius: (mobileW * 2) / 100,
+  borderWidth: (windowWidth * 0.3) / 100,
+  borderRadius: (windowWidth * 2) / 100,
 }}>
 <View style={{width: '95%', alignSelf: 'center'}}>
   <TextInput
@@ -939,7 +938,7 @@ style={{
       color: Colors.textblack,
       fontSize: Font.placeholdersize,
       textAlign: config.textalign,
-      paddingVertical: (mobileW * 4) / 100,
+      paddingVertical: (windowWidth * 4) / 100,
       fontFamily: Font.fontlight,
     }}
     maxLength={50}
@@ -948,7 +947,7 @@ style={{
         ? Lang_chg.textinputemails[config.language]
         : null
     }
-    placeholderTextColor={Colors.placeholder_text}
+    DarkGrey={Colors.DarkGrey}
     onChangeText={txt => {
       this.setState({email: txt});
     }}
@@ -971,9 +970,9 @@ style={{
     style={{
       position: 'absolute',
       backgroundColor: 'white',
-      left: (mobileW * 4) / 100,
-      top: (-mobileW * 2) / 100,
-      paddingHorizontal: (mobileW * 1) / 100,
+      left: (windowWidth * 4) / 100,
+      top: (-windowWidth * 2) / 100,
+      paddingHorizontal: (windowWidth * 1) / 100,
     }}>
     <Text style={{color: '#0057A5'}}>
       {Lang_chg.textinputemails[config.language]}

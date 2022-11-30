@@ -12,13 +12,13 @@ import {
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   msgProvider,
   msgText,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -197,7 +197,7 @@ export default class Appointment extends Component {
   get_Services = async (page) => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
-
+    
     let apishow = "api-patient-all-appointment";
 
     let url = config.baseURL + apishow;
@@ -205,7 +205,6 @@ export default class Appointment extends Component {
 
     var data = new FormData();
     data.append("lgoin_user_id", user_id);
-
     data.append("service_type", this.state.pass_status);
 
     consolepro.consolelog("data", data);
@@ -1026,6 +1025,7 @@ export default class Appointment extends Component {
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
+
   time_tick = (item, index) => {
     let data = this.state.time_Arr;
     console.log("new data", data);
@@ -1051,8 +1051,8 @@ export default class Appointment extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, paddingBottom: (mobileW * 10) / 100 }}>
-          <View style={{ flex: 1, marginBottom: (mobileW * 10) / 100 }}>
+        <View style={{ flex: 1, paddingBottom: (windowWidth * 10) / 100 }}>
+          <View style={{ flex: 1, marginBottom: (windowWidth * 10) / 100 }}>
             {/* <Text>Home</Text> */}
 
             {/* header */}
@@ -1062,8 +1062,8 @@ export default class Appointment extends Component {
                   flexDirection: "row",
                   width: "98%",
                   alignSelf: "center",
-                  paddingVertical: (mobileW * 3) / 100,
-                  backgroundColor: Colors.white_color,
+                  paddingVertical: (windowWidth * 3) / 100,
+                  backgroundColor: Colors.white,
                   alignItems: "center",
                   // backgroundColor: 'red',
                 }}
@@ -1082,22 +1082,22 @@ export default class Appointment extends Component {
                   >
                     {config.language == 0 ? (
                       <Image
-                        source={localimag.leftarrow}
+                        source={Icons.leftarrow}
                         style={{
                           resizeMode: "contain",
-                          width: (mobileW * 9) / 100,
+                          width: (windowWidth * 9) / 100,
                           alignSelf: "center",
-                          height: (mobileW * 9) / 100,
+                          height: (windowWidth * 9) / 100,
                         }}
                       />
                     ) : (
                       <Image
-                        source={localimag.arabic_back}
+                        source={Icons.arabic_back}
                         style={{
                           resizeMode: "contain",
-                          width: (mobileW * 9) / 100,
+                          width: (windowWidth * 9) / 100,
                           alignSelf: "center",
-                          height: (mobileW * 9) / 100,
+                          height: (windowWidth * 9) / 100,
                         }}
                       />
                     )}
@@ -1132,14 +1132,14 @@ export default class Appointment extends Component {
                       // tintColor="#fff"
                       source={
                         this.state.notification_count > 0
-                          ? localimag.notifications
-                          : localimag.notifications_sec
+                          ? Icons.notifications
+                          : Icons.notifications_sec
                       }
                       style={{
                         alignSelf: "center",
                         resizeMode: "contain",
-                        width: (mobileW * 6) / 100,
-                        height: (mobileW * 6) / 100,
+                        width: (windowWidth * 6) / 100,
+                        height: (windowWidth * 6) / 100,
                       }}
                     />
                   </TouchableOpacity>
@@ -1150,8 +1150,8 @@ export default class Appointment extends Component {
             {/* tabheadings */}
             <View
               style={{
-                backgroundColor: Colors.theme_color,
-                paddingTop: (mobileW * 1.5) / 100,
+                backgroundColor: Colors.Theme,
+                paddingTop: (windowWidth * 1.5) / 100,
               }}
             >
               <FlatList
@@ -1174,13 +1174,13 @@ export default class Appointment extends Component {
                             ? {
                                 borderColor: "#1b56ee",
                                 justifyContent: "center",
-                                height: (mobileH * 4.3) / 100,
-                                marginHorizontal: (mobileW * 4) / 100,
+                                height: (windowHeight * 4.3) / 100,
+                                marginHorizontal: (windowWidth * 4) / 100,
                               }
                             : {
-                                height: (mobileH * 4.3) / 100,
+                                height: (windowHeight * 4.3) / 100,
                                 justifyContent: "center",
-                                marginHorizontal: (mobileW * 4) / 100,
+                                marginHorizontal: (windowWidth * 4) / 100,
                               }
                         }
                       >
@@ -1188,7 +1188,7 @@ export default class Appointment extends Component {
                           <Text
                             style={[
                               {
-                                fontSize: (mobileW * 3.8) / 100,
+                                fontSize: (windowWidth * 3.8) / 100,
                                 textAlign: "center",
                                 fontFamily: Font.fontsemibold,
                               },
@@ -1203,7 +1203,7 @@ export default class Appointment extends Component {
                           <Text
                             style={[
                               {
-                                fontSize: (mobileW * 3.8) / 100,
+                                fontSize: (windowWidth * 3.8) / 100,
                                 textAlign: "center",
                                 fontFamily: Font.fontsemibold,
                               },
@@ -1222,8 +1222,8 @@ export default class Appointment extends Component {
                             width: "70%",
                             borderWidth: 2.2,
                             borderColor: "#fff",
-                            borderTopLeftRadius: (mobileW * 2.2) / 100,
-                            borderTopRightRadius: (mobileW * 2.2) / 100,
+                            borderTopLeftRadius: (windowWidth * 2.2) / 100,
+                            borderTopRightRadius: (windowWidth * 2.2) / 100,
                             backgroundColor: "#fff",
                             alignSelf: "center",
                           }}
@@ -1239,10 +1239,10 @@ export default class Appointment extends Component {
                 <Text
                   style={{
                     textAlign: "center",
-                    color: Colors.theme_color,
+                    color: Colors.Theme,
                     fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 3.5) / 100,
-                    marginTop: (mobileW * 60) / 100,
+                    fontSize: (windowWidth * 3.5) / 100,
+                    marginTop: (windowWidth * 60) / 100,
                   }}
                 >
                   {this.state.message}
@@ -1251,7 +1251,7 @@ export default class Appointment extends Component {
 
             <FlatList
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: (mobileW * 5) / 100 }}
+              contentContainerStyle={{ paddingBottom: (windowWidth * 5) / 100 }}
               data={this.state.appoinment_detetails}
               renderItem={({ item, index }) => {
                 if (
@@ -1346,7 +1346,7 @@ export default class Appointment extends Component {
                     <View>
                       <View
                         style={{
-                          marginTop: (mobileW * 2) / 100,
+                          marginTop: (windowWidth * 2) / 100,
                           backgroundColor: "#fff",
                           shadowOpacity: 0.3,
                           shadowColor: "#000",
@@ -1367,7 +1367,7 @@ export default class Appointment extends Component {
                               flexDirection: "row",
                               width: "100%",
                               alignSelf: "center",
-                              padding: (mobileW * 2) / 100,
+                              padding: (windowWidth * 2) / 100,
                               // justifyContent: 'space-between',
                             }}
                           >
@@ -1378,7 +1378,7 @@ export default class Appointment extends Component {
                                 style={{
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.theme_color,
+                                  color: Colors.Theme,
                                   textAlign: config.textRotate,
                                   textTransform: "uppercase",
                                 }}
@@ -1387,10 +1387,10 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 2) / 100,
+                                  paddingTop: (windowWidth * 2) / 100,
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1398,10 +1398,10 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 1) / 100,
+                                  paddingTop: (windowWidth * 1) / 100,
                                   fontFamily: Font.fontregular,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1409,7 +1409,7 @@ export default class Appointment extends Component {
                               </Text>
                               <View
                                 style={{
-                                  marginTop: (mobileW * 2) / 100,
+                                  marginTop: (windowWidth * 2) / 100,
                                   flexDirection: "row",
                                   alignItems: "center",
                                 }}
@@ -1418,19 +1418,19 @@ export default class Appointment extends Component {
                                   style={{
                                     fontFamily: Font.fontmedium,
                                     fontSize: Font.sregulartext_size,
-                                    color: Colors.theme_color,
+                                    color: Colors.Theme,
                                     textAlign: config.textRotate,
                                   }}
                                 >
                                   {Lang_chg.Patient[config.language]}
                                 </Text>
                                 <Image
-                                  source={localimag.dots}
+                                  source={Icons.dots}
                                   style={{
                                     width: 25,
                                     height: 13,
                                     resizeMode: "contain",
-                                    marginLeft: (mobileW * 1.5) / 100,
+                                    marginLeft: (windowWidth * 1.5) / 100,
                                   }}
                                 />
                               </View>
@@ -1438,8 +1438,8 @@ export default class Appointment extends Component {
                                 style={{
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  marginTop: (mobileW * 1) / 100,
-                                  color: Colors.darkgraytextheading,
+                                  marginTop: (windowWidth * 1) / 100,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                   width: "80%",
                                 }}
@@ -1449,7 +1449,7 @@ export default class Appointment extends Component {
                               </Text>
                               <View
                                 style={{
-                                  marginTop: (mobileW * 2.8) / 100,
+                                  marginTop: (windowWidth * 2.8) / 100,
                                   flexDirection: "row",
                                 }}
                               >
@@ -1457,7 +1457,7 @@ export default class Appointment extends Component {
                                   style={{
                                     fontFamily: Font.fontregular,
                                     fontSize: Font.sregulartext_size,
-                                    color: Colors.darkgraytextheading,
+                                    color: Colors.DarkGrey,
                                     textAlign: config.textRotate,
                                   }}
                                 >
@@ -1467,10 +1467,10 @@ export default class Appointment extends Component {
                                   style={{
                                     fontFamily: Font.fontmedium,
                                     fontSize: Font.sregulartext_size,
-                                    color: Colors.darkgraytextheading,
+                                    color: Colors.DarkGrey,
                                     textAlign: config.textRotate,
                                     textTransform: "uppercase",
-                                    marginLeft: (mobileW * 1.5) / 100,
+                                    marginLeft: (windowWidth * 1.5) / 100,
                                   }}
                                 >
                                   {item.booking_date}
@@ -1486,8 +1486,8 @@ export default class Appointment extends Component {
                               <Text
                                 style={{
                                   fontFamily: Font.fontmedium,
-                                  fontSize: (mobileW * 3.4) / 100,
-                                  color: Colors.theme_color,
+                                  fontSize: (windowWidth * 3.4) / 100,
+                                  color: Colors.Theme,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1495,10 +1495,10 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 1) / 100,
+                                  paddingTop: (windowWidth * 1) / 100,
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1506,9 +1506,9 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 1) / 100,
+                                  paddingTop: (windowWidth * 1) / 100,
                                   fontFamily: Font.fontmedium,
-                                  color: Colors.theme_color,
+                                  color: Colors.Theme,
                                   fontSize: Font.sregulartext_size,
                                   textAlign: config.textRotate,
                                 }}
@@ -1517,10 +1517,10 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 1) / 100,
+                                  paddingTop: (windowWidth * 1) / 100,
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                   textTransform: "uppercase",
                                 }}
@@ -1531,12 +1531,12 @@ export default class Appointment extends Component {
                               <View
                                 style={{
                                   flexDirection: "row",
-                                  marginTop: (mobileW * 2) / 100,
-                                  paddingVertical: (mobileW * 0.5) / 100,
-                                  paddingHorizontal: (mobileW * 1) / 100,
+                                  marginTop: (windowWidth * 2) / 100,
+                                  paddingVertical: (windowWidth * 0.5) / 100,
+                                  paddingHorizontal: (windowWidth * 1) / 100,
                                   borderWidth: 1,
-                                  borderRadius: (mobileW * 1) / 100,
-                                  borderColor: Colors.theme_color,
+                                  borderRadius: (windowWidth * 1) / 100,
+                                  borderColor: Colors.Theme,
                                   alignSelf: "flex-start",
                                 }}
                               >
@@ -1544,7 +1544,7 @@ export default class Appointment extends Component {
                                   style={{
                                     fontFamily: Font.fontmedium,
                                     fontSize: Font.sregulartext_size,
-                                    color: Colors.theme_color,
+                                    color: Colors.Theme,
                                   }}
                                 >
                                   {item.appointment_type}
@@ -1559,10 +1559,10 @@ export default class Appointment extends Component {
                             >
                               <View
                                 style={{
-                                  borderRadius: (mobileW * 0.5) / 100,
+                                  borderRadius: (windowWidth * 0.5) / 100,
                                   width: "100%",
                                   alignItems: "center",
-                                  paddingVertical: (mobileW * 1) / 100,
+                                  paddingVertical: (windowWidth * 1) / 100,
                                   backgroundColor:
                                     item.acceptance_status == "Rejected"
                                       ? "#FF4500"
@@ -1575,7 +1575,7 @@ export default class Appointment extends Component {
                                   style={{
                                     color: "#FCFFFE",
                                     fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 2.7) / 100,
+                                    fontSize: (windowWidth * 2.7) / 100,
                                     textAlign: "center",
                                     textTransform: "uppercase",
                                   }}
@@ -1585,9 +1585,9 @@ export default class Appointment extends Component {
                               </View>
                               <Text
                                 style={{
-                                  marginTop: (mobileW * 6.5) / 100,
+                                  marginTop: (windowWidth * 6.5) / 100,
                                   fontFamily: Font.fontmedium,
-                                  color: Colors.theme_color,
+                                  color: Colors.Theme,
                                   fontSize: Font.sregulartext_size,
                                   textAlign: config.textRotate,
                                 }}
@@ -1596,10 +1596,10 @@ export default class Appointment extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  paddingTop: (mobileW * 1) / 100,
+                                  paddingTop: (windowWidth * 1) / 100,
                                   fontFamily: Font.fontmedium,
                                   fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
+                                  color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1610,39 +1610,39 @@ export default class Appointment extends Component {
                                 style={{
                                   width: "100%",
                                   flexDirection: "row",
-                                  paddingVertical: (mobileW * 2) / 100,
-                                  borderRadius: (mobileW * 1) / 100,
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  borderRadius: (windowWidth * 1) / 100,
                                   alignItems: "center",
                                 }}
                               >
                                 {config.language == 0 ? (
                                   <Image
-                                    source={localimag.clock}
+                                    source={Icons.clock}
                                     style={{
-                                      tintColor: Colors.theme_color,
+                                      tintColor: Colors.Theme,
                                       resizeMode: "contain",
-                                      width: (mobileW * 3.5) / 100,
-                                      height: (mobileW * 3.5) / 100,
+                                      width: (windowWidth * 3.5) / 100,
+                                      height: (windowWidth * 3.5) / 100,
                                     }}
                                   />
                                 ) : (
                                   <Image
-                                    source={localimag.clock_arabic}
+                                    source={Icons.clock_arabic}
                                     style={{
-                                      tintColor: Colors.theme_color,
+                                      tintColor: Colors.Theme,
                                       resizeMode: "contain",
-                                      width: (mobileW * 3.5) / 100,
-                                      height: (mobileW * 3.5) / 100,
+                                      width: (windowWidth * 3.5) / 100,
+                                      height: (windowWidth * 3.5) / 100,
                                     }}
                                   />
                                 )}
 
                                 <Text
                                   style={{
-                                    color: Colors.theme_color,
+                                    color: Colors.Theme,
                                     fontFamily: Font.fontregular,
-                                    fontSize: (mobileW * 3) / 100,
-                                    marginLeft: (mobileW * 1) / 100,
+                                    fontSize: (windowWidth * 3) / 100,
+                                    marginLeft: (windowWidth * 1) / 100,
                                     textAlign: config.textRotate,
                                   }}
                                 >
@@ -1655,8 +1655,8 @@ export default class Appointment extends Component {
                           <View
                             style={{
                               flexDirection: "row",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
                               width: "95%",
                               alignItems: "center",
@@ -1670,12 +1670,12 @@ export default class Appointment extends Component {
 
                                 width: "35%",
                                 // backgroundColor: 'red',
-                                paddingVertical: (mobileW * 1.5) / 100,
+                                paddingVertical: (windowWidth * 1.5) / 100,
                               }}
                             >
                               {config.language == 0 ? (
                                 <Image
-                                  source={localimag.purse}
+                                  source={Icons.purse}
                                   style={{
                                     resizeMode: "contain",
                                     width: 15,
@@ -1684,7 +1684,7 @@ export default class Appointment extends Component {
                                 />
                               ) : (
                                 <Image
-                                  source={localimag.purse_arbic}
+                                  source={Icons.purse_arbic}
                                   style={{
                                     resizeMode: "contain",
                                     width: 15,
@@ -1694,11 +1694,11 @@ export default class Appointment extends Component {
                               )}
                               <Text
                                 style={{
-                                  color: Colors.theme_color,
-                                  fontSize: (mobileW * 3.7) / 100,
+                                  color: Colors.Theme,
+                                  fontSize: (windowWidth * 3.7) / 100,
                                   fontFamily: Font.fontmedium,
                                   alignSelf: "center",
-                                  marginLeft: (mobileW * 1) / 100,
+                                  marginLeft: (windowWidth * 1) / 100,
                                   marginTop: 0.5,
                                 }}
                               >
@@ -1712,7 +1712,7 @@ export default class Appointment extends Component {
                                 // backgroundColor: 'yellow',
                                 width: "65%",
                                 justifyContent: "flex-end",
-                                paddingVertical: (mobileW * 1.5) / 100,
+                                paddingVertical: (windowWidth * 1.5) / 100,
                               }}
                             >
                               {item.acceptance_status == "Accepted" &&
@@ -1738,19 +1738,19 @@ export default class Appointment extends Component {
                                     style={{
                                       backgroundColor: Colors.buttoncolorhgreen,
                                       width: "35%",
-                                      borderRadius: (mobileW * 1) / 100,
+                                      borderRadius: (windowWidth * 1) / 100,
                                       justifyContent: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       marginRight: 10,
                                     }}
                                   >
                                     <Text
                                       style={{
                                         textAlign: "center",
-                                        color: Colors.white_color,
+                                        color: Colors.white,
                                         textTransform: "uppercase",
                                         fontFamily: Font.fontmedium,
-                                        fontSize: (mobileW * 3) / 100,
+                                        fontSize: (windowWidth * 3) / 100,
                                       }}
                                     >
                                       VIDEO CALL
@@ -1773,19 +1773,19 @@ export default class Appointment extends Component {
                                   style={{
                                     backgroundColor: Colors.buttoncolorhgreen,
                                     width: "48%",
-                                    borderRadius: (mobileW * 1) / 100,
+                                    borderRadius: (windowWidth * 1) / 100,
                                     justifyContent: "center",
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     marginRight: 10,
                                   }}
                                 >
                                   <Text
                                     style={{
                                       textAlign: "center",
-                                      color: Colors.white_color,
+                                      color: Colors.white,
                                       textTransform: "uppercase",
                                       fontFamily: Font.fontmedium,
-                                      fontSize: (mobileW * 3) / 100,
+                                      fontSize: (windowWidth * 3) / 100,
                                     }}
                                   >
                                     {Lang_chg.Reschedule[config.language]}
@@ -1813,19 +1813,19 @@ export default class Appointment extends Component {
                                 style={{
                                   backgroundColor: Colors.lbluebtn,
                                   width: "48%",
-                                  borderRadius: (mobileW * 1) / 100,
+                                  borderRadius: (windowWidth * 1) / 100,
                                   justifyContent: "center",
-                                  paddingVertical: (mobileW * 2) / 100,
+                                  paddingVertical: (windowWidth * 2) / 100,
                                 }}
                               >
                                 <Text
                                   style={{
                                     alignSelf: "center",
                                     textAlign: "center",
-                                    color: Colors.white_color,
-                                    //  paddingHorizontal: (mobileW * 2) / 100,
+                                    color: Colors.white,
+                                    //  paddingHorizontal: (windowWidth * 2) / 100,
                                     fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 3) / 100,
+                                    fontSize: (windowWidth * 3) / 100,
                                   }}
                                 >
                                   {Lang_chg.VIEWDETAILS[config.language]}
@@ -1842,8 +1842,8 @@ export default class Appointment extends Component {
                             position: "absolute",
                             right: 0,
                             top: 8,
-                            // borderTopLeftRadius : (mobileW * 2) / 100,
-                            borderBottomLeftRadius: (mobileW * 2) / 100,
+                            // borderTopLeftRadius : (windowWidth * 2) / 100,
+                            borderBottomLeftRadius: (windowWidth * 2) / 100,
                             paddingVertical: 3,
                             paddingHorizontal: 10,
                             marginBottom: 10,
@@ -1853,8 +1853,8 @@ export default class Appointment extends Component {
                             style={{
                               color: "#fff",
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 2.5) / 100,
-                              alignSelf: "center",
+                              fontSize: (windowWidth * 2.5) / 100,
+                               alignSelf: "center",
                             }}
                           >
                             {Lang_chg.Hospital[config.language]}
@@ -1868,7 +1868,8 @@ export default class Appointment extends Component {
             />
           </View>
         </View>
-        <HideWithKeyboard>
+        
+        {/* <HideWithKeyboard>
           <Footer
             activepage="Appointment"
             usertype={1}
@@ -1877,42 +1878,42 @@ export default class Appointment extends Component {
                 name: "Home",
                 fname: Lang_chg.home_footer[config.language],
                 countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
+                image: Icons.Home,
+                activeimage: Icons.Home,
               },
               {
                 name: "Appointment",
                 fname: Lang_chg.Appointment_footer[config.language],
                 countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
+                image: Icons.Appointment,
+                activeimage: Icons.Appointment,
               },
               {
                 name: "Cart",
                 fname: Lang_chg.Cart_footer[config.language],
                 countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
+                image: Icons.Cart,
+                activeimage: Icons.Cart,
               },
               {
                 name: "More",
                 fname: Lang_chg.More_footer[config.language],
                 countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
+                image: Icons.More,
+                activeimage: Icons.More,
               },
             ]}
             navigation={this.props.navigation}
             imagestyle1={{
               width: 25,
               height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
+              paddingBottom: (windowWidth * 5.4) / 100,
               backgroundColor: "white",
               countcolor: "red",
               countbackground: "red",
             }}
           />
-        </HideWithKeyboard>
+        </HideWithKeyboard> */}
 
         {/* code for modal */}
         <Modal
@@ -1938,24 +1939,24 @@ export default class Appointment extends Component {
             <View
               style={{
                 width: "100%",
-                backgroundColor: Colors.white_color,
-                // marginTop: (mobileW * 50) / 100,
+                backgroundColor: Colors.white,
+                // marginTop: (windowWidth * 50) / 100,
                 position: "absolute",
                 bottom: 0,
-                borderTopLeftRadius: (mobileW * 10) / 100,
-                borderTopRightRadius: (mobileW * 10) / 100,
-                borderWidth: (mobileW * 0.3) / 100,
+                borderTopLeftRadius: (windowWidth * 10) / 100,
+                borderTopRightRadius: (windowWidth * 10) / 100,
+                borderWidth: (windowWidth * 0.3) / 100,
                 borderColor: Colors.gainsboro,
                 elevation: 5,
-                height: (mobileH * 80) / 100,
+                height: (windowHeight * 80) / 100,
               }}
             >
               {/* task booking section */}
               <ScrollView
                 style={{
-                  marginTop: (mobileW * 2) / 100,
-                  borderTopRightRadius: (mobileW * 5) / 100,
-                  borderTopLeftRadius: (mobileW * 5) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  borderTopRightRadius: (windowWidth * 5) / 100,
+                  borderTopLeftRadius: (windowWidth * 5) / 100,
                 }}
                 showsVerticalScrollIndicator={false}
               >
@@ -1964,17 +1965,17 @@ export default class Appointment extends Component {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      width: (mobileW * 90) / 100,
+                      width: (windowWidth * 90) / 100,
                       // backgroundColor:'red',
                       alignSelf: "center",
-                      paddingTop: (mobileW * 4) / 100,
+                      paddingTop: (windowWidth * 4) / 100,
                       alignItems: "center",
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: Font.fontmedium,
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                       }}
                     >
                       {Lang_chg.Reschedule[config.language]}
@@ -1984,10 +1985,10 @@ export default class Appointment extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.name,
-                          paddingRight: (mobileW * 4) / 100,
+                          paddingRight: (windowWidth * 4) / 100,
                         }}
                       >
                         {rescdule.order_id}
@@ -1997,10 +1998,10 @@ export default class Appointment extends Component {
                         onPress={() => this.setState({ modalVisible: false })}
                       >
                         <Image
-                          source={localimag.cross}
+                          source={Icons.cross}
                           style={{
                             resizeMode: "contain",
-                            // backgroundColor: Colors.white_color,
+                            // backgroundColor: Colors.white,
                             width: 20,
                             height: 20,
 
@@ -2017,23 +2018,23 @@ export default class Appointment extends Component {
                       borderColor: Colors.gainsboro,
                       width: "90%",
                       alignSelf: "center",
-                      marginVertical: (mobileW * 2) / 100,
+                      marginVertical: (windowWidth * 2) / 100,
                     }}
                   />
                   <View
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      paddingVertical: (mobileW * 4) / 100,
+                      paddingVertical: (windowWidth * 4) / 100,
                     }}
                   >
-                    <View style={{ paddingBottom: (mobileW * 1.5) / 100 }}>
+                    <View style={{ paddingBottom: (windowWidth * 1.5) / 100 }}>
                       <Text
                         style={{
                           fontFamily: Font.fontmedium,
-                          fontSize: (mobileW * 3.5) / 100,
+                          fontSize: (windowWidth * 3.5) / 100,
                           textAlign: config.textRotate,
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                         }}
                       >
                         {/* {rescdule.provider_type === "doctor"
@@ -2055,13 +2056,13 @@ export default class Appointment extends Component {
                     <View
                       style={[
                         {
-                          paddingVertical: (mobileW * 3) / 100,
-                          borderTopWidth: (mobileW * 0.3) / 100,
+                          paddingVertical: (windowWidth * 3) / 100,
+                          borderTopWidth: (windowWidth * 0.3) / 100,
                           borderColor: Colors.bordercolor,
                         },
                         this.state.task_details.length >= 3
-                          ? { height: (mobileW * 40) / 100 }
-                          : { paddingVertical: (mobileW * 1.5) / 100 },
+                          ? { height: (windowWidth * 40) / 100 }
+                          : { paddingVertical: (windowWidth * 1.5) / 100 },
                       ]}
                     >
                       {rescdule.provider_type === "doctor" ? (
@@ -2080,9 +2081,9 @@ export default class Appointment extends Component {
                                     alignItems: "center",
                                     width: "100%",
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 1.7) / 100,
+                                    paddingVertical: (windowWidth * 1.7) / 100,
                                     flexDirection: "row",
-                                    marginTop: (mobileW * 0.3) / 100,
+                                    marginTop: (windowWidth * 0.3) / 100,
                                   }}
                                 >
                                   <Text
@@ -2090,7 +2091,7 @@ export default class Appointment extends Component {
                                       width: "70%",
                                       textAlign: config.textRotate,
                                       alignSelf: "center",
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
                                       color: "#000",
                                     }}
@@ -2100,7 +2101,7 @@ export default class Appointment extends Component {
                                   <Text
                                     style={{
                                       width: "30%",
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
                                       color: "#000",
                                       textAlign: "right",
@@ -2132,9 +2133,9 @@ export default class Appointment extends Component {
                                     width: "100%",
                                     alignSelf: "center",
 
-                                    paddingVertical: (mobileW * 1.7) / 100,
+                                    paddingVertical: (windowWidth * 1.7) / 100,
                                     flexDirection: "row",
-                                    marginTop: (mobileW * 0.3) / 100,
+                                    marginTop: (windowWidth * 0.3) / 100,
                                   }}
                                 >
                                   <Text
@@ -2142,7 +2143,7 @@ export default class Appointment extends Component {
                                       width: "70%",
                                       textAlign: config.textRotate,
                                       alignSelf: "center",
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
 
                                       color: "#000",
@@ -2154,7 +2155,7 @@ export default class Appointment extends Component {
                                     style={{
                                       width: "30%",
 
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
                                       color: "#000",
 
@@ -2187,9 +2188,9 @@ export default class Appointment extends Component {
                                     alignItems: "center",
                                     width: "100%",
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 1.7) / 100,
+                                    paddingVertical: (windowWidth * 1.7) / 100,
                                     flexDirection: "row",
-                                    marginTop: (mobileW * 0.3) / 100,
+                                    marginTop: (windowWidth * 0.3) / 100,
                                   }}
                                 >
                                   <Text
@@ -2197,7 +2198,7 @@ export default class Appointment extends Component {
                                       width: "70%",
                                       textAlign: config.textRotate,
                                       alignSelf: "center",
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
 
                                       color: "#000",
@@ -2209,7 +2210,7 @@ export default class Appointment extends Component {
                                     style={{
                                       width: "30%",
 
-                                      fontSize: (mobileW * 3.6) / 100,
+                                      fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.fontregular,
                                       color: "#000",
 
@@ -2234,32 +2235,32 @@ export default class Appointment extends Component {
                             return (
                               <View
                                 style={{
-                                  borderRadius: (mobileW * 2) / 100,
-                                  marginRight: (mobileW * 2) / 100,
-                                  marginTop: (mobileW * 2) / 100,
+                                  borderRadius: (windowWidth * 2) / 100,
+                                  marginRight: (windowWidth * 2) / 100,
+                                  marginTop: (windowWidth * 2) / 100,
                                   borderColor: "#0168B3",
                                   borderWidth: 2,
 
-                                  width: (mobileW * 30) / 100,
+                                  width: (windowWidth * 30) / 100,
                                   backgroundColor: "#fff",
                                 }}
                               >
                                 <View
                                   style={{
                                     backgroundColor: "#0168B3",
-                                    borderTopLeftRadius: (mobileW * 1.2) / 100,
-                                    borderTopRightRadius: (mobileW * 1.2) / 100,
+                                    borderTopLeftRadius: (windowWidth * 1.2) / 100,
+                                    borderTopRightRadius: (windowWidth * 1.2) / 100,
                                     width: "100%",
                                   }}
                                 >
                                   <Text
                                     style={{
                                       // backgroundColor:'red',
-                                      // paddingHorizontal: (mobileW * 5) / 100,
-                                      paddingVertical: (mobileW * 1.5) / 100,
-                                      color: Colors.white_color,
+                                      // paddingHorizontal: (windowWidth * 5) / 100,
+                                      paddingVertical: (windowWidth * 1.5) / 100,
+                                      color: Colors.white,
                                       fontFamily: Font.fontmedium,
-                                      fontSize: (mobileW * 3) / 100,
+                                      fontSize: (windowWidth * 3) / 100,
                                       textAlign: "center",
                                       textTransform: "uppercase",
                                     }}
@@ -2269,7 +2270,7 @@ export default class Appointment extends Component {
                                 </View>
                                 <Text
                                   style={{
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     fontFamily: Font.fontmedium,
                                     textAlign: "center",
                                     fontSize: Font.sregulartext_size,
@@ -2292,9 +2293,9 @@ export default class Appointment extends Component {
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignSelf: "center",
-                        paddingTop: (mobileW * 4) / 100,
-                        // paddingBottom: (mobileW * 4) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingTop: (windowWidth * 4) / 100,
+                        // paddingBottom: (windowWidth * 4) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.gainsboro,
                       }}
                     >
@@ -2311,7 +2312,7 @@ export default class Appointment extends Component {
                         style={{ flexDirection: "row", alignItems: "center" }}
                       >
                         <Image
-                          source={localimag.calendarimg}
+                          source={Icons.calendarimg}
                           style={{
                             resizeMode: "contain",
                             width: 20,
@@ -2322,10 +2323,10 @@ export default class Appointment extends Component {
 
                         <Text
                           style={{
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             fontFamily: Font.fontmedium,
                             fontSize: Font.name,
-                            marginLeft: (mobileW * 1) / 100,
+                            marginLeft: (windowWidth * 1) / 100,
                           }}
                         >
                           {this.state.set_date}
@@ -2338,15 +2339,15 @@ export default class Appointment extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     />
                     <View
                       style={{
                         width: "100%",
                         alignSelf: "center",
-                        paddingTop: (mobileW * 3) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingTop: (windowWidth * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -2385,21 +2386,21 @@ export default class Appointment extends Component {
                                     }
                                   );
                                 }}
-                                style={{ width: (mobileW * 15) / 100 }}
+                                style={{ width: (windowWidth * 15) / 100 }}
                               >
                                 <Text
                                   style={{
-                                    marginRight: (mobileW * 3) / 100,
-                                    marginTop: (mobileW * 3) / 100,
+                                    marginRight: (windowWidth * 3) / 100,
+                                    marginTop: (windowWidth * 3) / 100,
                                     backgroundColor:
                                       item.tick == 1 ? "#0787D2" : Colors.gray6,
                                     color: item.tick == 1 ? "white" : "black",
                                     textAlign: "center",
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     fontFamily: Font.ques_fontfamily,
                                     fontSize: Font.sregulartext_size,
 
-                                    lineHeight: (mobileW * 5) / 100,
+                                    lineHeight: (windowWidth * 5) / 100,
                                   }}
                                 >
                                   {item.day}
@@ -2419,15 +2420,15 @@ export default class Appointment extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
                     <View
                       style={{
                         width: "100%",
                         alignSelf: "center",
-                        paddingVertical: (mobileW * 3) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -2463,19 +2464,19 @@ export default class Appointment extends Component {
                                         <Text
                                           style={[
                                             {
-                                              marginRight: (mobileW * 3) / 100,
-                                              marginTop: (mobileW * 3) / 100,
+                                              marginRight: (windowWidth * 3) / 100,
+                                              marginTop: (windowWidth * 3) / 100,
                                               fontFamily: Font.ques_fontfamily,
                                               fontSize: Font.sregulartext_size,
-                                              padding: (mobileW * 2) / 100,
+                                              padding: (windowWidth * 2) / 100,
                                               paddingHorizontal:
-                                                (mobileW * 3.3) / 100,
+                                                (windowWidth * 3.3) / 100,
                                             },
                                             item.time ==
                                             this.state.time_take_data
                                               ? {
                                                   backgroundColor:
-                                                    Colors.theme_color,
+                                                    Colors.Theme,
                                                   color: "#fff",
                                                 }
                                               : {
@@ -2508,19 +2509,19 @@ export default class Appointment extends Component {
                                         <Text
                                           style={[
                                             {
-                                              marginRight: (mobileW * 3) / 100,
-                                              marginTop: (mobileW * 3) / 100,
+                                              marginRight: (windowWidth * 3) / 100,
+                                              marginTop: (windowWidth * 3) / 100,
                                               fontFamily: Font.ques_fontfamily,
                                               fontSize: Font.sregulartext_size,
-                                              padding: (mobileW * 2) / 100,
+                                              padding: (windowWidth * 2) / 100,
                                               paddingHorizontal:
-                                                (mobileW * 3.3) / 100,
+                                                (windowWidth * 3.3) / 100,
                                             },
                                             item.time ==
                                             this.state.time_take_data
                                               ? {
                                                   backgroundColor:
-                                                    Colors.theme_color,
+                                                    Colors.Theme,
                                                   color: "#fff",
                                                 }
                                               : {
@@ -2541,11 +2542,11 @@ export default class Appointment extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontMediumItalic,
-                                fontSize: (mobileW * 4) / 100,
+                                fontSize: (windowWidth * 4) / 100,
                                 alignSelf: "center",
-                                marginTop: (mobileW * 3) / 100,
+                                marginTop: (windowWidth * 3) / 100,
                                 textAlign: "center",
-                                marginLeft: (mobileW * 32) / 100,
+                                marginLeft: (windowWidth * 32) / 100,
                               }}
                             >
                               {Lang_chg.no_data_Found[config.language]}
@@ -2562,10 +2563,10 @@ export default class Appointment extends Component {
                       style={{
                         width: "98%",
                         alignSelf: "center",
-                        borderRadius: (mobileW * 2) / 100,
-                        backgroundColor: Colors.theme_color,
-                        paddingVertical: (mobileW * 2.8) / 100,
-                        marginVertical: (mobileW * 6) / 100,
+                        borderRadius: (windowWidth * 2) / 100,
+                        backgroundColor: Colors.Theme,
+                        paddingVertical: (windowWidth * 2.8) / 100,
+                        marginVertical: (windowWidth * 6) / 100,
                       }}
                     >
                       <Text

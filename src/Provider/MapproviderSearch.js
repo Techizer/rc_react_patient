@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Text, View, StyleSheet, Dimensions, TouchableOpacity, Image, TouchableHighlight, Alert, ImageBackground } from 'react-native'
-import { Colors, mediaprovider, config, localStorage, localimag, Currentltlg, Lang_chg, mobileW, mobileH, Font } from './utilslib/Utils';
+import { Colors, mediaprovider, config, localStorage, Icons, Currentltlg, Lang_chg, windowWidth, windowHeight, Font } from './utilslib/Utils';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import MapView, { Callout, Circle, Marker, PROVIDER_GOOGLE, } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -170,17 +170,17 @@ export default class MapproviderSearch extends Component {
       //   }}>
       <View style={styles.container}>
         {/* <View style={{ width: '100%', alignSelf: 'center', flexDirection: 'row', paddingTop: 10, backgroundColor: '#d15252' }}>
-            <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center', backgroundColor: Colors.theme_color }} onPress={() => { this.setState({ makermove: 0 }); this.props.canclemap() }}>
+            <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center', backgroundColor: Colors.Theme }} onPress={() => { this.setState({ makermove: 0 }); this.props.canclemap() }}>
               <View style={{ width: '100%', alignSelf: 'center' }}>
-                <Image source={localimag.back} style={{ alignSelf: 'center', width: 25, height: 25 }} />
+                <Image source={Icons.back} style={{ alignSelf: 'center', width: 25, height: 25 }} />
               </View>
             </TouchableOpacity>
             <View style={{ paddingVertical: 15, width: '60%' }}>
-              <Text style={{ color: 'white', fontFamily:Font.FontSemiBold, fontSize: mobileW * 5 / 100, textAlign: 'center' }}>{Lang_chg.titlesearchlocation[config.language]}</Text>
+              <Text style={{ color: 'white', fontFamily:Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{Lang_chg.titlesearchlocation[config.language]}</Text>
             </View>
             <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center' }} onPress={() => { this.state.profile == 'location' ? this.locationupdatebtn() : this.props.navigation.goBack() }}>
               <View style={{ width: '100%', alignSelf: 'center' }} >
-                <Text style={{ color: Colors.theme_color, fontFamily: Font.FontSemiBold, fontSize: 13, textAlign: 'center' }}></Text>
+                <Text style={{ color: Colors.Theme, fontFamily: Font.FontSemiBold, fontSize: 13, textAlign: 'center' }}></Text>
               </View>
             </TouchableOpacity>
 
@@ -232,7 +232,7 @@ export default class MapproviderSearch extends Component {
             >
 
 
-              <Image source={localimag.maplocation} style={{ height: 35, width: 35, resizeMode: 'contain', }} />
+              <Image source={Icons.maplocation} style={{ height: 35, width: 35, resizeMode: 'contain', }} />
             </Marker.Animated>
 
             <Circle
@@ -245,7 +245,7 @@ export default class MapproviderSearch extends Component {
               radius={(this.props.circle_radius)?parseFloat(this.props.circle_radius):2000}
 
               zIndex={0}
-              strokeColor={Colors.theme_color}
+              strokeColor={Colors.Theme}
               fillColor='rgba(1,0.1,40,0.3)'
 
             >
@@ -260,20 +260,20 @@ export default class MapproviderSearch extends Component {
                   isPreselected={true}
                   // onDragEnd={(e) => { console.log("dragEnd", (e.nativeEvent.coordinate)) }}
                   draggable
-                  // image={localimag.location_tags}
+                  // image={Icons.location_tags}
                   title={this.state.username != null ? this.state.username : 'Guest user'}
                   description={'Your are here location'}
                   on
                 //onPress={()=>console.log('gdfg')}
                 >
-                  <ImageBackground source={localimag.location_tags} imageStyle={{ tintColor: item.chat_status == 0 && 'red' }} style={{ resizeMode: 'contain', width: mobileW * 0.11, height: mobileW * 0.11, alignItems: 'center' }} >
+                  <ImageBackground source={Icons.location_tags} imageStyle={{ tintColor: item.chat_status == 0 && 'red' }} style={{ resizeMode: 'contain', width: windowWidth * 0.11, height: windowWidth * 0.11, alignItems: 'center' }} >
                     {
                       item.provider_image == 'NA' || item.provider_image == '' || item.provider_image == null
                         ?
-                        <Image style={{ resizeMode: 'cover', marginTop:mobileW * 0.007, alignSelf: 'center', width: mobileW * 0.060, height: mobileW * 0.060, borderRadius: mobileW * 0.025 }}
-                          source={localimag.pro}></Image>
+                        <Image style={{ resizeMode: 'cover', marginTop:windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }}
+                          source={Icons.pro}></Image>
                         :
-                        <Image source={{ uri: config.img_url + item.provider_image }} style={{ resizeMode: 'cover', marginTop:mobileW * 0.007, alignSelf: 'center', width: mobileW * 0.060, height: mobileW * 0.060, borderRadius: mobileW * 0.025 }} />
+                        <Image source={{ uri: config.img_url + item.provider_image }} style={{ resizeMode: 'cover', marginTop:windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }} />
                     }
                   </ImageBackground>
 
@@ -287,7 +287,7 @@ export default class MapproviderSearch extends Component {
                               item.provider_image == 'NA' || item.provider_image == '' || item.provider_image == null
                                 ?
                                 <Image style={{ width: windowWidth * 10 / 100, height: windowHeight * 10 / 100, resizeMode: 'contain', }}
-                                  source={localimag.pro}></Image>
+                                  source={Icons.pro}></Image>
                                 :
                                 <Image onError={(error) => { this.setimageerror(index) }} style={{ width: windowWidth * 10 / 100, height: windowHeight * 10 / 100, resizeMode: 'contain', }}
                                   source={{ uri: config.img_url + item.provider_image }}></Image>
@@ -297,12 +297,12 @@ export default class MapproviderSearch extends Component {
                         <View style={{}}><Text style={{ color: Colors.textcolor, fontFamily: Font.FontBold, fontSize: windowHeight * 2 / 100 }} numberOfLines={1}>Name-{item.provider_name}</Text>
                           <Text style={{ color: Colors.textcolor, fontFamily: Font.FontBold, fontSize: windowHeight * 2 / 100 }}>{item.provider_dist} miles</Text>
                           {/* <View style={{ flexDirection: 'row', width: '65%', justifyContent: 'space-evenly' }}>
-                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={localimag.star}></Image></Text>
-                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={localimag.star}></Image></Text>
-                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={localimag.star}></Image></Text>
-                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={localimag.star}></Image></Text>
-                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={localimag.star}></Image></Text>
-                            <Text style={{ marginStart: 5, fontFamily: Font.FontMedium, fontSize: mobileW * 2.5 / 100, }}>(5.0)</Text>
+                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={Icons.star}></Image></Text>
+                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={Icons.star}></Image></Text>
+                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={Icons.star}></Image></Text>
+                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={Icons.star}></Image></Text>
+                            <Text><Image style={{ marginTop: 2, width: windowWidth * 2 / 100, height: windowHeight * 1.5 / 100 }} source={Icons.star}></Image></Text>
+                            <Text style={{ marginStart: 5, fontFamily: Font.FontMedium, fontSize: windowWidth * 2.5 / 100, }}>(5.0)</Text>
                           </View>*/}
 
                         </View>
@@ -374,7 +374,7 @@ export default class MapproviderSearch extends Component {
                       height: 55,
                       alignItems: 'flex-end',
                       // borderRadius:50
-                      width: mobileW,
+                      width: windowWidth,
                     },
                     textInput: {
                       marginLeft: 7,
@@ -424,7 +424,7 @@ export default class MapproviderSearch extends Component {
                     'country']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                   //   predefinedPlaces={[homePlace, workPlace]}
                   debounce={100}
-                  renderLeftButton={() => <Image style={{ width: 25, height: 25, alignSelf: 'center', marginLeft: 25 }} source={localimag.search} />}
+                  renderLeftButton={() => <Image style={{ width: 25, height: 25, alignSelf: 'center', marginLeft: 25 }} source={Icons.search} />}
                   renderRightButton={() => (<TouchableOpacity style={{ alignSelf: 'center', paddingRight: 10 }} onPress={() => { this.GooglePlacesRef.setAddressText(""); this.setState({ addressselected: 'search' }) }}>
                     <Icon2 name='circle-with-cross' size={25} color='#c2cfc4' style={{ alignSelf: 'center' }} />
                   </TouchableOpacity>)}
@@ -484,11 +484,11 @@ const styles = StyleSheet.create({
   },
   customtab:
   {
-    width: mobileW,
+    width: windowWidth,
     flexDirection: 'row',
     alignSelf: 'center', alignContent: 'center',
     backgroundColor: Colors.whiteColor,
-    paddingVertical: mobileW * 0.03,
+    paddingVertical: windowWidth * 0.03,
     justifyContent: 'space-evenly',
     shadowColor: "#000",
     shadowOffset: {
@@ -502,9 +502,9 @@ const styles = StyleSheet.create({
   },
   Tabtextstyle:
   {
-    fontSize: mobileW * 0.045,
+    fontSize: windowWidth * 0.045,
     fontFamily: Font.FontRegular,
-    marginLeft: mobileW * 0.02
+    marginLeft: windowWidth * 0.02
 
   },
 

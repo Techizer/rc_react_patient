@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, SafeAreaView, Text, View, StyleSheet, PermissionsAndroid, Alert, Platform, TouchableOpacity, Image } from 'react-native'
-import { Colors, mediaprovider, Font, config, localStorage, localimag, consolepro, Currentltlg, Lang_chg, mobileW, msgTitle } from './utilslib/Utils';
+import { Colors, mediaprovider, Font, config, localStorage, Icons, consolepro, Currentltlg, Lang_chg, windowWidth, msgTitle } from './utilslib/Utils';
 import Geolocation from '@react-native-community/geolocation';
 import Icon2 from 'react-native-vector-icons/Entypo';
 import MapView, { Marker, PROVIDER_GOOGLE, } from 'react-native-maps';
@@ -224,19 +224,18 @@ export default class Mapprovider extends Component {
           this.props.canclemap();
         }}>
         <View style={styles.container}>
-          <SafeAreaView style={{ flex: 0, backgroundColor: Colors.statusbarcolor }} />
-          <View style={{ width: '100%', alignSelf: 'center', flexDirection: 'row', paddingTop: 10, backgroundColor: Colors.theme_color }}>
-            <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center', backgroundColor: Colors.theme_color }} onPress={() => { this.setState({ makermove: 0 }); this.props.canclemap() }}>
+          <View style={{ width: '100%', alignSelf: 'center', flexDirection: 'row', paddingTop: 10, backgroundColor: Colors.Theme }}>
+            <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center', backgroundColor: Colors.Theme }} onPress={() => { this.setState({ makermove: 0 }); this.props.canclemap() }}>
               <View style={{ width: '100%', alignSelf: 'center' }}>
-                <Image source={localimag.back} style={{ alignSelf: 'center', width: 25, height: 25 }} />
+                <Image source={Icons.back} style={{ alignSelf: 'center', width: 25, height: 25 }} />
               </View>
             </TouchableOpacity>
             <View style={{ paddingVertical: 15, width: '60%' }}>
-              <Text style={{ color: 'white', fontFamily: Font.FontSemiBold, fontSize: mobileW * 5 / 100, textAlign: 'center' }}>{this.props.title}</Text>
+              <Text style={{ color: 'white', fontFamily: Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{this.props.title}</Text>
             </View>
             <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center' }} onPress={() => { this.state.profile == 'location' ? this.locationupdatebtn() : this.props.navigation.goBack() }}>
               <View style={{ width: '100%', alignSelf: 'center' }} >
-                <Text style={{ color: Colors.theme_color, fontFamily: Font.FontSemiBold, fontSize: 13, textAlign: 'center' }}></Text>
+                <Text style={{ color: Colors.Theme, fontFamily: Font.FontSemiBold, fontSize: 13, textAlign: 'center' }}></Text>
               </View>
             </TouchableOpacity>
 
@@ -292,7 +291,7 @@ export default class Mapprovider extends Component {
                   description={'Your are here location'}
 
                 >
-                  <Image source={localimag.maplocation} style={{ height: 30, width: 30, resizeMode: 'contain', }} />
+                  <Image source={Icons.maplocation} style={{ height: 30, width: 30, resizeMode: 'contain', }} />
                 </Marker.Animated>
               </MapView>
               <View style={{ position: 'absolute', width: '100%', top: 20 }}>
@@ -412,7 +411,7 @@ export default class Mapprovider extends Component {
 
               </View>
             </View>}
-          {/* <View style={{ position: 'absolute', bottom: 15, width: mobileW, paddingHorizontal: 30 }}>
+          {/* <View style={{ position: 'absolute', bottom: 15, width: windowWidth, paddingHorizontal: 30 }}>
             <View style={{ borderRadius: 10, height: 50, marginBottom: 10, backgroundColor: Colors.themecolor }} >
               <TouchableOpacity onPress={() => { this.props.canclemap(); }} style={{ justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: 50, }}>
                 <Text style={{ color: 'black', fontSize: 18, fontFamily: Font.bold_font }}>Continue</Text>
@@ -422,7 +421,7 @@ export default class Mapprovider extends Component {
           </View> */}
 
         </View>
-        <View style={{ position: 'absolute', bottom: 15, width: mobileW, paddingHorizontal: 30 }}>
+        <View style={{ position: 'absolute', bottom: 15, width: windowWidth, paddingHorizontal: 30 }}>
           <View style={{ borderRadius: 10, height: 50, marginBottom: 10, backgroundColor: Colors.statusbarcolor }} >
             {/* {this.state.signuplocation=='changelocation' && <TouchableOpacity onPress={()=>{this.changeaddress()}} style={{justifyContent:'center',alignItems:'center',borderRadius: 10,height: 50, }}>
                        <Text style={{ color:Colorss.whiteColor, fontSize: 15,fontFamily:Fonts.fontbold

@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  StatusBar,
   Image,
   TouchableOpacity,
   ImageBackground,
@@ -19,9 +18,9 @@ import {
   msgProvider,
   msgText,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -133,8 +132,8 @@ export default class Booking extends Component {
       this.state.pass_status === "lab"
         ? this.getLabServices()
         : this.state.pass_status === "doctor"
-        ? this.getDoctorServices()
-        : this.getServices();
+          ? this.getDoctorServices()
+          : this.getServices();
       this.getDay();
       this.getAllNotification();
       this.state.pass_status === "lab" && this.getPerson();
@@ -334,7 +333,7 @@ export default class Booking extends Component {
                   real_total_show =
                     (parseFloat(
                       homeSubTotal +
-                        Number(this.state.booking_data.distance_fare)
+                      Number(this.state.booking_data.distance_fare)
                     ) /
                       100) *
                     vat_price_new;
@@ -1063,7 +1062,7 @@ export default class Booking extends Component {
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
                 parseFloat(obj.result.distance_fare) +
-                  parseFloat(real_total_final)
+                parseFloat(real_total_final)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             } else {
@@ -1318,7 +1317,7 @@ export default class Booking extends Component {
                 show_real_price = "";
                 homeSubTotal = parseFloat(
                   Number(obj.result.home_visit_task[0].task_price) +
-                    Number(obj.result.distance_fare)
+                  Number(obj.result.distance_fare)
                 ).toFixed(1);
                 console.log("sub_total home_visit_task :: ", homeSubTotal);
                 real_total_show =
@@ -1615,7 +1614,7 @@ export default class Booking extends Component {
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
                 parseFloat(obj.result.distance_fare) +
-                  parseFloat(real_total_final)
+                parseFloat(real_total_final)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             } else {
@@ -2146,8 +2145,8 @@ export default class Booking extends Component {
       ).toFixed(1);
       hour_add = parseFloat(
         parseInt(this.state.distance_fare_pass) +
-          parseInt(prize) +
-          parseFloat(this.state.vat_price_show)
+        parseInt(prize) +
+        parseFloat(this.state.vat_price_show)
       ).toFixed(1);
     } else {
       let vat_sum_per = prize;
@@ -2160,8 +2159,8 @@ export default class Booking extends Component {
       show_total_price = real_total;
       hour_add = parseFloat(
         parseInt(this.state.distance_fare_pass) +
-          parseInt(prize) +
-          parseFloat(show_total_price)
+        parseInt(prize) +
+        parseFloat(show_total_price)
       ).toFixed(1);
     }
     console.log("dnhcnfby", hour_add);
@@ -2288,19 +2287,19 @@ export default class Booking extends Component {
             <View
               style={{
                 backgroundColor: "#fff",
-                paddingVertical: (mobileW * 2) / 100,
+                paddingVertical: (windowWidth * 2) / 100,
                 borderBottomWidth: 1,
-                borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+                borderBottomColor: Colors.Border,
               }}
             >
               <View
                 style={{
-                  padding: (mobileW * 2.5) / 100,
+                  padding: (windowWidth * 2.5) / 100,
                   flexDirection: "row",
                   width: "99%",
                   alignSelf: "center",
-                  paddingTop: (mobileW * 3) / 100,
-                  backgroundColor: Colors.white_color,
+                  paddingTop: (windowWidth * 3) / 100,
+                  backgroundColor: Colors.white,
                   alignItems: "center",
                 }}
               >
@@ -2318,14 +2317,14 @@ export default class Booking extends Component {
                     <Image
                       source={
                         config.textalign == "right"
-                          ? localimag.arabic_back
-                          : localimag.backarrow
+                          ? Icons.arabic_back
+                          : Icons.backarrow
                       }
                       style={{
                         resizeMode: "contain",
-                        width: (mobileW * 9) / 100,
+                        width: (windowWidth * 9) / 100,
                         alignSelf: "center",
-                        height: (mobileW * 9) / 100,
+                        height: (windowWidth * 9) / 100,
                       }}
                     />
                   </TouchableOpacity>
@@ -2340,7 +2339,7 @@ export default class Booking extends Component {
                     style={{
                       textAlign: "center",
                       fontFamily: Font.fontmedium,
-                      fontSize: (mobileW * 4) / 100,
+                      fontSize: (windowWidth * 4) / 100,
                     }}
                   >
                     {Lang_chg.Booking[config.language]}
@@ -2360,14 +2359,14 @@ export default class Booking extends Component {
                     <Image
                       source={
                         this.state.notification_count > 0
-                          ? localimag.notifications
-                          : localimag.notifications_sec
+                          ? Icons.notifications
+                          : Icons.notifications_sec
                       }
                       style={{
                         alignSelf: "center",
                         resizeMode: "contain",
-                        width: (mobileW * 6) / 100,
-                        height: (mobileW * 6) / 100,
+                        width: (windowWidth * 6) / 100,
+                        height: (windowWidth * 6) / 100,
                       }}
                     />
                   </TouchableOpacity>
@@ -2377,7 +2376,7 @@ export default class Booking extends Component {
 
             <ScrollView
               style={Styles.container2}
-              contentContainerStyle={{ paddingBottom: (mobileW * 30) / 100 }}
+              contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
               keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
@@ -2386,9 +2385,9 @@ export default class Booking extends Component {
                 style={{
                   backgroundColor:
                     this.state.pass_status === "lab"
-                      ? Colors.white_color
+                      ? Colors.white
                       : "#F1F2F4",
-                  paddingVertical: (mobileW * 5) / 100,
+                  paddingVertical: (windowWidth * 5) / 100,
                 }}
               >
                 <View
@@ -2402,17 +2401,17 @@ export default class Booking extends Component {
                     <Image
                       source={
                         item.image == "NA" ||
-                        item.image == null ||
-                        item.image == ""
-                          ? localimag.p1
+                          item.image == null ||
+                          item.image == ""
+                          ? Icons.p1
                           : { uri: config.img_url3 + item.image }
                       }
                       style={{
-                        width: (mobileW * 20) / 100,
-                        height: (mobileW * 20) / 100,
+                        width: (windowWidth * 20) / 100,
+                        height: (windowWidth * 20) / 100,
                         borderWidth: 1,
-                        borderColor: Colors.theme_color,
-                        borderRadius: (mobileW * 10) / 100,
+                        borderColor: Colors.Theme,
+                        borderRadius: (windowWidth * 10) / 100,
                         alignSelf: "center",
                       }}
                     />
@@ -2420,7 +2419,7 @@ export default class Booking extends Component {
                   <View
                     style={{
                       width: "58%",
-                      marginLeft: (mobileW * 2) / 100,
+                      marginLeft: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -2435,10 +2434,10 @@ export default class Booking extends Component {
                     <Text
                       style={{
                         textAlign: config.textRotate,
-                        paddingVertical: (mobileW * 1.5) / 100,
+                        paddingVertical: (windowWidth * 1.5) / 100,
                         fontFamily: Font.ques_fontfamily,
                         fontSize: Font.subtext,
-                        color: Colors.theme_color,
+                        color: Colors.Theme,
                       }}
                     >
                       {this.state.pass_status === "lab"
@@ -2459,14 +2458,14 @@ export default class Booking extends Component {
                     )}
                   </View>
                   {this.state.pass_status === "lab" &&
-                  item.hospital_id !== "" ? (
+                    item.hospital_id !== "" ? (
                     <View
                       style={{
                         backgroundColor: "#FFA800",
                         width: "17%",
                         height: 20,
                         marginTop: -13,
-                        borderBottomLeftRadius: (mobileW * 2) / 100,
+                        borderBottomLeftRadius: (windowWidth * 2) / 100,
                         paddingVertical: 3,
                       }}
                     >
@@ -2474,7 +2473,7 @@ export default class Booking extends Component {
                         style={{
                           color: "#fff",
                           fontFamily: Font.fontmedium,
-                          fontSize: (mobileW * 2.5) / 100,
+                          fontSize: (windowWidth * 2.5) / 100,
                           alignSelf: "center",
                         }}
                       >
@@ -2489,8 +2488,8 @@ export default class Booking extends Component {
                           width: "17%",
                           height: 20,
                           marginTop: -13,
-                          // borderTopLeftRadius : (mobileW * 2) / 100,
-                          borderBottomLeftRadius: (mobileW * 2) / 100,
+                          // borderTopLeftRadius : (windowWidth * 2) / 100,
+                          borderBottomLeftRadius: (windowWidth * 2) / 100,
                           paddingVertical: 3,
                         }}
                       >
@@ -2498,7 +2497,7 @@ export default class Booking extends Component {
                           style={{
                             color: "#fff",
                             fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 2.5) / 100,
+                            fontSize: (windowWidth * 2.5) / 100,
                             alignSelf: "center",
                           }}
                         >
@@ -2536,8 +2535,8 @@ export default class Booking extends Component {
               {this.state.pass_status !== "lab" && (
                 <View
                   style={{
-                    backgroundColor: Colors.white_color,
-                    padding: (mobileW * 3) / 100,
+                    backgroundColor: Colors.white,
+                    padding: (windowWidth * 3) / 100,
                     flexDirection: "row",
                     // justifyContent:'space-between'
                   }}
@@ -2551,11 +2550,11 @@ export default class Booking extends Component {
                     }}
                     style={[
                       {
-                        width: (mobileW * 20) / 100,
-                        height: (mobileW * 24) / 100,
-                        borderRadius: (mobileW * 2) / 100,
-                        paddingVertical: (mobileW * 3) / 100,
-                        borderColor: Colors.theme_color,
+                        width: (windowWidth * 20) / 100,
+                        height: (windowWidth * 24) / 100,
+                        borderRadius: (windowWidth * 2) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        borderColor: Colors.Theme,
                         justifyContent: "center",
                       },
                       this.state.active_status == true
@@ -2566,27 +2565,27 @@ export default class Booking extends Component {
                     <Image
                       source={
                         this.state.profile_img == "NA" ||
-                        this.state.profile_img == null
-                          ? localimag.user_img
+                          this.state.profile_img == null
+                          ? Icons.user_img
                           : { uri: config.img_url3 + this.state.profile_img }
                       }
                       style={{
                         alignSelf: "center",
-                        width: (mobileW * 16) / 100,
-                        height: (mobileW * 14) / 100,
-                        borderRadius: (mobileW * 2) / 100,
-                        borderColor: Colors.theme_color,
-                        marginTop: (mobileW * 2) / 100,
+                        width: (windowWidth * 16) / 100,
+                        height: (windowWidth * 14) / 100,
+                        borderRadius: (windowWidth * 2) / 100,
+                        borderColor: Colors.Theme,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     />
                     <Text
                       style={{
                         alignSelf: "center",
                         fontFamily: Font.fontmedium,
-                        paddingBottom: (mobileW * 2) / 100,
-                        marginTop: (mobileW * 2) / 100,
-                        fontSize: (mobileW * 3) / 100,
-                        paddingHorizontal: (mobileW * 0.5) / 100,
+                        paddingBottom: (windowWidth * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        fontSize: (windowWidth * 3) / 100,
+                        paddingHorizontal: (windowWidth * 0.5) / 100,
                       }}
                       numberOfLines={1}
                     >
@@ -2597,7 +2596,7 @@ export default class Booking extends Component {
                     style={{
                       width: "60%",
                       alignSelf: "center",
-                      marginLeft: (mobileW * 3) / 100,
+                      marginLeft: (windowWidth * 3) / 100,
                       alignItems: "flex-start",
                     }}
                   >
@@ -2620,14 +2619,14 @@ export default class Booking extends Component {
                               }}
                               style={[
                                 {
-                                  width: (mobileW * 20) / 100,
-                                  height: (mobileW * 24) / 100,
-                                  borderRadius: (mobileW * 2) / 100,
-                                  paddingVertical: (mobileW * 3) / 100,
-                                  borderColor: Colors.theme_color,
+                                  width: (windowWidth * 20) / 100,
+                                  height: (windowWidth * 24) / 100,
+                                  borderRadius: (windowWidth * 2) / 100,
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                  borderColor: Colors.Theme,
                                   justifyContent: "center",
-                                  paddingHorizontal: (mobileW * 0.2) / 100,
-                                  marginRight: (mobileW * 1) / 100,
+                                  paddingHorizontal: (windowWidth * 0.2) / 100,
+                                  marginRight: (windowWidth * 1) / 100,
                                   // backgroundColor: '#d1e9f6',
                                 },
                                 this.state.family_member_id == item.id
@@ -2638,28 +2637,28 @@ export default class Booking extends Component {
                               <View
                                 style={{
                                   borderWidth: 2,
-                                  borderColor: Colors.theme_color,
-                                  width: (mobileW * 14) / 100,
+                                  borderColor: Colors.Theme,
+                                  width: (windowWidth * 14) / 100,
                                   alignItems: "center",
-                                  marginLeft: (mobileW * 2.5) / 100,
-                                  borderRadius: (mobileW * 3) / 100,
+                                  marginLeft: (windowWidth * 2.5) / 100,
+                                  borderRadius: (windowWidth * 3) / 100,
                                   alignItems: "center",
-                                  marginTop: (mobileW * 2) / 100,
+                                  marginTop: (windowWidth * 2) / 100,
                                 }}
                               >
                                 <ImageBackground
                                   imageStyle={{
-                                    borderRadius: (mobileW * 2.5) / 100,
+                                    borderRadius: (windowWidth * 2.5) / 100,
                                   }}
                                   source={
                                     item.image == "NA" || item.image == null
-                                      ? localimag.user_img
+                                      ? Icons.user_img
                                       : { uri: config.img_url3 + item.image }
                                   }
                                   style={{
                                     alignSelf: "center",
-                                    width: (mobileW * 13) / 100,
-                                    height: (mobileW * 13) / 100,
+                                    width: (windowWidth * 13) / 100,
+                                    height: (windowWidth * 13) / 100,
                                     alignSelf: "center",
                                   }}
                                 >
@@ -2680,7 +2679,7 @@ export default class Booking extends Component {
                                         alignSelf: "flex-end",
                                         top: 0,
                                       }}
-                                      source={localimag.crossimg}
+                                      source={Icons.crossimg}
                                     />
                                   </TouchableOpacity>
                                 </ImageBackground>
@@ -2688,10 +2687,10 @@ export default class Booking extends Component {
                               <Text
                                 style={{
                                   fontFamily: Font.fontlight,
-                                  paddingBottom: (mobileW * 2) / 100,
+                                  paddingBottom: (windowWidth * 2) / 100,
                                   textAlign: "center",
-                                  marginTop: (mobileW * 1.2) / 100,
-                                  fontSize: (mobileW * 3.2) / 100,
+                                  marginTop: (windowWidth * 1.2) / 100,
+                                  fontSize: (windowWidth * 3.2) / 100,
                                 }}
                                 numberOfLines={1}
                               >
@@ -2709,10 +2708,10 @@ export default class Booking extends Component {
                       this.props.navigation.navigate("AddPatient");
                     }}
                     style={{
-                      width: (mobileW * 16) / 100,
-                      height: (mobileW * 20) / 100,
-                      borderRadius: (mobileW * 2) / 100,
-                      borderColor: Colors.theme_color,
+                      width: (windowWidth * 16) / 100,
+                      height: (windowWidth * 20) / 100,
+                      borderRadius: (windowWidth * 2) / 100,
+                      borderColor: Colors.Theme,
                       justifyContent: "center",
                       backgroundColor: "#d1e9f6",
                       alignSelf: "center",
@@ -2721,21 +2720,21 @@ export default class Booking extends Component {
                   >
                     <Image
                       resizeMode="contain"
-                      source={localimag.addicon}
+                      source={Icons.addicon}
                       style={{
-                        width: (mobileW * 10) / 100,
-                        height: (mobileW * 10) / 100,
-                        marginLeft: (mobileW * 3) / 100,
-                        marginRight: (mobileW * 3) / 100,
-                        borderColor: Colors.theme_color,
+                        width: (windowWidth * 10) / 100,
+                        height: (windowWidth * 10) / 100,
+                        marginLeft: (windowWidth * 3) / 100,
+                        marginRight: (windowWidth * 3) / 100,
+                        borderColor: Colors.Theme,
                       }}
                     />
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 3) / 100,
+                        fontSize: (windowWidth * 3) / 100,
                         textAlign: "center",
-                        marginTop: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     >
                       {Lang_chg.Add[config.language]}
@@ -2788,21 +2787,21 @@ export default class Booking extends Component {
                                   {item.status == true && (
                                     <View
                                       style={{
-                                        backgroundColor: Colors.theme_color,
-                                        paddingVertical: (mobileW * 0.8) / 100,
+                                        backgroundColor: Colors.Theme,
+                                        paddingVertical: (windowWidth * 0.8) / 100,
                                         flexDirection: "row",
                                         paddingHorizontal:
-                                          (mobileW * 1.5) / 100,
-                                        marginTop: (mobileW * 2) / 100,
+                                          (windowWidth * 1.5) / 100,
+                                        marginTop: (windowWidth * 2) / 100,
                                         justifyContent: "space-between",
                                         alignItems: "center",
-                                        borderRadius: (mobileW * 1) / 100,
-                                        marginRight: (mobileW * 2) / 100,
+                                        borderRadius: (windowWidth * 1) / 100,
+                                        marginRight: (windowWidth * 2) / 100,
                                       }}
                                     >
                                       <Text
                                         style={{
-                                          color: Colors.white_color,
+                                          color: Colors.white,
                                           fontSize: Font.textsize,
                                           fontFamily: Font.fontlight,
                                         }}
@@ -2815,12 +2814,12 @@ export default class Booking extends Component {
                                         }}
                                       >
                                         <Image
-                                          source={localimag.cross2}
+                                          source={Icons.cross2}
                                           style={{
                                             alignSelf: "center",
-                                            width: (mobileW * 2) / 100,
-                                            height: (mobileW * 2) / 100,
-                                            marginLeft: (mobileW * 3.5) / 100,
+                                            width: (windowWidth * 2) / 100,
+                                            height: (windowWidth * 2) / 100,
+                                            marginLeft: (windowWidth * 3.5) / 100,
                                           }}
                                         />
                                       </TouchableOpacity>
@@ -2839,7 +2838,7 @@ export default class Booking extends Component {
                           alignSelf: "center",
                           backgroundColor: Colors.tab_background_color,
                           alignItems: "center",
-                          marginTop: (mobileW * 3) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -2863,26 +2862,26 @@ export default class Booking extends Component {
                               Keyboard.dismiss();
                             }}
                             style={{
-                              fontSize: (mobileW * 4) / 100,
+                              fontSize: (windowWidth * 4) / 100,
                               fontFamily: Font.ques_fontfamily,
                               color: "#8F98A7",
                               width: "90%",
-                              paddingVertical: (mobileW * 3.5) / 100,
+                              paddingVertical: (windowWidth * 3.5) / 100,
                               textAlign: config.textalign,
                             }}
-                            placeholderTextColor={"#8F98A7"}
+                            DarkGrey={"#8F98A7"}
                             placeholder={Lang_chg.SearchTests[config.language]}
                           />
 
                           <View style={{ width: "10%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                width: (mobileW * 4) / 100,
-                                height: (mobileW * 4) / 100,
+                                width: (windowWidth * 4) / 100,
+                                height: (windowWidth * 4) / 100,
                                 tintColor: "#8F98A7",
                                 alignSelf: "center",
                               }}
-                              source={localimag.search2}
+                              source={Icons.search2}
                             />
                           </View>
                         </View>
@@ -2895,7 +2894,7 @@ export default class Booking extends Component {
                               {
                                 width: "100%",
                                 alignSelf: "center",
-                                marginTop: (mobileW * 2) / 100,
+                                marginTop: (windowWidth * 2) / 100,
                               },
                               this.state.task_base_task.length >= 7
                                 ? { height: 240 }
@@ -2919,9 +2918,9 @@ export default class Booking extends Component {
                                         width: "100%",
                                         alignSelf: "center",
                                         backgroundColor: "#F8F8F8",
-                                        paddingVertical: (mobileW * 1.7) / 100,
+                                        paddingVertical: (windowWidth * 1.7) / 100,
                                         flexDirection: "row",
-                                        marginTop: (mobileW * 0.3) / 100,
+                                        marginTop: (windowWidth * 0.3) / 100,
                                       }}
                                     >
                                       <View
@@ -2933,26 +2932,26 @@ export default class Booking extends Component {
                                         {item.status == true ? (
                                           <Image
                                             style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
+                                              width: (windowWidth * 5) / 100,
+                                              height: (windowWidth * 5) / 100,
                                               borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
+                                                (windowWidth * 0.4) / 100,
+                                              marginRight: (windowWidth * 2) / 100,
+                                              marginLeft: (windowWidth * 3) / 100,
                                               resizeMode: "contain",
                                               alignSelf: "flex-start",
                                             }}
-                                            source={localimag.remembertick}
+                                            source={Icons.remembertick}
                                           />
                                         ) : (
                                           <Image
                                             style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
+                                              width: (windowWidth * 5) / 100,
+                                              height: (windowWidth * 5) / 100,
                                               borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
+                                                (windowWidth * 0.4) / 100,
+                                              marginRight: (windowWidth * 2) / 100,
+                                              marginLeft: (windowWidth * 3) / 100,
                                               resizeMode: "contain",
                                               alignSelf: "flex-start",
                                             }}
@@ -2965,7 +2964,7 @@ export default class Booking extends Component {
                                           width: "59%",
                                           textAlign: config.textRotate,
                                           alignSelf: "center",
-                                          fontSize: (mobileW * 3.6) / 100,
+                                          fontSize: (windowWidth * 3.6) / 100,
                                           fontFamily: Font.fontregular,
                                           color: "#000",
                                         }}
@@ -2975,7 +2974,7 @@ export default class Booking extends Component {
                                       <Text
                                         style={{
                                           width: "25%",
-                                          fontSize: (mobileW * 3.6) / 100,
+                                          fontSize: (windowWidth * 3.6) / 100,
                                           fontFamily: Font.fontregular,
                                           color: "#000",
 
@@ -2999,8 +2998,8 @@ export default class Booking extends Component {
                       style={{
                         width: "100%",
                         backgroundColor: "#fff",
-                        paddingVertical: (mobileW * 3) / 100,
-                        marginBottom: (mobileW * 1) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        marginBottom: (windowWidth * 1) / 100,
                       }}
                     >
                       <FlatList
@@ -3021,30 +3020,30 @@ export default class Booking extends Component {
                               }}
                               style={[
                                 {
-                                  borderRadius: (mobileW * 2) / 100,
-                                  marginLeft: (mobileW * 2) / 100,
-                                  width: (mobileW * 40) / 100,
-                                  // height: (mobileW * 40) / 100,
+                                  borderRadius: (windowWidth * 2) / 100,
+                                  marginLeft: (windowWidth * 2) / 100,
+                                  width: (windowWidth * 40) / 100,
+                                  // height: (windowWidth * 40) / 100,
                                   backgroundColor: "#fff",
                                   // borderColor: "#DFDFDF",
                                   // borderWidth: 1,
                                 },
                                 item.status == true
                                   ? {
-                                      borderColor: Colors.theme_color,
-                                      borderWidth: 2,
-                                    }
+                                    borderColor: Colors.Theme,
+                                    borderWidth: 2,
+                                  }
                                   : { borderColor: "#DFDFDF", borderWidth: 1 },
                               ]}
                             >
                               <Text
                                 style={{
                                   width: "100%",
-                                  paddingVertical: (mobileW * 1.5) / 100,
-                                  paddingHorizontal: (mobileW * 2) / 100,
-                                  color: Colors.theme_color,
+                                  paddingVertical: (windowWidth * 1.5) / 100,
+                                  paddingHorizontal: (windowWidth * 2) / 100,
+                                  color: Colors.Theme,
                                   fontFamily: Font.fontmedium,
-                                  fontSize: (mobileW * 3.5) / 100,
+                                  fontSize: (windowWidth * 3.5) / 100,
                                   textAlign: "left",
                                 }}
                               >
@@ -3053,11 +3052,11 @@ export default class Booking extends Component {
 
                               <Text
                                 style={{
-                                  paddingVertical: (mobileW * 2) / 100,
-                                  paddingHorizontal: (mobileW * 2) / 100,
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  paddingHorizontal: (windowWidth * 2) / 100,
                                   fontFamily: Font.fontregular,
                                   textAlign: "left",
-                                  color: Colors.tablightcolo,
+                                  color: Colors.lightGrey,
                                   fontSize: Font.sregulartext_size,
                                 }}
                               >
@@ -3068,17 +3067,17 @@ export default class Booking extends Component {
                                   width: "90%",
                                   alignSelf: "center",
                                   borderColor: Colors.bordercolor,
-                                  borderBottomWidth: (mobileW * 0.5) / 100,
-                                  marginTop: (mobileW * 1) / 100,
+                                  borderBottomWidth: (windowWidth * 0.5) / 100,
+                                  marginTop: (windowWidth * 1) / 100,
                                 }}
                               />
                               <Text
                                 style={{
-                                  paddingVertical: (mobileW * 2) / 100,
-                                  paddingHorizontal: (mobileW * 2) / 100,
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  paddingHorizontal: (windowWidth * 2) / 100,
                                   textAlign: config.textalign,
                                   fontFamily: Font.fontmedium,
-                                  fontSize: (mobileW * 4) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
                                 }}
                               >
                                 {item.price}
@@ -3094,12 +3093,12 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding: (mobileW * 0.2) / 100,
+                      // padding: (windowWidth * 0.2) / 100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
-                      marginTop: (mobileW * 2) / 100,
-                      marginBottom: (mobileW * 1.5) / 100,
+                      marginTop: (windowWidth * 2) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
                       backgroundColor: "#fff",
                     }}
                   >
@@ -3109,7 +3108,7 @@ export default class Booking extends Component {
                         alignItems: "center",
                         width: "93%",
                         alignSelf: "center",
-                        paddingTop: (mobileW * 4) / 100,
+                        paddingTop: (windowWidth * 4) / 100,
                       }}
                     >
                       <Text
@@ -3118,7 +3117,7 @@ export default class Booking extends Component {
                           fontSize: Font.name,
                           width: "65%",
                           textAlign: config.textRotate,
-                          fontSize: (mobileW * 3.5) / 100,
+                          fontSize: (windowWidth * 3.5) / 100,
                         }}
                       >
                         {Lang_chg.Appointmentschedule[config.language]}
@@ -3134,22 +3133,22 @@ export default class Booking extends Component {
                         <View style={{ width: "20%", alignSelf: "center" }}>
                           <Image
                             style={{
-                              width: (mobileW * 5) / 100,
-                              height: (mobileW * 5) / 100,
+                              width: (windowWidth * 5) / 100,
+                              height: (windowWidth * 5) / 100,
                               // resizeMode:'contain',
                               alignSelf: "center",
                             }}
-                            source={localimag.calendarimg}
+                            source={Icons.calendarimg}
                           />
                         </View>
 
                         <Text
                           style={{
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             fontFamily: Font.fontmedium,
                             fontSize: Font.name,
                             alignSelf: "center",
-                            marginLeft: (mobileW * 1) / 100,
+                            marginLeft: (windowWidth * 1) / 100,
                             // width:'75%',
                             // backgroundColor:'red',
                             textAlign: "right",
@@ -3164,8 +3163,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -3173,7 +3172,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3203,21 +3202,21 @@ export default class Booking extends Component {
                                     this.getLabTimeDate(),
                                     this.checkDate(item, index);
                                 }}
-                                style={{ width: (mobileW * 15) / 100 }}
+                                style={{ width: (windowWidth * 15) / 100 }}
                               >
                                 <Text
                                   style={{
-                                    marginRight: (mobileW * 3) / 100,
-                                    marginTop: (mobileW * 3) / 100,
+                                    marginRight: (windowWidth * 3) / 100,
+                                    marginTop: (windowWidth * 3) / 100,
                                     backgroundColor:
                                       item.tick == 1 ? "#0787D2" : Colors.gray6,
                                     color: item.tick == 1 ? "white" : "black",
                                     textAlign: "center",
-                                    paddingVertical: (mobileW * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
                                     fontFamily: Font.ques_fontfamily,
                                     fontSize: Font.sregulartext_size,
 
-                                    lineHeight: (mobileW * 5) / 100,
+                                    lineHeight: (windowWidth * 5) / 100,
                                   }}
                                 >
                                   {item.day}
@@ -3236,8 +3235,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -3245,7 +3244,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3283,43 +3282,43 @@ export default class Booking extends Component {
                                           onPress={() => {
                                             this.state.indexPosition === 0
                                               ? this.setState({
-                                                  time_take_data: item.time,
-                                                })
+                                                time_take_data: item.time,
+                                              })
                                               : this.setState({
-                                                  time_take_data_hour:
-                                                    item.time,
-                                                });
+                                                time_take_data_hour:
+                                                  item.time,
+                                              });
                                           }}
                                         >
                                           <Text
                                             style={[
                                               {
                                                 marginRight:
-                                                  (mobileW * 3) / 100,
-                                                marginTop: (mobileW * 3) / 100,
+                                                  (windowWidth * 3) / 100,
+                                                marginTop: (windowWidth * 3) / 100,
                                                 fontFamily:
                                                   Font.ques_fontfamily,
                                                 fontSize:
                                                   Font.sregulartext_size,
-                                                padding: (mobileW * 2) / 100,
+                                                padding: (windowWidth * 2) / 100,
                                                 paddingHorizontal:
-                                                  (mobileW * 3.3) / 100,
+                                                  (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
+                                                (this.state.indexPosition === 0
+                                                  ? this.state.time_take_data
+                                                  : this.state
                                                     .time_take_data_hour)
                                                 ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
+                                                  backgroundColor:
+                                                    Colors.Theme,
+                                                  color: "#fff",
+                                                }
                                                 : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
+                                                  backgroundColor:
+                                                    Colors.gray6,
+                                                  color: "#000",
+                                                },
                                             ]}
                                           >
                                             {item.time}
@@ -3340,43 +3339,43 @@ export default class Booking extends Component {
                                           onPress={() => {
                                             this.state.indexPosition === 0
                                               ? this.setState({
-                                                  time_take_data: item.time,
-                                                })
+                                                time_take_data: item.time,
+                                              })
                                               : this.setState({
-                                                  time_take_data_hour:
-                                                    item.time,
-                                                });
+                                                time_take_data_hour:
+                                                  item.time,
+                                              });
                                           }}
                                         >
                                           <Text
                                             style={[
                                               {
                                                 marginRight:
-                                                  (mobileW * 3) / 100,
-                                                marginTop: (mobileW * 3) / 100,
+                                                  (windowWidth * 3) / 100,
+                                                marginTop: (windowWidth * 3) / 100,
                                                 fontFamily:
                                                   Font.ques_fontfamily,
                                                 fontSize:
                                                   Font.sregulartext_size,
-                                                padding: (mobileW * 2) / 100,
+                                                padding: (windowWidth * 2) / 100,
                                                 paddingHorizontal:
-                                                  (mobileW * 3.3) / 100,
+                                                  (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
+                                                (this.state.indexPosition === 0
+                                                  ? this.state.time_take_data
+                                                  : this.state
                                                     .time_take_data_hour)
                                                 ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
+                                                  backgroundColor:
+                                                    Colors.Theme,
+                                                  color: "#fff",
+                                                }
                                                 : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
+                                                  backgroundColor:
+                                                    Colors.gray6,
+                                                  color: "#000",
+                                                },
                                             ]}
                                           >
                                             {item.time}
@@ -3391,11 +3390,11 @@ export default class Booking extends Component {
                               <Text
                                 style={{
                                   fontFamily: Font.fontMediumItalic,
-                                  fontSize: (mobileW * 4) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
                                   alignSelf: "center",
-                                  paddingVertical: (mobileW * 3) / 100,
+                                  paddingVertical: (windowWidth * 3) / 100,
                                   textAlign: "center",
-                                  marginLeft: (mobileW * 32) / 100,
+                                  marginLeft: (windowWidth * 32) / 100,
                                 }}
                               >
                                 {Lang_chg.no_data_Found[config.language]}
@@ -3417,11 +3416,11 @@ export default class Booking extends Component {
                         width: "100%",
                         shadowOpacity: 0.3,
                         shadowColor: "#000",
-                        paddingVertical: (mobileW * 3) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
                         shadowOffset: { width: 2, height: 2 },
-                        marginTop: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
                         elevation: 2,
-                        marginBottom: (mobileW * 3) / 100,
+                        marginBottom: (windowWidth * 3) / 100,
                         backgroundColor: "#fff",
                       }}
                     >
@@ -3436,8 +3435,8 @@ export default class Booking extends Component {
                             style={{
                               fontFamily: Font.fontmedium,
                               // fontSize: Font.headingfont,
-                              fontSize: (mobileW * 4) / 100,
-                              color: Colors.theme_color,
+                              fontSize: (windowWidth * 4) / 100,
+                              color: Colors.Theme,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -3457,7 +3456,7 @@ export default class Booking extends Component {
                                           flexDirection: "row",
                                           width: "100%",
                                           justifyContent: "space-between",
-                                          marginTop: (mobileW * 1.5) / 100,
+                                          marginTop: (windowWidth * 1.5) / 100,
                                           alignSelf: "center",
                                         }}
                                       >
@@ -3505,7 +3504,7 @@ export default class Booking extends Component {
                                         style={{
                                           flexDirection: "row",
                                           width: "100%",
-                                          paddingVertical: (mobileW * 3) / 100,
+                                          paddingVertical: (windowWidth * 3) / 100,
                                           justifyContent: "space-between",
                                           alignSelf: "center",
                                         }}
@@ -3544,10 +3543,10 @@ export default class Booking extends Component {
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            borderTopWidth: (mobileW * 0.3) / 100,
+                            paddingVertical: (windowWidth * 2) / 100,
+                            borderTopWidth: (windowWidth * 0.3) / 100,
                             borderColor: Colors.bordercolor,
-                            marginTop: (mobileW * 2) / 100,
+                            marginTop: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text
@@ -3555,7 +3554,7 @@ export default class Booking extends Component {
                               fontFamily: Font.ques_fontfamily,
                               fontSize: Font.sregulartext_size,
                               color: "#000",
-                              // marginTop: mobileW * 1 / 100,
+                              // marginTop: windowWidth * 1 / 100,
                             }}
                           >
                             {item.distance_fare_text}
@@ -3565,7 +3564,7 @@ export default class Booking extends Component {
                               fontFamily: Font.ques_fontfamily,
                               fontSize: Font.sregulartext_size,
                               color: "#000",
-                              // marginTop: mobileW * 1 / 100,
+                              // marginTop: windowWidth * 1 / 100,
                             }}
                           >
                             {item.distance_fare}.0 {this.state.currency_symbol}
@@ -3576,18 +3575,18 @@ export default class Booking extends Component {
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            borderTopWidth: (mobileW * 0.3) / 100,
+                            paddingVertical: (windowWidth * 2) / 100,
+                            borderTopWidth: (windowWidth * 0.3) / 100,
                             borderColor: Colors.bordercolor,
-                            // marginTop: mobileW * 0.5 / 100,
+                            // marginTop: windowWidth * 0.5 / 100,
                           }}
                         >
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
+                              color: Colors.Theme,
+                              // marginTop: windowWidth * 1 / 100,
                             }}
                           >
                             {Lang_chg.subTotal[config.language]}
@@ -3595,9 +3594,9 @@ export default class Booking extends Component {
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
+                              color: Colors.Theme,
+                              // marginTop: windowWidth * 1 / 100,
                             }}
                           >
                             {this.state.subTotal} {this.state.currency_symbol}
@@ -3608,9 +3607,9 @@ export default class Booking extends Component {
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            marginTop: (mobileW * 1) / 100,
+                            marginTop: (windowWidth * 1) / 100,
                             borderColor: Colors.bordercolor,
-                            marginBottom: (mobileW * 2) / 100,
+                            marginBottom: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text
@@ -3641,17 +3640,17 @@ export default class Booking extends Component {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            borderTopWidth: (mobileW * 0.3) / 100,
+                            borderTopWidth: (windowWidth * 0.3) / 100,
                             borderColor: Colors.bordercolor,
-                            marginBottom: (mobileW * 2) / 100,
-                            paddingVertical: (mobileW * 2) / 100,
+                            marginBottom: (windowWidth * 2) / 100,
+                            paddingVertical: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
+                              fontSize: (windowWidth * 3.7) / 100,
+                              color: Colors.Theme,
                             }}
                           >
                             {Lang_chg.Total[config.language]}
@@ -3659,8 +3658,8 @@ export default class Booking extends Component {
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
+                              fontSize: (windowWidth * 3.7) / 100,
+                              color: Colors.Theme,
                             }}
                           >
                             {this.state.indexPosition === 0
@@ -3689,12 +3688,12 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding:mobileW*0.2/100,
+                      // padding:windowWidth*0.2/100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
-                      marginTop: (mobileW * 1.5) / 100,
-                      marginBottom: (mobileW * 1.5) / 100,
+                      marginTop: (windowWidth * 1.5) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
                       backgroundColor: "#fff",
                     }}
                   >
@@ -3704,7 +3703,7 @@ export default class Booking extends Component {
                         alignItems: "center",
                         width: "93%",
                         alignSelf: "center",
-                        paddingTop: (mobileW * 4) / 100,
+                        paddingTop: (windowWidth * 4) / 100,
                       }}
                     >
                       <Text
@@ -3713,7 +3712,7 @@ export default class Booking extends Component {
                           fontSize: Font.name,
                           width: "65%",
                           textAlign: config.textRotate,
-                          fontSize: (mobileW * 3.5) / 100,
+                          fontSize: (windowWidth * 3.5) / 100,
                         }}
                       >
                         {Lang_chg.Appointmentschedule[config.language]}
@@ -3729,22 +3728,22 @@ export default class Booking extends Component {
                         <View style={{ width: "20%", alignSelf: "center" }}>
                           <Image
                             style={{
-                              width: (mobileW * 5) / 100,
-                              height: (mobileW * 5) / 100,
+                              width: (windowWidth * 5) / 100,
+                              height: (windowWidth * 5) / 100,
                               // resizeMode:'contain',
                               alignSelf: "center",
                             }}
-                            source={localimag.calendarimg}
+                            source={Icons.calendarimg}
                           />
                         </View>
 
                         <Text
                           style={{
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             fontFamily: Font.fontmedium,
                             fontSize: Font.name,
                             alignSelf: "center",
-                            marginLeft: (mobileW * 1) / 100,
+                            marginLeft: (windowWidth * 1) / 100,
                             // width:'75%',
                             // backgroundColor:'red',
                             textAlign: "right",
@@ -3759,8 +3758,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -3768,7 +3767,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3799,23 +3798,23 @@ export default class Booking extends Component {
                                       this.getDoctorTimeDate(),
                                       this.checkDate(item, index);
                                   }}
-                                  style={{ width: (mobileW * 15) / 100 }}
+                                  style={{ width: (windowWidth * 15) / 100 }}
                                 >
                                   <Text
                                     style={{
-                                      marginRight: (mobileW * 3) / 100,
-                                      marginTop: (mobileW * 3) / 100,
+                                      marginRight: (windowWidth * 3) / 100,
+                                      marginTop: (windowWidth * 3) / 100,
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
                                           : Colors.gray6,
                                       color: item.tick == 1 ? "white" : "black",
                                       textAlign: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
                                       fontSize: Font.sregulartext_size,
 
-                                      lineHeight: (mobileW * 5) / 100,
+                                      lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
                                     {item.day}
@@ -3846,23 +3845,23 @@ export default class Booking extends Component {
                                       this.getDoctorTimeDate(),
                                       this.checkDate(item, index);
                                   }}
-                                  style={{ width: (mobileW * 15) / 100 }}
+                                  style={{ width: (windowWidth * 15) / 100 }}
                                 >
                                   <Text
                                     style={{
-                                      marginRight: (mobileW * 3) / 100,
-                                      marginTop: (mobileW * 3) / 100,
+                                      marginRight: (windowWidth * 3) / 100,
+                                      marginTop: (windowWidth * 3) / 100,
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
                                           : Colors.gray6,
                                       color: item.tick == 1 ? "white" : "black",
                                       textAlign: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
                                       fontSize: Font.sregulartext_size,
 
-                                      lineHeight: (mobileW * 5) / 100,
+                                      lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
                                     {item.day}
@@ -3883,8 +3882,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -3892,7 +3891,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3940,30 +3939,30 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
 
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -3991,30 +3990,30 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
 
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4029,11 +4028,11 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.fontMediumItalic,
-                                    fontSize: (mobileW * 4) / 100,
+                                    fontSize: (windowWidth * 4) / 100,
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
+                                    paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (mobileW * 32) / 100,
+                                    marginLeft: (windowWidth * 32) / 100,
                                   }}
                                 >
                                   {Lang_chg.no_data_Found[config.language]}
@@ -4070,29 +4069,29 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4120,29 +4119,29 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -4157,11 +4156,11 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.fontMediumItalic,
-                                    fontSize: (mobileW * 4) / 100,
+                                    fontSize: (windowWidth * 4) / 100,
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
+                                    paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (mobileW * 32) / 100,
+                                    marginLeft: (windowWidth * 32) / 100,
                                   }}
                                 >
                                   {Lang_chg.no_data_Found[config.language]}
@@ -4183,11 +4182,11 @@ export default class Booking extends Component {
                         width: "100%",
                         shadowOpacity: 0.3,
                         shadowColor: "#000",
-                        paddingVertical: (mobileW * 3) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
                         shadowOffset: { width: 2, height: 2 },
-                        marginTop: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
                         elevation: 2,
-                        marginBottom: (mobileW * 3) / 100,
+                        marginBottom: (windowWidth * 3) / 100,
                         backgroundColor: "#fff",
                       }}
                     >
@@ -4202,8 +4201,8 @@ export default class Booking extends Component {
                             style={{
                               fontFamily: Font.fontmedium,
                               // fontSize: Font.headingfont,
-                              fontSize: (mobileW * 4) / 100,
-                              color: Colors.theme_color,
+                              fontSize: (windowWidth * 4) / 100,
+                              color: Colors.Theme,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -4216,7 +4215,7 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               width: "100%",
                               justifyContent: "space-between",
-                              marginTop: (mobileW * 1.5) / 100,
+                              marginTop: (windowWidth * 1.5) / 100,
                               alignSelf: "center",
                             }}
                           >
@@ -4253,10 +4252,10 @@ export default class Booking extends Component {
                               style={{
                                 flexDirection: "row",
                                 justifyContent: "space-between",
-                                paddingVertical: (mobileW * 2) / 100,
-                                borderTopWidth: (mobileW * 0.3) / 100,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                borderTopWidth: (windowWidth * 0.3) / 100,
                                 borderColor: Colors.bordercolor,
-                                marginTop: (mobileW * 2) / 100,
+                                marginTop: (windowWidth * 2) / 100,
                               }}
                             >
                               <Text
@@ -4284,17 +4283,17 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginTop: (mobileW * 2) / 100,
+                              marginTop: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {Lang_chg.subTotal[config.language]}
@@ -4302,9 +4301,9 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {this.state.indexPosition === 0
@@ -4317,10 +4316,10 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              marginTop: (mobileW * 1) / 100,
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
+                              marginTop: (windowWidth * 1) / 100,
+                              // borderBottomWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
@@ -4350,17 +4349,17 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               alignItems: "center",
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
-                              paddingVertical: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {Lang_chg.Total[config.language]}
@@ -4368,8 +4367,8 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {this.state.indexPosition === 0
@@ -4411,21 +4410,21 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "taskbooking"
                                 ? {
-                                    color: Colors.textblue,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.textblue,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                }
                                 : {
-                                    color: Colors.tablightcolo,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.lightGrey,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                }
                             }
                           >
                             {Lang_chg.TaskBooking[config.language]}
@@ -4435,23 +4434,23 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "taskbooking"
                                 ? {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: 1,
-                                    borderWidth: 1,
-                                    borderColor: Colors.bordercolorblue,
-                                    backgroundColor: Colors.bordercolorblue,
-                                    borderTopLeftRadius: (mobileW * 2) / 100,
-                                    borderTopRightRadius: (mobileW * 2) / 100,
-                                  }
+                                  width: (windowWidth * 42) / 100,
+                                  alignSelf: "center",
+                                  paddingVertical: 1,
+                                  borderWidth: 1,
+                                  borderColor: Colors.bordercolorblue,
+                                  backgroundColor: Colors.bordercolorblue,
+                                  borderTopLeftRadius: (windowWidth * 2) / 100,
+                                  borderTopRightRadius: (windowWidth * 2) / 100,
+                                }
                                 : {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    borderWidth: 2,
-                                    borderColor: Colors.tab_background_color,
-                                    backgroundColor:
-                                      Colors.tab_background_color,
-                                  }
+                                  width: (windowWidth * 42) / 100,
+                                  alignSelf: "center",
+                                  borderWidth: 2,
+                                  borderColor: Colors.tab_background_color,
+                                  backgroundColor:
+                                    Colors.tab_background_color,
+                                }
                             }
                           />
                         </View>
@@ -4469,22 +4468,22 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "hourlybooking"
                                 ? {
-                                    color: Colors.textblue,
+                                  color: Colors.textblue,
 
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                }
                                 : {
-                                    color: Colors.tablightcolo,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                    textAlign: config.textalign,
-                                    alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
-                                  }
+                                  color: Colors.lightGrey,
+                                  fontFamily: Font.fontmedium,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  textAlign: config.textalign,
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                }
                             }
                           >
                             {Lang_chg.HourlyBooking[config.language]}
@@ -4494,23 +4493,23 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "hourlybooking"
                                 ? {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: 1,
-                                    borderWidth: 1,
-                                    borderColor: Colors.bordercolorblue,
-                                    backgroundColor: Colors.bordercolorblue,
-                                    borderTopLeftRadius: (mobileW * 2) / 100,
-                                    borderTopRightRadius: (mobileW * 2) / 100,
-                                  }
+                                  width: (windowWidth * 42) / 100,
+                                  alignSelf: "center",
+                                  paddingVertical: 1,
+                                  borderWidth: 1,
+                                  borderColor: Colors.bordercolorblue,
+                                  backgroundColor: Colors.bordercolorblue,
+                                  borderTopLeftRadius: (windowWidth * 2) / 100,
+                                  borderTopRightRadius: (windowWidth * 2) / 100,
+                                }
                                 : {
-                                    width: (mobileW * 42) / 100,
-                                    alignSelf: "center",
-                                    borderWidth: 2,
-                                    borderColor: Colors.tab_background_color,
-                                    backgroundColor:
-                                      Colors.tab_background_color,
-                                  }
+                                  width: (windowWidth * 42) / 100,
+                                  alignSelf: "center",
+                                  borderWidth: 2,
+                                  borderColor: Colors.tab_background_color,
+                                  backgroundColor:
+                                    Colors.tab_background_color,
+                                }
                             }
                           />
                         </View>
@@ -4545,25 +4544,25 @@ export default class Booking extends Component {
                                   {item.status == true && (
                                     <View
                                       style={{
-                                        backgroundColor: Colors.theme_color,
-                                        paddingVertical: (mobileW * 0.8) / 100,
+                                        backgroundColor: Colors.Theme,
+                                        paddingVertical: (windowWidth * 0.8) / 100,
                                         flexDirection: "row",
                                         paddingHorizontal:
-                                          (mobileW * 1.5) / 100,
-                                        marginTop: (mobileW * 2) / 100,
+                                          (windowWidth * 1.5) / 100,
+                                        marginTop: (windowWidth * 2) / 100,
                                         justifyContent: "space-between",
                                         alignItems: "center",
-                                        borderRadius: (mobileW * 1) / 100,
-                                        marginRight: (mobileW * 2) / 100,
+                                        borderRadius: (windowWidth * 1) / 100,
+                                        marginRight: (windowWidth * 2) / 100,
                                       }}
                                     >
                                       <Text
                                         style={{
-                                          color: Colors.white_color,
+                                          color: Colors.white,
                                           fontSize: Font.textsize,
                                           fontFamily: Font.fontlight,
 
-                                          // paddingHorizontal: (mobileW * 2) / 100,
+                                          // paddingHorizontal: (windowWidth * 2) / 100,
                                         }}
                                       >
                                         {item.name}
@@ -4574,12 +4573,12 @@ export default class Booking extends Component {
                                         }}
                                       >
                                         <Image
-                                          source={localimag.cross2}
+                                          source={Icons.cross2}
                                           style={{
                                             alignSelf: "center",
-                                            width: (mobileW * 2) / 100,
-                                            height: (mobileW * 2) / 100,
-                                            marginLeft: (mobileW * 3.5) / 100,
+                                            width: (windowWidth * 2) / 100,
+                                            height: (windowWidth * 2) / 100,
+                                            marginLeft: (windowWidth * 3.5) / 100,
                                           }}
                                         />
                                       </TouchableOpacity>
@@ -4598,7 +4597,7 @@ export default class Booking extends Component {
                           alignSelf: "center",
                           backgroundColor: Colors.tab_background_color,
                           alignItems: "center",
-                          marginTop: (mobileW * 3) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4622,27 +4621,27 @@ export default class Booking extends Component {
                               Keyboard.dismiss();
                             }}
                             style={{
-                              fontSize: (mobileW * 4) / 100,
+                              fontSize: (windowWidth * 4) / 100,
                               fontFamily: Font.ques_fontfamily,
                               color: "#8F98A7",
                               width: "90%",
-                              paddingVertical: (mobileW * 3.5) / 100,
+                              paddingVertical: (windowWidth * 3.5) / 100,
                               textAlign: config.textalign,
                             }}
-                            placeholderTextColor={"#8F98A7"}
+                            DarkGrey={"#8F98A7"}
                             placeholder={Lang_chg.Searchtask[config.language]}
                           />
 
                           <View style={{ width: "10%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                width: (mobileW * 4) / 100,
-                                height: (mobileW * 4) / 100,
+                                width: (windowWidth * 4) / 100,
+                                height: (windowWidth * 4) / 100,
                                 tintColor: "#8F98A7",
                                 // backgroundColor:'red',
                                 alignSelf: "center",
                               }}
-                              source={localimag.search2}
+                              source={Icons.search2}
                             />
                           </View>
                         </View>
@@ -4655,7 +4654,7 @@ export default class Booking extends Component {
                               {
                                 width: "100%",
                                 alignSelf: "center",
-                                marginTop: (mobileW * 2) / 100,
+                                marginTop: (windowWidth * 2) / 100,
                               },
                               this.state.task_base_task.length >= 4
                                 ? { height: 200 }
@@ -4679,9 +4678,9 @@ export default class Booking extends Component {
                                         width: "100%",
                                         alignSelf: "center",
                                         backgroundColor: "#F8F8F8",
-                                        paddingVertical: (mobileW * 1.7) / 100,
+                                        paddingVertical: (windowWidth * 1.7) / 100,
                                         flexDirection: "row",
-                                        marginTop: (mobileW * 0.3) / 100,
+                                        marginTop: (windowWidth * 0.3) / 100,
                                         // alignItems: 'center',
                                         // justifyContent: 'space-between',
                                       }}
@@ -4695,26 +4694,26 @@ export default class Booking extends Component {
                                         {item.status == true ? (
                                           <Image
                                             style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
+                                              width: (windowWidth * 5) / 100,
+                                              height: (windowWidth * 5) / 100,
                                               borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
+                                                (windowWidth * 0.4) / 100,
+                                              marginRight: (windowWidth * 2) / 100,
+                                              marginLeft: (windowWidth * 3) / 100,
                                               resizeMode: "contain",
                                               alignSelf: "flex-start",
                                             }}
-                                            source={localimag.remembertick}
+                                            source={Icons.remembertick}
                                           />
                                         ) : (
                                           <Image
                                             style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
+                                              width: (windowWidth * 5) / 100,
+                                              height: (windowWidth * 5) / 100,
                                               borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
+                                                (windowWidth * 0.4) / 100,
+                                              marginRight: (windowWidth * 2) / 100,
+                                              marginLeft: (windowWidth * 3) / 100,
                                               resizeMode: "contain",
                                               alignSelf: "flex-start",
                                             }}
@@ -4727,7 +4726,7 @@ export default class Booking extends Component {
                                           width: "59%",
                                           textAlign: config.textRotate,
                                           alignSelf: "center",
-                                          fontSize: (mobileW * 3.6) / 100,
+                                          fontSize: (windowWidth * 3.6) / 100,
                                           fontFamily: Font.fontregular,
 
                                           color: "#000",
@@ -4739,7 +4738,7 @@ export default class Booking extends Component {
                                         style={{
                                           width: "25%",
 
-                                          fontSize: (mobileW * 3.6) / 100,
+                                          fontSize: (windowWidth * 3.6) / 100,
                                           fontFamily: Font.fontregular,
                                           color: "#000",
 
@@ -4764,8 +4763,8 @@ export default class Booking extends Component {
                       style={{
                         width: "100%",
                         backgroundColor: "#fff",
-                        paddingVertical: (mobileW * 3) / 100,
-                        marginBottom: (mobileW * 1) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        marginBottom: (windowWidth * 1) / 100,
                       }}
                     >
                       <FlatList
@@ -4786,35 +4785,35 @@ export default class Booking extends Component {
                               }}
                               style={[
                                 {
-                                  borderRadius: (mobileW * 2) / 100,
-                                  marginLeft: (mobileW * 2) / 100,
-                                  width: (mobileW * 35) / 100,
+                                  borderRadius: (windowWidth * 2) / 100,
+                                  marginLeft: (windowWidth * 2) / 100,
+                                  width: (windowWidth * 35) / 100,
                                   backgroundColor: "#fff",
                                 },
                                 item.status == true
                                   ? {
-                                      borderColor: Colors.theme_color,
-                                      borderWidth: 2,
-                                    }
+                                    borderColor: Colors.Theme,
+                                    borderWidth: 2,
+                                  }
                                   : { borderColor: "#DFDFDF", borderWidth: 1 },
                               ]}
                             >
                               <View
                                 style={{
                                   backgroundColor: "#0168B3",
-                                  borderTopLeftRadius: (mobileW * 1.1) / 100,
-                                  borderTopRightRadius: (mobileW * 1.1) / 100,
+                                  borderTopLeftRadius: (windowWidth * 1.1) / 100,
+                                  borderTopRightRadius: (windowWidth * 1.1) / 100,
                                   width: "100%",
                                 }}
                               >
                                 <Text
                                   style={{
                                     // backgroundColor:'red',
-                                    // paddingHorizontal: (mobileW * 5) / 100,
-                                    paddingVertical: (mobileW * 1.5) / 100,
-                                    color: Colors.white_color,
+                                    // paddingHorizontal: (windowWidth * 5) / 100,
+                                    paddingVertical: (windowWidth * 1.5) / 100,
+                                    color: Colors.white,
                                     fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 3) / 100,
+                                    fontSize: (windowWidth * 3) / 100,
                                     textTransform: "uppercase",
                                     textAlign: "center",
                                   }}
@@ -4825,7 +4824,7 @@ export default class Booking extends Component {
 
                               <Text
                                 style={{
-                                  paddingVertical: (mobileW * 2) / 100,
+                                  paddingVertical: (windowWidth * 2) / 100,
                                   fontFamily: Font.fontmedium,
                                   textAlign: "center",
                                   fontSize: Font.sregulartext_size,
@@ -4845,12 +4844,12 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding:mobileW*0.2/100,
+                      // padding:windowWidth*0.2/100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
-                      marginTop: (mobileW * 1.5) / 100,
-                      marginBottom: (mobileW * 1.5) / 100,
+                      marginTop: (windowWidth * 1.5) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
                       backgroundColor: "#fff",
                     }}
                   >
@@ -4860,7 +4859,7 @@ export default class Booking extends Component {
                         alignItems: "center",
                         width: "93%",
                         alignSelf: "center",
-                        paddingTop: (mobileW * 4) / 100,
+                        paddingTop: (windowWidth * 4) / 100,
                       }}
                     >
                       <Text
@@ -4869,7 +4868,7 @@ export default class Booking extends Component {
                           fontSize: Font.name,
                           width: "65%",
                           textAlign: config.textRotate,
-                          fontSize: (mobileW * 3.5) / 100,
+                          fontSize: (windowWidth * 3.5) / 100,
                         }}
                       >
                         {Lang_chg.Appointmentschedule[config.language]}
@@ -4885,22 +4884,22 @@ export default class Booking extends Component {
                         <View style={{ width: "20%", alignSelf: "center" }}>
                           <Image
                             style={{
-                              width: (mobileW * 5) / 100,
-                              height: (mobileW * 5) / 100,
+                              width: (windowWidth * 5) / 100,
+                              height: (windowWidth * 5) / 100,
                               // resizeMode:'contain',
                               alignSelf: "center",
                             }}
-                            source={localimag.calendarimg}
+                            source={Icons.calendarimg}
                           />
                         </View>
 
                         <Text
                           style={{
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             fontFamily: Font.fontmedium,
                             fontSize: Font.name,
                             alignSelf: "center",
-                            marginLeft: (mobileW * 1) / 100,
+                            marginLeft: (windowWidth * 1) / 100,
                             // width:'75%',
                             // backgroundColor:'red',
                             textAlign: "right",
@@ -4915,8 +4914,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -4924,7 +4923,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -4955,23 +4954,23 @@ export default class Booking extends Component {
                                       this.getTimeDate(),
                                       this.checkDate(item, index);
                                   }}
-                                  style={{ width: (mobileW * 15) / 100 }}
+                                  style={{ width: (windowWidth * 15) / 100 }}
                                 >
                                   <Text
                                     style={{
-                                      marginRight: (mobileW * 3) / 100,
-                                      marginTop: (mobileW * 3) / 100,
+                                      marginRight: (windowWidth * 3) / 100,
+                                      marginTop: (windowWidth * 3) / 100,
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
                                           : Colors.gray6,
                                       color: item.tick == 1 ? "white" : "black",
                                       textAlign: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
                                       fontSize: Font.sregulartext_size,
 
-                                      lineHeight: (mobileW * 5) / 100,
+                                      lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
                                     {item.day}
@@ -5002,23 +5001,23 @@ export default class Booking extends Component {
                                       this.getTimeDate(),
                                       this.checkDate(item, index);
                                   }}
-                                  style={{ width: (mobileW * 15) / 100 }}
+                                  style={{ width: (windowWidth * 15) / 100 }}
                                 >
                                   <Text
                                     style={{
-                                      marginRight: (mobileW * 3) / 100,
-                                      marginTop: (mobileW * 3) / 100,
+                                      marginRight: (windowWidth * 3) / 100,
+                                      marginTop: (windowWidth * 3) / 100,
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
                                           : Colors.gray6,
                                       color: item.tick == 1 ? "white" : "black",
                                       textAlign: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
                                       fontSize: Font.sregulartext_size,
 
-                                      lineHeight: (mobileW * 5) / 100,
+                                      lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
                                     {item.day}
@@ -5039,8 +5038,8 @@ export default class Booking extends Component {
                         borderWidth: 1,
                         borderColor: Colors.gainsboro,
                         width: "100%",
-                        marginTop: (mobileW * 1.5) / 100,
-                        marginBottom: (mobileW * 1.5) / 100,
+                        marginTop: (windowWidth * 1.5) / 100,
+                        marginBottom: (windowWidth * 1.5) / 100,
                       }}
                     />
 
@@ -5048,7 +5047,7 @@ export default class Booking extends Component {
                       style={{
                         width: "93%",
                         alignSelf: "center",
-                        paddingBottom: (mobileW * 3) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -5096,29 +5095,29 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5146,30 +5145,30 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
 
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data
+                                                  this.state.time_take_data
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5184,11 +5183,11 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.fontMediumItalic,
-                                    fontSize: (mobileW * 4) / 100,
+                                    fontSize: (windowWidth * 4) / 100,
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
+                                    paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (mobileW * 32) / 100,
+                                    marginLeft: (windowWidth * 32) / 100,
                                   }}
                                 >
                                   {Lang_chg.no_data_Found[config.language]}
@@ -5224,29 +5223,29 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data_hour
+                                                  this.state.time_take_data_hour
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5274,30 +5273,30 @@ export default class Booking extends Component {
                                               style={[
                                                 {
                                                   marginRight:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
                                                   marginTop:
-                                                    (mobileW * 3) / 100,
+                                                    (windowWidth * 3) / 100,
 
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
                                                     Font.sregulartext_size,
-                                                  padding: (mobileW * 2) / 100,
+                                                  padding: (windowWidth * 2) / 100,
                                                   paddingHorizontal:
-                                                    (mobileW * 3.3) / 100,
+                                                    (windowWidth * 3.3) / 100,
                                                 },
                                                 item.time ==
-                                                this.state.time_take_data_hour
+                                                  this.state.time_take_data_hour
                                                   ? {
-                                                      backgroundColor:
-                                                        Colors.theme_color,
-                                                      color: "#fff",
-                                                    }
+                                                    backgroundColor:
+                                                      Colors.Theme,
+                                                    color: "#fff",
+                                                  }
                                                   : {
-                                                      backgroundColor:
-                                                        Colors.gray6,
-                                                      color: "#000",
-                                                    },
+                                                    backgroundColor:
+                                                      Colors.gray6,
+                                                    color: "#000",
+                                                  },
                                               ]}
                                             >
                                               {item.time}
@@ -5312,11 +5311,11 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.fontMediumItalic,
-                                    fontSize: (mobileW * 4) / 100,
+                                    fontSize: (windowWidth * 4) / 100,
                                     alignSelf: "center",
-                                    paddingVertical: (mobileW * 3) / 100,
+                                    paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (mobileW * 32) / 100,
+                                    marginLeft: (windowWidth * 32) / 100,
                                   }}
                                 >
                                   {Lang_chg.no_data_Found[config.language]}
@@ -5339,11 +5338,11 @@ export default class Booking extends Component {
                           width: "100%",
                           shadowOpacity: 0.3,
                           shadowColor: "#000",
-                          paddingVertical: (mobileW * 3) / 100,
+                          paddingVertical: (windowWidth * 3) / 100,
                           shadowOffset: { width: 2, height: 2 },
-                          marginTop: (mobileW * 1.5) / 100,
+                          marginTop: (windowWidth * 1.5) / 100,
                           elevation: 2,
-                          marginBottom: (mobileW * 3) / 100,
+                          marginBottom: (windowWidth * 3) / 100,
                           backgroundColor: "#fff",
                         }}
                       >
@@ -5358,8 +5357,8 @@ export default class Booking extends Component {
                               style={{
                                 fontFamily: Font.fontmedium,
                                 // fontSize: Font.headingfont,
-                                fontSize: (mobileW * 4) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 4) / 100,
+                                color: Colors.Theme,
                                 textAlign: config.textRotate,
                               }}
                             >
@@ -5379,7 +5378,7 @@ export default class Booking extends Component {
                                             flexDirection: "row",
                                             width: "100%",
                                             justifyContent: "space-between",
-                                            marginTop: (mobileW * 1.5) / 100,
+                                            marginTop: (windowWidth * 1.5) / 100,
                                             alignSelf: "center",
                                           }}
                                         >
@@ -5418,10 +5417,10 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginTop: (mobileW * 2) / 100,
+                              marginTop: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
@@ -5429,7 +5428,7 @@ export default class Booking extends Component {
                                 fontFamily: Font.ques_fontfamily,
                                 fontSize: Font.sregulartext_size,
                                 color: "#000",
-                                // marginTop: mobileW * 1 / 100,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {item.distance_fare_text}
@@ -5439,7 +5438,7 @@ export default class Booking extends Component {
                                 fontFamily: Font.ques_fontfamily,
                                 fontSize: Font.sregulartext_size,
                                 color: "#000",
-                                // marginTop: mobileW * 1 / 100,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {item.distance_fare}.0{" "}
@@ -5451,18 +5450,18 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              // marginTop: mobileW * 0.5 / 100,
+                              // marginTop: windowWidth * 0.5 / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {Lang_chg.subTotal[config.language]}
@@ -5470,9 +5469,9 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {this.state.subTotal} {this.state.currency_symbol}
@@ -5483,10 +5482,10 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              marginTop: (mobileW * 1) / 100,
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
+                              marginTop: (windowWidth * 1) / 100,
+                              // borderBottomWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
@@ -5515,17 +5514,17 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               alignItems: "center",
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
-                              paddingVertical: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {Lang_chg.Total[config.language]}
@@ -5533,8 +5532,8 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {this.state.final_total_price}{" "}
@@ -5557,11 +5556,11 @@ export default class Booking extends Component {
                           width: "100%",
                           shadowOpacity: 0.3,
                           shadowColor: "#000",
-                          paddingVertical: (mobileW * 3) / 100,
+                          paddingVertical: (windowWidth * 3) / 100,
                           shadowOffset: { width: 2, height: 2 },
-                          marginTop: (mobileW * 1.5) / 100,
+                          marginTop: (windowWidth * 1.5) / 100,
                           elevation: 2,
-                          marginBottom: (mobileW * 3) / 100,
+                          marginBottom: (windowWidth * 3) / 100,
                           backgroundColor: "#fff",
                         }}
                       >
@@ -5576,8 +5575,8 @@ export default class Booking extends Component {
                               style={{
                                 fontFamily: Font.fontmedium,
                                 // fontSize: Font.headingfont,
-                                fontSize: (mobileW * 4) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 4) / 100,
+                                color: Colors.Theme,
                                 textAlign: config.textRotate,
                               }}
                             >
@@ -5597,7 +5596,7 @@ export default class Booking extends Component {
                                             flexDirection: "row",
                                             width: "100%",
                                             paddingVertical:
-                                              (mobileW * 3) / 100,
+                                              (windowWidth * 3) / 100,
                                             justifyContent: "space-between",
                                             alignSelf: "center",
                                           }}
@@ -5637,10 +5636,10 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginTop: (mobileW * 2) / 100,
+                              marginTop: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
@@ -5667,18 +5666,18 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              // marginTop: mobileW * 0.5 / 100,
+                              // marginTop: windowWidth * 0.5 / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {Lang_chg.subTotal[config.language]}
@@ -5686,9 +5685,9 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
+                                // marginTop: windowWidth * 1 / 100,
                               }}
                             >
                               {this.state.subTotal} {this.state.currency_symbol}
@@ -5698,9 +5697,9 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
+                              // borderBottomWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
@@ -5729,17 +5728,17 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               alignItems: "center",
-                              borderTopWidth: (mobileW * 0.3) / 100,
+                              borderTopWidth: (windowWidth * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              marginBottom: (mobileW * 2) / 100,
-                              paddingVertical: (mobileW * 2) / 100,
+                              marginBottom: (windowWidth * 2) / 100,
+                              paddingVertical: (windowWidth * 2) / 100,
                             }}
                           >
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {Lang_chg.Total[config.language]}
@@ -5747,8 +5746,8 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3.7) / 100,
-                                color: Colors.theme_color,
+                                fontSize: (windowWidth * 3.7) / 100,
+                                color: Colors.Theme,
                               }}
                             >
                               {this.state.hour_total_price}{" "}
@@ -5790,19 +5789,11 @@ export default class Booking extends Component {
                   justifyContent: "center",
                   paddingHorizontal: 20,
                   marginTop: -50,
-                }}
-              >
-                <StatusBar
-                  backgroundColor={"#fff"}
-                  barStyle="default"
-                  hidden={false}
-                  translucent={false}
-                  networkActivityIndicatorVisible={true}
-                />
+                }}>
                 <View
                   style={{
                     borderRadius: 20,
-                    width: (mobileW * 90) / 100,
+                    width: (windowWidth * 90) / 100,
                     position: "absolute",
                     alignSelf: "center",
                   }}
@@ -5817,17 +5808,17 @@ export default class Booking extends Component {
                     <View
                       style={{
                         alignSelf: "flex-start",
-                        paddingVertical: (mobileW * 3) / 100,
-                        marginTop: (mobileW * 2) / 100,
-                        paddingLeft: (mobileW * 4) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingLeft: (windowWidth * 4) / 100,
                         flexDirection: "row",
                         alignItems: "center",
                       }}
                     >
                       <Image
                         style={{
-                          width: (mobileW * 6) / 100,
-                          height: (mobileW * 6) / 100,
+                          width: (windowWidth * 6) / 100,
+                          height: (windowWidth * 6) / 100,
                         }}
                         source={require("../icons/logo.png")}
                       />
@@ -5835,8 +5826,8 @@ export default class Booking extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           color: "#000",
-                          fontSize: (mobileW * 5) / 100,
-                          paddingLeft: (mobileW * 4) / 100,
+                          fontSize: (windowWidth * 5) / 100,
+                          paddingLeft: (windowWidth * 4) / 100,
                           width: "90%",
                           textAlign: config.textRotate,
                         }}
@@ -5849,7 +5840,7 @@ export default class Booking extends Component {
 
                     <View
                       style={{
-                        paddingLeft: (mobileW * 4) / 100,
+                        paddingLeft: (windowWidth * 4) / 100,
                         width: "95%",
                         alignSelf: "center",
                       }}
@@ -5858,7 +5849,7 @@ export default class Booking extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           color: "#000",
-                          fontSize: (mobileW * 4.4) / 100,
+                          fontSize: (windowWidth * 4.4) / 100,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -5868,12 +5859,12 @@ export default class Booking extends Component {
 
                     <View
                       style={{
-                        paddingBottom: (mobileW * 5) / 100,
-                        marginTop: (mobileW * 9) / 100,
+                        paddingBottom: (windowWidth * 5) / 100,
+                        marginTop: (windowWidth * 9) / 100,
                         alignSelf: "flex-end",
                         flexDirection: "row",
                         alignItems: "center",
-                        paddingHorizontal: (mobileW * 3) / 100,
+                        paddingHorizontal: (windowWidth * 3) / 100,
                       }}
                     >
                       <TouchableOpacity
@@ -5881,7 +5872,7 @@ export default class Booking extends Component {
                           this.setState({ modalVisible3: false });
                         }}
                         style={{
-                          width: (mobileW * 15) / 100,
+                          width: (windowWidth * 15) / 100,
                           flexDirection: "row",
                           alignSelf: "center",
                         }}
@@ -5889,8 +5880,8 @@ export default class Booking extends Component {
                         <Text
                           style={{
                             fontFamily: Font.fontregular,
-                            fontSize: (mobileW * 4) / 100,
-                            color: Colors.theme_color,
+                            fontSize: (windowWidth * 4) / 100,
+                            color: Colors.Theme,
                             alignSelf: "center",
                             textAlign: config.textalign,
                           }}
@@ -5907,7 +5898,7 @@ export default class Booking extends Component {
                           }, 200);
                         }}
                         style={{
-                          width: (mobileW * 15) / 100,
+                          width: (windowWidth * 15) / 100,
                           flexDirection: "row",
                           alignSelf: "center",
                         }}
@@ -5915,8 +5906,8 @@ export default class Booking extends Component {
                         <Text
                           style={{
                             fontFamily: Font.fontregular,
-                            fontSize: (mobileW * 4) / 100,
-                            color: Colors.theme_color,
+                            fontSize: (windowWidth * 4) / 100,
+                            color: Colors.Theme,
                             alignSelf: "center",
                             textAlign: config.textalign,
                           }}
@@ -5934,9 +5925,9 @@ export default class Booking extends Component {
               style={{
                 width: "100%",
                 alignSelf: "center",
-                backgroundColor: Colors.white_color,
-                paddingHorizontal: (mobileW * 5) / 100,
-                paddingVertical: (mobileW * 2) / 100,
+                backgroundColor: Colors.white,
+                paddingHorizontal: (windowWidth * 5) / 100,
+                paddingVertical: (windowWidth * 2) / 100,
                 height: 80,
                 justifyContent: "center", //Centered horizontally
                 alignItems: "center", //Centered vertically
@@ -5947,18 +5938,18 @@ export default class Booking extends Component {
                   this.state.pass_status === "doctor"
                     ? this.submitButtonForDoctor()
                     : this.state.pass_status === "lab"
-                    ? this.state.indexPosition === 0
-                      ? this.submit_btn()
-                      : this.submit_btn_hourly()
-                    : this.state.display == "hourlybooking"
-                    ? this.submit_btn_hourly()
-                    : this.submit_btn();
+                      ? this.state.indexPosition === 0
+                        ? this.submit_btn()
+                        : this.submit_btn_hourly()
+                      : this.state.display == "hourlybooking"
+                        ? this.submit_btn_hourly()
+                        : this.submit_btn();
                 }}
                 style={{
                   width: "100%",
-                  borderRadius: (mobileW * 3) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (mobileW * 3) / 100,
+                  borderRadius: (windowWidth * 3) / 100,
+                  backgroundColor: Colors.Theme,
+                  paddingVertical: (windowWidth * 3) / 100,
                 }}
               >
                 <Text
@@ -5977,8 +5968,8 @@ export default class Booking extends Component {
             </View>
           </View>
 
-          <HideWithKeyboard>
-            {/* <Footer
+          {/* <HideWithKeyboard>
+            <Footer
               activepage="Home"
               usertype={1}
               footerpage={[
@@ -5986,42 +5977,43 @@ export default class Booking extends Component {
                   name: "Home",
                   fname: Lang_chg.home_footer[config.language],
                   countshow: false,
-                  image: localimag.Home,
-                  activeimage: localimag.Home,
+                  image: Icons.Home,
+                  activeimage: Icons.Home,
                 },
                 {
                   name: "Appointment",
                   fname: Lang_chg.Appointment_footer[config.language],
                   countshow: false,
-                  image: localimag.Appointment,
-                  activeimage: localimag.Appointment,
+                  image: Icons.Appointment,
+                  activeimage: Icons.Appointment,
                 },
                 {
                   name: "Cart",
                   fname: Lang_chg.Cart_footer[config.language],
                   countshow: false,
-                  image: localimag.Cart,
-                  activeimage: localimag.Cart,
+                  image: Icons.Cart,
+                  activeimage: Icons.Cart,
                 },
                 {
                   name: "More",
                   fname: Lang_chg.More_footer[config.language],
                   countshow: false,
-                  image: localimag.More,
-                  activeimage: localimag.More,
+                  image: Icons.More,
+                  activeimage: Icons.More,
                 },
               ]}
               navigation={this.props.navigation}
               imagestyle1={{
                 width: 25,
                 height: 25,
-                paddingBottom: (mobileW * 5.4) / 100,
+                paddingBottom: (windowWidth * 5.4) / 100,
                 backgroundColor: "white",
                 countcolor: "red",
                 countbackground: "red",
               }}
-            /> */}
-          </HideWithKeyboard>
+            />
+          </HideWithKeyboard> */}
+
         </View>
       );
     } else {
@@ -6044,19 +6036,11 @@ export default class Booking extends Component {
                 justifyContent: "center",
                 paddingHorizontal: 20,
                 marginTop: -50,
-              }}
-            >
-              <StatusBar
-                backgroundColor={"#fff"}
-                barStyle="default"
-                hidden={false}
-                translucent={false}
-                networkActivityIndicatorVisible={true}
-              />
+              }}>
               <View
                 style={{
                   borderRadius: 20,
-                  width: (mobileW * 90) / 100,
+                  width: (windowWidth * 90) / 100,
                   position: "absolute",
                   alignSelf: "center",
                 }}
@@ -6066,13 +6050,13 @@ export default class Booking extends Component {
                     backgroundColor: "#fff",
                     borderRadius: 4,
                     width: "100%",
-                    paddingVertical: (mobileW * 6) / 100,
+                    paddingVertical: (windowWidth * 6) / 100,
                   }}
                 >
                   <Image
                     style={{
-                      width: (mobileW * 15) / 100,
-                      height: (mobileW * 15) / 100,
+                      width: (windowWidth * 15) / 100,
+                      height: (windowWidth * 15) / 100,
                       alignSelf: "center",
                     }}
                     source={require("../icons/logo.png")}
@@ -6080,10 +6064,10 @@ export default class Booking extends Component {
                   <Text
                     style={{
                       fontFamily: Font.fontmedium,
-                      fontSize: (mobileW * 5) / 100,
-                      color: Colors.theme_color,
+                      fontSize: (windowWidth * 5) / 100,
+                      color: Colors.Theme,
                       alignSelf: "center",
-                      marginTop: (mobileW * 6) / 100,
+                      marginTop: (windowWidth * 6) / 100,
                     }}
                   >
                     {Lang_chg.we_wii_back[config.language]}
@@ -6092,8 +6076,8 @@ export default class Booking extends Component {
                     <Text
                       style={{
                         fontFamily: Font.fontmedium,
-                        fontSize: (mobileW * 5) / 100,
-                        color: Colors.theme_color,
+                        fontSize: (windowWidth * 5) / 100,
+                        color: Colors.Theme,
                         alignSelf: "center",
                       }}
                     >
@@ -6105,9 +6089,9 @@ export default class Booking extends Component {
                     style={{
                       fontFamily: Font.fontlight,
                       color: "#000",
-                      fontSize: (mobileW * 3.8) / 100,
+                      fontSize: (windowWidth * 3.8) / 100,
                       textAlign: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       width: "90%",
                       alignSelf: "center",
                     }}
@@ -6118,9 +6102,9 @@ export default class Booking extends Component {
                     style={{
                       fontFamily: Font.fontregular,
                       color: "#000",
-                      fontSize: (mobileW * 5) / 100,
+                      fontSize: (windowWidth * 5) / 100,
                       textAlign: "center",
-                      marginTop: (mobileW * 5) / 100,
+                      marginTop: (windowWidth * 5) / 100,
                     }}
                   >
                     {Lang_chg.Bad_gateway[config.language]}
@@ -6128,13 +6112,13 @@ export default class Booking extends Component {
 
                   <TouchableOpacity
                     style={{
-                      paddingHorizontal: (mobileW * 2) / 100,
-                      paddingVertical: (mobileW * 2) / 100,
+                      paddingHorizontal: (windowWidth * 2) / 100,
+                      paddingVertical: (windowWidth * 2) / 100,
                       alignSelf: "center",
                       borderWidth: 1,
                       borderColor: "#000",
                       borderRadius: 4,
-                      marginTop: (mobileW * 6) / 100,
+                      marginTop: (windowWidth * 6) / 100,
                     }}
                     onPress={() => {
                       this.setState({ Error_popup: false });
@@ -6146,7 +6130,7 @@ export default class Booking extends Component {
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                         alignSelf: "center",
                         color: "#000",
                       }}
@@ -6169,8 +6153,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.input_field_digi,
 
     fontFamily: Font.ques_fontfamily,
-    borderRadius: (mobileW * 1) / 100,
+    borderRadius: (windowWidth * 1) / 100,
     color: "#4E4E4E",
-    fontSize: (mobileW * 3.5) / 100,
+    fontSize: (windowWidth * 3.5) / 100,
   },
 });

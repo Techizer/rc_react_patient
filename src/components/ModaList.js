@@ -152,7 +152,7 @@ class ModalList extends Component {
                         );
                     }}
                     placeholder={'search by name'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -245,7 +245,7 @@ class ModalList extends Component {
                                     );
                                 }}
                                 placeholder="Search by Name"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

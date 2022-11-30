@@ -11,8 +11,8 @@ import {
   Colors,
   Font,
   config,
-  mobileW,
-  localimag,
+  windowWidth,
+  Icons,
   Lang_chg,
 } from './Provider/utilslib/Utils';
 // import Footer from './src/Provider/Footer';
@@ -47,7 +47,7 @@ const Appointmentdata = [
 const neworders = [
   {
     id: 1,
-    img: localimag.Nurse1,
+    img: Icons.Nurse1,
     rating: '4.5',
     personname: 'Sunidhi Sharma',
     description:
@@ -88,7 +88,7 @@ export default class Cart2 extends Component {
           showsVerticalScrollIndicator={false}>
            
 
-            <View style={{backgroundColor:'#fff',marginTop:mobileW*2/100,shadowOpacity: 0.3,
+            <View style={{backgroundColor:'#fff',marginTop:windowWidth*2/100,shadowOpacity: 0.3,
                         shadowColor:'#000',
                         shadowOffset:{width:1,height:1},
                         elevation:2,
@@ -99,19 +99,19 @@ export default class Cart2 extends Component {
                   <View
                     style={{alignItems:'center',
                       flexDirection: 'row',
-                      paddingVertical:mobileW*3/100,
+                      paddingVertical:windowWidth*3/100,
                       width: '90%',
                       alignSelf: 'center',
                      
                       justifyContent: 'space-between',
-                      // marginTop:mobileW*2/100
+                      // marginTop:windowWidth*2/100
                     
                     }}>
                     <View style={{flexDirection: 'row',width:"83%",alignItems:'center'}}>
                       <Text
                         style={{
                           fontFamily: Font.fontmedium,
-                          fontSize:mobileW*3.9/100,
+                          fontSize:windowWidth*3.9/100,
                           color:Colors.gray4
                         }}>Aisha A.
                      
@@ -120,8 +120,8 @@ export default class Cart2 extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize:Font.cart2subtext,
-                          color: Colors.theme_color,
-                          marginLeft:mobileW*4/100
+                          color: Colors.Theme,
+                          marginLeft:windowWidth*4/100
                          
                         }}>
                         Nurse
@@ -136,12 +136,12 @@ export default class Cart2 extends Component {
                           
                         }}>
                         <Image
-                          source={localimag.cross}
+                          source={Icons.cross}
                           style={{
                             resizeMode: 'contain',
-                            backgroundColor: Colors.white_color,
-                            width: (mobileW * 4.5) / 100,
-                            height: (mobileW * 4.5) / 100,
+                            backgroundColor: Colors.white,
+                            width: (windowWidth * 4.5) / 100,
+                            height: (windowWidth * 4.5) / 100,
                             alignSelf: 'center',
                           }}></Image>
                       </View>
@@ -154,8 +154,8 @@ export default class Cart2 extends Component {
                       borderTopWidth: 0.5,
                       borderColor: Colors.gainsboro,
                       
-                      marginTop:mobileW*1/100
-                      // marginVertical: (mobileW * 3) / 100,
+                      marginTop:windowWidth*1/100
+                      // marginVertical: (windowWidth * 3) / 100,
                     
                     }}></View>
                   <View style={{width: '90%', alignSelf: 'center'}}>
@@ -164,9 +164,9 @@ export default class Cart2 extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize: Font.cart2heading,
-                          color: Colors.theme_color,
-                          paddingBottom: (mobileW * 3.5) / 100,
-                          paddingTop:mobileW*2/100
+                          color: Colors.Theme,
+                          paddingBottom: (windowWidth * 3.5) / 100,
+                          paddingTop:windowWidth*2/100
                         }}>
                         Appointment
                       </Text>
@@ -175,7 +175,7 @@ export default class Cart2 extends Component {
                           <View
                           style={{
                               backgroundColor: '#fff',
-                              marginBottom: (mobileW * 3.5) / 100,
+                              marginBottom: (windowWidth * 3.5) / 100,
                             }}>
                             <View style={{}}>
                               <View
@@ -192,8 +192,8 @@ export default class Cart2 extends Component {
                                   <Text
                                     style={{
                                       fontFamily: Font.fontmedium,
-                                      color: Colors.theme_color,
-                                      fontSize:mobileW*3.5/100,
+                                      color: Colors.Theme,
+                                      fontSize:windowWidth*3.5/100,
                                     }}>
                                     Date
                                   </Text>
@@ -201,28 +201,28 @@ export default class Cart2 extends Component {
                                     style={{
                                       fontFamily: Font.fontmedium,
                                       fontSize: Font.cart2subtext,
-                                      color: Colors.darkgraytextheading,
-                                      paddingTop: (mobileW * 1) / 100,
+                                      color: Colors.DarkGrey,
+                                      paddingTop: (windowWidth * 1) / 100,
                                     }}>SAT,26 MAR 2022
                                     
                                   </Text>
 
                                   <View
                                     style={{borderWidth:1,
-                                    borderColor:Colors.theme_color,
+                                    borderColor:Colors.Theme,
                                    
-                                   marginTop:mobileW*2/100,
+                                   marginTop:windowWidth*2/100,
                                      
-                                     paddingVertical:mobileW*1/100,
+                                     paddingVertical:windowWidth*1/100,
                                      width:'45%',
                                      justifyContent:'center',
-                                      borderRadius: (mobileW * 1) / 100,
+                                      borderRadius: (windowWidth * 1) / 100,
                                     }}>
                                     <Text
                                       style={{
                                         fontFamily: Font.fontmedium,
-                                        fontSize:mobileW*3/100,
-                                        color: Colors.theme_color,
+                                        fontSize:windowWidth*3/100,
+                                        color: Colors.Theme,
                                         textAlign:'center'
                                       }}>Task Base
                                     </Text>
@@ -232,13 +232,13 @@ export default class Cart2 extends Component {
                                 <View
                                   style={{
                                     width: '50%',
-                                    marginRight: (mobileW * 3) / 100,
+                                    marginRight: (windowWidth * 3) / 100,
                                   }}>
                                   <Text
                                     style={{
                                       fontFamily: Font.fontmedium,
-                                      color: Colors.theme_color,
-                                      fontSize:mobileW*3.5/100,
+                                      color: Colors.Theme,
+                                      fontSize:windowWidth*3.5/100,
                                     }}>
                                     Time
                                   </Text>
@@ -246,8 +246,8 @@ export default class Cart2 extends Component {
                                     style={{
                                       fontFamily: Font.fontmedium,
                                       fontSize: Font.cart2subtext,
-                                      color: Colors.darkgraytextheading,
-                                      paddingTop: (mobileW * 1) / 100,
+                                      color: Colors.DarkGrey,
+                                      paddingTop: (windowWidth * 1) / 100,
                                     }}>9:30 PM - 10:00 PM
                                     
                                   </Text>
@@ -256,25 +256,25 @@ export default class Cart2 extends Component {
                                     style={{
                                       width: '100%',
                                       flexDirection: 'row',
-                                      paddingVertical: (mobileW * 2) / 100,
-                                      borderRadius: (mobileW * 1) / 100,
+                                      paddingVertical: (windowWidth * 2) / 100,
+                                      borderRadius: (windowWidth * 1) / 100,
                                       alignItems:'center',
-                                      marginTop:mobileW*1/100,
+                                      marginTop:windowWidth*1/100,
                                     }}>
                                     <Image
-                                      source={localimag.clock}
-                                      style={{tintColor:Colors.theme_color,
+                                      source={Icons.clock}
+                                      style={{tintColor:Colors.Theme,
                                         resizeMode: 'contain',
-                                        width: (mobileW * 4) / 100,
-                                        height: (mobileW * 4) / 100,
+                                        width: (windowWidth * 4) / 100,
+                                        height: (windowWidth * 4) / 100,
                                       }}></Image>
 
                                     <Text
                                       style={{
-                                        color: Colors.theme_color,
+                                        color: Colors.Theme,
                                         fontFamily: Font.fontregular,
-                                        fontSize: (mobileW * 3.3) / 100,
-                                        marginLeft:mobileW*1.5/100,
+                                        fontSize: (windowWidth * 3.3) / 100,
+                                        marginLeft:windowWidth*1.5/100,
                                       }}>30 mins
                                      
                                     
@@ -292,7 +292,7 @@ export default class Cart2 extends Component {
                   style={{
                    backgroundColor:'#F1F2F4',
                 
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                   }}>
                   <View style={{width: '90%', alignSelf: 'center'}}>
                     <View>
@@ -300,8 +300,8 @@ export default class Cart2 extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize: Font.cart2heading,
-                          color: Colors.theme_color,
-                          paddingTop:mobileW*1/100
+                          color: Colors.Theme,
+                          paddingTop:windowWidth*1/100
                         }}>
                         Payment
                       </Text>
@@ -310,15 +310,15 @@ export default class Cart2 extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 3) / 100,
-                        borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 3) / 100,
+                        borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
-                        marginTop:mobileW*1/100,
+                        marginTop:windowWidth*1/100,
                       }}>
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                        IV Cannula removal
@@ -326,7 +326,7 @@ export default class Cart2 extends Component {
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                         120.0 SAR
@@ -336,14 +336,14 @@ export default class Cart2 extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 2) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
                       }}>
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                         Distance Fare
@@ -351,7 +351,7 @@ export default class Cart2 extends Component {
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                         5952.0 SAR
@@ -361,14 +361,14 @@ export default class Cart2 extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        paddingVertical: (mobileW * 2) / 100,
-                        // borderBottomWidth: (mobileW * 0.3) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
                       }}>
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                         VAT (10%)
@@ -376,7 +376,7 @@ export default class Cart2 extends Component {
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
-                          fontSize:mobileW*3.3/100,
+                          fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
                         0.0 SAR
@@ -394,25 +394,25 @@ export default class Cart2 extends Component {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginTop:mobileW*2/100,
-                        // paddingVertical: (mobileW * 3) / 100,
-                        // borderTopWidth: (mobileW * 0.3) / 100,
+                        marginTop:windowWidth*2/100,
+                        // paddingVertical: (windowWidth * 3) / 100,
+                        // borderTopWidth: (windowWidth * 0.3) / 100,
                         // borderColor: Colors.bordercolor,
                         
                       }}>
                       <Text
                         style={{
                           fontFamily: Font.fontmedium,
-                          fontSize:mobileW*3.5/100,
-                          color: Colors.theme_color,
+                          fontSize:windowWidth*3.5/100,
+                          color: Colors.Theme,
                         }}>
                         Total
                       </Text>
                       <Text
                         style={{
                           fontFamily: Font.fontmedium,
-                          fontSize:mobileW*3.5/100,
-                          color: Colors.theme_color,
+                          fontSize:windowWidth*3.5/100,
+                          color: Colors.Theme,
                         }}>
                        6070.0 SAR
                       </Text>
@@ -430,11 +430,11 @@ export default class Cart2 extends Component {
                 style={{
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: (mobileW * 2) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (mobileW * 4) / 100,
+                  borderRadius: (windowWidth * 2) / 100,
+                  backgroundColor: Colors.Theme,
+                  paddingVertical: (windowWidth * 4) / 100,
                   position: 'absolute',
-                  bottom: (mobileW * 25) / 100,
+                  bottom: (windowWidth * 25) / 100,
                 }}>
                 <Text
                   style={{
@@ -469,26 +469,26 @@ export default class Cart2 extends Component {
               style={{
                 width: '100%',
                 backgroundColor: 'white',
-                borderRadius: (mobileW * 4) / 100,
+                borderRadius: (windowWidth * 4) / 100,
                 position: 'absolute',
                 bottom: 0,
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingBottom: (mobileW * 5) / 100,
+                paddingBottom: (windowWidth * 5) / 100,
                 alignSelf: 'center',
               }}>
               <Image
                 style={{
-                  width: (mobileW * 15) / 100,
-                  height: (mobileW * 15) / 100,
+                  width: (windowWidth * 15) / 100,
+                  height: (windowWidth * 15) / 100,
                   alignSelf: 'center',
-                  marginTop: (mobileW * -5) / 100,
+                  marginTop: (windowWidth * -5) / 100,
                 }}
-                source={localimag.greentick}></Image>
+                source={Icons.greentick}></Image>
               <Text
                 style={{
-                  fontSize: (mobileW * 8) / 100,
-                  marginTop: (mobileW * 5) / 100,
+                  fontSize: (windowWidth * 8) / 100,
+                  marginTop: (windowWidth * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
                 }}>
@@ -496,8 +496,8 @@ export default class Cart2 extends Component {
               </Text>
               <Text
                 style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 5) / 100,
+                  fontSize: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
                 }}>
@@ -506,11 +506,11 @@ export default class Cart2 extends Component {
 
               <Text
                 style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 1) / 100,
+                  fontSize: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 1) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
-                  color: Colors.textgray,
+                  color: Colors.lightGrey,
                 }}>
                 Your appointment has been booked Successfully.
               </Text>
@@ -525,19 +525,19 @@ export default class Cart2 extends Component {
                   alignSelf: 'center',
                   borderColor: Colors.bordercolorblue,
                   borderWidth: 1,
-                  padding: (mobileW * 2) / 100,
-                  paddingHorizontal: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  borderRadius: (mobileW * 2) / 100,
+                  padding: (windowWidth * 2) / 100,
+                  paddingHorizontal: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 5) / 100,
+                  borderRadius: (windowWidth * 2) / 100,
                 }}>
                 <Text
                   style={{
-                    fontSize: (mobileW * 3) / 100,
+                    fontSize: (windowWidth * 3) / 100,
                     alignSelf: 'center',
                     fontFamily: Font.fontsemibold,
                     textAlign: config.textalign,
                     alignSelf: 'center',
-                    color: Colors.terms_text_color_blue,
+                    color: Colors.Theme,
                   }}>
                   Go to appointment
                 </Text>
@@ -545,47 +545,8 @@ export default class Cart2 extends Component {
             </View>
           </View>
         </Modal>
-        <HideWithKeyboard>
-          <Footer
-            activepage="Cart"
-            usertype={1}
-            footerpage={[
-              {
-                name: 'Home',
-                countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
-              },
-              {
-                name: 'Appointment',
-                countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
-              },
-              {
-                name: 'Cart',
-                countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
-              },
-              {
-                name: 'More',
-                countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width:25,
-              height:25,
-              paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: 'white',
-              countcolor: 'red',
-              countbackground: 'red',
-            }}
-          />
-        </HideWithKeyboard>
+
+    
       </View>
     );
   }

@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
@@ -17,10 +16,10 @@ import HideWithKeyboard from "react-native-hide-with-keyboard";
 import {
   consolepro,
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
+  windowWidth,
   Lang_chg,
   localStorage,
   apifuntion,
@@ -859,17 +858,6 @@ export default class EditProfile extends Component {
     return (
       //
       <View style={{ flex: 1 }}>
-        <SafeAreaView
-          style={{ backgroundColor: Colors.statusbar_color, flex: 0 }}
-        />
-
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor={Colors.statusbarcolor}
-          hidden={false}
-          translucent={false}
-          networkActivityIndicatorVisible={true}
-        />
 
         {/* -------------------Yes No MOdal----------------------- */}
 
@@ -935,13 +923,13 @@ export default class EditProfile extends Component {
                 }}
               >
                 <View
-                  style={{ width: "55%", paddingVertical: (mobileW * 3) / 100 }}
+                  style={{ width: "55%", paddingVertical: (windowWidth * 3) / 100 }}
                 >
                   <Text
                     style={{
                       textAlign: config.textRotate,
                       fontFamily: Font.fontregular,
-                      fontSize: (mobileW * 4) / 100,
+                      fontSize: (windowWidth * 4) / 100,
                       alignSelf: "center",
                       color: Colors.textwhite,
                     }}
@@ -968,14 +956,14 @@ export default class EditProfile extends Component {
                     flexDirection: "row",
                     borderBottomColor: "#0000001F",
                     borderBottomWidth: 1,
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                   }}
                 >
                   <View style={{ width: "87%", alignSelf: "center" }}>
                     <Text
                       style={{
                         color: Colors.textblack,
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                         textAlign: config.textRotate,
                       }}
                     >
@@ -994,11 +982,11 @@ export default class EditProfile extends Component {
                   style={{
                     width: "100%",
                     alignSelf: "center",
-                    marginTop: (mobileW * 3) / 100,
+                    marginTop: (windowWidth * 3) / 100,
                     flexDirection: "row",
                     borderBottomColor: "#0000001F",
                     borderBottomWidth: 1,
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                   }}
                 >
                   <View style={{ width: "100%", alignSelf: "center" }}>
@@ -1006,7 +994,7 @@ export default class EditProfile extends Component {
                       <Text
                         style={{
                           color: Colors.textblack,
-                          fontSize: (mobileW * 4) / 100,
+                          fontSize: (windowWidth * 4) / 100,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -1031,7 +1019,7 @@ export default class EditProfile extends Component {
           onRequestClose={() => {}}
         >
           <SafeAreaView style={{ flex: 1 }}>
-            {/* <View style={{ height: mobileH * 100 / 100, backgroundColor: '#fff' }}> */}
+            {/* <View style={{ height: windowHeight * 100 / 100, backgroundColor: '#fff' }}> */}
 
             <TouchableOpacity
               activeOpacity={0.9}
@@ -1053,8 +1041,8 @@ export default class EditProfile extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   alignSelf: "center",
-                  marginTop: (mobileW * 16) / 100,
-                  marginBottom: (mobileW * 10) / 100,
+                  marginTop: (windowWidth * 16) / 100,
+                  marginBottom: (windowWidth * 10) / 100,
                 }}
               >
                 <View
@@ -1067,14 +1055,14 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "35%",
-                      paddingVertical: (mobileW * 3) / 100,
+                      paddingVertical: (windowWidth * 3) / 100,
                     }}
                   >
                     <Text
                       style={{
                         textAlign: config.textRotate,
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                         alignSelf: "center",
                         color: Colors.textwhite,
                       }}
@@ -1087,7 +1075,7 @@ export default class EditProfile extends Component {
                   <FlatList
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
-                      paddingBottom: (mobileW * 10) / 100,
+                      paddingBottom: (windowWidth * 10) / 100,
                     }}
                     data={this.state.nationality_arr}
                     renderItem={({ item, index }) => {
@@ -1114,14 +1102,14 @@ export default class EditProfile extends Component {
                                 width: "95%",
                                 borderBottomColor: "#0000001F",
                                 borderBottomWidth: 1,
-                                paddingVertical: (mobileW * 2) / 100,
-                                marginLeft: (mobileW * 5) / 100,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                marginLeft: (windowWidth * 5) / 100,
                               }}
                             >
                               <Text
                                 style={{
                                   color: Colors.textblack,
-                                  fontSize: (mobileW * 4) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1158,7 +1146,7 @@ export default class EditProfile extends Component {
               backgroundColor: "#00000080",
               width: "100%",
 
-              paddingBottom: (mobileW * 8) / 100,
+              paddingBottom: (windowWidth * 8) / 100,
             }}
           >
             <View
@@ -1168,7 +1156,7 @@ export default class EditProfile extends Component {
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
-                marginTop: (mobileW * 20) / 100,
+                marginTop: (windowWidth * 20) / 100,
               }}
             >
               <View
@@ -1179,16 +1167,16 @@ export default class EditProfile extends Component {
               >
                 <View
                   style={{
-                    marginLeft: (mobileW * 5) / 100,
+                    marginLeft: (windowWidth * 5) / 100,
                     width: "65%",
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                   }}
                 >
                   <Text
                     style={{
                       textAlign: config.textRotate,
                       fontFamily: Font.fontregular,
-                      fontSize: (mobileW * 4) / 100,
+                      fontSize: (windowWidth * 4) / 100,
 
                       color: Colors.textwhite,
                     }}
@@ -1204,7 +1192,7 @@ export default class EditProfile extends Component {
               <View style={{ width: "100%", alignSelf: "center" }}>
                 <FlatList
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ paddingBottom: (mobileW * 4) / 100 }}
+                  contentContainerStyle={{ paddingBottom: (windowWidth * 4) / 100 }}
                   data={this.state.occ_food_activity_arr}
                   renderItem={({ item, index }) => {
                     return (
@@ -1242,8 +1230,8 @@ export default class EditProfile extends Component {
                                 {
                                   width: "95%",
                                   borderBottomWidth: 1,
-                                  paddingVertical: (mobileW * 2.5) / 100,
-                                  marginLeft: (mobileW * 5) / 100,
+                                  paddingVertical: (windowWidth * 2.5) / 100,
+                                  marginLeft: (windowWidth * 5) / 100,
                                 },
                                 item.line == 0
                                   ? { borderBottomColor: "#0000001F" }
@@ -1253,7 +1241,7 @@ export default class EditProfile extends Component {
                               <Text
                                 style={{
                                   color: Colors.textblack,
-                                  fontSize: (mobileW * 4) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
                                   textAlign: config.textRotate,
                                 }}
                               >
@@ -1309,16 +1297,16 @@ export default class EditProfile extends Component {
                 style={{
                   width: "100%",
                   backgroundColor: Colors.backgroundcolorblue,
-                  paddingVertical: (mobileW * 2) / 100,
+                  paddingVertical: (windowWidth * 2) / 100,
                 }}
               >
                 <Text
                   style={{
-                    paddingLeft: (mobileW * 4.5) / 100,
-                    paddingRight: (mobileW * 4.5) / 100,
+                    paddingLeft: (windowWidth * 4.5) / 100,
+                    paddingRight: (windowWidth * 4.5) / 100,
                     textAlign: config.textRotate,
                     fontFamily: Font.fontregular,
-                    fontSize: (mobileW * 4) / 100,
+                    fontSize: (windowWidth * 4) / 100,
                     color: Colors.textwhite,
                   }}
                 >
@@ -1328,7 +1316,7 @@ export default class EditProfile extends Component {
 
               <View style={{ width: "100%", alignSelf: "center" }}>
                 <FlatList
-                  contentContainerStyle={{ paddingBottom: (mobileW * 2) / 100 }}
+                  contentContainerStyle={{ paddingBottom: (windowWidth * 2) / 100 }}
                   data={bloodModal_arr}
                   renderItem={({ item, index }) => {
                     return (
@@ -1353,8 +1341,8 @@ export default class EditProfile extends Component {
                               {
                                 width: "95%",
                                 borderBottomWidth: 1,
-                                paddingVertical: (mobileW * 2) / 100,
-                                marginLeft: (mobileW * 5) / 100,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                marginLeft: (windowWidth * 5) / 100,
                               },
                               item.line == 0
                                 ? { borderBottomColor: "#0000001F" }
@@ -1364,8 +1352,8 @@ export default class EditProfile extends Component {
                             <Text
                               style={{
                                 color: Colors.textblack,
-                                fontSize: (mobileW * 4) / 100,
-                                paddingLeft: (mobileW * 2) / 100,
+                                fontSize: (windowWidth * 4) / 100,
+                                paddingLeft: (windowWidth * 2) / 100,
                                 textAlign: config.textRotate,
                               }}
                             >
@@ -1390,8 +1378,8 @@ export default class EditProfile extends Component {
             style={{
               backgroundColor: "#fff",
               width: "100%",
-              paddingVertical: (mobileW * 3) / 100,
-              borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+              paddingVertical: (windowWidth * 3) / 100,
+              borderBottomColor: Colors.Border,
               borderBottomWidth: 1,
               // shadowColor:'#000',
               // shadowOffset:{width:1,height:1},
@@ -1406,28 +1394,28 @@ export default class EditProfile extends Component {
                 width: "95%",
                 alignSelf: "center",
                 backgroundColor: "white",
-                //  height: (mobileW * 12) / 100,
+                //  height: (windowWidth * 12) / 100,
                 flexDirection: "row",
               }}
             >
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("Home");
+                  this.props.navigation.pop();
                 }}
                 style={{ width: "10%", alignSelf: "center" }}
               >
                 <Image
                   source={
                     config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
+                      ? Icons.arabic_back
+                      : Icons.backarrow
                   }
                   style={{
-                    height: (mobileW * 8) / 100,
-                    width: (mobileW * 8) / 100,
+                    height: (windowWidth * 8) / 100,
+                    width: (windowWidth * 8) / 100,
                   }}
                 >
-                  {/* {localimag.backarrow} */}
+                  {/* {Icons.backarrow} */}
                 </Image>
               </TouchableOpacity>
 
@@ -1454,16 +1442,16 @@ export default class EditProfile extends Component {
                   <Image
                     source={
                       this.state.notification_count > 0
-                        ? localimag.notifications
-                        : localimag.notifications_sec
+                        ? Icons.notifications
+                        : Icons.notifications_sec
                     }
                     style={{
-                      height: (mobileW * 6) / 100,
-                      width: (mobileW * 6) / 100,
+                      height: (windowWidth * 6) / 100,
+                      width: (windowWidth * 6) / 100,
                       resizeMode: "contain",
                     }}
                   >
-                    {/* {localimag.backarrow} */}
+                    {/* {Icons.backarrow} */}
                   </Image>
                 </View>
               </TouchableOpacity>
@@ -1471,7 +1459,7 @@ export default class EditProfile extends Component {
           </View>
           <ScrollView
             style={{ backgroundColor: "white" }}
-            contentContainerStyle={{ paddingBottom: (mobileW * 15) / 100 }}
+            contentContainerStyle={{ paddingBottom: (windowWidth * 15) / 100 }}
             showsVerticalScrollIndicator={false}
           >
             <KeyboardAwareScrollView>
@@ -1514,10 +1502,10 @@ export default class EditProfile extends Component {
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
                               alignSelf: "center",
-                              paddingVertical: (mobileW * 3) / 100,
+                              paddingVertical: (windowWidth * 3) / 100,
                             }
                           : {
-                              color: Colors.tablightcolo,
+                              color: Colors.lightGrey,
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
@@ -1532,17 +1520,17 @@ export default class EditProfile extends Component {
                       style={
                         this.state.pbtn == true
                           ? {
-                              width: (mobileW * 28) / 100,
+                              width: (windowWidth * 28) / 100,
                               alignSelf: "center",
                               borderWidth: 2.2,
                               borderColor: Colors.bordercolorblue,
-                              borderTopLeftRadius: (mobileW * 2) / 100,
-                              borderTopRightRadius: (mobileW * 2) / 100,
+                              borderTopLeftRadius: (windowWidth * 2) / 100,
+                              borderTopRightRadius: (windowWidth * 2) / 100,
                               backgroundColor: Colors.bordercolorblue,
                               alignSelf: "center",
                             }
                           : {
-                              width: (mobileW * 30) / 100,
+                              width: (windowWidth * 30) / 100,
                               alignSelf: "center",
                               borderColor: Colors.tab_background_color,
                               borderWidth: 2.5,
@@ -1569,10 +1557,10 @@ export default class EditProfile extends Component {
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
                               alignSelf: "center",
-                              paddingVertical: (mobileW * 3) / 100,
+                              paddingVertical: (windowWidth * 3) / 100,
                             }
                           : {
-                              color: Colors.tablightcolo,
+                              color: Colors.lightGrey,
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
@@ -1586,17 +1574,17 @@ export default class EditProfile extends Component {
                       style={
                         this.state.mbtn == true
                           ? {
-                              width: (mobileW * 28) / 100,
+                              width: (windowWidth * 28) / 100,
                               alignSelf: "center",
                               borderWidth: 2.2,
                               borderColor: Colors.bordercolorblue,
-                              borderTopLeftRadius: (mobileW * 2) / 100,
-                              borderTopRightRadius: (mobileW * 2) / 100,
+                              borderTopLeftRadius: (windowWidth * 2) / 100,
+                              borderTopRightRadius: (windowWidth * 2) / 100,
                               backgroundColor: Colors.bordercolorblue,
                               alignSelf: "center",
                             }
                           : {
-                              width: (mobileW * 30) / 100,
+                              width: (windowWidth * 30) / 100,
                               alignSelf: "center",
                               borderColor: Colors.tab_background_color,
                               borderWidth: 2.5,
@@ -1623,10 +1611,10 @@ export default class EditProfile extends Component {
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
                               alignSelf: "center",
-                              paddingVertical: (mobileW * 3) / 100,
+                              paddingVertical: (windowWidth * 3) / 100,
                             }
                           : {
-                              color: Colors.tablightcolo,
+                              color: Colors.lightGrey,
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
                               textAlign: config.textalign,
@@ -1642,17 +1630,17 @@ export default class EditProfile extends Component {
                     style={
                       this.state.lbtn == true
                         ? {
-                            width: (mobileW * 28) / 100,
+                            width: (windowWidth * 28) / 100,
                             alignSelf: "center",
                             borderWidth: 2.2,
                             borderColor: Colors.bordercolorblue,
-                            borderTopLeftRadius: (mobileW * 2) / 100,
-                            borderTopRightRadius: (mobileW * 2) / 100,
+                            borderTopLeftRadius: (windowWidth * 2) / 100,
+                            borderTopRightRadius: (windowWidth * 2) / 100,
                             backgroundColor: Colors.bordercolorblue,
                             alignSelf: "center",
                           }
                         : {
-                            width: (mobileW * 30) / 100,
+                            width: (windowWidth * 30) / 100,
                             alignSelf: "center",
                             borderColor: Colors.tab_background_color,
                             borderWidth: 2.5,
@@ -1669,16 +1657,16 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 7) / 100,
+                      marginTop: (windowWidth * 7) / 100,
                       flexDirection: "row",
                     }}
                   >
                     <View style={{ width: "28%", alignSelf: "center" }}>
                       <View
                         style={{
-                          width: (mobileW * 21) / 100,
-                          height: (mobileW * 21) / 100,
-                          borderRadius: (mobileW * 10.5) / 100,
+                          width: (windowWidth * 21) / 100,
+                          height: (windowWidth * 21) / 100,
+                          borderRadius: (windowWidth * 10.5) / 100,
                           borderWidth: 2.5,
                           borderColor: Colors.bordercolor_light_blue,
 
@@ -1687,9 +1675,9 @@ export default class EditProfile extends Component {
                       >
                         <Image
                           style={{
-                            width: (mobileW * 20) / 100,
-                            height: (mobileW * 20) / 100,
-                            borderRadius: (mobileW * 10) / 100,
+                            width: (windowWidth * 20) / 100,
+                            height: (windowWidth * 20) / 100,
+                            borderRadius: (windowWidth * 10) / 100,
 
                             alignSelf: "center",
                           }}
@@ -1697,7 +1685,7 @@ export default class EditProfile extends Component {
                             this.state.profile_img == "NA" ||
                             this.state.profile_img == null ||
                             this.state.profile_img == ""
-                              ? localimag.profileimg
+                              ? Icons.profileimg
                               : { uri: this.state.profile_img }
                           }
                         ></Image>
@@ -1722,14 +1710,14 @@ export default class EditProfile extends Component {
                         style={{
                           width: "100%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 1) / 100,
+                          marginTop: (windowWidth * 1) / 100,
                         }}
                       >
                         <Text
                           style={{
-                            color: Colors.tablightcolo,
+                            color: Colors.lightGrey,
                             fontFamily: Font.allergies_heading_fontfamily,
-                            fontSize: (mobileW * 3) / 100,
+                            fontSize: (windowWidth * 3) / 100,
                             textAlign: config.textRotate,
                           }}
                         >
@@ -1743,15 +1731,15 @@ export default class EditProfile extends Component {
                     style={{
                       width: "60%",
                       alignSelf: "center",
-                      marginTop: (mobileW * -8) / 100,
-                      marginRight: (mobileW * 4) / 100,
+                      marginTop: (windowWidth * -8) / 100,
+                      marginRight: (windowWidth * 4) / 100,
                     }}
                   >
                     <View
                       style={{
-                        width: (mobileW * 8) / 100,
-                        height: (mobileW * 8) / 100,
-                        borderRadius: (mobileW * 4) / 100,
+                        width: (windowWidth * 8) / 100,
+                        height: (windowWidth * 8) / 100,
+                        borderRadius: (windowWidth * 4) / 100,
                         borderWidth: 2,
                         borderColor: Colors.bordercolor_light_blue,
                         backgroundColor: "white",
@@ -1764,12 +1752,12 @@ export default class EditProfile extends Component {
                       >
                         <Image
                           style={{
-                            height: (mobileW * 3.5) / 100,
-                            width: (mobileW * 3.5) / 100,
+                            height: (windowWidth * 3.5) / 100,
+                            width: (windowWidth * 3.5) / 100,
                             alignSelf: "center",
-                            marginTop: (mobileW * 1.8) / 100,
+                            marginTop: (windowWidth * 1.8) / 100,
                           }}
-                          source={localimag.camera}
+                          source={Icons.camera}
                         ></Image>
                       </TouchableOpacity>
                     </View>
@@ -1783,10 +1771,10 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 6) / 100,
+                      marginTop: (windowWidth * 6) / 100,
                       // borderColor:this.state.namefocus==true?Colors.placholderactive:Colors.placeholder_border,
                       // borderWidth:1,
-                      // borderRadius:mobileW*1/100,
+                      // borderRadius:windowWidth*1/100,
                     }}
                   >
                     <AuthInputBoxSec
@@ -1816,14 +1804,14 @@ export default class EditProfile extends Component {
                     color: Colors.textblack,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
-                    height: (mobileW * 12) / 100,
+                    height: (windowWidth * 12) / 100,
                     fontFamily: Font.placeholderfontfamily,
-                    borderRadius: (mobileW * 1) / 100 ,
+                    borderRadius: (windowWidth * 1) / 100 ,
                    
                    }}
                     maxLength={50}
                     placeholder={this.state.namefocus!=true?Lang_chg.textinputname[config.language]:null}
-                    placeholderTextColor={Colors.placeholder_text}
+                    DarkGrey={Colors.DarkGrey}
                     onChangeText={(txt)=>{this.setState({name:txt})}}
                     value={this.state.name}
                     onFocus={()=>{this.setState({namefocus:true})}}
@@ -1833,7 +1821,7 @@ export default class EditProfile extends Component {
                     returnKeyType='done'
                   />
                   </View>
-                {this.state.namefocus==true && <View style={{position:'absolute',backgroundColor:'white',left:mobileW*4/100,top:-mobileW*2.5/100,paddingHorizontal:mobileW*1/100}}>
+                {this.state.namefocus==true && <View style={{position:'absolute',backgroundColor:'white',left:windowWidth*4/100,top:-windowWidth*2.5/100,paddingHorizontal:windowWidth*1/100}}>
                      <Text style={{color:'#0057A5',textAlign:config.textalign}}>{Lang_chg.textinputname[config.language]}</Text>
                  </View>} */}
                   </View>
@@ -1843,7 +1831,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "100%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <DropDownboxSec
@@ -1864,9 +1852,9 @@ export default class EditProfile extends Component {
                       borderColor:'#CCCCCC',
                       borderWidth:1,
                       backgroundColor:Colors.tab_background_color,
-                      borderRadius:mobileW*1/100,
-                      paddingVertical: (mobileW * 3.7) / 100,
-                      marginTop: (mobileW * 3) / 100,}}>
+                      borderRadius:windowWidth*1/100,
+                      paddingVertical: (windowWidth * 3.7) / 100,
+                      marginTop: (windowWidth * 3) / 100,}}>
                     <View
                       style={{
                         width: '95%',
@@ -1874,18 +1862,18 @@ export default class EditProfile extends Component {
                         flexDirection: 'row',
                         justifyContent:'space-between'
                       }}>
-                        <Text style={{fontSize: (mobileW * 3.7) / 100,fontFamily:Font.fontregular, textAlign:config.textRotate}}>
+                        <Text style={{fontSize: (windowWidth * 3.7) / 100,fontFamily:Font.fontregular, textAlign:config.textRotate}}>
                           {this.state.work_area.length<=0?Lang_chg.select[config.language]:this.state.work_area}
                         </Text>
 
                       <View style={{width: '20%', alignSelf: 'center'}}>
                         <Image
                           style={{
-                            height: (mobileW * 4) / 100,
-                            width: (mobileW * 4) / 100,
+                            height: (windowWidth * 4) / 100,
+                            width: (windowWidth * 4) / 100,
                             alignSelf: 'flex-end',
                           }}
-                          source={localimag.downarrow}></Image>
+                          source={Icons.downarrow}></Image>
                       </View>
                     </View>
                   </View> */}
@@ -1895,7 +1883,7 @@ export default class EditProfile extends Component {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      width: (mobileW * 90) / 100,
+                      width: (windowWidth * 90) / 100,
                       justifyContent: "space-between",
                       alignSelf: "center",
                     }}
@@ -1904,10 +1892,10 @@ export default class EditProfile extends Component {
                       style={{
                         width: "20%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2.3) / 100,
+                        marginTop: (windowWidth * 2.3) / 100,
                         // borderColor: this.state.country_code.length > 0 ? '#0057A5' : Colors.placeholder_border,
                         // borderWidth: 1,
-                        // borderRadius: (mobileW * 1) / 100,
+                        // borderRadius: (windowWidth * 1) / 100,
                       }}
                     >
                       <AuthInputBoxSec
@@ -1916,7 +1904,7 @@ export default class EditProfile extends Component {
                         }}
                         inputFieldStyle={{
                           textAlign: "center",
-                          marginBottom: (mobileW * 4) / 100,
+                          marginBottom: (windowWidth * 4) / 100,
                         }}
                         // icon={layer9_icon}
                         lableText={Lang_chg.CC_code[config.language]}
@@ -1954,7 +1942,7 @@ export default class EditProfile extends Component {
                             ? Lang_chg.CC_code[config.language]
                             : null
                         }
-                        placeholderTextColor={Colors.placeholder_text}
+                        DarkGrey={Colors.DarkGrey}
                         onChangeText={txt => {
                           this.setState({ country_code: txt });
                         }}
@@ -1980,9 +1968,9 @@ export default class EditProfile extends Component {
                           style={{
                             position: 'absolute',
                             backgroundColor: 'white',
-                            left: (mobileW * 5) / 100,
-                            top: (-mobileW * 2) / 100,
-                            paddingHorizontal: (mobileW * 1) / 100,
+                            left: (windowWidth * 5) / 100,
+                            top: (-windowWidth * 2) / 100,
+                            paddingHorizontal: (windowWidth * 1) / 100,
                           }}>
                           <Text style={{ color: '#0057A5' }}>
                             {Lang_chg.CC_code[config.language]}
@@ -1994,10 +1982,10 @@ export default class EditProfile extends Component {
                       style={{
                         width: "75%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                         // borderColor: this.state.numberfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                         // borderWidth: 1,
-                        // borderRadius: mobileW * 1 / 100,
+                        // borderRadius: windowWidth * 1 / 100,
                       }}
                     >
                       <AuthInputBoxSec
@@ -2024,7 +2012,7 @@ export default class EditProfile extends Component {
                         style={{
                           width: "89%",
                           // alignSelf: 'center',
-                          marginTop: (mobileW * 0.5) / 100,
+                          marginTop: (windowWidth * 0.5) / 100,
                         }}
                       >
                         <Text
@@ -2032,7 +2020,7 @@ export default class EditProfile extends Component {
                             textAlign: config.textRotate,
                             fontSize: Font.textsize,
                             fontFamily: Font.headingfontfamily,
-                            color: Colors.textgray,
+                            color: Colors.lightGrey,
                           }}
                         >
                           {Lang_chg.mobletexttitle[config.language]}
@@ -2044,15 +2032,15 @@ export default class EditProfile extends Component {
                           color: Colors.textblack,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
-                          height: (mobileW * 12) / 100,
+                          height: (windowWidth * 12) / 100,
                           fontFamily: Font.placeholderfontfamily,
-                          borderRadius: (mobileW * 1) / 100,
-                          marginLeft: mobileW * 1.5 / 100
+                          borderRadius: (windowWidth * 1) / 100,
+                          marginLeft: windowWidth * 1.5 / 100
 
                         }}
                         maxLength={50}
                         placeholder={this.state.numberfocus != true ? Lang_chg.textinputnumber[config.language] : null}
-                        placeholderTextColor={Colors.placeholder_text}
+                        DarkGrey={Colors.DarkGrey}
                         onChangeText={(txt) => { this.setState({ mobile: txt }) }}
                         value={this.state.mobile}
                         onFocus={() => { this.setState({ numberfocus: true }) }}
@@ -2062,7 +2050,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
 
-                      {this.state.numberfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                      {this.state.numberfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputnumber[config.language]}</Text>
                       </View>} */}
                     </View>
@@ -2073,8 +2061,8 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
-                      // borderColor: this.state.emailfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (mobileW * 1) / 100,
+                      marginTop: (windowWidth * 3) / 100,
+                      // borderColor: this.state.emailfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (windowWidth * 1) / 100,
                     }}
                   >
                     <AuthInputBoxSec
@@ -2104,14 +2092,14 @@ export default class EditProfile extends Component {
                           color: Colors.textblack,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
-                          height: (mobileW * 12) / 100,
+                          height: (windowWidth * 12) / 100,
                           fontFamily: Font.placeholderfontfamily,
-                          borderRadius: (mobileW * 1) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
 
                         }}
                         maxLength={100}
                         placeholder={this.state.emailfocus != true ? Lang_chg.textinputemails[config.language] : null}
-                        placeholderTextColor={Colors.placeholder_text}
+                        DarkGrey={Colors.DarkGrey}
                         onChangeText={(txt) => { this.setState({ email: txt }) }}
                         value={this.state.email}
                         editable={false}
@@ -2122,7 +2110,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                    {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputemails[config.language]}</Text>
                     </View>} */}
                   </View>
@@ -2132,14 +2120,14 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                       borderColor:
                         this.state.dobfocus == true
                           ? Colors.field_border_color
                           : Colors.field_border_color,
                       borderWidth: 1,
-                      borderRadius: (mobileW * 1) / 100,
+                      borderRadius: (windowWidth * 1) / 100,
                     }}
                   >
                     <TouchableOpacity
@@ -2153,7 +2141,7 @@ export default class EditProfile extends Component {
                         style={{
                           width: "100%",
                           height: Font.placeholder_height,
-                          marginLeft: (mobileW * 2) / 100,
+                          marginLeft: (windowWidth * 2) / 100,
                           alignItems: "center",
                           flexDirection: "row",
                         }}
@@ -2162,7 +2150,7 @@ export default class EditProfile extends Component {
                           style={{
                             width: "78%",
                             textAlign: config.textRotate,
-                            color: Colors.placeholder_text,
+                            color: Colors.DarkGrey,
                           }}
                         >
                           {this.state.dob_date.length <= 0
@@ -2177,7 +2165,7 @@ export default class EditProfile extends Component {
                           }}
                         >
                           <Image
-                            source={localimag.dobimg}
+                            source={Icons.dobimg}
                             style={{ height: 25, width: 25 }}
                           ></Image>
                         </View>
@@ -2189,9 +2177,9 @@ export default class EditProfile extends Component {
                         style={{
                           position: "absolute",
                           backgroundColor: "white",
-                          left: (mobileW * 4) / 100,
-                          top: (-mobileW * 2.5) / 100,
-                          paddingHorizontal: (mobileW * 1) / 100,
+                          left: (windowWidth * 4) / 100,
+                          top: (-windowWidth * 2.5) / 100,
+                          paddingHorizontal: (windowWidth * 1) / 100,
                         }}
                       >
                         <Text
@@ -2211,8 +2199,8 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3.2) / 100,
-                      marginBottom: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 3.2) / 100,
+                      marginBottom: (windowWidth * 2) / 100,
                       flexDirection: "row",
                       alignItems: "center",
                     }}
@@ -2222,7 +2210,7 @@ export default class EditProfile extends Component {
                         style={{
                           color: Colors.textGender,
                           fontFamily: Font.placeholderfontfamily,
-                          fontSize: (mobileW * 4.1) / 100,
+                          fontSize: (windowWidth * 4.1) / 100,
                           textAlign: config.textRotate,
                         }}
                       >
@@ -2282,9 +2270,9 @@ export default class EditProfile extends Component {
                                 <Text
                                   style={{
                                     color: Colors.textGender,
-                                    fontSize: (mobileW * 4.1) / 100,
+                                    fontSize: (windowWidth * 4.1) / 100,
                                     fontFamily: Font.placeholderfontfamily,
-                                    marginLeft: (mobileW * 1.5) / 100,
+                                    marginLeft: (windowWidth * 1.5) / 100,
                                     textAlign: config.textRotate,
                                   }}
                                 >
@@ -2314,9 +2302,9 @@ export default class EditProfile extends Component {
                                 <Text
                                   style={{
                                     color: Colors.textGender,
-                                    fontSize: (mobileW * 4.1) / 100,
+                                    fontSize: (windowWidth * 4.1) / 100,
                                     fontFamily: Font.placeholderfontfamily,
-                                    marginLeft: (mobileW * 1.5) / 100,
+                                    marginLeft: (windowWidth * 1.5) / 100,
                                     textAlign: config.textRotate,
                                   }}
                                 >
@@ -2341,7 +2329,7 @@ export default class EditProfile extends Component {
                           style={{
                             width: "100%",
                             alignSelf: "center",
-                            marginLeft: (mobileW * 2) / 100,
+                            marginLeft: (windowWidth * 2) / 100,
                           }}
                         >
                           {this.state.fbtn == false && (
@@ -2371,9 +2359,9 @@ export default class EditProfile extends Component {
                                 style={{
                                   color: Colors.textGender,
                                   textAlign: config.textRotate,
-                                  fontSize: (mobileW * 4.1) / 100,
+                                  fontSize: (windowWidth * 4.1) / 100,
                                   fontFamily: Font.placeholderfontfamily,
-                                  marginLeft: (mobileW * 1.5) / 100,
+                                  marginLeft: (windowWidth * 1.5) / 100,
                                   // alignSelf: 'center',
                                 }}
                               >
@@ -2400,9 +2388,9 @@ export default class EditProfile extends Component {
                                 style={{
                                   color: Colors.textGender,
                                   textAlign: config.textRotate,
-                                  fontSize: (mobileW * 4.1) / 100,
+                                  fontSize: (windowWidth * 4.1) / 100,
                                   fontFamily: Font.placeholderfontfamily,
-                                  marginLeft: (mobileW * 1.5) / 100,
+                                  marginLeft: (windowWidth * 1.5) / 100,
                                   // alignSelf: 'center',
                                 }}
                               >
@@ -2420,14 +2408,14 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                       borderColor:
                         this.state.nationalityfocus == true
                           ? Colors.field_border_color
                           : Colors.field_border_color,
                       borderWidth: 1,
-                      borderRadius: (mobileW * 1) / 100,
+                      borderRadius: (windowWidth * 1) / 100,
                     }}
                   >
                     <TouchableOpacity
@@ -2443,7 +2431,7 @@ export default class EditProfile extends Component {
                           flexDirection: "row",
                           alignItems: "center",
                           height: Font.placeholder_height,
-                          borderRadius: (mobileW * 1) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
                           justifyContent: "center",
                         }}
                       >
@@ -2470,7 +2458,7 @@ export default class EditProfile extends Component {
                           }}
                         >
                           <Image
-                            source={localimag.downarrow}
+                            source={Icons.downarrow}
                             style={{ height: 16, width: 16 }}
                           ></Image>
                         </View>
@@ -2482,9 +2470,9 @@ export default class EditProfile extends Component {
                         style={{
                           position: "absolute",
                           backgroundColor: "white",
-                          left: (mobileW * 4) / 100,
-                          top: (-mobileW * 2.5) / 100,
-                          paddingHorizontal: (mobileW * 1) / 100,
+                          left: (windowWidth * 4) / 100,
+                          top: (-windowWidth * 2.5) / 100,
+                          paddingHorizontal: (windowWidth * 1) / 100,
                         }}
                       >
                         <Text
@@ -2504,8 +2492,8 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
-                      // borderColor: this.state.addressfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (mobileW * 1) / 100,
+                      marginTop: (windowWidth * 3) / 100,
+                      // borderColor: this.state.addressfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (windowWidth * 1) / 100,
                     }}
                   >
                     <AuthInputBoxSec
@@ -2535,14 +2523,14 @@ export default class EditProfile extends Component {
                           color: Colors.textblack,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
-                          height: (mobileW * 12) / 100,
+                          height: (windowWidth * 12) / 100,
                           fontFamily: Font.placeholderfontfamily,
-                          borderRadius: (mobileW * 1) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
 
                         }}
                         maxLength={50}
                         placeholder={this.state.addressfocus != true ? Lang_chg.textinputaddress[config.language] : null}
-                        placeholderTextColor={Colors.placeholder_text}
+                        DarkGrey={Colors.DarkGrey}
                         onChangeText={(txt) => { this.setState({ address: txt }) }}
                         value={this.state.address}
                         onFocus={() => { this.setState({ addressfocus: true }) }}
@@ -2552,7 +2540,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.addressfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                    {this.state.addressfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputaddress[config.language]}</Text>
                     </View>} */}
                   </View>
@@ -2562,8 +2550,8 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
-                      // borderColor: this.state.identityfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (mobileW * 1) / 100,
+                      marginTop: (windowWidth * 3) / 100,
+                      // borderColor: this.state.identityfocus == true ? Colors.placholderactive : Colors.placeholder_border, borderWidth: 1, borderRadius: (windowWidth * 1) / 100,
                     }}
                   >
                     <AuthInputBoxSec
@@ -2593,14 +2581,14 @@ export default class EditProfile extends Component {
                           color: Colors.textblack,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
-                          height: (mobileW * 12) / 100,
+                          height: (windowWidth * 12) / 100,
                           fontFamily: Font.placeholderfontfamily,
-                          borderRadius: (mobileW * 1) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
 
                         }}
                         maxLength={15}
                         placeholder={this.state.identityfocus != true ? Lang_chg.textinputidentity[config.language] : null}
-                        placeholderTextColor={Colors.placeholder_text}
+                        DarkGrey={Colors.DarkGrey}
                         onChangeText={(txt) => { this.setState({ identity: txt }) }}
                         value={this.state.identity}
                         onFocus={() => { this.setState({ identityfocus: true }) }}
@@ -2610,14 +2598,14 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.identityfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                    {this.state.identityfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputidentity[config.language]}</Text>
                     </View>} */}
                   </View>
 
                   {/* ==========================================person btn================================ */}
 
-                  <View style={{ paddingBottom: (mobileW * 10) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 10) / 100 }}>
                     <TouchableOpacity
                       onPress={() => {
                         this.submit_click();
@@ -2625,10 +2613,10 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        borderRadius: (mobileW * 2) / 100,
-                        backgroundColor: Colors.buttoncolorblue,
-                        paddingVertical: (mobileW * 4) / 100,
-                        marginTop: (mobileW * 5) / 100,
+                        borderRadius: (windowWidth * 2) / 100,
+                        backgroundColor: Colors.Theme,
+                        paddingVertical: (windowWidth * 4) / 100,
+                        marginTop: (windowWidth * 5) / 100,
                         shadowColor: "#000",
                         shadowOffset: { width: 1, height: 1 },
                         shadowOpacity: 0.5,
@@ -2667,8 +2655,8 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -2689,7 +2677,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -2709,7 +2697,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "88%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                     }}
                   >
@@ -2727,7 +2715,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -2806,16 +2794,16 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     {this.state.allergies == "Yes" && (
                       <View
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 6) / 100,
+                          marginTop: (windowWidth * 6) / 100,
                           // borderColor: this.state.allergiesfocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                          // borderWidth: mobileW * 0.3 / 100,
-                          // borderRadius: (mobileW * 1) / 100
+                          // borderWidth: windowWidth * 0.3 / 100,
+                          // borderRadius: (windowWidth * 1) / 100
                         }}
                       >
                         <AuthInputBoxSec
@@ -2849,14 +2837,14 @@ export default class EditProfile extends Component {
                               color: Colors.textblack,
                               fontSize: Font.placeholdersize,
                               textAlign: config.textalign,
-                              height: (mobileW * 12) / 100,
+                              height: (windowWidth * 12) / 100,
                               fontFamily: Font.placeholderfontfamily,
-                              borderRadius: (mobileW * 1) / 100,
+                              borderRadius: (windowWidth * 1) / 100,
 
                             }}
                             maxLength={70}
                             placeholder={this.state.allergiesfocus != true ? Lang_chg.textinputallierdies[config.language] : null}
-                            placeholderTextColor={Colors.placeholder_text}
+                            DarkGrey={Colors.DarkGrey}
                             onChangeText={(txt) => { this.setState({ allergies_data: txt }) }}
                             value={this.state.allergies_data}
                             onFocus={() => { this.setState({ allergiesfocus: true }) }}
@@ -2871,9 +2859,9 @@ export default class EditProfile extends Component {
                             style={{
                               position: 'absolute',
                               backgroundColor: 'white',
-                              left: (mobileW * 4) / 100,
-                              top: (-mobileW * 2) / 100,
-                              paddingHorizontal: (mobileW * 1) / 100,
+                              left: (windowWidth * 4) / 100,
+                              top: (-windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 1) / 100,
                             }}>
                             <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputallierdies[config.language]}</Text>
                           </View>
@@ -2893,8 +2881,8 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -2914,7 +2902,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -2933,7 +2921,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "88%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                     }}
                   >
@@ -2951,7 +2939,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3029,16 +3017,16 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     {this.state.current_medication == "Yes" && (
                       <View
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                           // borderColor: this.state.currentfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                           // borderWidth: 1,
-                          // borderRadius: (mobileW * 1) / 100,
+                          // borderRadius: (windowWidth * 1) / 100,
                         }}
                       >
                         <AuthInputBoxSec
@@ -3071,14 +3059,14 @@ export default class EditProfile extends Component {
                             color: Colors.textblack,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
-                            height: (mobileW * 12) / 100,
+                            height: (windowWidth * 12) / 100,
                             fontFamily: Font.placeholderfontfamily,
-                            borderRadius: (mobileW * 1) / 100,
+                            borderRadius: (windowWidth * 1) / 100,
 
                           }}
                           maxLength={50}
                           placeholder={this.state.currentfocus != true ? Lang_chg.textinputcurrent[config.language] : null}
-                          placeholderTextColor={Colors.placeholder_text}
+                          DarkGrey={Colors.DarkGrey}
                           onChangeText={(txt) => { this.setState({ current_medication_data: txt }) }}
                           value={this.state.current_medication_data}
                           onFocus={() => { this.setState({ currentfocus: true }) }}
@@ -3088,7 +3076,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.currentfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                      {this.state.currentfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputcurrent[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3106,8 +3094,8 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3127,7 +3115,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -3146,7 +3134,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "88%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                     }}
                   >
@@ -3164,7 +3152,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3210,7 +3198,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3243,16 +3231,16 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     {this.state.past_medication == "Yes" && (
                       <View
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                           // borderColor: this.state.pastfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                           // borderWidth: 1,
-                          // borderRadius: (mobileW * 1) / 100,
+                          // borderRadius: (windowWidth * 1) / 100,
                         }}
                       >
                         <AuthInputBoxSec
@@ -3287,14 +3275,14 @@ export default class EditProfile extends Component {
                             color: Colors.textblack,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
-                            height: (mobileW * 12) / 100,
+                            height: (windowWidth * 12) / 100,
                             fontFamily: Font.placeholderfontfamily,
-                            borderRadius: (mobileW * 1) / 100,
+                            borderRadius: (windowWidth * 1) / 100,
 
                           }}
                           maxLength={50}
                           placeholder={this.state.pastfocus != true ? Lang_chg.textinputpastmedication[config.language] : null}
-                          placeholderTextColor={Colors.placeholder_text}
+                          DarkGrey={Colors.DarkGrey}
                           onChangeText={(txt) => { this.setState({ past_medication_data: txt }) }}
                           value={this.state.past_medication_data}
                           onFocus={() => { this.setState({ pastfocus: true }) }}
@@ -3304,7 +3292,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.pastfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                      {this.state.pastfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputpastmedication[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3322,8 +3310,8 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3343,7 +3331,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -3362,7 +3350,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "88%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                     }}
                   >
@@ -3379,7 +3367,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3458,16 +3446,16 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     {this.state.injuries == "Yes" && (
                       <View
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                           // borderColor: this.state.injuriesfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                           // borderWidth: 1,
-                          // borderRadius: (mobileW * 1) / 100,
+                          // borderRadius: (windowWidth * 1) / 100,
                         }}
                       >
                         <AuthInputBoxSec
@@ -3499,14 +3487,14 @@ export default class EditProfile extends Component {
                             color: Colors.textblack,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
-                            height: (mobileW * 12) / 100,
+                            height: (windowWidth * 12) / 100,
                             fontFamily: Font.placeholderfontfamily,
-                            borderRadius: (mobileW * 1) / 100,
+                            borderRadius: (windowWidth * 1) / 100,
 
                           }}
                           maxLength={50}
                           placeholder={this.state.injuriesfocus != true ? Lang_chg.textinputinjuries[config.language] : null}
-                          placeholderTextColor={Colors.placeholder_text}
+                          DarkGrey={Colors.DarkGrey}
                           onChangeText={(txt) => { this.setState({ injuries_data: txt }) }}
                           value={this.state.injuries_data}
                           onFocus={() => { this.setState({ injuriesfocus: true }) }}
@@ -3516,7 +3504,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.injuriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                      {this.state.injuriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputinjuries[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3534,8 +3522,8 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 2) / 100,
+                        paddingBottom: (windowWidth * 3) / 100,
                       }}
                     >
                       <Text
@@ -3555,7 +3543,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "90%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 2) / 100,
+                      marginTop: (windowWidth * 2) / 100,
                     }}
                   >
                     <Text
@@ -3574,7 +3562,7 @@ export default class EditProfile extends Component {
                     style={{
                       width: "88%",
                       alignSelf: "center",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                       flexDirection: "row",
                     }}
                   >
@@ -3592,7 +3580,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3637,7 +3625,7 @@ export default class EditProfile extends Component {
                       <View style={{ width: "20%", alignSelf: "center" }}>
                         <View
                           style={{
-                            width: (mobileW * 5) / 100,
+                            width: (windowWidth * 5) / 100,
                             alignSelf: "center",
                             flexDirection: "row",
                           }}
@@ -3670,16 +3658,16 @@ export default class EditProfile extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     {this.state.surgeries == "Yes" && (
                       <View
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
+                          marginTop: (windowWidth * 5) / 100,
                           // borderColor: this.state.sugeriesfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                           // borderWidth: 1,
-                          // borderRadius: (mobileW * 1) / 100,
+                          // borderRadius: (windowWidth * 1) / 100,
                         }}
                       >
                         <AuthInputBoxSec
@@ -3711,14 +3699,14 @@ export default class EditProfile extends Component {
                             color: Colors.textblack,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
-                            height: (mobileW * 12) / 100,
+                            height: (windowWidth * 12) / 100,
                             fontFamily: Font.placeholderfontfamily,
-                            borderRadius: (mobileW * 1) / 100,
+                            borderRadius: (windowWidth * 1) / 100,
 
                           }}
                           maxLength={50}
                           placeholder={this.state.sugeriesfocus != true ? Lang_chg.textinputsurgeries[config.language] : null}
-                          placeholderTextColor={Colors.placeholder_text}
+                          DarkGrey={Colors.DarkGrey}
                           onChangeText={(txt) => { this.setState({ surgeries_data: txt }) }}
                           value={this.state.surgeries_data}
                           onFocus={() => { this.setState({ sugeriesfocus: true }) }}
@@ -3728,7 +3716,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.sugeriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                      {this.state.sugeriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputsurgeries[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3736,7 +3724,7 @@ export default class EditProfile extends Component {
                   </View>
 
                   {/* --------------------------------------------------------------------------------------q6 */}
-                  <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                  <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                     <View
                       style={{
                         width: "100%",
@@ -3747,8 +3735,8 @@ export default class EditProfile extends Component {
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          marginTop: (mobileW * 2) / 100,
-                          paddingBottom: (mobileW * 3) / 100,
+                          marginTop: (windowWidth * 2) / 100,
+                          paddingBottom: (windowWidth * 3) / 100,
                         }}
                       >
                         <Text
@@ -3768,7 +3756,7 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 2) / 100,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     >
                       <Text
@@ -3787,7 +3775,7 @@ export default class EditProfile extends Component {
                       style={{
                         width: "88%",
                         alignSelf: "center",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         flexDirection: "row",
                       }}
                     >
@@ -3805,7 +3793,7 @@ export default class EditProfile extends Component {
                         <View style={{ width: "20%", alignSelf: "center" }}>
                           <View
                             style={{
-                              width: (mobileW * 5) / 100,
+                              width: (windowWidth * 5) / 100,
                               alignSelf: "center",
                               flexDirection: "row",
                             }}
@@ -3850,7 +3838,7 @@ export default class EditProfile extends Component {
                         <View style={{ width: "20%", alignSelf: "center" }}>
                           <View
                             style={{
-                              width: (mobileW * 5) / 100,
+                              width: (windowWidth * 5) / 100,
                               alignSelf: "center",
                               flexDirection: "row",
                             }}
@@ -3883,16 +3871,16 @@ export default class EditProfile extends Component {
                       </TouchableOpacity>
                     </View>
 
-                    <View style={{ paddingBottom: (mobileW * 3) / 100 }}>
+                    <View style={{ paddingBottom: (windowWidth * 3) / 100 }}>
                       {this.state.chronic_diseases == "Yes" && (
                         <View
                           style={{
                             width: "90%",
                             alignSelf: "center",
-                            marginTop: (mobileW * 5) / 100,
+                            marginTop: (windowWidth * 5) / 100,
                             // borderColor: this.state.chronicfocus == true ? Colors.placholderactive : Colors.placeholder_border,
                             // borderWidth: 1,
-                            // borderRadius: (mobileW * 1) / 100,
+                            // borderRadius: (windowWidth * 1) / 100,
                           }}
                         >
                           <AuthInputBoxSec
@@ -3924,14 +3912,14 @@ export default class EditProfile extends Component {
                               color: Colors.textblack,
                               fontSize: Font.placeholdersize,
                               textAlign: config.textalign,
-                              height: (mobileW * 12) / 100,
+                              height: (windowWidth * 12) / 100,
                               fontFamily: Font.placeholderfontfamily,
-                              borderRadius: (mobileW * 1) / 100,
+                              borderRadius: (windowWidth * 1) / 100,
 
                             }}
                             maxLength={50}
                             placeholder={this.state.chronicfocus != true ? Lang_chg.textinputchronic[config.language] : null}
-                            placeholderTextColor={Colors.placeholder_text}
+                            DarkGrey={Colors.DarkGrey}
                             onChangeText={(txt) => { this.setState({ chronic_diseases_data: txt }) }}
                             value={this.state.chronic_diseases_data}
                             onFocus={() => { this.setState({ chronicfocus: true }) }}
@@ -3941,7 +3929,7 @@ export default class EditProfile extends Component {
                             returnKeyType='done'
                           />
                         </View>
-                        {this.state.chronicfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: mobileW * 4 / 100, top: -mobileW * 2.5 / 100, paddingHorizontal: mobileW * 1 / 100 }}>
+                        {this.state.chronicfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                           <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputchronic[config.language]}</Text>
                         </View>} */}
                         </View>
@@ -3950,7 +3938,7 @@ export default class EditProfile extends Component {
                   </View>
                   <View
                     style={{
-                      paddingBottom: (mobileW * 5) / 100,
+                      paddingBottom: (windowWidth * 5) / 100,
                       backgroundColor: Colors.tab_background_color,
                     }}
                   >
@@ -3961,10 +3949,10 @@ export default class EditProfile extends Component {
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                        borderRadius: (mobileW * 2) / 100,
-                        backgroundColor: Colors.buttoncolorblue,
-                        paddingVertical: (mobileW * 4) / 100,
-                        marginTop: (mobileW * 8) / 100,
+                        borderRadius: (windowWidth * 2) / 100,
+                        backgroundColor: Colors.Theme,
+                        paddingVertical: (windowWidth * 4) / 100,
+                        marginTop: (windowWidth * 8) / 100,
                         shadowColor: "#000",
                         shadowOffset: { width: 1, height: 1 },
                         shadowOpacity: 0.5,
@@ -3995,7 +3983,7 @@ export default class EditProfile extends Component {
                 <View
                   style={{
                     backgroundColor: Colors.backgroundcolorlight,
-                    paddingBottom: (mobileW * 15) / 100,
+                    paddingBottom: (windowWidth * 15) / 100,
                   }}
                 >
                   <View
@@ -4007,7 +3995,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4037,9 +4025,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4053,7 +4041,7 @@ export default class EditProfile extends Component {
                           {/* <View style={{width: '80%'}}> */}
                           <Text
                             style={{
-                              fontSize: (mobileW * 3.7) / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
                               fontFamily: Font.fontregular,
                               textAlign: config.textRotate,
                             }}
@@ -4067,11 +4055,11 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             ></Image>
                           </View>
                         </View>
@@ -4089,7 +4077,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4119,9 +4107,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4133,7 +4121,7 @@ export default class EditProfile extends Component {
                           }}
                         >
                           {/* <View style={{width: '80%'}}> */}
-                          <Text style={{ fontSize: (mobileW * 3.7) / 100 }}>
+                          <Text style={{ fontSize: (windowWidth * 3.7) / 100 }}>
                             {this.state.alcohol.length <= 0
                               ? Lang_chg.select[config.language]
                               : this.state.alcohol}
@@ -4143,11 +4131,11 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             />
                           </View>
                         </View>
@@ -4166,7 +4154,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4196,9 +4184,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4212,7 +4200,7 @@ export default class EditProfile extends Component {
                           {/* <View style={{width: '80%'}}> */}
                           <Text
                             style={{
-                              fontSize: (mobileW * 3.7) / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -4225,11 +4213,11 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             ></Image>
                           </View>
                         </View>
@@ -4247,7 +4235,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4278,9 +4266,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4294,7 +4282,7 @@ export default class EditProfile extends Component {
                           {/* <View style={{width: '80%'}}> */}
                           <Text
                             style={{
-                              fontSize: (mobileW * 3.7) / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -4307,11 +4295,11 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             ></Image>
                           </View>
                         </View>
@@ -4329,7 +4317,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4360,9 +4348,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4376,7 +4364,7 @@ export default class EditProfile extends Component {
                           {/* <View style={{width: '80%'}}> */}
                           <Text
                             style={{
-                              fontSize: (mobileW * 3.7) / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -4389,11 +4377,11 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             ></Image>
                           </View>
                         </View>
@@ -4411,7 +4399,7 @@ export default class EditProfile extends Component {
                     <View
                       style={{
                         width: "90%",
-                        marginTop: (mobileW * 3) / 100,
+                        marginTop: (windowWidth * 3) / 100,
                         alignSelf: "center",
                       }}
                     >
@@ -4442,9 +4430,9 @@ export default class EditProfile extends Component {
                           borderColor: "#CCCCCC",
                           borderWidth: 1,
                           backgroundColor: Colors.tab_background_color,
-                          borderRadius: (mobileW * 1) / 100,
-                          paddingVertical: (mobileW * 3.5) / 100,
-                          marginTop: (mobileW * 3) / 100,
+                          borderRadius: (windowWidth * 1) / 100,
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          marginTop: (windowWidth * 3) / 100,
                         }}
                       >
                         <View
@@ -4458,7 +4446,7 @@ export default class EditProfile extends Component {
                           {/* <View style={{width: '80%'}}> */}
                           <Text
                             style={{
-                              fontSize: (mobileW * 3.7) / 100,
+                              fontSize: (windowWidth * 3.7) / 100,
                               textAlign: config.textRotate,
                             }}
                           >
@@ -4471,18 +4459,18 @@ export default class EditProfile extends Component {
                           <View style={{ width: "20%", alignSelf: "center" }}>
                             <Image
                               style={{
-                                height: (mobileW * 4) / 100,
-                                width: (mobileW * 4) / 100,
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
                                 alignSelf: "flex-end",
                               }}
-                              source={localimag.downarrow}
+                              source={Icons.downarrow}
                             ></Image>
                           </View>
                         </View>
                       </TouchableOpacity>
                     </View>
 
-                    <View style={{ paddingBottom: (mobileW * 5) / 100 }}>
+                    <View style={{ paddingBottom: (windowWidth * 5) / 100 }}>
                       <TouchableOpacity
                         onPress={() => {
                           this.lifestyle_click();
@@ -4490,10 +4478,10 @@ export default class EditProfile extends Component {
                         style={{
                           width: "90%",
                           alignSelf: "center",
-                          borderRadius: (mobileW * 2) / 100,
-                          backgroundColor: Colors.buttoncolorblue,
-                          paddingVertical: (mobileW * 4) / 100,
-                          marginTop: (mobileW * 8) / 100,
+                          borderRadius: (windowWidth * 2) / 100,
+                          backgroundColor: Colors.Theme,
+                          paddingVertical: (windowWidth * 4) / 100,
+                          marginTop: (windowWidth * 8) / 100,
                           shadowColor: "#000",
                           shadowOffset: { width: 1, height: 1 },
                           shadowOpacity: 0.5,
@@ -4521,51 +4509,6 @@ export default class EditProfile extends Component {
             </KeyboardAwareScrollView>
           </ScrollView>
         </View>
-        <HideWithKeyboard>
-          <Footer
-            activepage="Home"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: "#fff",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          />
-        </HideWithKeyboard>
       </View>
     );
   }

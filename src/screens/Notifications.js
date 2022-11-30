@@ -8,15 +8,14 @@ import {
   Image,
   Modal,
   TouchableOpacity,
-  StatusBar,
 } from "react-native";
 import {
   Colors,
   Font,
   config,
-  mobileW,
+  windowWidth,
   localStorage,
-  localimag,
+  Icons,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -140,17 +139,10 @@ export default class Notifications extends Component {
                 marginTop: -50,
               }}
             >
-              <StatusBar
-                backgroundColor={"#fff"}
-                barStyle="default"
-                hidden={false}
-                translucent={false}
-                networkActivityIndicatorVisible={true}
-              />
               <View
                 style={{
                   borderRadius: 20,
-                  width: (mobileW * 90) / 100,
+                  width: (windowWidth * 90) / 100,
                   position: "absolute",
                   alignSelf: "center",
                 }}
@@ -160,23 +152,23 @@ export default class Notifications extends Component {
                     backgroundColor: "#fff",
                     borderRadius: 2,
                     width: "100%",
-                    paddingVertical: (mobileW * 3) / 100,
+                    paddingVertical: (windowWidth * 3) / 100,
                   }}
                 >
                   <View
                     style={{
                       alignSelf: "flex-start",
-                      width: (mobileW * 50) / 100,
-                      paddingBottom: (mobileW * 3) / 100,
-                      marginTop: (mobileW * 2) / 100,
-                      paddingLeft: (mobileW * 4) / 100,
+                      width: (windowWidth * 50) / 100,
+                      paddingBottom: (windowWidth * 3) / 100,
+                      marginTop: (windowWidth * 2) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
                       flexDirection: "row",
                     }}
                   >
                     <Image
                       style={{
-                        width: (mobileW * 6) / 100,
-                        height: (mobileW * 6) / 100,
+                        width: (windowWidth * 6) / 100,
+                        height: (windowWidth * 6) / 100,
                       }}
                       source={require("../icons/logo.png")}
                     />
@@ -184,8 +176,8 @@ export default class Notifications extends Component {
                       style={{
                         fontFamily: Font.fontmedium,
                         color: "#000",
-                        fontSize: (mobileW * 5) / 100,
-                        paddingLeft: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 5) / 100,
+                        paddingLeft: (windowWidth * 4) / 100,
                       }}
                     >
                       {Lang_chg.Notification[config.language]}
@@ -194,8 +186,8 @@ export default class Notifications extends Component {
                   <View
                     style={{
                       alignSelf: "flex-start",
-                      paddingVertical: (mobileW * 1) / 100,
-                      paddingLeft: (mobileW * 4) / 100,
+                      paddingVertical: (windowWidth * 1) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
                       flexDirection: "row",
                       alignItems: "center",
                     }}
@@ -204,7 +196,7 @@ export default class Notifications extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         color: "#000",
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                         width: "90%",
                       }}
                     >
@@ -218,16 +210,16 @@ export default class Notifications extends Component {
                     }}
                     activeOpacity={0.8}
                     style={{
-                      width: (mobileW * 20) / 100,
+                      width: (windowWidth * 20) / 100,
                       justifyContent: "flex-end",
                       alignSelf: "flex-end",
-                      marginTop: (mobileW * 3) / 100,
+                      marginTop: (windowWidth * 3) / 100,
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
+                        fontSize: (windowWidth * 4) / 100,
                         color: Colors.bordercolorblue,
                         alignSelf: "center",
                       }}
@@ -245,10 +237,10 @@ export default class Notifications extends Component {
                 <Text
                   style={{
                     textAlign: "center",
-                    color: Colors.theme_color,
+                    color: Colors.Theme,
                     fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 3.5) / 100,
-                    marginTop: (mobileW * 60) / 100,
+                    fontSize: (windowWidth * 3.5) / 100,
+                    marginTop: (windowWidth * 60) / 100,
                   }}
                 >
                   {this.state.message}
@@ -260,7 +252,7 @@ export default class Notifications extends Component {
             this.state.notificationdata != null && (
               <FlatList
                 data={this.state.notificationdata}
-                contentContainerStyle={{ paddingBottom: (mobileW * 10) / 100 }}
+                contentContainerStyle={{ paddingBottom: (windowWidth * 10) / 100 }}
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity
@@ -275,60 +267,60 @@ export default class Notifications extends Component {
                       }}
                       style={{
                         flexDirection: "row",
-                        backgroundColor: Colors.white_color,
-                        marginTop: (mobileW * 2) / 100,
+                        backgroundColor: Colors.white,
+                        marginTop: (windowWidth * 2) / 100,
                         backgroundColor: "#fff",
                         shadowOpacity: 0.3,
                         shadowColor: "#000",
                         shadowOffset: { width: 1, height: 1 },
                         elevation: 5,
-                        //   paddingtop: (mobileW * 3) / 100,
+                        //   paddingtop: (windowWidth * 3) / 100,
                       }}
                     >
                       <View
                         style={[
                           {
-                            width: (mobileW * 1.5) / 100,
+                            width: (windowWidth * 1.5) / 100,
                           },
                           item.read == "1"
                             ? { backgroundColor: "#515C6F" }
-                            : { backgroundColor: Colors.theme_color },
+                            : { backgroundColor: Colors.Theme },
                         ]}
                       />
                       <View
                         style={{
                           width: "15%",
-                          paddingTop: (mobileW * 4) / 100,
-                          paddingRight: (mobileW * 2) / 100,
+                          paddingTop: (windowWidth * 4) / 100,
+                          paddingRight: (windowWidth * 2) / 100,
                         }}
                       >
                         <Image
                           source={
                             item.read == "0"
-                              ? localimag.rocketicon
-                              : localimag.rocket_gray
+                              ? Icons.rocketicon
+                              : Icons.rocket_gray
                           }
                           style={{
                             alignSelf: "center",
-                            width: (mobileW * 8) / 100,
-                            height: (mobileW * 8) / 100,
+                            width: (windowWidth * 8) / 100,
+                            height: (windowWidth * 8) / 100,
                           }}
                         />
                       </View>
                       <View
                         style={{
                           width: "80%",
-                          paddingTop: (mobileW * 4) / 100,
+                          paddingTop: (windowWidth * 4) / 100,
                         }}
                       >
                         <Text
                           style={{
                             fontFamily: Font.fontregular,
                             fontSize: Font.sregulartext_size,
-                            lineHeight: (mobileW * 4.2) / 100,
+                            lineHeight: (windowWidth * 4.2) / 100,
                             textAlign: config.textRotate,
                             color: Colors.lightgraytext,
-                            paddingBottom: (mobileW * 2.1) / 100,
+                            paddingBottom: (windowWidth * 2.1) / 100,
                           }}
                         >
                           {item.body}
@@ -336,10 +328,10 @@ export default class Notifications extends Component {
                         <View
                           style={{
                             flexDirection: "row",
-                            borderTopWidth: (mobileW * 0.3) / 100,
+                            borderTopWidth: (windowWidth * 0.3) / 100,
                             borderColor: Colors.gainsboro,
                             alignSelf: "flex-start",
-                            paddingVertical: (mobileW * 2) / 100,
+                            paddingVertical: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text

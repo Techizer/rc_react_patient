@@ -12,7 +12,7 @@ import {
   BackHandler,
 } from "react-native";
 
-import { mobileW, Colors, localStorage } from "./Provider/utilslib/Utils";
+import { windowWidth, Colors, localStorage } from "./Provider/utilslib/Utils";
 import DeviceInfo from "react-native-device-info";
 
 // import { config } from './configProvider';
@@ -23,6 +23,7 @@ import DeviceInfo from "react-native-device-info";
 //import { msgProvider, msgTitle, msgText } from './messageProvider';
 const screenHeight = Math.round(Dimensions.get("window").height);
 const screenWidth = Math.round(Dimensions.get("window").width);
+
 export default class Footer extends Component {
   constructor(props) {
     super(props);
@@ -69,6 +70,7 @@ export default class Footer extends Component {
       });
     }
   };
+
   usercheckbtn = async (page) => {
     this.props.functionremove;
     const navigation = this.props.navigation;
@@ -97,6 +99,7 @@ export default class Footer extends Component {
       }
     }
   };
+
   Checkuser = () => {
     Alert.alert(
       "confirm",
@@ -144,8 +147,7 @@ export default class Footer extends Component {
           visible={this.state.modalVisible1}
           onRequestClose={() => {
             this.setState({ modalVisible1: false });
-          }}
-        >
+          }}>
           <TouchableOpacity
             style={{
               flex: 1,
@@ -251,71 +253,7 @@ export default class Footer extends Component {
           </TouchableOpacity>
         </Modal>
 
-        {/* -------------------plan modal------------------------   */}
-
-        {/* <Modal
-                    animationType="slide"
-                    transparent
-                    visible={this.state.planModal}
-                    onRequestClose={() => {
-                        // console.log('Modal has been closed.');
-                    }}>
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: '#00000090',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 0,
-                           
-                        }}>
-                    <View style={{justifyContent:'center',alignItems:'center',alignSelf:'center',width:screenWidth*81/100,
-                    borderRadius: 10,
-                    borderWidth:2,
-                    borderColor:'#fff',
-                    alignContent:'center',
-                    backgroundColor:'#f9f9f9'}}>
-                        
-                       <View style={{alignItems:'center',backgroundColor:'#f9f9f9',paddingVertical:mobileW*6.5/100,width:screenWidth*80/100,alignSelf:'center',borderBottomWidth:2,borderBottomColor:'#9393ff'}}>
-                        <Text style={{textAlign:'center',color:Colors.black_color,fontFamily:Font.fontbold,fontSize:mobileW*4.5/100}}>Buy Subscription Plan</Text>                       
-                        </View>
-
-                        <View style={{alignItems:'center',backgroundColor:'#f9f9f9',paddingVertical:mobileW*5.5/100,width:'100%',alignSelf:'center'}}>
-                        <Text style={{textAlign:'center',color:Colors.black_color,fontFamily:Font.fontregular,fontSize:mobileW*12/100}}>$20</Text>
-                        <Text style={{textAlign:'center',color:'blue',fontFamily:Font.fontbold,fontSize:mobileW*5/100,marginTop:mobileW*2/100}}>{Lang_chg.for_month[config.language]}</Text>
-                        </View>
-                        <View style={{width:'100%',alignSelf:'center',marginBottom:mobileW*5/100,backgroundColor:'#f9f9f9',}}>
-                 <Text style={{textAlign:'justify',fontSize:mobileW*4/100,color:Colors.black_color,width:'90%',alignSelf:'center',lineHeight:25,fontFamily:Font.fontregular}}>
-                 There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour,which not look even slightly believable
-                 </Text>
-                
-                    <View style={{width:'95%',flexDirection:'row',justifyContent:'space-around',alignSelf:'center'}}>
-                       
-                     <TouchableOpacity onPress={()=>{this.setState({planModal:false})}} style={{ paddingVertical:mobileW*1.5/100,width:'35%',borderWidth:1,borderColor:Colors.border_color,
-                      alignSelf:'center',
-                      marginTop:mobileW*4/100,
-                      borderRadius:mobileW*6/100,}} >
-                     <Text style={{fontSize:mobileW*3/100,color:Colors.allmsg,textAlign:'center',fontFamily:Font.fontregular}}>{Lang_chg.cancel[config.language]}</Text>
-                     </TouchableOpacity>
-
-                     <LinearGradient
-                     start={{ x: 0, y: 0.5 }}
-                     end={{ x: 1, y: 0.5 }}
-                     locations={[0, 0.5, 0.9]}
-                     colors={['#01faff', '#019fff', '#0139ff']} style={style1.buttonView1} >
-                     <TouchableOpacity onPress={()=>{
-                         this.setState({planModal:false})
-                         this.props.navigation.navigate('Payment')}}>
-                     <Text style={{fontSize:mobileW*3/100,color:Colors.white_color,textAlign:'center',fontFamily:Font.fontregular}}>{Lang_chg.Pay_now[config.language]}</Text>
-                     </TouchableOpacity>
-                   </LinearGradient>  
-
-                     </View>
-                    </View>
-                      
-                        </View>
-                    </View>
-                </Modal> */}
+      
 
         <FlatList
           data={this.props.footerpage}
@@ -355,7 +293,7 @@ export default class Footer extends Component {
                       <Text
                         style={{
                           alignSelf: "center",
-                          fontSize: (mobileW * 3) / 100,
+                          fontSize: (windowWidth * 3) / 100,
                           color: Colors.textblue,
                         }}
                       >
@@ -431,7 +369,7 @@ export default class Footer extends Component {
                       <Text
                         style={{
                           alignSelf: "center",
-                          fontSize: (mobileW * 3) / 100,
+                          fontSize: (windowWidth * 3) / 100,
                           color: Colors.gray4,
                         }}
                       >
@@ -492,7 +430,7 @@ const style1 = StyleSheet.create({
     width: screenWidth,
     position: "absolute",
     borderTopWidth: 1,
-    borderTopColor: Colors.LIGHT_CLIENT_BORDER,
+    borderTopColor: Colors.Border,
     bottom: 0,
 
     paddingTop: 3.5,
