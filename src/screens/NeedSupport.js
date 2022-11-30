@@ -2,6 +2,7 @@ import {
   Text,
   View,
   Image,
+  StatusBar,
   TouchableOpacity,
   Modal,
   FlatList,
@@ -11,12 +12,12 @@ import {
 import React, { Component } from "react";
 import {
   Colors,
-  Icons,
+  localimag,
   Font,
   msgProvider,
   msgText,
   config,
-  windowWidth,
+  mobileW,
   localStorage,
   Lang_chg,
   apifuntion,
@@ -170,9 +171,16 @@ export default class NeedSupport extends Component {
           width: "100%",
           alignSelf: "center",
           flex: 1,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.white_color,
         }}
       >
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor={Colors.statusbarcolor}
+          hidden={false}
+          translucent={false}
+          networkActivityIndicatorVisible={true}
+        />
 
         <Modal
           animationType="fade"
@@ -191,8 +199,8 @@ export default class NeedSupport extends Component {
               justifyContent: "center",
               backgroundColor: "#00000080",
               width: "100%",
-              marginTop: (windowWidth * 3) / 100,
-              paddingBottom: (windowWidth * 8) / 100,
+              marginTop: (mobileW * 3) / 100,
+              paddingBottom: (mobileW * 8) / 100,
             }}
           >
             <View
@@ -211,13 +219,13 @@ export default class NeedSupport extends Component {
                 }}
               >
                 <View
-                  style={{ width: "45%", paddingVertical: (windowWidth * 3) / 100 }}
+                  style={{ width: "45%", paddingVertical: (mobileW * 3) / 100 }}
                 >
                   <Text
                     style={{
                       textAlign: config.textalign,
                       fontFamily: Font.fontregular,
-                      fontSize: (windowWidth * 4) / 100,
+                      fontSize: (mobileW * 4) / 100,
                       alignSelf: "center",
                       color: Colors.textwhite,
                     }}
@@ -253,16 +261,16 @@ export default class NeedSupport extends Component {
                                 width: "95%",
                                 borderBottomColor: "#0000001F",
                                 borderBottomWidth: 1,
-                                paddingVertical: (windowWidth * 2.5) / 100,
-                                marginLeft: (windowWidth * 5) / 100,
+                                paddingVertical: (mobileW * 2.5) / 100,
+                                marginLeft: (mobileW * 5) / 100,
                               }}
                             >
                               <Text
                                 style={{
                                   color: Colors.textblack,
                                   textAlign: config.textRotate,
-                                  fontSize: (windowWidth * 4) / 100,
-                                  paddingLeft: (windowWidth * 2) / 100,
+                                  fontSize: (mobileW * 4) / 100,
+                                  paddingLeft: (mobileW * 2) / 100,
                                 }}
                               >
                                 {item.name}
@@ -302,22 +310,22 @@ export default class NeedSupport extends Component {
               style={{
                 width: "100%",
                 backgroundColor: "white",
-                borderRadius: (windowWidth * 4) / 100,
+                borderRadius: (mobileW * 4) / 100,
                 position: "absolute",
                 bottom: 0,
                 alignItems: "center",
                 justifyContent: "center",
-                paddingBottom: (windowWidth * 5) / 100,
+                paddingBottom: (mobileW * 5) / 100,
                 alignSelf: "center",
               }}
             >
               {config.language == 0 ? (
                 <Image
                   style={{
-                    width: (windowWidth * 17) / 100,
-                    height: (windowWidth * 17) / 100,
+                    width: (mobileW * 17) / 100,
+                    height: (mobileW * 17) / 100,
                     alignSelf: "center",
-                    marginTop: (windowWidth * -7) / 100,
+                    marginTop: (mobileW * -7) / 100,
                     resizeMode: "contain",
                   }}
                   source={require("../icons/greentick.png")}
@@ -325,10 +333,10 @@ export default class NeedSupport extends Component {
               ) : (
                 <Image
                   style={{
-                    width: (windowWidth * 17) / 100,
-                    height: (windowWidth * 17) / 100,
+                    width: (mobileW * 17) / 100,
+                    height: (mobileW * 17) / 100,
                     alignSelf: "center",
-                    marginTop: (windowWidth * -7) / 100,
+                    marginTop: (mobileW * -7) / 100,
                     resizeMode: "contain",
                   }}
                   source={require("../icons/ryt_opp.png")}
@@ -336,8 +344,8 @@ export default class NeedSupport extends Component {
               )}
               <Text
                 style={{
-                  fontSize: (windowWidth * 8) / 100,
-                  marginTop: (windowWidth * 5) / 100,
+                  fontSize: (mobileW * 8) / 100,
+                  marginTop: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
                 }}
@@ -346,8 +354,8 @@ export default class NeedSupport extends Component {
               </Text>
               <Text
                 style={{
-                  fontSize: (windowWidth * 3.5) / 100,
-                  marginTop: (windowWidth * 5) / 100,
+                  fontSize: (mobileW * 3.5) / 100,
+                  marginTop: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
                 }}
@@ -357,11 +365,11 @@ export default class NeedSupport extends Component {
 
               <Text
                 style={{
-                  fontSize: (windowWidth * 3) / 100,
-                  marginTop: (windowWidth * 2) / 100,
+                  fontSize: (mobileW * 3) / 100,
+                  marginTop: (mobileW * 2) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: config.textalign,
-                  color: Colors.lightGrey,
+                  color: Colors.textgray,
                 }}
               >
                 {Lang_chg.text_of_modal[config.language]}
@@ -377,19 +385,19 @@ export default class NeedSupport extends Component {
                   alignSelf: "center",
                   borderColor: Colors.bordercolorblue,
                   borderWidth: 1,
-                  paddingVertical: (windowWidth * 2) / 100,
-                  marginTop: (windowWidth * 5) / 100,
-                  borderRadius: (windowWidth * 3) / 100,
+                  paddingVertical: (mobileW * 2) / 100,
+                  marginTop: (mobileW * 5) / 100,
+                  borderRadius: (mobileW * 3) / 100,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: (windowWidth * 3) / 100,
+                    fontSize: (mobileW * 3) / 100,
                     alignSelf: "center",
                     fontFamily: Font.fontmedium,
                     textAlign: config.textalign,
                     alignSelf: "center",
-                    color: Colors.Theme,
+                    color: Colors.terms_text_color_blue,
                   }}
                 >
                   {Lang_chg.close_txt[config.language]}
@@ -403,7 +411,7 @@ export default class NeedSupport extends Component {
           style={{
             width: "100%",
             alignSelf: "center",
-            paddingVertical: (windowWidth * 3) / 100,
+            paddingVertical: (mobileW * 3) / 100,
             shadowOpacity: 0.3,
             marginBottom: 0.9,
             shadowColor: "#000",
@@ -429,14 +437,14 @@ export default class NeedSupport extends Component {
               >
                 <Image
                   style={{
-                    width: (windowWidth * 8) / 100,
-                    height: (windowWidth * 8) / 100,
+                    width: (mobileW * 8) / 100,
+                    height: (mobileW * 8) / 100,
                     alignSelf: "center",
                   }}
                   source={
                     config.textalign == "right"
-                      ? Icons.arabic_back
-                      : Icons.backarrow
+                      ? localimag.arabic_back
+                      : localimag.backarrow
                   }
                 ></Image>
               </TouchableOpacity>
@@ -445,7 +453,7 @@ export default class NeedSupport extends Component {
               <Text
                 style={{
                   textAlign: config.textalign,
-                  fontSize: (windowWidth * 4.5) / 100,
+                  fontSize: (mobileW * 4.5) / 100,
                   color: Colors.textblack,
                   fontFamily: Font.buttonfontfamily,
                   alignSelf: "center",
@@ -462,7 +470,7 @@ export default class NeedSupport extends Component {
             width: "100%",
             alignSelf: "center",
             flex: 1,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white_color,
           }}
         >
           <KeyboardAwareScrollView>
@@ -470,7 +478,7 @@ export default class NeedSupport extends Component {
               style={{
                 width: "100%",
                 backgroundColor: Colors.tab_background_color,
-                paddingVertical: (windowWidth * 2) / 100,
+                paddingVertical: (mobileW * 2) / 100,
               }}
             ></View>
 
@@ -480,24 +488,24 @@ export default class NeedSupport extends Component {
                 width: "90%",
                 alignSelf: "center",
                 flexDirection: "row",
-                marginTop: (windowWidth * 3) / 100,
+                marginTop: (mobileW * 3) / 100,
               }}
             >
               <View style={{ width: "8%", alignSelf: "center" }}>
                 <Image
                   style={{
-                    width: (windowWidth * 5) / 100,
-                    height: (windowWidth * 5) / 100,
+                    width: (mobileW * 5) / 100,
+                    height: (mobileW * 5) / 100,
                     resizeMode: "contain",
                   }}
-                  source={Icons.needsupportimg}
+                  source={localimag.needsupportimg}
                 ></Image>
               </View>
 
               <Text
                 style={{
                   textAlign: config.textalign,
-                  fontSize: (windowWidth * 3.7) / 100,
+                  fontSize: (mobileW * 3.7) / 100,
                   color: Colors.textblack,
                   fontFamily: Font.buttonfontfamily,
                 }}
@@ -511,8 +519,8 @@ export default class NeedSupport extends Component {
                 width: "90%",
                 alignSelf: "center",
                 borderColor: Colors.bordercolor,
-                borderBottomWidth: (windowWidth * 0.3) / 100,
-                marginTop: (windowWidth * 3) / 100,
+                borderBottomWidth: (mobileW * 0.3) / 100,
+                marginTop: (mobileW * 3) / 100,
               }}
             />
 
@@ -520,13 +528,13 @@ export default class NeedSupport extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 2) / 100,
+                marginTop: (mobileW * 2) / 100,
               }}
             >
               <Text
                 style={{
                   textAlign: config.textRotate,
-                  fontSize: (windowWidth * 3.5) / 100,
+                  fontSize: (mobileW * 3.5) / 100,
                   color: "#707070",
                   fontFamily: Font.fontregular,
                 }}
@@ -539,13 +547,13 @@ export default class NeedSupport extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 4) / 100,
+                marginTop: (mobileW * 4) / 100,
               }}
             >
               <Text
                 style={{
                   textAlign: config.textRotate,
-                  fontSize: (windowWidth * 3.7) / 100,
+                  fontSize: (mobileW * 3.7) / 100,
                   color: Colors.textblack,
                   fontFamily: Font.buttonfontfamily,
                 }}
@@ -558,11 +566,11 @@ export default class NeedSupport extends Component {
               style={{
                 width: "100%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 1) / 100,
+                marginTop: (mobileW * 1) / 100,
                 //flexDirection: 'row',
                 // borderColor: Colors.bordercolor,
                 // borderWidth: 1,
-                // borderRadius: windowWidth * 1 / 100
+                // borderRadius: mobileW * 1 / 100
               }}
             >
               <DropDownboxSec
@@ -579,17 +587,17 @@ export default class NeedSupport extends Component {
               {/* <TouchableOpacity onPress={() => {
                 this.setState({ selectmodal: true });
               }}
-                style={{ width: '100%', backgroundColor: Colors.backgroundcolor, borderRadius: windowWidth * 1 / 100 }}>
+                style={{ width: '100%', backgroundColor: Colors.backgroundcolor, borderRadius: mobileW * 1 / 100 }}>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', alignSelf: 'center' }}>
                   <Text
-                    style={{ alignSelf: 'center', color: Colors.textblack, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: windowWidth * 4 / 100, fontFamily: Font.placeholderfontfamily }}
+                    style={{ alignSelf: 'center', color: Colors.textblack, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: mobileW * 4 / 100, fontFamily: Font.placeholderfontfamily }}
 
                   >{this.state.select.length <= 0 ? Lang_chg.select_issues_text[config.language] : this.state.select}</Text>
                   <View style={{ width: '10%', alignSelf: 'center' }}>
                     <Image
-                      source={Icons.downarrow}
-                      style={{ height: windowWidth * 4 / 100, width: windowWidth * 4 / 100, alignSelf: 'flex-end' }}>
+                      source={localimag.downarrow}
+                      style={{ height: mobileW * 4 / 100, width: mobileW * 4 / 100, alignSelf: 'flex-end' }}>
                     </Image>
                   </View>
                 </View>
@@ -600,8 +608,8 @@ export default class NeedSupport extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 3) / 100,
-                // borderColor: this.state.selectissuefocus == true ? '#0057A5' : Colors.bordercolor, borderWidth: windowWidth * 0.3 / 100, borderRadius: windowWidth * 2 / 100, height: windowWidth * 40 / 100
+                marginTop: (mobileW * 3) / 100,
+                // borderColor: this.state.selectissuefocus == true ? '#0057A5' : Colors.bordercolor, borderWidth: mobileW * 0.3 / 100, borderRadius: mobileW * 2 / 100, height: mobileW * 40 / 100
               }}
             >
             <AuthInputBoxSec
@@ -609,17 +617,17 @@ export default class NeedSupport extends Component {
                   width: "100%",
                 }}
                 inputFieldStyle={{
-                  // marginTop: windowWidth * 1 / 100,
+                  // marginTop: mobileW * 1 / 100,
                   // backgroundColor: "red",
                   width: "100%",
-                  // height: (windowWidth * 40) / 100,
+                  // height: (mobileW * 40) / 100,
                   color: Colors.textblack,
                   fontSize: Font.placeholdersize,
                   textAlign: config.textalign,
                   fontFamily: Font.placeholderfontfamily,
                   justifyContent: "flex-start",
                   textAlignVertical: "top",
-                  // paddingVertical: windowWidth * 3 / 100,
+                  // paddingVertical: mobileW * 3 / 100,
                 }}
                 // icon={layer9_icon}
                 lableText={
@@ -645,27 +653,27 @@ export default class NeedSupport extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 6) / 100,
+                marginTop: (mobileW * 6) / 100,
                 borderColor:
                   this.state.selectissuefocus == true
                     ? "#0057A5"
                     : Colors.bordercolor,
-                borderWidth: (windowWidth * 0.3) / 100,
-                borderRadius: (windowWidth * 2) / 100,
-                height: (windowWidth * 40) / 100,
+                borderWidth: (mobileW * 0.3) / 100,
+                borderRadius: (mobileW * 2) / 100,
+                height: (mobileW * 40) / 100,
               }}
             >
               <View style={{ width: "95%", alignSelf: "center" }}>
                 <TextInput
                   style={{
-                    // marginTop: (windowWidth * 1) / 100,
+                    marginTop: (mobileW * 2) / 100,
                     backgroundColor: "#fff",
                     width: "100%",
                     color: Colors.textblack,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
                     fontFamily: Font.placeholderfontfamily,
-                    paddingVertical: (windowWidth * 3) / 100,
+                    paddingVertical: (mobileW * 3) / 100,
                   }}
                   maxLength={250}
                   multiline={true}
@@ -674,7 +682,7 @@ export default class NeedSupport extends Component {
                       ? Lang_chg.text_input_topic[config.language]
                       : null
                   }
-                  DarkGrey={Colors.DarkGrey}
+                  placeholderTextColor={Colors.placeholder_text}
                   onChangeText={(txt) => {
                     this.setState({ message: txt });
                   }}
@@ -696,9 +704,9 @@ export default class NeedSupport extends Component {
                   style={{
                     position: "absolute",
                     backgroundColor: "white",
-                    left: (windowWidth * 4) / 100,
-                    top: (-windowWidth * 2) / 100,
-                    paddingHorizontal: (windowWidth * 1) / 100,
+                    left: (mobileW * 4) / 100,
+                    top: (-mobileW * 2) / 100,
+                    paddingHorizontal: (mobileW * 1) / 100,
                   }}
                 >
                   <Text
@@ -717,10 +725,10 @@ export default class NeedSupport extends Component {
               style={{
                 width: "90%",
                 alignSelf: "center",
-                borderRadius: (windowWidth * 2) / 100,
-                backgroundColor: Colors.Theme,
-                paddingVertical: (windowWidth * 4) / 100,
-                marginTop: (windowWidth * 45) / 100,
+                borderRadius: (mobileW * 2) / 100,
+                backgroundColor: Colors.buttoncolorblue,
+                paddingVertical: (mobileW * 4) / 100,
+                marginTop: (mobileW * 45) / 100,
               }}
             >
               <Text

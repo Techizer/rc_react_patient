@@ -6,15 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import ScreenHeader from "../components/ScreenHeader";
 import {
   Colors,
-  Icons,
+  localimag,
   Font,
-  windowWidth,
+  mobileW,
   config,
   Lang_chg,
 } from "../Provider/utilslib/Utils";
@@ -55,8 +53,8 @@ export default class TermsAndConditions extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.white }}>
-        {/* <View style={styles.header_view}>
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={styles.header_view}>
           <View style={styles.backarrow}>
             <TouchableOpacity
               onPress={() => {
@@ -67,19 +65,18 @@ export default class TermsAndConditions extends Component {
                 style={{ width: 30, height: 30, resizeMode: "contain" }}
                 source={
                   config.textalign == "right"
-                    ? Icons.backarrow
-                    : Icons.backarrow
+                    ? localimag.backarrow
+                    : localimag.backarrow
                 }
               ></Image>
             </TouchableOpacity>
           </View>
-          
           <View style={styles.headerText}>
             {this.state.pagename == 0 && (
               <Text
                 style={{
                   width: "100%",
-                  fontSize: (windowWidth * 5) / 100,
+                  fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
                   color: Colors.textblack,
@@ -92,7 +89,7 @@ export default class TermsAndConditions extends Component {
               <Text
                 style={{
                   width: "100%",
-                  fontSize: (windowWidth * 5) / 100,
+                  fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
                   color: Colors.textblack,
@@ -105,7 +102,7 @@ export default class TermsAndConditions extends Component {
               <Text
                 style={{
                   width: "100%",
-                  fontSize: (windowWidth * 5) / 100,
+                  fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
                   color: Colors.textblack,
@@ -115,14 +112,7 @@ export default class TermsAndConditions extends Component {
               </Text>
             )}
           </View>
-        </View> */}
-
-        <ScreenHeader
-        navigation={this.props.navigation}
-        onBackPress={()=>this.props.navigation.pop()}
-        title={Lang_chg.AboutRootscare[config.language]}
-        rightIcon={false}
-        />
+        </View>
 
         {config.language == 1 ? (
           <WebView
@@ -157,12 +147,12 @@ const styles = StyleSheet.create({
   },
   header_view: {
     backgroundColor: "#fff",
-    paddingVertical: (windowWidth * 3) / 100,
-    borderBottomColor: Colors.Border,
+    paddingVertical: (mobileW * 3) / 100,
+    borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
     borderBottomWidth: 1,
     flexDirection: "row",
     alignItems: "center",
-    // marginBottom: (windowWidth * 1) / 100,
+    marginBottom: (mobileW * 1) / 100,
   },
   backarrow: {
     width: "15%",
