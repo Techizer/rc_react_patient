@@ -206,7 +206,7 @@ export default class NeedSupport extends Component {
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -227,7 +227,7 @@ export default class NeedSupport extends Component {
                       fontFamily: Font.fontregular,
                       fontSize: (mobileW * 4) / 100,
                       alignSelf: "center",
-                      color: Colors.textwhite,
+                      color: Colors.White,
                     }}
                   >
                     {Lang_chg.select_topic_text[config.language]}
@@ -267,7 +267,7 @@ export default class NeedSupport extends Component {
                             >
                               <Text
                                 style={{
-                                  color: Colors.textblack,
+                                  color: Colors.Black,
                                   textAlign: config.textRotate,
                                   fontSize: (mobileW * 4) / 100,
                                   paddingLeft: (mobileW * 2) / 100,
@@ -309,7 +309,7 @@ export default class NeedSupport extends Component {
             <View
               style={{
                 width: "100%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 borderRadius: (mobileW * 4) / 100,
                 position: "absolute",
                 bottom: 0,
@@ -383,7 +383,7 @@ export default class NeedSupport extends Component {
                 style={{
                   width: "15%",
                   alignSelf: "center",
-                  borderColor: Colors.bordercolorblue,
+                  borderColor: Colors.Blue,
                   borderWidth: 1,
                   paddingVertical: (mobileW * 2) / 100,
                   marginTop: (mobileW * 5) / 100,
@@ -417,7 +417,7 @@ export default class NeedSupport extends Component {
             shadowColor: "#000",
             shadowOffset: { width: 1, height: 1 },
             elevation: 5,
-            backgroundColor: "white",
+            backgroundColor: "White",
           }}
         >
           <View
@@ -454,7 +454,7 @@ export default class NeedSupport extends Component {
                 style={{
                   textAlign: config.textalign,
                   fontSize: (mobileW * 4.5) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.buttonfontfamily,
                   alignSelf: "center",
                 }}
@@ -506,7 +506,7 @@ export default class NeedSupport extends Component {
                 style={{
                   textAlign: config.textalign,
                   fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.buttonfontfamily,
                 }}
               >
@@ -554,7 +554,7 @@ export default class NeedSupport extends Component {
                 style={{
                   textAlign: config.textRotate,
                   fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.buttonfontfamily,
                 }}
               >
@@ -591,7 +591,7 @@ export default class NeedSupport extends Component {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', alignSelf: 'center' }}>
                   <Text
-                    style={{ alignSelf: 'center', color: Colors.textblack, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: mobileW * 4 / 100, fontFamily: Font.placeholderfontfamily }}
+                    style={{ alignSelf: 'center', color: Colors.Black, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: mobileW * 4 / 100, fontFamily: Font.placeholderfontfamily }}
 
                   >{this.state.select.length <= 0 ? Lang_chg.select_issues_text[config.language] : this.state.select}</Text>
                   <View style={{ width: '10%', alignSelf: 'center' }}>
@@ -621,7 +621,7 @@ export default class NeedSupport extends Component {
                   // backgroundColor: "red",
                   width: "100%",
                   // height: (mobileW * 40) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontSize: Font.placeholdersize,
                   textAlign: config.textalign,
                   fontFamily: Font.placeholderfontfamily,
@@ -669,7 +669,7 @@ export default class NeedSupport extends Component {
                     marginTop: (mobileW * 2) / 100,
                     backgroundColor: "#fff",
                     width: "100%",
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
                     fontFamily: Font.placeholderfontfamily,
@@ -703,7 +703,7 @@ export default class NeedSupport extends Component {
                 <View
                   style={{
                     position: "absolute",
-                    backgroundColor: "white",
+                    backgroundColor: "White",
                     left: (mobileW * 4) / 100,
                     top: (-mobileW * 2) / 100,
                     paddingHorizontal: (mobileW * 1) / 100,
@@ -733,7 +733,7 @@ export default class NeedSupport extends Component {
             >
               <Text
                 style={{
-                  color: Colors.textwhite,
+                  color: Colors.White,
                   fontFamily: Font.fontmedium,
                   fontSize: Font.buttontextsize,
                   alignSelf: "flex-end",

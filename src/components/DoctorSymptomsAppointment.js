@@ -566,12 +566,12 @@ const DoctorSymptomsAppointment = (props) => {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: Colors.textblue,
+        backgroundColor: Colors.Blue,
         height: (windowWidth * 1) / 100,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
       }}
-      activeColor={Colors.textblue}
+      activeColor={Colors.Blue}
       inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{
@@ -672,7 +672,7 @@ const DoctorSymptomsAppointment = (props) => {
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                color: Colors.gray4,
+                color: Colors.lightGrey,
                 fontSize: (windowWidth * 3.5) / 100,
               }}
             >
@@ -822,7 +822,7 @@ const DoctorSymptomsAppointment = (props) => {
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                color: Colors.gray4,
+                color: Colors.lightGrey,
                 fontSize: (windowWidth * 3.5) / 100,
               }}
             >
@@ -912,7 +912,7 @@ const DoctorSymptomsAppointment = (props) => {
 };
 const styles = StyleSheet.create({
   textInputFocus: {
-    borderColor: Colors.textblue,
+    borderColor: Colors.Blue,
     backgroundColor: Colors.white2,
     borderBottomWidth: 1,
     borderWidth: 1,
@@ -922,7 +922,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   textInput: {
-    borderColor: Colors.gray4,
+    borderColor: Colors.lightGrey,
     backgroundColor: Colors.white2,
     borderBottomWidth: 1,
     borderWidth: 1,

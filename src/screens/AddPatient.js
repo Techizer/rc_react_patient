@@ -225,7 +225,7 @@ export default class AddPatient extends Component {
               style={{
                 width: "95%",
                 alignSelf: "center",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 //  height: (windowWidth * 12) / 100,
                 flexDirection: "row",
               }}
@@ -254,7 +254,7 @@ export default class AddPatient extends Component {
               <View style={{ width: "80%", alignSelf: "center" }}>
                 <Text
                   style={{
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontFamily: Font.blackheadingfontfamily,
                     fontSize: Font.headingblack_txt_size_edit,
                     alignSelf: "flex-end",
@@ -293,7 +293,7 @@ export default class AddPatient extends Component {
               flex: 1,
               width: "100%",
               alignSelf: "center",
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.White,
               marginTop: (windowWidth * 3) / 100,
               paddingBottom: (windowWidth * 10) / 100,
               shadowColor: "#000",
@@ -375,7 +375,7 @@ export default class AddPatient extends Component {
                     borderRadius: (windowWidth * 4) / 100,
                     borderWidth: 2,
                     borderColor: Colors.bordercolor_light_blue,
-                    backgroundColor: "white",
+                    backgroundColor: "White",
                     alignSelf: "flex-end",
                   }}
                 >
@@ -423,7 +423,7 @@ export default class AddPatient extends Component {
                   <TextInput
                     style={{
                       width: '100%',
-                      color: Colors.textblack,
+                      color: Colors.Black,
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
@@ -459,7 +459,7 @@ export default class AddPatient extends Component {
                   <View
                     style={{
                       position: 'absolute',
-                      backgroundColor: 'white',
+                      backgroundColor: 'White',
                       left: (windowWidth * 4) / 100,
                       top: (-windowWidth * 2.5) / 100,
                       paddingHorizontal: (windowWidth * 1) / 100,
@@ -501,7 +501,7 @@ export default class AddPatient extends Component {
                   <TextInput
                     style={{
                       width: '100%',
-                      color: Colors.textblack,
+                      color: Colors.Black,
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
@@ -537,7 +537,7 @@ export default class AddPatient extends Component {
                   <View
                     style={{
                       position: 'absolute',
-                      backgroundColor: 'white',
+                      backgroundColor: 'White',
                       left: (windowWidth * 4) / 100,
                       top: (-windowWidth * 2.5) / 100,
                       paddingHorizontal: (windowWidth * 1) / 100,
@@ -579,7 +579,7 @@ export default class AddPatient extends Component {
                   <TextInput
                     style={{
                       width: '100%',
-                      color: Colors.textblack,
+                      color: Colors.Black,
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
@@ -615,7 +615,7 @@ export default class AddPatient extends Component {
                   <View
                     style={{
                       position: 'absolute',
-                      backgroundColor: 'white',
+                      backgroundColor: 'White',
                       left: (windowWidth * 4) / 100,
                       top: (-windowWidth * 2.5) / 100,
                       paddingHorizontal: (windowWidth * 1) / 100,
@@ -657,7 +657,7 @@ export default class AddPatient extends Component {
                   <TextInput
                     style={{
                       width: '100%',
-                      color: Colors.textblack,
+                      color: Colors.Black,
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
 
@@ -694,7 +694,7 @@ export default class AddPatient extends Component {
                   <View
                     style={{
                       position: 'absolute',
-                      backgroundColor: 'white',
+                      backgroundColor: 'White',
                       left: (windowWidth * 4) / 100,
                       top: (-windowWidth * 2.5) / 100,
                       paddingHorizontal: (windowWidth * 1) / 100,
@@ -906,7 +906,7 @@ export default class AddPatient extends Component {
               width: 25,
               height: 25,
               paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: "white",
+              backgroundColor: "White",
               countcolor: "red",
               countbackground: "red",
             }}

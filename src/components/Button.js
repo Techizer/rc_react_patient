@@ -14,6 +14,7 @@ const Button = ({
   onLoading,
   isSingle,
   isBlank,
+  btnStyle
 }) => {
   return (
     <>
@@ -22,7 +23,7 @@ const Button = ({
         (isBlank != undefined && isBlank === true) ?
           <TouchableOpacity
             onPress={onPress}
-            style={[styles.mainContainer1, customStyles.mainContainer]}>
+            style={[styles.mainContainer1, btnStyle]}>
             <Text style={[styles.buttonText1, customStyles.buttonText]}>
               {text}
             </Text>
@@ -30,7 +31,7 @@ const Button = ({
           :
           <TouchableOpacity
             onPress={onPress}
-            style={[styles.mainContainer, customStyles.mainContainer]}>
+            style={[styles.mainContainer, btnStyle]}>
             <Text style={[styles.buttonText, customStyles.buttonText]}>
               {text}
             </Text>
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   mainContainer1: {
     width: '90%',
     alignSelf: 'center',
-    borderColor: Colors.bordercolorblue,
+    borderColor: Colors.Blue,
     borderWidth: 2,
     borderRadius: (windowWidth * 2) / 100,
     backgroundColor: Colors.buttoncolorlight,
@@ -66,14 +67,14 @@ const styles = StyleSheet.create({
     marginBottom: (windowWidth * 4) / 100,
   },
   buttonText: {
-    color: Colors.textwhite,
+    color: Colors.White,
     fontFamily: Font.fontmedium,
     fontSize: Font.buttontextsize,
     textAlign: config.textalign,
     alignSelf: 'center',
   },
   buttonText1: {
-    color: Colors.textblue,
+    color: Colors.Blue,
     fontFamily: Font.fontmedium,
     fontSize: Font.buttontextsize,
     textAlign: config.textalign,

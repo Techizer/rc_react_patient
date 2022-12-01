@@ -875,7 +875,7 @@ class FilterContainer extends Component {
                     },
                     buttonText: {
                       fontSize: RF(18),
-                      color: "black", //Color.white,
+                      color: "black", //Color.White,
                       fontFamily: Fonts.semibold,
                     },
                     //img: signinstyles.mail1

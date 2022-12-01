@@ -74,7 +74,7 @@ const LabPackageDetails = (props) => {
               width: "99%",
               alignSelf: "center",
               paddingTop: (windowWidth * 3) / 100,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.White,
               alignItems: "center",
             }}
           >
@@ -184,7 +184,7 @@ const LabPackageDetails = (props) => {
                         paddingHorizontal: (windowWidth * 4) / 100,
                         fontSize: Font.buttontext_size,
                         textAlign: config.textRotate,
-                        color: Colors.lightgraytext,
+                        color: Colors.lightGrey,
                       }}
                     >
                       {labDetailsData.task_heading}
@@ -195,7 +195,7 @@ const LabPackageDetails = (props) => {
                         p: {
                           fontSize: Font.subtext,
                           paddingHorizontal: (windowWidth * 4) / 100,
-                          color: Colors.lightgraytext,
+                          color: Colors.lightGrey,
                           marginTop: (windowWidth * 2) / 100,
                           fontFamily: Font.fontregular,
                         },
@@ -229,7 +229,7 @@ const LabPackageDetails = (props) => {
                         p: {
                           fontSize: Font.subtext,
                           paddingHorizontal: (windowWidth * 4) / 100,
-                          color: Colors.lightgraytext,
+                          color: Colors.lightGrey,
                           marginTop: (windowWidth * 2) / 100,
                           fontFamily: Font.fontregular,
                         },

@@ -31,7 +31,7 @@ const TestFunction = (props) => {
       <View style={{ padding: 10 }}>
         <TextInput
           value={input}
-          style={{ height: 40, backgroundColor: "white", fontSize: 20 }}
+          style={{ height: 40, backgroundColor: "White", fontSize: 20 }}
           placeholder="Enter Value"
           onChangeText={(text) => {
             setInput(text);

@@ -564,14 +564,14 @@ export default class ShowOtherAppointments extends Component {
             {/* <Text>Home</Text> */}
 
             {/* header */}
-            <View style={{ backgroundColor: "white" }}>
+            <View style={{ backgroundColor: "White" }}>
               <View
                 style={{
                   flexDirection: "row",
                   width: "98%",
                   alignSelf: "center",
                   paddingVertical: (windowWidth * 3) / 100,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.White,
                   alignItems: "center",
                   // backgroundColor: 'red',
                 }}
@@ -1077,7 +1077,7 @@ export default class ShowOtherAppointments extends Component {
                                     ? "#FF4500"
                                     : item.acceptance_status == "Pending"
                                     ? Colors.gold
-                                    : Colors.buttoncolorhgreen,
+                                    : Colors.Green,
                               }}
                             >
                               <Text
@@ -1244,7 +1244,7 @@ export default class ShowOtherAppointments extends Component {
                                     );
                                   }}
                                   style={{
-                                    backgroundColor: Colors.buttoncolorhgreen,
+                                    backgroundColor: Colors.Green,
                                     width: "35%",
                                     borderRadius: (windowWidth * 1) / 100,
                                     justifyContent: "center",
@@ -1255,7 +1255,7 @@ export default class ShowOtherAppointments extends Component {
                                   <Text
                                     style={{
                                       textAlign: "center",
-                                      color: Colors.white,
+                                      color: Colors.White,
                                       textTransform: "uppercase",
                                       fontFamily: Font.fontmedium,
                                       fontSize: (windowWidth * 3) / 100,
@@ -1278,7 +1278,7 @@ export default class ShowOtherAppointments extends Component {
                                     });
                                 }}
                                 style={{
-                                  backgroundColor: Colors.buttoncolorhgreen,
+                                  backgroundColor: Colors.Green,
                                   width: "48%",
                                   borderRadius: (windowWidth * 1) / 100,
                                   justifyContent: "center",
@@ -1289,7 +1289,7 @@ export default class ShowOtherAppointments extends Component {
                                 <Text
                                   style={{
                                     textAlign: "center",
-                                    color: Colors.white,
+                                    color: Colors.White,
                                     textTransform: "uppercase",
                                     fontFamily: Font.fontmedium,
                                     fontSize: (windowWidth * 3) / 100,
@@ -1328,7 +1328,7 @@ export default class ShowOtherAppointments extends Component {
                                 style={{
                                   alignSelf: "center",
                                   textAlign: "center",
-                                  color: Colors.white,
+                                  color: Colors.White,
                                   //  paddingHorizontal: (windowWidth * 2) / 100,
                                   fontFamily: Font.fontmedium,
                                   fontSize: (windowWidth * 3) / 100,
@@ -1414,7 +1414,7 @@ export default class ShowOtherAppointments extends Component {
               width: 25,
               height: 25,
               paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: "white",
+              backgroundColor: "White",
               countcolor: "red",
               countbackground: "red",
             }}
@@ -1445,7 +1445,7 @@ export default class ShowOtherAppointments extends Component {
             <View
               style={{
                 width: "100%",
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.White,
                 // marginTop: (windowWidth * 50) / 100,
                 position: "absolute",
                 bottom: 0,
@@ -1507,7 +1507,7 @@ export default class ShowOtherAppointments extends Component {
                           source={Icons.cross}
                           style={{
                             resizeMode: "contain",
-                            // backgroundColor: Colors.white,
+                            // backgroundColor: Colors.White,
                             width: 20,
                             height: 20,
 
@@ -1646,7 +1646,7 @@ export default class ShowOtherAppointments extends Component {
                                       // backgroundColor:'red',
                                       // paddingHorizontal: (windowWidth * 5) / 100,
                                       paddingVertical: (windowWidth * 1.5) / 100,
-                                      color: Colors.white,
+                                      color: Colors.White,
                                       fontFamily: Font.fontmedium,
                                       fontSize: (windowWidth * 3) / 100,
                                       textAlign: "center",
@@ -1703,7 +1703,7 @@ export default class ShowOtherAppointments extends Component {
                           source={Icons.calendarimg}
                           style={{
                             resizeMode: "contain",
-                            // backgroundColor: Colors.white,
+                            // backgroundColor: Colors.White,
                             width: 20,
                             height: 20,
 
@@ -1775,8 +1775,8 @@ export default class ShowOtherAppointments extends Component {
                                     marginRight: (windowWidth * 3) / 100,
                                     marginTop: (windowWidth * 3) / 100,
                                     backgroundColor:
-                                      item.tick == 1 ? "#0787D2" : Colors.gray6,
-                                    color: item.tick == 1 ? "white" : "black",
+                                      item.tick == 1 ? "#0787D2" : Colors.lightGrey,
+                                    color: item.tick == 1 ? "White" : "black",
                                     textAlign: "center",
                                     paddingVertical: (windowWidth * 2) / 100,
                                     fontFamily: Font.ques_fontfamily,
@@ -1863,7 +1863,7 @@ export default class ShowOtherAppointments extends Component {
                                                   color: "#fff",
                                                 }
                                               : {
-                                                  backgroundColor: Colors.gray6,
+                                                  backgroundColor: Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                           ]}
@@ -1909,7 +1909,7 @@ export default class ShowOtherAppointments extends Component {
                                                   color: "#fff",
                                                 }
                                               : {
-                                                  backgroundColor: Colors.gray6,
+                                                  backgroundColor: Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                           ]}
@@ -1955,7 +1955,7 @@ export default class ShowOtherAppointments extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.textwhite,
+                          color: Colors.White,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.subtext,
                           alignSelf: "flex-end",

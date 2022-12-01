@@ -79,7 +79,7 @@ export default class TermsAndConditions extends Component {
                   fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
-                  color: Colors.textblack,
+                  color: Colors.Black,
                 }}
               >
                 {Lang_chg.AboutRootscare[config.language]}
@@ -92,7 +92,7 @@ export default class TermsAndConditions extends Component {
                   fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
-                  color: Colors.textblack,
+                  color: Colors.Black,
                 }}
               >
                 {Lang_chg.TermsandConditions[config.language]}
@@ -105,7 +105,7 @@ export default class TermsAndConditions extends Component {
                   fontSize: (mobileW * 5) / 100,
                   fontFamily: Font.fontmedium,
                   textAlign: "center",
-                  color: Colors.textblack,
+                  color: Colors.Black,
                 }}
               >
                 {Lang_chg.PrivacyPolicy[config.language]}

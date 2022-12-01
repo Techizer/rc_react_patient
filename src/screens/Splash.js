@@ -229,12 +229,12 @@ export default class Splash extends Component {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
         }}
       >
         <StatusBar
           barStyle="dark-content"
-          backgroundColor={Colors.white}
+          backgroundColor={Colors.White}
           hidden={false}
           translucent={false}
           networkActivityIndicatorVisible={true}
@@ -344,7 +344,7 @@ export default class Splash extends Component {
                     stylesheet={{
                       h3: {
                         fontFamily: Font.fontregular,
-                        color: Colors.textblack, //'#000',
+                        color: Colors.Black, //'#000',
                         fontSize: (windowWidth * 4.8) / 100,
                         opacity: 0.9,
                         // color: '#FF3366', // make links coloured pink
@@ -371,7 +371,7 @@ export default class Splash extends Component {
                     stylesheet={{
                       p: {
                         fontFamily: Font.fontregular,
-                        color: Colors.textblack, //'#515C6F', //Colors.DarkGrey,
+                        color: Colors.Black, //'#515C6F', //Colors.DarkGrey,
                         fontSize: (windowWidth * 4) / 100,
                         textAlign: "left",
                         opacity: 0.9,
@@ -419,7 +419,7 @@ export default class Splash extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: (windowWidth * 3.8) / 100,
-                          color: Colors.Theme, //Colors.bordercolorblue,
+                          color: Colors.Theme, //Colors.Blue,
                           alignSelf: "center",
                         }}
                       >
@@ -446,7 +446,7 @@ export default class Splash extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: (windowWidth * 3.8) / 100,
-                        color: Colors.white,
+                        color: Colors.White,
                         alignSelf: "center",
                       }}
                     >
@@ -458,7 +458,7 @@ export default class Splash extends Component {
                   <View
                     style={{
                       borderTopWidth: 1,
-                      borderTopColor: Colors.gray5,
+                      borderTopColor: Colors.lightGrey,
                       height: (windowWidth * 15) / 100,
                       // backgroundColor: 'red',
                       // justifyContent: 'flex-start',

@@ -35,7 +35,7 @@ const Profile = ({ navigation }) => {
   }, [isDrawerOpen])
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.white }}>
+    <View style={{ flex: 1, backgroundColor: Colors.White }}>
 
     </View>
   );

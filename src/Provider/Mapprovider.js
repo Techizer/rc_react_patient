@@ -231,7 +231,7 @@ export default class Mapprovider extends Component {
               </View>
             </TouchableOpacity>
             <View style={{ paddingVertical: 15, width: '60%' }}>
-              <Text style={{ color: 'white', fontFamily: Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{this.props.title}</Text>
+              <Text style={{ color: 'White', fontFamily: Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{this.props.title}</Text>
             </View>
             <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center' }} onPress={() => { this.state.profile == 'location' ? this.locationupdatebtn() : this.props.navigation.goBack() }}>
               <View style={{ width: '100%', alignSelf: 'center' }} >
@@ -333,7 +333,7 @@ export default class Mapprovider extends Component {
                     }}
                     styles={{
                       textInputContainer: {
-                        backgroundColor: 'white',
+                        backgroundColor: 'White',
                         marginTop: 10,
                         //  borderWidth:1,
 
@@ -351,7 +351,7 @@ export default class Mapprovider extends Component {
                         height: 37,
                         borderRadius: 10,
 
-                        // backgroundColor:'white',
+                        // backgroundColor:'White',
                         color: '#5d5d5d',
                         fontSize: 16,
                       },

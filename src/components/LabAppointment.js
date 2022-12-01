@@ -68,12 +68,12 @@ const LabAppointment = (props) => {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: Colors.textblue,
+        backgroundColor: Colors.Blue,
         height: (windowWidth * 1) / 100,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
       }}
-      activeColor={Colors.textblue}
+      activeColor={Colors.Blue}
       inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{

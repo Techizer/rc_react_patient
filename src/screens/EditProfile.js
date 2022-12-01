@@ -910,7 +910,7 @@ export default class EditProfile extends Component {
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -931,7 +931,7 @@ export default class EditProfile extends Component {
                       fontFamily: Font.fontregular,
                       fontSize: (windowWidth * 4) / 100,
                       alignSelf: "center",
-                      color: Colors.textwhite,
+                      color: Colors.White,
                     }}
                   >
                     {this.state.smoking_btn == true
@@ -962,7 +962,7 @@ export default class EditProfile extends Component {
                   <View style={{ width: "87%", alignSelf: "center" }}>
                     <Text
                       style={{
-                        color: Colors.textblack,
+                        color: Colors.Black,
                         fontSize: (windowWidth * 4) / 100,
                         textAlign: config.textRotate,
                       }}
@@ -993,7 +993,7 @@ export default class EditProfile extends Component {
                     <View style={{ width: "87%", alignSelf: "center" }}>
                       <Text
                         style={{
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: (windowWidth * 4) / 100,
                           textAlign: config.textRotate,
                         }}
@@ -1037,7 +1037,7 @@ export default class EditProfile extends Component {
               <View
                 style={{
                   width: "70%",
-                  backgroundColor: "white",
+                  backgroundColor: "White",
                   alignItems: "center",
                   justifyContent: "center",
                   alignSelf: "center",
@@ -1064,7 +1064,7 @@ export default class EditProfile extends Component {
                         fontFamily: Font.fontregular,
                         fontSize: (windowWidth * 4) / 100,
                         alignSelf: "center",
-                        color: Colors.textwhite,
+                        color: Colors.White,
                       }}
                     >
                       {Lang_chg.nationality[config.language]}
@@ -1108,7 +1108,7 @@ export default class EditProfile extends Component {
                             >
                               <Text
                                 style={{
-                                  color: Colors.textblack,
+                                  color: Colors.Black,
                                   fontSize: (windowWidth * 4) / 100,
                                   textAlign: config.textRotate,
                                 }}
@@ -1152,7 +1152,7 @@ export default class EditProfile extends Component {
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -1178,7 +1178,7 @@ export default class EditProfile extends Component {
                       fontFamily: Font.fontregular,
                       fontSize: (windowWidth * 4) / 100,
 
-                      color: Colors.textwhite,
+                      color: Colors.White,
                     }}
                   >
                     {this.state.occ_food_activity == "activity"
@@ -1240,7 +1240,7 @@ export default class EditProfile extends Component {
                             >
                               <Text
                                 style={{
-                                  color: Colors.textblack,
+                                  color: Colors.Black,
                                   fontSize: (windowWidth * 4) / 100,
                                   textAlign: config.textRotate,
                                 }}
@@ -1287,7 +1287,7 @@ export default class EditProfile extends Component {
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -1307,7 +1307,7 @@ export default class EditProfile extends Component {
                     textAlign: config.textRotate,
                     fontFamily: Font.fontregular,
                     fontSize: (windowWidth * 4) / 100,
-                    color: Colors.textwhite,
+                    color: Colors.White,
                   }}
                 >
                   {Lang_chg.blood[config.language]}
@@ -1351,7 +1351,7 @@ export default class EditProfile extends Component {
                           >
                             <Text
                               style={{
-                                color: Colors.textblack,
+                                color: Colors.Black,
                                 fontSize: (windowWidth * 4) / 100,
                                 paddingLeft: (windowWidth * 2) / 100,
                                 textAlign: config.textRotate,
@@ -1393,7 +1393,7 @@ export default class EditProfile extends Component {
               style={{
                 width: "95%",
                 alignSelf: "center",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 //  height: (windowWidth * 12) / 100,
                 flexDirection: "row",
               }}
@@ -1422,7 +1422,7 @@ export default class EditProfile extends Component {
               <View style={{ width: "80%", alignSelf: "center" }}>
                 <Text
                   style={{
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontFamily: Font.blackheadingfontfamily,
                     fontSize: Font.headingblack_txt_size_edit,
                     alignSelf: "flex-end",
@@ -1458,7 +1458,7 @@ export default class EditProfile extends Component {
             </View>
           </View>
           <ScrollView
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: "White" }}
             contentContainerStyle={{ paddingBottom: (windowWidth * 15) / 100 }}
             showsVerticalScrollIndicator={false}
           >
@@ -1496,7 +1496,7 @@ export default class EditProfile extends Component {
                       style={
                         this.state.pbtn == true
                           ? {
-                              color: Colors.textblue,
+                              color: Colors.Blue,
 
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
@@ -1523,10 +1523,10 @@ export default class EditProfile extends Component {
                               width: (windowWidth * 28) / 100,
                               alignSelf: "center",
                               borderWidth: 2.2,
-                              borderColor: Colors.bordercolorblue,
+                              borderColor: Colors.Blue,
                               borderTopLeftRadius: (windowWidth * 2) / 100,
                               borderTopRightRadius: (windowWidth * 2) / 100,
-                              backgroundColor: Colors.bordercolorblue,
+                              backgroundColor: Colors.Blue,
                               alignSelf: "center",
                             }
                           : {
@@ -1551,7 +1551,7 @@ export default class EditProfile extends Component {
                       style={
                         this.state.mbtn == true
                           ? {
-                              color: Colors.textblue,
+                              color: Colors.Blue,
 
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
@@ -1577,10 +1577,10 @@ export default class EditProfile extends Component {
                               width: (windowWidth * 28) / 100,
                               alignSelf: "center",
                               borderWidth: 2.2,
-                              borderColor: Colors.bordercolorblue,
+                              borderColor: Colors.Blue,
                               borderTopLeftRadius: (windowWidth * 2) / 100,
                               borderTopRightRadius: (windowWidth * 2) / 100,
-                              backgroundColor: Colors.bordercolorblue,
+                              backgroundColor: Colors.Blue,
                               alignSelf: "center",
                             }
                           : {
@@ -1605,7 +1605,7 @@ export default class EditProfile extends Component {
                       style={
                         this.state.lbtn == true
                           ? {
-                              color: Colors.textblue,
+                              color: Colors.Blue,
 
                               fontFamily: Font.blackheadingfontfamily,
                               fontSize: Font.tabtextsize,
@@ -1633,10 +1633,10 @@ export default class EditProfile extends Component {
                             width: (windowWidth * 28) / 100,
                             alignSelf: "center",
                             borderWidth: 2.2,
-                            borderColor: Colors.bordercolorblue,
+                            borderColor: Colors.Blue,
                             borderTopLeftRadius: (windowWidth * 2) / 100,
                             borderTopRightRadius: (windowWidth * 2) / 100,
-                            backgroundColor: Colors.bordercolorblue,
+                            backgroundColor: Colors.Blue,
                             alignSelf: "center",
                           }
                         : {
@@ -1742,7 +1742,7 @@ export default class EditProfile extends Component {
                         borderRadius: (windowWidth * 4) / 100,
                         borderWidth: 2,
                         borderColor: Colors.bordercolor_light_blue,
-                        backgroundColor: "white",
+                        backgroundColor: "White",
                       }}
                     >
                       <TouchableOpacity
@@ -1801,7 +1801,7 @@ export default class EditProfile extends Component {
                   <TextInput
                      style={{
                     width: '100%',
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
                     height: (windowWidth * 12) / 100,
@@ -1821,7 +1821,7 @@ export default class EditProfile extends Component {
                     returnKeyType='done'
                   />
                   </View>
-                {this.state.namefocus==true && <View style={{position:'absolute',backgroundColor:'white',left:windowWidth*4/100,top:-windowWidth*2.5/100,paddingHorizontal:windowWidth*1/100}}>
+                {this.state.namefocus==true && <View style={{position:'absolute',backgroundColor:'White',left:windowWidth*4/100,top:-windowWidth*2.5/100,paddingHorizontal:windowWidth*1/100}}>
                      <Text style={{color:'#0057A5',textAlign:config.textalign}}>{Lang_chg.textinputname[config.language]}</Text>
                  </View>} */}
                   </View>
@@ -1928,7 +1928,7 @@ export default class EditProfile extends Component {
                       {/* <TextInput
                         style={{
                           width: '100%',
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: Font.placeholdersize,
                           textAlign: 'center',
                           height: Font.placeholder_height,
@@ -1967,7 +1967,7 @@ export default class EditProfile extends Component {
                         <View
                           style={{
                             position: 'absolute',
-                            backgroundColor: 'white',
+                            backgroundColor: 'White',
                             left: (windowWidth * 5) / 100,
                             top: (-windowWidth * 2) / 100,
                             paddingHorizontal: (windowWidth * 1) / 100,
@@ -2029,7 +2029,7 @@ export default class EditProfile extends Component {
                       {/* <TextInput
                         style={{
                           width: '100%',
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
                           height: (windowWidth * 12) / 100,
@@ -2050,7 +2050,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
 
-                      {this.state.numberfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                      {this.state.numberfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputnumber[config.language]}</Text>
                       </View>} */}
                     </View>
@@ -2089,7 +2089,7 @@ export default class EditProfile extends Component {
                       <TextInput
                         style={{
                           width: '100%',
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
                           height: (windowWidth * 12) / 100,
@@ -2110,7 +2110,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                    {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputemails[config.language]}</Text>
                     </View>} */}
                   </View>
@@ -2176,7 +2176,7 @@ export default class EditProfile extends Component {
                       <View
                         style={{
                           position: "absolute",
-                          backgroundColor: "white",
+                          backgroundColor: "White",
                           left: (windowWidth * 4) / 100,
                           top: (-windowWidth * 2.5) / 100,
                           paddingHorizontal: (windowWidth * 1) / 100,
@@ -2440,7 +2440,7 @@ export default class EditProfile extends Component {
                           style={{
                             width: "77%",
                             alignSelf: "center",
-                            color: Colors.textblack,
+                            color: Colors.Black,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textRotate,
                             fontFamily: Font.placeholderfontfamily,
@@ -2469,7 +2469,7 @@ export default class EditProfile extends Component {
                       <View
                         style={{
                           position: "absolute",
-                          backgroundColor: "white",
+                          backgroundColor: "White",
                           left: (windowWidth * 4) / 100,
                           top: (-windowWidth * 2.5) / 100,
                           paddingHorizontal: (windowWidth * 1) / 100,
@@ -2520,7 +2520,7 @@ export default class EditProfile extends Component {
                       <TextInput
                         style={{
                           width: '100%',
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
                           height: (windowWidth * 12) / 100,
@@ -2540,7 +2540,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.addressfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                    {this.state.addressfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputaddress[config.language]}</Text>
                     </View>} */}
                   </View>
@@ -2578,7 +2578,7 @@ export default class EditProfile extends Component {
                       <TextInput
                         style={{
                           width: '100%',
-                          color: Colors.textblack,
+                          color: Colors.Black,
                           fontSize: Font.placeholdersize,
                           textAlign: config.textalign,
                           height: (windowWidth * 12) / 100,
@@ -2598,7 +2598,7 @@ export default class EditProfile extends Component {
                         returnKeyType='done'
                       />
                     </View>
-                    {this.state.identityfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                    {this.state.identityfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                       <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputidentity[config.language]}</Text>
                     </View>} */}
                   </View>
@@ -2626,7 +2626,7 @@ export default class EditProfile extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.textwhite,
+                          color: Colors.White,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.buttontextsize,
                           alignSelf: "flex-end",
@@ -2834,7 +2834,7 @@ export default class EditProfile extends Component {
                           <TextInput
                             style={{
                               width: '100%',
-                              color: Colors.textblack,
+                              color: Colors.Black,
                               fontSize: Font.placeholdersize,
                               textAlign: config.textalign,
                               height: (windowWidth * 12) / 100,
@@ -2858,7 +2858,7 @@ export default class EditProfile extends Component {
                           <View
                             style={{
                               position: 'absolute',
-                              backgroundColor: 'white',
+                              backgroundColor: 'White',
                               left: (windowWidth * 4) / 100,
                               top: (-windowWidth * 2) / 100,
                               paddingHorizontal: (windowWidth * 1) / 100,
@@ -3056,7 +3056,7 @@ export default class EditProfile extends Component {
                         <TextInput
                           style={{
                             width: '100%',
-                            color: Colors.textblack,
+                            color: Colors.Black,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
                             height: (windowWidth * 12) / 100,
@@ -3076,7 +3076,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.currentfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                      {this.state.currentfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputcurrent[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3272,7 +3272,7 @@ export default class EditProfile extends Component {
                         <TextInput
                           style={{
                             width: '100%',
-                            color: Colors.textblack,
+                            color: Colors.Black,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
                             height: (windowWidth * 12) / 100,
@@ -3292,7 +3292,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.pastfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                      {this.state.pastfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputpastmedication[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3484,7 +3484,7 @@ export default class EditProfile extends Component {
                         <TextInput
                           style={{
                             width: '100%',
-                            color: Colors.textblack,
+                            color: Colors.Black,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
                             height: (windowWidth * 12) / 100,
@@ -3504,7 +3504,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.injuriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                      {this.state.injuriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputinjuries[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3696,7 +3696,7 @@ export default class EditProfile extends Component {
                         <TextInput
                           style={{
                             width: '100%',
-                            color: Colors.textblack,
+                            color: Colors.Black,
                             fontSize: Font.placeholdersize,
                             textAlign: config.textalign,
                             height: (windowWidth * 12) / 100,
@@ -3716,7 +3716,7 @@ export default class EditProfile extends Component {
                           returnKeyType='done'
                         />
                       </View>
-                      {this.state.sugeriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                      {this.state.sugeriesfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                         <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputsurgeries[config.language]}</Text>
                       </View>} */}
                       </View>
@@ -3909,7 +3909,7 @@ export default class EditProfile extends Component {
                           <TextInput
                             style={{
                               width: '100%',
-                              color: Colors.textblack,
+                              color: Colors.Black,
                               fontSize: Font.placeholdersize,
                               textAlign: config.textalign,
                               height: (windowWidth * 12) / 100,
@@ -3929,7 +3929,7 @@ export default class EditProfile extends Component {
                             returnKeyType='done'
                           />
                         </View>
-                        {this.state.chronicfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                        {this.state.chronicfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2.5 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                           <Text style={{ color: '#0057A5', textAlign: config.textalign }}>{Lang_chg.textinputchronic[config.language]}</Text>
                         </View>} */}
                         </View>
@@ -3962,7 +3962,7 @@ export default class EditProfile extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.textwhite,
+                          color: Colors.White,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.buttontextsize,
                           alignSelf: "flex-end",
@@ -3989,7 +3989,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4071,7 +4071,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4148,7 +4148,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4229,7 +4229,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4311,7 +4311,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4393,7 +4393,7 @@ export default class EditProfile extends Component {
                   <View
                     style={{
                       width: "100%",
-                      backgroundColor: Colors.whitebackgroundcolor,
+                      backgroundColor: Colors.White,
                     }}
                   >
                     <View
@@ -4491,7 +4491,7 @@ export default class EditProfile extends Component {
                       >
                         <Text
                           style={{
-                            color: Colors.textwhite,
+                            color: Colors.White,
                             fontFamily: Font.allergies_heading_fontfamily,
                             fontSize: Font.allergies_txt_size_edit,
                             alignSelf: "flex-end",

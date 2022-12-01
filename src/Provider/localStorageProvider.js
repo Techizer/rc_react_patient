@@ -11,7 +11,7 @@ class localStorageProvider {
     }
 
     getItemString(key) {
-        console.log('getItemObject key',key);
+        // console.log('getItemObject key',key);
         var item = AsyncStorage.getItem(key);
         return item;
     }
@@ -27,7 +27,7 @@ class localStorageProvider {
     }
  
     async getItemObject(key) {
-        console.log('getItemObject key',key);
+        // console.log('getItemObject key',key);
         var item = await AsyncStorage.getItem(key);
         return JSON.parse(item);
     }

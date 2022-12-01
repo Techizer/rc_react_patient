@@ -71,7 +71,7 @@ const AuthInputBoxSec = ({
               fontSize: 14,
               marginBottom: 5,
               marginTop: 15,
-              color: Colors.textblack,
+              color: Colors.Black,
             }}
           >
             {lableText} {lblTxtInfo ? "(" + lblTxtInfo + ")" : ""}
@@ -117,7 +117,7 @@ const AuthInputBoxSec = ({
                   backgroundColor:
                     props.editable == false
                       ? Colors.tab_background_color
-                      : "white",
+                      : "White",
                 },
               ]}
               ref={(r) => {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: 48,
-    color: Colors.textblack,
+    color: Colors.Black,
     fontSize: Font.placeholdersize,
     textAlign: config.textalign,
     //height: (windowWidth * 12) / 100,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     includeFontPadding: false,
-    backgroundColor: "white",
+    backgroundColor: "White",
     lineHeight: 48,
     // borderColor: 'red', //Colors.placeholder_border
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   errorTxt: {
-    color: "white",
+    color: "White",
     fontWeight: "bold",
     fontSize: 12,
   },

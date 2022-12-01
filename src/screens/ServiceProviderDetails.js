@@ -26,9 +26,12 @@ import {
   apifuntion,
 } from "../Provider/utilslib/Utils";
 import { Appbtn2, AppHeader2 } from "../Allcomponents";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import HTMLView from "react-native-htmlview";
-import Footer from "../Footer";
+import ScreenHeader from "../components/ScreenHeader";
+import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { Button } from "../components";
 
 const rootcaresteps = [
   {
@@ -75,15 +78,15 @@ export default class ServiceProviderDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pass_status: this.props.route.params.pass_status,
-      nurse_id: this.props.route.params.nurse_id,
+      providerType: this.props.route.params.providerType,
+      providerId: this.props.route.params.providerId,
       isFromHospital: this.props.route.params.isFromHospital,
-      nurse_data: "",
+      provider_details: "",
       message: "",
       modalVisible: false,
       modal2Visible: false,
       how_work_value: "",
-      availability_task: "",
+      available_days: "",
     };
     screens = "Login";
   }
@@ -105,31 +108,31 @@ export default class ServiceProviderDetails extends Component {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url = config.baseURL + "api-patient-service-provider-details";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("id", this.state.nurse_id);
+    data.append("id", this.state.providerId);
     data.append("login_user_id", user_id);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
     data.append("work_area", user_details["work_area"]);
 
-    consolepro.consolelog("data", data);
+    consolepro.consolelog("get_Services-query-data......", data);
+    // return false
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", JSON.stringify(obj));
+        consolepro.consolelog("get_Service-details-response", JSON.stringify(obj));
 
         if (obj.status == true) {
           let htmlData = '<!DOCTYPE html><html><body style="color:#0168b3">';
           let htmlDataClosed = "</body></html>";
 
           this.setState({
-            nurse_data: obj.result,
+            provider_details: obj.result,
             message: obj.message,
             availability_arr: obj.result.availability,
           });
           let how_work = obj.result.how_work_value;
-          consolepro.consolelog("how_work", how_work);
+          // consolepro.consolelog("how_work", how_work);
 
           let result_new = how_work.replace('<font color="#0888D1">', "");
           result_new = result_new.replace("<h4>", '<h4 color="#0168b3">');
@@ -137,7 +140,7 @@ export default class ServiceProviderDetails extends Component {
           let result_new_tag = result_new.replace(/<\/p><p>/g, "</p>");
           htmlData = htmlData + result_new_tag + htmlDataClosed;
 
-          consolepro.consolelog("mfdgf", htmlData);
+          // consolepro.consolelog("htmlData", htmlData);
           this.setState({ how_work_value: htmlData });
           let hour_task = obj.result.availability;
           if (
@@ -148,8 +151,8 @@ export default class ServiceProviderDetails extends Component {
               hour_task[k] = hour_task[k].slot_day;
             }
           }
-          console.log("musaknfg", hour_task.toString());
-          this.setState({ availability_task: hour_task.toString() });
+          // console.log("availability-days", hour_task.toString());
+          this.setState({ available_days: hour_task.toString() });
         } else {
           msgProvider.showError(obj.message);
           return false;
@@ -159,1274 +162,467 @@ export default class ServiceProviderDetails extends Component {
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
-  
+
   render() {
     const { modalVisible } = this.state;
     const { modal2Visible } = this.state;
-    var item = this.state.nurse_data;
+    const { provider_details, available_days } = this.state;
     return (
-      <View style={{ flex: 1, backgroundColor: "#f1f2f4" }}>
-        <SafeAreaView style={{ flex: 0 }} />
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
-        <AppHeader2
-          navigation={this.props.navigation}
+        <ScreenHeader
           title={
-            this.state.pass_status == "nurse"
+            this.state.providerType == "nurse"
               ? Lang_chg.Nurse[config.language]
-              : this.state.pass_status == "physiotherapy"
-              ? Lang_chg.Physiotherapist[config.language]
-              : this.state.pass_status == "caregiver"
-              ? Lang_chg.Nurse_assistant[config.language]
-              : this.state.pass_status == "babysitter"
-              ? Lang_chg.Babysitter[config.language]
-              : this.state.pass_status == "doctor"
-              ? Lang_chg.Doctor[config.language]
-              : this.state.pass_status == "hospital"
-              ? Lang_chg.Hospital[config.language]
-              : Lang_chg.Lab[config.language]
+              : this.state.providerType == "physiotherapy"
+                ? Lang_chg.Physiotherapist[config.language]
+                : this.state.providerType == "caregiver"
+                  ? Lang_chg.Nurse_assistant[config.language]
+                  : this.state.providerType == "babysitter"
+                    ? Lang_chg.Babysitter[config.language]
+                    : this.state.providerType == "doctor"
+                      ? Lang_chg.Doctor[config.language]
+                      : Lang_chg.Lab[config.language]
           }
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon={leftArrow}
+          rightIcon={Notification}
         />
 
-        {this.state.nurse_data != null && this.state.nurse_data != "" && (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom:
-                this.state.pass_status !== "lab"
-                  ? (windowWidth * 20) / 100
-                  : (windowWidth * 17) / 100,
-            }}
-          >
-            <View style={{ marginVertical: (windowWidth * 3) / 100, flex: 1 }}>
-              <View>
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    paddingBottom: (windowWidth * 5) / 100,
-                    paddingHorizontal: (windowWidth * 4) / 100,
-                    // alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      paddingVertical: (windowWidth * 1) / 100,
-                      marginTop: (windowWidth * 2) / 100,
-                    }}
-                  >
-                    {/* image and store name */}
 
-                    <View style={{ width: "28%" }}>
-                      <Image
-                        source={
-                          item.image == "NA" ||
-                          item.image == null ||
-                          item.image == ""
-                            ? Icons.p1
-                            : { uri: config.img_url3 + item.image }
-                        }
-                        style={{
-                          width: (windowWidth * 20) / 100,
-                          height: (windowWidth * 20) / 100,
-                          borderWidth: 1,
-                          borderColor: "#0888D1",
-                          borderRadius: (windowWidth * 10) / 100,
-                        }}
-                      />
-                    </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 100
+          }}>
 
-                    <View
+          {/* -------------------Info Container-------------------- */}
+
+          <View style={styles.infoContainer}>
+
+            <View
+              style={{
+                flexDirection: "row",
+                width: '100%',
+                paddingHorizontal: s(11),
+              }}>
+              {/* image and Name */}
+
+              <View style={{ width: "30%", }}>
+                {
+                  (provider_details.image == "NA" || provider_details.image == null || provider_details.image == "") ?
+                    <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderWidth: 1, borderRadius: 38, borderColor: Colors.Border }} />
+                    :
+                    <Image
+                      source={{ uri: config.img_url3 + provider_details.image }}
                       style={{
-                        width: "55%",
-                        alignSelf: "center",
+                        borderWidth: 2,
+                        borderColor: Colors.Border,
+                        width: s(75),
+                        height: s(75),
+                        borderRadius: s(75),
                       }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.fontmedium,
-                          fontSize: Font.name,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {item.provider_name}
-                      </Text>
-
-                      {this.state.pass_status !== "lab" ? (
-                        <>
-                          <Text
-                            style={{
-                              paddingVertical: (windowWidth * 1.5) / 100,
-                              fontFamily: Font.fontregular,
-                              fontSize: Font.subtext,
-                              color: Colors.cardlighgray,
-                              textAlign: config.textRotate,
-                            }}
-                          >
-                            {item.qualification}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              color: Colors.Theme,
-                              fontSize: Font.subtext,
-                              textAlign: config.textRotate,
-                            }}
-                          >
-                            {item.speciality}
-                          </Text>
-                        </>
-                      ) : (
-                        <Text
-                          style={{
-                            paddingVertical: (windowWidth * 1.5) / 100,
-                            fontFamily: Font.fontregular,
-                            fontSize: Font.subtext,
-                            color: Colors.Theme,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {item.iso_text}
-                        </Text>
-                      )}
-                    </View>
-                    {this.state.pass_status === "lab" &&
-                    item.hospital_id !== "" ? (
-                      <View
-                        style={{
-                          backgroundColor: "#FFA800",
-                          width: "17%",
-                          height: 20,
-                          marginTop: -13,
-                          marginLeft: 15,
-                          borderBottomLeftRadius: (windowWidth * 2) / 100,
-                          paddingVertical: 3,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#fff",
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 2.5) / 100,
-                            alignSelf: "center",
-                          }}
-                        >
-                          {Lang_chg.Hospital[config.language]}
-                        </Text>
-                      </View>
-                    ) : (
-                      this.state.isFromHospital && (
-                        <View
-                          style={{
-                            backgroundColor: "#FFA800",
-                            width: "17%",
-                            height: 20,
-                            marginTop: -13,
-                            marginLeft: 15,
-                            // borderTopLeftRadius : (windowWidth * 2) / 100,
-                            borderBottomLeftRadius: (windowWidth * 2) / 100,
-                            paddingVertical: 3,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "#fff",
-                              fontFamily: Font.fontmedium,
-                              fontSize: (windowWidth * 2.5) / 100,
-                              alignSelf: "center",
-                            }}
-                          >
-                            {Lang_chg.Hospital[config.language]}
-                          </Text>
-                        </View>
-                      )
-                    )}
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      borderBottomWidth: (windowWidth * 0.3) / 100,
-                      paddingBottom: (windowWidth * 4) / 100,
-                      borderColor: Colors.gainsboro,
-                      paddingTop: (windowWidth * 4) / 100,
-                      width: "97%",
-                      alignSelf: "center",
-                    }}
-                  >
-                    <View style={{ width: "33.3%" }}>
-                      <Text
-                        style={{
-                          color: Colors.cardlighgray,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {this.state.pass_status !== "lab"
-                          ? Lang_chg.Experience[config.language]
-                          : Lang_chg.ESTABLISHED[config.language]}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.fontmedium,
-                          fontSize: Font.regulartext_size,
-                          paddingTop: (windowWidth * 2) / 100,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {item.experience !== "" ? item.experience : "-"}
-                      </Text>
-                    </View>
-                    <View style={{ width: "33.3%" }}>
-                      <Text
-                        style={{
-                          color: Colors.cardlighgray,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.Bookings_new[config.language]}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.fontmedium,
-                          fontSize: Font.regulartext_size,
-                          paddingTop: (windowWidth * 2) / 100,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {item.booking_count}
-                      </Text>
-                    </View>
-                    <View style={{ width: "33.3%" }}>
-                      <Text
-                        style={{
-                          color: Colors.cardlighgray,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.Rating[config.language]}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          paddingTop: (windowWidth * 2) / 100,
-                        }}
-                      >
-                        <Image
-                          source={Icons.starrating}
-                          style={{
-                            // tintColor: '#fff',
-                            width: (windowWidth * 3.3) / 100,
-                            height: (windowWidth * 3.3) / 100,
-                            alignSelf: "center",
-                          }}
-                        />
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.regulartext_size,
-                            marginLeft: (windowWidth * 2) / 100,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {item.avg_rating}.0
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  {this.state.pass_status !== "lab" ? (
-                    <View
-                      style={{
-                        borderBottomWidth: (windowWidth * 0.3) / 100,
-                        paddingVertical: (windowWidth * 4) / 100,
-                        borderColor: Colors.gainsboro,
-                        width: "96%",
-                        alignSelf: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          color: "#000",
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {item.description}
-                      </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        borderBottomWidth: (windowWidth * 0.3) / 100,
-                        paddingVertical: (windowWidth * 4) / 100,
-                        borderColor: Colors.gainsboro,
-                        width: "96%",
-                        alignSelf: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          color: "#000",
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.AVAILABLE_TESTS[config.language]}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          marginTop: (windowWidth * 4) / 100,
-                          color: Colors.Theme,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {item.available_test}
-                      </Text>
-                    </View>
-                  )}
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingVertical: (windowWidth * 2) / 100,
-                      borderRadius: (windowWidth * 1) / 100,
-                      width: "97%",
-                      alignSelf: "center",
-                      paddingVertical: (windowWidth * 2) / 100,
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                      }}
-                    >
-                      {config.language == 0 ? (
-                        <Image
-                          source={Icons.clock}
-                          style={{
-                            resizeMode: "contain",
-                            width: (windowWidth * 4) / 100,
-                            height: (windowWidth * 4) / 100,
-                          }}
-                        />
-                      ) : (
-                        <Image
-                          source={Icons.clock_arabic_gray}
-                          style={{
-                            resizeMode: "contain",
-                            width: (windowWidth * 4) / 100,
-                            height: (windowWidth * 4) / 100,
-                          }}
-                        />
-                      )}
-                      <Text
-                        style={{
-                          marginLeft: (windowWidth * 1.5) / 100,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          color: Colors.DarkGrey,
-                        }}
-                      >
-                        {item.bavi_text}
-                      </Text>
-                    </View>
-                    <View>
-                      <Text
-                        style={{
-                          color: Colors.Theme,
-                          fontFamily: Font.fontmedium,
-                          fontSize: Font.subtext,
-                        }}
-                      >
-                        {this.state.availability_task}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      borderColor: Colors.bordercolor,
-                      borderBottomWidth: (windowWidth * 0.3) / 100,
-                      marginTop: (windowWidth * 1) / 100,
-                    }}
-                  />
-                  {this.state.isFromHospital ? (
-                    <Appbtn2
-                      onPressHandler={() => {
-                        this.props.navigation.navigate("Booking", {
-                          pass_status: this.state.pass_status,
-                          nurse_id: this.state.nurse_id,
-                          display: "taskbooking",
-                          indexPosition: 0,
-                          isFromHospital: this.state.isFromHospital,
-                          hospitalId: this.props.route.params.hospitalId,
-                        });
-                      }}
-                      bgcolor={Colors.buttoncolorhgreen}
-                      title={Lang_chg.BookOnlineAppointment[config.language]}
                     />
-                  ) : this.state.pass_status === "doctor" ? (
-                    <Appbtn2
-                      onPressHandler={() => {
-                        this.props.navigation.navigate("Booking", {
-                          pass_status: this.state.pass_status,
-                          nurse_id: this.state.nurse_id,
-                          display: "taskbooking",
-                          indexPosition: 0,
-                        });
-                      }}
-                      bgcolor={Colors.buttoncolorhgreen}
-                      title={Lang_chg.BookOnlineAppointment[config.language]}
-                    />
-                  ) : this.state.pass_status === "lab" ? (
-                    <Appbtn2
-                      onPressHandler={() => {
-                        this.props.navigation.navigate("Booking", {
-                          pass_status: this.state.pass_status,
-                          nurse_id: this.state.nurse_id,
-                          display: "testBooking",
-                          indexPosition: 0,
-                        });
-                      }}
-                      bgcolor={Colors.buttoncolorhgreen}
-                      title={Lang_chg.BOOKLABTESTAPPOINTMENT[config.language]}
-                    />
-                  ) : (
-                    item.task_base_enable == 0 && (
-                      <Appbtn2
-                        onPressHandler={() => {
-                          this.props.navigation.navigate("Booking", {
-                            pass_status: this.state.pass_status,
-                            nurse_id: this.state.nurse_id,
-                            display: "taskbooking",
-                          });
-                        }}
-                        bgcolor={Colors.buttoncolorhgreen}
-                        title={
-                          Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]
-                        }
-                      />
-                    )
-                  )}
-                  {this.state.pass_status === "doctor" &&
-                  !this.state.isFromHospital ? (
-                    <Appbtn2
-                      onPressHandler={() => {
-                        this.props.navigation.navigate("Booking", {
-                          pass_status: this.state.pass_status,
-                          nurse_id: this.state.nurse_id,
-                          display: "hourlybooking",
-                          indexPosition: 1,
-                        });
-                      }}
-                      bgcolor={Colors.Theme}
-                      title={Lang_chg.BookHomeVisitAppointment[config.language]}
-                    />
-                  ) : (
-                    item.hour_base_enable == 0 && (
-                      <Appbtn2
-                        onPressHandler={() => {
-                          this.props.navigation.navigate("Booking", {
-                            pass_status: this.state.pass_status,
-                            nurse_id: this.state.nurse_id,
-                            display: "hourlybooking",
-                          });
-                        }}
-                        bgcolor={Colors.Theme}
-                        title={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
-                      />
-                    )
-                  )}
-                  {this.state.pass_status === "lab" && (
-                    <>
-                      <View
-                        style={{
-                          width: "120%",
-                          alignSelf: "center",
-                          borderColor: Colors.bordercolor,
-                          borderBottomWidth: (windowWidth * 0.5) / 100,
-                          marginTop: (windowWidth * 5) / 100,
-                        }}
-                      />
-                      <View
-                        style={{
-                          marginTop: (windowWidth * 5) / 100,
-                          height:
-                            item.available_package !== null
-                              ? (windowWidth * 48) / 100
-                              : (windowWidth * 20) / 100,
-                          // paddingVertical: (windowWidth * 1) / 100,
-                          elevation: 5,
-                          shadowRadius: 2,
-                          backgroundColor: "#fff",
-                        }}
-                      >
-                        <View style={{ width: "100%", alignSelf: "center" }}>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              alignItem: "center",
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textAlign: config.textalign,
-                                fontFamily: Font.fontregular,
-                                fontSize: (windowWidth * 4) / 100,
-                              }}
-                            >
-                              {Lang_chg.HealthPackages[config.language]}
-                            </Text>
-
-                            {item.available_package !== null && (
-                              <Text
-                                onPress={() => {
-                                  this.props.navigation.navigate(
-                                    "LabPackageListing",
-                                    { providerId: this.state.nurse_id }
-                                  );
-                                }}
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: Font.regulartext_size,
-                                  color: Colors.Theme,
-                                }}
-                              >
-                                {Lang_chg.See_all[config.language]}
-                              </Text>
-                            )}
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            width: "100%",
-                            backgroundColor: "#fff",
-                            paddingVertical: (windowWidth * 3) / 100,
-                            marginBottom: (windowWidth * 1) / 100,
-                          }}
-                        >
-                          {item.available_package != null ? (
-                            <FlatList
-                              showsHorizontalScrollIndicator={false}
-                              horizontal={true}
-                              data={item.available_package}
-                              renderItem={({ item, index }) => {
-                                return (
-                                  <TouchableOpacity
-                                    onPress={() => {
-                                      this.props.navigation.navigate(
-                                        "LabPackageDetails",
-                                        {
-                                          packageId: item.pid,
-                                          providerId: this.state.nurse_id,
-                                        }
-                                      );
-                                    }}
-                                    style={[
-                                      {
-                                        borderRadius: (windowWidth * 2) / 100,
-                                        marginLeft: (windowWidth * 2) / 100,
-                                        width: (windowWidth * 40) / 100,
-                                        height: (windowWidth * 40) / 100,
-                                        backgroundColor: "#fff",
-                                        borderColor: "#DFDFDF",
-                                        borderWidth: 1,
-                                      },
-                                    ]}
-                                  >
-                                    <Text
-                                      style={{
-                                        width: "100%",
-                                        paddingVertical: (windowWidth * 1.5) / 100,
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        color: "#000",
-                                        fontFamily: Font.fontmedium,
-                                        fontSize: (windowWidth * 3.5) / 100,
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-
-                                    <Text
-                                      style={{
-                                        paddingVertical: (windowWidth * 2) / 100,
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        fontFamily: Font.fontregular,
-                                        textAlign: "left",
-                                        fontSize: Font.sregulartext_size,
-                                      }}
-                                    >
-                                      {item.iso_certificate}
-                                    </Text>
-                                    <View
-                                      style={{
-                                        width: "90%",
-                                        alignSelf: "center",
-                                        borderColor: Colors.bordercolor,
-                                        borderBottomWidth:
-                                          (windowWidth * 0.5) / 100,
-                                        marginTop: (windowWidth * 1) / 100,
-                                      }}
-                                    />
-                                    <Text
-                                      style={{
-                                        paddingVertical: (windowWidth * 2) / 100,
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        fontFamily: Font.fontregular,
-                                        textAlign: "left",
-                                        color: Colors.buttoncolorhgreen,
-                                        fontSize: Font.sregulartext_size,
-                                      }}
-                                    >
-                                      {item.dis_off}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        fontFamily: Font.fontregular,
-                                        textAlign: "left",
-                                        fontSize: Font.sregulartext_size,
-                                        textDecorationLine: "line-through",
-                                        textDecorationStyle: "solid",
-                                      }}
-                                    >
-                                      {item.maxprice}
-                                    </Text>
-                                    <View
-                                      style={{
-                                        paddingVertical: (windowWidth * 2) / 100,
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        alignItem: "center",
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          textAlign: config.textalign,
-                                          fontFamily: Font.fontmedium,
-                                          fontSize: (windowWidth * 4) / 100,
-                                        }}
-                                      >
-                                        {item.price}
-                                      </Text>
-
-                                      <Text
-                                        onPress={() => {
-                                          this.props.navigation.navigate(
-                                            "Booking",
-                                            {
-                                              pass_status:
-                                                this.state.pass_status,
-                                              nurse_id: this.state.nurse_id,
-                                              display: "packageBooking",
-                                              indexPosition: 1,
-                                            }
-                                          );
-                                        }}
-                                        style={{
-                                          fontFamily: Font.fontsemibold,
-                                          fontSize: Font.regulartext_size,
-                                          color: Colors.Theme,
-                                          textTransform: "uppercase",
-                                        }}
-                                      >
-                                        {Lang_chg.Book[config.language]}
-                                      </Text>
-                                    </View>
-                                  </TouchableOpacity>
-                                );
-                              }}
-                            />
-                          ) : (
-                            <Text
-                              style={{
-                                fontFamily: Font.fontregular,
-                                fontSize: (windowWidth * 4) / 100,
-                                alignSelf: "center",
-                                paddingVertical: (windowWidth * 3) / 100,
-                                textAlign: "center",
-                                color: Colors.Theme,
-                              }}
-                            >
-                              {Lang_chg.Packages_Unavailable[config.language]}
-                            </Text>
-                          )}
-                        </View>
-                      </View>
-                    </>
-                  )}
-                </View>
-
-                <View
-                  style={{
-                    width: "100%",
-                    backgroundColor: Colors.orange,
-                    paddingVertical: (windowWidth * 2) / 100,
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "95%",
-                      backgroundColor: Colors.orange,
-                      flexDirection: "row",
-                      alignSelf: "center",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        width: "50%",
-                      }}
-                    >
-                      <View style={{ width: "20%", alignSelf: "center" }}>
-                        <Image
-                          style={{
-                            height: (windowWidth * 6) / 100,
-                            width: (windowWidth * 6) / 100,
-                            alignSelf: "center",
-                            borderRadius: (windowWidth * 3) / 100,
-                          }}
-                          source={
-                            this.state.pass_status == "nurse"
-                              ? Icons.nurse
-                              : this.state.pass_status == "physiotherapy"
-                              ? Icons.Physiotherapist
-                              : this.state.pass_status == "caregiver"
-                              ? Icons.NurseAssistant
-                              : this.state.pass_status == "babysitter"
-                              ? Icons.Babysitter
-                              : this.state.pass_status == "doctor"
-                              ? Icons.Doctor
-                              : this.state.pass_status == "lab"
-                              ? Icons.Lab
-                              : Icons.Doctor
-                          }
-                        />
-                      </View>
-                      {config.language == 0 ? (
-                        <View style={{ width: "79%", alignSelf: "center" }}>
-                          {this.state.pass_status == "nurse" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Nurse[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status == "physiotherapy" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Physiotherapist[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}
-                            </Text>
-                          ) : this.state.pass_status == "caregiver" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Nurse_assistant[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status == "babysitter" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Babysitter[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status == "doctor" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Doctor[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status === "lab" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Lab[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          ) : (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Doctor[config.language]}{" "}
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                            </Text>
-                          )}
-                        </View>
-                      ) : (
-                        <View style={{ width: "79%", alignSelf: "center" }}>
-                          {this.state.pass_status == "nurse" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Nurse[config.language]}
-                            </Text>
-                          ) : this.state.pass_status == "physiotherapy" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Physiotherapist[config.language]}
-                            </Text>
-                          ) : this.state.pass_status == "caregiver" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Nurse_assistant[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status == "babysitter" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Babysitter[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status == "doctor" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Doctor[config.language]}{" "}
-                            </Text>
-                          ) : this.state.pass_status === "lab" ? (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Lab[config.language]}{" "}
-                            </Text>
-                          ) : (
-                            <Text
-                              style={{
-                                color: Colors.white,
-                                fontFamily: Font.fontmedium,
-                                fontSize: (windowWidth * 3) / 100,
-                                textTransform: "capitalize",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Booking_detail[config.language]}{" "}
-                              {Lang_chg.Doctor[config.language]}{" "}
-                            </Text>
-                          )}
-                        </View>
-                      )}
-                      <View
-                        style={{
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderRightWidth: 1,
-                          borderRightColor: "#fff",
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: "50%",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: Colors.white,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.subtext,
-                          marginLeft: (windowWidth * 3) / 100,
-                          textAlign: "center",
-                        }}
-                      >
-                        {Lang_chg.RootsCare[config.language]}
-                      </Text>
-                      <Text
-                        onPress={() => this.setModalVisible(true)}
-                        style={{
-                          color: Colors.white,
-                          fontFamily: Font.fontmedium,
-                          fontSize: Font.subtext,
-                        }}
-                      >
-                        {item.how_work_text}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
+                }
               </View>
-              {this.state.pass_status !== "lab" && (
-                <View
+              <View
+                style={{
+                  width: "70%",
+                  alignSelf: "center",
+                  height: '100%',
+                  paddingTop: vs(3)
+                }} >
+                <Text
                   style={{
-                    marginVertical: (windowWidth * 3) / 100,
-                    height: (windowWidth * 65) / 100,
-                    paddingVertical: (windowWidth * 3) / 100,
-                    shadowOpacity: 0.3,
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 1 },
-                    elevation: 5,
-                    shadowRadius: 2,
-                    backgroundColor: "#fff",
-                  }}
-                >
-                  <View style={{ width: "90%", alignSelf: "center" }}>
-                    <View
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.xxlarge,
+                    textAlign: config.textRotate,
+                    color: Colors.detailTitles
+                  }}>
+                  {provider_details.provider_name}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.lightGrey,
+                    marginTop: vs(2)
+                  }}>
+                  {provider_details.qualification}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.Blue,
+                    marginTop: vs(5)
+                  }}>
+                  {provider_details.speciality}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.experienceContainer}>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.lightGrey,
+                    marginTop: vs(2)
+                  }}>
+                  {'Experience'}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.xlarge,
+                    textAlign: config.textRotate,
+                    color: Colors.detailTitles,
+                    marginTop: vs(5)
+                  }}>
+                  {provider_details.experience}
+                </Text>
+              </View>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {'Bookings'}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.xlarge,
+                    textAlign: config.textRotate,
+                    color: Colors.detailTitles,
+                    marginTop: vs(5),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {provider_details.booking_count}
+                </Text>
+              </View>
+              <View style={{ flex: 1, }}>
+                <Text
+                  style={{
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {'Rating'}
+                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
+                  <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
+                  <Text
+                    style={{
+                      fontFamily: Font.fontmedium,
+                      fontSize: Font.xlarge,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles,
+                      marginLeft: s(5)
+                    }}>
+                    {`${provider_details.avg_rating}.0`}
+                  </Text>
+                </View>
+
+              </View>
+            </View>
+
+            <View style={styles.descContainer}>
+              <Text
+                style={{
+                  fontFamily: Font.fontregular,
+                  fontSize: Font.xsmall,
+                  textAlign: config.textRotate,
+                  color: Colors.detailTitles,
+                }}>
+                {provider_details.description}
+              </Text>
+            </View>
+
+            <View style={styles.timeContainer}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', width: '30%', }}>
+                <SvgXml xml={Clock} height={s(15)} width={s(15)} style={{ marginRight: s(9) }} />
+                <Text
+                  style={{
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.medium,
+                    textAlign: config.textRotate,
+                    color: Colors.DarkGrey,
+                  }}>
+                  {'Availability'}
+                </Text>
+              </View>
+
+              <View style={{ alignItems: 'flex-end', width: '70%', }}>
+                <Text
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    color: Colors.Blue,
+                    fontSize: Font.medium,
+                    textAlign: config.textRotate,
+                  }}>
+                  {available_days}
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(18) }}></View>
+
+            <View style={styles.btnContainer}>
+              <Button
+                text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
+                btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                onPress={() => { }}
+              />
+
+              <Button
+                text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
+                btnStyle={{ marginTop: vs(10), backgroundColor: Colors.Theme }}
+                onPress={() => { }}
+              />
+            </View>
+          </View>
+
+          <View style={styles.aboutContainer}>
+
+            <View style={{ flexDirection: 'row', width: '75%', height: '100%', alignItems: 'center' }}>
+              <SvgXml xml={dummyDoc} height={s(23)} width={s(23)} style={{}} />
+              <Text
+                style={{
+                  fontFamily: Font.fontregular,
+                  fontSize: Font.small,
+                  textAlign: config.textRotate,
+                  color: Colors.White,
+                  paddingLeft: s(7),
+                  paddingRight: s(14),
+                }}>
+                {Lang_chg.Nurse_Booking[config.language]}
+              </Text>
+              <View style={{ height: '40%', borderWidth: 0.8, borderColor: Colors.backgroundcolor }}></View>
+              <Text
+                style={{
+                  fontFamily: Font.fontregular,
+                  fontSize: Font.small,
+                  textAlign: config.textRotate,
+                  color: Colors.White,
+                  paddingLeft: s(12),
+                }}>
+                {Lang_chg.RootsCare[config.language]}
+              </Text>
+            </View>
+
+            <View style={{ width: '25%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+              <Text
+                style={{
+                  fontFamily: Font.fontmedium,
+                  fontSize: Font.small,
+                  textAlign: config.textRotate,
+                  color: Colors.White,
+                  paddingLeft: s(12),
+                }}>
+                {Lang_chg.Howitworks[config.language]}
+              </Text>
+            </View>
+
+          </View>
+
+          <View style={styles.availableContainer}>
+
+
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              data={provider_details.available_provider}
+              // data={[1, 2, 3, 4, 5, 6]}
+              contentContainerStyle={{ paddingHorizontal: s(14) }}
+              ItemSeparatorComponent={()=>{
+                return (
+                  <View style={{width:s(8)}}>
+
+                  </View>
+                )
+              }}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate(
+                        "LabPackageDetails",
+                        {
+                          packageId: item.pid,
+                          providerId: this.state.providerId,
+                        }
+                      )
+                    }}
+                    style={[
+                      {
+                        borderRadius: 10,
+                        width: s(135),
+                        height: vs(150),
+                        backgroundColor: Colors.White,
+                        borderColor: Colors.Border,
+                        borderWidth: 1,
+                      }]}>
+
+                    <View style={{ height: '60%', width: '100%' }}>
+                      <ImageBackground
+                        source={{ uri: config.img_url3 + item.image }}
+                        style={{ height: '100%', width: '100%' }}
+                        imageStyle={{ borderTopLeftRadius: 9, borderTopRightRadius: 9 }}
+                      />
+                    </View>
+
+                    <View style={{ height: '40%', paddingHorizontal: s(6), justifyContent: 'center' }}>
+                      <Text
+                        style={{
+                          color: Colors.detailTitles,
+                          fontFamily: Font.fontmedium,
+                          fontSize: Font.small,
+                          textAlign: config.textRotate,
+                        }}>
+                        {item?.provider_name}
+                      </Text>
+
+                      <Text
+                        style={{
+                          color: Colors.lightGrey,
+                          fontFamily: Font.fontregular,
+                          fontSize: Font.xsmall,
+                          textAlign: config.textRotate,
+                          marginTop: vs(3)
+                        }}>
+                        {item?.qualification}
+                      </Text>
+
+                      <Text
+                        style={{
+                          color: Colors.Blue,
+                          fontFamily: Font.fontregular,
+                          fontSize: Font.xsmall,
+                          textAlign: config.textRotate,
+                          marginTop: vs(6)
+                        }}>
+                        {item?.speciality}
+                      </Text>
+                    </View>
+
+
+                    {/* <Text
                       style={{
+                        paddingVertical: (windowWidth * 2) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
+                        fontFamily: Font.fontregular,
+                        textAlign: "left",
+                        fontSize: Font.sregulartext_size,
+                      }}
+                    >
+                      {item.iso_certificate}
+                    </Text> */}
+
+                    {/* <View
+                      style={{
+                        width: "90%",
+                        alignSelf: "center",
+                        borderColor: Colors.bordercolor,
+                        borderBottomWidth:
+                          (windowWidth * 0.5) / 100,
+                        marginTop: (windowWidth * 1) / 100,
+                      }}
+                    /> */}
+
+                    {/* <Text
+                      style={{
+                        paddingVertical: (windowWidth * 2) / 100,
+                        paddingHorizontal: (windowWidth * 2) / 100,
+                        fontFamily: Font.fontregular,
+                        textAlign: "left",
+                        color: Colors.Green,
+                        fontSize: Font.sregulartext_size,
+                      }}
+                    >
+                      {item.dis_off}
+                    </Text> */}
+
+                    {/* <Text
+                      style={{
+                        paddingHorizontal: (windowWidth * 2) / 100,
+                        fontFamily: Font.fontregular,
+                        textAlign: "left",
+                        fontSize: Font.sregulartext_size,
+                        textDecorationLine: "line-through",
+                        textDecorationStyle: "solid",
+                      }}
+                    >
+                      {item.maxprice}
+                    </Text> */}
+
+                    {/* <View
+                      style={{
+                        paddingVertical: (windowWidth * 2) / 100,
                         flexDirection: "row",
                         justifyContent: "space-between",
+                        paddingHorizontal: (windowWidth * 2) / 100,
                         alignItem: "center",
                       }}
                     >
-                      {this.state.pass_status == "nurse" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.AvailableNurse[config.language]}
-                        </Text>
-                      ) : this.state.pass_status == "physiotherapy" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.Availablephysotharpst[config.language]}
-                        </Text>
-                      ) : this.state.pass_status == "caregiver" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.Availableassistent[config.language]}
-                        </Text>
-                      ) : this.state.pass_status == "babysitter" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.Availablebabysitter[config.language]}
-                        </Text>
-                      ) : this.state.pass_status == "doctor" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.AvailableDoctor[config.language]}
-                        </Text>
-                      ) : this.state.pass_status === "lab" ? (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.AvailableLab[config.language]}
-                        </Text>
-                      ) : (
-                        <Text
-                          style={{
-                            textAlign: config.textalign,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                          }}
-                        >
-                          {Lang_chg.AvailableDoctor[config.language]}
-                        </Text>
-                      )}
+                      <Text
+                        style={{
+                          textAlign: config.textalign,
+                          fontFamily: Font.fontmedium,
+                          fontSize: (windowWidth * 4) / 100,
+                        }}
+                      >
+                        {item.price}
+                      </Text>
 
                       <Text
                         onPress={() => {
-                          this.props.navigation.goBack();
+                          this.props.navigation.navigate(
+                            "Booking",
+                            {
+                              pass_status:
+                                this.state.pass_status,
+                              nurse_id: this.state.nurse_id,
+                              display: "packageBooking",
+                              indexPosition: 1,
+                            }
+                          );
                         }}
                         style={{
                           fontFamily: Font.fontsemibold,
                           fontSize: Font.regulartext_size,
                           color: Colors.Theme,
+                          textTransform: "uppercase",
                         }}
                       >
-                        {Lang_chg.See_all[config.language]}
+                        {Lang_chg.Book[config.language]}
                       </Text>
-                    </View>
-                    {item.available_provider != "" ? (
-                      <View
-                        style={{
-                          alignSelf: "flex-start",
-                          marginTop: (windowWidth * 4) / 100,
-                        }}
-                      >
-                        <FlatList
-                          showsHorizontalScrollIndicator={false}
-                          horizontal={true}
-                          data={item.available_provider}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <View style={{ width: (windowWidth * 36) / 100 }}>
-                                <TouchableOpacity
-                                  activeOpacity={0.9}
-                                  onPress={() => {
-                                    this.get_Services(),
-                                      this.setState({
-                                        nurse_id: item.user_id,
-                                        isFromHospital: false,
-                                      });
-                                  }}
-                                  style={{
-                                    width: (windowWidth * 32) / 100,
-                                    marginRight: (windowWidth * 4) / 100,
-                                    borderWidth: 1,
-                                    borderColor: Colors.Border,
-                                    // shadowOpacity: 0.3,
-                                    // shadowColor:'#000',
-                                    // shadowOffset:{width:1,height:1},
-                                    // elevation:5,
-                                    // shadowRadius: 2,
-                                    backgroundColor: "#fff",
-                                    // borderColor:'#DFDFDF',
-                                    // borderWidth:1,
-                                    borderRadius: (windowWidth * 2) / 100,
-                                    paddingBottom: (windowWidth * 3) / 100,
-                                    marginBottom: 3,
-                                    // alignItems:'center'
-                                  }}
-                                >
-                                  <ImageBackground
-                                    imageStyle={{
-                                      backgroundColor:
-                                        Colors.Border,
-                                      borderTopLeftRadius:
-                                        (windowWidth * 1.7) / 100,
-                                      borderTopRightRadius:
-                                        (windowWidth * 1.7) / 100,
-                                    }}
-                                    style={{
-                                      borderRadius: (windowWidth * 2) / 100,
-                                      width: "100%",
-                                      height: (windowWidth * 28) / 100,
-                                      alignSelf: "center",
-                                    }}
-                                    source={
-                                      item.image == "NA" || item.image == null
-                                        ? Icons.p1
-                                        : { uri: config.img_url3 + item.image }
-                                    }
-                                  >
-                                    <View
-                                      style={{
-                                        borderRadius: (windowWidth * 1) / 100,
-                                        paddingHorizontal: (windowWidth * 2) / 100,
-                                        paddingVertical: (windowWidth * 1) / 100,
-                                        position: "absolute",
-                                        bottom: 3,
-                                        left: 5,
-                                        flexDirection: "row",
-                                        alignItems: "center",
+                    </View> */}
 
-                                        backgroundColor:
-                                          Colors.buttoncolorhgreen,
-                                      }}
-                                    >
-                                      <Image
-                                        source={Icons.starrating}
-                                        style={{
-                                          tintColor: "#fff",
-                                          width: 10,
-                                          height: 10,
-                                          alignSelf: "center",
-                                        }}
-                                      />
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.fontregular,
-                                          fontSize: (windowWidth * 2.5) / 100,
-                                          color: Colors.white,
-                                          marginLeft: (windowWidth * 1.2) / 100,
-                                        }}
-                                      >
-                                        {item.avg_rating}.0
-                                      </Text>
-                                    </View>
-                                  </ImageBackground>
-                                  <View
-                                    style={{
-                                      marginTop: (windowWidth * 1) / 100,
-                                      width: "90%",
-                                      //  backgroundColor:'red',
-                                      alignSelf: "center",
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        color: "#000",
-                                        fontSize: (windowWidth * 3) / 100,
-                                        marginTop: (windowWidth * 1) / 100,
-                                        fontFamily: Font.fontmedium,
-                                        textAlign: config.textRotate,
-                                      }}
-                                      numberOfLines={1}
-                                    >
-                                      {item.provider_name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        color: "#8F98A7",
-                                        fontSize: (windowWidth * 3) / 100,
-                                        marginTop: (windowWidth * 1) / 100,
-                                        fontFamily: Font.fontregular,
-                                        textAlign: config.textRotate,
-                                      }}
-                                      numberOfLines={1}
-                                    >
-                                      {item.qualification}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        color: "#0888D1",
-                                        fontSize: (windowWidth * 3) / 100,
-                                        marginTop: (windowWidth * 1) / 100,
-                                        fontFamily: Font.fontregular,
-                                        textAlign: config.textRotate,
-                                      }}
-                                      numberOfLines={1}
-                                    >
-                                      {item.speciality}
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                              </View>
-                            );
-                          }}
-                        />
-                      </View>
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: Font.fontregular,
-                          fontSize: (windowWidth * 3.5) / 100,
-                          color: Colors.Theme,
-                          textAlign: "center",
-                          marginTop: (windowWidth * 5) / 100,
-                        }}
-                      >
-                        {Lang_chg.Not_available_for_booking[config.language]}
-                      </Text>
-                    )}
-                  </View>
-                </View>
-              )}
-            </View>
-          </ScrollView>
-        )}
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
+          </View>
+
+        </ScrollView>
+
+
         {/* code for modal */}
         <Modal
           backdropOpacity={3}
@@ -1458,7 +654,7 @@ export default class ServiceProviderDetails extends Component {
                 style={{
                   width: "95%",
                   alignSelf: "center",
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.White,
                   paddingHorizontal: (windowWidth * 7) / 100,
                   paddingVertical: (windowWidth * 3) / 100,
                   // borderRadius: (windowWidth * 6) / 100,
@@ -1482,10 +678,9 @@ export default class ServiceProviderDetails extends Component {
 
                 <View
                   style={{
-                    backgroundColor: "red",
                     width: "95%",
                     alignSelf: "flex-end",
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.White,
                     paddingVertical: (windowWidth * 2) / 100,
                   }}
                 >
@@ -1517,53 +712,6 @@ export default class ServiceProviderDetails extends Component {
           </View>
         </Modal>
 
-        {/* {this.state.nurse_data != null && this.state.nurse_data != "" && (
-          <HideWithKeyboard>
-            <Footer
-              activepage="Home"
-              usertype={1}
-              footerpage={[
-                {
-                  name: "Home",
-                  fname: Lang_chg.home_footer[config.language],
-                  countshow: false,
-                  image: Icons.Home,
-                  activeimage: Icons.Home,
-                },
-                {
-                  name: "Appointment",
-                  fname: Lang_chg.Appointment_footer[config.language],
-                  countshow: false,
-                  image: Icons.Appointment,
-                  activeimage: Icons.Appointment,
-                },
-                {
-                  name: "Cart",
-                  fname: Lang_chg.Cart_footer[config.language],
-                  countshow: false,
-                  image: Icons.Cart,
-                  activeimage: Icons.Cart,
-                },
-                {
-                  name: "More",
-                  fname: Lang_chg.More_footer[config.language],
-                  countshow: false,
-                  image: Icons.More,
-                  activeimage: Icons.More,
-                },
-              ]}
-              navigation={this.props.navigation}
-              imagestyle1={{
-                width: 25,
-                height: 25,
-                paddingBottom: (windowWidth * 5.4) / 100,
-                backgroundColor: "white",
-                countcolor: "red",
-                countbackground: "red",
-              }}
-            />
-          </HideWithKeyboard>
-        )} */}
       </View>
     );
   }
@@ -1572,13 +720,65 @@ const HTMLstyles = StyleSheet.create({
   h4: {
     color: "#0888D1",
     fontSize: (windowWidth * 4.5) / 100,
-    //marginBottom:20,
-    // make links coloured pink
   },
   h5: {
-    color: "#0888D1", // make links coloured pink
+    color: "#0888D1",
     fontSize: (windowWidth * 4.3) / 100,
     fontFamily: Font.fontmedium,
-    // paddingBottom:20,
   },
 });
+
+const styles = StyleSheet.create({
+
+  infoContainer: {
+    paddingTop: vs(11),
+    backgroundColor: Colors.White,
+    marginTop: vs(7),
+    // shadowColor: Colors.Black,
+    // shadowOffset: { width: 1, height: 1 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 3,
+    zIndex: 999
+  },
+  experienceContainer: {
+    width: '100%',
+    paddingVertical: vs(18),
+    flexDirection: 'row',
+    paddingHorizontal: s(11),
+  },
+  descContainer: {
+    borderBottomWidth: 1.5,
+    borderTopWidth: 1.5,
+    borderBottomColor: Colors.backgroundcolor,
+    borderTopColor: Colors.backgroundcolor,
+    paddingTop: vs(11),
+    paddingBottom: vs(15),
+    paddingHorizontal: s(11),
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    marginTop: vs(11),
+    paddingHorizontal: s(11),
+  },
+  btnContainer: {
+    paddingVertical: vs(17)
+  },
+  aboutContainer: {
+    flexDirection: 'row',
+    height: vs(30),
+    width: '100%',
+    backgroundColor: Colors.orange,
+    paddingHorizontal: s(11),
+  },
+  availableContainer: {
+    marginTop: vs(7),
+    paddingVertical: vs(14),
+    backgroundColor: Colors.White,
+    // shadowColor: Colors.Black,
+    // shadowOffset: { width: 1, height: 1.5 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 3,
+  }
+
+
+})

@@ -123,6 +123,7 @@ const DoctorConsultation = [
     details: "15-30 mins",
     arabic_details: "30-15 دقيقة",
     pass_status: "doctor",
+    enableFor: 'ONLINE_CONSULT'
   },
   {
     id: 2,
@@ -133,6 +134,7 @@ const DoctorConsultation = [
     arabic_details: "لمدة 30 دقيقة    ",
     details: "for 30 mins",
     pass_status: "doctor",
+    enableFor: 'HOME_VISIT_CONSULT'
   },
 ];
 
@@ -146,7 +148,8 @@ const LabTest = [
     details: "Get test report within 24 hours of sample collected. All Rootscare labs are 100% safe.",
     arabic_details: "30-15 دقيقة",
     status: '1 day report guaranteed.',
-    pass_status: "T&C Apply",
+    terms: "T&C Apply",
+    pass_status: "lab",
   },
   // {
   //   id: 2,
@@ -471,7 +474,7 @@ export default class Home extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <View style={Styles.container3}>
-          
+
           {/* <View style={styles_new.headerstyle}>
             <View
               style={{
@@ -480,7 +483,7 @@ export default class Home extends Component {
                 width: "95%",
                 alignSelf: "center",
                 // paddingTop: (windowWidth * 3) / 100,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.White,
                 alignItems: "center",
                 backgroundColor:'pink'
               }}
@@ -615,13 +618,13 @@ export default class Home extends Component {
             </View>
           </View> */}
           <ScreenHeader
-          navigation={this.props.navigation}
-          title={'Home'}
-          leftIcon={this.state.profile_img }
-          rightIcon={true}
-          addressOld={this.state.address_old}
-          addressShow={this.state.address_show}
-          notiCount={this.state.notification_count}
+            navigation={this.props.navigation}
+            title={'Home'}
+            leftIcon={this.state.profile_img}
+            rightIcon={true}
+            addressOld={this.state.address_old}
+            addressShow={this.state.address_show}
+            notiCount={this.state.notification_count}
           />
 
           <ScrollView
@@ -637,7 +640,7 @@ export default class Home extends Component {
               <BannerCrousel data={bannersList} navigation={this.props.navigation} />
 
               {/* FlatList 1 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9) }}>
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9) }}>
                 <Appheading
                   title={
                     Lang_chg.HomeHealthcareServiceAppointments[config.language]
@@ -736,7 +739,7 @@ export default class Home extends Component {
               </View>
 
               {/* FlatList 2 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9), }}>
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), }}>
                 <Appheading
                   title={
                     Lang_chg.DoctorConsultation[config.language]
@@ -760,7 +763,10 @@ export default class Home extends Component {
                           onPress={() =>
                             this.props.navigation.navigate(
                               "AllServiceProviderListing",
-                              { pass_status: item.pass_status }
+                              {
+                                pass_status: item.pass_status,
+                                enableFor:item.enableFor
+                              }
                             )
                           }
                           style={{
@@ -834,7 +840,7 @@ export default class Home extends Component {
 
 
               {/* FlatList 3 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.white, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
+              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
                 <Appheading
                   title={
                     Lang_chg.Lab_Test_Booking[config.language]
@@ -881,7 +887,7 @@ export default class Home extends Component {
                             marginTop: vs(8),
                             marginHorizontal: s(1),
                             marginBottom: vs(4),
-                            backgroundColor: Colors.white,
+                            backgroundColor: Colors.White,
                             borderWidth: 0.8,
                             borderColor: Colors.ButtonBorder,
                             shadowOpacity: 0.3,
@@ -896,7 +902,7 @@ export default class Home extends Component {
                               style={{
                                 fontSize: Font.small,
                                 fontFamily: Font.fontmedium,
-                                color: Colors.textblue
+                                color: Colors.Blue
                               }}
                             >{Lang_chg.Find_Labs[config.language]}</Text>
                           </TouchableOpacity>
@@ -922,19 +928,19 @@ export default class Home extends Component {
                             )}
 
                             {config.language == 1 ? (
-                              <Text style={[Styles.subDetails, { color: Colors.textblue, marginTop: vs(8), }]}>
+                              <Text style={[Styles.subDetails, { color: Colors.Blue, marginTop: vs(8), }]}>
                                 {item.status}
                               </Text>
                             ) : (
-                              <Text style={[Styles.subDetails, { color: Colors.textblue, marginTop: vs(8), }]}>{item.status}</Text>
+                              <Text style={[Styles.subDetails, { color: Colors.Blue, marginTop: vs(8), }]}>{item.status}</Text>
                             )}
 
                             {config.language == 1 ? (
                               <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>
-                                {item.pass_status}
+                                {item.terms}
                               </Text>
                             ) : (
-                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>{item.pass_status}</Text>
+                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>{item.terms}</Text>
                             )}
 
                           </View>
@@ -961,7 +967,7 @@ export default class Home extends Component {
   }
 }
 const styles_new = StyleSheet.create({
- 
+
   icons: {
     width: (windowWidth * 13) / 100,
     height: (windowWidth * 13) / 100,

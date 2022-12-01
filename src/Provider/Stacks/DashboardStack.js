@@ -51,7 +51,7 @@ function ProfileDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        drawerStyle: { width: "100%", backgroundColor: Colors.white },
+        drawerStyle: { width: "100%", backgroundColor: Colors.White },
         drawerType: "front",
       }}
       drawerContent={(props) => <Drawerscreen {...props} />}
@@ -72,7 +72,7 @@ function HomeDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        drawerStyle: { width: "100%", backgroundColor: Colors.white },
+        drawerStyle: { width: "100%", backgroundColor: Colors.White },
         drawerType: "front",
       }}
       drawerContent={(props) => <Drawerscreen {...props} />}
@@ -93,7 +93,7 @@ const DashboardStack = ({ navigation }) => {
   return (
     <Tab.Navigator
       sceneContainerStyle={{
-        backgroundColor: Colors.whitebackgroundcolor
+        backgroundColor: Colors.White
       }}
       initialRouteName={'Home'}
       activeColor="#fff"
@@ -140,7 +140,7 @@ const DashboardStack = ({ navigation }) => {
             elevation: 8,
             position: 'absolute',
             bottom: 0,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.White,
             borderTopWidth:1,
             borderTopColor:Colors.Border
           }}>

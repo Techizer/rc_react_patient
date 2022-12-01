@@ -149,7 +149,7 @@ import {
             width: "100%",
             alignSelf: "center",
             flex: 1,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.White,
           }}
         >
   
@@ -187,7 +187,7 @@ import {
                 style={{
                   textAlign: config.textalign,
                   fontSize: (windowWidth * 4.5) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.fontmedium,
                   alignSelf: "center",
                 }}
@@ -332,7 +332,7 @@ import {
                   alignSelf: "center",
                   backgroundColor:
                     this.state.langaugeme == 0
-                      ? Colors.buttonbackgoungcolorlightblue
+                      ? Colors.lightBlue
                       : "#fff",
                   borderColor: "black",
                   borderBottomWidth: 1,
@@ -383,7 +383,7 @@ import {
                   backgroundColor:
                     this.state.langaugeme == 0
                       ? "#fff"
-                      : Colors.buttonbackgoungcolorlightblue,
+                      : Colors.lightBlue,
                   borderColor: "#fff",
                   borderColor: "black",
                   borderWidth: 1,
@@ -678,7 +678,7 @@ import {
                 style={{
                   textAlign: config.textalign,
                   fontSize: (windowWidth * 4) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.fontsemibold,
                 }}
               >
@@ -826,7 +826,7 @@ import {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: (windowWidth * 4) / 100,
-                          color: Colors.bordercolorblue,
+                          color: Colors.Blue,
                           alignSelf: "center",
                         }}
                       >
@@ -853,7 +853,7 @@ import {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: (windowWidth * 4) / 100,
-                          color: Colors.bordercolorblue,
+                          color: Colors.Blue,
                           alignSelf: "center",
                         }}
                       >

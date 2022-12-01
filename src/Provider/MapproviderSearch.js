@@ -176,7 +176,7 @@ export default class MapproviderSearch extends Component {
               </View>
             </TouchableOpacity>
             <View style={{ paddingVertical: 15, width: '60%' }}>
-              <Text style={{ color: 'white', fontFamily:Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{Lang_chg.titlesearchlocation[config.language]}</Text>
+              <Text style={{ color: 'White', fontFamily:Font.FontSemiBold, fontSize: windowWidth * 5 / 100, textAlign: 'center' }}>{Lang_chg.titlesearchlocation[config.language]}</Text>
             </View>
             <TouchableOpacity style={{ paddingVertical: 15, width: '20%', alignSelf: 'center' }} onPress={() => { this.state.profile == 'location' ? this.locationupdatebtn() : this.props.navigation.goBack() }}>
               <View style={{ width: '100%', alignSelf: 'center' }} >
@@ -368,7 +368,7 @@ export default class MapproviderSearch extends Component {
                   }}
                   styles={{
                     textInputContainer: {
-                      backgroundColor: 'white',
+                      backgroundColor: 'White',
                       // marginTop:10,
                       alignSelf: 'center',
                       height: 55,

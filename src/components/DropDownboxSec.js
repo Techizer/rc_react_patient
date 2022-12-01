@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   errorTxt: {
-    color: "white",
+    color: "White",
     fontWeight: "bold",
     fontSize: 12,
   },

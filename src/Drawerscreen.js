@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Platform,
 } from "react-native";
 import {
   Colors,
@@ -106,7 +107,7 @@ export default class Drawerscreen extends Component {
     var data = new FormData();
     data.append("user_id", user_id);
 
-    
+
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
@@ -132,14 +133,14 @@ export default class Drawerscreen extends Component {
       <SafeAreaView style={{ flex: 1, }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}
+          style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(150) : vs(65), }}
         >
           <View
             style={{
               flex: 1,
               width: "100%",
               // paddingHorizontal: s(15),
-              paddingBottom: vs(17),
+              paddingBottom: Platform.OS === 'ios' ? vs(90) : vs(80),
             }}
           >
             {/* user Profile */}
@@ -147,7 +148,7 @@ export default class Drawerscreen extends Component {
               disabled={isGuest === 'true' ? true : false}
               onPress={() => this.props.navigation.navigate("EditProfile")}
               activeOpacity={0.7}
-              style={{ width: '100%', alignItems: "center", flexDirection: 'row', paddingTop: vs(20), height: vs(140), backgroundColor: Colors.white }}>
+              style={{ width: '100%', alignItems: "center", flexDirection: 'row', paddingTop: vs(20), height: vs(140), backgroundColor: Colors.White }}>
 
               <View style={{ width: '31%', height: '100%' }} >
                 {
@@ -174,7 +175,7 @@ export default class Drawerscreen extends Component {
                       style={{
                         color: Colors.Black,
                         fontFamily: Font.fontmedium,
-                        fontSize: Font.xxlarge,
+                        fontSize: Font.xxxlarge,
                         textAlign: config.textRotate,
                         opacity: (isGuest === 'true') ? 0.3 : 1
                       }}
@@ -238,7 +239,7 @@ export default class Drawerscreen extends Component {
 
             {/* Appoints and bookings section */}
 
-            <View style={{ width: '100%', paddingVertical: vs(22), marginTop: vs(7), backgroundColor: Colors.white }}>
+            <View style={{ width: '100%', paddingVertical: vs(22), marginTop: vs(7), backgroundColor: Colors.White }}>
 
               <View style={{ paddingHorizontal: vs(19) }}>
                 <Text
@@ -361,7 +362,7 @@ export default class Drawerscreen extends Component {
                 }
                 leftIcon={ManageAddress}
                 disable={isGuest === 'true' ? true : false}
-                onPress={()=>{
+                onPress={() => {
                   this.props.navigation.navigate('Address')
                 }}
               />
@@ -479,7 +480,7 @@ export default class Drawerscreen extends Component {
                   marginTop: -50,
                 }}
               >
-                
+
                 <View
                   style={{
                     borderRadius: 20,
@@ -569,7 +570,7 @@ export default class Drawerscreen extends Component {
                           style={{
                             fontFamily: Font.fontregular,
                             fontSize: (windowWidth * 4) / 100,
-                            color: Colors.bordercolorblue,
+                            color: Colors.Blue,
                             alignSelf: "center",
                           }}
                         >
@@ -593,7 +594,7 @@ export default class Drawerscreen extends Component {
                           style={{
                             fontFamily: Font.fontregular,
                             fontSize: (windowWidth * 4) / 100,
-                            color: Colors.bordercolorblue,
+                            color: Colors.Blue,
                             alignSelf: "center",
                           }}
                         >

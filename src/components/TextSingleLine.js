@@ -29,7 +29,7 @@ TextSingleLine.defaultProps = { customStyles: {} }
 //     },
 //     buttonText: {
 //         fontSize: RF(18),
-//         color: 'white', //Color.white,
+//         color: 'White', //Color.White,
 //         fontFamily: Fonts.semiBold,
 //     },
 //     img: {

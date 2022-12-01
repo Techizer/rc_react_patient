@@ -26,7 +26,7 @@ export function AppHeader(props) {
           width: "95%",
           alignSelf: "center",
           // paddingTop: (windowWidth * 3) / 100,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
           alignItems: "center",
         }}
       >
@@ -88,7 +88,7 @@ export function AppHeader2(props) {
           width: "99%",
           alignSelf: "center",
           paddingTop: (windowWidth * 3) / 100,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
           alignItems: "center",
         }}
       >
@@ -165,7 +165,7 @@ export function CarAppHeader2(props) {
           width: "99%",
           alignSelf: "center",
           paddingTop: (windowWidth * 3) / 100,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
           alignItems: "center",
         }}
       >
@@ -224,7 +224,7 @@ export function AppHeader3(props) {
           width: "95%",
           alignSelf: "center",
           paddingVertical: (windowWidth * 3) / 100,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
           alignItems: "center",
           // backgroundColor: 'red',
         }}
@@ -300,7 +300,7 @@ export function AppHeader4(props) {
           width: "95%",
           alignSelf: "center",
           paddingVertical: (windowWidth * 3) / 100,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.White,
           alignItems: "center",
           // backgroundColor: 'red',
         }}
@@ -385,7 +385,7 @@ export function Appbtn(props) {
     >
       <Text
         style={{
-          color: Colors.textwhite,
+          color: Colors.White,
           fontFamily: Font.fontmedium,
           fontSize: Font.buttontextsize,
           alignSelf: "flex-end",
@@ -414,7 +414,7 @@ export function Appbtn2(props) {
     >
       <Text
         style={{
-          color: Colors.textwhite,
+          color: Colors.White,
           fontFamily: Font.fontmedium,
           fontSize: Font.subtext,
           alignSelf: "flex-end",
@@ -449,7 +449,7 @@ export function Appbtn3(props) {
     >
       <Text
         style={{
-          color: Colors.textwhite,
+          color: Colors.White,
           fontFamily: Font.fontmedium,
           fontSize: Font.buttontextsize,
           alignSelf: "center",
@@ -471,7 +471,7 @@ export function Searchbarandicon(props) {
           marginTop: (windowWidth * 1.5) / 100,
           marginBottom: (windowWidth * 2) / 100,
           alignSelf: "center",
-          backgroundColor: Colors.textwhite,
+          backgroundColor: Colors.White,
           padding: (windowWidth * 1) / 100,
           borderRadius: (windowWidth * 1) / 100,
           alignItems: "center",
@@ -685,7 +685,7 @@ export function Taskbooking(props) {
     >
       <Text
         style={{
-          color: Colors.white,
+          color: Colors.White,
           fontSize: Font.textsize,
           fontFamily: Font.fontlight,
           // paddingHorizontal: (windowWidth * 2) / 100,
@@ -935,7 +935,7 @@ style={{
   <TextInput
     style={{
       width: '100%',
-      color: Colors.textblack,
+      color: Colors.Black,
       fontSize: Font.placeholdersize,
       textAlign: config.textalign,
       paddingVertical: (windowWidth * 4) / 100,
@@ -969,7 +969,7 @@ style={{
   <View
     style={{
       position: 'absolute',
-      backgroundColor: 'white',
+      backgroundColor: 'White',
       left: (windowWidth * 4) / 100,
       top: (-windowWidth * 2) / 100,
       paddingHorizontal: (windowWidth * 1) / 100,

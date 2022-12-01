@@ -103,7 +103,7 @@ export class AppProvider extends Component {
                       textAlign: "center",
                       paddingVertical: 5,
                       fontSize: 14,
-                      color: Colors.internettextcolor,
+                      color: Colors.White,
                     }}
                     onPress={msgProvider.showError(
                       msgText.NoInternet[config.language]

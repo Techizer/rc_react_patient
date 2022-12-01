@@ -20,7 +20,7 @@ import {
 export default Styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.White,
   },
   container2: {
     flex: 1,
@@ -88,7 +88,7 @@ export default Styles = StyleSheet.create({
   },
   placeholder_style: {
     width: "100%",
-    color: Colors.textblack,
+    color: Colors.Black,
     fontSize: Font.placeholdersize,
     textAlign: config.textRotate,
     height: (windowWidth * 12) / 100,

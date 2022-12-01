@@ -112,7 +112,7 @@ export default class Cart2 extends Component {
                         style={{
                           fontFamily: Font.fontmedium,
                           fontSize:windowWidth*3.9/100,
-                          color:Colors.gray4
+                          color:Colors.lightGrey
                         }}>Aisha A.
                      
                       </Text>
@@ -139,7 +139,7 @@ export default class Cart2 extends Component {
                           source={Icons.cross}
                           style={{
                             resizeMode: 'contain',
-                            backgroundColor: Colors.white,
+                            backgroundColor: Colors.White,
                             width: (windowWidth * 4.5) / 100,
                             height: (windowWidth * 4.5) / 100,
                             alignSelf: 'center',
@@ -438,7 +438,7 @@ export default class Cart2 extends Component {
                 }}>
                 <Text
                   style={{
-                    color: Colors.textwhite,
+                    color: Colors.White,
                     fontFamily: Font.fontmedium,
                     fontSize: Font.buttontextsize,
                     alignSelf: 'flex-end',
@@ -468,7 +468,7 @@ export default class Cart2 extends Component {
             <View
               style={{
                 width: '100%',
-                backgroundColor: 'white',
+                backgroundColor: 'White',
                 borderRadius: (windowWidth * 4) / 100,
                 position: 'absolute',
                 bottom: 0,
@@ -523,7 +523,7 @@ export default class Cart2 extends Component {
                 style={{
                   // width: '15%',
                   alignSelf: 'center',
-                  borderColor: Colors.bordercolorblue,
+                  borderColor: Colors.Blue,
                   borderWidth: 1,
                   padding: (windowWidth * 2) / 100,
                   paddingHorizontal: (windowWidth * 3) / 100,

@@ -137,7 +137,6 @@ export default class Booking extends Component {
           : this.getServices();
       this.getDay();
       this.getAllNotification();
-      // this.state.pass_status === "lab" && this.getPerson();
       this.getPerson()
     });
   }
@@ -278,7 +277,6 @@ export default class Booking extends Component {
                       time: nameArr[l],
                       time_status: false,
                     });
-                    // if ((l + 2) % 2 == 0) {
                     if (!home_visit_ar1) {
                       home_visit_ar1 = true;
                       home_visit_ar2 = false;
@@ -291,7 +289,6 @@ export default class Booking extends Component {
                   }
                 } else {
                   new_time_home.push({ time: nameArr[l], time_status: false });
-                  // if ((l + 2) % 2 == 0) {
                   if (!home_visit_ar1) {
                     home_visit_ar1 = true;
                     home_visit_ar2 = false;
@@ -391,7 +388,6 @@ export default class Booking extends Component {
 
             console.log("vat_price_new:: ", vat_price_new);
             console.log("real_total:: ", real_total);
-            // console.log("sub_total:: ", sub_total);
             console.log("real_total_final:: ", real_total_final);
             console.log("show_real_price:: ", show_real_price);
             this.setState({
@@ -451,11 +447,7 @@ export default class Booking extends Component {
                   consolepro.consolelog(
                     "-------- new_time_online if ------- " + new_time_online
                   );
-                  // if ((m + 2) % 2 == 0) {
-                  //   online_Arr1.push({ time: nameArr_time[m] });
-                  // } else {
-                  //   online_Arr2.push({ time: nameArr_time[m] });
-                  // }
+                 
                   if (!ar1) {
                     ar1 = true;
                     ar2 = false;
@@ -471,7 +463,6 @@ export default class Booking extends Component {
                   time: nameArr_time[m],
                   time_status: false,
                 });
-                // consolepro.consolelog("-------- new_time_online else  ------- " + new_time_online);
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -481,11 +472,7 @@ export default class Booking extends Component {
                   ar2 = true;
                   online_Arr2.push({ time: nameArr_time[m] });
                 }
-                // if ((m + 2) % 2 == 0) {
-                //   online_Arr1.push({ time: nameArr_time[m] });
-                // } else {
-                //   online_Arr2.push({ time: nameArr_time[m] });
-                // }
+               
               }
             }
             this.setState({
@@ -555,7 +542,6 @@ export default class Booking extends Component {
 
             console.log("vat_price_new:: ", vat_price_new);
             console.log("real_total:: ", real_total);
-            // console.log("sub_total:: ", sub_total);
             console.log("real_total_final:: ", real_total_final);
             console.log("show_real_price:: ", show_real_price);
             this.setState({
@@ -678,8 +664,6 @@ export default class Booking extends Component {
           } else {
             this.setState({
               time_Arr: obj.result.task_time,
-              // final_one: Arr1,
-              // final_arr2: Arr2,
             });
           }
         } else {
@@ -737,24 +721,12 @@ export default class Booking extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime = convertTime(timeStr);
-                  // console.log(
-                  //   "finaltime: ",
-                  //   finaltime,
-                  //   " this.state.timcurrent_for_check",
-                  //   this.state.timcurrent_for_check
-                  // );
-                  // console.log(
-                  //   "check: ",
-                  //   finaltime >= this.state.timcurrent_for_check,
-                  //   l,
-                  //   nameArr[l]
-                  // );
+                  
                   if (finaltime >= this.state.timcurrent_for_check) {
                     new_time_dlot.push({
                       time: nameArr[l],
                       time_status: false,
                     });
-                    // if ((l + 2) % 2 == 0) {
                     if (!task_ar1) {
                       task_ar1 = true;
                       task_ar2 = false;
@@ -767,7 +739,6 @@ export default class Booking extends Component {
                   }
                 } else {
                   new_time_dlot.push({ time: nameArr[l], time_status: false });
-                  // if ((l + 2) % 2 == 0) {
                   if (!task_ar1) {
                     task_ar1 = true;
                     task_ar2 = false;
@@ -821,11 +792,6 @@ export default class Booking extends Component {
                     time: nameArr_time[m],
                     time_status: false,
                   });
-                  // if ((m + 2) % 2 == 0) {
-                  //   hour_Arr1.push({ time: nameArr_time[m] });
-                  // } else {
-                  //   hour_Arr2.push({ time: nameArr_time[m] });
-                  // }
                   if (!ar1) {
                     ar1 = true;
                     ar2 = false;
@@ -841,11 +807,6 @@ export default class Booking extends Component {
                   time: nameArr_time[m],
                   time_status: false,
                 });
-                // if ((m + 2) % 2 == 0) {
-                //   hour_Arr1.push({ time: nameArr_time[m] });
-                // } else {
-                //   hour_Arr2.push({ time: nameArr_time[m] });
-                // }
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -942,11 +903,9 @@ export default class Booking extends Component {
       // console.log("text", value.text);
     }
     if (value.audio != null) {
-      // console.log("audio", value.audio);
       this.state.symptomsRecording = value.audio;
     }
     if (value.tab != null) {
-      // console.log("tab", value.tab);
       this.setState({ indexPosition: value.tab, time_take_data: "" });
     }
     if (value.image != null) {
@@ -969,7 +928,6 @@ export default class Booking extends Component {
       current.getMinutes() < 10
         ? "0" + current.getMinutes()
         : current.getMinutes();
-    // console.log("current.getHours()----> ", current.getHours());
     let hour =
       current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
     var timcurrent = hour + ":" + min;
@@ -1004,7 +962,6 @@ export default class Booking extends Component {
           }
           console.log("task_time", obj.result.task_time);
           if (obj.result.task_time != undefined && obj.result.task_time != "") {
-            // console.log("home_visit_time");
             var names = obj.result.task_time;
             var nameArr = names.split(",");
           }
@@ -1032,11 +989,6 @@ export default class Booking extends Component {
               if (finaltime >= timcurrent) {
                 new_time_home.push({ time: nameArr[l], time_status: false });
 
-                // if ((l + 2) % 2 == 0) {
-                //   Arr1.push({ time: nameArr[l], time_status: false });
-                // } else {
-                //   Arr2.push({ time: nameArr[l], time_status: false });
-                // }
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -1056,7 +1008,6 @@ export default class Booking extends Component {
           let show_real_price = "";
           let vat_price_new = obj.result.vat_price;
 
-          // vat_price_new=15
           if (vat_price_new != 0) {
             if (obj.result.distance_fare != 0) {
               real_total_show =
@@ -1167,7 +1118,6 @@ export default class Booking extends Component {
       current.getMinutes() < 10
         ? "0" + current.getMinutes()
         : current.getMinutes();
-    // console.log("current.getHours()----> ", current.getHours());
     let hour =
       current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
     var timcurrent = hour + ":" + min;
@@ -1196,7 +1146,6 @@ export default class Booking extends Component {
             obj.result.home_visit_time != undefined &&
             obj.result.home_visit_time != ""
           ) {
-            // console.log("home_visit_time");
             var names = obj.result.home_visit_time;
             var nameArr = names.split(",");
           }
@@ -1227,11 +1176,7 @@ export default class Booking extends Component {
               if (finaltime >= timcurrent) {
                 new_time_home.push({ time: nameArr[l], time_status: false });
 
-                // if ((l + 2) % 2 == 0) {
-                //   Arr1.push({ time: nameArr[l], time_status: false });
-                // } else {
-                //   Arr2.push({ time: nameArr[l], time_status: false });
-                // }
+            
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -1278,10 +1223,7 @@ export default class Booking extends Component {
                 return `${hours}:${minutes}`;
               };
               var finaltime = convertTime(timeStr);
-              // consolepro.consolelog("finaltime ----> ", finaltime);
-              // consolepro.consolelog("timcurrent ----> ", timcurrent);
               if (finaltime >= timcurrent) {
-                // console.log("nameArr :: ", nameArr[l]);
                 new_time_online.push({ time: nameArr[l], time_status: false });
                 // if ((l + 2) % 2 == 0) {
                 if (!online_ar1) {
@@ -1309,7 +1251,6 @@ export default class Booking extends Component {
           let onlineVat = "";
           let homeVat = "";
 
-          // vat_price_new=15
           if (vat_price_new != 0) {
             if (obj.result.home_visit_time != "") {
               if (obj.result.distance_fare != 0) {
@@ -1389,21 +1330,16 @@ export default class Booking extends Component {
 
           console.log("vat_price_new:: ", vat_price_new);
           console.log("real_total:: ", real_total);
-          // console.log("sub_total:: ", sub_total);
           console.log("real_total_final:: ", real_total_final);
           console.log("show_real_price:: ", show_real_price);
           this.setState({
             onlineSubTotalPrice: onlineSubTotal,
             homeVisitSubTotalPrice: homeSubTotal,
-            // subTotal: onlineSubTotal,
             homeVisitVat: homeVat, //0.0,
             onlineVisitVat: onlineVat, //0.0,
             booking_data: obj.result,
             message: obj.message,
-            // onlineTaskPrice:
-            // task_base_task: obj.result.task_base_task,
-            // task_base_task1: obj.result.task_base_task,
-            // task_time: obj.result.task_time,
+            
             time_Arr: new_time_home,
             vat_price: vat_price_new,
             distance_fare: obj.result.distance_fare,
@@ -1534,11 +1470,7 @@ export default class Booking extends Component {
               if (finaltime >= timcurrent) {
                 new_time_dlot.push({ time: nameArr[l], time_status: false });
 
-                // if ((l + 2) % 2 == 0) {
-                //   Arr1.push({ time: nameArr[l], time_status: false });
-                // } else {
-                //   Arr2.push({ time: nameArr[l], time_status: false });
-                // }
+               
                 if (!task_ar1) {
                   task_ar1 = true;
                   task_ar2 = false;
@@ -1584,11 +1516,6 @@ export default class Booking extends Component {
                   time_status: false,
                 });
 
-                // if ((m + 2) % 2 == 0) {
-                //   hour_Arr1.push({ time: nameArr_time[m] });
-                // } else {
-                //   hour_Arr2.push({ time: nameArr_time[m] });
-                // }
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -1608,7 +1535,6 @@ export default class Booking extends Component {
           let show_real_price = "";
           let vat_price_new = obj.result.vat_price;
 
-          // vat_price_new=15
           if (vat_price_new != 0) {
             if (obj.result.distance_fare != 0) {
               real_total_show =
@@ -1636,12 +1562,6 @@ export default class Booking extends Component {
           }
           let sun_total = parseFloat(real_total).toFixed(2);
 
-          // console.log("vat_price_new:: ", vat_price_new);
-          // console.log("real_total:: ", real_total);
-
-          // console.log("real_total_final:: ", real_total_final);
-          // console.log("show_real_price:: ", show_real_price);
-          // console.log("sun_total:: ", sun_total);
           this.setState({
             subTotal: obj.result.distance_fare,
             vat_price_show_display: real_total_final, //0.0,
@@ -1731,13 +1651,6 @@ export default class Booking extends Component {
       this.state.indexPosition === 0 ? "online_task" : "home_visit";
     let appointmentType = this.state.indexPosition === 0 ? "online" : "offline";
 
-    // console.log("this.state.symptomText ", this.state.symptomText);
-    // console.log("this.state.time_take_data ", this.state.time_take_data);
-    // console.log("this.state.set_price ", this.state.set_price);
-    // console.log("this.state.distance_fare_pass ", this.state.distance_fare_pass);
-    // console.log("subTotalPrice ", subTotalPrice);
-    // console.log("vatPrice ", vatPrice);
-    // console.log("subTotalPrice ", subTotalPrice);
 
     if (this.state.time_take_data.length <= 0) {
       msgProvider.showError(msgText.EmptyTime[config.language]);
@@ -1854,27 +1767,7 @@ export default class Booking extends Component {
     console.log("url", url);
     var data = new FormData();
 
-    // var taskBase =
-    //   this.state.pass_status === "lab"
-    //     ? this.state.indexPosition === 0
-    //       ? "task_base"
-    //       : "package_base"
-    //     : this.state.display === "taskbooking"
-    //     ? "task_base"
-    //     : "hour_base";
 
-    // var taskId =
-    //   this.state.pass_status === "lab"
-    //     ? this.state.indexPosition === 0
-    //       ? this.state.final_data
-    //       : this.state.hour_id
-    //     : this.state.final_data;
-    // var taskPrice =
-    //   this.state.pass_status === "lab"
-    //     ? this.state.indexPosition === 0
-    //       ? this.state.set_price
-    //       : this.state.hour_price
-    //     : this.state.set_price;
 
     if (this.state.pass_status === "lab") {
       data.append("hospital_id", this.state.booking_data.hospital_id);
@@ -1895,7 +1788,6 @@ export default class Booking extends Component {
     data.append("vat_price", this.state.vat_price_show);
     data.append("distance_fare", this.state.distance_fare_pass);
     data.append("task_price_total", this.state.total_price_show);
-    // data.append('sub_total_price', this.state.total_price_show)
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.final_total_price);
 
@@ -1995,7 +1887,6 @@ export default class Booking extends Component {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
           }, 700);
-          // }
           return false;
         }
       })
@@ -2057,21 +1948,6 @@ export default class Booking extends Component {
     let real_total_final = "";
     let show_total_price;
 
-    // console.log(
-    //   "this.state.only_vatprice_show:: ",
-    //   this.state.only_vatprice_show
-    // );
-    // console.log(
-    //   "this.state.only_vatprice_show:: ",
-    //   this.state.only_vatprice_show
-    // );
-    // console.log("sum:: ", sum);
-    // console.log("this.state.distance_fare:: ", this.state.distance_fare);
-    // console.log(
-    //   "this.state.distance_fare_pass:: ",
-    //   this.state.distance_fare_pass
-    // );
-    // console.log("this.state.vat_price:: ", this.state.vat_price);
 
     let vat_sum_per =
       parseFloat(sum) + parseFloat(this.state.distance_fare_pass); //sum
@@ -2133,8 +2009,6 @@ export default class Booking extends Component {
     let show_total_price;
     let hour_add = "";
     let subTotal = "";
-    // console.log("helloo hello ", this.state.vat_price_show);
-    // console.log("prize ", prize);
     console.log("only_vatprice_show ", this.state.only_vatprice_show);
 
     if (
@@ -2167,7 +2041,6 @@ export default class Booking extends Component {
     }
     console.log("dnhcnfby", hour_add);
 
-    // }
     this.setState({
       hour_base_task: data,
       hour_base_task_new: data,
@@ -2189,26 +2062,19 @@ export default class Booking extends Component {
         data[i].tick = 0;
       }
     }
-    // }
     this.setState({ date_array: data });
   };
 
   time_tick = (item, index) => {
     let data = this.state.time_Arr;
     console.log("new data", data);
-    // if(data[index].time_status==true)
-    // {
-    //     data[index].time_status=false
-    // }
-    // else
-    // {
+    
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
         data[i].time_status = true;
       } else {
         data[i].time_status = false;
       }
-      // }
     }
     this.setState({ time_Arr: data });
   };
@@ -2285,7 +2151,6 @@ export default class Booking extends Component {
       return (
         <View style={Styles.container1}>
           <View style={Styles.container3}>
-            {/* <Text>Home</Text> */}
             <View
               style={{
                 backgroundColor: "#fff",
@@ -2333,7 +2198,6 @@ export default class Booking extends Component {
                 </View>
                 <View
                   style={{
-                    // backgroundColor: 'yellow',
                     width: "80%",
                   }}
                 >
@@ -2490,7 +2354,6 @@ export default class Booking extends Component {
                           width: "17%",
                           height: 20,
                           marginTop: -13,
-                          // borderTopLeftRadius : (mobileW * 2) / 100,
                           borderBottomLeftRadius: (mobileW * 2) / 100,
                           paddingVertical: 3,
                         }}
@@ -2540,7 +2403,6 @@ export default class Booking extends Component {
                     backgroundColor: Colors.white_color,
                     padding: (mobileW * 3) / 100,
                     flexDirection: "row",
-                    // justifyContent:'space-between'
                   }}
                 >
                   <TouchableOpacity
@@ -2629,7 +2491,6 @@ export default class Booking extends Component {
                                   justifyContent: "center",
                                   paddingHorizontal: (mobileW * 0.2) / 100,
                                   marginRight: (mobileW * 1) / 100,
-                                  // backgroundColor: '#d1e9f6',
                                 },
                                 this.state.family_member_id == item.id
                                   ? { backgroundColor: "#d1e9f6" }
@@ -3025,10 +2886,7 @@ export default class Booking extends Component {
                                   borderRadius: (mobileW * 2) / 100,
                                   marginLeft: (mobileW * 2) / 100,
                                   width: (mobileW * 40) / 100,
-                                  // height: (mobileW * 40) / 100,
                                   backgroundColor: "#fff",
-                                  // borderColor: "#DFDFDF",
-                                  // borderWidth: 1,
                                 },
                                 item.status == true
                                   ? {
@@ -3095,7 +2953,6 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding: (mobileW * 0.2) / 100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
@@ -3137,7 +2994,6 @@ export default class Booking extends Component {
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
-                              // resizeMode:'contain',
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
@@ -3151,8 +3007,6 @@ export default class Booking extends Component {
                             fontSize: Font.name,
                             alignSelf: "center",
                             marginLeft: (mobileW * 1) / 100,
-                            // width:'75%',
-                            // backgroundColor:'red',
                             textAlign: "right",
                           }}
                         >
@@ -3211,8 +3065,8 @@ export default class Booking extends Component {
                                     marginRight: (mobileW * 3) / 100,
                                     marginTop: (mobileW * 3) / 100,
                                     backgroundColor:
-                                      item.tick == 1 ? "#0787D2" : Colors.gray6,
-                                    color: item.tick == 1 ? "white" : "black",
+                                      item.tick == 1 ? "#0787D2" : Colors.lightGrey,
+                                    color: item.tick == 1 ? "White" : "black",
                                     textAlign: "center",
                                     paddingVertical: (mobileW * 2) / 100,
                                     fontFamily: Font.ques_fontfamily,
@@ -3318,7 +3172,7 @@ export default class Booking extends Component {
                                                 }
                                                 : {
                                                   backgroundColor:
-                                                    Colors.gray6,
+                                                    Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                             ]}
@@ -3375,7 +3229,7 @@ export default class Booking extends Component {
                                                 }
                                                 : {
                                                   backgroundColor:
-                                                    Colors.gray6,
+                                                    Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                             ]}
@@ -3436,7 +3290,6 @@ export default class Booking extends Component {
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              // fontSize: Font.headingfont,
                               fontSize: (mobileW * 4) / 100,
                               color: Colors.theme_color,
                               textAlign: config.textRotate,
@@ -3556,7 +3409,6 @@ export default class Booking extends Component {
                               fontFamily: Font.ques_fontfamily,
                               fontSize: Font.sregulartext_size,
                               color: "#000",
-                              // marginTop: mobileW * 1 / 100,
                             }}
                           >
                             {item.distance_fare_text}
@@ -3566,7 +3418,6 @@ export default class Booking extends Component {
                               fontFamily: Font.ques_fontfamily,
                               fontSize: Font.sregulartext_size,
                               color: "#000",
-                              // marginTop: mobileW * 1 / 100,
                             }}
                           >
                             {item.distance_fare}.0 {this.state.currency_symbol}
@@ -3580,7 +3431,6 @@ export default class Booking extends Component {
                             paddingVertical: (mobileW * 2) / 100,
                             borderTopWidth: (mobileW * 0.3) / 100,
                             borderColor: Colors.bordercolor,
-                            // marginTop: mobileW * 0.5 / 100,
                           }}
                         >
                           <Text
@@ -3588,7 +3438,6 @@ export default class Booking extends Component {
                               fontFamily: Font.fontmedium,
                               fontSize: (mobileW * 3.7) / 100,
                               color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
                             }}
                           >
                             {Lang_chg.subTotal[config.language]}
@@ -3598,7 +3447,6 @@ export default class Booking extends Component {
                               fontFamily: Font.fontmedium,
                               fontSize: (mobileW * 3.7) / 100,
                               color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
                             }}
                           >
                             {this.state.subTotal} {this.state.currency_symbol}
@@ -3690,7 +3538,6 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding:mobileW*0.2/100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
@@ -3732,7 +3579,6 @@ export default class Booking extends Component {
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
-                              // resizeMode:'contain',
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
@@ -3746,8 +3592,6 @@ export default class Booking extends Component {
                             fontSize: Font.name,
                             alignSelf: "center",
                             marginLeft: (mobileW * 1) / 100,
-                            // width:'75%',
-                            // backgroundColor:'red',
                             textAlign: "right",
                           }}
                         >
@@ -3809,8 +3653,8 @@ export default class Booking extends Component {
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
-                                          : Colors.gray6,
-                                      color: item.tick == 1 ? "white" : "black",
+                                          : Colors.lightGrey,
+                                      color: item.tick == 1 ? "White" : "black",
                                       textAlign: "center",
                                       paddingVertical: (mobileW * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
@@ -3856,8 +3700,8 @@ export default class Booking extends Component {
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
-                                          : Colors.gray6,
-                                      color: item.tick == 1 ? "white" : "black",
+                                          : Colors.lightGrey,
+                                      color: item.tick == 1 ? "White" : "black",
                                       textAlign: "center",
                                       paddingVertical: (mobileW * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
@@ -3962,7 +3806,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -4013,7 +3857,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -4058,7 +3902,6 @@ export default class Booking extends Component {
                                       showsHorizontalScrollIndicator={false}
                                       data={this.state.final_hour_one}
                                       renderItem={({ item, index }) => {
-                                        // consolepro.consolelog("final_hour_one ---->>>", item)
                                         return (
                                           <TouchableOpacity
                                             onPress={() => {
@@ -4091,7 +3934,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -4141,7 +3984,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -4202,7 +4045,6 @@ export default class Booking extends Component {
                           <Text
                             style={{
                               fontFamily: Font.fontmedium,
-                              // fontSize: Font.headingfont,
                               fontSize: (mobileW * 4) / 100,
                               color: Colors.theme_color,
                               textAlign: config.textRotate,
@@ -4305,7 +4147,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.fontmedium,
                                 fontSize: (mobileW * 3.7) / 100,
                                 color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {this.state.indexPosition === 0
@@ -4319,7 +4160,6 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               marginTop: (mobileW * 1) / 100,
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
                               borderColor: Colors.bordercolor,
                               marginBottom: (mobileW * 2) / 100,
                             }}
@@ -4412,7 +4252,7 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "taskbooking"
                                 ? {
-                                  color: Colors.textblue,
+                                  color: Colors.Blue,
                                   fontFamily: Font.fontmedium,
                                   fontSize: (mobileW * 4) / 100,
                                   textAlign: config.textalign,
@@ -4440,8 +4280,8 @@ export default class Booking extends Component {
                                   alignSelf: "center",
                                   paddingVertical: 1,
                                   borderWidth: 1,
-                                  borderColor: Colors.bordercolorblue,
-                                  backgroundColor: Colors.bordercolorblue,
+                                  borderColor: Colors.Blue,
+                                  backgroundColor: Colors.Blue,
                                   borderTopLeftRadius: (mobileW * 2) / 100,
                                   borderTopRightRadius: (mobileW * 2) / 100,
                                 }
@@ -4470,7 +4310,7 @@ export default class Booking extends Component {
                             style={
                               this.state.display == "hourlybooking"
                                 ? {
-                                  color: Colors.textblue,
+                                  color: Colors.Blue,
 
                                   fontFamily: Font.fontmedium,
                                   fontSize: (mobileW * 4) / 100,
@@ -4499,8 +4339,8 @@ export default class Booking extends Component {
                                   alignSelf: "center",
                                   paddingVertical: 1,
                                   borderWidth: 1,
-                                  borderColor: Colors.bordercolorblue,
-                                  backgroundColor: Colors.bordercolorblue,
+                                  borderColor: Colors.Blue,
+                                  backgroundColor: Colors.Blue,
                                   borderTopLeftRadius: (mobileW * 2) / 100,
                                   borderTopRightRadius: (mobileW * 2) / 100,
                                 }
@@ -4563,8 +4403,6 @@ export default class Booking extends Component {
                                           color: Colors.white_color,
                                           fontSize: Font.textsize,
                                           fontFamily: Font.fontlight,
-
-                                          // paddingHorizontal: (mobileW * 2) / 100,
                                         }}
                                       >
                                         {item.name}
@@ -4640,7 +4478,6 @@ export default class Booking extends Component {
                                 width: (mobileW * 4) / 100,
                                 height: (mobileW * 4) / 100,
                                 tintColor: "#8F98A7",
-                                // backgroundColor:'red',
                                 alignSelf: "center",
                               }}
                               source={localimag.search2}
@@ -4683,8 +4520,6 @@ export default class Booking extends Component {
                                         paddingVertical: (mobileW * 1.7) / 100,
                                         flexDirection: "row",
                                         marginTop: (mobileW * 0.3) / 100,
-                                        // alignItems: 'center',
-                                        // justifyContent: 'space-between',
                                       }}
                                     >
                                       <View
@@ -4810,8 +4645,6 @@ export default class Booking extends Component {
                               >
                                 <Text
                                   style={{
-                                    // backgroundColor:'red',
-                                    // paddingHorizontal: (mobileW * 5) / 100,
                                     paddingVertical: (mobileW * 1.5) / 100,
                                     color: Colors.white_color,
                                     fontFamily: Font.fontmedium,
@@ -4846,7 +4679,6 @@ export default class Booking extends Component {
                       width: "100%",
                       shadowOpacity: 0.3,
                       shadowColor: "#000",
-                      // padding:mobileW*0.2/100,
                       shadowOffset: { width: 2, height: 2 },
                       elevation: 2,
                       shadowRadius: 2,
@@ -4888,7 +4720,6 @@ export default class Booking extends Component {
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
-                              // resizeMode:'contain',
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
@@ -4902,8 +4733,6 @@ export default class Booking extends Component {
                             fontSize: Font.name,
                             alignSelf: "center",
                             marginLeft: (mobileW * 1) / 100,
-                            // width:'75%',
-                            // backgroundColor:'red',
                             textAlign: "right",
                           }}
                         >
@@ -4965,8 +4794,8 @@ export default class Booking extends Component {
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
-                                          : Colors.gray6,
-                                      color: item.tick == 1 ? "white" : "black",
+                                          : Colors.lightGrey,
+                                      color: item.tick == 1 ? "White" : "black",
                                       textAlign: "center",
                                       paddingVertical: (mobileW * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
@@ -5012,8 +4841,8 @@ export default class Booking extends Component {
                                       backgroundColor:
                                         item.tick == 1
                                           ? "#0787D2"
-                                          : Colors.gray6,
-                                      color: item.tick == 1 ? "white" : "black",
+                                          : Colors.lightGrey,
+                                      color: item.tick == 1 ? "White" : "black",
                                       textAlign: "center",
                                       paddingVertical: (mobileW * 2) / 100,
                                       fontFamily: Font.ques_fontfamily,
@@ -5117,7 +4946,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -5168,7 +4997,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -5245,7 +5074,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -5296,7 +5125,7 @@ export default class Booking extends Component {
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.gray6,
+                                                      Colors.lightGrey,
                                                     color: "#000",
                                                   },
                                               ]}
@@ -5358,7 +5187,6 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                // fontSize: Font.headingfont,
                                 fontSize: (mobileW * 4) / 100,
                                 color: Colors.theme_color,
                                 textAlign: config.textRotate,
@@ -5430,7 +5258,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.ques_fontfamily,
                                 fontSize: Font.sregulartext_size,
                                 color: "#000",
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {item.distance_fare_text}
@@ -5440,7 +5267,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.ques_fontfamily,
                                 fontSize: Font.sregulartext_size,
                                 color: "#000",
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {item.distance_fare}.0{" "}
@@ -5463,7 +5289,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.fontmedium,
                                 fontSize: (mobileW * 3.7) / 100,
                                 color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {Lang_chg.subTotal[config.language]}
@@ -5485,7 +5310,6 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               marginTop: (mobileW * 1) / 100,
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
                               borderColor: Colors.bordercolor,
                               marginBottom: (mobileW * 2) / 100,
                             }}
@@ -5576,7 +5400,6 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.fontmedium,
-                                // fontSize: Font.headingfont,
                                 fontSize: (mobileW * 4) / 100,
                                 color: Colors.theme_color,
                                 textAlign: config.textRotate,
@@ -5671,7 +5494,6 @@ export default class Booking extends Component {
                               paddingVertical: (mobileW * 2) / 100,
                               borderTopWidth: (mobileW * 0.3) / 100,
                               borderColor: Colors.bordercolor,
-                              // marginTop: mobileW * 0.5 / 100,
                             }}
                           >
                             <Text
@@ -5679,7 +5501,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.fontmedium,
                                 fontSize: (mobileW * 3.7) / 100,
                                 color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {Lang_chg.subTotal[config.language]}
@@ -5689,7 +5510,6 @@ export default class Booking extends Component {
                                 fontFamily: Font.fontmedium,
                                 fontSize: (mobileW * 3.7) / 100,
                                 color: Colors.theme_color,
-                                // marginTop: mobileW * 1 / 100,
                               }}
                             >
                               {this.state.subTotal} {this.state.currency_symbol}
@@ -5699,7 +5519,6 @@ export default class Booking extends Component {
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
                               borderColor: Colors.bordercolor,
                               marginBottom: (mobileW * 2) / 100,
                             }}
@@ -5938,8 +5757,8 @@ export default class Booking extends Component {
                 paddingHorizontal: (mobileW * 5) / 100,
                 paddingVertical: (mobileW * 2) / 100,
                 height: 80,
-                justifyContent: "center", //Centered horizontally
-                alignItems: "center", //Centered vertically
+                justifyContent: "center", 
+                alignItems: "center",
               }}
             >
               <TouchableOpacity
@@ -5963,7 +5782,7 @@ export default class Booking extends Component {
               >
                 <Text
                   style={{
-                    color: Colors.textwhite,
+                    color: Colors.White,
                     fontFamily: Font.fontmedium,
                     fontSize: Font.buttontextsize,
                     alignSelf: "flex-end",
@@ -5977,51 +5796,7 @@ export default class Booking extends Component {
             </View>
           </View>
 
-          <HideWithKeyboard>
-            {/* <Footer
-              activepage="Home"
-              usertype={1}
-              footerpage={[
-                {
-                  name: "Home",
-                  fname: Lang_chg.home_footer[config.language],
-                  countshow: false,
-                  image: localimag.Home,
-                  activeimage: localimag.Home,
-                },
-                {
-                  name: "Appointment",
-                  fname: Lang_chg.Appointment_footer[config.language],
-                  countshow: false,
-                  image: localimag.Appointment,
-                  activeimage: localimag.Appointment,
-                },
-                {
-                  name: "Cart",
-                  fname: Lang_chg.Cart_footer[config.language],
-                  countshow: false,
-                  image: localimag.Cart,
-                  activeimage: localimag.Cart,
-                },
-                {
-                  name: "More",
-                  fname: Lang_chg.More_footer[config.language],
-                  countshow: false,
-                  image: localimag.More,
-                  activeimage: localimag.More,
-                },
-              ]}
-              navigation={this.props.navigation}
-              imagestyle1={{
-                width: 25,
-                height: 25,
-                paddingBottom: (mobileW * 5.4) / 100,
-                backgroundColor: "white",
-                countcolor: "red",
-                countbackground: "red",
-              }}
-            /> */}
-          </HideWithKeyboard>
+          
         </View>
       );
     } else {

@@ -220,7 +220,7 @@ export default class Notifications extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: (windowWidth * 4) / 100,
-                        color: Colors.bordercolorblue,
+                        color: Colors.Blue,
                         alignSelf: "center",
                       }}
                     >
@@ -267,7 +267,7 @@ export default class Notifications extends Component {
                       }}
                       style={{
                         flexDirection: "row",
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.White,
                         marginTop: (windowWidth * 2) / 100,
                         backgroundColor: "#fff",
                         shadowOpacity: 0.3,
@@ -319,7 +319,7 @@ export default class Notifications extends Component {
                             fontSize: Font.sregulartext_size,
                             lineHeight: (windowWidth * 4.2) / 100,
                             textAlign: config.textRotate,
-                            color: Colors.lightgraytext,
+                            color: Colors.lightGrey,
                             paddingBottom: (windowWidth * 2.1) / 100,
                           }}
                         >
@@ -338,7 +338,7 @@ export default class Notifications extends Component {
                             style={{
                               fontFamily: Font.fontregular,
                               fontSize: Font.sregulartext_size,
-                              color: Colors.lightgraytext,
+                              color: Colors.lightGrey,
                             }}
                           >
                             {item.datetime}

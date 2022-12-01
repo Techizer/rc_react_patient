@@ -3,62 +3,17 @@ import { s, vs, ms, mvs } from 'react-native-size-matters'
 const windowWidth = Dimensions.get("window").width;
 
 export const Colors = {
-  internettextcolor: "#FFFFFF",
-  onlinetextcolor: "#fff",
-  mediabackground: "#FFFFFF",
-  mediatextcolor: "black",
-  cancletextcolor: "black",
-  headingtextboldcolor: "black",
 
-  textwhite: "white",
-  textblack: "black",
 
-  textblue: "#0888D1",
-  buttoncolorhgreen: "#4FB82A",
-  DarkGrey: "#979ea9",
-  placeholder_border: "#707070",
   optboxcolor: "#F1F2F4",
   discountBox: "#D1ECC8",
   precautionText: "#041A27",
-
-  //26-02
-
-  mediabackground: "#FFFFFF",
-  mediatextcolor: "black",
-  cancletextcolor: "black",
-  lightGrey: "#9EA6B2",
-  headingtextboldcolor: "black",
-  textwhite: "white",
-  lightGrey: "gray",
-  textblue: "#0888D1",
-  Theme2: "#0888d1",
-  buttoncolorhgreen: "#4FB82A",
-
-  buttoncolorlight: "#F1F2F4",
-  bordercolorblue: "#0888D1",
   placholderactive: "#0057A5",
-  optboxcolor: "#0000001F",
-  whitebackgroundcolor: "white",
-
-  txt_light: "#D0CECE",
-  // -------------------------r---------
-  // txt_light: "#D0CECE",
-  ligh_background: "#bcbcbc",
-  white: "#ffffff",
   white2: "#f8f8f8",
 
-  blue2: "#d1e9f6",
-
-  //28 radhekrishan
-  lightgraytext: "#354052",
-  gray4: "#7d8490",
-  gray5: "#e7e7e7",
-  gray6: "#e9e9e9",
   gainsboro: "#e5e5e5",
   backgroundcolor: "#f1f2f4",
-  orange: "#FFA800",
 
-  //01-03 radhekrishan
   drawerblue: "#57A7DB",
   drawertextblue: "#7dbfe6",
   lbluebtn: "#84cbff",
@@ -73,10 +28,8 @@ export const Colors = {
 
   //28 gunja
   backgroundcolorblue: "#0057A5",
-  buttonbackgoungcolorlightblue: "#C5EAFF",
   textGreenColor: "#26720B",
 
-  //----------------------------------------------gunajn(02-03-22)
 
   bordercolor_light_blue: "lightblue",
   tab_background_color: "#F1F2F4",
@@ -84,7 +37,7 @@ export const Colors = {
   // yesnobtn_color:'gray',
   ques_color: "red",
   field_border_color: "#CCCCCC",
-  textblue: "#0888D1",
+  Blue: "#0888D1",
   bordercolor_light_blue: "lightblue",
   //-------------------------------04/03 gunjan
   textgray_que: "#354052",
@@ -93,6 +46,9 @@ export const Colors = {
   // ----------------------------Ahsan
   Theme:'#0168B3',
   Primary:'#38ABEC',
+  Blue:'#0888D1',
+  lightBlue:'#C5EAFF',
+  Green:'#4FB82A',
   inActiveTab: '#505B6E',
   tabBackground: '#E5F6FF',
   DarkGrey:'#515C6F',
@@ -101,9 +57,13 @@ export const Colors = {
   dullGrey:'#6D737E',
   Border:'#DFDFDF',
   Highlight:'#E2E7EE82',
-  Black: "black",
+  Black: "#000000",
+  White:'#ffffff',
+  orange: "#FFA800",
   inActiveText:'#0C1016',
-  ButtonBorder:'#E2EBF0'
+  ButtonBorder:'#E2EBF0',
+  darkText:'#17181A',
+  detailTitles:'#354052'
 
 
 };
@@ -133,7 +93,8 @@ export const Font = {
   medium: s(13),  //----14
   large: s(14),  //----15
   xlarge: s(15),  //----16
-  xxlarge: s(19),  //----20
+  xxlarge: s(17),  //----18
+  xxxlarge: s(19),  //----20
 
 
   headerfont: (windowWidth * 5) / 100,

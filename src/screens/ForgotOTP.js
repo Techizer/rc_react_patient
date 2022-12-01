@@ -166,7 +166,7 @@ export default class ForgotOTP extends Component {
   render() {
     return (
       <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
+        style={{ flex: 1, backgroundColor: "White" }}
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
@@ -308,7 +308,7 @@ export default class ForgotOTP extends Component {
                   style={{
                     width: "95%",
                     alignSelf: "center",
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontSize: Font.placeholdersize,
                     textAlign: config.textalign,
                     height: (windowWidth * 12) / 100,
@@ -342,7 +342,7 @@ export default class ForgotOTP extends Component {
                 <View
                   style={{
                     position: "absolute",
-                    backgroundColor: "white",
+                    backgroundColor: "White",
                     left: (windowWidth * 4) / 100,
                     top: (-windowWidth * 2) / 100,
                     paddingHorizontal: (windowWidth * 1) / 100,
@@ -438,7 +438,7 @@ export default class ForgotOTP extends Component {
             >
               <Text
                 style={{
-                  color: Colors.textwhite,
+                  color: Colors.White,
                   fontFamily: Font.fontmedium,
                   fontSize: Font.buttontextsize,
                   alignSelf: "flex-end",

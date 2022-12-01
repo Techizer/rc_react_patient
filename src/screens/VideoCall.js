@@ -514,7 +514,7 @@ export default VideoCall;
 const style1 = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "White",
   },
   callContainer: {
     flex: 1,
@@ -536,7 +536,7 @@ const style1 = StyleSheet.create({
     marginLeft: 70,
     marginTop: 50,
     textAlign: "center",
-    backgroundColor: "white",
+    backgroundColor: "White",
   },
   button: {
     marginTop: 100,

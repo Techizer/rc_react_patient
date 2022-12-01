@@ -367,7 +367,7 @@ error) => {let position={'coords':{'latitude':config.latitude,'longitude':config
 </View>
 <View style={{width:'90%',borderBottomWidth:1,borderBottomColor:Colors.bordercolor,paddingBottom:windowWidth*3/100,}}>
        <Text style={{textAlign:config.textRotate,fontSize:windowWidth*3.8/100,fontFamily:Font.fontregular}}>{Lang_chg.Currentlocation[config.language]}</Text>
-       <Text style={{textAlign:config.textRotate,fontSize:windowWidth*3/100,fontFamily:Font.fontregular,color:Colors.gray4}}>{Lang_chg.Using_gpsofyoudevice[config.language]}</Text>
+       <Text style={{textAlign:config.textRotate,fontSize:windowWidth*3/100,fontFamily:Font.fontregular,color:Colors.lightGrey}}>{Lang_chg.Using_gpsofyoudevice[config.language]}</Text>
        </View>
        
          </TouchableOpacity>

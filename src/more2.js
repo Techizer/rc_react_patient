@@ -116,7 +116,7 @@ export default class More extends Component {
                       <View style={{ flex: 1 }}>
                         <View
                           style={{
-                            backgroundColor: Colors.buttoncolorhgreen,
+                            backgroundColor: Colors.Green,
                             flexDirection: 'row',
                             alignSelf: 'flex-start',
                           }}>
@@ -153,7 +153,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         Blood Test
                       </Text>
@@ -161,7 +161,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         450 SAR
                       </Text>
@@ -178,7 +178,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         Distance Fare
                       </Text>
@@ -186,7 +186,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         10 SAR
                       </Text>
@@ -203,7 +203,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         VAT(10%)
                       </Text>
@@ -211,7 +211,7 @@ export default class More extends Component {
                         style={{
                           fontFamily: Font.fontregular,
                           fontSize: Font.sregulartext_size,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}>
                         10 SAR
                       </Text>
@@ -255,7 +255,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       Blood Test
                     </Text>
@@ -263,7 +263,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       450 SAR
                     </Text>
@@ -280,7 +280,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       Distance Fare
                     </Text>
@@ -288,7 +288,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       10 SAR
                     </Text>
@@ -305,7 +305,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       VAT(10%)
                     </Text>
@@ -313,7 +313,7 @@ export default class More extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: Font.sregulartext_size,
-                        color: Colors.gray4,
+                        color: Colors.lightGrey,
                       }}>
                       10 SAR
                     </Text>
@@ -361,7 +361,7 @@ export default class More extends Component {
                 }}>
                 <Text
                   style={{
-                    color: Colors.textwhite,
+                    color: Colors.White,
                     fontFamily: Font.fontmedium,
                     fontSize: Font.buttontextsize,
                     alignSelf: 'flex-end',
@@ -415,7 +415,7 @@ export default class More extends Component {
               width: (windowWidth * 4.7) / 100,
               height: (windowWidth * 4.7) / 100,
               paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: 'white',
+              backgroundColor: 'White',
               countcolor: 'red',
               countbackground: 'red',
             }}

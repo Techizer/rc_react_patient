@@ -252,8 +252,8 @@ const AppointmentSchedule = (props) => {
                       marginRight: (windowWidth * 3) / 100,
                       marginTop: (windowWidth * 3) / 100,
                       backgroundColor:
-                        item.tick == 1 ? "#0787D2" : Colors.gray6,
-                      color: item.tick == 1 ? "white" : "black",
+                        item.tick == 1 ? "#0787D2" : Colors.lightGrey,
+                      color: item.tick == 1 ? "White" : "black",
                       textAlign: "center",
                       paddingVertical: (windowWidth * 2) / 100,
                       fontFamily: Font.ques_fontfamily,
@@ -331,7 +331,7 @@ const AppointmentSchedule = (props) => {
                                       color: "#fff",
                                     }
                                   : {
-                                      backgroundColor: Colors.gray6,
+                                      backgroundColor: Colors.lightGrey,
                                       color: "#000",
                                     },
                               ]}
@@ -373,7 +373,7 @@ const AppointmentSchedule = (props) => {
                                       color: "#fff",
                                     }
                                   : {
-                                      backgroundColor: Colors.gray6,
+                                      backgroundColor: Colors.lightGrey,
                                       color: "#000",
                                     },
                               ]}

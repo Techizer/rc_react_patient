@@ -92,7 +92,7 @@ const CovidPackageDetails = (props) => {
             width: "99%",
             alignSelf: "center",
             paddingTop: (windowWidth * 3) / 100,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.White,
             alignItems: "center",
           }}
         >
@@ -160,7 +160,7 @@ const CovidPackageDetails = (props) => {
                           width: "100%",
                           marginTop: (windowWidth * 3) / 100,
                           paddingHorizontal: (windowWidth * 4) / 100,
-                          color: Colors.lightgraytext,
+                          color: Colors.lightGrey,
                           fontFamily: Font.fontmedium,
                           fontSize: (windowWidth * 4.5) / 100,
                           textAlign: "left",
@@ -176,7 +176,7 @@ const CovidPackageDetails = (props) => {
                             paddingHorizontal: (windowWidth * 4) / 100,
                             fontSize: Font.buttontext_size,
                             textAlign: config.textRotate,
-                            color: Colors.lightgraytext,
+                            color: Colors.lightGrey,
                           }}
                         >
                           {covidTestDetailsData.ctitle}
@@ -225,7 +225,7 @@ const CovidPackageDetails = (props) => {
                           style={{
                             fontFamily: Font.fontmedium,
                             fontSize: Font.name,
-                            color: Colors.lightgraytext,
+                            color: Colors.lightGrey,
                             textAlign: config.textRotate,
                           }}
                         >
@@ -252,7 +252,7 @@ const CovidPackageDetails = (props) => {
                         p: {
                           fontSize: Font.subtext,
                           paddingHorizontal: (windowWidth * 4) / 100,
-                          color: Colors.lightgraytext,
+                          color: Colors.lightGrey,
                           marginTop: (windowWidth * 3) / 100,
                           marginBottom: (windowWidth * 3) / 100,
                           fontFamily: Font.fontregular,
@@ -298,7 +298,7 @@ const CovidPackageDetails = (props) => {
                               style={{
                                 width: "90%",
                                 fontSize: Font.subtext,
-                                color: Colors.lightgraytext,
+                                color: Colors.lightGrey,
                                 fontFamily: Font.fontmedium,
                                 paddingHorizontal: (windowWidth * 2) / 100,
                                 textAlign: "left",
@@ -375,8 +375,8 @@ const CovidPackageDetails = (props) => {
                                         paddingVertical: (windowWidth * 0.5) / 100,
                                         paddingHorizontal: (windowWidth * 3) / 100,
                                         marginHorizontal: (windowWidth * 4) / 100,
-                                        borderColor: Colors.buttoncolorhgreen,
-                                        color: Colors.buttoncolorhgreen,
+                                        borderColor: Colors.Green,
+                                        color: Colors.Green,
                                         borderRadius: 5,
                                         borderStyle: "dotted",
                                         borderWidth: 1,
@@ -464,7 +464,7 @@ const CovidPackageDetails = (props) => {
                                         stylesheet={{
                                           p: {
                                             fontSize: Font.subtext,
-                                            color: Colors.lightgraytext,
+                                            color: Colors.lightGrey,
                                             fontFamily: Font.fontregular,
                                           },
                                         }}
@@ -516,7 +516,7 @@ const CovidPackageDetails = (props) => {
               style={{
                 width: "100%",
                 alignSelf: "center",
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.White,
                 paddingHorizontal: (windowWidth * 5) / 100,
                 paddingVertical: (windowWidth * 2) / 100,
                 height: 80,
@@ -541,7 +541,7 @@ const CovidPackageDetails = (props) => {
               >
                 <Text
                   style={{
-                    color: Colors.textwhite,
+                    color: Colors.White,
                     fontFamily: Font.fontmedium,
                     fontSize: Font.buttontextsize,
                     alignSelf: "flex-end",

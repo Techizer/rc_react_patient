@@ -85,7 +85,7 @@ export default class ForgotPage extends Component {
   render() {
     return (
       <View
-        style={{ flex: 1, backgroundColor: Colors.white, paddingTop:StatusbarHeight }}>
+        style={{ flex: 1, backgroundColor: Colors.White, paddingTop:StatusbarHeight }}>
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
@@ -133,7 +133,7 @@ export default class ForgotPage extends Component {
                 style={{
                   fontSize: Font.headingblack,
                   fontFamily: Font.hedingfontfamily,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   textAlign: config.textRotate,
                 }}
               >
@@ -203,7 +203,7 @@ export default class ForgotPage extends Component {
                     returnKeyType='done'
                   />
                 </View>
-                {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'white', left: windowWidth * 4 / 100, top: -windowWidth * 2 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
+                {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
                   <Text style={{ color: '#0168B3', textAlign: config.textalign }}>{Lang_chg.textinputregistered[config.language]}</Text>
                 </View>} */}
             </View>
@@ -222,7 +222,7 @@ export default class ForgotPage extends Component {
 
             {/* <TouchableOpacity onPress={() => this.submit_click()}
                 style={{ width: '90%', alignSelf: 'center', borderRadius: windowWidth * 2 / 100, backgroundColor: Colors.Theme, paddingVertical: windowWidth * 4 / 100, marginTop: windowWidth * 6 / 100 }}>
-                <Text style={{ color: Colors.textwhite, fontFamily: Font.fontmedium, fontSize: Font.buttontextsize, textAlign: config.textalign, alignSelf: 'center' }}>{Lang_chg.forgotbtn[config.language]}</Text>
+                <Text style={{ color: Colors.White, fontFamily: Font.fontmedium, fontSize: Font.buttontextsize, textAlign: config.textalign, alignSelf: 'center' }}>{Lang_chg.forgotbtn[config.language]}</Text>
               </TouchableOpacity> */}
           </View>
         </KeyboardAwareScrollView>

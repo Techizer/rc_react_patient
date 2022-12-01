@@ -270,7 +270,7 @@ export default class Signup extends Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.white, paddingTop:StatusbarHeight+10 }}>
+      <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop:StatusbarHeight+10 }}>
 
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps='handled'
@@ -843,7 +843,7 @@ export default class Signup extends Component {
                   textAlign: config.textalign,
                   fontSize: Font.medium,
                   fontFamily: Font.fontmedium,
-                  color: Colors.textblue,
+                  color: Colors.Blue,
                 }}
               >
                 {Lang_chg.loginheretext[config.language]}
@@ -875,7 +875,7 @@ export default class Signup extends Component {
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -895,7 +895,7 @@ export default class Signup extends Component {
                     textAlign: config.textRotate,
                     fontFamily: Font.fontregular,
                     fontSize: (windowWidth * 4) / 100,
-                    color: Colors.textwhite,
+                    color: Colors.White,
                   }}
                 >
                   {Lang_chg.Country_code[config.language]}
@@ -945,7 +945,7 @@ export default class Signup extends Component {
                             >
                               <Text
                                 style={{
-                                  color: Colors.textblack,
+                                  color: Colors.Black,
                                   fontSize: (windowWidth * 4) / 100,
                                   paddingLeft: (windowWidth * 2) / 100,
                                   textAlign: config.textRotate,

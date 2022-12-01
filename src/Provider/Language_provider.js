@@ -394,9 +394,6 @@ class Language_provider {
   HomeVisit = ["Home Visit", "زيارة منزلية"];
 
   Tests = ["Tests", "الاختبارات"];
-
-  RootsCare = ["Roots Care", "روتس كير "];
-  Howitworks = ["How it works", "How it works"];
   Not_available_for_booking = ["Not Available for Booking", "غير متاح للحجز "];
   the_best_company = ["The Best Company", " أفضل شركة"];
   for_mediical = ["for Medical Services", "للخدمات الطبية"];
@@ -597,6 +594,9 @@ class Language_provider {
   Like_Us = ["Like Us? Give 5 Star Review", "مثلنا؟ أعط مراجعة 5 نجوم"];
   SignOut = ["Sign Out", "خروج"];
   About_App=['Making healthcare digital & easy', 'جعل الرعاية الصحية رقمية وسهلة'];
-  About_App_Details=['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة']
+  About_App_Details=['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة'];
+  Nurse_Booking=['Nurse Booking', 'ممرضة الحجز'];
+  RootsCare = ["Roots Care", "روتس كير "];
+  Howitworks = ["How it works", "How it works"];
 }
 export const Lang_chg = new Language_provider();

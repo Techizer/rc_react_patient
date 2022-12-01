@@ -161,7 +161,7 @@ export default class OTPPage extends Component {
   render() {
     return (
       <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
+        style={{ flex: 1, backgroundColor: "White" }}
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
@@ -278,7 +278,7 @@ export default class OTPPage extends Component {
           >
             <Text
               style={{
-                color: Colors.textwhite,
+                color: Colors.White,
                 fontFamily: Font.fontmedium,
                 fontSize: Font.buttontextsize,
 

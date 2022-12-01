@@ -184,7 +184,7 @@ export default class Footer extends Component {
                 <View style={{ position: "absolute", left: -13, top: -13 }}>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: "white",
+                      backgroundColor: "White",
                       borderRadius: 30,
                       alignSelf: "center",
                       justifyContent: "center",
@@ -294,7 +294,7 @@ export default class Footer extends Component {
                         style={{
                           alignSelf: "center",
                           fontSize: (windowWidth * 3) / 100,
-                          color: Colors.textblue,
+                          color: Colors.Blue,
                         }}
                       >
                         {item.fname}
@@ -370,7 +370,7 @@ export default class Footer extends Component {
                         style={{
                           alignSelf: "center",
                           fontSize: (windowWidth * 3) / 100,
-                          color: Colors.gray4,
+                          color: Colors.lightGrey,
                         }}
                       >
                         {item.fname}

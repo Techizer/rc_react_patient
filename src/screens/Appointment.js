@@ -1056,7 +1056,7 @@ export default class Appointment extends Component {
             {/* <Text>Home</Text> */}
 
             {/* header */}
-            <View style={{ backgroundColor: "white" }}>
+            <View style={{ backgroundColor: "White" }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -1569,7 +1569,7 @@ export default class Appointment extends Component {
                                       ? "#FF4500"
                                       : item.acceptance_status == "Pending"
                                       ? Colors.gold
-                                      : Colors.buttoncolorhgreen,
+                                      : Colors.Green,
                                 }}
                               >
                                 <Text
@@ -1737,7 +1737,7 @@ export default class Appointment extends Component {
                                       );
                                     }}
                                     style={{
-                                      backgroundColor: Colors.buttoncolorhgreen,
+                                      backgroundColor: Colors.Green,
                                       width: "35%",
                                       borderRadius: (mobileW * 1) / 100,
                                       justifyContent: "center",
@@ -1772,7 +1772,7 @@ export default class Appointment extends Component {
                                       });
                                   }}
                                   style={{
-                                    backgroundColor: Colors.buttoncolorhgreen,
+                                    backgroundColor: Colors.Green,
                                     width: "48%",
                                     borderRadius: (mobileW * 1) / 100,
                                     justifyContent: "center",
@@ -1908,7 +1908,7 @@ export default class Appointment extends Component {
               width: 25,
               height: 25,
               paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: "white",
+              backgroundColor: "White",
               countcolor: "red",
               countbackground: "red",
             }}
@@ -2393,8 +2393,8 @@ export default class Appointment extends Component {
                                     marginRight: (mobileW * 3) / 100,
                                     marginTop: (mobileW * 3) / 100,
                                     backgroundColor:
-                                      item.tick == 1 ? "#0787D2" : Colors.gray6,
-                                    color: item.tick == 1 ? "white" : "black",
+                                      item.tick == 1 ? "#0787D2" : Colors.lightGrey,
+                                    color: item.tick == 1 ? "White" : "black",
                                     textAlign: "center",
                                     paddingVertical: (mobileW * 2) / 100,
                                     fontFamily: Font.ques_fontfamily,
@@ -2480,7 +2480,7 @@ export default class Appointment extends Component {
                                                   color: "#fff",
                                                 }
                                               : {
-                                                  backgroundColor: Colors.gray6,
+                                                  backgroundColor: Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                           ]}
@@ -2525,7 +2525,7 @@ export default class Appointment extends Component {
                                                   color: "#fff",
                                                 }
                                               : {
-                                                  backgroundColor: Colors.gray6,
+                                                  backgroundColor: Colors.lightGrey,
                                                   color: "#000",
                                                 },
                                           ]}
@@ -2571,7 +2571,7 @@ export default class Appointment extends Component {
                     >
                       <Text
                         style={{
-                          color: Colors.textwhite,
+                          color: Colors.White,
                           fontFamily: Font.fontmedium,
                           fontSize: Font.subtext,
                           alignSelf: "flex-end",

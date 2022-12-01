@@ -38,7 +38,7 @@ export default class Cameragallery extends Component {
             <View
               style={{
                 width: "94%",
-                backgroundColor: Colors.mediabackground,
+                backgroundColor: Colors.White,
                 borderRadius: 5,
                 paddingVertical: (screenWidth * 4) / 100,
                 alignSelf: "center",

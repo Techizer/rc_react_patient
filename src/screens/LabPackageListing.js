@@ -71,7 +71,7 @@ const LabPackageListing = (props) => {
               width: "99%",
               alignSelf: "center",
               paddingTop: (windowWidth * 3) / 100,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.White,
               alignItems: "center",
             }}
           >
@@ -293,8 +293,8 @@ const LabPackageListing = (props) => {
                           paddingVertical: (windowWidth * 0.5) / 100,
                           paddingHorizontal: (windowWidth * 3) / 100,
                           marginHorizontal: (windowWidth * 4) / 100,
-                          borderColor: Colors.buttoncolorhgreen,
-                          color: Colors.buttoncolorhgreen,
+                          borderColor: Colors.Green,
+                          color: Colors.Green,
                           borderRadius: 5,
                           borderStyle: "dotted",
                           borderWidth: 1,

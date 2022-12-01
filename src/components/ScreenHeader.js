@@ -51,7 +51,7 @@ const ScreenHeader = ({
                     style={{
                         width: windowWidth,
                         height: headerHeight + StatusbarHeight,
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.White,
                         paddingTop: StatusbarHeight + 10,
                         borderBottomWidth: 0.9,
                         borderBottomColor: Colors.Border
@@ -126,7 +126,7 @@ const ScreenHeader = ({
             (<View style={{
                 width: windowWidth,
                 height: headerHeight + StatusbarHeight,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.White,
                 paddingTop: StatusbarHeight + 10,
                 borderBottomWidth: 0.9,
                 borderBottomColor: Colors.Border

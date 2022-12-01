@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     //     fontSize: 18,
     // },
     selectorLayout: {
-        backgroundColor: 'white',
+        backgroundColor: 'White',
         padding: 10,
         height: height * 0.8,
         width: width * 0.99,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowOpacity: 1,
         elevation: 9,
-        color: "white"
+        color: "White"
 
     },
     dialCodeLayout: {
@@ -141,18 +141,18 @@ const styles = StyleSheet.create({
     dialCodeTxt: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: "white"
+        color: "White"
 
     },
     countryNameLayout: {
         width: "71%",
         justifyContent: 'center',
-        color: "white"
+        color: "White"
 
     },
     countryNameTxt: {
         fontSize: 16,
-        color: "white"
+        color: "White"
     },
     countryImgLayout: {
         width: "12%",
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     },
     emptytxt: {
         fontSize: 14,
-        color: "white"
+        color: "White"
     }
 })
 export default CountrySelector

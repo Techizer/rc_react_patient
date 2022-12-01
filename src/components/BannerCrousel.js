@@ -109,7 +109,7 @@ const BannerCrousel = ({ data, navigation }) => {
     }, [currentIndex]);
 
     return (
-        // <View style={{ flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.white, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
+        // <View style={{ flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
 
         //     <FlatList
         //         data={data}
@@ -166,7 +166,7 @@ const BannerCrousel = ({ data, navigation }) => {
         //         }} />
         // </View>
 
-        <View style={{ marginTop: vs(7), flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.white, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
+        <View style={{ marginTop: vs(7), flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
 
             <FlatList
                 showsHorizontalScrollIndicator={false}

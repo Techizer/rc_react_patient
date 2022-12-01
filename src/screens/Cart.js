@@ -577,7 +577,7 @@ export default class Cart extends Component {
               width: "100%",
               alignSelf: "center",
               paddingVertical: (windowWidth * 3) / 100,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.White,
               borderBottomWidth: 1,
               borderBottomColor: Colors.Border,
 
@@ -592,7 +592,7 @@ export default class Cart extends Component {
 
                 alignSelf: "center",
                 paddingTop: (windowWidth * 3) / 100,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.White,
                 alignItems: "center",
               }}
             >
@@ -722,7 +722,7 @@ export default class Cart extends Component {
                           style={{
                             fontFamily: Font.fontmedium,
                             fontSize: (windowWidth * 3.9) / 100,
-                            color: Colors.gray4,
+                            color: Colors.lightGrey,
                           }}
                         >
                           {this.state.provider_name}
@@ -755,7 +755,7 @@ export default class Cart extends Component {
                               source={Icons.cross}
                               style={{
                                 resizeMode: "contain",
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.White,
                                 width: (windowWidth * 5.5) / 100,
                                 height: (windowWidth * 5.5) / 100,
                                 alignSelf: "center",
@@ -1156,7 +1156,7 @@ export default class Cart extends Component {
                 >
                   <Text
                     style={{
-                      color: Colors.textwhite,
+                      color: Colors.White,
                       fontFamily: Font.fontmedium,
                       fontSize: Font.buttontextsize,
                       alignSelf: "flex-end",
@@ -1214,7 +1214,7 @@ export default class Cart extends Component {
                 >
                   <Text
                     style={{
-                      color: Colors.textwhite,
+                      color: Colors.White,
                       fontFamily: Font.fontmedium,
                       fontSize: Font.buttontextsize,
                       alignSelf: "flex-end",
@@ -1337,7 +1337,7 @@ export default class Cart extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: (windowWidth * 4) / 100,
-                        color: Colors.bordercolorblue,
+                        color: Colors.Blue,
                         alignSelf: "center",
                       }}
                     >
@@ -1360,7 +1360,7 @@ export default class Cart extends Component {
                       style={{
                         fontFamily: Font.fontregular,
                         fontSize: (windowWidth * 4) / 100,
-                        color: Colors.bordercolorblue,
+                        color: Colors.Blue,
                         alignSelf: "center",
                       }}
                     >
@@ -1410,7 +1410,7 @@ export default class Cart extends Component {
             <View
               style={{
                 width: "100%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 borderRadius: (windowWidth * 4) / 100,
                 position: "absolute",
                 bottom: 0,
@@ -1470,7 +1470,7 @@ export default class Cart extends Component {
                 style={{
                   // width: '15%',
                   alignSelf: "center",
-                  borderColor: Colors.bordercolorblue,
+                  borderColor: Colors.Blue,
                   borderWidth: 1,
                   padding: (windowWidth * 2) / 100,
                   paddingHorizontal: (windowWidth * 3) / 100,
@@ -1534,7 +1534,7 @@ export default class Cart extends Component {
               width: 25,
               height: 25,
               paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: "white",
+              backgroundColor: "White",
               countcolor: "red",
               countbackground: "red",
             }}
@@ -1546,7 +1546,7 @@ export default class Cart extends Component {
             style={{
               width: "100%",
               alignSelf: "center",
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.White,
               paddingHorizontal: (windowWidth * 5) / 100,
               paddingVertical: (windowWidth * 2) / 100,
               height: 80,
@@ -1577,7 +1577,7 @@ export default class Cart extends Component {
             >
               <Text
                 style={{
-                  color: Colors.textwhite,
+                  color: Colors.White,
                   fontFamily: Font.fontmedium,
                   fontSize: Font.buttontextsize,
                   alignSelf: "flex-end",

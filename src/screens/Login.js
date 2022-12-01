@@ -491,7 +491,7 @@ export default class Login extends Component {
     };
 
     return (
-      <View style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.white, paddingTop: StatusbarHeight + 10 }}>
+      <View style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
 
         {/* <GestureRecognizer
           onSwipeLeft={(_state) => {
@@ -505,7 +505,7 @@ export default class Login extends Component {
         > */}
         {/* <StatusBar
           barStyle="dark-content"
-          backgroundColor={Colors.white}
+          backgroundColor={Colors.White}
           hidden={false}
           translucent={false}
           networkActivityIndicatorVisible={true}
@@ -541,10 +541,10 @@ export default class Login extends Component {
             >
               <Text
                 style={{
-                  fontSize: Font.xxlarge,
+                  fontSize: Font.xxxlarge,
                   fontFamily: Font.blackheadingfontfamily,
                   textAlign: config.textRotate,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   marginTop: vs(35)
                 }}
               >
@@ -741,7 +741,7 @@ export default class Login extends Component {
                     this.props.navigation.navigate("ForgotPage");
                   }}
                   style={{
-                    color: Colors.textblue,
+                    color: Colors.Blue,
                     fontFamily: Font.fontregular,
                     fontSize: Font.Forgot,
                     alignSelf: "flex-end",
@@ -817,7 +817,7 @@ export default class Login extends Component {
                 style={[
                   {
                     fontSize: (windowWidth * 3.1) / 100,
-                    color: Colors.textwhite,
+                    color: Colors.White,
                     fontFamily: Font.ques_fontfamily,
                   }
                 ]}
@@ -840,7 +840,7 @@ export default class Login extends Component {
                   width: (windowWidth * 6) / 100,
                   alignSelf: "center",
                   height: (windowWidth * 6) / 100,
-                  tintColor: Colors.white
+                  tintColor: Colors.White
                 }}
               />
 
@@ -878,7 +878,7 @@ export default class Login extends Component {
                   textAlign: config.textRotate,
                   fontFamily: Font.fontregular,
                   fontSize: Font.headinggray,
-                  color: Colors.textblue,
+                  color: Colors.Blue,
                   marginTop: (windowWidth * 2) / 100,
                 }}
               >
@@ -900,7 +900,7 @@ export default class Login extends Component {
               style={[
                 {
                   fontSize: (windowWidth * 3.8) / 100,
-                  color: Colors.textblack,
+                  color: Colors.Black,
                   fontFamily: Font.ques_fontfamily,
                 },
                 Platform.OS == "ios"
@@ -932,7 +932,7 @@ export default class Login extends Component {
                   width: "47%",
                   backgroundColor:
                     this.state.langaugeme == 0
-                      ? Colors.buttonbackgoungcolorlightblue
+                      ? Colors.lightBlue
                       : "#fff",
                   borderColor: Colors.lightGrey,
                   borderWidth: 1,
@@ -944,7 +944,7 @@ export default class Login extends Component {
                   style={{
                     textAlign: config.textalign,
                     fontSize: (windowWidth * 3.5) / 100,
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontFamily: Font.ques_fontfamily,
                     alignSelf: "center",
                   }}
@@ -968,7 +968,7 @@ export default class Login extends Component {
                   alignSelf: "center",
                   backgroundColor:
                     this.state.langaugeme == 1
-                      ? Colors.buttonbackgoungcolorlightblue
+                      ? Colors.lightBlue
                       : "#fff",
                   borderColor: Colors.lightGrey,
                   borderWidth: 1,
@@ -979,7 +979,7 @@ export default class Login extends Component {
                   style={{
                     textAlign: config.textalign,
                     fontSize: (windowWidth * 3.5) / 100,
-                    color: Colors.textblack,
+                    color: Colors.Black,
                     fontFamily: Font.ques_fontfamily,
                     alignSelf: "center",
                   }}

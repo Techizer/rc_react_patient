@@ -147,7 +147,7 @@ class AddOnScreen extends Component {
                         <View style={{
                             //justifyContent: 'flex-start',
                             height: Dimen.height - 70,
-                            backgroundColor: 'white',
+                            backgroundColor: 'White',
                             borderWidth: 1,
                             borderColor: 'lightgray',
                             borderStyle: 'solid',
@@ -173,7 +173,7 @@ class AddOnScreen extends Component {
                             </View>
                             <View style={{
                                 height: Dimen.height - 275,
-                                backgroundColor: 'white',
+                                backgroundColor: 'White',
                                 paddingHorizontal: 20,
                                 paddingVertical: 10,
                             }}>

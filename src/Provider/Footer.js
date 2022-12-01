@@ -160,7 +160,7 @@ export default class Footer extends Component {
                 <View style={{ position: "absolute", left: -13, top: -13 }}>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: "white",
+                      backgroundColor: "White",
                       borderRadius: 30,
                       alignSelf: "center",
                       justifyContent: "center",
