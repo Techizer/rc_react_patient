@@ -122,7 +122,7 @@ export default class AllServiceProviderListing extends Component {
     let url = config.baseURL + "api-patient-hospital-doctor-list";
 
     console.log("url", url);
-    
+
     var data = new FormData();
     data.append("login_user_id", user_id);
     data.append("hospital_id", this.state.hospitalId);
@@ -168,8 +168,7 @@ export default class AllServiceProviderListing extends Component {
   };
 
   get_Services = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+
     let url =
       config.baseURL +
       (this.state.pass_status === "hospital"
@@ -178,14 +177,27 @@ export default class AllServiceProviderListing extends Component {
     console.log("url", url);
 
     var data = new FormData();
+    var user_id = "0"
+    if (global.isLogin == false) {
+      data.append("work_area", "Saudi Arabia");
+    } else {
+      let user_details = await localStorage.getItemObject("user_arr");
+      user_id = user_details["user_id"];
+      data.append("work_area", user_details["work_area"]);
+    }
+
     data.append("login_user_id", user_id);
-    if (this.state.pass_status !== "hospital")
-      data.append("provider_name", this.state.provider_name);
     data.append("service_type", this.state.pass_status);
-    data.append("work_area", user_details["work_area"]);
     data.append("page_count", 1);
-    if (this.state.pass_status === "doctor")
+
+    if (this.state.pass_status !== "hospital") {
+      data.append("provider_name", this.state.provider_name);
+    }
+
+    if (this.state.pass_status === "doctor"){
       data.append("docEnableFor", this.state.enableFor);
+    }
+      
     if (this.state.pass_status === "hospital") {
       data.append("hospital_name", this.state.provider_name);
     }
@@ -264,10 +276,10 @@ export default class AllServiceProviderListing extends Component {
                   onPress={() => {
                     this.state.isHospitalDoctorList
                       ? this.setState({
-                          isHospitalDoctorList:
-                            !this.state.isHospitalDoctorList,
-                          availableDoctorsUnderHospital: [],
-                        })
+                        isHospitalDoctorList:
+                          !this.state.isHospitalDoctorList,
+                        availableDoctorsUnderHospital: [],
+                      })
                       : this.props.navigation.goBack();
                   }}
                 >
@@ -302,18 +314,18 @@ export default class AllServiceProviderListing extends Component {
                   {this.state.isHospitalDoctorList
                     ? Lang_chg.Doctor[config.language]
                     : this.state.pass_status == "nurse"
-                    ? Lang_chg.Nurse[config.language]
-                    : this.state.pass_status == "physiotherapy"
-                    ? Lang_chg.Physiotherapist[config.language]
-                    : this.state.pass_status == "caregiver"
-                    ? Lang_chg.Nurse_assistant[config.language]
-                    : this.state.pass_status == "babysitter"
-                    ? Lang_chg.Babysitter[config.language]
-                    : this.state.pass_status == "doctor"
-                    ? Lang_chg.Doctor[config.language]
-                    : this.state.pass_status == "hospital"
-                    ? Lang_chg.Hospital[config.language]
-                    : Lang_chg.Lab[config.language]}
+                      ? Lang_chg.Nurse[config.language]
+                      : this.state.pass_status == "physiotherapy"
+                        ? Lang_chg.Physiotherapist[config.language]
+                        : this.state.pass_status == "caregiver"
+                          ? Lang_chg.Nurse_assistant[config.language]
+                          : this.state.pass_status == "babysitter"
+                            ? Lang_chg.Babysitter[config.language]
+                            : this.state.pass_status == "doctor"
+                              ? Lang_chg.Doctor[config.language]
+                              : this.state.pass_status == "hospital"
+                                ? Lang_chg.Hospital[config.language]
+                                : Lang_chg.Lab[config.language]}
                 </Text>
               </View>
               <View
@@ -454,16 +466,16 @@ export default class AllServiceProviderListing extends Component {
                       this.state.pass_status == "nurse"
                         ? Lang_chg.SearchNurse[config.language]
                         : this.state.pass_status == "physiotherapy"
-                        ? Lang_chg.Searchphysi[config.language]
-                        : this.state.pass_status == "caregiver"
-                        ? Lang_chg.Searchseassistent[config.language]
-                        : this.state.pass_status == "babysitter"
-                        ? Lang_chg.SearchBabysitter[config.language]
-                        : this.state.pass_status == "doctor"
-                        ? Lang_chg.SearchDoctor[config.language]
-                        : this.state.pass_status == "hospital"
-                        ? Lang_chg.SearchHospital[config.language]
-                        : Lang_chg.SearchLab[config.language]
+                          ? Lang_chg.Searchphysi[config.language]
+                          : this.state.pass_status == "caregiver"
+                            ? Lang_chg.Searchseassistent[config.language]
+                            : this.state.pass_status == "babysitter"
+                              ? Lang_chg.SearchBabysitter[config.language]
+                              : this.state.pass_status == "doctor"
+                                ? Lang_chg.SearchDoctor[config.language]
+                                : this.state.pass_status == "hospital"
+                                  ? Lang_chg.SearchHospital[config.language]
+                                  : Lang_chg.SearchLab[config.language]
                     }
                     placeholderTextColor={Colors.searchPlaceholder}
                     onChangeText={(txt) => {
@@ -566,12 +578,12 @@ export default class AllServiceProviderListing extends Component {
                                 <Image
                                   source={
                                     item.image == "NA" ||
-                                    item.image == null ||
-                                    item.image == ""
+                                      item.image == null ||
+                                      item.image == ""
                                       ? require("../icons/No-Image3x.png")
                                       : {
-                                          uri: config.img_url3 + item.image,
-                                        }
+                                        uri: config.img_url3 + item.image,
+                                      }
                                   }
                                   style={{
                                     // alignSelf: 'center',
@@ -837,11 +849,11 @@ export default class AllServiceProviderListing extends Component {
               <View>
                 {this.state.nurse_data == "" ||
                   (this.state.nurse_data == null && (
-                    <View style={{ 
+                    <View style={{
                       marginTop: (mobileW * 55) / 100,
                       width: '75%',
                       alignSelf: 'center'
-                      }}>
+                    }}>
                       <Text
                         style={{
                           fontFamily: Font.fontregular,
@@ -910,12 +922,12 @@ export default class AllServiceProviderListing extends Component {
                                     <Image
                                       source={
                                         item.image == "NA" ||
-                                        item.image == null ||
-                                        item.image == ""
+                                          item.image == null ||
+                                          item.image == ""
                                           ? require("../icons/No-Image3x.png")
                                           : {
-                                              uri: config.img_url3 + item.image,
-                                            }
+                                            uri: config.img_url3 + item.image,
+                                          }
                                       }
                                       style={{
                                         // alignSelf: 'center',
@@ -1320,8 +1332,8 @@ export default class AllServiceProviderListing extends Component {
                                     {this.state.pass_status === "lab"
                                       ? Lang_chg.BOOKTEST[config.language]
                                       : Lang_chg.BOOKAPPOINTMENT[
-                                          config.language
-                                        ]}
+                                      config.language
+                                      ]}
                                   </Text>
                                 </TouchableOpacity>
                               </View>
@@ -1390,12 +1402,12 @@ export default class AllServiceProviderListing extends Component {
                                     <Image
                                       source={
                                         item.image == "NA" ||
-                                        item.image == null ||
-                                        item.image == ""
+                                          item.image == null ||
+                                          item.image == ""
                                           ? require("../icons/No-Image3x.png")
                                           : {
-                                              uri: config.img_url3 + item.image,
-                                            }
+                                            uri: config.img_url3 + item.image,
+                                          }
                                       }
                                       style={{
                                         // alignSelf: 'center',
@@ -1543,14 +1555,14 @@ export default class AllServiceProviderListing extends Component {
                                               <Image
                                                 source={
                                                   item.image == "NA" ||
-                                                  item.image == null ||
-                                                  item.image == ""
+                                                    item.image == null ||
+                                                    item.image == ""
                                                     ? require("../icons/No-Image3x.png")
                                                     : {
-                                                        uri:
-                                                          config.img_url3 +
-                                                          item.image,
-                                                      }
+                                                      uri:
+                                                        config.img_url3 +
+                                                        item.image,
+                                                    }
                                                 }
                                                 style={{
                                                   borderWidth: 1,
@@ -1658,7 +1670,7 @@ export default class AllServiceProviderListing extends Component {
                                                 >
                                                   {
                                                     Lang_chg.BookConsultation[
-                                                      config.language
+                                                    config.language
                                                     ]
                                                   }
                                                 </Text>
@@ -1694,7 +1706,7 @@ export default class AllServiceProviderListing extends Component {
                                   >
                                     {
                                       Lang_chg.BookOnlineAppointment[
-                                        config.language
+                                      config.language
                                       ]
                                     }
                                   </Text>
@@ -1732,7 +1744,7 @@ export default class AllServiceProviderListing extends Component {
                                   >
                                     {
                                       Lang_chg.FindSpecialtyDoctor[
-                                        config.language
+                                      config.language
                                       ]
                                     }
                                   </Text>
@@ -1800,7 +1812,7 @@ export default class AllServiceProviderListing extends Component {
           animationType="slide"
           transparent={true}
           visible={this.state.specialtyModal}
-          onRequestClose={() => {}}
+          onRequestClose={() => { }}
         >
           <TouchableOpacity
             activeOpacity={0.9}

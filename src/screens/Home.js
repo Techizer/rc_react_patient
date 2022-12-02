@@ -180,12 +180,12 @@ export default class Home extends Component {
         // if (notification.data?.type == "Logout") {
         //   that.logout();
         // }
-        
+
         if (notification.userInteraction) {
           // Handle notification click
           console.log("PushNotification.configure", notification);
 
-          
+
 
           if (notification.data?.type == "doctor_to_patient_video_call") {
             let data;
@@ -251,12 +251,12 @@ export default class Home extends Component {
 
   handleBackButton = () => {
     console.log('Back button is pressed', this.props.route.name);
-    if(this.props.route.name == "Home"){
+    if (this.props.route.name == "Home") {
       return true;
-    }else{
+    } else {
       return false;
     }
-    
+
   }
 
   getNotificationCall = async () => {
@@ -457,10 +457,15 @@ export default class Home extends Component {
     let user_details = await localStorage.getItemObject("user_arr");
     let address_arr = await localStorage.getItemObject("address_arr");
     console.log("user_details user_details", user_details);
-    console.log("address_arr", address_arr);
+    console.log("address_arraddress_arr", address_arr);
     this.setState({
       address_show: address_arr,
       address_old: user_details.current_address,
+    }, () => {
+      if (this.state.address_old == null ||
+        this.state.address_old == "") {
+        this.updateAddress()
+      }
     });
 
     if (user_details.image != null) {
@@ -468,6 +473,43 @@ export default class Home extends Component {
         profile_img: config.img_url3 + user_details["image"],
       });
     }
+  };
+
+
+
+  updateAddress = async () => {
+    var user_details = await localStorage.getItemObject("user_arr");
+    console.log("user_details user_details", user_details);
+
+    let address_arr = await localStorage.getItemObject("addressDetails");
+    console.log("addressDetailsaddressDetails", address_arr);
+    let user_id = user_details["user_id"];
+
+    let url = config.baseURL + "api-patient-address-update";
+    console.log("url", url);
+    var data = new FormData();
+    data.append("user_id", user_id);
+    data.append("lat", address_arr.latitude);
+    data.append("lng", address_arr.longitude);
+
+    consolepro.consolelog("data", data);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        consolepro.consolelog("obj", obj);
+        if (obj.status == true) {
+          this.setState({ address_old: obj.result.current_address });
+          localStorage.setItemObject("address_arr", obj.result.current_address);
+          user_details['current_address'] = obj.result.current_address
+          localStorage.setItemObject("user_arr", user_details);
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        this.getProfile();
+        console.log("-------- error ------- " + error);
+      });
   };
 
   render() {
@@ -570,7 +612,7 @@ export default class Home extends Component {
                       width: "50%",
                     }}
                   >
-                    {this.state.address_show}
+                    {this.state.address_old}
                   </Text>
                 ) : (
                   <Text
@@ -584,7 +626,7 @@ export default class Home extends Component {
                       width: "50%",
                     }}
                   >
-                    NA
+                    {this.state.address_show}
                   </Text>
                 )}
               </View>
@@ -664,7 +706,7 @@ export default class Home extends Component {
                 {/* FlatList 1 */}
                 <View style={{
                   paddingTop: (mobileW * 1.7) / 100,
-                  
+
                 }}>
                   <Appheading
                     title={

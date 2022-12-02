@@ -11,6 +11,7 @@ import FlashMessage from "react-native-flash-message";
 global.MapAddress = "NA";
 global.screens = "Splash";
 global.fcmtoken = "123456";
+global.isLogin = true;
 import RNRestart from "react-native-restart";
 console.reportErrorsAsExceptions = false;
 class App extends Component {

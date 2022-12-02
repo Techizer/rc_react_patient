@@ -56,13 +56,12 @@ export default class Drawerscreen extends Component {
     let address_arr = await localStorage.getItemObject("address_arr");
     console.log("user_details user_details", user_details);
     console.log("address_arr", address_arr);
-    this.setState({ address_new: address_arr });
 
     this.setState({
       name: user_details["first_name"],
       email: user_details["email"],
-
       mobile: user_details["phone_number"],
+      address_new: address_arr,
       address_old: user_details["current_address"],
     });
     if (user_details.image != null) {
@@ -253,7 +252,7 @@ export default class Drawerscreen extends Component {
                       alignSelf: "center",
                     }}
                   >
-                    {this.state.address_new}
+                    {this.state.address_old}
                   </Text>
                 ) : (
                   <Text
@@ -268,7 +267,7 @@ export default class Drawerscreen extends Component {
                       alignSelf: "center",
                     }}
                   >
-                    NA
+                    {this.state.address_new}
                   </Text>
                 )}
                 {config.language == 1 && (
