@@ -71,7 +71,7 @@ export default class Booking extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pass_status: this.props.route.params.pass_status,
+      providerType: this.props.route.params.providerType,
       nurse_id: this.props.route.params.nurse_id,
       isFromHospital: this.props.route.params.isFromHospital,
       display: "taskbooking",
@@ -130,10 +130,10 @@ export default class Booking extends Component {
       console.log("display", display);
     }
     this.props.navigation.addListener("focus", () => {
-      this.state.pass_status === "lab"
-        ? this.getLabServices()
-        : this.state.pass_status === "doctor"
-          ? this.getDoctorServices()
+      this.state.providerType === "lab" ?
+        this.getLabServices()
+        : this.state.providerType === "doctor" ?
+          this.getDoctorServices()
           : this.getServices();
       this.getDay();
       this.getAllNotification();
@@ -234,7 +234,7 @@ export default class Booking extends Component {
     var data = new FormData();
     data.append("provider_id", this.state.nurse_id);
     data.append("date", this.state.set_date);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -447,7 +447,7 @@ export default class Booking extends Component {
                   consolepro.consolelog(
                     "-------- new_time_online if ------- " + new_time_online
                   );
-                 
+
                   if (!ar1) {
                     ar1 = true;
                     ar2 = false;
@@ -472,7 +472,7 @@ export default class Booking extends Component {
                   ar2 = true;
                   online_Arr2.push({ time: nameArr_time[m] });
                 }
-               
+
               }
             }
             this.setState({
@@ -588,7 +588,7 @@ export default class Booking extends Component {
     var data = new FormData();
     data.append("provider_id", this.state.nurse_id);
     data.append("date", this.state.set_date);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -683,7 +683,7 @@ export default class Booking extends Component {
     data.append("provider_id", this.state.nurse_id);
     data.append("date", this.state.set_date);
     data.append("task_type", this.state.set_task);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -721,7 +721,7 @@ export default class Booking extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime = convertTime(timeStr);
-                  
+
                   if (finaltime >= this.state.timcurrent_for_check) {
                     new_time_dlot.push({
                       time: nameArr[l],
@@ -947,7 +947,7 @@ export default class Booking extends Component {
     var data = new FormData();
     data.append("provider_id", this.state.nurse_id);
     data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -1133,7 +1133,7 @@ export default class Booking extends Component {
     var data = new FormData();
     data.append("provider_id", this.state.nurse_id);
     data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -1176,7 +1176,7 @@ export default class Booking extends Component {
               if (finaltime >= timcurrent) {
                 new_time_home.push({ time: nameArr[l], time_status: false });
 
-            
+
                 if (!ar1) {
                   ar1 = true;
                   ar2 = false;
@@ -1339,7 +1339,7 @@ export default class Booking extends Component {
             onlineVisitVat: onlineVat, //0.0,
             booking_data: obj.result,
             message: obj.message,
-            
+
             time_Arr: new_time_home,
             vat_price: vat_price_new,
             distance_fare: obj.result.distance_fare,
@@ -1432,7 +1432,7 @@ export default class Booking extends Component {
     var data = new FormData();
     data.append("provider_id", this.state.nurse_id);
     data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
 
     consolepro.consolelog("data", data);
     apifuntion
@@ -1470,7 +1470,7 @@ export default class Booking extends Component {
               if (finaltime >= timcurrent) {
                 new_time_dlot.push({ time: nameArr[l], time_status: false });
 
-               
+
                 if (!task_ar1) {
                   task_ar1 = true;
                   task_ar2 = false;
@@ -1669,7 +1669,7 @@ export default class Booking extends Component {
       "hospital_id",
       this.state.isFromHospital ? this.props.route.params.hospitalId : ""
     );
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
     data.append("login_user_id", user_id);
     data.append("currency_symbol", this.state.currency_symbol);
     data.append("family_member_id", this.state.family_member_id);
@@ -1736,7 +1736,7 @@ export default class Booking extends Component {
 
   submit_btn = async () => {
     Keyboard.dismiss();
-    if (this.state.pass_status === "lab") {
+    if (this.state.providerType === "lab") {
       if (this.state.indexPosition === 0) {
         if (this.state.select_task.length <= 0) {
           msgProvider.showError(msgText.EmptyTask[config.language]);
@@ -1769,10 +1769,10 @@ export default class Booking extends Component {
 
 
 
-    if (this.state.pass_status === "lab") {
+    if (this.state.providerType === "lab") {
       data.append("hospital_id", this.state.booking_data.hospital_id);
     }
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
     data.append("login_user_id", user_id);
     data.append("currency_symbol", this.state.currency_symbol);
     data.append("family_member_id", this.state.family_member_id);
@@ -1833,8 +1833,7 @@ export default class Booking extends Component {
       return false;
     }
 
-    var taskBase =
-      this.state.pass_status === "lab" ? "package_base" : "hour_base";
+    var taskBase = this.state.providerType === "lab" ? "package_base" : "hour_base";
 
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
@@ -1844,10 +1843,10 @@ export default class Booking extends Component {
     var data = new FormData();
     console.log("data", data);
 
-    if (this.state.pass_status === "lab") {
+    if (this.state.providerType === "lab") {
       data.append("hospital_id", this.state.booking_data.hospital_id);
     }
-    data.append("service_type", this.state.pass_status);
+    data.append("service_type", this.state.providerType);
     data.append("login_user_id", user_id);
     data.append("currency_symbol", this.state.currency_symbol);
     data.append("family_member_id", this.state.family_member_id);
@@ -2068,7 +2067,7 @@ export default class Booking extends Component {
   time_tick = (item, index) => {
     let data = this.state.time_Arr;
     console.log("new data", data);
-    
+
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
         data[i].time_status = true;
@@ -2128,7 +2127,7 @@ export default class Booking extends Component {
   render() {
     if (this.state.booking_data != "" && this.state.booking_data != null) {
       var item = this.state.booking_data;
-      if (this.state.pass_status === "doctor") {
+      if (this.state.providerType === "doctor") {
         this.state.set_task =
           this.state.indexPosition === 0
             ? item.online_base_text
@@ -2146,7 +2145,6 @@ export default class Booking extends Component {
       }
       console.log("display ", this.state.display);
       console.log("item ", item);
-      console.log("pass_status ", this.state.pass_status);
 
       return (
         <View style={Styles.container1}>
@@ -2181,7 +2179,7 @@ export default class Booking extends Component {
                       this.props.navigation.goBack();
                     }}
                   >
-                    <Image
+                    {/* <Image
                       source={
                         config.textalign == "right"
                           ? localimag.arabic_back
@@ -2193,7 +2191,7 @@ export default class Booking extends Component {
                         alignSelf: "center",
                         height: (mobileW * 9) / 100,
                       }}
-                    />
+                    /> */}
                   </TouchableOpacity>
                 </View>
                 <View
@@ -2222,7 +2220,7 @@ export default class Booking extends Component {
                       this.props.navigation.navigate("Notifications");
                     }}
                   >
-                    <Image
+                    {/* <Image
                       source={
                         this.state.notification_count > 0
                           ? localimag.notifications
@@ -2234,7 +2232,7 @@ export default class Booking extends Component {
                         width: (mobileW * 6) / 100,
                         height: (mobileW * 6) / 100,
                       }}
-                    />
+                    /> */}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -2249,10 +2247,7 @@ export default class Booking extends Component {
             >
               <View
                 style={{
-                  backgroundColor:
-                    this.state.pass_status === "lab"
-                      ? Colors.white_color
-                      : "#F1F2F4",
+                  backgroundColor: this.state.providerType === "lab" ? Colors.white_color : "#F1F2F4",
                   paddingVertical: (mobileW * 5) / 100,
                 }}
               >
@@ -2264,7 +2259,7 @@ export default class Booking extends Component {
                   }}
                 >
                   <View style={{ width: "25%" }}>
-                    <Image
+                    {/* <Image
                       source={
                         item.image == "NA" ||
                           item.image == null ||
@@ -2280,7 +2275,7 @@ export default class Booking extends Component {
                         borderRadius: (mobileW * 10) / 100,
                         alignSelf: "center",
                       }}
-                    />
+                    /> */}
                   </View>
                   <View
                     style={{
@@ -2306,11 +2301,11 @@ export default class Booking extends Component {
                         color: Colors.theme_color,
                       }}
                     >
-                      {this.state.pass_status === "lab"
+                      {this.state.providerType === "lab"
                         ? item.iso_text
                         : item.dispaly_provider_type + " - " + item.experience}
                     </Text>
-                    {this.state.pass_status !== "lab" && (
+                    {this.state.providerType !== "lab" && (
                       <Text
                         style={{
                           textAlign: config.textRotate,
@@ -2323,7 +2318,7 @@ export default class Booking extends Component {
                       </Text>
                     )}
                   </View>
-                  {this.state.pass_status === "lab" &&
+                  {this.state.providerType === "lab" &&
                     item.hospital_id !== "" ? (
                     <View
                       style={{
@@ -2372,13 +2367,13 @@ export default class Booking extends Component {
                     )
                   )}
                 </View>
-                {this.state.pass_status === "lab" &&
+                {this.state.providerType === "lab" &&
                   this.state.nurse_id !== "497" && (
                     <Text
                       onPress={() => {
                         this.props.navigation.navigate(
                           "AllServiceProviderListing",
-                          { pass_status: this.state.pass_status }
+                          { providerType: this.state.providerType }
                         );
                       }}
                       style={{
@@ -2397,7 +2392,7 @@ export default class Booking extends Component {
                   )}
               </View>
               {/* contact flatlist */}
-              {this.state.pass_status !== "lab" && (
+              {this.state.providerType !== "lab" && (
                 <View
                   style={{
                     backgroundColor: Colors.white_color,
@@ -2605,7 +2600,7 @@ export default class Booking extends Component {
                   </TouchableOpacity>
                 </View>
               )}
-              {this.state.pass_status === "doctor" && (
+              {this.state.providerType === "doctor" && (
                 <DoctorSymptomsAppointment
                   navigation={this.props.navigation}
                   indexPosition={this.props.route.params.indexPosition}
@@ -2613,7 +2608,7 @@ export default class Booking extends Component {
                   sendData={this.getData.bind(this)}
                 />
               )}
-              {this.state.pass_status === "lab" && (
+              {this.state.providerType === "lab" && (
                 <LabAppointment
                   navigation={this.props.navigation}
                   indexPosition={this.props.route.params.indexPosition}
@@ -2621,7 +2616,7 @@ export default class Booking extends Component {
                   sendData={this.getData.bind(this)}
                 />
               )}
-              {this.state.pass_status === "lab" ? (
+              {this.state.providerType === "lab" ? (
                 <View>
                   {this.state.indexPosition === 0 && (
                     <View
@@ -2793,19 +2788,20 @@ export default class Booking extends Component {
                                         }}
                                       >
                                         {item.status == true ? (
-                                          <Image
-                                            style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
-                                              borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
-                                              resizeMode: "contain",
-                                              alignSelf: "flex-start",
-                                            }}
-                                            source={localimag.remembertick}
-                                          />
+                                          // <Image
+                                          //   style={{
+                                          //     width: (mobileW * 5) / 100,
+                                          //     height: (mobileW * 5) / 100,
+                                          //     borderRadius:
+                                          //       (mobileW * 0.4) / 100,
+                                          //     marginRight: (mobileW * 2) / 100,
+                                          //     marginLeft: (mobileW * 3) / 100,
+                                          //     resizeMode: "contain",
+                                          //     alignSelf: "flex-start",
+                                          //   }}
+                                          //   source={localimag.remembertick}
+                                          // />
+                                          null
                                         ) : (
                                           <Image
                                             style={{
@@ -2990,14 +2986,14 @@ export default class Booking extends Component {
                         }}
                       >
                         <View style={{ width: "20%", alignSelf: "center" }}>
-                          <Image
+                          {/* <Image
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
-                          />
+                          /> */}
                         </View>
 
                         <Text
@@ -3531,7 +3527,7 @@ export default class Booking extends Component {
                     </View>
                   </View>
                 </View>
-              ) : this.state.pass_status === "doctor" ? (
+              ) : this.state.providerType === "doctor" ? (
                 <View>
                   <View
                     style={{
@@ -3575,14 +3571,14 @@ export default class Booking extends Component {
                         }}
                       >
                         <View style={{ width: "20%", alignSelf: "center" }}>
-                          <Image
+                          {/* <Image
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
-                          />
+                          /> */}
                         </View>
 
                         <Text
@@ -4412,7 +4408,7 @@ export default class Booking extends Component {
                                           this.check_all_false(item, index);
                                         }}
                                       >
-                                        <Image
+                                        {/* <Image
                                           source={localimag.cross2}
                                           style={{
                                             alignSelf: "center",
@@ -4420,7 +4416,7 @@ export default class Booking extends Component {
                                             height: (mobileW * 2) / 100,
                                             marginLeft: (mobileW * 3.5) / 100,
                                           }}
-                                        />
+                                        /> */}
                                       </TouchableOpacity>
                                     </View>
                                   )}
@@ -4473,7 +4469,7 @@ export default class Booking extends Component {
                           />
 
                           <View style={{ width: "10%", alignSelf: "center" }}>
-                            <Image
+                            {/* <Image
                               style={{
                                 width: (mobileW * 4) / 100,
                                 height: (mobileW * 4) / 100,
@@ -4481,7 +4477,7 @@ export default class Booking extends Component {
                                 alignSelf: "center",
                               }}
                               source={localimag.search2}
-                            />
+                            /> */}
                           </View>
                         </View>
                       </View>
@@ -4529,19 +4525,20 @@ export default class Booking extends Component {
                                         }}
                                       >
                                         {item.status == true ? (
-                                          <Image
-                                            style={{
-                                              width: (mobileW * 5) / 100,
-                                              height: (mobileW * 5) / 100,
-                                              borderRadius:
-                                                (mobileW * 0.4) / 100,
-                                              marginRight: (mobileW * 2) / 100,
-                                              marginLeft: (mobileW * 3) / 100,
-                                              resizeMode: "contain",
-                                              alignSelf: "flex-start",
-                                            }}
-                                            source={localimag.remembertick}
-                                          />
+                                          // <Image
+                                          //   style={{
+                                          //     width: (mobileW * 5) / 100,
+                                          //     height: (mobileW * 5) / 100,
+                                          //     borderRadius:
+                                          //       (mobileW * 0.4) / 100,
+                                          //     marginRight: (mobileW * 2) / 100,
+                                          //     marginLeft: (mobileW * 3) / 100,
+                                          //     resizeMode: "contain",
+                                          //     alignSelf: "flex-start",
+                                          //   }}
+                                          //   source={localimag.remembertick}
+                                          // />
+                                          null
                                         ) : (
                                           <Image
                                             style={{
@@ -4716,14 +4713,14 @@ export default class Booking extends Component {
                         }}
                       >
                         <View style={{ width: "20%", alignSelf: "center" }}>
-                          <Image
+                          {/* <Image
                             style={{
                               width: (mobileW * 5) / 100,
                               height: (mobileW * 5) / 100,
                               alignSelf: "center",
                             }}
                             source={localimag.calendarimg}
-                          />
+                          /> */}
                         </View>
 
                         <Text
@@ -5757,15 +5754,15 @@ export default class Booking extends Component {
                 paddingHorizontal: (mobileW * 5) / 100,
                 paddingVertical: (mobileW * 2) / 100,
                 height: 80,
-                justifyContent: "center", 
+                justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <TouchableOpacity
                 onPress={() => {
-                  this.state.pass_status === "doctor"
+                  this.state.providerType === "doctor"
                     ? this.submitButtonForDoctor()
-                    : this.state.pass_status === "lab"
+                    : this.state.providerType === "lab"
                       ? this.state.indexPosition === 0
                         ? this.submit_btn()
                         : this.submit_btn_hourly()
@@ -5796,7 +5793,7 @@ export default class Booking extends Component {
             </View>
           </View>
 
-          
+
         </View>
       );
     } else {

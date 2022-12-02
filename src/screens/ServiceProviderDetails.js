@@ -25,7 +25,6 @@ import {
   Lang_chg,
   apifuntion,
 } from "../Provider/utilslib/Utils";
-import { Appbtn2, AppHeader2 } from "../Allcomponents";
 import HTMLView from "react-native-htmlview";
 import ScreenHeader from "../components/ScreenHeader";
 import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
@@ -166,7 +165,7 @@ export default class ServiceProviderDetails extends Component {
   render() {
     const { modalVisible } = this.state;
     const { modal2Visible } = this.state;
-    const { provider_details, available_days } = this.state;
+    const { provider_details, available_days, providerType, providerId } = this.state;
     return (
       <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
@@ -200,7 +199,6 @@ export default class ServiceProviderDetails extends Component {
           {/* -------------------Info Container-------------------- */}
 
           <View style={styles.infoContainer}>
-
             <View
               style={{
                 flexDirection: "row",
@@ -212,7 +210,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ width: "30%", }}>
                 {
                   (provider_details.image == "NA" || provider_details.image == null || provider_details.image == "") ?
-                    <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderWidth: 1, borderRadius: 38, borderColor: Colors.Border }} />
+                    <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderColor: Colors.Border }} />
                     :
                     <Image
                       source={{ uri: config.img_url3 + provider_details.image }}
@@ -242,16 +240,19 @@ export default class ServiceProviderDetails extends Component {
                   }}>
                   {provider_details.provider_name}
                 </Text>
-                <Text
-                  style={{
-                    fontFamily: Font.fontregular,
-                    fontSize: Font.small,
-                    textAlign: config.textRotate,
-                    color: Colors.lightGrey,
-                    marginTop: vs(2)
-                  }}>
-                  {provider_details.qualification}
-                </Text>
+                {
+                  providerType != 'lab' &&
+                  <Text
+                    style={{
+                      fontFamily: Font.fontregular,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      color: Colors.lightGrey,
+                      marginTop: vs(2)
+                    }}>
+                    {provider_details.qualification}
+                  </Text>
+                }
                 <Text
                   style={{
                     fontFamily: Font.fontmedium,
@@ -260,11 +261,12 @@ export default class ServiceProviderDetails extends Component {
                     color: Colors.Blue,
                     marginTop: vs(5)
                   }}>
-                  {provider_details.speciality}
+                  {providerType === 'lab' ? provider_details?.iso_text : provider_details.speciality}
                 </Text>
               </View>
             </View>
 
+            {/* -------------------Experience Container-------------------- */}
             <View style={styles.experienceContainer}>
               <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
                 <Text
@@ -275,7 +277,7 @@ export default class ServiceProviderDetails extends Component {
                     color: Colors.lightGrey,
                     marginTop: vs(2)
                   }}>
-                  {'Experience'}
+                  {providerType === 'lab' ? Lang_chg.ESTABLISHED[config.language] : Lang_chg.Experience[config.language]}
                 </Text>
                 <Text
                   style={{
@@ -285,7 +287,7 @@ export default class ServiceProviderDetails extends Component {
                     color: Colors.detailTitles,
                     marginTop: vs(5)
                   }}>
-                  {provider_details.experience}
+                  {provider_details.experience ? provider_details.experience : '-'}
                 </Text>
               </View>
               <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
@@ -298,7 +300,7 @@ export default class ServiceProviderDetails extends Component {
                     marginTop: vs(2),
                     paddingHorizontal: s(15)
                   }}>
-                  {'Bookings'}
+                  {Lang_chg.Bookings[config.language]}
                 </Text>
                 <Text
                   style={{
@@ -322,7 +324,7 @@ export default class ServiceProviderDetails extends Component {
                     marginTop: vs(2),
                     paddingHorizontal: s(15)
                   }}>
-                  {'Rating'}
+                  {Lang_chg.Rating[config.language]}
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
                   <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
@@ -334,12 +336,14 @@ export default class ServiceProviderDetails extends Component {
                       color: Colors.detailTitles,
                       marginLeft: s(5)
                     }}>
-                    {`${provider_details.avg_rating}.0`}
+                    {provider_details.avg_rating ? `${provider_details.avg_rating}.0` : 'NA'}
                   </Text>
                 </View>
 
               </View>
             </View>
+
+            {/* -------------------Desc Container-------------------- */}
 
             <View style={styles.descContainer}>
               <Text
@@ -352,6 +356,8 @@ export default class ServiceProviderDetails extends Component {
                 {provider_details.description}
               </Text>
             </View>
+
+            {/* -------------------Time Container-------------------- */}
 
             <View style={styles.timeContainer}>
               <View style={{ flexDirection: 'row', alignItems: 'center', width: '30%', }}>
@@ -382,18 +388,31 @@ export default class ServiceProviderDetails extends Component {
 
             <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(18) }}></View>
 
-            <View style={styles.btnContainer}>
-              <Button
-                text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
-                btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                onPress={() => { }}
-              />
+            {/* -------------------Btns Container-------------------- */}
 
-              <Button
-                text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
-                btnStyle={{ marginTop: vs(10), backgroundColor: Colors.Theme }}
-                onPress={() => { }}
-              />
+            <View style={styles.btnContainer}>
+              {
+                providerType === 'lab' ?
+                  <Button
+                    text={Lang_chg.BOOKLABTESTAPPOINTMENT[config.language]}
+                    btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                    onPress={() => { }}
+                  />
+                  :
+                  <>
+                    <Button
+                      text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
+                      btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                      onPress={() => { }}
+                    />
+
+                    <Button
+                      text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
+                      btnStyle={{ marginTop: vs(10), backgroundColor: Colors.Theme }}
+                      onPress={() => { }}
+                    />
+                  </>
+              }
             </View>
           </View>
 
@@ -426,199 +445,402 @@ export default class ServiceProviderDetails extends Component {
             </View>
 
             <View style={{ width: '25%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-              <Text
-                style={{
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.small,
-                  textAlign: config.textRotate,
-                  color: Colors.White,
-                  paddingLeft: s(12),
-                }}>
-                {Lang_chg.Howitworks[config.language]}
-              </Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => this.setModalVisible(true)}
+              >
+                <Text
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.small,
+                    textAlign: config.textRotate,
+                    color: Colors.White,
+                    paddingLeft: s(12),
+                  }}>
+                  {Lang_chg.Howitworks[config.language]}
+                </Text>
+              </TouchableOpacity>
             </View>
 
           </View>
 
-          <View style={styles.availableContainer}>
+          {/* -----------------Available--------------- */}
 
+          {
+            provider_details?.available_package &&
+            <View style={styles.availableContainer}>
+              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: s(11) }}>
+                <Text
+                  style={{
+                    textAlign: config.textRotate,
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.xlarge,
+                    color: Colors.detailTitles
+                  }}
+                >
 
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              data={provider_details.available_provider}
-              // data={[1, 2, 3, 4, 5, 6]}
-              contentContainerStyle={{ paddingHorizontal: s(14) }}
-              ItemSeparatorComponent={()=>{
-                return (
-                  <View style={{width:s(8)}}>
+                  {Lang_chg.HealthPackages[config.language]}
+                </Text>
+                <Text
+                  onPress={() => {
+                    this.props.navigation.navigate(
+                      "LabPackageListing",
+                      { providerId: providerId }
+                    );
+                  }}
+                  style={{
+                    fontFamily: Font.fontmedium,
+                    fontSize: Font.medium,
+                    color: Colors.Blue,
+                  }}
+                >
+                  {Lang_chg.See_all[config.language]}
+                </Text>
 
-                  </View>
-                )
-              }}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate(
-                        "LabPackageDetails",
+              </View>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                // data={[1, 2, 3, 4]}
+                data={provider_details?.available_package}
+                contentContainerStyle={{ paddingHorizontal: s(14), marginTop: vs(15) }}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(8) }}>
+
+                    </View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.navigation.navigate(
+                          "LabPackageDetails",
+                          {
+                            packageId: item.pid,
+                            providerId: providerId,
+                          })
+                      }}
+                      style={[
                         {
-                          packageId: item.pid,
-                          providerId: this.state.providerId,
-                        }
-                      )
-                    }}
-                    style={[
-                      {
-                        borderRadius: 10,
-                        width: s(135),
-                        height: vs(150),
-                        backgroundColor: Colors.White,
-                        borderColor: Colors.Border,
-                        borderWidth: 1,
-                      }]}>
-
-                    <View style={{ height: '60%', width: '100%' }}>
-                      <ImageBackground
-                        source={{ uri: config.img_url3 + item.image }}
-                        style={{ height: '100%', width: '100%' }}
-                        imageStyle={{ borderTopLeftRadius: 9, borderTopRightRadius: 9 }}
-                      />
-                    </View>
-
-                    <View style={{ height: '40%', paddingHorizontal: s(6), justifyContent: 'center' }}>
+                          borderRadius: 10,
+                          width: s(135),
+                          // height: vs(150),
+                          backgroundColor: Colors.White,
+                          borderColor: Colors.Border,
+                          borderWidth: 1,
+                          paddingHorizontal: s(6),
+                          paddingVertical: vs(7)
+                        }]}>
                       <Text
                         style={{
-                          color: Colors.detailTitles,
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.fontregular,
+                          textAlign: config.textRotate,
+                          fontSize: Font.medium,
+                          color: Colors.detailTitles
+                        }}>{item?.name}</Text>
+
+                      <Text
+                        style={{
+                          fontFamily: Font.fontregular,
+                          textAlign: config.textRotate,
                           fontSize: Font.small,
-                          textAlign: config.textRotate,
-                        }}>
-                        {item?.provider_name}
-                      </Text>
-
-                      <Text
-                        style={{
-                          color: Colors.lightGrey,
-                          fontFamily: Font.fontregular,
-                          fontSize: Font.xsmall,
-                          textAlign: config.textRotate,
-                          marginTop: vs(3)
-                        }}>
-                        {item?.qualification}
-                      </Text>
-
-                      <Text
-                        style={{
                           color: Colors.Blue,
+                          marginTop: vs(5)
+                        }}>{item?.iso_certificate}</Text>
+
+
+                      <View style={{ width: '92%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10), alignSelf: 'center' }}></View>
+
+                      <Text
+                        style={{
+                          paddingVertical: vs(3),
                           fontFamily: Font.fontregular,
-                          fontSize: Font.xsmall,
                           textAlign: config.textRotate,
-                          marginTop: vs(6)
+                          color: Colors.Green,
+                          fontSize: Font.small,
+                        }}
+                      >
+                        {item.dis_off}
+                      </Text>
+
+                      <Text
+                        style={{
+                          fontFamily: Font.fontregular,
+                          textAlign: config.textRotate,
+                          fontSize: Font.small,
+                          textDecorationLine: "line-through",
+                          textDecorationStyle: "solid",
+                          color: Colors.Black
+                        }}
+                      >
+                        {item.maxprice}
+                      </Text>
+
+
+                      <View
+                        style={{
+                          paddingVertical: (windowWidth * 2) / 100,
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItem: "center",
                         }}>
-                        {item?.speciality}
-                      </Text>
+                        <Text
+                          style={{
+                            textAlign: config.textRotate,
+                            fontFamily: Font.fontmedium,
+                            fontSize: Font.medium,
+                          }}>
+                          {item.price}
+                        </Text>
+
+                        <Text
+                          onPress={() => {
+                            this.props.navigation.navigate(
+                              "Booking",
+                              {
+                                providerType: providerType,
+                                nurse_id: providerId,
+                                display: "packageBooking",
+                                indexPosition: 1,
+                              }
+                            );
+                          }}
+                          style={{
+                            fontFamily: Font.fontsemibold,
+                            fontSize: Font.medium,
+                            color: Colors.Theme,
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {Lang_chg.Book[config.language]}
+                        </Text>
+                      </View>
+
+                      {/* <View
+               style={{
+                 width: "90%",
+                 alignSelf: "center",
+                 borderColor: Colors.bordercolor,
+                 borderBottomWidth:
+                   (windowWidth * 0.5) / 100,
+                 marginTop: (windowWidth * 1) / 100,
+               }}
+             /> */}
+
+
+
+
+
+
+
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+
+            </View>
+
+          }
+
+{
+            provider_details?.available_provider &&
+            <View style={styles.availableContainer}>
+              <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: s(11) }}>
+                <Text
+                  style={{
+                    textAlign: config.textRotate,
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.xlarge,
+                    color: Colors.detailTitles
+                  }}
+                >
+                  {`${providerType === 'nurse' ? Lang_chg.AvailableNurse[config.language] : providerType === 'physiotherapy' ? Lang_chg.Availablephysotharpst[config.language] : providerType === 'caregiver' ? Lang_chg.Availableassistent[config.language] : providerType === 'babysitter' ? Lang_chg.Availablebabysitter[config.language] : providerType === 'doctor' ? Lang_chg.AvailableDoctor[config.language] : Lang_chg.AvailableLab[config.language]}`}
+                </Text>
+                <TouchableOpacity onPress={()=>this.props.navigation.pop()}>
+                  <Text
+                    style={{
+                      fontFamily: Font.fontmedium,
+                      fontSize: Font.medium,
+                      color: Colors.Blue,
+                    }}
+                  >
+                    {Lang_chg.See_all[config.language]}
+                  </Text>
+                </TouchableOpacity>
+
+              </View>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={provider_details?.available_provider}
+                // data={[1, 2, 3, 4, 5, 6]}
+                contentContainerStyle={{ paddingHorizontal: s(14), marginTop: vs(15) }}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(8) }}>
+
                     </View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        {
+                          borderRadius: 10,
+                          width: s(135),
+                          height: vs(150),
+                          backgroundColor: Colors.White,
+                          borderColor: Colors.Border,
+                          borderWidth: 1,
+                        }]}>
+
+                      <View style={{ height: '60%', width: '100%', backgroundColor: Colors.backgroundcolor, borderRadius: 9 }}>
+                        <ImageBackground
+                          source={{ uri: config.img_url3 + item.image }}
+                          style={{ height: '100%', width: '100%' }}
+                          imageStyle={{ borderTopLeftRadius: 9, borderTopRightRadius: 9 }}
+                        />
+                      </View>
+
+                      <View style={{ height: '40%', paddingHorizontal: s(6), justifyContent: 'center' }}>
+                        <Text
+                          style={{
+                            color: Colors.detailTitles,
+                            fontFamily: Font.fontmedium,
+                            fontSize: Font.small,
+                            textAlign: config.textRotate,
+                          }}>
+                          {item?.provider_name}
+                        </Text>
+
+                        <Text
+                          style={{
+                            color: Colors.lightGrey,
+                            fontFamily: Font.fontregular,
+                            fontSize: Font.xsmall,
+                            textAlign: config.textRotate,
+                            marginTop: vs(3)
+                          }}>
+                          {item?.qualification}
+                        </Text>
+
+                        <Text
+                          style={{
+                            color: Colors.Blue,
+                            fontFamily: Font.fontregular,
+                            fontSize: Font.xsmall,
+                            textAlign: config.textRotate,
+                            marginTop: vs(6)
+                          }}>
+                          {item?.speciality}
+                        </Text>
+                      </View>
 
 
-                    {/* <Text
-                      style={{
-                        paddingVertical: (windowWidth * 2) / 100,
-                        paddingHorizontal: (windowWidth * 2) / 100,
-                        fontFamily: Font.fontregular,
-                        textAlign: "left",
-                        fontSize: Font.sregulartext_size,
-                      }}
-                    >
-                      {item.iso_certificate}
-                    </Text> */}
+                      {/* <Text
+               style={{
+                 paddingVertical: (windowWidth * 2) / 100,
+                 paddingHorizontal: (windowWidth * 2) / 100,
+                 fontFamily: Font.fontregular,
+                 textAlign: "left",
+                 fontSize: Font.sregulartext_size,
+               }}
+             >
+               {item.iso_certificate}
+             </Text> */}
 
-                    {/* <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        borderColor: Colors.bordercolor,
-                        borderBottomWidth:
-                          (windowWidth * 0.5) / 100,
-                        marginTop: (windowWidth * 1) / 100,
-                      }}
-                    /> */}
+                      {/* <View
+               style={{
+                 width: "90%",
+                 alignSelf: "center",
+                 borderColor: Colors.bordercolor,
+                 borderBottomWidth:
+                   (windowWidth * 0.5) / 100,
+                 marginTop: (windowWidth * 1) / 100,
+               }}
+             /> */}
 
-                    {/* <Text
-                      style={{
-                        paddingVertical: (windowWidth * 2) / 100,
-                        paddingHorizontal: (windowWidth * 2) / 100,
-                        fontFamily: Font.fontregular,
-                        textAlign: "left",
-                        color: Colors.Green,
-                        fontSize: Font.sregulartext_size,
-                      }}
-                    >
-                      {item.dis_off}
-                    </Text> */}
+                      {/* <Text
+               style={{
+                 paddingVertical: (windowWidth * 2) / 100,
+                 paddingHorizontal: (windowWidth * 2) / 100,
+                 fontFamily: Font.fontregular,
+                 textAlign: "left",
+                 color: Colors.Green,
+                 fontSize: Font.sregulartext_size,
+               }}
+             >
+               {item.dis_off}
+             </Text> */}
 
-                    {/* <Text
-                      style={{
-                        paddingHorizontal: (windowWidth * 2) / 100,
-                        fontFamily: Font.fontregular,
-                        textAlign: "left",
-                        fontSize: Font.sregulartext_size,
-                        textDecorationLine: "line-through",
-                        textDecorationStyle: "solid",
-                      }}
-                    >
-                      {item.maxprice}
-                    </Text> */}
+                      {/* <Text
+               style={{
+                 paddingHorizontal: (windowWidth * 2) / 100,
+                 fontFamily: Font.fontregular,
+                 textAlign: "left",
+                 fontSize: Font.sregulartext_size,
+                 textDecorationLine: "line-through",
+                 textDecorationStyle: "solid",
+               }}
+             >
+               {item.maxprice}
+             </Text> */}
 
-                    {/* <View
-                      style={{
-                        paddingVertical: (windowWidth * 2) / 100,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingHorizontal: (windowWidth * 2) / 100,
-                        alignItem: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: config.textalign,
-                          fontFamily: Font.fontmedium,
-                          fontSize: (windowWidth * 4) / 100,
-                        }}
-                      >
-                        {item.price}
-                      </Text>
+                      {/* <View
+               style={{
+                 paddingVertical: (windowWidth * 2) / 100,
+                 flexDirection: "row",
+                 justifyContent: "space-between",
+                 paddingHorizontal: (windowWidth * 2) / 100,
+                 alignItem: "center",
+               }}
+             >
+               <Text
+                 style={{
+                   textAlign: config.textalign,
+                   fontFamily: Font.fontmedium,
+                   fontSize: (windowWidth * 4) / 100,
+                 }}
+               >
+                 {item.price}
+               </Text>
 
-                      <Text
-                        onPress={() => {
-                          this.props.navigation.navigate(
-                            "Booking",
-                            {
-                              pass_status:
-                                this.state.pass_status,
-                              nurse_id: this.state.nurse_id,
-                              display: "packageBooking",
-                              indexPosition: 1,
-                            }
-                          );
-                        }}
-                        style={{
-                          fontFamily: Font.fontsemibold,
-                          fontSize: Font.regulartext_size,
-                          color: Colors.Theme,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {Lang_chg.Book[config.language]}
-                      </Text>
-                    </View> */}
+               <Text
+                 onPress={() => {
+                   this.props.navigation.navigate(
+                     "Booking",
+                     {
+                       pass_status:
+                         this.state.pass_status,
+                       nurse_id: this.state.nurse_id,
+                       display: "packageBooking",
+                       indexPosition: 1,
+                     }
+                   );
+                 }}
+                 style={{
+                   fontFamily: Font.fontsemibold,
+                   fontSize: Font.regulartext_size,
+                   color: Colors.Theme,
+                   textTransform: "uppercase",
+                 }}
+               >
+                 {Lang_chg.Book[config.language]}
+               </Text>
+             </View> */}
 
-                  </TouchableOpacity>
-                );
-              }}
-            />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
 
-          </View>
+            </View>
+
+          }
+
 
         </ScrollView>
 

@@ -17,6 +17,8 @@ import Booking from '../../screens/Booking';
 import ServiceProviderDetails from '../../screens/ServiceProviderDetails';
 // -----------------------------------------
 import { Colors } from '../Colorsfont';
+import LabPackageListing from '../../screens/LabPackageListing';
+import LabPackageDetails from '../../screens/LabPackageDetails';
 
 const Stack = createStackNavigator()
 
@@ -65,10 +67,6 @@ const MainStack = () => {
                 />
 
                 <Stack.Screen
-                    name="AllServiceProviderListing"
-                    component={AllServiceProviderListing}
-                />
-                <Stack.Screen
                     name="SupportandMore"
                     component={SupportandMore}
                 />
@@ -92,6 +90,15 @@ const MainStack = () => {
                     component={ServiceProviderDetails}
                 />
 
+                <Stack.Screen
+                    name="LabPackageListing"
+                    component={LabPackageListing}
+                />
+
+                <Stack.Screen
+                    name="LabPackageDetails"
+                    component={LabPackageDetails}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     )

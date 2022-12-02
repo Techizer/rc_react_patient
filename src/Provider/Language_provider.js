@@ -198,7 +198,7 @@ class Language_provider {
   Nurse = ["Nurse", "ممرضة    "];
   SearchNurse = [
     "Search Nurse near your address",
-    "Search Nurse near your address",
+    "ابحث عن ممرضة بالقرب من عنوانك",
   ];
   // BOOKNOW = ["BOOK NOW", "احجز الآن"];
 
@@ -376,14 +376,13 @@ class Language_provider {
     "ابحث عن التخصصات والأطباء",
   ];
   SAFE = ["Safe", "آمن"];
-  BookConsultation = ["Book Consultation", "استشارة كتاب"];
   Availability = ["Availability", "التوفر  "];
   Location = ["Location", "موقع"];
   Physiotherapist = ["Physiotherapist", "اخصائي العلاج الطبيعي  "];
   Nurse_assistant = ["Nurse Assistant", "مساعد ممرض    "];
   Babysitter = ["Babysitter", "جليسه اطفال    "];
   Rating = ["Rating", "التقييم "];
-  Bookings = ["Booking", "الحجوزات"];
+  Booking = ["Booking", "الحجوزات"];
   Booking = ["Booking", "حجز "];
   Experience = ["Experience", "الخبرة  "];
   ESTABLISHED = ["Established", "أنشئت"];
@@ -479,20 +478,20 @@ class Language_provider {
   ];
   Bad_gateway = ["Bad gateway", "بوابة غير صالحة  "];
   Go_back = ["GO BACK", "الرجوع للخلف  "];
-  Bookings_new = ["Bookings", "الحجوزات  "];
+  Bookings = ["Bookings", "الحجوزات  "];
   AddPatient = ["Add Patient", " أضف المريض    "];
   Booking_detail = ["Booking", "حجز "];
   Searchphysi = [
     "Search Physiotherapist near your address",
-    "Search Physiotherapist near your address",
+    "ابحث عن أخصائي العلاج الطبيعي بالقرب من عنوانك",
   ];
   Searchseassistent = [
     "Search Nurse Assistant near your address",
-    "Search Nurse Assistant near your address",
+    "ابحث عن مساعد ممرضة بالقرب من عنوانك",
   ];
   SearchBabysitter = [
     "Search Babysitter near your address",
-    "Search Babysitter near your address",
+    "ابحث عن جليسة الأطفال بالقرب من عنوانك",
   ];
   SearchDoctor = [
     "Search Doctor near your address",
@@ -598,5 +597,8 @@ class Language_provider {
   Nurse_Booking=['Nurse Booking', 'ممرضة الحجز'];
   RootsCare = ["Roots Care", "روتس كير "];
   Howitworks = ["How it works", "How it works"];
+  BookConsultation = ["BOOK CONSULTATION", "استشارة كتاب"];
+  NearBy = ["Near by", "مجاور"];
+
 }
 export const Lang_chg = new Language_provider();

@@ -24,10 +24,11 @@ import {
 
 import Styles from "../Styles";
 import ScreenHeader from "../components/ScreenHeader";
-import { Clock, dummyUser, leftArrow, Location, Notification, Star } from "../icons/SvgIcons/Index";
+import { leftArrow, Notification } from "../icons/SvgIcons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import ServiceProviderContainer from "../components/ServiceProviderContainer";
+import SearchInput from "../components/SearchInput";
 
 export default class AllServiceProviderListing extends Component {
   _didFocusSubscription;
@@ -60,7 +61,7 @@ export default class AllServiceProviderListing extends Component {
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
       this.get_Services();
-      // this.get_all_notification();
+      this.get_all_notification();
     });
   }
   get_all_notification = async () => {
@@ -85,7 +86,7 @@ export default class AllServiceProviderListing extends Component {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("get_all_notification-error------- " + error);
       });
   };
 
@@ -192,10 +193,6 @@ export default class AllServiceProviderListing extends Component {
 
     if (this.state.pass_status === "doctor") data.append("docEnableFor", this.state.enableFor);
 
-    // if (this.state.pass_status === "hospital") {
-    //   data.append("hospital_name", this.state.provider_name);
-    // }
-
     // consolepro.consolelog("get_Services-query-data......", data);
     // return false;
     apifuntion.postApi(url, data, 1).then((res) => {
@@ -240,25 +237,56 @@ export default class AllServiceProviderListing extends Component {
       });
   };
 
+  listHeader = (type) => {
+    return (
+      <SearchInput
+        placeholder={
+          type == "nurse"
+            ? Lang_chg.SearchNurse[config.language]
+            : type == "physiotherapy"
+              ? Lang_chg.Searchphysi[config.language]
+              : type == "caregiver"
+                ? Lang_chg.Searchseassistent[config.language]
+                : type == "babysitter"
+                  ? Lang_chg.SearchBabysitter[config.language]
+                  : type == "doctor"
+                    ? Lang_chg.SearchDoctor[config.language]
+                    : type == "hospital"
+                      ? Lang_chg.SearchHospital[config.language]
+                      : Lang_chg.SearchLab[config.language]
+        }
+        onChangeText={(val) => {
+          this.setState({ provider_name: val });
+        }}
+        onSubmitEditing={() => {
+          Keyboard.dismiss();
+        }}
+        onPressSearch={() => this.get_Services()}
+      />
+    )
+  }
+
   render() {
 
     const { isLoading, providersList, pass_status } = this.state
+
     return (
       <View style={{ backgroundColor: Colors.backgroundcolor, flex: 1 }}>
+
 
         <ScreenHeader
           title={
             this.state.isHospitalDoctorList
               ? Lang_chg.Doctor[config.language]
-              : this.state.pass_status == "nurse"
+              : pass_status == "nurse"
                 ? Lang_chg.Nurse[config.language]
-                : this.state.pass_status == "physiotherapy"
+                : pass_status == "physiotherapy"
                   ? Lang_chg.Physiotherapist[config.language]
-                  : this.state.pass_status == "caregiver"
+                  : pass_status == "caregiver"
                     ? Lang_chg.Nurse_assistant[config.language]
-                    : this.state.pass_status == "babysitter"
+                    : pass_status == "babysitter"
                       ? Lang_chg.Babysitter[config.language]
-                      : this.state.pass_status == "doctor"
+                      : pass_status == "doctor"
                         ? Lang_chg.Doctor[config.language]
                         : Lang_chg.Lab[config.language]
           }
@@ -268,141 +296,24 @@ export default class AllServiceProviderListing extends Component {
           rightIcon={Notification}
         />
 
-        {/* <ScrollView> */}
         <FlatList
           contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}
           data={providersList}
           keyExtractor={(item, index) => `Provider ${index}`}
+          ListHeaderComponent={this.listHeader(pass_status)}
           renderItem={({ item, index }) => {
             return (
               <ServiceProviderContainer
                 Item={item}
                 navigation={this.props.navigation}
                 isLoading={isLoading}
-                providerType={pass_status} />
+                providerType={pass_status}
+                Index={index} />
             );
           }
           }
         />
-        {/* </ScrollView> */}
-
-
-        {/* <View
-            style={{
-              backgroundColor: "#fff",
-              paddingVertical: (windowWidth * 2) / 100,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
-            }}
-          >
-            <View
-              style={{
-                padding: (windowWidth * 2.5) / 100,
-                flexDirection: "row",
-                width: "99%",
-                alignSelf: "center",
-                paddingTop: (windowWidth * 3) / 100,
-                backgroundColor: Colors.white_color,
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  width: "10%",
-                  // backgroundColor: 'pink',
-                  alignSelf: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.state.isHospitalDoctorList
-                      ? this.setState({
-                          isHospitalDoctorList:
-                            !this.state.isHospitalDoctorList,
-                          availableDoctorsUnderHospital: [],
-                        })
-                      : this.props.navigation.goBack();
-                  }}
-                >
-                  <Image
-                    source={
-                      config.textalign == "right"
-                        ? localimag.arabic_back
-                        : localimag.backarrow
-                    }
-                    style={{
-                      resizeMode: "contain",
-                      width: (windowWidth * 9) / 100,
-                      alignSelf: "center",
-                      height: (windowWidth * 9) / 100,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  // backgroundColor: 'yellow',
-                  width: "80%",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontFamily: Font.fontmedium,
-                    fontSize: (windowWidth * 4) / 100,
-                  }}
-                >
-                  {this.state.isHospitalDoctorList
-                    ? Lang_chg.Doctor[config.language]
-                    : this.state.pass_status == "nurse"
-                    ? Lang_chg.Nurse[config.language]
-                    : this.state.pass_status == "physiotherapy"
-                    ? Lang_chg.Physiotherapist[config.language]
-                    : this.state.pass_status == "caregiver"
-                    ? Lang_chg.Nurse_assistant[config.language]
-                    : this.state.pass_status == "babysitter"
-                    ? Lang_chg.Babysitter[config.language]
-                    : this.state.pass_status == "doctor"
-                    ? Lang_chg.Doctor[config.language]
-                    : this.state.pass_status == "hospital"
-                    ? Lang_chg.Hospital[config.language]
-                    : Lang_chg.Lab[config.language]}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: "10%",
-                  alignSelf: "center",
-                  // backgroundColor: 'red',
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Notifications");
-                  }}
-                >
-                  <Image
-                    // tintColor="#fff"
-                    source={
-                      this.state.notification_count > 0
-                        ? localimag.notifications
-                        : localimag.notifications_sec
-                    }
-                    style={{
-                      alignSelf: "center",
-                      resizeMode: "contain",
-                      width: (windowWidth * 6) / 100,
-                      height: (windowWidth * 6) / 100,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View> */}
-
-
-
 
 
         <Modal

@@ -265,6 +265,14 @@ export const dummyDoc=`<svg xmlns="http://www.w3.org/2000/svg" width="21.472" he
 </g>
 </svg>`
 
+export const Filter=`<svg xmlns="http://www.w3.org/2000/svg" width="19.03" height="12.687" viewBox="0 0 19.03 12.687">
+<path id="Filter_icon" d="M3424.4,7968.687h4.229v-2.114H3424.4ZM3417,7956v2.114h19.03V7956Zm3.172,7.4h12.687v-2.114h-12.687Z" transform="translate(-3417 -7956)" fill="#fff"/>
+</svg>`
+
+export const Search=`<svg xmlns="http://www.w3.org/2000/svg" width="13.742" height="13.742" viewBox="0 0 13.742 13.742">
+<path id="search_icon" d="M15450.078,16047.479l-2.683-2.683a5.9,5.9,0,0,1-3.56,1.172,5.985,5.985,0,1,1,5.988-5.984,5.929,5.929,0,0,1-1.172,3.56l2.678,2.683a.886.886,0,1,1-1.252,1.253Zm-10.451-7.5a4.21,4.21,0,1,0,4.209-4.209A4.215,4.215,0,0,0,15439.627,16039.983Z" transform="translate(-15437.851 -16033.998)" fill="#fff"/>
+</svg>`
+
 
 
 

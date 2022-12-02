@@ -74,15 +74,18 @@ function HomeDrawer() {
       screenOptions={{
         drawerStyle: { width: "100%", backgroundColor: Colors.White },
         drawerType: "front",
+        headerShown:false
       }}
       drawerContent={(props) => <Drawerscreen {...props} />}
     >
       <Drawer.Screen
         name="HomeDrawer"
-        options={{
-          headerShown: false,
-        }}
         component={Home}
+      />
+
+      <Drawer.Screen
+        name="AllServiceProviderListing"
+        component={AllServiceProviderListing}
       />
     </Drawer.Navigator>
   );
@@ -141,8 +144,8 @@ const DashboardStack = ({ navigation }) => {
             position: 'absolute',
             bottom: 0,
             backgroundColor: Colors.White,
-            borderTopWidth:1,
-            borderTopColor:Colors.Border
+            borderTopWidth: 1,
+            borderTopColor: Colors.Border
           }}>
 
             <TabItem

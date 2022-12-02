@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
+import ScreenHeader from "../components/ScreenHeader";
+import { leftArrow, Notification } from "../icons/SvgIcons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
@@ -16,9 +18,9 @@ import {
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
 
-const LabPackageDetails = (props) => {
-  const { navigation } = props;
-  const { packageId, providerId } = props.route.params;
+const LabPackageDetails = ({navigation, route}) => {
+  
+  const { packageId, providerId } = route.params;
   const [labDetailsData, setLabDetailsData] = useState();
   const [showTaskDetails, isShowTaskDetails] = useState(false);
   console.log("providerId ", packageId);
@@ -59,68 +61,14 @@ const LabPackageDetails = (props) => {
   return (
     <View style={Styles.container1}>
       <View style={{ backgroundColor: "#f1f2f4", flex: 1 }}>
-        <View
-          style={{
-            backgroundColor: "#fff",
-            paddingVertical: (windowWidth * 2) / 100,
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.Border,
-          }}
-        >
-          <View
-            style={{
-              padding: (windowWidth * 2.5) / 100,
-              flexDirection: "row",
-              width: "99%",
-              alignSelf: "center",
-              paddingTop: (windowWidth * 3) / 100,
-              backgroundColor: Colors.White,
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                width: "10%",
-                alignSelf: "center",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              >
-                <Image
-                  source={
-                    config.textalign == "right"
-                      ? Icons.arabic_back
-                      : Icons.backarrow
-                  }
-                  style={{
-                    resizeMode: "contain",
-                    width: (windowWidth * 9) / 100,
-                    alignSelf: "center",
-                    height: (windowWidth * 9) / 100,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: "80%",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontFamily: Font.fontmedium,
-                  fontSize: (windowWidth * 4) / 100,
-                }}
-              >
-                {Lang_chg.PackageDetails[config.language]}
-              </Text>
-            </View>
-          </View>
-        </View>
+
+        <ScreenHeader
+          title={'Package Details'}
+          navigation={navigation}
+          onBackPress={() => navigation.pop()}
+          leftIcon={leftArrow}
+          rightIcon={Notification}
+        />
         {labDetailsData != null && labDetailsData != "" && (
           <>
             <View>
