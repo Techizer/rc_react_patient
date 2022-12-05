@@ -332,7 +332,7 @@ export default class Login extends Component {
         this.setState({ add_my_location: data2 });
 
         localStorage.setItemObject("address_arr", add_location.address);
-
+        localStorage.setItemObject("addressDetails", data2);
         console.log("dfhhdfgb", data2);
         //   return  this.props.locationget(data2);
       });
@@ -462,6 +462,7 @@ export default class Login extends Component {
           // msgProvider.showError(msgText.sucess_message_login[config.language])
           setTimeout(() => {
             // this.props.navigation.navigate("Home");
+            global.isLogin = true
             this.props.navigation.reset({
               index: 0,
               routes: [{ name: "DashboardStack" }],
@@ -734,6 +735,7 @@ export default class Login extends Component {
               activeOpacity={0.8}
               onPress={() => {
                 localStorage.setItemString('Guest', 'true')
+                global.isLogin = false
                 setTimeout(() => {
                   this.props.navigation.reset({
                     index: 0,
