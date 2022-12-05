@@ -216,7 +216,7 @@ const ScreenHeader = ({
 
                                 }}
                             >
-                                {addressShow}
+                                {addressOld}
                             </Text>
                         ) : (
                             <Text
@@ -227,7 +227,7 @@ const ScreenHeader = ({
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}
-                            >{'NA'}</Text>
+                            >{addressShow}</Text>
                         )}
                     </View>
 

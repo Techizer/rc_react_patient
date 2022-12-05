@@ -248,14 +248,29 @@ export default class Home extends Component {
     this.messageListener();
 
     this.props.navigation.addListener("focus", () => {
-      this.getAllCount();
+      if (global.isLogin == false){
+        this.getProfile();
+      }else{
+        this.getAllCount();
+      }
     });
   }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
-
+  logout = async () => {
+    await localStorage.removeItem("user_arr");
+    await localStorage.removeItem("user_login");
+    // await localStorage.removeItem('password');
+    // await localStorage.clear();
+    // this.setState({ show: false });
+    global.isLogin = false
+    this.props.navigation.reset({
+      index: 0,
+      routes: [{ name: "AuthStack" }],
+    });
+  };
   handleBackButton = () => {
     console.log('Back button is pressed', this.props.route.name);
     if (this.props.route.name == "Home") {
@@ -362,9 +377,14 @@ export default class Home extends Component {
       },
       (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
     );
+    var that = this;
     messaging().onMessage(async (remoteMessage) => {
       console.log("hello", JSON.stringify(remoteMessage));
       //alert(JSON.stringify(remoteMessage));
+      console.log('remoteMessage.data?.type', remoteMessage.data?.type)
+      if (remoteMessage.data?.type == "Logout") {
+        that.logout();
+      }
       // if (remoteMessage.data?.type !== "doctor_to_patient_video_call") {
       PushNotification.localNotification({
         channelId: "rootscares1", //his must be same with channelId in create channel
@@ -426,7 +446,7 @@ export default class Home extends Component {
 
   getAllCount = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
+    console.log("user_details user_details count", user_details);
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-notification-count";
@@ -454,20 +474,83 @@ export default class Home extends Component {
   };
 
   getProfile = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let address_arr = await localStorage.getItemObject("address_arr");
-    console.log("user_details user_details", user_details);
-    console.log("address_arr", address_arr);
-    this.setState({
-      address_show: address_arr,
-      address_old: user_details.current_address,
-    });
-
-    if (user_details.image != null) {
+    if (global.isLogin == false){
+      let address_arr = await localStorage.getItemObject("address_arr");
+      console.log("address_arr", address_arr);
       this.setState({
-        profile_img: config.img_url3 + user_details["image"],
+        address_show: address_arr,
+        address_old: null,
+      }, () => {
+        console.log("global.isLogin", global.isLogin);
+        console.log("this.state.address_old", this.state.address_old);
+        console.log("this.state.address_show", this.state.address_show);
       });
+  
+      // if (user_details.image != null) {
+      //   this.setState({
+      //     profile_img: config.img_url3 + user_details["image"],
+      //   });
+      // }
+    }else{
+      let user_details = await localStorage.getItemObject("user_arr");
+      let address_arr = await localStorage.getItemObject("address_arr");
+      console.log("user_details user_details else", user_details);
+      console.log("address_arr", address_arr);
+      this.setState({
+        address_show: address_arr,
+        address_old: user_details.current_address,
+      }, () => {
+        console.log("global.isLogin", global.isLogin);
+        console.log("this.state.address_old", this.state.address_old);
+        console.log("this.state.address_show", this.state.address_show);
+        if (global.isLogin == true && this.state.address_old == null ||
+          this.state.address_old == "") {
+          this.updateAddress()
+        }
+      });
+  
+      if (user_details.image != null) {
+        this.setState({
+          profile_img: config.img_url3 + user_details["image"],
+        });
+      }
     }
+    
+  };
+
+  updateAddress = async () => {
+    var user_details = await localStorage.getItemObject("user_arr");
+    console.log("user_details user_details address", user_details);
+
+    let address_arr = await localStorage.getItemObject("addressDetails");
+    console.log("addressDetailsaddressDetails", address_arr);
+    let user_id = user_details["user_id"];
+
+    let url = config.baseURL + "api-patient-address-update";
+    console.log("url", url);
+    var data = new FormData();
+    data.append("user_id", user_id);
+    data.append("lat", address_arr.latitude);
+    data.append("lng", address_arr.longitude);
+
+    consolepro.consolelog("data", data);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        consolepro.consolelog("obj", obj);
+        if (obj.status == true) {
+          this.setState({ address_old: obj.result.current_address });
+          localStorage.setItemObject("address_arr", obj.result.current_address);
+          user_details['current_address'] = obj.result.current_address
+          localStorage.setItemObject("user_arr", user_details);
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        this.getProfile();
+        console.log("-------- error ------- " + error);
+      });
   };
 
   render() {
