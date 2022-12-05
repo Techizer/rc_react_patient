@@ -239,7 +239,9 @@ export default class Splash extends Component {
           translucent={false}
           networkActivityIndicatorVisible={true}
         />
-        <SvgXml xml={Splash_Logo} />
+        {/* <SvgXml xml={Splash_Logo} /> */}
+
+        <Image source={Icons.splashLogo} style={{height:windowWidth-100, height: windowWidth-100}} resizeMode='contain' />
 
         <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
 
@@ -247,8 +249,7 @@ export default class Splash extends Component {
           style={{
             width: "50%",
             alignSelf: "center",
-          }}
-        >
+          }}>
           <Text
             style={{
               paddingVertical: vs(14),

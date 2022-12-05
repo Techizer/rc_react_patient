@@ -45,7 +45,7 @@ Button.defaultProps = { customStyles: {} };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width: '90%',
+    width: '100%',
     height:40,
     alignSelf: 'center',
     borderRadius: (windowWidth * 2) / 100,

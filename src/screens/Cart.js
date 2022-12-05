@@ -1279,7 +1279,7 @@ export default class Cart extends Component {
                       width: (windowWidth * 6) / 100,
                       height: (windowWidth * 6) / 100,
                     }}
-                    source={require("../icons/logo.png")}
+                    source={Icons.logoPlain}
                   />
                   <Text
                     style={{

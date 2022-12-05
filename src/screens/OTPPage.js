@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  TouchableHighlight,
 } from "react-native";
 import React, { Component } from "react";
 import OTPTextInput from "react-native-otp-textinput";
@@ -23,7 +24,13 @@ import {
   msgProvider,
   msgText,
   consolepro,
+  StatusbarHeight,
 } from "../Provider/utilslib/Utils";
+import { leftArrow, rightArrow } from "../icons/SvgIcons/Index";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { Button } from "../components";
 
 export default class OTPPage extends Component {
   _didFocusSubscription;
@@ -38,7 +45,7 @@ export default class OTPPage extends Component {
       password: "",
       device_lang: "AR",
       mobile: "",
-      country_name: this.props.route.params.country_name,
+      country_name: this.props.route?.params?.country_name || '',
       fcm_token: 123456,
       otp: "",
       modalVisible3: false,
@@ -160,105 +167,121 @@ export default class OTPPage extends Component {
   };
   render() {
     return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "White" }}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
 
-        <View style={{ paddingBottom: (windowWidth * 8) / 100 }}>
+
+      <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
+
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{
+            justifyContent: 'center',
+            paddingBottom: vs(50),
+          }}
+          showsVerticalScrollIndicator={false}>
+
           <View
             style={{
-              width: "50%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 8) / 100,
-              marginBottom: (windowWidth * 10) / 100,
-            }}
-          >
-            <Image
-              style={{
-                width: (windowWidth * 50) / 100,
-                height: (windowWidth * 40) / 100,
-                alignSelf: "center",
-                resizeMode: "contain",
-                alignItems: "center",
+              width: "100%",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: vs(40),
+            }}>
+            <View style={{ justifyContent: 'center' }}>
+              {/* <SvgXml xml={Logo} /> */}
+              <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
+
+            </View>
+
+            <TouchableHighlight
+              underlayColor={Colors.Highlight}
+              onPress={() => {
+                this.props.navigation.pop();
               }}
-              source={Icons.Forgotlogo}
-            ></Image>
+              style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
+            >
+              <SvgXml xml={
+                config.textalign == "right"
+                  ? rightArrow : leftArrow
+              } height={vs(17.11)} width={s(9.72)} />
+            </TouchableHighlight>
           </View>
+
           <View
             style={{
               width: "90%",
               alignSelf: "center",
-              marginTop: (windowWidth * 1) / 100,
-            }}
-          >
+              marginTop: vs(25)
+            }}>
             <Text
               style={{
-                fontSize: (windowWidth * 5.3) / 100,
-                fontFamily: Font.blackheadingfontfamily,
+                fontSize: Font.xxxlarge,
+                fontFamily: Font.fontmedium,
                 textAlign: config.textRotate,
-              }}
-            >
-              {Lang_chg.opt[config.language]}
+                color: Colors.darkText
+              }}>
+              {Lang_chg.otp[config.language]}
+            </Text>
+
+            <Text
+              style={{
+                textAlign: config.textRotate,
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.inActiveText,
+                marginTop: vs(4)
+              }}>
+              {Lang_chg.otptext[config.language]}
+            </Text>
+
+
+            <View style={{ marginTop: vs(25) }}>
+              <OTPTextInput
+                style={{
+                  height: (windowWidth * 14) / 100,
+                  width: (windowWidth * 20) / 100,
+                  color: "#000",
+                  alignSelf: "center",
+                  fontFamily: Font.fontregular,
+                  fontSize: (windowWidth * 5) / 100,
+                  borderWidth: 2,
+                  borderColor: Colors.Border,
+                  borderRadius: (windowWidth * 2) / 100,
+                  textAlign: "center",
+                }}
+                ref={(e) => (this.otpInput = e)}
+                numberOfInputs={4}
+                cellTextLength={1}
+                handleTextChange={(text) => this.setState({ otp: text })}
+                tintColor={Colors.Blue}
+                offTintColor="#f5f5ff"
+                keyboardType={"number-pad"}
+                backgroundColor={Colors.backgroundcolor}
+              />
+            </View>
+
+            <Button
+              text={Lang_chg.submitbtntext[config.language]}
+              // onLoading={this.state.loading}
+              onPress={() => this.otpVerify()}
+            // isBlank={false}
+            />
+            <Text
+              style={{
+                textAlign: config.textRotate,
+                fontSize: Font.small,
+                fontFamily: Font.fontregular,
+                color: Colors.DarkGrey,
+                paddingVertical: vs(20)
+              }}>
+              {Lang_chg.OtpTime[config.language]}
             </Text>
           </View>
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 1) / 100,
-            }}
-          >
-            <View style={{ width: "90%" }}>
-              <Text
-                style={{
-                  fontSize: Font.headinggray,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.DarkGrey,
-                  textAlign: config.textRotate,
-                }}
-              >
-                {Lang_chg.opttext[config.language]}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              width: "90%",
-              // backgroundColor: 'red',
-              //  paddingHorizontal:windowWidth*1/100,
-              paddingVertical: (windowWidth * 1) / 100,
-              marginTop: (windowWidth * 8) / 100,
-              marginLeft: (windowWidth * 5) / 100,
-            }}
-          >
-            <OTPTextInput
-              style={{
-                height: (windowWidth * 14) / 100,
-                width: (windowWidth * 20) / 100,
-                color: "#000",
-                alignSelf: "center",
-                fontFamily: Font.fontregular,
-                fontSize: (windowWidth * 5) / 100,
-                borderWidth: 2,
-                borderColor: "#DFDFDF",
-                borderRadius: (windowWidth * 2) / 100,
-                textAlign: "center",
-              }}
-              ref={(e) => (this.otpInput = e)}
-              numberOfInputs={4}
-              cellTextLength={1}
-              handleTextChange={(text) => this.setState({ otp: text })}
-              tintColor="#f5f5ff"
-              offTintColor="#f5f5ff"
-              keyboardType={"number-pad"}
-            />
-          </View>
+          <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
 
-          <TouchableOpacity
+
+          {/* <TouchableOpacity
             onPress={() => {
               this.otpVerify();
             }}
@@ -288,13 +311,13 @@ export default class OTPPage extends Component {
             >
               {Lang_chg.signupbtntext[config.language]}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View
             style={{
-              width: "89%",
+              width: "90%",
               alignSelf: "center",
-              marginTop: (windowWidth * 5) / 100,
+              marginTop: vs(18),
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
@@ -303,11 +326,10 @@ export default class OTPPage extends Component {
             <Text
               style={{
                 textAlign: config.textalign,
-                fontSize: (windowWidth * 4) / 100,
-                fontFamily: Font.headingfontfamily,
-                color: Colors.lightGrey,
-              }}
-            >
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.DarkGrey,
+              }} >
               {Lang_chg.notrectext[config.language]}
             </Text>
             <Text
@@ -316,15 +338,16 @@ export default class OTPPage extends Component {
               }}
               style={{
                 textAlign: config.textalign,
-                fontSize: (windowWidth * 4) / 100,
-                fontFamily: Font.fontsemibold,
-                color: Colors.Theme,
-              }}
-            >
+                fontSize: Font.medium,
+                fontFamily: Font.fontmedium,
+                color: Colors.Blue,
+              }}>
               {Lang_chg.sendagaintext[config.language]}
             </Text>
           </View>
-        </View>
+
+        </KeyboardAwareScrollView>
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -373,7 +396,7 @@ export default class OTPPage extends Component {
                       width: (windowWidth * 6) / 100,
                       height: (windowWidth * 6) / 100,
                     }}
-                    source={require("../icons/logo.png")}
+                    source={Icons.logoPlain}
                   />
                   <Text
                     style={{
@@ -442,7 +465,9 @@ export default class OTPPage extends Component {
             </View>
           </View>
         </Modal>
-      </ScrollView>
+
+      </View>
+
     );
   }
 }

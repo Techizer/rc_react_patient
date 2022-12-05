@@ -8,6 +8,8 @@ import {
   Dimensions,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import ScreenHeader from "../components/ScreenHeader";
+import { leftArrow } from "../icons/SvgIcons/Index";
 import {
   Colors,
   localimag,
@@ -53,66 +55,14 @@ export default class TermsAndConditions extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={styles.header_view}>
-          <View style={styles.backarrow}>
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
-            >
-              <Image
-                style={{ width: 30, height: 30, resizeMode: "contain" }}
-                source={
-                  config.textalign == "right"
-                    ? localimag.backarrow
-                    : localimag.backarrow
-                }
-              ></Image>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.headerText}>
-            {this.state.pagename == 0 && (
-              <Text
-                style={{
-                  width: "100%",
-                  fontSize: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: "center",
-                  color: Colors.Black,
-                }}
-              >
-                {Lang_chg.AboutRootscare[config.language]}
-              </Text>
-            )}
-            {this.state.pagename == 2 && (
-              <Text
-                style={{
-                  width: "100%",
-                  fontSize: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: "center",
-                  color: Colors.Black,
-                }}
-              >
-                {Lang_chg.TermsandConditions[config.language]}
-              </Text>
-            )}
-            {this.state.pagename == 1 && (
-              <Text
-                style={{
-                  width: "100%",
-                  fontSize: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: "center",
-                  color: Colors.Black,
-                }}
-              >
-                {Lang_chg.PrivacyPolicy[config.language]}
-              </Text>
-            )}
-          </View>
-        </View>
+      <View style={{ flex: 1, backgroundColor: Colors.White }}>
+
+        <ScreenHeader
+          title={this.state.pagename === 0 ? Lang_chg.AboutRootscare[config.language] : this.state.pagename === 1 ? Lang_chg.PrivacyPolicy[config.language] : Lang_chg.TermsandConditions[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon={leftArrow}
+        />
 
         {config.language == 1 ? (
           <WebView
@@ -141,18 +91,9 @@ export default class TermsAndConditions extends Component {
 const styles = StyleSheet.create({
   webview: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.White,
     width: deviceWidth,
     height: deviceHeight,
-  },
-  header_view: {
-    backgroundColor: "#fff",
-    paddingVertical: (mobileW * 3) / 100,
-    borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
-    borderBottomWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: (mobileW * 1) / 100,
   },
   backarrow: {
     width: "15%",

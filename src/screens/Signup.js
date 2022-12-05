@@ -270,7 +270,7 @@ export default class Signup extends Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop:StatusbarHeight+10 }}>
+      <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
 
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps='handled'
@@ -278,8 +278,7 @@ export default class Signup extends Component {
             justifyContent: 'center',
             paddingBottom: vs(50),
           }}
-          showsVerticalScrollIndicator={false}
-        >
+          showsVerticalScrollIndicator={false}>
 
           <View
             style={{
@@ -290,7 +289,9 @@ export default class Signup extends Component {
               marginTop: vs(40),
             }}>
             <View style={{ justifyContent: 'center' }}>
-              <SvgXml xml={Logo} />
+              {/* <SvgXml xml={Logo} /> */}
+              <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
+
             </View>
 
             <TouchableHighlight
@@ -312,51 +313,33 @@ export default class Signup extends Component {
               width: "90%",
               alignSelf: "center",
               marginTop: vs(25)
-            }}
-          >
+            }}>
             <Text
               style={{
-                fontSize: Font.headingblack,
-                fontFamily: Font.blackheadingfontfamily,
+                fontSize: Font.xxxlarge,
+                fontFamily: Font.fontmedium,
                 textAlign: config.textRotate,
-              }}
-            >
+                color: Colors.darkText
+              }}>
               {Lang_chg.Signup[config.language]}
             </Text>
-          </View>
-
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 1) / 100,
-            }}
-          >
             <Text
               style={{
                 textAlign: config.textRotate,
-                fontSize: Font.headinggray,
-                fontFamily: Font.headingfontfamily,
-                color: Colors.DarkGrey,
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.inActiveText,
+                marginTop: vs(4)
               }}
             >
               {Lang_chg.Signuptext1[config.language]}
             </Text>
-          </View>
 
-          {/* ---------------------------------------------------------------------fullname */}
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(18),
-            }}
-          >
+            {/* ---------------------------------------------------------------------fullname */}
+
             <AuthInputBoxSec
-              mainContainer={{
-                width: "100%",
-              }}
+              mainContainer={{ marginTop: vs(18), width: '100%' }}
               lableText={Lang_chg.textinputname[config.language]}
               inputRef={(ref) => {
                 this.nameInput = ref;
@@ -369,22 +352,14 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.emailInput.focus();
               }}
+              editable
             />
-          </View>
 
-          {/* -----------------------------------------------------------------------------------email */}
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(4),
-            }}
-          >
+            {/* -----------------------------------------------------------------------------------email */}
+
             <AuthInputBoxSec
-              mainContainer={{
-                width: "100%",
-              }}
+              mainContainer={{ marginTop: vs(8), width: '100%' }}
               lableText={Lang_chg.textinputemails[config.language]}
               inputRef={(ref) => {
                 this.emailInput = ref;
@@ -397,12 +372,12 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.mobileInput.focus();
               }}
+              editable
             />
-          </View>
 
-          {/* -----------------------------------------------------------------------------Country Picker- */}
+            {/* -----------------------------------------------------------------------------Country Picker- */}
 
-          <View style={{ width: "90%", alignSelf: "center" }}>
+
             <TouchableOpacity
               onPress={() => {
                 this.setState({ bloodModal: true });
@@ -411,29 +386,26 @@ export default class Signup extends Component {
                 width: "100%",
                 height: 48,
                 alignSelf: "center",
-                borderColor: "#CCCCCC",
+                borderColor: Colors.Border,
                 borderWidth: 1,
-                backgroundColor: Colors.tab_background_color,
+                backgroundColor: Colors.backgroundcolor,
                 borderRadius: (windowWidth * 1) / 100,
-                paddingVertical: (windowWidth * 3.7) / 100,
-                marginTop: vs(8),
-              }}
-            >
+                justifyContent: 'center',
+                marginTop: vs(13),
+              }}>
               <View
                 style={{
                   width: "95%",
                   alignSelf: "center",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
+                }} >
                 <Text
                   style={{
                     fontSize: (windowWidth * 3.7) / 100,
                     fontFamily: Font.fontregular,
                     textAlign: config.textRotate,
-                  }}
-                >
+                  }}>
                   {this.state.country_name.length <= 0
                     ? Lang_chg.select[config.language]
                     : this.state.country_name}
@@ -451,107 +423,82 @@ export default class Signup extends Component {
                 </View>
               </View>
             </TouchableOpacity>
-          </View>
 
-          {/* -----------------------------------------------------------------------------no- */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              // alignItems: "center",
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(4)
-            }}
-          >
+
+            {/* -----------------------------------------------------------------------------no- */}
             <View
               style={{
-                width: "20%",
-              }}
-            >
-              <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                inputFieldStyle={{
-                  textAlign: "center",
-                }}
-                lableText={Lang_chg.CC_code[config.language]}
-                inputRef={(ref) => {
-                  this.country_codeInput = ref;
-                }}
-                onChangeText={(text) =>
-                  this.setState({ country_code: text })
-                }
-                maxLength={3}
-                editable={false}
-                value={this.state.country_code}
-                keyboardType="number-pad"
-                autoCapitalize="none"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  //this.passwordInput.focus();
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                width: "78%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
                 alignSelf: "center",
-              }}
-            >
-              <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                lableText={Lang_chg.textinputnumber[config.language]}
-                inputRef={(ref) => {
-                  this.mobileInput = ref;
-                }}
-                onChangeText={(text) => this.setState({ mobile: text })}
-                value={this.state.mobile}
-                keyboardType="number-pad"
-                maxLength={9}
-                autoCapitalize="none"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  this.idInput.focus();
-                }}
-              />
+                marginTop: vs(4)
+              }}>
               <View
                 style={{
-                  width: "89%",
-                  marginTop: (windowWidth * 0.5) / 100,
-                }}
-              >
+                  width: "20%",
+                }}>
+                <AuthInputBoxSec
+                  mainContainer={{ width: "100%", }}
+                  lableText={Lang_chg.CC_code[config.language]}
+                  inputRef={(ref) => {
+                    this.country_codeInput = ref;
+                  }}
+                  onChangeText={(text) =>
+                    this.setState({ country_code: text })
+                  }
+                  maxLength={3}
+                  editable={false}
+                  value={this.state.country_code}
+                  keyboardType="number-pad"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    //this.passwordInput.focus();
+                  }}
+                />
+              </View>
+
+              <View
+                style={{
+                  width: "78%",
+                  alignSelf: "center",
+                }}>
+                <AuthInputBoxSec
+                  mainContainer={{ width: '100%' }}
+                  lableText={Lang_chg.textinputnumber[config.language]}
+                  inputRef={(ref) => {
+                    this.mobileInput = ref;
+                  }}
+                  onChangeText={(text) => this.setState({ mobile: text })}
+                  value={this.state.mobile}
+                  keyboardType="number-pad"
+                  maxLength={9}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    this.idInput.focus();
+                  }}
+                  editable
+                />
+
                 <Text
                   style={{
                     textAlign: config.textRotate,
                     fontSize: Font.textsize,
                     fontFamily: Font.headingfontfamily,
                     color: Colors.lightGrey,
-                  }}
-                >
+                    marginTop: vs(8)
+                  }}>
                   {Lang_chg.mobletexttitle[config.language]}
                 </Text>
               </View>
-
             </View>
-          </View>
-          {/* ---------------------------------------------------------------------------idno */}
+            {/* ---------------------------------------------------------------------------idno */}
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(4)
-            }}
-          >
+
             <AuthInputBoxSec
-              mainContainer={{
-                width: "100%",
-              }}
+              mainContainer={{ marginTop: vs(8), width: "100%", }}
               // icon={layer9_icon}
               lableText={Lang_chg.textinputnationalid[config.language]}
               inputRef={(ref) => {
@@ -566,19 +513,14 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.passwordInput.focus();
               }}
+              editable
             />
 
-          </View>
 
-          {/* --------------------------------------------------------------------------------text */}
 
-          <View
-            style={{
-              width: "89%",
-              alignSelf: "center",
-              marginTop: vs(4)
-            }}
-          >
+            {/* --------------------------------------------------------------------------------text */}
+
+
             {this.state.country_short_code == "UAE" ? (
               <Text
                 style={{
@@ -586,6 +528,7 @@ export default class Signup extends Component {
                   fontSize: Font.textsize,
                   fontFamily: Font.headingfontfamily,
                   color: Colors.lightGrey,
+                  marginTop: vs(8)
                 }}
               >
                 {Lang_chg.ProvideUAE[config.language]}
@@ -597,26 +540,17 @@ export default class Signup extends Component {
                   fontSize: Font.textsize,
                   fontFamily: Font.headingfontfamily,
                   color: Colors.lightGrey,
+                  marginTop: vs(8)
                 }}
               >
                 {Lang_chg.Signuptext2[config.language]}
               </Text>
             )}
-          </View>
-          {/* ------------------------------------------------------password */}
+            {/* ------------------------------------------------------password */}
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(4),
-              flexDirection: "row",
-            }}
-          >
+
             <AuthInputBoxSec
-              mainContainer={{
-                width: "100%",
-              }}
+              mainContainer={{ marginTop: vs(5), width: "100%", }}
               lableText={Lang_chg.password[config.language]}
               inputRef={(ref) => {
                 this.passwordInput = ref;
@@ -629,7 +563,7 @@ export default class Signup extends Component {
               returnKeyType="next"
               secureTextEntry={this.state.isSecurePassword}
               disableImg={true}
-              iconName={this.state.isSecurePassword ? "eye" : "eye-off"}
+              iconName={this.state.isSecurePassword ? "eye-off" : "eye"}
               iconPressAction={() => {
                 this.setState({
                   isSecurePassword: !this.state.isSecurePassword,
@@ -638,44 +572,28 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.confirmInput.focus();
               }}
+              editable
             />
-          </View>
 
-          {/* -----------------------------------------------------------text*/}
+            {/* -----------------------------------------------------------text*/}
 
-          <View
-            style={{
-              width: "89%",
-              alignSelf: "center",
-              marginTop: vs(4)
-            }}
-          >
             <Text
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.textsize,
                 fontFamily: Font.headingfontfamily,
                 color: Colors.lightGrey,
+                marginTop: vs(8)
               }}
             >
               {Lang_chg.Signuptext3[config.language]}
             </Text>
-          </View>
-          {/* ----------------------------------------------------------------------confirmpasword */}
 
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 2) / 100,
-              flexDirection: "row",
-            }}
-          >
+            {/* ----------------------------------------------------------------------confirmpasword */}
+
+
             <AuthInputBoxSec
-              mainContainer={{
-                width: "100%",
-              }}
-              // icon={layer9_icon}
+              mainContainer={{ marginTop: vs(8), width: "100%", }}
               lableText={Lang_chg.confirmpassword1[config.language]}
               inputRef={(ref) => {
                 this.confirmInput = ref;
@@ -688,7 +606,7 @@ export default class Signup extends Component {
               returnKeyType="done"
               secureTextEntry={this.state.isSecurePassword1}
               disableImg={true}
-              iconName={this.state.isSecurePassword1 ? "eye" : "eye-off"}
+              iconName={this.state.isSecurePassword1 ? "eye-off" : "eye"}
               iconPressAction={() => {
                 this.setState({
                   isSecurePassword1: !this.state.isSecurePassword1,
@@ -697,58 +615,48 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 // this.signup_click()
               }}
+              editable
             />
 
-          </View>
-          {/*   ---------------------------------------------------------------------------- */}
+            {/*   ---------------------------------------------------------------------------- */}
 
-          <View
-            style={{
-              width: "89%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 0.5) / 100,
-            }}
-          >
+
             <Text
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.textsize,
                 fontFamily: Font.headingfontfamily,
                 color: Colors.lightGrey,
+                marginTop: vs(8)
               }}
             >
               {Lang_chg.Signuptext4[config.language]}
             </Text>
-          </View>
 
-          <Button
-            text={Lang_chg.btntext[config.language]}
-            // onLoading={this.state.loading}
-            customStyles={
-              {
-                // mainContainer: styles.butonContainer
+            <Button
+              text={Lang_chg.btntext[config.language]}
+              // onLoading={this.state.loading}
+              customStyles={
+                {
+                  // mainContainer: styles.butonContainer
+                }
               }
-            }
-            onPress={() => this.signup_click()}
-          // isBlank={false}
-          />
+              onPress={() => this.signup_click()}
+            // isBlank={false}
+            />
 
 
 
-          <View
-            style={{
-              width: "80%",
-              alignSelf: "center",
-              marginTop: (windowWidth * 10) / 100,
-              flexDirection: "row",
-            }}
-          >
             <View
               style={{
-                width: "100%",
+                width: "90%",
                 alignSelf: "center",
-              }}
-            >
+                marginTop: vs(12),
+                alignSelf:'center',
+                justifyContent:'center',
+                alignItems:'center'
+              }}>
+
               <Text
                 style={{
                   textAlign: config.textalign,
@@ -757,98 +665,108 @@ export default class Signup extends Component {
                   color: Colors.DarkGrey,
                   textAlign: "center",
                   alignSelf: "center",
-                }}
-              >
+                }}>
                 {Lang_chg.termsandconditiontext1[config.language]}
               </Text>
-              <Text
-                onPress={() => {
-                  this.props.navigation.navigate("TermsAndConditions", {
-                    contantpage: 2,
-                    content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
-                    content_ar: config.term_url_ar, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/ar'
-                  });
-                }}
-                style={{
-                  fontSize: Font.small,
-                  fontFamily: Font.fontmedium,
-                  color: Colors.Black,
-                  flexDirection: "row",
-                  width: "100%",
-                  textAlign: 'center'
-                }}
-              >
-                {Lang_chg.termsandconditiontext2[config.language]}
+
+              <View style={{
+                marginTop:vs(2),
+                flexDirection: 'row',
+                alignSelf:'center',
+              }}>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.props.navigation.navigate("TermsAndConditions", {
+                      contantpage: 2,
+                      content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
+                      content_ar: config.term_url_ar, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/ar'
+                    });
+                  }}
+                  underlayColor={Colors.Highlight}>
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      fontFamily: Font.fontmedium,
+                      color: Colors.Black,
+                      textAlign: 'center'
+                    }} >
+                    {Lang_chg.termsandconditiontext2[config.language]}
+                  </Text>
+                </TouchableHighlight>
                 <Text
                   style={{
                     textAlign: config.textalign,
                     fontSize: Font.small,
                     fontFamily: Font.fontregular,
                     color: Colors.DarkGrey,
-                  }}
-                >
+                  }}>
                   {Lang_chg.termsandconditiontext3[config.language]}
                 </Text>
-                <Text
+                <TouchableHighlight
                   onPress={() => {
-                    this.props.navigation.navigate("Tremsandcondition", {
-                      contantpage: 1,
-                      content: config.privacy_url_eng, //'https://teq-dev-var19.co.in/rootscare/privacy-policy/eng',
-                      content_ar: config.privacy_url_ar, //'https://teq-dev-var19.co.in/rootscare/privacy-policy/ar'
+                    this.props.navigation.navigate("TermsAndConditions", {
+                      contantpage: 2,
+                      content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
+                      content_ar: config.term_url_ar, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/ar'
                     });
                   }}
-                  style={{
-                    textAlign: config.textalign,
-                    fontSize: Font.small,
-                    fontFamily: Font.fontmedium,
-                    color: Colors.Black,
-                  }}
-                >
-                  {Lang_chg.termsandconditiontext4[config.language]}
-                </Text>
-              </Text>
+                  underlayColor={Colors.Highlight}>
+                  <Text
+                    style={{
+                      textAlign: config.textalign,
+                      fontSize: Font.small,
+                      fontFamily: Font.fontmedium,
+                      color: Colors.Black,
+                    }}>
+                    {Lang_chg.termsandconditiontext4[config.language]}
+                  </Text>
+                </TouchableHighlight>
+              </View>
+
             </View>
-          </View>
 
-          <View style={{ width: '90%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(18), alignSelf: 'center' }}></View>
+            <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(18), alignSelf: 'center' }}></View>
 
 
-          <View
-            style={{
-              width: "90%",
-              flexDirection: "row",
-              alignSelf: "center",
-              marginTop: vs(11),
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
+            <View
               style={{
-                textAlign: config.textRotate,
-                fontSize: Font.medium,
-                fontFamily: Font.fontregular,
-                color: Colors.DarkGrey,
-              }}
-            >
-              {Lang_chg.allreadyhaveaccounttext[config.language]}
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("Login");
+                width: "100%",
+                flexDirection: "row",
+                alignSelf: "center",
+                marginTop: vs(11),
+                justifyContent: "space-between",
               }}
             >
               <Text
                 style={{
-                  textAlign: config.textalign,
+                  textAlign: config.textRotate,
                   fontSize: Font.medium,
-                  fontFamily: Font.fontmedium,
-                  color: Colors.Blue,
+                  fontFamily: Font.fontregular,
+                  color: Colors.DarkGrey,
                 }}
               >
-                {Lang_chg.loginheretext[config.language]}
+                {Lang_chg.allreadyhaveaccounttext[config.language]}
               </Text>
-            </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("Login");
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: config.textalign,
+                    fontSize: Font.medium,
+                    fontFamily: Font.fontmedium,
+                    color: Colors.Blue,
+                  }}
+                >
+                  {Lang_chg.loginheretext[config.language]}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* -------------------End------------------ */}
+
           </View>
 
         </KeyboardAwareScrollView>
@@ -1014,7 +932,7 @@ export default class Signup extends Component {
                       width: (windowWidth * 6) / 100,
                       height: (windowWidth * 6) / 100,
                     }}
-                    source={require("../icons/logo.png")}
+                    source={Icons.logo}
                   ></Image>
                   <Text
                     style={{

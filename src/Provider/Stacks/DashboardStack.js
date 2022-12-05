@@ -74,7 +74,7 @@ function HomeDrawer() {
       screenOptions={{
         drawerStyle: { width: "100%", backgroundColor: Colors.White },
         drawerType: "front",
-        headerShown:false
+        headerShown: false,
       }}
       drawerContent={(props) => <Drawerscreen {...props} />}
     >
@@ -83,10 +83,13 @@ function HomeDrawer() {
         component={Home}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
+        options={{
+          swipeEnabled: false
+        }}
         name="AllServiceProviderListing"
         component={AllServiceProviderListing}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }

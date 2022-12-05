@@ -25,6 +25,7 @@ import {
   consolepro,
   Lang_chg,
   apifuntion,
+  Icons,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
 
@@ -5646,7 +5647,7 @@ export default class Booking extends Component {
                           width: (mobileW * 6) / 100,
                           height: (mobileW * 6) / 100,
                         }}
-                        source={require("../icons/logo.png")}
+                        source={Icons.logoPlain}
                       />
                       <Text
                         style={{
@@ -5847,7 +5848,7 @@ export default class Booking extends Component {
                       height: (mobileW * 15) / 100,
                       alignSelf: "center",
                     }}
-                    source={require("../icons/logo.png")}
+                    source={Icons.logoPlain}
                   />
                   <Text
                     style={{

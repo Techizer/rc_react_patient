@@ -67,6 +67,10 @@ const MainStack = () => {
                 />
 
                 <Stack.Screen
+                    name="AllServiceProviderListing"
+                    component={AllServiceProviderListing}
+                />
+                <Stack.Screen
                     name="SupportandMore"
                     component={SupportandMore}
                 />

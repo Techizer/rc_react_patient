@@ -58,25 +58,15 @@ const AuthInputBoxSec = ({
   showCode,
   iconColor,
   isEditable,
+  onChangeText,
+  value,
   ...props
 }) => {
   //console.log(props.onSubmitEditing)
   return (
     <>
       <View style={[styles.mainContainer, mainContainer]}>
-        {/* {lableText ? (
-          <Text
-            style={{
-              fontFamily: Font.fontregular,
-              fontSize: 14,
-              marginBottom: 5,
-              marginTop: 15,
-              color: Colors.Black,
-            }}
-          >
-            {lableText} {lblTxtInfo ? "(" + lblTxtInfo + ")" : ""}
-          </Text>
-        ) : null} */}
+
         <View
           style={[
             styles.inputLayout,
@@ -86,30 +76,14 @@ const AuthInputBoxSec = ({
             inputLayout,
           ]}
         >
-          {/* {showCode ? (
-            <Text
-              style={{
-                // position: 'absolute',
-                // top: '50%',
-                // left: 0,
-                marginTop: 10,
-                marginRight: 10,
-                color: "black", //"#7C7C7C",
-                fontFamily: Font.fontregular,
-                fontSize: 14,
-              }}
-            >
-              +0
-            </Text>
-          ) : null} */}
+
           <View
             style={{
               width: "100%",
               alignSelf: "center",
-              // backgroundColor: 'red'
             }}
           >
-            <TextInput //OutlineInput
+            {/* <TextInput
               style={[
                 styles.inputFieldStyle,
                 inputFieldStyle,
@@ -120,11 +94,9 @@ const AuthInputBoxSec = ({
                       : "White",
                 },
               ]}
-              ref={(r) => {
-                inputRef && inputRef(r);
-              }}
+              ref={inputRef}
               label={lableText}
-              mode="outlined"
+              mode='outlined'
               outlineColor={Colors.Border}
               activeOutlineColor={Colors.placholderactive}
               autoCapitalize="none"
@@ -144,12 +116,44 @@ const AuthInputBoxSec = ({
                   />
                 )
               }
+            /> */}
+
+            <TextInput
+              style={[styles.inputFieldStyle,
+              {
+                backgroundColor:
+                  props.editable ? Colors.White : Colors.backgroundcolor
+              },
+              ]}
+              ref={inputRef}
+              label={lableText}
+              mode='outlined'
+              outlineColor={Colors.Border}
+              activeOutlineColor={Colors.placholderactive}
+              autoCapitalize="none"
+              onChangeText={onChangeText}
+              value={value}
+              right={
+                disableImg && (
+                  <TextInput.Icon
+                    name={iconName}
+                    onPress={iconPressAction}
+                    forceTextInputFocus={false}
+                    color={Colors.DarkGrey}
+                    style={{
+                      marginTop: 12
+                    }}
+                  />
+                )
+              }
+              {...props}
             />
+
           </View>
-         
+
         </View>
       </View>
-      
+
     </>
   );
 };
@@ -183,25 +187,18 @@ const styles = StyleSheet.create({
   },
   inputLayout: {
     width: "100%",
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
+    height: 50,
   },
   inputFieldStyle: {
-    flex: 1,
+    height: '100%',
     width: "100%",
     height: 48,
     color: Colors.Black,
-    fontSize: Font.placeholdersize,
+    fontSize: Font.medium,
     textAlign: config.textalign,
-    //height: (windowWidth * 12) / 100,
-    fontFamily: Font.placeholderfontfamily,
-    borderRadius: 80,
-    padding: 0,
-    margin: 0,
+    fontFamily: Font.fontregular,
     includeFontPadding: false,
-    backgroundColor: "White",
     lineHeight: 48,
-    // borderColor: 'red', //Colors.placeholder_border
   },
   errorLayout: {
     backgroundColor: "red",

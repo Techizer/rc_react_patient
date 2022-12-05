@@ -1026,6 +1026,7 @@ export default class Appointment extends Component {
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
+  
   time_tick = (item, index) => {
     let data = this.state.time_Arr;
     console.log("new data", data);
@@ -1080,7 +1081,7 @@ export default class Appointment extends Component {
                       this.props.navigation.navigate("Home");
                     }}
                   >
-                    {config.language == 0 ? (
+                    {/* {config.language == 0 ? (
                       <Image
                         source={localimag.leftarrow}
                         style={{
@@ -1100,7 +1101,7 @@ export default class Appointment extends Component {
                           height: (mobileW * 9) / 100,
                         }}
                       />
-                    )}
+                    )} */}
                   </TouchableOpacity>
                 </View>
                 <View
@@ -1128,8 +1129,7 @@ export default class Appointment extends Component {
                       this.props.navigation.navigate("Notifications");
                     }}
                   >
-                    <Image
-                      // tintColor="#fff"
+                    {/* <Image
                       source={
                         this.state.notification_count > 0
                           ? localimag.notifications
@@ -1141,7 +1141,7 @@ export default class Appointment extends Component {
                         width: (mobileW * 6) / 100,
                         height: (mobileW * 6) / 100,
                       }}
-                    />
+                    /> */}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -1424,7 +1424,7 @@ export default class Appointment extends Component {
                                 >
                                   {Lang_chg.Patient[config.language]}
                                 </Text>
-                                <Image
+                                {/* <Image
                                   source={localimag.dots}
                                   style={{
                                     width: 25,
@@ -1432,7 +1432,7 @@ export default class Appointment extends Component {
                                     resizeMode: "contain",
                                     marginLeft: (mobileW * 1.5) / 100,
                                   }}
-                                />
+                                /> */}
                               </View>
                               <Text
                                 style={{
@@ -1616,7 +1616,7 @@ export default class Appointment extends Component {
                                   alignItems: "center",
                                 }}
                               >
-                                {config.language == 0 ? (
+                                {/* {config.language == 0 ? (
                                   <Image
                                     source={localimag.clock}
                                     style={{
@@ -1636,7 +1636,7 @@ export default class Appointment extends Component {
                                       height: (mobileW * 3.5) / 100,
                                     }}
                                   />
-                                )}
+                                )} */}
 
                                 <Text
                                   style={{
@@ -1674,7 +1674,7 @@ export default class Appointment extends Component {
                                 paddingVertical: (mobileW * 1.5) / 100,
                               }}
                             >
-                              {config.language == 0 ? (
+                              {/* {config.language == 0 ? (
                                 <Image
                                   source={localimag.purse}
                                   style={{
@@ -1692,7 +1692,7 @@ export default class Appointment extends Component {
                                     height: 15,
                                   }}
                                 />
-                              )}
+                              )} */}
                               <Text
                                 style={{
                                   color: Colors.theme_color,
@@ -1843,7 +1843,6 @@ export default class Appointment extends Component {
                             position: "absolute",
                             right: 0,
                             top: 8,
-                            // borderTopLeftRadius : (mobileW * 2) / 100,
                             borderBottomLeftRadius: (mobileW * 2) / 100,
                             paddingVertical: 3,
                             paddingHorizontal: 10,
@@ -1869,53 +1868,9 @@ export default class Appointment extends Component {
             />
           </View>
         </View>
-        <HideWithKeyboard>
-          <Footer
-            activepage="Appointment"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: "White",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          />
-        </HideWithKeyboard>
+       
 
-        {/* code for modal */}
+         {/* code for modal */}
         <Modal
           backdropOpacity={3}
           //  style={{backgroundColor: Colors.dim_grey}}
@@ -1997,17 +1952,16 @@ export default class Appointment extends Component {
                       <TouchableOpacity
                         onPress={() => this.setState({ modalVisible: false })}
                       >
-                        <Image
+                        {/* <Image
                           source={localimag.cross}
                           style={{
                             resizeMode: "contain",
-                            // backgroundColor: Colors.white_color,
                             width: 20,
                             height: 20,
 
                             alignSelf: "center",
                           }}
-                        />
+                        /> */}
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -2311,7 +2265,7 @@ export default class Appointment extends Component {
                       <View
                         style={{ flexDirection: "row", alignItems: "center" }}
                       >
-                        <Image
+                        {/* <Image
                           source={localimag.calendarimg}
                           style={{
                             resizeMode: "contain",
@@ -2319,7 +2273,7 @@ export default class Appointment extends Component {
                             height: 20,
                             alignSelf: "center",
                           }}
-                        />
+                        /> */}
 
                         <Text
                           style={{

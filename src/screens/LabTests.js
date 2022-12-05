@@ -30,15 +30,28 @@ import HideWithKeyboard from "react-native-hide-with-keyboard";
 import Icon from "react-native-vector-icons/AntDesign";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
+import ScreenHeader from "../components/ScreenHeader";
 
-const LabTests=()=> {
- 
+const LabTests = ({navigation}) => {
 
-    return (
-      <View style={Styles.container1}>
-    
-      </View>
-    );
+
+  return (
+    <View style={Styles.container1}>
+
+      <ScreenHeader
+        title={Lang_chg.Lab_Test[config.language]}
+        navigation={navigation}
+        onBackPress={() => navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })}
+        rightIcon={Notification}
+        leftIcon={true}
+      />
+
+
+    </View>
+  );
 
 }
 

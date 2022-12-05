@@ -38,6 +38,7 @@ import { s, vs } from "react-native-size-matters";
 
 import { AuthInputBoxSec, Button } from "../components";
 import { leftArrow, Logo, rightArrow } from "../icons/SvgIcons/Index";
+import { TextInput } from "react-native-paper";
 
 global.current_lat_long = "NA";
 global.myLatitude = "NA";
@@ -521,221 +522,165 @@ export default class Login extends Component {
 
           <View
             style={{
-              paddingBottom: (windowWidth * 6) / 100,
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                alignItems: 'center',
-                marginTop: vs(40),
-              }}>
-              <SvgXml xml={Logo} />
-            </View>
+              width: "100%",
+              alignItems: 'center',
+              marginTop: vs(40),
+            }}>
+            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
+          </View>
 
-            <View
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              marginTop: vs(25)
+            }}>
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
+                fontSize: Font.xxxlarge,
+                fontFamily: Font.fontmedium,
+                textAlign: config.textRotate,
+                color:Colors.darkText
+
               }}
             >
-              <Text
-                style={{
-                  fontSize: Font.xxxlarge,
-                  fontFamily: Font.blackheadingfontfamily,
-                  textAlign: config.textRotate,
-                  color: Colors.Black,
-                  marginTop: vs(35)
-                }}
-              >
-                {Lang_chg.Login[config.language]}
-              </Text>
-            </View>
+              {Lang_chg.Login[config.language]}
+            </Text>
 
-            <View
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 1) / 100,
+                textAlign: config.textRotate,
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.inActiveText,
+                marginTop: vs(4)
               }}
             >
-              <Text
-                style={{
-                  fontSize: Font.headinggray,
-                  fontFamily: Font.headingfontfamily,
-                  color: "#515C6F",
-                  textAlign: config.textRotate,
-                }}
-              >
-                {Lang_chg.Logintext[config.language]}
-              </Text>
-            </View>
+              {Lang_chg.Logintext[config.language]}
+            </Text>
+
             {/* ----------------------------------------email------------------------------------ */}
 
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 6) / 100,
+
+            <AuthInputBoxSec
+              mainContainer={{ marginTop: vs(18), width: '100%' }}
+              lableText={Lang_chg.Mobileno[config.language]}
+              inputRef={(ref) => {
+                this.emailInput = ref;
               }}
-            >
-              <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                // icon={layer9_icon}
-                lableText={Lang_chg.Mobileno[config.language]}
-                inputRef={(ref) => {
-                  this.emailInput = ref;
-                }}
-                onChangeText={(text) => this.setState({ email: text })}
-                value={this.state.email}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                DarkGrey={Colors.DarkGrey}
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  this.passwordInput.focus();
-                }}
-              />
-            </View>
-
-
+              onChangeText={(text) => this.setState({ email: text })}
+              value={this.state.email}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              DarkGrey={Colors.DarkGrey}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.passwordInput.focus();
+              }}
+              editable
+            />
 
             {/* ----------------------------------------------------pssword--- */}
 
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: vs(4),
-                flexDirection: "row",
+            <AuthInputBoxSec
+              mainContainer={{ marginTop: vs(8), width: '100%' }}
+              lableText={Lang_chg.password[config.language]}
+              inputRef={(ref) => {
+                this.passwordInput = ref;
               }}
-            >
-              <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                lableText={Lang_chg.password[config.language]}
-                inputRef={(ref) => {
-                  this.passwordInput = ref;
-                }}
-                onChangeText={(text) => this.setState({ password: text })}
-                value={this.state.password}
-                keyboardType="default"
-                autoCapitalize="none"
-                returnKeyLabel="done"
-                returnKeyType="done"
-                secureTextEntry={this.state.isSecurePassword}
-                disableImg={true}
-                iconName={this.state.isSecurePassword ? "eye-off" : "eye"}
-                iconPressAction={() => {
-                  this.setState({
-                    isSecurePassword: !this.state.isSecurePassword,
-                  });
-                }}
-                onSubmitEditing={() => {
-                  Keyboard.dismiss();
-                }}
-              />
-            </View>
+              onChangeText={(text) => this.setState({ password: text })}
+              value={this.state.password}
+              keyboardType="default"
+              autoCapitalize="none"
+              returnKeyLabel="done"
+              returnKeyType="done"
+              secureTextEntry={this.state.isSecurePassword}
+              disableImg={true}
+              iconName={this.state.isSecurePassword ? "eye-off" : "eye"}
+              iconPressAction={() => {
+                this.setState({
+                  isSecurePassword: !this.state.isSecurePassword,
+                });
+              }}
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
+              }}
+              editable
+            />
+
 
             {/* ----------------------------------------------------------------------------checkbox */}
 
             <View
               style={{
-                width: "90%",
+                width: "100%",
                 alignSelf: "center",
-                marginTop: (windowWidth * 4) / 100,
+                marginTop: vs(15),
                 flexDirection: "row",
-              }}
-            >
-              {this.state.remember_me == false && (
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  style={{
-                    width: "45%",
-                    flexDirection: "row",
-                    paddingLeft: (windowWidth * 1) / 100,
-                  }}
-                  onPress={() => {
-                    this.remember_me_fun();
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View style={{ width: "20%" }}>
-                      <Image
-                        style={{
-                          height: 23,
-                          width: 23,
-                          resizeMode: "contain",
-                          tintColor: "#696464",
-                        }}
-                        source={require("../icons/blank-check-box.png")}
-                      ></Image>
-                    </View>
+                alignItems: 'center'
+              }} >
 
-                    <Text
-                      style={{
-                        color: Colors.DarkGrey,
-                        fontFamily: Font.fontregular,
-                        // paddingLeft:windowWidth*2/100,
-                        // textAlign: config.textalign,
-                        fontSize: Font.Remember,
-                      }}
-                    >
-                      {Lang_chg.Remember[config.language]}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-              {this.state.remember_me == true && (
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  style={{ width: "45%", paddingLeft: (windowWidth * 1) / 100 }}
-                  onPress={() => {
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  width: "37%",
+                  flexDirection: "row",
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  this.state.remember_me == false ?
+                    this.remember_me_fun()
+                    :
                     this.remove_remember_me_fun();
+                }}>
+
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.state.remember_me == false ?
+                      this.remember_me_fun()
+                      :
+                      this.remove_remember_me_fun();
                   }}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View style={{ width: "20%" }}>
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 5,
+                    backgroundColor: this.state.remember_me ? Colors.Theme : Colors.White,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: this.state.remember_me ? 0 : 1.3,
+                    borderColor: Colors.Border
+                  }}>
+                  {
+                    this.state.remember_me ?
                       <Image
                         style={{
-                          height: 23,
-                          width: 23,
-                          resizeMode: "contain",
+                          height: 14,
+                          width: 14,
+                          tintColor: Colors.White
                         }}
-                        source={Icons.remembertick}
-                      ></Image>
-                    </View>
-                    <Text
-                      style={{
-                        color: Colors.DarkGrey,
-                        fontFamily: Font.fontregular,
-                        // paddingLeft:windowWidth*2/100,
-                        // textAlign: config.textalign,
-                        fontSize: Font.Remember,
-                      }}
-                    >
-                      {Lang_chg.Remember[config.language]}
-                    </Text>
-                  </View>
+                        resizeMode="contain"
+                        source={Icons.Tick}
+                      />
+                      :
+                      null
+                  }
                 </TouchableOpacity>
-              )}
+                <Text
+                  style={{
+                    color: Colors.inActiveText,
+                    fontFamily: Font.fontregular,
+                    fontSize: Font.medium,
+                  }}>
+                  {Lang_chg.Remember[config.language]}
+                </Text>
 
-              <View style={{ width: "55%", alignSelf: "center" }}>
+              </TouchableOpacity>
+
+
+              <View style={{ width: "63%", alignSelf: "center", }}>
                 <Text
                   onPress={() => {
                     this.props.navigation.navigate("ForgotPage");
@@ -744,8 +689,8 @@ export default class Login extends Component {
                     color: Colors.Blue,
                     fontFamily: Font.fontregular,
                     fontSize: Font.Forgot,
-                    alignSelf: "flex-end",
                     textAlign: config.textalign,
+                    alignSelf: 'flex-end'
                   }}
                 >
                   {Lang_chg.Forgotpassword[config.language]}
@@ -760,27 +705,22 @@ export default class Login extends Component {
             // isBlank={false}
             />
 
-            <View
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 7) / 100,
+                fontSize: Font.headinggray,
+                fontFamily: Font.headingfontfamily,
+                color: Colors.DarkGrey,
+                textAlign: config.textRotate,
+                textDecorationLine: 'underline',
+                marginTop: vs(25),
               }}
             >
-              <Text
-                style={{
-                  fontSize: Font.headinggray,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.DarkGrey,
-                  textAlign: config.textRotate,
-                  textDecorationLine: 'underline'
-                }}
-              >
-                {Lang_chg.Trouble_SignIn[config.language]}
-              </Text>
-            </View>
+              {Lang_chg.Trouble_SignIn[config.language]}
+            </Text>
 
           </View>
+
+
 
 
           {/* //--------------------------------------------------------------------------------bottom */}
@@ -788,9 +728,8 @@ export default class Login extends Component {
           <View
             style={{
               width: "100%",
-              // paddingVertical: (windowWidth * 3) / 100,
-            }}
-          >
+              marginTop: vs(35)
+            }}>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
@@ -809,16 +748,16 @@ export default class Login extends Component {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 backgroundColor: Colors.Theme,
-                paddingVertical: (windowWidth * 1) / 100,
+                paddingVertical: vs(6),
                 paddingHorizontal: (windowWidth * 5) / 100
-              }}
-            >
+              }} >
               <Text
                 style={[
                   {
-                    fontSize: (windowWidth * 3.1) / 100,
+                    fontSize: Font.small,
                     color: Colors.White,
-                    fontFamily: Font.ques_fontfamily,
+                    fontFamily: Font.fontregular,
+                    textAlign: config.textRotate
                   }
                 ]}
               >
@@ -826,9 +765,10 @@ export default class Login extends Component {
               </Text>
 
               {/* <SvgXml xml={
-                  config.textalign == "right"
-                    ? leftArrow : rightArrow
-                } /> */}
+                config.textalign == "right"
+                  ? leftArrow : rightArrow
+              }
+                height={vs(11.98)} width={s(6.42)} color={Colors.White} /> */}
 
               <Image
                 source={
@@ -837,13 +777,12 @@ export default class Login extends Component {
                 }
                 style={{
                   resizeMode: "contain",
-                  width: (windowWidth * 6) / 100,
+                  width: 20,
                   alignSelf: "center",
-                  height: (windowWidth * 6) / 100,
+                  height: 20,
                   tintColor: Colors.White
                 }}
               />
-
             </TouchableOpacity>
 
           </View>
@@ -852,11 +791,10 @@ export default class Login extends Component {
           <View
             style={{
               width: "100%",
-              paddingVertical: (windowWidth * 6) / 100,
-              paddingHorizontal: (windowWidth * 6) / 100,
+              paddingVertical: vs(15),
+              paddingHorizontal: s(15),
               backgroundColor: Colors.appointmentdetaillightblue
-            }}
-          >
+            }} >
 
             <Text
               style={{
@@ -876,8 +814,8 @@ export default class Login extends Component {
               <Text
                 style={{
                   textAlign: config.textRotate,
-                  fontFamily: Font.fontregular,
-                  fontSize: Font.headinggray,
+                  fontFamily: Font.fontmedium,
+                  fontSize: Font.medium,
                   color: Colors.Blue,
                   marginTop: (windowWidth * 2) / 100,
                 }}
@@ -891,11 +829,11 @@ export default class Login extends Component {
 
           <View
             style={{
-              width: "100%",
+              width: "90%",
               paddingVertical: (windowWidth * 2) / 100,
-              paddingHorizontal: (windowWidth * 6) / 100,
-            }}
-          >
+              alignSelf:'center',
+              marginTop:vs(15)
+            }}>
             <Text
               style={[
                 {

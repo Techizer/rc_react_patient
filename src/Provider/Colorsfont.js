@@ -12,7 +12,6 @@ export const Colors = {
   white2: "#f8f8f8",
 
   gainsboro: "#e5e5e5",
-  backgroundcolor: "#f1f2f4",
 
   drawerblue: "#57A7DB",
   drawertextblue: "#7dbfe6",
@@ -37,13 +36,13 @@ export const Colors = {
   // yesnobtn_color:'gray',
   ques_color: "red",
   field_border_color: "#CCCCCC",
-  Blue: "#0888D1",
   bordercolor_light_blue: "lightblue",
   //-------------------------------04/03 gunjan
   textgray_que: "#354052",
   textGender: "#63666b",
 
   // ----------------------------Ahsan
+  backgroundcolor: "#f1f2f4",
   Theme:'#0168B3',
   Primary:'#38ABEC',
   Blue:'#0888D1',

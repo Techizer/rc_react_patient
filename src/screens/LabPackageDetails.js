@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
+import { s, vs } from "react-native-size-matters";
 import ScreenHeader from "../components/ScreenHeader";
 import { leftArrow, Notification } from "../icons/SvgIcons/Index";
 import { config } from "../Provider/configProvider";
@@ -71,20 +72,18 @@ const LabPackageDetails = ({navigation, route}) => {
         />
         {labDetailsData != null && labDetailsData != "" && (
           <>
-            <View>
               <View
                 style={{
-                  backgroundColor: "#fff",
-                }}
-              >
+                  backgroundColor: "pink",
+                  paddingHorizontal:s(11)
+                }}>
                 <Text
                   style={{
                     width: "100%",
-                    marginTop: (windowWidth * 3) / 100,
-                    paddingHorizontal: (windowWidth * 4) / 100,
-                    color: "#000",
+                    marginTop: vs(9),
+                    color: Colors.Black,
                     fontFamily: Font.fontmedium,
-                    fontSize: (windowWidth * 4.5) / 100,
+                    fontSize: Font.xxlarge,
                     textAlign: "left",
                   }}
                 >
@@ -92,8 +91,7 @@ const LabPackageDetails = ({navigation, route}) => {
                 </Text>
                 <Text
                   style={{
-                    paddingVertical: (windowWidth * 2) / 100,
-                    paddingHorizontal: (windowWidth * 4) / 100,
+                    paddingVertical: vs(6),
                     fontFamily: Font.fontregular,
                     textAlign: "left",
                     color: Colors.Theme,
@@ -104,33 +102,23 @@ const LabPackageDetails = ({navigation, route}) => {
                 </Text>
                 <Text
                   style={{
-                    paddingVertical: (windowWidth * 2) / 100,
-                    paddingHorizontal: (windowWidth * 4) / 100,
+                    paddingTop: vs(7),
                     textAlign: config.textalign,
                     fontFamily: Font.fontmedium,
-                    fontSize: (windowWidth * 5) / 100,
+                    fontSize: Font.xxlarge,
                   }}
                 >
                   {labDetailsData.price}
                 </Text>
-                <View
-                  style={{
-                    width: "100%",
-                    paddingHorizontal: (windowWidth * 4) / 100,
-                    alignSelf: "center",
-                    borderColor: Colors.bordercolor,
-                    borderBottomWidth: (windowWidth * 0.2) / 100,
-                    marginTop: (windowWidth * 1) / 100,
-                  }}
-                />
+                
+                <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+
                 {labDetailsData.task_content != null && (
                   <>
                     <Text
                       style={{
                         fontFamily: Font.fontregular,
-                        marginTop: (windowWidth * 2) / 100,
-                        paddingHorizontal: (windowWidth * 4) / 100,
-                        fontSize: Font.buttontext_size,
+                        fontSize: Font.large,
                         textAlign: config.textRotate,
                         color: Colors.lightGrey,
                       }}
@@ -141,10 +129,9 @@ const LabPackageDetails = ({navigation, route}) => {
                       value={labDetailsData.task_content}
                       stylesheet={{
                         p: {
-                          fontSize: Font.subtext,
-                          paddingHorizontal: (windowWidth * 4) / 100,
+                          fontSize: Font.medium,
                           color: Colors.lightGrey,
-                          marginTop: (windowWidth * 2) / 100,
+                          marginTop: vs(8),
                           fontFamily: Font.fontregular,
                         },
                       }}
@@ -164,7 +151,6 @@ const LabPackageDetails = ({navigation, route}) => {
                         fontFamily: Font.fontregular,
                         fontSize: Font.headingfont_booking,
                         color: Colors.precautionText,
-                        paddingHorizontal: (windowWidth * 4) / 100,
                         marginTop: (windowWidth * 2) / 100,
                         textAlign: config.textRotate,
                       }}
@@ -176,7 +162,6 @@ const LabPackageDetails = ({navigation, route}) => {
                       stylesheet={{
                         p: {
                           fontSize: Font.subtext,
-                          paddingHorizontal: (windowWidth * 4) / 100,
                           color: Colors.lightGrey,
                           marginTop: (windowWidth * 2) / 100,
                           fontFamily: Font.fontregular,
@@ -186,24 +171,24 @@ const LabPackageDetails = ({navigation, route}) => {
                   </View>
                 )}
               </View>
-            </View>
+
             <View
               style={{
-                width: (windowWidth * 100) / 100,
-                backgroundColor: "#fff",
+                width:'100%',
+                backgroundColor: "red",
                 alignSelf: "center",
                 alignItems: "flex-start",
-                marginTop: (windowWidth * 2) / 100,
+                marginTop: vs(7),
+                paddingHorizontal:s(11),
+                paddingVertical:vs(10)
               }}
             >
               <Text
                 style={{
                   width: "100%",
-                  marginTop: (windowWidth * 3) / 100,
-                  paddingHorizontal: (windowWidth * 2) / 100,
-                  color: "#000",
+                  color: Colors.Black,
                   fontFamily: Font.fontregular,
-                  fontSize: (windowWidth * 4) / 100,
+                  fontSize: Font.large,
                   textAlign: "left",
                 }}
               >
@@ -236,7 +221,6 @@ const LabPackageDetails = ({navigation, route}) => {
                             justifyContent: "flex-start",
                             // paddingVertical: (windowWidth * 1) / 100,
                             marginTop: (windowWidth * 3) / 100,
-                            paddingHorizontal: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text

@@ -66,24 +66,29 @@ const ScreenHeader = ({
                             alignItems: "center",
                         }}
                     >
-                        <TouchableHighlight
-                            underlayColor={Colors.Highlight}
-                            activeOpacity={0.7}
-                            onPress={onBackPress}
-                            style={{
-                                width: "13%",
-                                height: '100%',
-                                alignSelf: "center",
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <SvgXml xml={
-                                config.textalign == "right"
-                                    ? rightArrow : leftArrow
-                            } height={vs(17.11)} width={s(9.72)} />
+                        {
+                            leftIcon ?
+                            <TouchableHighlight
+                                underlayColor={Colors.Highlight}
+                                activeOpacity={0.7}
+                                onPress={onBackPress}
+                                style={{
+                                    width: "13%",
+                                    height: '100%',
+                                    alignSelf: "center",
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <SvgXml xml={
+                                    config.textalign == "right"
+                                        ? rightArrow : leftArrow
+                                } height={vs(17.11)} width={s(9.72)} />
 
-                        </TouchableHighlight>
+                            </TouchableHighlight>
+                            :
+                            <View style={{width:'13%'}}></View>
+                        }
 
                         <View
                             style={{

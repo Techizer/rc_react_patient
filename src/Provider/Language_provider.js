@@ -144,12 +144,8 @@ class Language_provider {
   Country_code = ["Country Code", "الرقم الدولي"];
 
   //--------------------------------------------------------------otppage-----------------------------------------
-  opt = ["OTP Verification Code", "رمز التحقق لمرة واحدة  "];
-  opttext = [
-    "We have sent the code verification to your email",
-    "لقد أرسلنا رمز التحقق إلى بريدك الإلكتروني  ",
-  ];
-  opttext_forget = [
+  otp = ["OTP Verification Code", "رمز التحقق لمرة واحدة  "];
+  otptext = [
     "We have sent the code verification to your email",
     "لقد أرسلنا رمز التحقق إلى بريدك الإلكتروني  ",
   ];
@@ -288,7 +284,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم & المزيد "];
-  version = ["Version 1.0.(1)", "الإصدار 1.0.()1"];
+  version = ["Version 1.0.0", "الإصدار 1.0.0"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "];
@@ -599,6 +595,7 @@ class Language_provider {
   Howitworks = ["How it works", "How it works"];
   BookConsultation = ["BOOK CONSULTATION", "استشارة كتاب"];
   NearBy = ["Near by", "مجاور"];
+  OtpTime=['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.']
 
 }
 export const Lang_chg = new Language_provider();

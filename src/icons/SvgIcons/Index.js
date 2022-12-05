@@ -26,7 +26,8 @@ export const Splash_Logo=`<svg xmlns="http://www.w3.org/2000/svg" width="161.015
     <path id="Path_6911" data-name="Path 6911" d="M151.442,83.865v7.512h16.7v6.466h-16.7V105.5h19.07v6.464H143.641V77.4H169.97v6.469Z" transform="translate(-29.672 -77.148)" fill="#0057a5"/>
   </g>
 </g>
-</svg>`
+</svg>
+`
 
 export const Logo = `<svg xmlns="http://www.w3.org/2000/svg" width="205.625" height="95.284" viewBox="0 0 205.625 95.284">
 <g id="RC_Logo" transform="translate(-18.538 -173.052)">
@@ -273,6 +274,9 @@ export const Search=`<svg xmlns="http://www.w3.org/2000/svg" width="13.742" heig
 <path id="search_icon" d="M15450.078,16047.479l-2.683-2.683a5.9,5.9,0,0,1-3.56,1.172,5.985,5.985,0,1,1,5.988-5.984,5.929,5.929,0,0,1-1.172,3.56l2.678,2.683a.886.886,0,1,1-1.252,1.253Zm-10.451-7.5a4.21,4.21,0,1,0,4.209-4.209A4.215,4.215,0,0,0,15439.627,16039.983Z" transform="translate(-15437.851 -16033.998)" fill="#fff"/>
 </svg>`
 
+export const Cross=`<svg id="close_icon" xmlns="http://www.w3.org/2000/svg" width="13.101" height="13.101" viewBox="0 0 13.101 13.101">
+<path id="close" d="M6.013,4.775A.876.876,0,0,0,4.775,6.013l5.056,5.056L4.775,16.125a.876.876,0,0,0,1.238,1.238l5.056-5.056,5.056,5.056a.876.876,0,0,0,1.238-1.238l-5.056-5.056,5.056-5.056a.876.876,0,1,0-1.238-1.238L11.069,9.831Z" transform="translate(-4.518 -4.518)" fill="#fff"/>
+</svg>`
 
 
 

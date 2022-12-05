@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  TouchableHighlight,
 } from "react-native";
 import React, { Component } from "react";
 import OTPTextInput from "react-native-otp-textinput";
@@ -22,7 +23,13 @@ import {
   msgProvider,
   msgText,
   consolepro,
+  StatusbarHeight,
 } from "../Provider/utilslib/Utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { leftArrow, rightArrow } from "../icons/SvgIcons/Index";
+import { AuthInputBoxSec, Button } from "../components";
 
 export default class ForgotOTP extends Component {
   _didFocusSubscription;
@@ -39,6 +46,7 @@ export default class ForgotOTP extends Component {
       mobile: "",
       fcm_token: 123456,
       otp: "",
+      isSecurePassword: true,
     };
     this._didFocusSubscription = props.navigation.addListener(
       "focus",
@@ -165,120 +173,84 @@ export default class ForgotOTP extends Component {
   };
   render() {
     return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "White" }}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
 
-          <View style={{ paddingBottom: (windowWidth * 8) / 100 }}>
-            <View
-              style={{
-                width: "95%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 5) / 100,
-                flexDirection: "row",
-              }}
-            >
-              <View
-                style={{
-                  width: "10%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 25) / 100,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Login");
-                  }}
-                  style={{ width: "100%" }}
-                >
-                  <Image
-                    style={{
-                      width: (windowWidth * 10) / 100,
-                      height: (windowWidth * 10) / 100,
-                      resizeMode: "contain",
-                    }}
-                    source={
-                      config.textalign == "right"
-                        ? Icons.arabic_back
-                        : Icons.backarrow
-                    }
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: "80%", alignSelf: "center" }}>
-                <Image
-                  style={{
-                    width: (windowWidth * 50) / 100,
-                    height: (windowWidth * 40) / 100,
-                    alignSelf: "center",
-                    resizeMode: "contain",
-                  }}
-                  source={Icons.Forgotlogo}
-                ></Image>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 10) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: Font.headingblack,
-                  fontFamily: Font.fontsemibold,
-                  textAlign: config.textRotate,
-                }}
-              >
-                {Lang_chg.opt[config.language]}
-              </Text>
+      <View
+        style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight }}>
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{
+            justifyContent: 'center',
+            paddingBottom: vs(30),
+          }}
+          showsVerticalScrollIndicator={false} >
+
+          <View
+            style={{
+              width: "100%",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: vs(40),
+            }}>
+            <View style={{ justifyContent: 'center' }}>
+              {/* <SvgXml xml={Logo} /> */}
+              <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
+
             </View>
 
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 1) / 100,
+            <TouchableHighlight
+              underlayColor={Colors.Highlight}
+              onPress={() => {
+                this.props.navigation.pop();
               }}
+              style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
             >
-              <View style={{ width: "90%" }}>
-                <Text
-                  style={{
-                    fontSize: Font.headinggray,
-                    fontFamily: Font.headingfontfamily,
-                    color: Colors.DarkGrey,
-                    textAlign: config.textRotate,
-                  }}
-                >
-                  {Lang_chg.opttext_forget[config.language]}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "70%",
+              <SvgXml xml={
+                config.textalign == "right"
+                  ? rightArrow : leftArrow
+              } height={vs(17.11)} width={s(9.72)} />
+            </TouchableHighlight>
+          </View>
 
-                //  paddingHorizontal:windowWidth*1/100,
-                paddingVertical: (windowWidth * 1) / 100,
-                marginTop: (windowWidth * 10) / 100,
-                marginLeft: (windowWidth * 5) / 100,
-              }}
-            >
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              marginTop: vs(25)
+            }}>
+
+            <Text
+              style={{
+                fontSize: Font.xxxlarge,
+                fontFamily: Font.fontmedium,
+                textAlign: config.textRotate,
+                color: Colors.darkText
+              }}>
+              {Lang_chg.otp[config.language]}
+            </Text>
+
+            <Text
+              style={{
+                textAlign: config.textRotate,
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.inActiveText,
+                marginTop: vs(4)
+              }}>
+              {Lang_chg.otptext[config.language]}
+            </Text>
+
+            <View style={{ marginTop: vs(25) }}>
               <OTPTextInput
                 style={{
                   height: (windowWidth * 14) / 100,
-                  width: (windowWidth * 14) / 100,
+                  width: (windowWidth * 20) / 100,
                   color: "#000",
                   alignSelf: "center",
                   fontFamily: Font.fontregular,
                   fontSize: (windowWidth * 5) / 100,
                   borderWidth: 2,
-                  borderColor: "#DFDFDF",
+                  borderColor: Colors.Border,
                   borderRadius: (windowWidth * 2) / 100,
                   textAlign: "center",
                 }}
@@ -286,207 +258,112 @@ export default class ForgotOTP extends Component {
                 numberOfInputs={4}
                 cellTextLength={1}
                 handleTextChange={(text) => this.setState({ otp: text })}
+                tintColor={Colors.Blue}
+                offTintColor="#f5f5ff"
                 keyboardType={"number-pad"}
+                backgroundColor={Colors.backgroundcolor}
               />
             </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 4) / 100,
-                flexDirection: "row",
-                borderColor:
-                  this.state.passwordfocus == true
-                    ? Colors.placholderactive
-                    : Colors.placeholder_border,
-                borderWidth: (windowWidth * 0.3) / 100,
-                borderRadius: (windowWidth * 1) / 100,
-              }}
-            >
-              <View style={{ width: "90%", alignSelf: "center" }}>
-                <TextInput
-                  style={{
-                    width: "95%",
-                    alignSelf: "center",
-                    color: Colors.Black,
-                    fontSize: Font.placeholdersize,
-                    textAlign: config.textalign,
-                    height: (windowWidth * 12) / 100,
-                    fontFamily: Font.placeholderfontfamily,
-                  }}
-                  maxLength={50}
-                  placeholder={
-                    this.state.passwordfocus != true
-                      ? Lang_chg.create_new_pass[config.language]
-                      : null
-                  }
-                  DarkGrey={Colors.DarkGrey}
-                  onChangeText={(txt) => {
-                    this.setState({ password: txt });
-                  }}
-                  value={this.state.password}
-                  onFocus={() => {
-                    this.setState({ passwordfocus: true });
-                  }}
-                  onBlur={() => {
-                    this.setState({
-                      passwordfocus: this.state.email.length > 0 ? true : false,
-                    });
-                  }}
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                  secureTextEntry={this.state.isSecurePassword}
-                />
-              </View>
-              {this.state.passwordfocus == true && (
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "White",
-                    left: (windowWidth * 4) / 100,
-                    top: (-windowWidth * 2) / 100,
-                    paddingHorizontal: (windowWidth * 1) / 100,
-                  }}
-                >
-                  <Text
-                    style={{ color: "#0057A5", textAlign: config.textalign }}
-                  >
-                    {Lang_chg.create_new_pass[config.language]}
-                  </Text>
-                </View>
-              )}
 
-              <TouchableOpacity
-                style={{ width: "10%", alignSelf: "center" }}
-                onPress={() => {
-                  this.setState({
-                    isSecurePassword: !this.state.isSecurePassword,
-                  });
-                }}
-              >
-                {this.state.isSecurePassword == false ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <Image
-                      style={{
-                        height: (windowWidth * 6) / 100,
-                        width: (windowWidth * 6) / 100,
-                      }}
-                      source={require("../icons/eye-icon.png")}
-                    ></Image>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <Image
-                      style={{
-                        height: (windowWidth * 6) / 100,
-                        width: (windowWidth * 6) / 100,
-                      }}
-                      source={require("../icons/eye-icon02.png")}
-                    />
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 0.5) / 100,
+            <AuthInputBoxSec
+              mainContainer={{ marginTop: vs(8), width: "100%", }}
+              lableText={this.state.passwordfocus != true
+                ? Lang_chg.create_new_pass[config.language]
+                : null}
+              // inputRef={(ref) => {
+              //   this.confirmInput = ref;
+              // }}
+              onChangeText={(val) => this.setState({ password: val })}
+              value={this.state.password}
+              keyboardType="default"
+              autoCapitalize="none"
+              returnKeyLabel="next"
+              returnKeyType="done"
+              secureTextEntry={this.state.isSecurePassword}
+              disableImg={true}
+              iconName={this.state.isSecurePassword ? "eye-off" : "eye"}
+              iconPressAction={() => {
+                this.setState({
+                  isSecurePassword: !this.state.isSecurePassword,
+                });
               }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: Font.textsize,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.lightGrey,
-                }}
-              >
-                {Lang_chg.Signuptext3[config.language]}
-              </Text>
-            </View>
+              onSubmitEditing={() => {
+                // this.signup_click()
+              }}
+              editable
+            />
 
-            <TouchableOpacity
-              onPress={() => {
-                this.otpVerify();
-              }}
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: (windowWidth * 2) / 100,
-                backgroundColor: Colors.Theme,
-                paddingVertical: (windowWidth * 4) / 100,
-                marginTop: (windowWidth * 6) / 100,
-                shadowColor: "#000",
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 3,
+                textAlign: config.textRotate,
+                fontSize: Font.textsize,
+                fontFamily: Font.fontregular,
+                color: Colors.lightGrey,
+                marginTop: vs(8)
               }}
             >
-              <Text
-                style={{
-                  color: Colors.White,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.submitbtntext[config.language]}
-              </Text>
-            </TouchableOpacity>
+              {Lang_chg.Signuptext3[config.language]}
+            </Text>
 
-            <View
+          <Button
+              text={Lang_chg.submitbtntext[config.language]}
+              // onLoading={this.state.loading}
+              onPress={() => this.otpVerify()}
+            // isBlank={false}
+            />
+            <Text
               style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (windowWidth * 5) / 100,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (windowWidth * 4) / 100,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.lightGrey,
-                }}
-              >
-                {Lang_chg.notrectext[config.language]}
-              </Text>
-              <Text
-                onPress={() => {
-                  this.sendagain();
-                }}
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (windowWidth * 4) / 100,
-                  fontFamily: Font.fontsemibold,
-                  color: Colors.Theme,
-                }}
-              >
-                {Lang_chg.sendagaintext[config.language]}
-              </Text>
-            </View>
+                textAlign: config.textRotate,
+                fontSize: Font.small,
+                fontFamily: Font.fontregular,
+                color: Colors.DarkGrey,
+                paddingVertical: vs(20)
+              }}>
+              {Lang_chg.OtpTime[config.language]}
+            </Text>
           </View>
-        </View>
-      </ScrollView>
+
+          <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+              marginTop: vs(18),
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }} >
+            <Text
+              style={{
+                textAlign: config.textalign,
+                fontSize: Font.medium,
+                fontFamily: Font.fontregular,
+                color: Colors.DarkGrey,
+              }} >
+              {Lang_chg.notrectext[config.language]}
+            </Text>
+            <Text
+              onPress={() => {
+                this.sendagain();
+              }}
+              style={{
+                textAlign: config.textalign,
+                fontSize: Font.medium,
+                fontFamily: Font.fontmedium,
+                color: Colors.Blue,
+              }}>
+              {Lang_chg.sendagaintext[config.language]}
+            </Text>
+          </View>
+
+          
+
+          
+
+        </KeyboardAwareScrollView>
+      </View>
+
     );
   }
 }

@@ -21,6 +21,8 @@ import {
   apifuntion,
 } from "../Provider/utilslib/Utils";
 import { AppHeader4 } from "../Allcomponents";
+import ScreenHeader from "../components/ScreenHeader";
+import { leftArrow } from "../icons/SvgIcons/Index";
 
 export default class Notifications extends Component {
   constructor(props) {
@@ -109,15 +111,13 @@ export default class Notifications extends Component {
           flex: 1,
           width: "100%",
           alignSelf: "center",
-        }}
-      >
-        <SafeAreaView style={{ flex: 0 }}></SafeAreaView>
+        }}>
 
-        <AppHeader4
-          handlarrowpress={() => {
-            this.props.navigation.goBack();
-          }}
+        <ScreenHeader
           title={Lang_chg.NotificationsList[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon={leftArrow}
         />
 
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
@@ -170,7 +170,7 @@ export default class Notifications extends Component {
                         width: (windowWidth * 6) / 100,
                         height: (windowWidth * 6) / 100,
                       }}
-                      source={require("../icons/logo.png")}
+                      source={Icons.logoPlain}
                     />
                     <Text
                       style={{

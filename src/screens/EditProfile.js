@@ -32,6 +32,8 @@ import {
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { AuthInputBoxSec, DropDownboxSec } from "../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import ScreenHeader from "../components/ScreenHeader";
+import { leftArrow, Notification } from "../icons/SvgIcons/Index";
 const bloodModal_arr = [
   {
     id: 1,
@@ -1373,90 +1375,15 @@ export default class EditProfile extends Component {
 
         {/* ------------------------------------------------------------------------------------------------------------ */}
 
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              backgroundColor: "#fff",
-              width: "100%",
-              paddingVertical: (windowWidth * 3) / 100,
-              borderBottomColor: Colors.Border,
-              borderBottomWidth: 1,
-              // shadowColor:'#000',
-              // shadowOffset:{width:1,height:1},
-              // elevation:3,
+        <View style={{ flex: 1, backgroundColor:Colors.backgroundcolor }}>
+        <ScreenHeader
+          title={Lang_chg.Editprofile[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon={leftArrow}
+          rightIcon={Notification}
+        />
 
-              // shadowOpacity:0.6,
-              // shadowRadius:4,
-            }}
-          >
-            <View
-              style={{
-                width: "95%",
-                alignSelf: "center",
-                backgroundColor: "White",
-                //  height: (windowWidth * 12) / 100,
-                flexDirection: "row",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.pop();
-                }}
-                style={{ width: "10%", alignSelf: "center" }}
-              >
-                <Image
-                  source={
-                    config.textalign == "right"
-                      ? Icons.arabic_back
-                      : Icons.backarrow
-                  }
-                  style={{
-                    height: (windowWidth * 8) / 100,
-                    width: (windowWidth * 8) / 100,
-                  }}
-                >
-                  {/* {Icons.backarrow} */}
-                </Image>
-              </TouchableOpacity>
-
-              <View style={{ width: "80%", alignSelf: "center" }}>
-                <Text
-                  style={{
-                    color: Colors.Black,
-                    fontFamily: Font.blackheadingfontfamily,
-                    fontSize: Font.headingblack_txt_size_edit,
-                    alignSelf: "flex-end",
-
-                    alignSelf: "center",
-                  }}
-                >
-                  {Lang_chg.Editprofile[config.language]}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate("Notifications");
-                }}
-              >
-                <View style={{ width: "10%", alignSelf: "center" }}>
-                  <Image
-                    source={
-                      this.state.notification_count > 0
-                        ? Icons.notifications
-                        : Icons.notifications_sec
-                    }
-                    style={{
-                      height: (windowWidth * 6) / 100,
-                      width: (windowWidth * 6) / 100,
-                      resizeMode: "contain",
-                    }}
-                  >
-                    {/* {Icons.backarrow} */}
-                  </Image>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
           <ScrollView
             style={{ backgroundColor: "White" }}
             contentContainerStyle={{ paddingBottom: (windowWidth * 15) / 100 }}

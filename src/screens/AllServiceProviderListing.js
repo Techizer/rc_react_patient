@@ -42,7 +42,7 @@ export default class AllServiceProviderListing extends Component {
       nurse_data: "",
       message: "",
       notification_count: "",
-      provider_name: "",
+      searchProvider: "",
       isHospitalDoctorList: false,
       hospitalName: "",
       hospitalId: "",
@@ -120,60 +120,65 @@ export default class AllServiceProviderListing extends Component {
       });
   };
 
-  getHospitalDoctorList = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
-    let user_id = user_details["user_id"];
+  // getHospitalDoctorList = async () => {
+  //   let user_details = await localStorage.getItemObject("user_arr");
+  //   console.log("user_details user_details", user_details);
+  //   let user_id = user_details["user_id"];
 
-    let url = config.baseURL + "api-patient-hospital-doctor-list";
+  //   let url = config.baseURL + "api-patient-hospital-doctor-list";
 
-    console.log("url", url);
+  //   console.log("url", url);
 
-    var data = new FormData();
-    data.append("login_user_id", user_id);
-    data.append("hospital_id", this.state.hospitalId);
-    data.append("service_type", "doctor");
-    data.append("provider_name", "");
-    data.append("page_count", 1);
-    data.append("work_area", user_details["work_area"]);
-    data.append("specility", this.state.specialtyData);
+  //   var data = new FormData();
+  //   data.append("login_user_id", user_id);
+  //   data.append("hospital_id", this.state.hospitalId);
+  //   data.append("service_type", "doctor");
+  //   data.append("provider_name", "");
+  //   data.append("page_count", 1);
+  //   data.append("work_area", user_details["work_area"]);
+  //   data.append("specility", this.state.specialtyData);
 
-    consolepro.consolelog("data", data);
-    apifuntion
-      .postApi(url, data)
-      .then((obj) => {
-        consolepro.consolelog("obj", JSON.stringify(obj));
-        if (obj.status == true) {
-          this.setState({
-            availableDoctorsUnderHospital: obj.result,
-            availableDoctorsMessage: obj.message,
-          });
-          let day_task = obj.result;
-          if (obj.result != null && obj.result != "") {
-            for (let k = 0; k < obj.result.length; k++) {
-              let availability = day_task[k].availability;
-              for (let l = 0; l < availability.length; l++) {
-                day_task[k].availability[l] = availability[l].slot_day;
-              }
-              day_task[k].new_availablity = day_task[k].availability.toString();
-            }
-          }
-          console.log("availableDoctorsUnderHospital ", day_task);
-          this.setState({ availableDoctorsUnderHospital: day_task });
-        } else {
-          this.setState({
-            availableDoctorsUnderHospital: obj.result,
-            availableDoctorsMessage: obj.message,
-          });
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  };
+  //   consolepro.consolelog("data", data);
+  //   apifuntion
+  //     .postApi(url, data)
+  //     .then((obj) => {
+  //       consolepro.consolelog("obj", JSON.stringify(obj));
+  //       if (obj.status == true) {
+  //         this.setState({
+  //           availableDoctorsUnderHospital: obj.result,
+  //           availableDoctorsMessage: obj.message,
+  //         });
+  //         let day_task = obj.result;
+  //         if (obj.result != null && obj.result != "") {
+  //           for (let k = 0; k < obj.result.length; k++) {
+  //             let availability = day_task[k].availability;
+  //             for (let l = 0; l < availability.length; l++) {
+  //               day_task[k].availability[l] = availability[l].slot_day;
+  //             }
+  //             day_task[k].new_availablity = day_task[k].availability.toString();
+  //           }
+  //         }
+  //         console.log("availableDoctorsUnderHospital ", day_task);
+  //         this.setState({ availableDoctorsUnderHospital: day_task });
+  //       } else {
+  //         this.setState({
+  //           availableDoctorsUnderHospital: obj.result,
+  //           availableDoctorsMessage: obj.message,
+  //         });
+  //         return false;
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("-------- error ------- " + error);
+  //     });
+  // };
 
   get_Services = async () => {
+    if (this.state.searchProvider != '') {
+      this.setState({
+        isLoading: true
+      })
+    }
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url =
@@ -188,31 +193,24 @@ export default class AllServiceProviderListing extends Component {
 
     // --------When Search anything--------
     if (this.state.pass_status !== "hospital")
-      data.append("provider_name", this.state.provider_name);
+      data.append("provider_name", this.state.searchProvider);
     // -------------------------------------
 
     if (this.state.pass_status === "doctor") data.append("docEnableFor", this.state.enableFor);
 
     // consolepro.consolelog("get_Services-query-data......", data);
-    // return false;
     apifuntion.postApi(url, data, 1).then((res) => {
       consolepro.consolelog("get_Services-response ", JSON.stringify(res));
 
       if (res.status == true) {
-        this.setState({
-          providersList: res.result,
-          message: res.message,
-        });
-
-        if (this.state.providersList.length > 0) {
+        console.log('if');
+        setTimeout(() => {
           this.setState({
+            providersList: res.result,
+            message: res.message,
             isLoading: false
-          })
-        } else {
-          setTimeout(() => {
-            this.setState({ isLoading: false })
-          }, 2000);
-        }
+          });
+        }, 2000);
         //   if (this.state.pass_status !== "hospital") {
         //     let hour_task = obj.result;
         //     if (obj.result != null && obj.result != "") {
@@ -230,6 +228,14 @@ export default class AllServiceProviderListing extends Component {
         // } else {
         //   this.setState({ nurse_data: obj.result, message: obj.message });
         //   return false;
+
+      } else {
+        console.log('else');
+        this.setState({
+          providersList: [],
+          message: res.message,
+          isLoading: false
+        });
       }
     })
       .catch((error) => {
@@ -256,7 +262,7 @@ export default class AllServiceProviderListing extends Component {
                       : Lang_chg.SearchLab[config.language]
         }
         onChangeText={(val) => {
-          this.setState({ provider_name: val });
+          this.setState({ searchProvider: val });
         }}
         onSubmitEditing={() => {
           Keyboard.dismiss();
@@ -268,7 +274,7 @@ export default class AllServiceProviderListing extends Component {
 
   render() {
 
-    const { isLoading, providersList, pass_status } = this.state
+    const { isLoading, providersList, pass_status, message } = this.state
 
     return (
       <View style={{ backgroundColor: Colors.backgroundcolor, flex: 1 }}>
@@ -302,6 +308,17 @@ export default class AllServiceProviderListing extends Component {
           data={providersList}
           keyExtractor={(item, index) => `Provider ${index}`}
           ListHeaderComponent={this.listHeader(pass_status)}
+          ListEmptyComponent={() => {
+            return (
+              <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
+                <Text style={{
+                  fontSize: Font.xxlarge,
+                  fontFamily: Font.fontmedium,
+                  color: Colors.darkText
+                }}>{message}</Text>
+              </View>
+            )
+          }}
           renderItem={({ item, index }) => {
             return (
               <ServiceProviderContainer
