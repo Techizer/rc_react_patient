@@ -317,7 +317,7 @@ export default class Signup extends Component {
             <Text
               style={{
                 fontSize: Font.xxxlarge,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 textAlign: config.textRotate,
                 color: Colors.darkText
               }}>
@@ -327,7 +327,7 @@ export default class Signup extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.inActiveText,
                 marginTop: vs(4)
               }}
@@ -403,7 +403,7 @@ export default class Signup extends Component {
                 <Text
                   style={{
                     fontSize: (windowWidth * 3.7) / 100,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     textAlign: config.textRotate,
                   }}>
                   {this.state.country_name.length <= 0
@@ -635,33 +635,25 @@ export default class Signup extends Component {
 
             <Button
               text={Lang_chg.btntext[config.language]}
-              // onLoading={this.state.loading}
-              customStyles={
-                {
-                  // mainContainer: styles.butonContainer
-                }
-              }
               onPress={() => this.signup_click()}
-            // isBlank={false}
+              btnStyle={{ marginTop: vs(15) }}
             />
-
-
 
             <View
               style={{
                 width: "90%",
                 alignSelf: "center",
                 marginTop: vs(12),
-                alignSelf:'center',
-                justifyContent:'center',
-                alignItems:'center'
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center'
               }}>
 
               <Text
                 style={{
                   textAlign: config.textalign,
                   fontSize: Font.small,
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   color: Colors.DarkGrey,
                   textAlign: "center",
                   alignSelf: "center",
@@ -670,9 +662,9 @@ export default class Signup extends Component {
               </Text>
 
               <View style={{
-                marginTop:vs(2),
+                marginTop: vs(2),
                 flexDirection: 'row',
-                alignSelf:'center',
+                alignSelf: 'center',
               }}>
                 <TouchableHighlight
                   onPress={() => {
@@ -686,7 +678,7 @@ export default class Signup extends Component {
                   <Text
                     style={{
                       fontSize: Font.small,
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: Colors.Black,
                       textAlign: 'center'
                     }} >
@@ -697,7 +689,7 @@ export default class Signup extends Component {
                   style={{
                     textAlign: config.textalign,
                     fontSize: Font.small,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     color: Colors.DarkGrey,
                   }}>
                   {Lang_chg.termsandconditiontext3[config.language]}
@@ -705,9 +697,9 @@ export default class Signup extends Component {
                 <TouchableHighlight
                   onPress={() => {
                     this.props.navigation.navigate("TermsAndConditions", {
-                      contantpage: 2,
-                      content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
-                      content_ar: config.term_url_ar, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/ar'
+                      contantpage: 1,
+                      content: config.privacy_url_eng,
+                      content_ar: config.privacy_url_ar
                     });
                   }}
                   underlayColor={Colors.Highlight}>
@@ -715,7 +707,7 @@ export default class Signup extends Component {
                     style={{
                       textAlign: config.textalign,
                       fontSize: Font.small,
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: Colors.Black,
                     }}>
                     {Lang_chg.termsandconditiontext4[config.language]}
@@ -741,7 +733,7 @@ export default class Signup extends Component {
                 style={{
                   textAlign: config.textRotate,
                   fontSize: Font.medium,
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   color: Colors.DarkGrey,
                 }}
               >
@@ -757,7 +749,7 @@ export default class Signup extends Component {
                   style={{
                     textAlign: config.textalign,
                     fontSize: Font.medium,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     color: Colors.Blue,
                   }}
                 >
@@ -811,7 +803,7 @@ export default class Signup extends Component {
                     paddingLeft: (windowWidth * 4.5) / 100,
                     paddingRight: (windowWidth * 4.5) / 100,
                     textAlign: config.textRotate,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: (windowWidth * 4) / 100,
                     color: Colors.White,
                   }}
@@ -936,7 +928,7 @@ export default class Signup extends Component {
                   ></Image>
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: "#000",
                       fontSize: (windowWidth * 5) / 100,
                       paddingLeft: (windowWidth * 4) / 100,
@@ -956,7 +948,7 @@ export default class Signup extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       color: "#000",
                       fontSize: (windowWidth * 4) / 100,
                     }}
@@ -993,7 +985,7 @@ export default class Signup extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         color: Colors.Theme,
                         alignSelf: "center",

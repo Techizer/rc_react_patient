@@ -106,7 +106,7 @@ const LabPackageListing = ({ navigation, route }) => {
           >
             <Text
               style={{
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 fontSize: Font.name,
                 textAlign: config.textRotate,
               }}
@@ -116,7 +116,7 @@ const LabPackageListing = ({ navigation, route }) => {
             <Text
               style={{
                 paddingVertical: (windowWidth * 1.5) / 100,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.subtext,
                 color: Colors.Theme,
                 textAlign: config.textRotate,
@@ -169,7 +169,7 @@ const LabPackageListing = ({ navigation, route }) => {
                       width: "100%",
                       marginTop: (windowWidth * 3) / 100,
                       color: "#000",
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       fontSize: (windowWidth * 4.5) / 100,
                       textAlign: "left",
                     }}
@@ -180,7 +180,7 @@ const LabPackageListing = ({ navigation, route }) => {
                   <Text
                     style={{
                       paddingVertical: (windowWidth * 2) / 100,
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       textAlign: "left",
                       color: Colors.lightGrey,
                       fontSize: Font.sregulartext_size,
@@ -191,7 +191,7 @@ const LabPackageListing = ({ navigation, route }) => {
                   <Text
                     style={{
                       paddingVertical: (windowWidth * 1.5) / 100,
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: Font.sregulartext_size,
                       color: Colors.Theme,
                       textAlign: config.textRotate,
@@ -201,7 +201,7 @@ const LabPackageListing = ({ navigation, route }) => {
                   </Text>
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       textAlign: "left",
                       fontSize: Font.sregulartext_size,
                       marginTop: (windowWidth * 3) / 100,
@@ -223,7 +223,7 @@ const LabPackageListing = ({ navigation, route }) => {
                     <Text
                       style={{
                         textAlign: config.textalign,
-                        fontFamily: Font.fontmedium,
+                        fontFamily: Font.Medium,
                         fontSize: (windowWidth * 4) / 100,
                       }}
                     >
@@ -244,7 +244,7 @@ const LabPackageListing = ({ navigation, route }) => {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           textAlign: "left",
                           color: Colors.textGreenColor,
                           fontSize: Font.sregulartext_size,

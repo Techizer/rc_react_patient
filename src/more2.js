@@ -36,7 +36,6 @@ import {
   Appbtn,
 } from './Allcomponents';
 import Footer from './Footer';
-import HideWithKeyboard from 'react-native-hide-with-keyboard';
 
 const neworders = [
   {
@@ -91,7 +90,7 @@ export default class More extends Component {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: Font.fontsemibold,
+                            fontFamily: Font.SemiBold,
                             fontSize: Font.regulartext_size,
                           }}>
                           YR
@@ -109,7 +108,7 @@ export default class More extends Component {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: Font.fontsemibold,
+                            fontFamily: Font.SemiBold,
                             fontSize: Font.regulartext_size,
                           }}></Text>
                       </View>
@@ -134,7 +133,7 @@ export default class More extends Component {
                     <View>
                       <Text
                         style={{
-                          fontFamily: Font.fontsemibold,
+                          fontFamily: Font.SemiBold,
                           fontSize: Font.headingfont,
                           color: Colors.Theme,
                         }}>
@@ -151,7 +150,7 @@ export default class More extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -159,7 +158,7 @@ export default class More extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -176,7 +175,7 @@ export default class More extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -184,7 +183,7 @@ export default class More extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -201,7 +200,7 @@ export default class More extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -209,7 +208,7 @@ export default class More extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.sregulartext_size,
                           color: Colors.lightGrey,
                         }}>
@@ -220,7 +219,7 @@ export default class More extends Component {
                     <View>
                       <Text
                         style={{
-                          fontFamily: Font.fontsemibold,
+                          fontFamily: Font.SemiBold,
                           fontSize: Font.headingfont,
                           color: Colors.Theme,
                           // borderTopWidth: (windowWidth * 0.3) / 100,
@@ -236,7 +235,7 @@ export default class More extends Component {
                   <View>
                     <Text
                       style={{
-                        fontFamily: Font.fontsemibold,
+                        fontFamily: Font.SemiBold,
                         fontSize: Font.headingfont,
                         color: Colors.Theme,
                       }}>
@@ -253,7 +252,7 @@ export default class More extends Component {
                     }}>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -261,7 +260,7 @@ export default class More extends Component {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -278,7 +277,7 @@ export default class More extends Component {
                     }}>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -286,7 +285,7 @@ export default class More extends Component {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -303,7 +302,7 @@ export default class More extends Component {
                     }}>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -311,7 +310,7 @@ export default class More extends Component {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.sregulartext_size,
                         color: Colors.lightGrey,
                       }}>
@@ -329,7 +328,7 @@ export default class More extends Component {
                     }}>
                     <Text
                       style={{
-                        fontFamily: Font.fontsemibold,
+                        fontFamily: Font.SemiBold,
                         fontSize: Font.headingfont,
                         color: Colors.Theme,
                       }}>
@@ -337,7 +336,7 @@ export default class More extends Component {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: Font.fontsemibold,
+                        fontFamily: Font.SemiBold,
                         fontSize: Font.headingfont,
                         color: Colors.Theme,
                       }}>
@@ -362,7 +361,7 @@ export default class More extends Component {
                 <Text
                   style={{
                     color: Colors.White,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.buttontextsize,
                     alignSelf: 'flex-end',
                     textAlign: config.textalign,

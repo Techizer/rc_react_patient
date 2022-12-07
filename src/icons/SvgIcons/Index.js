@@ -274,9 +274,30 @@ export const Search=`<svg xmlns="http://www.w3.org/2000/svg" width="13.742" heig
 <path id="search_icon" d="M15450.078,16047.479l-2.683-2.683a5.9,5.9,0,0,1-3.56,1.172,5.985,5.985,0,1,1,5.988-5.984,5.929,5.929,0,0,1-1.172,3.56l2.678,2.683a.886.886,0,1,1-1.252,1.253Zm-10.451-7.5a4.21,4.21,0,1,0,4.209-4.209A4.215,4.215,0,0,0,15439.627,16039.983Z" transform="translate(-15437.851 -16033.998)" fill="#fff"/>
 </svg>`
 
-export const Cross=`<svg id="close_icon" xmlns="http://www.w3.org/2000/svg" width="13.101" height="13.101" viewBox="0 0 13.101 13.101">
-<path id="close" d="M6.013,4.775A.876.876,0,0,0,4.775,6.013l5.056,5.056L4.775,16.125a.876.876,0,0,0,1.238,1.238l5.056-5.056,5.056,5.056a.876.876,0,0,0,1.238-1.238l-5.056-5.056,5.056-5.056a.876.876,0,1,0-1.238-1.238L11.069,9.831Z" transform="translate(-4.518 -4.518)" fill="#fff"/>
+export const Cross=`<svg xmlns="http://www.w3.org/2000/svg" width="18.546" height="19" viewBox="0 0 18.546 19">
+<g id="Group_1088" data-name="Group 1088" transform="translate(1 1)">
+  <g id="Rectangle_2" data-name="Rectangle 2" transform="translate(-1 -1)" fill="#dbdbdb" stroke="#354052" stroke-width="1">
+    <rect width="18.546" height="19" rx="9.273" stroke="none"/>
+    <rect x="0.5" y="0.5" width="17.546" height="18" rx="8.773" fill="none"/>
+  </g>
+  <path id="Union_3" data-name="Union 3" d="M3.511,4.149.638,7.022,0,6.383,2.872,3.511,0,.638.638,0,3.511,2.872,6.383,0l.639.638L4.149,3.511,7.022,6.383l-.639.639Z" transform="translate(5.072 5.072)" fill="#17181a"/>
+</g>
 </svg>`
 
+export const Edit =`<svg xmlns="http://www.w3.org/2000/svg" width="12.2" height="12.2" viewBox="0 0 12.2 12.2">
+<path id="ic_mode_edit_24px" d="M3,12.656V15.2H5.541l7.5-7.5L10.5,5.161ZM15,5.737a.675.675,0,0,0,0-.956L13.416,3.2a.675.675,0,0,0-.956,0l-1.24,1.24,2.541,2.541L15,5.737Z" transform="translate(-3 -2.997)" fill="#354052"/>
+</svg>`
+
+export const Address =`<svg xmlns="http://www.w3.org/2000/svg" width="14.081" height="17" viewBox="0 0 14.081 17">
+<path id="Path_6099" data-name="Path 6099" d="M3312.041,5197l-4.976-4.983a7.047,7.047,0,1,1,9.951,0Zm3.873-6.086a5.482,5.482,0,1,0-7.745,0l3.872,3.873Zm-3.873-2.308a1.575,1.575,0,1,1,1.1-.461A1.538,1.538,0,0,1,3312.041,5188.605Z" transform="translate(-3305 -5180)" fill="#17181a"/>
+</svg>`
+
+export const Add =`<svg xmlns="http://www.w3.org/2000/svg" width="10.221" height="10.221" viewBox="0 0 10.221 10.221">
+<path id="ic_add_24px" d="M15.221,10.84H10.84v4.38H9.38V10.84H5V9.38H9.38V5h1.46V9.38h4.38Z" transform="translate(-5 -5)" fill="#0888d1"/>
+</svg>`
+
+export const Menu = `<svg xmlns="http://www.w3.org/2000/svg" width="2.75" height="11" viewBox="0 0 2.75 11">
+<path id="ic_more_vert_24px" d="M11.375,6.75A1.375,1.375,0,1,0,10,5.375,1.379,1.379,0,0,0,11.375,6.75Zm0,1.375A1.375,1.375,0,1,0,12.75,9.5,1.379,1.379,0,0,0,11.375,8.125Zm0,4.125a1.375,1.375,0,1,0,1.375,1.375A1.379,1.379,0,0,0,11.375,12.25Z" transform="translate(-10 -4)" fill="#354052"/>
+</svg>`
 
 

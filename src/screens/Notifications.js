@@ -23,6 +23,7 @@ import {
 import { AppHeader4 } from "../Allcomponents";
 import ScreenHeader from "../components/ScreenHeader";
 import { leftArrow } from "../icons/SvgIcons/Index";
+import { s, vs } from "react-native-size-matters";
 
 export default class Notifications extends Component {
   constructor(props) {
@@ -174,7 +175,7 @@ export default class Notifications extends Component {
                     />
                     <Text
                       style={{
-                        fontFamily: Font.fontmedium,
+                        fontFamily: Font.Medium,
                         color: "#000",
                         fontSize: (windowWidth * 5) / 100,
                         paddingLeft: (windowWidth * 4) / 100,
@@ -194,7 +195,7 @@ export default class Notifications extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         color: "#000",
                         fontSize: (windowWidth * 4) / 100,
                         width: "90%",
@@ -218,7 +219,7 @@ export default class Notifications extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         color: Colors.Blue,
                         alignSelf: "center",
@@ -231,6 +232,7 @@ export default class Notifications extends Component {
               </View>
             </View>
           </Modal>
+
           {this.state.notificationdata == "" ||
             (this.state.notificationdata == null && (
               <View>
@@ -238,7 +240,7 @@ export default class Notifications extends Component {
                   style={{
                     textAlign: "center",
                     color: Colors.Theme,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: (windowWidth * 3.5) / 100,
                     marginTop: (windowWidth * 60) / 100,
                   }}
@@ -268,19 +270,18 @@ export default class Notifications extends Component {
                       style={{
                         flexDirection: "row",
                         backgroundColor: Colors.White,
-                        marginTop: (windowWidth * 2) / 100,
+                        marginTop: vs(7),
                         backgroundColor: "#fff",
-                        shadowOpacity: 0.3,
-                        shadowColor: "#000",
+                        shadowOpacity: 0.1,
+                        shadowColor: Colors.DarkGrey,
                         shadowOffset: { width: 1, height: 1 },
-                        elevation: 5,
-                        //   paddingtop: (windowWidth * 3) / 100,
+                        // elevation: 5,
                       }}
                     >
                       <View
                         style={[
                           {
-                            width: (windowWidth * 1.5) / 100,
+                            width: s(4),
                           },
                           item.read == "1"
                             ? { backgroundColor: "#515C6F" }
@@ -292,19 +293,16 @@ export default class Notifications extends Component {
                           width: "15%",
                           paddingTop: (windowWidth * 4) / 100,
                           paddingRight: (windowWidth * 2) / 100,
-                        }}
-                      >
+                        }}>
                         <Image
-                          source={
-                            item.read == "0"
-                              ? Icons.rocketicon
-                              : Icons.rocket_gray
-                          }
+                          source={Icons.Notification}
                           style={{
                             alignSelf: "center",
-                            width: (windowWidth * 8) / 100,
-                            height: (windowWidth * 8) / 100,
+                            width: 25,
+                            height: 25,
+                            tintColor: item.read == "0" ? Colors.Blue :Colors.DarkGrey
                           }}
+                          resizeMode={'contain'}
                         />
                       </View>
                       <View
@@ -315,7 +313,7 @@ export default class Notifications extends Component {
                       >
                         <Text
                           style={{
-                            fontFamily: Font.fontregular,
+                            fontFamily: Font.Regular,
                             fontSize: Font.sregulartext_size,
                             lineHeight: (windowWidth * 4.2) / 100,
                             textAlign: config.textRotate,
@@ -336,7 +334,7 @@ export default class Notifications extends Component {
                         >
                           <Text
                             style={{
-                              fontFamily: Font.fontregular,
+                              fontFamily: Font.Regular,
                               fontSize: Font.sregulartext_size,
                               color: Colors.lightGrey,
                             }}

@@ -67,23 +67,19 @@ export const Colors = {
 
 };
 export const Font = {
-  fontmedium: "Rubik-Medium",
-  fontMediumItalic: "Rubik-MediumItalic",
-  fontitalic: "Rubik-Italic",
-  fontitaclicblack: "Rubik-BlackItalic",
-  fontbolditalic: "Rubik-BoldItalic",
-  fontlightitalic: "Rubik-LightItalic",
-  fontbold: "Rubik-Bold",
-  fontregular: "Rubik-Regular",
-  fontthin: "Rubik-Light",
-  fontlight: "Rubik-Light",
-  fontblack: "Rubik-Black",
-  fontextrabold: "Rubik-ExtraBold",
-  fontsemibold: "Rubik-SemiBold",
-  headerfamily: "Rubik-SemiBold",
-  fontSemiBoldItalic: "Rubik-SemiBoldItalic",
-  placeholderstyle: "Rubik-Medium",
-  button_font: "Rubik-SemiBold",
+  Medium: "Rubik-Medium",
+  MediumItalic: "Rubik-MediumItalic",
+  Italic: "Rubik-Italic",
+  ItalicBlack: "Rubik-BlackItalic",
+  BoldItalic: "Rubik-BoldItalic",
+  LightItalic: "Rubik-LightItalic",
+  Bold: "Rubik-Bold",
+  Regular: "Rubik-Regular",
+  Light: "Rubik-Light",
+  Black: "Rubik-Black",
+  ExtraBold: "Rubik-ExtraBold",
+  SemiBold: "Rubik-SemiBold",
+  SemiBoldItalic: "Rubik-SemiBoldItalic",
 
   // ----------------------Font Sizes-----------------
 
@@ -96,22 +92,12 @@ export const Font = {
   xxxlarge: s(19),  //----20
 
 
-  headerfont: (windowWidth * 5) / 100,
   headingfont: (windowWidth * 4.5) / 100,
   headingfont_booking: (windowWidth * 4.2) / 100,
-  headingfont2: (windowWidth * 6) / 100,
   smallheadingfont: (windowWidth * 4.2) / 100,
-  serachplaceholdersize: (windowWidth * 4) / 100,
-
-  search_size: (windowWidth * 4) / 100,
-
   regulartext_size: (windowWidth * 3.8) / 100,
-  fontsizetermcondition: (windowWidth * 2.7) / 100,
-  headerpeding: (windowWidth * 2) / 100,
-
   buttontextsize: (windowWidth * 3.5) / 100,
 
-  //28-02
   sregulartext_size: (windowWidth * 3) / 100,
 
   // 03-01-2022------------------//

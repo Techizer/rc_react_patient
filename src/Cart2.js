@@ -21,7 +21,6 @@ import {
   AppHeader2,
 } from './Allcomponents';
 import Footer from './Footer';
-import HideWithKeyboard from 'react-native-hide-with-keyboard';
 
 const Appointmentdata = [
   {
@@ -110,7 +109,7 @@ export default class Cart2 extends Component {
                     <View style={{flexDirection: 'row',width:"83%",alignItems:'center'}}>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize:windowWidth*3.9/100,
                           color:Colors.lightGrey
                         }}>Aisha A.
@@ -118,7 +117,7 @@ export default class Cart2 extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize:Font.cart2subtext,
                           color: Colors.Theme,
                           marginLeft:windowWidth*4/100
@@ -162,7 +161,7 @@ export default class Cart2 extends Component {
                     <View>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.cart2heading,
                           color: Colors.Theme,
                           paddingBottom: (windowWidth * 3.5) / 100,
@@ -191,7 +190,7 @@ export default class Cart2 extends Component {
                                   }}>
                                   <Text
                                     style={{
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       color: Colors.Theme,
                                       fontSize:windowWidth*3.5/100,
                                     }}>
@@ -199,7 +198,7 @@ export default class Cart2 extends Component {
                                   </Text>
                                   <Text
                                     style={{
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       fontSize: Font.cart2subtext,
                                       color: Colors.DarkGrey,
                                       paddingTop: (windowWidth * 1) / 100,
@@ -220,7 +219,7 @@ export default class Cart2 extends Component {
                                     }}>
                                     <Text
                                       style={{
-                                        fontFamily: Font.fontmedium,
+                                        fontFamily: Font.Medium,
                                         fontSize:windowWidth*3/100,
                                         color: Colors.Theme,
                                         textAlign:'center'
@@ -236,7 +235,7 @@ export default class Cart2 extends Component {
                                   }}>
                                   <Text
                                     style={{
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       color: Colors.Theme,
                                       fontSize:windowWidth*3.5/100,
                                     }}>
@@ -244,7 +243,7 @@ export default class Cart2 extends Component {
                                   </Text>
                                   <Text
                                     style={{
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       fontSize: Font.cart2subtext,
                                       color: Colors.DarkGrey,
                                       paddingTop: (windowWidth * 1) / 100,
@@ -272,7 +271,7 @@ export default class Cart2 extends Component {
                                     <Text
                                       style={{
                                         color: Colors.Theme,
-                                        fontFamily: Font.fontregular,
+                                        fontFamily: Font.Regular,
                                         fontSize: (windowWidth * 3.3) / 100,
                                         marginLeft:windowWidth*1.5/100,
                                       }}>30 mins
@@ -298,7 +297,7 @@ export default class Cart2 extends Component {
                     <View>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.cart2heading,
                           color: Colors.Theme,
                           paddingTop:windowWidth*1/100
@@ -317,7 +316,7 @@ export default class Cart2 extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -325,7 +324,7 @@ export default class Cart2 extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -342,7 +341,7 @@ export default class Cart2 extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -350,7 +349,7 @@ export default class Cart2 extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -367,7 +366,7 @@ export default class Cart2 extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -375,7 +374,7 @@ export default class Cart2 extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize:windowWidth*3.3/100,
                           color:'#000',
                         }}>
@@ -402,7 +401,7 @@ export default class Cart2 extends Component {
                       }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize:windowWidth*3.5/100,
                           color: Colors.Theme,
                         }}>
@@ -410,7 +409,7 @@ export default class Cart2 extends Component {
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize:windowWidth*3.5/100,
                           color: Colors.Theme,
                         }}>
@@ -439,7 +438,7 @@ export default class Cart2 extends Component {
                 <Text
                   style={{
                     color: Colors.White,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.buttontextsize,
                     alignSelf: 'flex-end',
                     textAlign: config.textalign,
@@ -489,7 +488,7 @@ export default class Cart2 extends Component {
                 style={{
                   fontSize: (windowWidth * 8) / 100,
                   marginTop: (windowWidth * 5) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                 }}>
                 {Lang_chg.thank[config.language]}
@@ -498,7 +497,7 @@ export default class Cart2 extends Component {
                 style={{
                   fontSize: (windowWidth * 3) / 100,
                   marginTop: (windowWidth * 5) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                 }}>
                 {Lang_chg.success[config.language]}
@@ -508,7 +507,7 @@ export default class Cart2 extends Component {
                 style={{
                   fontSize: (windowWidth * 3) / 100,
                   marginTop: (windowWidth * 1) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                   color: Colors.lightGrey,
                 }}>
@@ -534,7 +533,7 @@ export default class Cart2 extends Component {
                   style={{
                     fontSize: (windowWidth * 3) / 100,
                     alignSelf: 'center',
-                    fontFamily: Font.fontsemibold,
+                    fontFamily: Font.SemiBold,
                     textAlign: config.textalign,
                     alignSelf: 'center',
                     color: Colors.Theme,

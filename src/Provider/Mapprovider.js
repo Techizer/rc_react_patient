@@ -424,12 +424,12 @@ export default class Mapprovider extends Component {
         <View style={{ position: 'absolute', bottom: 15, width: windowWidth, paddingHorizontal: 30 }}>
           <View style={{ borderRadius: 10, height: 50, marginBottom: 10, backgroundColor: Colors.statusbarcolor }} >
             {/* {this.state.signuplocation=='changelocation' && <TouchableOpacity onPress={()=>{this.changeaddress()}} style={{justifyContent:'center',alignItems:'center',borderRadius: 10,height: 50, }}>
-                       <Text style={{ color:Colorss.whiteColor, fontSize: 15,fontFamily:Fonts.fontbold
+                       <Text style={{ color:Colorss.whiteColor, fontSize: 15,fontFamily:Fonts.Bold
                        }}>{Lang_chg.Updatelocation[config.language]}</Text>
                    </TouchableOpacity>} */}
             <TouchableOpacity onPress={() => { this.props.setmap() }} style={{ justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: 50, }}>
               <Text style={{
-                fontSize: 15, fontFamily: Font.fontbold, color: Colors.whiteColor
+                fontSize: 15, fontFamily: Font.Bold, color: Colors.whiteColor
               }}>Continue</Text>
             </TouchableOpacity>
           </View>

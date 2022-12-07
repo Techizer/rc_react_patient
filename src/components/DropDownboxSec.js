@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainContainer: {
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
     marginTop: (windowWidth * 2) / 100,
     backgroundColor: Colors.tab_background_color, //Colors.optboxcolor,

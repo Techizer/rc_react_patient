@@ -198,7 +198,7 @@ const ServiceProviderContainer = ({
                   <SvgXml xml={Star} height={vs(10)} width={s(10)} />
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: Font.small,
                       color: Colors.White,
                       marginLeft: s(5)
@@ -210,7 +210,7 @@ const ServiceProviderContainer = ({
 
                 <Text
                   style={{
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.small,
                     color: Colors.darkText,
                   }}>
@@ -228,7 +228,7 @@ const ServiceProviderContainer = ({
               <Text
                 numberOfLines={1}
                 style={{
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   fontSize: Font.large,
                   textAlign: config.textRotate,
                   color: Colors.darkText,
@@ -244,7 +244,7 @@ const ServiceProviderContainer = ({
                   <SvgXml xml={Capsule} height={vs(18)} width={s(55)} />
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       color: Colors.Blue,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -260,7 +260,7 @@ const ServiceProviderContainer = ({
                 ((providerType === 'doctor' || providerType === 'lab') && Item.hospital_name != '') &&
                 <Text
                   style={{
-                    fontFamily: Font.fontbold,
+                    fontFamily: Font.Bold,
                     color: Colors.Blue,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -275,7 +275,7 @@ const ServiceProviderContainer = ({
                 providerType != 'lab' &&
                 <Text
                   style={{
-                    fontFamily: Font.fontbold,
+                    fontFamily: Font.Bold,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -291,7 +291,7 @@ const ServiceProviderContainer = ({
                 <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -305,7 +305,7 @@ const ServiceProviderContainer = ({
 
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -325,7 +325,7 @@ const ServiceProviderContainer = ({
                 <SvgXml xml={Location} height={vs(12)} width={s(12)} />
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -337,7 +337,7 @@ const ServiceProviderContainer = ({
 
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     color: Colors.Blue,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -358,7 +358,7 @@ const ServiceProviderContainer = ({
                 <Text
                   style={{
                     width: '35%',
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -374,7 +374,7 @@ const ServiceProviderContainer = ({
                       return (
                         <Text
                           style={{
-                            fontFamily: Font.fontmedium,
+                            fontFamily: Font.Medium,
                             color: Colors.Blue,
                             fontSize: Font.small,
                             textAlign: config.textRotate,
@@ -412,7 +412,7 @@ const ServiceProviderContainer = ({
               style={{
                 color: Colors.Green,
                 fontSize: Font.small,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 textAlign: config.textRotate
               }}
             >
@@ -441,7 +441,7 @@ const ServiceProviderContainer = ({
                 style={{
                   color: Colors.White,
                   fontSize: Font.small,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   textAlign: "center",
                 }}
               >

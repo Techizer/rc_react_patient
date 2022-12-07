@@ -2,7 +2,7 @@ import AsyncStorage  from "@react-native-community/async-storage";
 
 class localStorageProvider {
     setItemString(key, value) {
-        console.log('setItemString key',key);
+        // console.log('setItemString key',key);
          try {
                AsyncStorage.setItem(key, value);
              } catch (error) {
@@ -17,8 +17,8 @@ class localStorageProvider {
     }
 
     async setItemObject(key, item) {
-        console.log('setItemObject key',key);
-        console.log('setItemObject item',item);
+        // console.log('setItemObject key',key);
+        // console.log('setItemObject item',item);
         try {
             await AsyncStorage.setItem(key, JSON.stringify(item));
         } catch (error) {

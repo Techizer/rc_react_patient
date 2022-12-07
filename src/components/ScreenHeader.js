@@ -68,38 +68,38 @@ const ScreenHeader = ({
                     >
                         {
                             leftIcon ?
-                            <TouchableHighlight
-                                underlayColor={Colors.Highlight}
-                                activeOpacity={0.7}
-                                onPress={onBackPress}
-                                style={{
-                                    width: "13%",
-                                    height: '100%',
-                                    alignSelf: "center",
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <SvgXml xml={
-                                    config.textalign == "right"
-                                        ? rightArrow : leftArrow
-                                } height={vs(17.11)} width={s(9.72)} />
+                                <TouchableHighlight
+                                    underlayColor={Colors.Highlight}
+                                    activeOpacity={0.7}
+                                    onPress={onBackPress}
+                                    style={{
+                                        width: "14%",
+                                        height: '100%',
+                                        alignSelf: "center",
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <SvgXml xml={
+                                        config.textalign == "right"
+                                            ? rightArrow : leftArrow
+                                    } height={vs(17.11)} width={s(9.72)} fill={'red'} fillOpacity={1} />
 
-                            </TouchableHighlight>
-                            :
-                            <View style={{width:'13%'}}></View>
+                                </TouchableHighlight>
+                                :
+                                <View style={{ width: '14%' }}></View>
                         }
 
                         <View
                             style={{
-                                width: "74%",
+                                width: "72%",
                                 height: '80%',
                                 justifyContent: 'center'
                             }}>
                             <Text
                                 style={{
                                     textAlign: "center",
-                                    fontFamily: Font.fontmedium,
+                                    fontFamily: Font.Medium,
                                     fontSize: (windowWidth * 4) / 100,
                                 }}>{title}</Text>
                         </View>
@@ -117,12 +117,10 @@ const ScreenHeader = ({
                                         alignItems: 'center',
 
                                     }}>
-
-
                                     <SvgXml xml={Notification} height={vs(20.26)} width={s(16.21)} />
                                 </TouchableHighlight>
                                 :
-                                <></>
+                                <View style={{ width: '14%' }}></View>
                         }
                     </View>
                 </View>
@@ -152,8 +150,7 @@ const ScreenHeader = ({
                             alignSelf: "center",
                             justifyContent: 'center',
                             alignItems: 'center',
-                        }}
-                    >
+                        }}>
                         <TouchableOpacity
                             onPress={() => {
                                 navigation.toggleDrawer();
@@ -191,7 +188,7 @@ const ScreenHeader = ({
                             }}>
                             <Text
                                 style={{
-                                    fontFamily: Font.fontregular,
+                                    fontFamily: Font.Regular,
                                     fontSize: Font.small,
                                 }}>
                                 {Lang_chg.MyDashboard[config.language]}
@@ -212,7 +209,7 @@ const ScreenHeader = ({
                                 numberOfLines={1}
                                 style={{
                                     color: Colors.dullGrey,
-                                    fontFamily: Font.fontregular,
+                                    fontFamily: Font.Regular,
                                     fontSize: Font.small,
                                     textAlign: config.textRotate,
                                     width: '60%',
@@ -228,7 +225,7 @@ const ScreenHeader = ({
                                 numberOfLines={1}
                                 style={{
                                     color: Colors.dullGrey,
-                                    fontFamily: Font.fontregular,
+                                    fontFamily: Font.Regular,
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}

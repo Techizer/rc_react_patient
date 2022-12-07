@@ -12,13 +12,17 @@ import CovidPackageDetails from '../../screens/CovidPackageDetails';
 import AllServiceProviderListing from '../../screens/AllServiceProviderListing';
 import SupportandMore from '../../screens/SupportandMore';
 import EditProfile from '../../screens/EditProfile';
-import Office_address from '../../Office_address';
+import FindAddress from '../../FindAddress';
 import Booking from '../../screens/Booking';
 import ServiceProviderDetails from '../../screens/ServiceProviderDetails';
-// -----------------------------------------
-import { Colors } from '../Colorsfont';
 import LabPackageListing from '../../screens/LabPackageListing';
 import LabPackageDetails from '../../screens/LabPackageDetails';
+import TermsAndConditions from '../../screens/TermsAndConditions';
+import NeedSupport from '../../screens/NeedSupport';
+import HealthRecord from '../../HealthRecord';
+// -----------------------------------------
+import { Colors } from '../Colorsfont';
+
 
 const Stack = createStackNavigator()
 
@@ -57,6 +61,11 @@ const MainStack = () => {
                 />
 
                 <Stack.Screen
+                    name="HealthRecord"
+                    component={HealthRecord}
+                />
+
+                <Stack.Screen
                     name="Notifications"
                     component={Notifications}
                 />
@@ -80,8 +89,8 @@ const MainStack = () => {
                     component={EditProfile}
                 />
                 <Stack.Screen
-                    name="Address"
-                    component={Office_address}
+                    name="FindAddress"
+                    component={FindAddress}
                 />
 
                 <Stack.Screen
@@ -102,6 +111,16 @@ const MainStack = () => {
                 <Stack.Screen
                     name="LabPackageDetails"
                     component={LabPackageDetails}
+                />
+
+                <Stack.Screen
+                    name="Tremsandcondition"
+                    component={TermsAndConditions}
+                />
+
+                <Stack.Screen
+                    name="NeedSupport"
+                    component={NeedSupport}
                 />
             </Stack.Navigator>
         </NavigationContainer>

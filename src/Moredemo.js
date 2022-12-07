@@ -38,7 +38,7 @@ export default class Supportandmore extends Component {
                          </TouchableOpacity>
                          </View>
                          <View style={{width:'95%',alignSelf:'center'}}>                       
-                             <Text style={{textAlign:config.textalign,fontSize:mobileW*4.5/100,color:Colors.Black,fontFamily:Font.fontmedium,alignSelf:'center'}}>{Lang_chg.supporttext[config.language]} </Text> 
+                             <Text style={{textAlign:config.textalign,fontSize:mobileW*4.5/100,color:Colors.Black,fontFamily:Font.Medium,alignSelf:'center'}}>{Lang_chg.supporttext[config.language]} </Text> 
                              </View>
    
                      </View>
@@ -54,7 +54,7 @@ export default class Supportandmore extends Component {
                     </View>
          
                     <View style={{width:'40%',alignSelf:'center',marginTop:mobileW*3/100}}>
-                        <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.splashtextcolor,fontFamily:Font.fontmedium,alignSelf:'center'}}>{Lang_chg.Splashtext1[config.language]} </Text> 
+                        <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.splashtextcolor,fontFamily:Font.Medium,alignSelf:'center'}}>{Lang_chg.Splashtext1[config.language]} </Text> 
                     </View>
 
                      <View style={{width:'45%',alignSelf:'center',borderColor:Colors.bordercolor,borderWidth:mobileW*0.3/100,marginTop:mobileW*5/100}}>
@@ -62,12 +62,12 @@ export default class Supportandmore extends Component {
 
 
                      <View style={{width:'40%',alignSelf:'center',marginTop:mobileW*3/100}}>
-                        <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.veriontextcolor,fontFamily:Font.fontregular,alignSelf:'center'}}>{Lang_chg.version[config.language]} </Text> 
+                        <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.veriontextcolor,fontFamily:Font.Regular,alignSelf:'center'}}>{Lang_chg.version[config.language]} </Text> 
                     </View>
 
                     <View style={{width:'90%',alignSelf:'center',marginTop:mobileW*10/100,flexDirection:'row',justifyContent:'space-between'}}>
                        <View style={{width:'42%',alignSelf:'center'}}>
-                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.fontmedium,alignSelf:'center'}}>{Lang_chg.languagetxt[config.language]} </Text> 
+                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.Medium,alignSelf:'center'}}>{Lang_chg.languagetxt[config.language]} </Text> 
                         </View>
 
 
@@ -79,7 +79,7 @@ export default class Supportandmore extends Component {
                            ,borderBottomLeftRadius:mobileW*3/100,borderTopLeftRadius:mobileW*3/100}}>
                        <TouchableOpacity  onPress={()=>{this.setState({engbtn:true})}}
                                style={{width:'100%'}}>
-                               <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.Black,fontFamily:Font.fontregular,alignSelf:'center'}}>ENG</Text> 
+                               <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.Black,fontFamily:Font.Regular,alignSelf:'center'}}>ENG</Text> 
                           </TouchableOpacity>
                          
                            </View> 
@@ -90,7 +90,7 @@ export default class Supportandmore extends Component {
 
                            <View style={{width:'50%',alignSelf:'center',backgroundColor:this.state.engbtn == true ? '#fff' : Colors.lightBlue,borderColor:'#fff',borderColor:Colors.Blue,borderWidth:1,paddingVertical:mobileW*2/100,borderTopRightRadius:mobileW*3/100,borderBottomRightRadius:mobileW*3/100}}>
                                <TouchableOpacity onPress={()=>{this.setState({engbtn:false})}} style={{width:'100%'}}>
-                               <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.Black,fontFamily:Font.fontregular,alignSelf:'center'}}>AR</Text> 
+                               <Text style={{textAlign:config.textalign,fontSize:mobileW*4/100,color:Colors.Black,fontFamily:Font.Regular,alignSelf:'center'}}>AR</Text> 
                           </TouchableOpacity>
                            </View>
  
@@ -105,7 +105,7 @@ export default class Supportandmore extends Component {
 
                            <TouchableOpacity style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'95%',}}>
-                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.fontmedium,}}>{Lang_chg.termtxt[config.language]} </Text> 
+                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.Medium,}}>{Lang_chg.termtxt[config.language]} </Text> 
                         </View>
                         <View style={{width:'5%',alignSelf:'center',}}>
                             <TouchableOpacity style={{width:'100%',alignSelf:'center'}}>
@@ -128,7 +128,7 @@ export default class Supportandmore extends Component {
                      <TouchableOpacity onPress={()=>{this.props.navigation.navigate('TermsAndConditions',{contantpage:0})}}
                       style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'95%',}}>
-                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.fontmedium,}}>{Lang_chg.aboutrootcare[config.language]} </Text> 
+                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.Medium,}}>{Lang_chg.aboutrootcare[config.language]} </Text> 
                         </View>
                         <View style={{width:'5%',alignSelf:'center',}}>
                             <TouchableOpacity style={{width:'100%',alignSelf:'center'}}>
@@ -152,7 +152,7 @@ export default class Supportandmore extends Component {
                      <TouchableOpacity onPress={()=>{this.props.navigation.navigate('TermsAndConditions',{contantpage:2})}}
                      style={{width:'90%',alignSelf:'center',marginTop:mobileW*5/100,flexDirection:'row'}}>
                      <View style={{width:'95%',}}>
-                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.fontmedium,}}>{Lang_chg.privacy[config.language]} </Text> 
+                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.Medium,}}>{Lang_chg.privacy[config.language]} </Text> 
                         </View>
                         <View style={{width:'5%',alignSelf:'center',}}>
                             <TouchableOpacity style={{width:'100%',alignSelf:'center'}}>
@@ -186,7 +186,7 @@ export default class Supportandmore extends Component {
                         </View>
                         
                      <View style={{width:'85%'}}>
-                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.fontbold,}}>{Lang_chg.needsupport[config.language]} </Text> 
+                       <Text style={{textAlign:config.textalign,fontSize:mobileW*3.5/100,color:Colors.Black,fontFamily:Font.Bold,}}>{Lang_chg.needsupport[config.language]} </Text> 
                         </View>
                         <View style={{width:'5%',alignSelf:'center',}}>
                             <TouchableOpacity style={{width:'100%',alignSelf:'center'}}>

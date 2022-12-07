@@ -539,7 +539,7 @@ export default class Login extends Component {
             <Text
               style={{
                 fontSize: Font.xxxlarge,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 textAlign: config.textRotate,
                 color:Colors.darkText
 
@@ -552,7 +552,7 @@ export default class Login extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.inActiveText,
                 marginTop: vs(4)
               }}
@@ -672,7 +672,7 @@ export default class Login extends Component {
                 <Text
                   style={{
                     color: Colors.inActiveText,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.medium,
                   }}>
                   {Lang_chg.Remember[config.language]}
@@ -688,7 +688,7 @@ export default class Login extends Component {
                   }}
                   style={{
                     color: Colors.Blue,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.Forgot,
                     textAlign: config.textalign,
                     alignSelf: 'flex-end'
@@ -701,9 +701,8 @@ export default class Login extends Component {
 
             <Button
               text={Lang_chg.Contiunebtn[config.language]}
-              // onLoading={this.state.loading}
               onPress={() => this.loginbtn()}
-            // isBlank={false}
+              btnStyle={{marginTop:vs(15)}}
             />
 
             <Text
@@ -758,7 +757,7 @@ export default class Login extends Component {
                   {
                     fontSize: Font.small,
                     color: Colors.White,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     textAlign: config.textRotate
                   }
                 ]}
@@ -801,7 +800,7 @@ export default class Login extends Component {
             <Text
               style={{
                 textAlign: config.textRotate,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.headinggray,
                 color: Colors.DarkGrey,
               }}
@@ -816,7 +815,7 @@ export default class Login extends Component {
               <Text
                 style={{
                   textAlign: config.textRotate,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   fontSize: Font.medium,
                   color: Colors.Blue,
                   marginTop: (windowWidth * 2) / 100,

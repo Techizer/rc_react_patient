@@ -12,21 +12,24 @@ import {
 import React, { Component } from "react";
 import {
   Colors,
-  localimag,
   Font,
   msgProvider,
   msgText,
   config,
-  mobileW,
   localStorage,
   Lang_chg,
   apifuntion,
   msgTitle,
   consolepro,
+  Icons,
+  windowWidth,
 } from "../Provider/utilslib/Utils";
-import { AuthInputBoxSec, DropDownboxSec } from "../components";
+import { AuthInputBoxSec, Button, DropDownboxSec } from "../components";
 // import { Nodata_foundimage } from './Provider/Nodata_foundimage';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import ScreenHeader from "../components/ScreenHeader";
+import { leftArrow } from "../icons/SvgIcons/Index";
+import { s, vs } from "react-native-size-matters";
 
 const Select_arr = [
   {
@@ -168,25 +171,156 @@ export default class NeedSupport extends Component {
     return (
       <View
         style={{
-          width: "100%",
           alignSelf: "center",
           flex: 1,
-          backgroundColor: Colors.white_color,
-        }}
-      >
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor={Colors.statusbarcolor}
-          hidden={false}
-          translucent={false}
-          networkActivityIndicatorVisible={true}
+          backgroundColor: Colors.White,
+        }} >
+
+        <ScreenHeader
+          title={Lang_chg.NeedSupport[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon
+          rightIcon
         />
+
+
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{
+            justifyContent: 'center',
+            paddingBottom: vs(50),
+          }}
+          showsVerticalScrollIndicator={false}>
+
+
+          <View
+            style={{
+              width: "90%",
+              alignSelf: "center",
+            }}>
+            <View
+              style={{
+                alignItems: "center",
+                width: "100%",
+                alignSelf: "center",
+                flexDirection: "row",
+                marginTop: vs(10),
+              }}>
+              <View style={{ width: "8%", alignSelf: "center" }}>
+                <Image
+                  style={{ width: 20, height: 20, resizeMode: "contain" }}
+                  source={Icons.needsupportimg} />
+              </View>
+
+              <Text
+                style={{
+                  textAlign: config.textalign,
+                  fontSize: Font.large,
+                  color: Colors.Black,
+                  fontFamily: Font.Medium,
+                }}>
+                {Lang_chg.needsupport[config.language]}{" "}
+              </Text>
+            </View>
+
+            <View style={{ width: '100%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+
+
+
+            <Text
+              style={{
+                textAlign: config.textRotate,
+                // fontSize: (windowWidth * 3.5) / 100,
+                color: Colors.DarkGrey,
+                fontFamily: Font.Regular,
+              }} >
+              {Lang_chg.need_text[config.language]}{" "}
+            </Text>
+
+            <Text
+              style={{
+                textAlign: config.textRotate,
+                fontSize: Font.medium,
+                color: Colors.Black,
+                fontFamily: Font.Medium,
+                marginTop: vs(10)
+              }} >
+              {Lang_chg.select_topic_text[config.language]}{" "}
+            </Text>
+
+
+            <DropDownboxSec
+              lableText={
+                this.state.select.length <= 0
+                  ? Lang_chg.select_issues_text[config.language]
+                  : this.state.select
+              }
+              boxPressAction={() => {
+                this.setState({
+                  selectmodal: true,
+                  selectissuefocus: false
+                });
+              }}
+              mainContainer={{ marginTop: vs(10) }}
+            />
+
+            <View
+              style={{
+                width: "100%",
+                alignSelf: "center",
+                marginTop: vs(15),
+                borderColor: this.state.selectissuefocus ? Colors.Theme : Colors.Border,
+                borderWidth: 1,
+                borderRadius: 6,
+                height: vs(125),
+                paddingHorizontal: s(8),
+                paddingVertical: s(4),
+              }}>
+
+              <TextInput
+                style={{
+                  width: "100%",
+                  color: Colors.Black,
+                  fontSize: Font.medium,
+                  textAlign: config.textalign,
+                  fontFamily: Font.Regular,
+                }}
+                maxLength={250}
+                multiline={true}
+                placeholder={Lang_chg.text_input_topic[config.language]}
+                placeholderTextColor={Colors.MediumGrey}
+                onChangeText={(txt) => {
+                  this.setState({ message: txt });
+                }}
+                onFocus={() => {
+                  this.setState({ selectissuefocus: true });
+                }}
+                onBlur={() => {
+                  this.setState({
+                    selectissuefocus:
+                      this.state.message.length > 0 ? true : false,
+                  });
+                }}
+                keyboardType="default"
+                returnKeyLabel="done"
+              />
+            </View>
+
+            <Button
+              text={Lang_chg.submitbtntext[config.language]}
+              onPress={() => this.submit_click()}
+            />
+
+          </View>
+
+        </KeyboardAwareScrollView>
 
         <Modal
           animationType="fade"
           transparent={true}
           visible={this.state.selectmodal}
-          onRequestClose={() => {}}
+          onRequestClose={() => { }}
         >
           <TouchableOpacity
             activeOpacity={0.9}
@@ -199,8 +333,8 @@ export default class NeedSupport extends Component {
               justifyContent: "center",
               backgroundColor: "#00000080",
               width: "100%",
-              marginTop: (mobileW * 3) / 100,
-              paddingBottom: (mobileW * 8) / 100,
+              marginTop: (windowWidth * 3) / 100,
+              paddingBottom: (windowWidth * 8) / 100,
             }}
           >
             <View
@@ -219,13 +353,13 @@ export default class NeedSupport extends Component {
                 }}
               >
                 <View
-                  style={{ width: "45%", paddingVertical: (mobileW * 3) / 100 }}
+                  style={{ width: "45%", paddingVertical: (windowWidth * 3) / 100 }}
                 >
                   <Text
                     style={{
                       textAlign: config.textalign,
-                      fontFamily: Font.fontregular,
-                      fontSize: (mobileW * 4) / 100,
+                      fontFamily: Font.Regular,
+                      fontSize: (windowWidth * 4) / 100,
                       alignSelf: "center",
                       color: Colors.White,
                     }}
@@ -261,16 +395,16 @@ export default class NeedSupport extends Component {
                                 width: "95%",
                                 borderBottomColor: "#0000001F",
                                 borderBottomWidth: 1,
-                                paddingVertical: (mobileW * 2.5) / 100,
-                                marginLeft: (mobileW * 5) / 100,
+                                paddingVertical: (windowWidth * 2.5) / 100,
+                                marginLeft: (windowWidth * 5) / 100,
                               }}
                             >
                               <Text
                                 style={{
                                   color: Colors.Black,
                                   textAlign: config.textRotate,
-                                  fontSize: (mobileW * 4) / 100,
-                                  paddingLeft: (mobileW * 2) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  paddingLeft: (windowWidth * 2) / 100,
                                 }}
                               >
                                 {item.name}
@@ -291,8 +425,7 @@ export default class NeedSupport extends Component {
           animationType="fade"
           transparent={true}
           visible={this.state.successmodal}
-          onRequestClose={() => {}}
-        >
+          onRequestClose={() => { }}>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
@@ -304,28 +437,27 @@ export default class NeedSupport extends Component {
               justifyContent: "center",
               backgroundColor: "#00000080",
               width: "100%",
-            }}
-          >
+            }} >
             <View
               style={{
                 width: "100%",
                 backgroundColor: "White",
-                borderRadius: (mobileW * 4) / 100,
+                borderRadius: (windowWidth * 4) / 100,
                 position: "absolute",
                 bottom: 0,
                 alignItems: "center",
                 justifyContent: "center",
-                paddingBottom: (mobileW * 5) / 100,
+                paddingBottom: (windowWidth * 5) / 100,
                 alignSelf: "center",
               }}
             >
               {config.language == 0 ? (
                 <Image
                   style={{
-                    width: (mobileW * 17) / 100,
-                    height: (mobileW * 17) / 100,
+                    width: (windowWidth * 17) / 100,
+                    height: (windowWidth * 17) / 100,
                     alignSelf: "center",
-                    marginTop: (mobileW * -7) / 100,
+                    marginTop: (windowWidth * -7) / 100,
                     resizeMode: "contain",
                   }}
                   source={require("../icons/greentick.png")}
@@ -333,10 +465,10 @@ export default class NeedSupport extends Component {
               ) : (
                 <Image
                   style={{
-                    width: (mobileW * 17) / 100,
-                    height: (mobileW * 17) / 100,
+                    width: (windowWidth * 17) / 100,
+                    height: (windowWidth * 17) / 100,
                     alignSelf: "center",
-                    marginTop: (mobileW * -7) / 100,
+                    marginTop: (windowWidth * -7) / 100,
                     resizeMode: "contain",
                   }}
                   source={require("../icons/ryt_opp.png")}
@@ -344,9 +476,9 @@ export default class NeedSupport extends Component {
               )}
               <Text
                 style={{
-                  fontSize: (mobileW * 8) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontSize: (windowWidth * 8) / 100,
+                  marginTop: (windowWidth * 5) / 100,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                 }}
               >
@@ -354,9 +486,9 @@ export default class NeedSupport extends Component {
               </Text>
               <Text
                 style={{
-                  fontSize: (mobileW * 3.5) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontSize: (windowWidth * 3.5) / 100,
+                  marginTop: (windowWidth * 5) / 100,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                 }}
               >
@@ -365,9 +497,9 @@ export default class NeedSupport extends Component {
 
               <Text
                 style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 2) / 100,
-                  fontFamily: Font.fontmedium,
+                  fontSize: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  fontFamily: Font.Medium,
                   textAlign: config.textalign,
                   color: Colors.textgray,
                 }}
@@ -385,16 +517,16 @@ export default class NeedSupport extends Component {
                   alignSelf: "center",
                   borderColor: Colors.Blue,
                   borderWidth: 1,
-                  paddingVertical: (mobileW * 2) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  borderRadius: (mobileW * 3) / 100,
+                  paddingVertical: (windowWidth * 2) / 100,
+                  marginTop: (windowWidth * 5) / 100,
+                  borderRadius: (windowWidth * 3) / 100,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: (mobileW * 3) / 100,
+                    fontSize: (windowWidth * 3) / 100,
                     alignSelf: "center",
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     textAlign: config.textalign,
                     alignSelf: "center",
                     color: Colors.terms_text_color_blue,
@@ -406,346 +538,6 @@ export default class NeedSupport extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-
-        <View
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            paddingVertical: (mobileW * 3) / 100,
-            shadowOpacity: 0.3,
-            marginBottom: 0.9,
-            shadowColor: "#000",
-            shadowOffset: { width: 1, height: 1 },
-            elevation: 5,
-            backgroundColor: "White",
-          }}
-        >
-          <View
-            style={{
-              alignItems: "center",
-              width: "90%",
-              alignSelf: "center",
-              flexDirection: "row",
-            }}
-          >
-            <View style={{ width: "5%" }}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={{ width: "100%" }}
-              >
-                <Image
-                  style={{
-                    width: (mobileW * 8) / 100,
-                    height: (mobileW * 8) / 100,
-                    alignSelf: "center",
-                  }}
-                  source={
-                    config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
-                  }
-                ></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={{ width: "95%", alignSelf: "center" }}>
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4.5) / 100,
-                  color: Colors.Black,
-                  fontFamily: Font.buttonfontfamily,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.supporttext[config.language]}{" "}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <ScrollView
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            flex: 1,
-            backgroundColor: Colors.white_color,
-          }}
-        >
-          <KeyboardAwareScrollView>
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: Colors.tab_background_color,
-                paddingVertical: (mobileW * 2) / 100,
-              }}
-            ></View>
-
-            <View
-              style={{
-                alignItems: "center",
-                width: "90%",
-                alignSelf: "center",
-                flexDirection: "row",
-                marginTop: (mobileW * 3) / 100,
-              }}
-            >
-              <View style={{ width: "8%", alignSelf: "center" }}>
-                <Image
-                  style={{
-                    width: (mobileW * 5) / 100,
-                    height: (mobileW * 5) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={localimag.needsupportimg}
-                ></Image>
-              </View>
-
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.Black,
-                  fontFamily: Font.buttonfontfamily,
-                }}
-              >
-                {Lang_chg.needsupport[config.language]}{" "}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                borderColor: Colors.bordercolor,
-                borderBottomWidth: (mobileW * 0.3) / 100,
-                marginTop: (mobileW * 3) / 100,
-              }}
-            />
-
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 2) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: (mobileW * 3.5) / 100,
-                  color: "#707070",
-                  fontFamily: Font.fontregular,
-                }}
-              >
-                {Lang_chg.need_text[config.language]}{" "}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 4) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.Black,
-                  fontFamily: Font.buttonfontfamily,
-                }}
-              >
-                {Lang_chg.select_topic_text[config.language]}{" "}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "100%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-                //flexDirection: 'row',
-                // borderColor: Colors.bordercolor,
-                // borderWidth: 1,
-                // borderRadius: mobileW * 1 / 100
-              }}
-            >
-              <DropDownboxSec
-                lableText={
-                  this.state.select.length <= 0
-                    ? Lang_chg.select_issues_text[config.language]
-                    : this.state.select
-                }
-                boxPressAction={() => {
-                  this.setState({ selectmodal: true });
-                }}
-                // isDisabled={true}
-              />
-              {/* <TouchableOpacity onPress={() => {
-                this.setState({ selectmodal: true });
-              }}
-                style={{ width: '100%', backgroundColor: Colors.backgroundcolor, borderRadius: mobileW * 1 / 100 }}>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', alignSelf: 'center' }}>
-                  <Text
-                    style={{ alignSelf: 'center', color: Colors.Black, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: mobileW * 4 / 100, fontFamily: Font.placeholderfontfamily }}
-
-                  >{this.state.select.length <= 0 ? Lang_chg.select_issues_text[config.language] : this.state.select}</Text>
-                  <View style={{ width: '10%', alignSelf: 'center' }}>
-                    <Image
-                      source={localimag.downarrow}
-                      style={{ height: mobileW * 4 / 100, width: mobileW * 4 / 100, alignSelf: 'flex-end' }}>
-                    </Image>
-                  </View>
-                </View>
-              </TouchableOpacity> */}
-            </View>
-
-            {/* <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 3) / 100,
-                // borderColor: this.state.selectissuefocus == true ? '#0057A5' : Colors.bordercolor, borderWidth: mobileW * 0.3 / 100, borderRadius: mobileW * 2 / 100, height: mobileW * 40 / 100
-              }}
-            >
-            <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                inputFieldStyle={{
-                  // marginTop: mobileW * 1 / 100,
-                  // backgroundColor: "red",
-                  width: "100%",
-                  // height: (mobileW * 40) / 100,
-                  color: Colors.Black,
-                  fontSize: Font.placeholdersize,
-                  textAlign: config.textalign,
-                  fontFamily: Font.placeholderfontfamily,
-                  justifyContent: "flex-start",
-                  textAlignVertical: "top",
-                  // paddingVertical: mobileW * 3 / 100,
-                }}
-                // icon={layer9_icon}
-                lableText={
-                  this.state.selectissuefocus != true
-                    ? Lang_chg.text_input_topic[config.language]
-                    : null
-                }
-                inputRef={(ref) => {
-                  this.messageInput = ref;
-                }}
-                onChangeText={(text) => this.setState({ message: text })}
-                value={this.state.message}
-                maxLength={250}
-                multiline={true}
-                keyboardType="default"
-                autoCapitalize="none"
-                returnKeyType="next"
-                // onSubmitEditing={() => {
-                //   this.emailInput.focus();
-                // }}
-              /> */}
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 6) / 100,
-                borderColor:
-                  this.state.selectissuefocus == true
-                    ? "#0057A5"
-                    : Colors.bordercolor,
-                borderWidth: (mobileW * 0.3) / 100,
-                borderRadius: (mobileW * 2) / 100,
-                height: (mobileW * 40) / 100,
-              }}
-            >
-              <View style={{ width: "95%", alignSelf: "center" }}>
-                <TextInput
-                  style={{
-                    marginTop: (mobileW * 2) / 100,
-                    backgroundColor: "#fff",
-                    width: "100%",
-                    color: Colors.Black,
-                    fontSize: Font.placeholdersize,
-                    textAlign: config.textalign,
-                    fontFamily: Font.placeholderfontfamily,
-                    paddingVertical: (mobileW * 3) / 100,
-                  }}
-                  maxLength={250}
-                  multiline={true}
-                  placeholder={
-                    this.state.selectissuefocus != true
-                      ? Lang_chg.text_input_topic[config.language]
-                      : null
-                  }
-                  placeholderTextColor={Colors.placeholder_text}
-                  onChangeText={(txt) => {
-                    this.setState({ message: txt });
-                  }}
-                  onFocus={() => {
-                    this.setState({ selectissuefocus: true });
-                  }}
-                  onBlur={() => {
-                    this.setState({
-                      selectissuefocus:
-                        this.state.message.length > 0 ? true : false,
-                    });
-                  }}
-                  keyboardType="default"
-                  returnKeyLabel="done"
-                />
-              </View>
-              {this.state.selectissuefocus == true && (
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "White",
-                    left: (mobileW * 4) / 100,
-                    top: (-mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 1) / 100,
-                  }}
-                >
-                  <Text
-                    style={{ color: "#0057A5", textAlign: config.textalign }}
-                  >
-                    {Lang_chg.text_input_topic[config.language]}
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                this.submit_click();
-              }}
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 45) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  color: Colors.White,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.submitbtntext[config.language]}
-              </Text>
-            </TouchableOpacity>
-          </KeyboardAwareScrollView>
-        </ScrollView>
       </View>
     );
   }

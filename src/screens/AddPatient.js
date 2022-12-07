@@ -25,7 +25,6 @@ import {
   apifuntion,
 } from "../Provider/utilslib/Utils";
 import Icon from "react-native-vector-icons/FontAwesome";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import { AuthInputBoxSec, Button } from "../components";
 
 export default class AddPatient extends Component {
@@ -427,7 +426,7 @@ export default class AddPatient extends Component {
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={50}
@@ -505,7 +504,7 @@ export default class AddPatient extends Component {
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={50}
@@ -583,7 +582,7 @@ export default class AddPatient extends Component {
                       fontSize: Font.placeholdersize,
                       textAlign: config.textalign,
                       height: Font.placeholder_height,
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={100}
@@ -662,7 +661,7 @@ export default class AddPatient extends Component {
                       textAlign: config.textalign,
 
                       height: Font.placeholder_height,
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       padding: windowWidth * 0.5 / 100
                     }}
                     maxLength={3}
@@ -848,21 +847,9 @@ export default class AddPatient extends Component {
 
               <Button
                 text={Lang_chg.SAVEPATIENT[config.language]}
-                // onLoading={this.state.loading}
-                customStyles={
-                  {
-                    // mainContainer: styles.butonContainer
-                  }
-                }
                 onPress={() => this.submit_click()}
-                // isBlank={false}
               />
-
-              {/* <Appbtn3 handlarrowpress={() => {
-                this.submit_click()
-              }} 
-              title={Lang_chg.SAVEPATIENT[config.language]} 
-              bgcolor={Colors.Theme} /> */}
+              
             </View>
           </View>
         </ScrollView>

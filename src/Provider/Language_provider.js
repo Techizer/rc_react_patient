@@ -293,10 +293,8 @@ class Language_provider {
   nationality = ["Nationality", "  الجنسية  "];
   textinputaddress = ["Address", "العنوان  "];
 
-  // --------------------------------------------------------gunjan  03-03-22
-  //----------------------------needsupportpage
   need_text = [
-    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at +44 24776 9200 number",
+    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at \n +44 24776 9200 number",
     " اكتب مشكلتك هنا، وسوف نتواصل معك في غضون 24–48 ساعة عمل،أو إذا كان لديك أي شيء عاجل اتصل بنا على الرقم  24776 9200",
   ];
   text_input_topic = [
@@ -314,7 +312,6 @@ class Language_provider {
   ];
   close_txt = ["Close", "إغلاق  "];
 
-  //----------------------------------------------drawer
   drawername = ["Sanjay Singh", "سانجاي سينغ"];
   drawerid = ["anant@outlook.com", "anant@outlook.com"];
   draweraddress = ["Riyadh,saudi Arabia", "رياض,سعودي عربية"];
@@ -456,7 +453,6 @@ class Language_provider {
     "هل أنت متأكد من حذف فرد العائلة هذا؟  ",
   ];
   DeleteMember = ["Delete ", "حذف  "];
-  Delete = ["DELETE", "حذف   "];
   Date = ["Date", "التاريخ "];
   PROCEEDTOPAYMENT = [" PROCEED TO PAYMENT", " الانتقال إلى الدفع  "];
   confimation = ["Confirmation", "تأكيد  "];
@@ -584,6 +580,8 @@ class Language_provider {
   Acccount_and_More = ["Account & More", "الحساب  & المزيد  "];
   Acccount_Setting = ['Account Settings', 'إعدادت الحساب'];
   Manage_Address = ["Manage Address", "إدارة العنوان"];
+  Manage_Members = ["Manage Members | Health Record", "إدارة الأعضاء | السجل الصحي"];
+  Find_Location = ["Find Location", "البحث عن الموقع"];
   Health_Record=['My Health Record', 'سجلي الصحي']
   Support_and_More = ["Support & More", " الدعم & المزيد "];
   Like_Us = ["Like Us? Give 5 Star Review", "مثلنا؟ أعط مراجعة 5 نجوم"];
@@ -595,7 +593,25 @@ class Language_provider {
   Howitworks = ["How it works", "How it works"];
   BookConsultation = ["BOOK CONSULTATION", "استشارة كتاب"];
   NearBy = ["Near by", "مجاور"];
-  OtpTime=['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.']
+  OtpTime=['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.'];
+  NeedSupport = ["Need Support", "تحتاج مساعدة"];
+  Add_Address = ["Add This Address", "أضف هذا العنوان"];
+  Saved_Address = ["Saved Addresses", "العناوين المحفوظة"];
+  Edit_Address = ["Edit Address", "تعديل العنوان"];
+  Address_Title = ["Address Title", "عنوان عنوان"];
+  Google_Address = ["Google Map Address", "عنوان خريطة جوجل"];
+  Nearest_Address = ["Nearest Landmark", "أقرب معلم"];
+  Building_Name = ["Building Name", "اسم المبنى"];
+  Save_Address = ["SAVE ADDRESS", "حفظ العنوان"];
+  Delete = ["DELETE", "حذف   "];
+  Add_Member = ["ADD MEMBER", "إضافة جديد"];
+  Add_New_Member = ["ADD NEW MEMBER", "إضافة عضو جديد"];
+  Upload_Photo = ["Upload a photo of the member", "قم بتحميل صورة العضو"];
+  Photo_Size = ["Max. Upload Size 10 MB", "الأعلى. حجم الرفع 10 ميجا بايت"];
+  Archive = ["ARCHIVE", "أرشيف"];
+  Merge = ["MERGE", "دمج"];
+  Default_Address = ["Default Address", "العنوان الافتراضي"];
+
 
 }
 export const Lang_chg = new Language_provider();

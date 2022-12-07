@@ -80,7 +80,7 @@ const LabAppointment = (props) => {
         textTransform: "capitalize",
         fontSize: (windowWidth * 4) / 100,
         textAlign: config.textalign,
-        fontFamily: Font.fontmedium,
+        fontFamily: Font.Medium,
         alignSelf: "center",
       }}
       onTabPress={({ route, preventDefault }) => {

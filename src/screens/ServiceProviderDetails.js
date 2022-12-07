@@ -167,7 +167,7 @@ export default class ServiceProviderDetails extends Component {
     const { modal2Visible } = this.state;
     const { provider_details, available_days, providerType, providerId } = this.state;
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+      <View style={{ flex: 0.98, backgroundColor: Colors.backgroundcolor }}>
 
         <ScreenHeader
           title={
@@ -193,7 +193,7 @@ export default class ServiceProviderDetails extends Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingBottom: 100
+            paddingBottom: vs(30)
           }}>
 
           {/* -------------------Info Container-------------------- */}
@@ -233,7 +233,7 @@ export default class ServiceProviderDetails extends Component {
                 }} >
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     textAlign: config.textRotate,
                     color: Colors.detailTitles
@@ -244,7 +244,7 @@ export default class ServiceProviderDetails extends Component {
                   providerType != 'lab' &&
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
                       color: Colors.lightGrey,
@@ -255,7 +255,7 @@ export default class ServiceProviderDetails extends Component {
                 }
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
                     color: Colors.Blue,
@@ -271,7 +271,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
                 <Text
                   style={{
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
                     color: Colors.lightGrey,
@@ -281,7 +281,7 @@ export default class ServiceProviderDetails extends Component {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.xlarge,
                     textAlign: config.textRotate,
                     color: Colors.detailTitles,
@@ -293,7 +293,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
                 <Text
                   style={{
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
                     color: Colors.lightGrey,
@@ -304,7 +304,7 @@ export default class ServiceProviderDetails extends Component {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.xlarge,
                     textAlign: config.textRotate,
                     color: Colors.detailTitles,
@@ -317,7 +317,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ flex: 1, }}>
                 <Text
                   style={{
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
                     color: Colors.lightGrey,
@@ -330,7 +330,7 @@ export default class ServiceProviderDetails extends Component {
                   <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       fontSize: Font.xlarge,
                       textAlign: config.textRotate,
                       color: Colors.detailTitles,
@@ -348,7 +348,7 @@ export default class ServiceProviderDetails extends Component {
             <View style={styles.descContainer}>
               <Text
                 style={{
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: Font.xsmall,
                   textAlign: config.textRotate,
                   color: Colors.detailTitles,
@@ -364,7 +364,7 @@ export default class ServiceProviderDetails extends Component {
                 <SvgXml xml={Clock} height={s(15)} width={s(15)} style={{ marginRight: s(9) }} />
                 <Text
                   style={{
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.medium,
                     textAlign: config.textRotate,
                     color: Colors.DarkGrey,
@@ -376,7 +376,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ alignItems: 'flex-end', width: '70%', }}>
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     color: Colors.Blue,
                     fontSize: Font.medium,
                     textAlign: config.textRotate,
@@ -403,7 +403,14 @@ export default class ServiceProviderDetails extends Component {
                     <Button
                       text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
                       btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                      onPress={() => { }}
+                      onPress={() => {
+                        this.props.navigation.navigate("Booking", {
+                          providerType: providerType,
+                          providerId: this.state.providerId,
+                          display: "hourlybooking",
+                          indexPosition: 1,
+                        })
+                      }}
                     />
 
                     <Button
@@ -416,13 +423,16 @@ export default class ServiceProviderDetails extends Component {
             </View>
           </View>
 
+          {/* -------------------About Container-------------------- */}
+
+
           <View style={styles.aboutContainer}>
 
-            <View style={{ flexDirection: 'row', width: '75%', height: '100%', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', width: '70%', height: '100%', alignItems: 'center' }}>
               <SvgXml xml={dummyDoc} height={s(23)} width={s(23)} style={{}} />
               <Text
                 style={{
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: Font.small,
                   textAlign: config.textRotate,
                   color: Colors.White,
@@ -434,7 +444,7 @@ export default class ServiceProviderDetails extends Component {
               <View style={{ height: '40%', borderWidth: 0.8, borderColor: Colors.backgroundcolor }}></View>
               <Text
                 style={{
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: Font.small,
                   textAlign: config.textRotate,
                   color: Colors.White,
@@ -444,18 +454,18 @@ export default class ServiceProviderDetails extends Component {
               </Text>
             </View>
 
-            <View style={{ width: '25%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: '30%', height: '100%', justifyContent: 'center' }}>
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => this.setModalVisible(true)}
               >
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
                     color: Colors.White,
-                    paddingLeft: s(12),
+                    alignSelf: 'flex-end'
                   }}>
                   {Lang_chg.Howitworks[config.language]}
                 </Text>
@@ -473,7 +483,7 @@ export default class ServiceProviderDetails extends Component {
                 <Text
                   style={{
                     textAlign: config.textRotate,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.xlarge,
                     color: Colors.detailTitles
                   }}
@@ -489,7 +499,7 @@ export default class ServiceProviderDetails extends Component {
                     );
                   }}
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.medium,
                     color: Colors.Blue,
                   }}
@@ -535,15 +545,15 @@ export default class ServiceProviderDetails extends Component {
                         }]}>
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           textAlign: config.textRotate,
-                          fontSize: Font.medium,
+                          fontSize: Font.small,
                           color: Colors.detailTitles
                         }}>{item?.name}</Text>
 
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           textAlign: config.textRotate,
                           fontSize: Font.small,
                           color: Colors.Blue,
@@ -556,7 +566,7 @@ export default class ServiceProviderDetails extends Component {
                       <Text
                         style={{
                           paddingVertical: vs(3),
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           textAlign: config.textRotate,
                           color: Colors.Green,
                           fontSize: Font.small,
@@ -567,7 +577,7 @@ export default class ServiceProviderDetails extends Component {
 
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           textAlign: config.textRotate,
                           fontSize: Font.small,
                           textDecorationLine: "line-through",
@@ -589,7 +599,7 @@ export default class ServiceProviderDetails extends Component {
                         <Text
                           style={{
                             textAlign: config.textRotate,
-                            fontFamily: Font.fontmedium,
+                            fontFamily: Font.Medium,
                             fontSize: Font.medium,
                           }}>
                           {item.price}
@@ -608,7 +618,7 @@ export default class ServiceProviderDetails extends Component {
                             );
                           }}
                           style={{
-                            fontFamily: Font.fontsemibold,
+                            fontFamily: Font.SemiBold,
                             fontSize: Font.medium,
                             color: Colors.Theme,
                             textTransform: "uppercase",
@@ -644,24 +654,24 @@ export default class ServiceProviderDetails extends Component {
 
           }
 
-{
+          {
             provider_details?.available_provider &&
             <View style={styles.availableContainer}>
               <View style={{ width: "100%", flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: s(11) }}>
                 <Text
                   style={{
                     textAlign: config.textRotate,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: Font.xlarge,
                     color: Colors.detailTitles
                   }}
                 >
                   {`${providerType === 'nurse' ? Lang_chg.AvailableNurse[config.language] : providerType === 'physiotherapy' ? Lang_chg.Availablephysotharpst[config.language] : providerType === 'caregiver' ? Lang_chg.Availableassistent[config.language] : providerType === 'babysitter' ? Lang_chg.Availablebabysitter[config.language] : providerType === 'doctor' ? Lang_chg.AvailableDoctor[config.language] : Lang_chg.AvailableLab[config.language]}`}
                 </Text>
-                <TouchableOpacity onPress={()=>this.props.navigation.pop()}>
+                <TouchableOpacity onPress={() => this.props.navigation.pop()}>
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       fontSize: Font.medium,
                       color: Colors.Blue,
                     }}
@@ -687,6 +697,17 @@ export default class ServiceProviderDetails extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity
+                      onPress={() => {
+                        this.props.navigation.navigate(
+                          "ServiceProviderDetails",
+                          {
+                            providerType: providerType,
+                            providerId: item.user_id,
+                            isFromHospital: false,
+                            hospitalId: item?.hospital_id,
+                          }
+                        );
+                      }}
                       style={[
                         {
                           borderRadius: 10,
@@ -709,7 +730,7 @@ export default class ServiceProviderDetails extends Component {
                         <Text
                           style={{
                             color: Colors.detailTitles,
-                            fontFamily: Font.fontmedium,
+                            fontFamily: Font.Medium,
                             fontSize: Font.small,
                             textAlign: config.textRotate,
                           }}>
@@ -719,7 +740,7 @@ export default class ServiceProviderDetails extends Component {
                         <Text
                           style={{
                             color: Colors.lightGrey,
-                            fontFamily: Font.fontregular,
+                            fontFamily: Font.Regular,
                             fontSize: Font.xsmall,
                             textAlign: config.textRotate,
                             marginTop: vs(3)
@@ -730,7 +751,7 @@ export default class ServiceProviderDetails extends Component {
                         <Text
                           style={{
                             color: Colors.Blue,
-                            fontFamily: Font.fontregular,
+                            fontFamily: Font.Regular,
                             fontSize: Font.xsmall,
                             textAlign: config.textRotate,
                             marginTop: vs(6)
@@ -744,7 +765,7 @@ export default class ServiceProviderDetails extends Component {
                style={{
                  paddingVertical: (windowWidth * 2) / 100,
                  paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.fontregular,
+                 fontFamily: Font.Regular,
                  textAlign: "left",
                  fontSize: Font.sregulartext_size,
                }}
@@ -767,7 +788,7 @@ export default class ServiceProviderDetails extends Component {
                style={{
                  paddingVertical: (windowWidth * 2) / 100,
                  paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.fontregular,
+                 fontFamily: Font.Regular,
                  textAlign: "left",
                  color: Colors.Green,
                  fontSize: Font.sregulartext_size,
@@ -779,7 +800,7 @@ export default class ServiceProviderDetails extends Component {
                       {/* <Text
                style={{
                  paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.fontregular,
+                 fontFamily: Font.Regular,
                  textAlign: "left",
                  fontSize: Font.sregulartext_size,
                  textDecorationLine: "line-through",
@@ -801,7 +822,7 @@ export default class ServiceProviderDetails extends Component {
                <Text
                  style={{
                    textAlign: config.textalign,
-                   fontFamily: Font.fontmedium,
+                   fontFamily: Font.Medium,
                    fontSize: (windowWidth * 4) / 100,
                  }}
                >
@@ -822,7 +843,7 @@ export default class ServiceProviderDetails extends Component {
                    );
                  }}
                  style={{
-                   fontFamily: Font.fontsemibold,
+                   fontFamily: Font.SemiBold,
                    fontSize: Font.regulartext_size,
                    color: Colors.Theme,
                    textTransform: "uppercase",
@@ -920,7 +941,7 @@ export default class ServiceProviderDetails extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         color: "#0888D1",
                       }}
                       onPress={() => this.setModalVisible(false)}
@@ -946,7 +967,7 @@ const HTMLstyles = StyleSheet.create({
   h5: {
     color: "#0888D1",
     fontSize: (windowWidth * 4.3) / 100,
-    fontFamily: Font.fontmedium,
+    fontFamily: Font.Medium,
   },
 });
 
@@ -983,7 +1004,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: s(11),
   },
   btnContainer: {
-    paddingVertical: vs(17)
+    paddingVertical: vs(17),
+    width: '90%',
+    alignSelf: 'center'
   },
   aboutContainer: {
     flexDirection: 'row',

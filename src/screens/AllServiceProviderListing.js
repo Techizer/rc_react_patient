@@ -277,9 +277,7 @@ export default class AllServiceProviderListing extends Component {
     const { isLoading, providersList, pass_status, message } = this.state
 
     return (
-      <View style={{ backgroundColor: Colors.backgroundcolor, flex: 1 }}>
-
-
+      <View style={{ backgroundColor: Colors.backgroundcolor, flex: 0.98 }}>
         <ScreenHeader
           title={
             this.state.isHospitalDoctorList
@@ -301,37 +299,37 @@ export default class AllServiceProviderListing extends Component {
           leftIcon={leftArrow}
           rightIcon={Notification}
         />
-
-        <FlatList
-          contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
-          showsVerticalScrollIndicator={false}
-          data={providersList}
-          keyExtractor={(item, index) => `Provider ${index}`}
-          ListHeaderComponent={this.listHeader(pass_status)}
-          ListEmptyComponent={() => {
-            return (
-              <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
-                <Text style={{
-                  fontSize: Font.xxlarge,
-                  fontFamily: Font.fontmedium,
-                  color: Colors.darkText
-                }}>{message}</Text>
-              </View>
-            )
-          }}
-          renderItem={({ item, index }) => {
-            return (
-              <ServiceProviderContainer
-                Item={item}
-                navigation={this.props.navigation}
-                isLoading={isLoading}
-                providerType={pass_status}
-                Index={index} />
-            );
-          }
-          }
-        />
-
+        {/* <View style={{ backgroundColor: Colors.backgroundcolor, flex: 0.97 }}> */}
+          <FlatList
+            contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
+            showsVerticalScrollIndicator={false}
+            data={providersList}
+            keyExtractor={(item, index) => `Provider ${index}`}
+            ListHeaderComponent={this.listHeader(pass_status)}
+            ListEmptyComponent={() => {
+              return (
+                <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
+                  <Text style={{
+                    fontSize: Font.xxlarge,
+                    fontFamily: Font.Medium,
+                    color: Colors.darkText
+                  }}>{message}</Text>
+                </View>
+              )
+            }}
+            renderItem={({ item, index }) => {
+              return (
+                <ServiceProviderContainer
+                  Item={item}
+                  navigation={this.props.navigation}
+                  isLoading={isLoading}
+                  providerType={pass_status}
+                  Index={index} />
+              );
+            }
+            }
+          />
+        {/* </View> */}
 
         <Modal
           animationType="slide"
@@ -373,7 +371,7 @@ export default class AllServiceProviderListing extends Component {
                     paddingLeft: (windowWidth * 4.5) / 100,
                     paddingRight: (windowWidth * 4.5) / 100,
                     textAlign: config.textRotate,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: (windowWidth * 4) / 100,
                     color: Colors.White,
                   }}

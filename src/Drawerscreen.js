@@ -174,7 +174,7 @@ export default class Drawerscreen extends Component {
                     <Text
                       style={{
                         color: Colors.Black,
-                        fontFamily: Font.fontmedium,
+                        fontFamily: Font.Medium,
                         fontSize: Font.xxxlarge,
                         textAlign: config.textRotate,
                         opacity: (isGuest === 'true') ? 0.3 : 1
@@ -206,7 +206,7 @@ export default class Drawerscreen extends Component {
                     <Text
                       style={{
                         color: Colors.Primary,
-                        fontFamily: Font.fontmedium,
+                        fontFamily: Font.Medium,
                         fontSize: Font.medium,
                         textAlign: config.textRotate,
                         opacity: (isGuest === 'true') ? 0.3 : 1
@@ -222,7 +222,7 @@ export default class Drawerscreen extends Component {
                     <Text
                       style={{
                         color: Colors.DarkGrey,
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.small,
                         textAlign: config.textRotate,
                         marginTop: vs(4)
@@ -245,7 +245,7 @@ export default class Drawerscreen extends Component {
                 <Text
                   style={{
                     color: Colors.Black,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.medium,
                     textAlign: config.textRotate,
                   }}>
@@ -333,7 +333,7 @@ export default class Drawerscreen extends Component {
                 <Text
                   style={{
                     color: Colors.Black,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.medium,
                     textAlign: config.textRotate,
                   }}>
@@ -363,7 +363,7 @@ export default class Drawerscreen extends Component {
                 leftIcon={ManageAddress}
                 disable={isGuest === 'true' ? true : false}
                 onPress={() => {
-                  this.props.navigation.navigate('Address')
+                  this.props.navigation.navigate('Show_currentlocation')
                 }}
               />
 
@@ -375,6 +375,9 @@ export default class Drawerscreen extends Component {
                 }
                 leftIcon={HealthRecord}
                 disable={isGuest === 'true' ? true : false}
+                onPress={()=>{
+                  this.props.navigation.navigate('HealthRecord')
+                }}
               />
 
               <DrawerItemContainer
@@ -425,7 +428,7 @@ export default class Drawerscreen extends Component {
               <Text
                 style={{
                   color: Colors.DarkGrey,
-                  fontFamily: Font.fontmedium,
+                  fontFamily: Font.Medium,
                   fontSize: Font.medium,
                   textAlign: config.textRotate,
                 }}>
@@ -435,7 +438,7 @@ export default class Drawerscreen extends Component {
               <Text
                 style={{
                   color: Colors.MediumGrey,
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: Font.small,
                   textAlign: config.textRotate,
                   marginTop: vs(5)
@@ -514,7 +517,7 @@ export default class Drawerscreen extends Component {
                         source={Icons.logoPlain} />
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           color: "#000",
                           fontSize: (windowWidth * 5) / 100,
                           paddingLeft: (windowWidth * 4) / 100,
@@ -534,7 +537,7 @@ export default class Drawerscreen extends Component {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           color: "#000",
                           fontSize: (windowWidth * 4) / 100,
                         }}
@@ -567,7 +570,7 @@ export default class Drawerscreen extends Component {
                       >
                         <Text
                           style={{
-                            fontFamily: Font.fontregular,
+                            fontFamily: Font.Regular,
                             fontSize: (windowWidth * 4) / 100,
                             color: Colors.Blue,
                             alignSelf: "center",
@@ -591,7 +594,7 @@ export default class Drawerscreen extends Component {
                       >
                         <Text
                           style={{
-                            fontFamily: Font.fontregular,
+                            fontFamily: Font.Regular,
                             fontSize: (windowWidth * 4) / 100,
                             color: Colors.Blue,
                             alignSelf: "center",

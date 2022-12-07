@@ -578,7 +578,7 @@ const DoctorSymptomsAppointment = (props) => {
         textTransform: "capitalize",
         fontSize: (windowWidth * 4) / 100,
         textAlign: config.textalign,
-        fontFamily: Font.fontmedium,
+        fontFamily: Font.Medium,
         alignSelf: "center",
       }}
       onTabPress={({ route, preventDefault }) => {
@@ -657,7 +657,7 @@ const DoctorSymptomsAppointment = (props) => {
           >
             <Text
               style={{
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
@@ -668,7 +668,7 @@ const DoctorSymptomsAppointment = (props) => {
             </Text>
             <Text
               style={{
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
@@ -772,7 +772,7 @@ const DoctorSymptomsAppointment = (props) => {
             </TouchableOpacity>
             <Text
               style={{
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: (windowWidth * 3) / 100,
                 alignSelf: "flex-end",
                 right: -5,
@@ -807,7 +807,7 @@ const DoctorSymptomsAppointment = (props) => {
           >
             <Text
               style={{
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
@@ -818,7 +818,7 @@ const DoctorSymptomsAppointment = (props) => {
             </Text>
             <Text
               style={{
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
@@ -879,7 +879,7 @@ const DoctorSymptomsAppointment = (props) => {
               />
               <Text
                 style={{
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: (windowWidth * 3) / 100,
                   textAlign: "auto",
                   alignItems: "baseline",

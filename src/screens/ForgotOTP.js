@@ -39,7 +39,7 @@ export default class ForgotOTP extends Component {
     super(props);
     this.state = {
       name: "",
-      email: this.props.route.params.email,
+      email: this.props?.route?.params?.email || '',
       mobile: "",
       password: "",
       device_lang: "AR",
@@ -222,7 +222,7 @@ export default class ForgotOTP extends Component {
             <Text
               style={{
                 fontSize: Font.xxxlarge,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 textAlign: config.textRotate,
                 color: Colors.darkText
               }}>
@@ -233,7 +233,7 @@ export default class ForgotOTP extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.inActiveText,
                 marginTop: vs(4)
               }}>
@@ -247,7 +247,7 @@ export default class ForgotOTP extends Component {
                   width: (windowWidth * 20) / 100,
                   color: "#000",
                   alignSelf: "center",
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: (windowWidth * 5) / 100,
                   borderWidth: 2,
                   borderColor: Colors.Border,
@@ -297,7 +297,7 @@ export default class ForgotOTP extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.textsize,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 marginTop: vs(8)
               }}
@@ -307,15 +307,14 @@ export default class ForgotOTP extends Component {
 
           <Button
               text={Lang_chg.submitbtntext[config.language]}
-              // onLoading={this.state.loading}
               onPress={() => this.otpVerify()}
-            // isBlank={false}
+              btnStyle={{ marginTop: vs(30) }}
             />
             <Text
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.small,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.DarkGrey,
                 paddingVertical: vs(20)
               }}>
@@ -338,7 +337,7 @@ export default class ForgotOTP extends Component {
               style={{
                 textAlign: config.textalign,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.DarkGrey,
               }} >
               {Lang_chg.notrectext[config.language]}
@@ -350,7 +349,7 @@ export default class ForgotOTP extends Component {
               style={{
                 textAlign: config.textalign,
                 fontSize: Font.medium,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 color: Colors.Blue,
               }}>
               {Lang_chg.sendagaintext[config.language]}

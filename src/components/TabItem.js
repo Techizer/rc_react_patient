@@ -73,7 +73,7 @@ const TabItemSimple = ({ navigation, icon, path, index, activeIndex, reset = fal
             <Text style={{
                 fontSize: Font.xsmall,
                 color: (index === activeIndex) ? Colors.Theme : Colors.inActiveTab,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 position: 'absolute',
                 bottom: Platform.OS==='ios' ? vs(30) : vs(20)
             }} >{title}</Text>

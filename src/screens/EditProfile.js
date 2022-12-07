@@ -12,7 +12,6 @@ import {
 import React, { Component } from "react";
 import Footer from "../Footer";
 import Icon from "react-native-vector-icons/FontAwesome";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import {
   consolepro,
   Colors,
@@ -930,7 +929,7 @@ export default class EditProfile extends Component {
                   <Text
                     style={{
                       textAlign: config.textRotate,
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: (windowWidth * 4) / 100,
                       alignSelf: "center",
                       color: Colors.White,
@@ -1063,7 +1062,7 @@ export default class EditProfile extends Component {
                     <Text
                       style={{
                         textAlign: config.textRotate,
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         alignSelf: "center",
                         color: Colors.White,
@@ -1177,7 +1176,7 @@ export default class EditProfile extends Component {
                   <Text
                     style={{
                       textAlign: config.textRotate,
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: (windowWidth * 4) / 100,
 
                       color: Colors.White,
@@ -1307,7 +1306,7 @@ export default class EditProfile extends Component {
                     paddingLeft: (windowWidth * 4.5) / 100,
                     paddingRight: (windowWidth * 4.5) / 100,
                     textAlign: config.textRotate,
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     fontSize: (windowWidth * 4) / 100,
                     color: Colors.White,
                   }}
@@ -1789,7 +1788,7 @@ export default class EditProfile extends Component {
                         flexDirection: 'row',
                         justifyContent:'space-between'
                       }}>
-                        <Text style={{fontSize: (windowWidth * 3.7) / 100,fontFamily:Font.fontregular, textAlign:config.textRotate}}>
+                        <Text style={{fontSize: (windowWidth * 3.7) / 100,fontFamily:Font.Regular, textAlign:config.textRotate}}>
                           {this.state.work_area.length<=0?Lang_chg.select[config.language]:this.state.work_area}
                         </Text>
 
@@ -2554,7 +2553,7 @@ export default class EditProfile extends Component {
                       <Text
                         style={{
                           color: Colors.White,
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.buttontextsize,
                           alignSelf: "flex-end",
                           textAlign: config.textalign,
@@ -3890,7 +3889,7 @@ export default class EditProfile extends Component {
                       <Text
                         style={{
                           color: Colors.White,
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.buttontextsize,
                           alignSelf: "flex-end",
 
@@ -3969,7 +3968,7 @@ export default class EditProfile extends Component {
                           <Text
                             style={{
                               fontSize: (windowWidth * 3.7) / 100,
-                              fontFamily: Font.fontregular,
+                              fontFamily: Font.Regular,
                               textAlign: config.textRotate,
                             }}
                           >

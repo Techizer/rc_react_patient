@@ -248,9 +248,9 @@ export default class Home extends Component {
     this.messageListener();
 
     this.props.navigation.addListener("focus", () => {
-      if (global.isLogin == false){
+      if (global.isLogin == false) {
         this.getProfile();
-      }else{
+      } else {
         this.getAllCount();
       }
     });
@@ -474,7 +474,7 @@ export default class Home extends Component {
   };
 
   getProfile = async () => {
-    if (global.isLogin == false){
+    if (global.isLogin == false) {
       let address_arr = await localStorage.getItemObject("address_arr");
       console.log("address_arr", address_arr);
       this.setState({
@@ -485,13 +485,13 @@ export default class Home extends Component {
         console.log("this.state.address_old", this.state.address_old);
         console.log("this.state.address_show", this.state.address_show);
       });
-  
+
       // if (user_details.image != null) {
       //   this.setState({
       //     profile_img: config.img_url3 + user_details["image"],
       //   });
       // }
-    }else{
+    } else {
       let user_details = await localStorage.getItemObject("user_arr");
       let address_arr = await localStorage.getItemObject("address_arr");
       console.log("user_details user_details else", user_details);
@@ -508,14 +508,14 @@ export default class Home extends Component {
           this.updateAddress()
         }
       });
-  
+
       if (user_details.image != null) {
         this.setState({
           profile_img: config.img_url3 + user_details["image"],
         });
       }
     }
-    
+
   };
 
   updateAddress = async () => {
@@ -622,7 +622,7 @@ export default class Home extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       fontSize: (windowWidth * 3.5) / 100,
                     }}
                   >
@@ -647,7 +647,7 @@ export default class Home extends Component {
                     numberOfLines={1}
                     style={{
                       color: "#6D737E",
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: Font.sregulartext_size,
                       textAlign: config.textRotate,
                       marginLeft: (windowWidth * 2) / 100,
@@ -661,7 +661,7 @@ export default class Home extends Component {
                     numberOfLines={1}
                     style={{
                       color: "#6D737E",
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       fontSize: Font.sregulartext_size,
                       textAlign: config.textRotate,
                       marginLeft: (windowWidth * 2) / 100,
@@ -848,7 +848,7 @@ export default class Home extends Component {
                               "AllServiceProviderListing",
                               {
                                 pass_status: item.pass_status,
-                                enableFor:item.enableFor
+                                enableFor: item.enableFor
                               }
                             )
                           }
@@ -963,28 +963,33 @@ export default class Home extends Component {
                             }}
                             source={item.img}
                           />
-                          <TouchableOpacity style={{
-                            borderRadius: (windowWidth * 2) / 100,
-                            width: (windowWidth * 40) / 100,
-                            height: (windowWidth * 9) / 100,
-                            marginTop: vs(8),
-                            marginHorizontal: s(1),
-                            marginBottom: vs(4),
-                            backgroundColor: Colors.White,
-                            borderWidth: 0.8,
-                            borderColor: Colors.ButtonBorder,
-                            shadowOpacity: 0.3,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 1, height: 1 },
-                            elevation: 2,
-                            shadowRadius: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
+                          <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate(
+                              "AllServiceProviderListing",
+                              { pass_status: item.pass_status }
+                            )}
+                            style={{
+                              borderRadius: (windowWidth * 2) / 100,
+                              width: (windowWidth * 40) / 100,
+                              height: (windowWidth * 9) / 100,
+                              marginTop: vs(8),
+                              marginHorizontal: s(1),
+                              marginBottom: vs(4),
+                              backgroundColor: Colors.White,
+                              borderWidth: 0.8,
+                              borderColor: Colors.ButtonBorder,
+                              shadowOpacity: 0.3,
+                              shadowColor: '#000',
+                              shadowOffset: { width: 1, height: 1 },
+                              elevation: 2,
+                              shadowRadius: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
                             <Text
                               style={{
                                 fontSize: Font.small,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 color: Colors.Blue
                               }}
                             >{Lang_chg.Find_Labs[config.language]}</Text>
@@ -1063,7 +1068,7 @@ const styles_new = StyleSheet.create({
     borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
-    fontFamily: Font.fontregular,
+    fontFamily: Font.Regular,
     lineHeight: (windowWidth * 5) / 100,
   },
   notecard: {
@@ -1109,9 +1114,9 @@ const styles_new = StyleSheet.create({
   checkboxtext: {
     color: "#666666",
     fontSize: Font.smalltextsize,
-    fontFamily: Font.fontbold,
+    fontFamily: Font.Bold,
     // fontSize: Font.smalltextsize,
-    fontFamily: Font.fontbold,
+    fontFamily: Font.Bold,
     flex: 0.88,
   },
   buttonstyle: {
@@ -1127,7 +1132,7 @@ const styles_new = StyleSheet.create({
     backgroundColor: "#4C94DB",
     textAlign: "center",
     color: Colors.whiteColor,
-    fontFamily: Font.fontextrabold,
+    fontFamily: Font.ExtraBold,
     fontSize: (windowWidth * 4.2) / 100,
   },
 
@@ -1164,7 +1169,7 @@ const styles_new = StyleSheet.create({
     // alignSelf: 'flex-end',
     alignSelf: "center",
     fontSize: Font.ssregulartext_size,
-    fontFamily: Font.fontlight,
+    fontFamily: Font.Light,
     // backgroundColor: 'red',
     // color: Colors.gray3,
     // color: 'red',
@@ -1185,7 +1190,7 @@ const styles_new = StyleSheet.create({
     borderRadius: (windowWidth * 2) / 100,
   },
   noteboxtxt: {
-    fontFamily: Font.fontbold,
+    fontFamily: Font.Bold,
     fontSize: (windowWidth * 3.8) / 100,
     lineHeight: (windowWidth * 5) / 100,
   },
@@ -1222,7 +1227,7 @@ const styles_new = StyleSheet.create({
   },
   insideviewtext: {
     alignSelf: "flex-end",
-    fontFamily: Font.fontextrabold,
+    fontFamily: Font.ExtraBold,
     fontSize: Font.bigheadingfont,
     color: "#4B4B4B",
     marginRight: (windowWidth * 0.2) / 100,
@@ -1237,7 +1242,7 @@ const styles_new = StyleSheet.create({
   },
   insideviewname: {
     alignSelf: "center",
-    fontFamily: Font.fontextrabold,
+    fontFamily: Font.ExtraBold,
     fontSize: Font.mini,
     color: "#4B4B4B",
   },

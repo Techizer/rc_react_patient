@@ -48,7 +48,7 @@ export default class Cameragallery extends Component {
               <View style={{ width: "85%", alignSelf: "center" }}>
                 <Text
                   style={{
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     textAlign: config.textRotate,
                     fontSize: (screenWidth * 5) / 100,
                     color: "#000",
@@ -66,7 +66,7 @@ export default class Cameragallery extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       textAlign: config.textalign,
                       fontSize: (screenWidth * 4.5) / 100,
                       color: "#000",
@@ -83,7 +83,7 @@ export default class Cameragallery extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       textAlign: config.textalign,
                       fontSize: (screenWidth * 4.5) / 100,
                       color: "#000",
@@ -100,7 +100,7 @@ export default class Cameragallery extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       textAlign: config.textalign,
                       fontSize: (screenWidth * 4.5) / 100,
                       color: "#000",

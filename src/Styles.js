@@ -46,25 +46,25 @@ export default Styles = StyleSheet.create({
   headertext: {
     // color: Colors.whiteColor,
     textAlign: "center",
-    fontFamily: Font.fontmedium,
+    fontFamily: Font.Medium,
     fontSize: (windowWidth * 4) / 100,
   },
   headingtext: {
     // color: Colors.whiteColor,
     textAlign: config.textalign,
-    fontFamily: Font.fontmedium,
+    fontFamily: Font.Medium,
     fontSize: (windowWidth * 3.7) / 100,
   },
   cardtitle: {
     textAlign: config.textalign,
-    fontFamily: Font.fontmedium,
+    fontFamily: Font.Medium,
     fontSize: Font.medium,
     color: Colors.Black,
   },
   details: {
     textAlign: config.textalign,
     fontSize: Font.small,
-    fontFamily: Font.fontregular,
+    fontFamily: Font.Regular,
     color: Colors.Black,
     lineHeight: (windowWidth * 3.9) / 100,
     marginTop: vs(7),
@@ -72,7 +72,7 @@ export default Styles = StyleSheet.create({
   subDetails: {
     textAlign: config.textalign,
     fontSize: Font.xsmall,
-    fontFamily: Font.fontregular,
+    fontFamily: Font.Regular,
     
   },
 

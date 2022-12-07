@@ -121,15 +121,15 @@ const AuthInputBoxSec = ({
             <TextInput
               style={[styles.inputFieldStyle,
               {
-                backgroundColor:
-                  props.editable ? Colors.White : Colors.backgroundcolor
+                backgroundColor: props.editable ? Colors.White : Colors.backgroundcolor
               },
+              inputFieldStyle
               ]}
               ref={inputRef}
               label={lableText}
               mode='outlined'
               outlineColor={Colors.Border}
-              activeOutlineColor={Colors.placholderactive}
+              activeOutlineColor={Colors.Theme}
               autoCapitalize="none"
               onChangeText={onChangeText}
               value={value}
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     color: Colors.Black,
     fontSize: Font.medium,
     textAlign: config.textalign,
-    fontFamily: Font.fontregular,
+    fontFamily: Font.Regular,
     includeFontPadding: false,
     lineHeight: 48,
   },

@@ -69,7 +69,7 @@ class App extends Component {
           position="top"
           animated={true}
         // titleStyle={{
-        //   fontFamily: Font.fontregular,
+        //   fontFamily: Font.Regular,
         //   fontSize: 20
         // }}
         />

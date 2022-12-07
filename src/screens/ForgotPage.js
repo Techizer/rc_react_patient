@@ -68,8 +68,6 @@ export default class ForgotPage extends Component {
             this.props.navigation.navigate("ForgotOTP", { email: email_new });
           }, 300);
         } else {
-          console.log("muksna");
-
           setTimeout(() => {
             msgProvider.showError(obj.message);
           }, 300);
@@ -135,9 +133,9 @@ export default class ForgotPage extends Component {
             <Text
               style={{
                 fontSize: Font.xxxlarge,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 textAlign: config.textRotate,
-                color:Colors.darkText
+                color: Colors.darkText
               }}>
               {Lang_chg.Forgot[config.language]}
             </Text>
@@ -146,7 +144,7 @@ export default class ForgotPage extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.inActiveText,
                 marginTop: vs(4)
               }}
@@ -175,7 +173,7 @@ export default class ForgotPage extends Component {
 
             {/* <View style={{ width: '95%', alignSelf: 'center', }}>
                   <TextInput
-                    style={{ width: '100%', color: '#000', fontSize: Font.placeholdersize, textAlign: config.textalign, fontFamily: Font.fontlight, height: Font.placeholder_height }}
+                    style={{ width: '100%', color: '#000', fontSize: Font.placeholdersize, textAlign: config.textalign, fontFamily: Font.Light, height: Font.placeholder_height }}
                     maxLength={50}
                     placeholder={this.state.emailfocus != true ? Lang_chg.textinputregistered[config.language] : null}
                     DarkGrey={Colors.DarkGrey}
@@ -194,19 +192,13 @@ export default class ForgotPage extends Component {
 
             <Button
               text={Lang_chg.forgotbtn[config.language]}
-              // onLoading={this.state.loading}
-              customStyles={
-                {
-                  // mainContainer: styles.butonContainer
-                }
-              }
               onPress={() => this.submit_click()}
-            // isBlank={false}
+              btnStyle={{ marginTop: vs(30) }}
             />
 
             {/* <TouchableOpacity onPress={() => this.submit_click()}
                 style={{ width: '90%', alignSelf: 'center', borderRadius: windowWidth * 2 / 100, backgroundColor: Colors.Theme, paddingVertical: windowWidth * 4 / 100, marginTop: windowWidth * 6 / 100 }}>
-                <Text style={{ color: Colors.White, fontFamily: Font.fontmedium, fontSize: Font.buttontextsize, textAlign: config.textalign, alignSelf: 'center' }}>{Lang_chg.forgotbtn[config.language]}</Text>
+                <Text style={{ color: Colors.White, fontFamily: Font.Medium, fontSize: Font.buttontextsize, textAlign: config.textalign, alignSelf: 'center' }}>{Lang_chg.forgotbtn[config.language]}</Text>
               </TouchableOpacity> */}
 
           </View>

@@ -26,8 +26,6 @@ import {
 
 import Styles from "../Styles";
 
-import Footer from "../Footer";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import moment from "moment-timezone";
 
 const tabheadings = [
@@ -699,7 +697,7 @@ export default class ShowOtherAppointments extends Component {
                               {
                                 fontSize: (windowWidth * 3.8) / 100,
                                 textAlign: "center",
-                                fontFamily: Font.fontsemibold,
+                                fontFamily: Font.SemiBold,
                               },
                               item.name == this.state.manageTab
                                 ? { color: "#fff" }
@@ -714,7 +712,7 @@ export default class ShowOtherAppointments extends Component {
                               {
                                 fontSize: (windowWidth * 3.8) / 100,
                                 textAlign: "center",
-                                fontFamily: Font.fontsemibold,
+                                fontFamily: Font.SemiBold,
                               },
                               item.name == this.state.manageTab
                                 ? { color: "#fff" }
@@ -749,7 +747,7 @@ export default class ShowOtherAppointments extends Component {
                   style={{
                     textAlign: "center",
                     color: Colors.Theme,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: (windowWidth * 3.5) / 100,
                     marginTop: (windowWidth * 60) / 100,
                   }}
@@ -887,7 +885,7 @@ export default class ShowOtherAppointments extends Component {
                           <View style={{ width: "42%" }}>
                             <Text
                               style={{
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.Theme,
                                 textAlign: config.textRotate,
@@ -899,7 +897,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 2) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.DarkGrey,
                                 textAlign: config.textRotate,
@@ -910,7 +908,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 1) / 100,
-                                fontFamily: Font.fontregular,
+                                fontFamily: Font.Regular,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.DarkGrey,
                                 textAlign: config.textRotate,
@@ -927,7 +925,7 @@ export default class ShowOtherAppointments extends Component {
                             >
                               <Text
                                 style={{
-                                  fontFamily: Font.fontmedium,
+                                  fontFamily: Font.Medium,
                                   fontSize: Font.sregulartext_size,
                                   color: Colors.Theme,
                                   textAlign: config.textRotate,
@@ -947,7 +945,7 @@ export default class ShowOtherAppointments extends Component {
                             </View>
                             <Text
                               style={{
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 marginTop: (windowWidth * 1) / 100,
                                 color: Colors.DarkGrey,
@@ -964,7 +962,7 @@ export default class ShowOtherAppointments extends Component {
                             >
                               <Text
                                 style={{
-                                  fontFamily: Font.fontregular,
+                                  fontFamily: Font.Regular,
                                   fontSize: Font.sregulartext_size,
                                   color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
@@ -974,7 +972,7 @@ export default class ShowOtherAppointments extends Component {
                               </Text>
                               <Text
                                 style={{
-                                  fontFamily: Font.fontmedium,
+                                  fontFamily: Font.Medium,
                                   fontSize: Font.sregulartext_size,
                                   color: Colors.DarkGrey,
                                   textAlign: config.textRotate,
@@ -994,7 +992,7 @@ export default class ShowOtherAppointments extends Component {
                           >
                             <Text
                               style={{
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.regulartext_size,
                                 color: Colors.Theme,
                                 textAlign: config.textRotate,
@@ -1005,7 +1003,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 1) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.DarkGrey,
                                 textAlign: config.textRotate,
@@ -1016,7 +1014,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 1) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 color: Colors.Theme,
                                 fontSize: Font.sregulartext_size,
                                 textAlign: config.textRotate,
@@ -1027,7 +1025,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 1) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.DarkGrey,
                                 textAlign: config.textRotate,
@@ -1051,7 +1049,7 @@ export default class ShowOtherAppointments extends Component {
                             >
                               <Text
                                 style={{
-                                  fontFamily: Font.fontmedium,
+                                  fontFamily: Font.Medium,
                                   fontSize: Font.sregulartext_size,
                                   color: Colors.Theme,
                                 }}
@@ -1083,7 +1081,7 @@ export default class ShowOtherAppointments extends Component {
                               <Text
                                 style={{
                                   color: "#FCFFFE",
-                                  fontFamily: Font.fontmedium,
+                                  fontFamily: Font.Medium,
                                   fontSize: (windowWidth * 2.7) / 100,
                                   textAlign: "center",
                                   textTransform: "uppercase",
@@ -1095,7 +1093,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 marginTop: (windowWidth * 6.5) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 color: Colors.Theme,
                                 fontSize: Font.sregulartext_size,
                                 textAlign: config.textRotate,
@@ -1106,7 +1104,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 paddingTop: (windowWidth * 1) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: Font.sregulartext_size,
                                 color: Colors.DarkGrey,
                                 textAlign: config.textRotate,
@@ -1149,7 +1147,7 @@ export default class ShowOtherAppointments extends Component {
                               <Text
                                 style={{
                                   color: Colors.Theme,
-                                  fontFamily: Font.fontregular,
+                                  fontFamily: Font.Regular,
                                   fontSize: (windowWidth * 3) / 100,
                                   marginLeft: (windowWidth * 1) / 100,
                                   textAlign: config.textRotate,
@@ -1206,7 +1204,7 @@ export default class ShowOtherAppointments extends Component {
                               style={{
                                 color: Colors.Theme,
                                 fontSize: (windowWidth * 3.7) / 100,
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 alignSelf: "center",
                                 marginLeft: (windowWidth * 1) / 100,
                                 marginTop: 0.5,
@@ -1257,7 +1255,7 @@ export default class ShowOtherAppointments extends Component {
                                       textAlign: "center",
                                       color: Colors.White,
                                       textTransform: "uppercase",
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       fontSize: (windowWidth * 3) / 100,
                                     }}
                                   >
@@ -1291,7 +1289,7 @@ export default class ShowOtherAppointments extends Component {
                                     textAlign: "center",
                                     color: Colors.White,
                                     textTransform: "uppercase",
-                                    fontFamily: Font.fontmedium,
+                                    fontFamily: Font.Medium,
                                     fontSize: (windowWidth * 3) / 100,
                                   }}
                                 >
@@ -1330,7 +1328,7 @@ export default class ShowOtherAppointments extends Component {
                                   textAlign: "center",
                                   color: Colors.White,
                                   //  paddingHorizontal: (windowWidth * 2) / 100,
-                                  fontFamily: Font.fontmedium,
+                                  fontFamily: Font.Medium,
                                   fontSize: (windowWidth * 3) / 100,
                                 }}
                               >
@@ -1358,7 +1356,7 @@ export default class ShowOtherAppointments extends Component {
                             <Text
                               style={{
                                 color: "#fff",
-                                fontFamily: Font.fontmedium,
+                                fontFamily: Font.Medium,
                                 fontSize: (windowWidth * 2.5) / 100,
                                 alignSelf: "center",
                               }}
@@ -1480,7 +1478,7 @@ export default class ShowOtherAppointments extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontmedium,
+                        fontFamily: Font.Medium,
                         fontSize: (windowWidth * 4) / 100,
                       }}
                     >
@@ -1492,7 +1490,7 @@ export default class ShowOtherAppointments extends Component {
                       <Text
                         style={{
                           color: Colors.Theme,
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.name,
                           paddingRight: (windowWidth * 4) / 100,
                         }}
@@ -1537,7 +1535,7 @@ export default class ShowOtherAppointments extends Component {
                     <View style={{ paddingBottom: (windowWidth * 1.5) / 100 }}>
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: (windowWidth * 3.5) / 100,
                           textAlign: config.textRotate,
                           color: Colors.Theme,
@@ -1586,7 +1584,7 @@ export default class ShowOtherAppointments extends Component {
                                       textAlign: config.textRotate,
                                       alignSelf: "center",
                                       fontSize: (windowWidth * 3.6) / 100,
-                                      fontFamily: Font.fontregular,
+                                      fontFamily: Font.Regular,
 
                                       color: "#000",
                                     }}
@@ -1598,7 +1596,7 @@ export default class ShowOtherAppointments extends Component {
                                       width: "30%",
 
                                       fontSize: (windowWidth * 3.6) / 100,
-                                      fontFamily: Font.fontregular,
+                                      fontFamily: Font.Regular,
                                       color: "#000",
 
                                       textAlign: "right",
@@ -1647,7 +1645,7 @@ export default class ShowOtherAppointments extends Component {
                                       // paddingHorizontal: (windowWidth * 5) / 100,
                                       paddingVertical: (windowWidth * 1.5) / 100,
                                       color: Colors.White,
-                                      fontFamily: Font.fontmedium,
+                                      fontFamily: Font.Medium,
                                       fontSize: (windowWidth * 3) / 100,
                                       textAlign: "center",
                                       textTransform: "uppercase",
@@ -1659,7 +1657,7 @@ export default class ShowOtherAppointments extends Component {
                                 <Text
                                   style={{
                                     paddingVertical: (windowWidth * 2) / 100,
-                                    fontFamily: Font.fontmedium,
+                                    fontFamily: Font.Medium,
                                     textAlign: "center",
                                     fontSize: Font.sregulartext_size,
                                   }}
@@ -1689,7 +1687,7 @@ export default class ShowOtherAppointments extends Component {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.name,
                           textAlign: config.textRotate,
                         }}
@@ -1714,7 +1712,7 @@ export default class ShowOtherAppointments extends Component {
                         <Text
                           style={{
                             color: Colors.Theme,
-                            fontFamily: Font.fontmedium,
+                            fontFamily: Font.Medium,
                             fontSize: Font.name,
                             marginLeft: (windowWidth * 1) / 100,
                           }}
@@ -1742,7 +1740,7 @@ export default class ShowOtherAppointments extends Component {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.subtext,
                           color: "#000",
                           textAlign: config.textRotate,
@@ -1815,7 +1813,7 @@ export default class ShowOtherAppointments extends Component {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: Font.subtext,
                           textAlign: config.textRotate,
                         }}
@@ -1925,7 +1923,7 @@ export default class ShowOtherAppointments extends Component {
                           ) : (
                             <Text
                               style={{
-                                fontFamily: Font.fontMediumItalic,
+                                fontFamily: Font.MediumItalic,
                                 fontSize: (windowWidth * 4) / 100,
                                 alignSelf: "center",
                                 marginTop: (windowWidth * 3) / 100,
@@ -1956,7 +1954,7 @@ export default class ShowOtherAppointments extends Component {
                       <Text
                         style={{
                           color: Colors.White,
-                          fontFamily: Font.fontmedium,
+                          fontFamily: Font.Medium,
                           fontSize: Font.subtext,
                           alignSelf: "flex-end",
                           textAlign: config.textalign,

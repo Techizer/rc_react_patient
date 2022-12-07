@@ -367,15 +367,13 @@ PODS:
     - React-Core
   - react-native-cameraroll (5.1.0):
     - React-Core
-  - react-native-date-picker (4.2.6):
-    - React-Core
-  - react-native-geolocation (3.0.3):
+  - react-native-geolocation (3.0.4):
     - React-Core
   - react-native-maps (1.3.2):
     - React-Core
-  - react-native-netinfo (9.3.6):
+  - react-native-netinfo (9.3.7):
     - React-Core
-  - react-native-pager-view (6.1.1):
+  - react-native-pager-view (6.1.2):
     - React-Core
   - react-native-restart (0.0.24):
     - React-Core
@@ -395,7 +393,7 @@ PODS:
   - react-native-twilio-video-webrtc (3.0.0):
     - React
     - TwilioVideo (~> 4.6)
-  - react-native-webview (11.23.1):
+  - react-native-webview (11.25.0):
     - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
@@ -476,10 +474,10 @@ PODS:
     - React-Core
   - RNDeviceInfo (10.3.0):
     - React-Core
-  - RNFBApp (14.9.2):
+  - RNFBApp (14.12.0):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
-  - RNFBMessaging (14.9.2):
+  - RNFBMessaging (14.12.0):
     - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
@@ -633,7 +631,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
-  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -772,8 +769,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
-  react-native-date-picker:
-    :path: "../node_modules/react-native-date-picker"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-maps:
@@ -911,18 +906,17 @@ SPEC CHECKSUMS:
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-cameraroll: a40b082318eb1ecd0336a2f29d9f74b7f2c8cae8
-  react-native-date-picker: 93e43b3084cea595b4d68b1405d6d99849663bd6
-  react-native-geolocation: 2b4052c14edff18ba402795f4ce0f2a093c4ba3e
+  react-native-geolocation: 3ed60c3d7f613c36b777b9fd0bc3453214e1b0d5
   react-native-maps: 085f614cf14d3637b2048bb9752da5b1c27c2886
-  react-native-netinfo: f80db8cac2151405633324cb645c60af098ee461
-  react-native-pager-view: 3c66c4e2f3ab423643d07b2c7041f8ac48395f72
+  react-native-netinfo: 2517ad504b3d303e90d7a431b0fcaef76d207983
+  react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
   react-native-slider: 7d19220da2f2ae7cbb9aa80127cb73c597fa221f
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
   react-native-twilio-video-webrtc: a1d072a2e0c9df0c5179ca5162ce8ddeee8c647e
-  react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
+  react-native-webview: a71da846ed2e9085440e1d6659c04e285528834b
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034
@@ -942,8 +936,8 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNDateTimePicker: 1dd15d7ed1ab7d999056bc77879a42920d139c12
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
-  RNFBApp: 6f5c7b9931378efb467e08144959ff93172ac83b
-  RNFBMessaging: cecaa5c11d993b6b5c22c580bb5c3111fa5c6ef5
+  RNFBApp: e4439717c23252458da2b41b81b4b475c86f90c4
+  RNFBMessaging: 40dac204b4197a2661dec5be964780c6ec39bf65
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNGosellSdkReactNative: 3d49e21de3c9eca4001df37a4e0be3a36624d3e1
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
@@ -977,6 +971,6 @@ SPEC CHECKSUMS:
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 9e13f90db15e831a147031274ec708e496705376
+PODFILE CHECKSUM: 3b16acf14f1a6bf153027085015db0e26ddc5997
 
 COCOAPODS: 1.11.3

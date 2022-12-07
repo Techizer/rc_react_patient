@@ -181,7 +181,7 @@ export default class SupportandMore extends Component {
                 paddingVertical: vs(14),
                 fontSize: Font.xlarge,
                 color: Colors.lightGrey,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 alignSelf: "center",
                 textAlign: "center",
               }} >
@@ -196,7 +196,7 @@ export default class SupportandMore extends Component {
               marginTop: vs(11),
               fontSize: Font.medium,
               color: Colors.Border,
-              fontFamily: Font.fontregular,
+              fontFamily: Font.Regular,
               alignSelf: "center",
               textAlign: "center",
             }} >
@@ -512,7 +512,7 @@ export default class SupportandMore extends Component {
           style={{
             justifyContent: "space-between",
             width: "90%",
-            height:vs(15),
+            height: vs(15),
             alignSelf: "center",
             marginTop: vs(10),
             flexDirection: "row",
@@ -538,7 +538,7 @@ export default class SupportandMore extends Component {
                 textAlign: config.textalign,
                 fontSize: (windowWidth * 4) / 100,
                 color: Colors.Black,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
               }}
             >
               {Lang_chg.needsupport[config.language]}{" "}
@@ -613,7 +613,7 @@ export default class SupportandMore extends Component {
                   />
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: "#000",
                       fontSize: (windowWidth * 5) / 100,
                       paddingLeft: (windowWidth * 3) / 100,
@@ -636,7 +636,7 @@ export default class SupportandMore extends Component {
                     style={{
                       paddingVertical: (windowWidth * 1) / 100,
                       paddingLeft: (windowWidth * 4) / 100,
-                      fontFamily: Font.fontregular,
+                      fontFamily: Font.Regular,
                       color: "#000",
                       fontSize: (windowWidth * 4) / 100,
                       width: "90%",
@@ -669,7 +669,7 @@ export default class SupportandMore extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         color: Colors.Blue,
                         alignSelf: "center",
@@ -696,7 +696,7 @@ export default class SupportandMore extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         color: Colors.Blue,
                         alignSelf: "center",

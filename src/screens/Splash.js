@@ -290,7 +290,7 @@ export default class Splash extends Component {
               paddingVertical: vs(14),
               fontSize: Font.xlarge,
               color: Colors.lightGrey,
-              fontFamily: Font.fontregular,
+              fontFamily: Font.Regular,
               alignSelf: "center",
               textAlign: "center",
             }}
@@ -312,7 +312,7 @@ export default class Splash extends Component {
             style={{
               fontSize: Font.medium,
               color: Colors.lightGrey,
-              fontFamily: Font.fontregular,
+              fontFamily: Font.Regular,
               alignSelf: "center",
               textAlign: "center",
             }}
@@ -374,12 +374,12 @@ export default class Splash extends Component {
                   {/* <Image style={{ 
                     width: windowWidth * 6 / 100, 
                     height: windowWidth * 6 / 100 }} source={require('./icons/logo.png')}></Image> */}
-                  {/* <Text style={{ fontFamily: Font.fontmedium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
+                  {/* <Text style={{ fontFamily: Font.Medium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
                   <HTMLView
                     value={this.state.updTitle}
                     stylesheet={{
                       h3: {
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         color: Colors.Black, //'#000',
                         fontSize: (windowWidth * 4.8) / 100,
                         opacity: 0.9,
@@ -401,12 +401,12 @@ export default class Splash extends Component {
                     // backgroundColor: 'red'
                   }}
                 >
-                  {/* <Text style={{ fontFamily: Font.fontregular, color: '#000', fontSize: windowWidth * 4 / 100, }}>{Lang_chg.logut_msg[config.language]}</Text> */}
+                  {/* <Text style={{ fontFamily: Font.Regular, color: '#000', fontSize: windowWidth * 4 / 100, }}>{Lang_chg.logut_msg[config.language]}</Text> */}
                   <HTMLView
                     value={this.state.updText}
                     stylesheet={{
                       p: {
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         color: Colors.Black, //'#515C6F', //Colors.DarkGrey,
                         fontSize: (windowWidth * 4) / 100,
                         textAlign: "left",
@@ -453,7 +453,7 @@ export default class Splash extends Component {
                     >
                       <Text
                         style={{
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                           fontSize: (windowWidth * 3.8) / 100,
                           color: Colors.Theme, //Colors.Blue,
                           alignSelf: "center",
@@ -480,7 +480,7 @@ export default class Splash extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 3.8) / 100,
                         color: Colors.White,
                         alignSelf: "center",
@@ -509,7 +509,7 @@ export default class Splash extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontsemibold,
+                        fontFamily: Font.SemiBold,
                         fontSize: (windowWidth * 3.5) / 100,
                         color: Colors.placeholder_border,
                         // alignSelf: 'flex-start',
@@ -520,7 +520,7 @@ export default class Splash extends Component {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: Font.fontsemibold,
+                        fontFamily: Font.SemiBold,
                         fontSize: (windowWidth * 3.5) / 100,
                         color: Colors.Theme,
                         marginLeft: 6,

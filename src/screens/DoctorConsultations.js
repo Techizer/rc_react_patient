@@ -25,8 +25,6 @@ import {
 
 import Styles from "../Styles";
 import { leftArrow, rightArrow, Notification } from "../icons/SvgIcons/Index";
-import Footer from "../Footer";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
 import Icon from "react-native-vector-icons/AntDesign";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";

@@ -216,7 +216,7 @@ export default class OTPPage extends Component {
             <Text
               style={{
                 fontSize: Font.xxxlarge,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 textAlign: config.textRotate,
                 color: Colors.darkText
               }}>
@@ -227,7 +227,7 @@ export default class OTPPage extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.inActiveText,
                 marginTop: vs(4)
               }}>
@@ -242,7 +242,7 @@ export default class OTPPage extends Component {
                   width: (windowWidth * 20) / 100,
                   color: "#000",
                   alignSelf: "center",
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: (windowWidth * 5) / 100,
                   borderWidth: 2,
                   borderColor: Colors.Border,
@@ -262,15 +262,14 @@ export default class OTPPage extends Component {
 
             <Button
               text={Lang_chg.submitbtntext[config.language]}
-              // onLoading={this.state.loading}
               onPress={() => this.otpVerify()}
-            // isBlank={false}
+              btnStyle={{ marginTop: vs(30) }}
             />
             <Text
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.small,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.DarkGrey,
                 paddingVertical: vs(20)
               }}>
@@ -302,7 +301,7 @@ export default class OTPPage extends Component {
             <Text
               style={{
                 color: Colors.White,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 fontSize: Font.buttontextsize,
 
                 textAlign: config.textalign,
@@ -327,7 +326,7 @@ export default class OTPPage extends Component {
               style={{
                 textAlign: config.textalign,
                 fontSize: Font.medium,
-                fontFamily: Font.fontregular,
+                fontFamily: Font.Regular,
                 color: Colors.DarkGrey,
               }} >
               {Lang_chg.notrectext[config.language]}
@@ -339,7 +338,7 @@ export default class OTPPage extends Component {
               style={{
                 textAlign: config.textalign,
                 fontSize: Font.medium,
-                fontFamily: Font.fontmedium,
+                fontFamily: Font.Medium,
                 color: Colors.Blue,
               }}>
               {Lang_chg.sendagaintext[config.language]}
@@ -400,7 +399,7 @@ export default class OTPPage extends Component {
                   />
                   <Text
                     style={{
-                      fontFamily: Font.fontmedium,
+                      fontFamily: Font.Medium,
                       color: "#000",
                       fontSize: (windowWidth * 5) / 100,
                       paddingLeft: (windowWidth * 4) / 100,
@@ -419,7 +418,7 @@ export default class OTPPage extends Component {
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontlight,
+                      fontFamily: Font.Light,
                       color: "#000",
                       fontSize: (windowWidth * 4) / 100,
                     }}
@@ -450,7 +449,7 @@ export default class OTPPage extends Component {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
                         color: Colors.Theme,
                         alignSelf: "center",

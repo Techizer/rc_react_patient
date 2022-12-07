@@ -82,7 +82,7 @@ const LabPackageDetails = ({navigation, route}) => {
                     width: "100%",
                     marginTop: vs(9),
                     color: Colors.Black,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     textAlign: "left",
                   }}
@@ -92,7 +92,7 @@ const LabPackageDetails = ({navigation, route}) => {
                 <Text
                   style={{
                     paddingVertical: vs(6),
-                    fontFamily: Font.fontregular,
+                    fontFamily: Font.Regular,
                     textAlign: "left",
                     color: Colors.Theme,
                     fontSize: Font.sregulartext_size,
@@ -104,7 +104,7 @@ const LabPackageDetails = ({navigation, route}) => {
                   style={{
                     paddingTop: vs(7),
                     textAlign: config.textalign,
-                    fontFamily: Font.fontmedium,
+                    fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                   }}
                 >
@@ -117,7 +117,7 @@ const LabPackageDetails = ({navigation, route}) => {
                   <>
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.large,
                         textAlign: config.textRotate,
                         color: Colors.lightGrey,
@@ -132,7 +132,7 @@ const LabPackageDetails = ({navigation, route}) => {
                           fontSize: Font.medium,
                           color: Colors.lightGrey,
                           marginTop: vs(8),
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                         },
                       }}
                     />
@@ -148,7 +148,7 @@ const LabPackageDetails = ({navigation, route}) => {
                   >
                     <Text
                       style={{
-                        fontFamily: Font.fontregular,
+                        fontFamily: Font.Regular,
                         fontSize: Font.headingfont_booking,
                         color: Colors.precautionText,
                         marginTop: (windowWidth * 2) / 100,
@@ -164,7 +164,7 @@ const LabPackageDetails = ({navigation, route}) => {
                           fontSize: Font.subtext,
                           color: Colors.lightGrey,
                           marginTop: (windowWidth * 2) / 100,
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
                         },
                       }}
                     />
@@ -187,7 +187,7 @@ const LabPackageDetails = ({navigation, route}) => {
                 style={{
                   width: "100%",
                   color: Colors.Black,
-                  fontFamily: Font.fontregular,
+                  fontFamily: Font.Regular,
                   fontSize: Font.large,
                   textAlign: "left",
                 }}
@@ -228,7 +228,7 @@ const LabPackageDetails = ({navigation, route}) => {
                               width: "90%",
                               fontSize: Font.subtext,
                               color: Colors.Theme,
-                              fontFamily: Font.fontmedium,
+                              fontFamily: Font.Medium,
                               textAlign: "left",
                             }}
                           >
@@ -259,7 +259,7 @@ const LabPackageDetails = ({navigation, route}) => {
                             style={{
                               paddingTop: (windowWidth * 2) / 100,
                               paddingHorizontal: (windowWidth * 4) / 100,
-                              fontFamily: Font.fontregular,
+                              fontFamily: Font.Regular,
                               textAlign: "left",
                               color: Colors.subTaskColor,
                               fontSize: Font.sregulartext_size,

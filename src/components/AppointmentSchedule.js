@@ -163,7 +163,7 @@ const AppointmentSchedule = (props) => {
       >
         <Text
           style={{
-            fontFamily: Font.fontmedium,
+            fontFamily: Font.Medium,
             fontSize: Font.name,
             width: "65%",
             textAlign: config.textRotate,
@@ -194,7 +194,7 @@ const AppointmentSchedule = (props) => {
           <Text
             style={{
               color: Colors.Theme,
-              fontFamily: Font.fontmedium,
+              fontFamily: Font.Medium,
               fontSize: Font.name,
               alignSelf: "center",
               marginLeft: (windowWidth * 1) / 100,
@@ -224,7 +224,7 @@ const AppointmentSchedule = (props) => {
       >
         <Text
           style={{
-            fontFamily: Font.fontregular,
+            fontFamily: Font.Regular,
             fontSize: Font.subtext,
             textAlign: config.textRotate,
             color: "#000",
@@ -282,7 +282,7 @@ const AppointmentSchedule = (props) => {
       >
         <Text
           style={{
-            fontFamily: Font.fontregular,
+            fontFamily: Font.Regular,
             fontSize: Font.subtext,
             color: "#000",
             textAlign: config.textRotate,
@@ -389,7 +389,7 @@ const AppointmentSchedule = (props) => {
               ) : (
                 <Text
                   style={{
-                    fontFamily: Font.fontMediumItalic,
+                    fontFamily: Font.MediumItalic,
                     fontSize: (windowWidth * 4) / 100,
                     alignSelf: "center",
                     paddingVertical: (windowWidth * 3) / 100,

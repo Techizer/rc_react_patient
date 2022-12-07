@@ -20,8 +20,7 @@ import Booking from "../../screens/Booking";
 import Drawerscreen from "../../Drawerscreen";
 import Cart2 from "../../Cart2";
 
-import Office_address from "../../Office_address";
-import Show_currentlocation from "../../Show_currentlocation";
+
 import App_payment from "../../App_payment";
 
 import AddPatient from "../../screens/AddPatient";
@@ -29,14 +28,8 @@ import ShowOtherAppointments from "../../screens/ShowOtherAppointments";
 import AppointmentDetails from "../../screens/AppointmentDetails";
 import ServiceProviderDetails from "../../screens/ServiceProviderDetails";
 import VideoCall from "../../screens/VideoCall";
-import LabPackageListing from "../../screens/LabPackageListing";
-import LabPackageDetails from "../../screens/LabPackageDetails";
-import TermsAndConditions from "../../screens/TermsAndConditions";
-import CovidPackageDetails from "../../screens/CovidPackageDetails";
-import ForgotPage from "../../screens/ForgotPage";
-import NeedSupport from "../../screens/NeedSupport";
-import Notifications from "../../screens/Notifications";
-import ForgotOTP from "../../screens/ForgotOTP";
+
+
 import { Colors } from "../Colorsfont";
 import { Icons } from "../Localimage";
 import { Lang_chg } from "../Language_provider";

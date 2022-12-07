@@ -87,7 +87,8 @@ export const Icons = {
 
 
   //--Ahsan
-  Tick: require('../icons/tick.png')
+  Tick: require('../icons/tick.png'),
+  Notification: require('../icons/notification.png')
   
 };
 
