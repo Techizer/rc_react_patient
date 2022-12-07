@@ -26,6 +26,7 @@ import Styles from "../Styles";
 import Footer from "../Footer";
 import HideWithKeyboard from "react-native-hide-with-keyboard";
 import Icon from "react-native-vector-icons/AntDesign";
+import { Col } from "ionic-angular";
 
 export default class AllServiceProviderListing extends Component {
   _didFocusSubscription;
@@ -194,10 +195,10 @@ export default class AllServiceProviderListing extends Component {
       data.append("provider_name", this.state.provider_name);
     }
 
-    if (this.state.pass_status === "doctor"){
+    if (this.state.pass_status === "doctor") {
       data.append("docEnableFor", this.state.enableFor);
     }
-      
+
     if (this.state.pass_status === "hospital") {
       data.append("hospital_name", this.state.provider_name);
     }
@@ -800,7 +801,7 @@ export default class AllServiceProviderListing extends Component {
                             >
                               <Text
                                 style={{
-                                  color: Colors.buttoncolorhgreen,
+                                  color: (item.provider_available == "0") ? Colors.buttoncolorhgreen : Colors.regulartextcolor,
                                   fontSize: (mobileW * 3) / 100,
                                   fontFamily: Font.fontmedium,
                                   textAlign: config.textRotate,
@@ -809,35 +810,38 @@ export default class AllServiceProviderListing extends Component {
                                 {item.bavi_text}
                               </Text>
                             </View>
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.props.navigation.navigate("Booking", {
-                                  pass_status: "doctor",
-                                  nurse_id: item.user_id,
-                                  indexPosition: 0,
-                                  isFromHospital: true,
-                                  hospitalId: this.state.hospitalId,
-                                });
-                              }}
-                              style={{
-                                backgroundColor: Colors.buttoncolorblue2,
-                                borderRadius: (mobileW * 1) / 100,
-                                justifyContent: "center",
-                                paddingHorizontal: (mobileW * 2) / 100,
-                                paddingVertical: (mobileW * 0.5) / 100,
-                              }}
-                            >
-                              <Text
+                            {
+                              (item.provider_available == "0") &&
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.props.navigation.navigate("Booking", {
+                                    pass_status: "doctor",
+                                    nurse_id: item.user_id,
+                                    indexPosition: 0,
+                                    isFromHospital: true,
+                                    hospitalId: this.state.hospitalId,
+                                  });
+                                }}
                                 style={{
-                                  color: Colors.white_color,
-                                  fontSize: (mobileW * 2.5) / 100,
-                                  fontFamily: Font.fontmedium,
-                                  textAlign: "center",
+                                  backgroundColor: Colors.buttoncolorblue2,
+                                  borderRadius: (mobileW * 1) / 100,
+                                  justifyContent: "center",
+                                  paddingHorizontal: (mobileW * 2) / 100,
+                                  paddingVertical: (mobileW * 0.5) / 100,
                                 }}
                               >
-                                {Lang_chg.BOOKAPPOINTMENT[config.language]}
-                              </Text>
-                            </TouchableOpacity>
+                                <Text
+                                  style={{
+                                    color: Colors.white_color,
+                                    fontSize: (mobileW * 2.5) / 100,
+                                    fontFamily: Font.fontmedium,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {Lang_chg.BOOKAPPOINTMENT[config.language]}
+                                </Text>
+                              </TouchableOpacity>
+                            }
                           </View>
                         </View>
                       </View>
@@ -1296,7 +1300,7 @@ export default class AllServiceProviderListing extends Component {
                                 >
                                   <Text
                                     style={{
-                                      color: Colors.buttoncolorhgreen,
+                                      color: (item.provider_available == "0") ? Colors.buttoncolorhgreen : Colors.regulartextcolor,
                                       fontSize: (mobileW * 3) / 100,
                                       fontFamily: Font.fontmedium,
                                       textAlign: config.textRotate,
@@ -1305,37 +1309,41 @@ export default class AllServiceProviderListing extends Component {
                                     {item.bavi_text}
                                   </Text>
                                 </View>
-                                <TouchableOpacity
-                                  onPress={() =>
-                                    this.props.navigation.navigate("Booking", {
-                                      pass_status: this.state.pass_status,
-                                      nurse_id: item.user_id,
-                                      indexPosition: 0,
-                                    })
-                                  }
-                                  style={{
-                                    backgroundColor: Colors.buttoncolorblue2,
-                                    borderRadius: (mobileW * 1) / 100,
-                                    justifyContent: "center",
-                                    paddingHorizontal: (mobileW * 2) / 100,
-                                    paddingVertical: (mobileW * 0.5) / 100,
-                                  }}
-                                >
-                                  <Text
+                                {
+                                  (item.provider_available == "0") &&
+                                  <TouchableOpacity
+                                    onPress={() =>
+                                      this.props.navigation.navigate("Booking", {
+                                        pass_status: this.state.pass_status,
+                                        nurse_id: item.user_id,
+                                        indexPosition: 0,
+                                      })
+                                    }
                                     style={{
-                                      color: Colors.white_color,
-                                      fontSize: (mobileW * 2.5) / 100,
-                                      fontFamily: Font.fontmedium,
-                                      textAlign: "center",
+                                      backgroundColor: Colors.buttoncolorblue2,
+                                      borderRadius: (mobileW * 1) / 100,
+                                      justifyContent: "center",
+                                      paddingHorizontal: (mobileW * 2) / 100,
+                                      paddingVertical: (mobileW * 0.5) / 100,
                                     }}
                                   >
-                                    {this.state.pass_status === "lab"
-                                      ? Lang_chg.BOOKTEST[config.language]
-                                      : Lang_chg.BOOKAPPOINTMENT[
-                                      config.language
-                                      ]}
-                                  </Text>
-                                </TouchableOpacity>
+                                    <Text
+                                      style={{
+                                        color: Colors.white_color,
+                                        fontSize: (mobileW * 2.5) / 100,
+                                        fontFamily: Font.fontmedium,
+                                        textAlign: "center",
+                                      }}
+                                    >
+                                      {this.state.pass_status === "lab"
+                                        ? Lang_chg.BOOKTEST[config.language]
+                                        : Lang_chg.BOOKAPPOINTMENT[
+                                        config.language
+                                        ]}
+                                    </Text>
+                                  </TouchableOpacity>
+                                }
+
                               </View>
                             </View>
                           </View>

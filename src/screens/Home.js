@@ -695,7 +695,7 @@ export default class Home extends Component {
                   }
                   style={{
                     width: "100%",
-                    resizeMode: "stretch",
+                    resizeMode: "contain",
                     height: (mobileH * 16.5) / 100,
                     marginTop: 15
                   }}

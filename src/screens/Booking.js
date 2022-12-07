@@ -118,6 +118,7 @@ export default class Booking extends Component {
       prescriptionsImage: "",
       packageId: "",
       packagePrice: "",
+      // set_task: "task_base"
     };
     screens = "Booking";
   }
@@ -125,7 +126,10 @@ export default class Booking extends Component {
     if (this.props.route.params.display != undefined) {
       let display = this.props.route.params.display;
 
-      this.setState({ display: display });
+      this.setState({
+        display: display,
+        set_task: (display == "taskbooking") ? "task_base" : "hour_base"
+      });
 
       console.log("display", display);
     }
@@ -981,7 +985,7 @@ export default class Booking extends Component {
     }
     let url =
       config.baseURL +
-      (this.state.nurse_id !== "497"
+      (this.state.nurse_id !== "595"
         ? "api-patient-lab-booking-init-details"
         : "api-patient-rclab-booking-init-details");
     console.log("url", url);
@@ -2081,7 +2085,7 @@ export default class Booking extends Component {
       this.state.only_vatprice_show == 0 ||
       this.state.only_vatprice_show == "0.0"
     ) {
-      real_total = parseFloat(this.state.vat_price_show_display).toFixed(1);
+      real_total = 0 //parseFloat(this.state.vat_price_show_display).toFixed(1);
       show_total_price = parseFloat(
         parseInt(this.state.distance_fare_pass) + sum
       ).toFixed(1);
@@ -2108,7 +2112,7 @@ export default class Booking extends Component {
       sum_arr: price_arr,
       total_price_show: total_sum,
       vat_price_show: real_total,
-      vat_price_show_display: real_total,
+      vat_price_show_display: real_total, //vat show
       distance_fare: show_total_price,
       final_total_price: show_total_price,
     });
@@ -2141,7 +2145,7 @@ export default class Booking extends Component {
       this.state.only_vatprice_show == 0 ||
       this.state.only_vatprice_show == 0.0
     ) {
-      show_total_price = this.state.vat_price_show;
+      show_total_price = 0 //this.state.vat_price_show;
       subTotal = parseFloat(
         parseInt(this.state.distance_fare_pass) + parseInt(prize)
       ).toFixed(1);
@@ -2510,7 +2514,7 @@ export default class Booking extends Component {
                   )}
                 </View>
                 {this.state.pass_status === "lab" &&
-                  this.state.nurse_id !== "497" && (
+                  this.state.nurse_id !== "595" && (
                     <Text
                       onPress={() => {
                         this.props.navigation.navigate(
@@ -3200,9 +3204,11 @@ export default class Booking extends Component {
                                     set_date: item.date1,
                                     set_task: "task_base",
                                     time_take_data: "",
-                                  }),
-                                    this.getLabTimeDate(),
-                                    this.checkDate(item, index);
+                                  }, () => {
+                                    this.getLabTimeDate()
+                                    this.checkDate(item, index)
+                                  })
+
                                 }}
                                 style={{ width: (mobileW * 15) / 100 }}
                               >
@@ -3796,9 +3802,11 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: item.home_visit_text,
                                       time_take_data: "",
-                                    }),
-                                      this.getDoctorTimeDate(),
-                                      this.checkDate(item, index);
+                                    }, () => {
+                                      this.getDoctorTimeDate()
+                                      this.checkDate(item, index)
+                                    })
+
                                   }}
                                   style={{ width: (mobileW * 15) / 100 }}
                                 >
@@ -3843,9 +3851,11 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: item.online_base_text,
                                       time_take_data_hour: "",
-                                    }),
-                                      this.getDoctorTimeDate(),
-                                      this.checkDate(item, index);
+                                    },()=>{
+                                      this.getDoctorTimeDate()
+                                      this.checkDate(item, index)
+                                    })
+                                      
                                   }}
                                   style={{ width: (mobileW * 15) / 100 }}
                                 >
@@ -4403,7 +4413,10 @@ export default class Booking extends Component {
                     {item.task_base_enable == 0 && (
                       <TouchableOpacity
                         onPress={() => {
-                          this.setState({ display: "taskbooking" });
+                          this.setState({
+                            display: "taskbooking",
+                            set_task: "task_base"
+                          });
                         }}
                         style={{ width: "50%", alignSelf: "center" }}
                       >
@@ -4461,7 +4474,10 @@ export default class Booking extends Component {
                     {item.hour_base_enable == 0 && (
                       <TouchableOpacity
                         onPress={() => {
-                          this.setState({ display: "hourlybooking" });
+                          this.setState({
+                            display: "hourlybooking",
+                            set_task: "hour_base"
+                          });
                         }}
                         style={{ width: "50%", alignSelf: "center" }}
                       >
@@ -4948,13 +4964,15 @@ export default class Booking extends Component {
                               return (
                                 <TouchableOpacity
                                   onPress={() => {
+                                    console.log("item.date1:: ", item.date1);
                                     this.setState({
                                       set_date: item.date1,
                                       set_task: "task_base",
                                       time_take_data: "",
-                                    }),
-                                      this.getTimeDate(),
-                                      this.checkDate(item, index);
+                                    }, () => {
+                                      this.getTimeDate()
+                                      this.checkDate(item, index)
+                                    })
                                   }}
                                   style={{ width: (mobileW * 15) / 100 }}
                                 >
@@ -4999,9 +5017,11 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: "hour_base",
                                       time_take_data_hour: "",
-                                    }),
-                                      this.getTimeDate(),
-                                      this.checkDate(item, index);
+                                    },()=>{
+                                      this.getTimeDate()
+                                      this.checkDate(item, index)
+                                    })
+                                      
                                   }}
                                   style={{ width: (mobileW * 15) / 100 }}
                                 >

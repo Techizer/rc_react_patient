@@ -528,7 +528,7 @@ const CovidPackageDetails = (props) => {
                 onPress={() => {
                   navigation.navigate("Booking", {
                     pass_status: "lab",
-                    nurse_id: "497",
+                    nurse_id: "595", //"497",
                     indexPosition: 0,
                   });
                 }}
