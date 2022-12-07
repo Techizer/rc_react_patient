@@ -480,7 +480,7 @@ const CovidPackageDetails = ({ navigation }) => {
               onPress={() => {
                 navigation.navigate("Booking", {
                   pass_status: "lab",
-                  nurse_id: "497",
+                  nurse_id: "497", //live "595", //demo "497",
                   indexPosition: 0,
                 });
               }}

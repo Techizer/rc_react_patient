@@ -1200,7 +1200,10 @@ export default class Cart extends Component {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.goBack();
+                    this.props.navigation.reset({
+                      index: 0,
+                      routes: [{ name: "Home" }],
+                    });
                   }}
                   style={{
                     width: "90%",
@@ -1228,7 +1231,7 @@ export default class Cart extends Component {
             ))}
         </View>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalVisible3}
           onRequestClose={() => {
@@ -1374,7 +1377,7 @@ export default class Cart extends Component {
 
         {/* -------------------------------payment model-------------------------------- */}
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.payment_moodal}
           onRequestClose={() => {
@@ -1392,7 +1395,7 @@ export default class Cart extends Component {
         </Modal>
         {/* ----------------------------------------------sucess model -------------------------- */}
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalvisible}
           onRequestClose={() => { }}

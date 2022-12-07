@@ -179,24 +179,42 @@ export default class AllServiceProviderListing extends Component {
         isLoading: true
       })
     }
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+
     let url =
       config.baseURL +
       (this.state.pass_status === "hospital" ? "api-patient-hospital-list" : "api-patient-service-provider-list");
 
     var data = new FormData();
-    data.append("login_user_id", user_id);
-    data.append("service_type", this.state.pass_status);
-    data.append("work_area", user_details["work_area"]);
-    data.append("page_count", 1);
+    if (global.isLogin == false) {
 
-    // --------When Search anything--------
-    if (this.state.pass_status !== "hospital")
-      data.append("provider_name", this.state.searchProvider);
-    // -------------------------------------
+      // service_type: nurse
+      // page_count: 1
+      // provider_name:
+      // login_user_id: 0
+      // device_lang: ENG
+      // latitude: 37.785834
+      // longitudes: -122.406417
+      // work_area: UAE
+      // docEnableFor: ONLINE_CONSULT
 
-    if (this.state.pass_status === "doctor") data.append("docEnableFor", this.state.enableFor);
+    } else {
+      let user_details = await localStorage.getItemObject("user_arr");
+      let user_id = user_details["user_id"];
+
+      data.append("login_user_id", user_id);
+      data.append("service_type", this.state.pass_status);
+      data.append("work_area", user_details["work_area"]);
+      data.append("page_count", 1);
+
+      // --------When Search anything--------
+      if (this.state.pass_status !== "hospital")
+        data.append("provider_name", this.state.provider_name);
+      // -------------------------------------
+
+      if (this.state.pass_status === "doctor") {
+        data.append("docEnableFor", this.state.enableFor);
+      }
+    }
 
     // consolepro.consolelog("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {
@@ -300,35 +318,35 @@ export default class AllServiceProviderListing extends Component {
           rightIcon={Notification}
         />
         {/* <View style={{ backgroundColor: Colors.backgroundcolor, flex: 0.97 }}> */}
-          <FlatList
-            contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
-            showsVerticalScrollIndicator={false}
-            data={providersList}
-            keyExtractor={(item, index) => `Provider ${index}`}
-            ListHeaderComponent={this.listHeader(pass_status)}
-            ListEmptyComponent={() => {
-              return (
-                <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
-                  <Text style={{
-                    fontSize: Font.xxlarge,
-                    fontFamily: Font.Medium,
-                    color: Colors.darkText
-                  }}>{message}</Text>
-                </View>
-              )
-            }}
-            renderItem={({ item, index }) => {
-              return (
-                <ServiceProviderContainer
-                  Item={item}
-                  navigation={this.props.navigation}
-                  isLoading={isLoading}
-                  providerType={pass_status}
-                  Index={index} />
-              );
-            }
-            }
-          />
+        <FlatList
+          contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
+          showsVerticalScrollIndicator={false}
+          data={providersList}
+          keyExtractor={(item, index) => `Provider ${index}`}
+          ListHeaderComponent={this.listHeader(pass_status)}
+          ListEmptyComponent={() => {
+            return (
+              <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
+                <Text style={{
+                  fontSize: Font.xxlarge,
+                  fontFamily: Font.Medium,
+                  color: Colors.darkText
+                }}>{message}</Text>
+              </View>
+            )
+          }}
+          renderItem={({ item, index }) => {
+            return (
+              <ServiceProviderContainer
+                Item={item}
+                navigation={this.props.navigation}
+                isLoading={isLoading}
+                providerType={pass_status}
+                Index={index} />
+            );
+          }
+          }
+        />
         {/* </View> */}
 
         <Modal

@@ -139,7 +139,7 @@ const ServiceProviderContainer = ({
           {/* ----------Info Container--------- */}
 
           <View
-          key={Index}
+            key={Index}
             style={{
               width: "100%",
               // height: '79%',
@@ -240,7 +240,7 @@ const ServiceProviderContainer = ({
 
               {
                 providerType === 'lab' &&
-                <View style={{ flexDirection: 'row', marginTop: vs(5), alignItems:'center' }}>
+                <View style={{ flexDirection: 'row', marginTop: vs(5), alignItems: 'center' }}>
                   <SvgXml xml={Capsule} height={vs(18)} width={s(55)} />
                   <Text
                     style={{
@@ -410,7 +410,7 @@ const ServiceProviderContainer = ({
 
             <Text
               style={{
-                color: Colors.Green,
+                color: (Item.provider_available == "0") ? Colors.Green : Colors.DarkGrey,
                 fontSize: Font.small,
                 fontFamily: Font.Regular,
                 textAlign: config.textRotate
@@ -418,36 +418,38 @@ const ServiceProviderContainer = ({
             >
               {Item.bavi_text}
             </Text>
-
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Booking", {
-                  pass_status: "doctor",
-                  nurse_id: Item.user_id,
-                  indexPosition: 0,
-                  isFromHospital: true,
-                  // hospitalId: this.state.hospitalId,
-                });
-              }}
-              style={{
-                height: vs(25),
-                width: '40%',
-                backgroundColor: Colors.Blue,
-                borderRadius: 6,
-                justifyContent: "center",
-              }}
-            >
-              <Text
+            {
+              (Item.provider_available == "0") &&
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Booking", {
+                    pass_status: "doctor",
+                    nurse_id: Item.user_id,
+                    indexPosition: 0,
+                    isFromHospital: true,
+                    // hospitalId: this.state.hospitalId,
+                  });
+                }}
                 style={{
-                  color: Colors.White,
-                  fontSize: Font.small,
-                  fontFamily: Font.Medium,
-                  textAlign: "center",
+                  height: vs(25),
+                  width: '40%',
+                  backgroundColor: Colors.Blue,
+                  borderRadius: 6,
+                  justifyContent: "center",
                 }}
               >
-                {providerType === 'nurse' ? Lang_chg.BOOKAPPOINTMENT[config.language] : providerType === 'lab' ? Lang_chg.BOOKTEST[config.language] :  Lang_chg.BookConsultation[config.language]}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: Colors.White,
+                    fontSize: Font.small,
+                    fontFamily: Font.Medium,
+                    textAlign: "center",
+                  }}
+                >
+                  {providerType === 'nurse' ? Lang_chg.BOOKAPPOINTMENT[config.language] : providerType === 'lab' ? Lang_chg.BOOKTEST[config.language] : Lang_chg.BookConsultation[config.language]}
+                </Text>
+              </TouchableOpacity>
+            }
           </View>
 
         </View>
