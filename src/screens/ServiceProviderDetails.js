@@ -25,12 +25,12 @@ import {
   Lang_chg,
   apifuntion,
 } from "../Provider/utilslib/Utils";
-import HTMLView from "react-native-htmlview";
 import ScreenHeader from "../components/ScreenHeader";
 import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { Button } from "../components";
+import AboutAppBottomSheet from "../components/AboutAppBottomSheet";
 
 const rootcaresteps = [
   {
@@ -77,9 +77,10 @@ export default class ServiceProviderDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      providerType: this.props.route.params.providerType,
-      providerId: this.props.route.params.providerId,
-      isFromHospital: this.props.route.params.isFromHospital,
+      providerType: this.props?.route?.params?.providerType,
+      providerId: this.props?.route?.params?.providerId,
+      isFromHospital: this.props?.route?.params?.isFromHospital,
+      hospitaId: this?.props?.route?.params?.hospitalId,
       provider_details: "",
       message: "",
       modalVisible: false,
@@ -100,6 +101,7 @@ export default class ServiceProviderDetails extends Component {
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
       this.get_Services();
+      // console.log('isFromHospital',this.state.isFromHospital);
     });
   }
 
@@ -165,7 +167,7 @@ export default class ServiceProviderDetails extends Component {
   render() {
     const { modalVisible } = this.state;
     const { modal2Visible } = this.state;
-    const { provider_details, available_days, providerType, providerId } = this.state;
+    const { provider_details, available_days, providerType, providerId, isFromHospital, hospitaId } = this.state;
     return (
       <View style={{ flex: 0.98, backgroundColor: Colors.backgroundcolor }}>
 
@@ -391,35 +393,104 @@ export default class ServiceProviderDetails extends Component {
             {/* -------------------Btns Container-------------------- */}
 
             <View style={styles.btnContainer}>
+
+
+
               {
-                providerType === 'lab' ?
+                (providerType === "doctor" && isFromHospital) ?
                   <Button
-                    text={Lang_chg.BOOKLABTESTAPPOINTMENT[config.language]}
+                    text={Lang_chg.BookOnlineAppointment[config.language]}
                     btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                    onPress={() => { }}
+                    onPress={() => {
+                      this.props.navigation.navigate("Booking", {
+                        providerType: providerType,
+                        providerId: providerId,
+                        display: "taskbooking",
+                        indexPosition: 0,
+                        isFromHospital: isFromHospital,
+                        hospitalId: hospitaId,
+                      });
+                    }}
                   />
                   :
-                  <>
+                  (providerType === "doctor") ?
                     <Button
-                      text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
+                      text={Lang_chg.BookOnlineAppointment[config.language]}
                       btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                       onPress={() => {
                         this.props.navigation.navigate("Booking", {
                           providerType: providerType,
-                          providerId: this.state.providerId,
-                          display: "hourlybooking",
-                          indexPosition: 1,
+                          providerId: providerId,
+                          display: "taskbooking",
+                          indexPosition: 0,
                         })
                       }}
                     />
+                    :
+                    (providerType === "lab") ?
+                      <Button
+                        text={Lang_chg.BOOKLABTESTAPPOINTMENT[config.language]}
+                        btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                        onPress={() => {
+                          this.props.navigation.navigate("Booking", {
+                            providerType: providerType,
+                            providerId: providerId,
+                            display: "testBooking",
+                            indexPosition: 0,
+                          })
+                        }}
+                      />
+                      :
+                      provider_details?.task_base_enable == 0 ? (
+                        <Button
+                          text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
+                          btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                          onPress={() => {
+                            this.props.navigation.navigate("Booking", {
+                              providerType: providerType,
+                              providerId: providerId,
+                              display: "taskbooking",
+                            })
+                          }}
+                        />
+                      )
+                        : null
 
-                    <Button
-                      text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
-                      btnStyle={{ marginTop: vs(10), backgroundColor: Colors.Theme }}
-                      onPress={() => { }}
-                    />
-                  </>
+
               }
+              {
+                (providerType === "doctor" && !isFromHospital) ? (
+                  <Button
+                    text={Lang_chg.BookHomeVisitAppointment[config.language]}
+                    btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
+                    onPress={() => {
+                      this.props.navigation.navigate("Booking", {
+                        providerType: this.state.providerType,
+                        providerId: providerId,
+                        display: "hourlybooking",
+                        indexPosition: 1,
+                      })
+                    }}
+                  />
+                )
+                  :
+                  (
+                    provider_details?.hour_base_enable == 0 && (
+                      <Button
+                        text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
+                        btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
+                        onPress={() => {
+                          this.props.navigation.navigate("Booking", {
+                            providerType: providerType,
+                            providerId: providerId,
+                            display: "hourlybooking",
+                          })
+                        }}
+                      />
+                    )
+                  )
+              }
+
             </View>
           </View>
 
@@ -439,7 +510,18 @@ export default class ServiceProviderDetails extends Component {
                   paddingLeft: s(7),
                   paddingRight: s(14),
                 }}>
-                {Lang_chg.Nurse_Booking[config.language]}
+                {(this.state.providerType == "nurse"
+                  ? Lang_chg.Nurse[config.language]
+                  : this.state.providerType == "physiotherapy"
+                    ? Lang_chg.Physiotherapist[config.language]
+                    : this.state.providerType == "caregiver"
+                      ? Lang_chg.Nurse_assistant[config.language]
+                      : this.state.providerType == "babysitter"
+                        ? Lang_chg.Babysitter[config.language]
+                        : this.state.providerType == "doctor"
+                          ? Lang_chg.Doctor[config.language]
+                          : Lang_chg.Lab[config.language]) + ' ' + Lang_chg.Booking[config.language]
+                }
               </Text>
               <View style={{ height: '40%', borderWidth: 0.8, borderColor: Colors.backgroundcolor }}></View>
               <Text
@@ -865,111 +947,19 @@ export default class ServiceProviderDetails extends Component {
 
         </ScrollView>
 
-
-        {/* code for modal */}
-        <Modal
-          backdropOpacity={3}
-          // style={{backgroundColor: Colors.dim_grey}}
-          animationType="slide"
-          transparent={true}
+        <AboutAppBottomSheet
           visible={modalVisible}
-          presentationStyle="overFullScreen"
           onRequestClose={() => {
             this.setModalVisible(!modalVisible);
           }}
-        >
-          <View
-            // onPress={() => this.setModalVisible(false)}
-            style={{
-              flex: 1,
-              backgroundColor: "#000000aa",
-              justifyContent: "center",
-            }}
-          >
-            <View
-              style={{
-                alignSelf: "center",
-                height: (windowHeight * 85) / 100,
-              }}
-            >
-              <View
-                // showsVerticalScrollIndicator={false}
-                style={{
-                  width: "95%",
-                  alignSelf: "center",
-                  backgroundColor: Colors.White,
-                  paddingHorizontal: (windowWidth * 7) / 100,
-                  paddingVertical: (windowWidth * 3) / 100,
-                  // borderRadius: (windowWidth * 6) / 100,
-                  borderRadius: (windowWidth * 4) / 100,
-                  height: (windowHeight * 75) / 100,
-                }}
-              >
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View
-                    style={{
-                      paddingBottom: (windowWidth * 15) / 100,
-                      paddingTop: (windowWidth * 2) / 100,
-                    }}
-                  >
-                    <HTMLView
-                      value={this.state.how_work_value}
-                      stylesheet={HTMLstyles}
-                    />
-                  </View>
-                </ScrollView>
-
-                <View
-                  style={{
-                    width: "95%",
-                    alignSelf: "flex-end",
-                    backgroundColor: Colors.White,
-                    paddingVertical: (windowWidth * 2) / 100,
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      alignItems: "flex-end",
-
-                      borderWidth: 1,
-                      borderColor: "#0888D1",
-                      borderRadius: (windowWidth * 2.5) / 100,
-                      paddingVertical: (windowWidth * 1.5) / 100,
-                      paddingHorizontal: (windowWidth * 3) / 100,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        color: "#0888D1",
-                      }}
-                      onPress={() => this.setModalVisible(false)}
-                    >
-                      {Lang_chg.close_txt[config.language]}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        </Modal>
+          data={this.state.how_work_value}
+        />
 
       </View>
     );
   }
 }
-const HTMLstyles = StyleSheet.create({
-  h4: {
-    color: "#0888D1",
-    fontSize: (windowWidth * 4.5) / 100,
-  },
-  h5: {
-    color: "#0888D1",
-    fontSize: (windowWidth * 4.3) / 100,
-    fontFamily: Font.Medium,
-  },
-});
+
 
 const styles = StyleSheet.create({
 

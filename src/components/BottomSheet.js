@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         paddingTop: vs(40),
         paddingBottom: vs(20),
-        paddingHorizontal: s(11),
+        paddingHorizontal: s(13),
         position: 'absolute',
         bottom: 0,
         zIndex: 999

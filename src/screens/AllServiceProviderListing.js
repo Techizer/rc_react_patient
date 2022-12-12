@@ -29,6 +29,7 @@ import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import ServiceProviderContainer from "../components/ServiceProviderContainer";
 import SearchInput from "../components/SearchInput";
+import FilterBottomSheet from "../components/FilterBottomSheet";
 
 export default class AllServiceProviderListing extends Component {
   _didFocusSubscription;
@@ -54,7 +55,8 @@ export default class AllServiceProviderListing extends Component {
       availableDoctorsMessage: "",
       providersList: [1, 2, 3, 4, 5, 6, 7],
       availability: [],
-      isLoading: true
+      isLoading: true,
+      isFilter:false
     };
     screens = "Login";
   }
@@ -207,9 +209,11 @@ export default class AllServiceProviderListing extends Component {
       data.append("page_count", 1);
 
       // --------When Search anything--------
-      if (this.state.pass_status !== "hospital")
-        data.append("provider_name", this.state.provider_name);
-      // -------------------------------------
+      if (this.state.searchProvider !== "") {
+        data.append("provider_name", this.state.searchProvider);
+      } else {
+        data.append("provider_name", '');
+      }
 
       if (this.state.pass_status === "doctor") {
         data.append("docEnableFor", this.state.enableFor);
@@ -286,6 +290,9 @@ export default class AllServiceProviderListing extends Component {
           Keyboard.dismiss();
         }}
         onPressSearch={() => this.get_Services()}
+        onFilterPress={()=>{
+          this.setState({isFilter:true})
+        }}
       />
     )
   }
@@ -459,6 +466,13 @@ export default class AllServiceProviderListing extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
+
+        <FilterBottomSheet
+        visible={this.state.isFilter}
+        onRequestClose={()=>{
+          this.setState({isFilter:false})
+        }}
+        />
       </View >
     );
   }

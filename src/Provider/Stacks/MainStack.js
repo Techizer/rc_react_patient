@@ -22,6 +22,8 @@ import NeedSupport from '../../screens/NeedSupport';
 import HealthRecord from '../../HealthRecord';
 // -----------------------------------------
 import { Colors } from '../Colorsfont';
+import AddPatient from '../../screens/AddPatient';
+import Cart from '../../screens/Cart';
 
 
 const Stack = createStackNavigator()
@@ -121,6 +123,16 @@ const MainStack = () => {
                 <Stack.Screen
                     name="NeedSupport"
                     component={NeedSupport}
+                />
+
+                <Stack.Screen
+                    name="AddPatient"
+                    component={AddPatient}
+                />
+
+                <Stack.Screen
+                    name="Cart"
+                    component={Cart}
                 />
             </Stack.Navigator>
         </NavigationContainer>

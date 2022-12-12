@@ -30,6 +30,7 @@ const SearchInput = ({
     onChangeText,
     onSubmitEditing,
     onPressSearch,
+    onFilterPress,
     navigation
 }) => {
     return (
@@ -57,7 +58,7 @@ const SearchInput = ({
                                         fontFamily: Font.Regular,
                                         fontSize: Font.small,
                                         textAlign: config.textalign,
-                                        color:Colors.lightGrey
+                                        color: Colors.lightGrey
                                     },
                                 ]}
 
@@ -137,8 +138,22 @@ const SearchInput = ({
 
                     </View>
 
-                    <View style={{ width: '12%', height: '100%', borderRadius: 9, backgroundColor: Colors.Green, justifyContent: 'center', alignItems: 'center' }}>
-                        <SvgXml xml={Filter} height={vs(14)} width={s(20)} />
+                    <View style={{ width: '12%', height: '100%', borderRadius: 9, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{
+                            height: '80%',
+                            width: '80%',
+                            borderRadius: 8,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: Colors.Blue
+                        }}>
+                            <TouchableOpacity
+                                onPress={onFilterPress}>
+
+                                <SvgXml xml={Filter} height={vs(14)} width={s(17)} />
+                            </TouchableOpacity>
+                        </View>
+                        
                     </View>
                 </View>
 

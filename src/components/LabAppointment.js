@@ -109,6 +109,7 @@ const LabAppointment = (props) => {
           width: layout.width,
           height: layout.height,
         }}
+        style={{ height: 40, }}
         renderTabBar={renderTabBar}
       />
     </View>

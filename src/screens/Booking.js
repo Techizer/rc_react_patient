@@ -31,6 +31,10 @@ import Styles from "../Styles";
 
 import DoctorSymptomsAppointment from "../components/DoctorSymptomsAppointment";
 import LabAppointment from "../components/LabAppointment";
+import ScreenHeader from "../components/ScreenHeader";
+import { Clock, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { SvgXml } from "react-native-svg";
+import { s, vs } from "react-native-size-matters";
 
 const timedata = [
   {
@@ -71,9 +75,9 @@ export default class Booking extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      providerType: this.props.route.params.providerType,
-      providerId: this.props.route.params.providerId,
-      isFromHospital: this.props.route.params.isFromHospital,
+      providerType: this.props?.route?.params?.providerType,
+      providerId: this.props?.route?.params?.providerId,
+      isFromHospital: this.props?.route?.params?.isFromHospital,
       display: "taskbooking",
       task_base_task: "",
       task_base_task1: "",
@@ -119,15 +123,12 @@ export default class Booking extends Component {
       packageId: "",
       packagePrice: "",
     };
-    screens = "Booking";
   }
   componentDidMount() {
     if (this.props.route.params.display != undefined) {
       let display = this.props.route.params.display;
-
       this.setState({ display: display });
 
-      console.log("display", display);
     }
     this.props.navigation.addListener("focus", () => {
       this.state.providerType === "lab" ?
@@ -138,26 +139,24 @@ export default class Booking extends Component {
       this.getDay();
       this.getAllNotification();
       this.getPerson()
+      // console.log('..........................', this.props?.route?.params?.providerType);
+
     });
   }
   getAllNotification = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-notification-count";
-    console.log("url", url);
     var data = new FormData();
     data.append("login_user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        // consolepro.consolelog("getAllNotification", obj);
         if (obj.status == true) {
           this.setState({ notification_count: obj.result });
-          console.log("obj nationality", obj);
         } else {
           return false;
         }
@@ -224,31 +223,26 @@ export default class Booking extends Component {
       arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
     }
     this.setState({ date_array: arr });
-    console.log("check date muskan", arr);
   };
 
   getDoctorTimeDate = async () => {
+
     let url = config.baseURL + "api-patient-doctor-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
     data.append("date", this.state.set_date);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("misdhfbs ", obj);
+        // console.log("getDoctorTimeDate ", obj);
 
         if (obj.status == true) {
-          consolepro.consolelog("obj.result", obj.result);
           if (obj.result.home_visit_time != "") {
             var names = obj.result.home_visit_time;
             var nameArr = names.split(",");
-
-            console.log("Arr2", Arr2);
 
             const new_time_home = [];
             const Arr1 = [];
@@ -328,7 +322,7 @@ export default class Booking extends Component {
                       this.state.booking_data.home_visit_task[0].task_price
                     ) + Number(this.state.booking_data.distance_fare)
                   ).toFixed(1);
-                  console.log("sub_total home_visit_task :: ", homeSubTotal);
+                  // console.log("sub_total home_visit_task :: ", homeSubTotal);
                   real_total_show =
                     (parseFloat(
                       homeSubTotal +
@@ -337,10 +331,7 @@ export default class Booking extends Component {
                       100) *
                     vat_price_new;
                   real_total_final = real_total_show.toFixed(1);
-                  console.log(
-                    "real_total_final home_visit_task:: ",
-                    real_total_final
-                  );
+                  // console.log("real_total_final home_visit_task:: ", real_total_final);
                   real_total = parseFloat(
                     Number(homeSubTotal) + Number(real_total_final)
                   ).toFixed(1);
@@ -357,14 +348,11 @@ export default class Booking extends Component {
                       this.state.booking_data.home_visit_task[0].task_price
                     )
                   ).toFixed(1);
-                  console.log("sub_total home_visit_task :: ", homeSubTotal);
+                  // console.log("sub_total home_visit_task :: ", homeSubTotal);
                   real_total_show =
                     (parseFloat(homeSubTotal) / 100) * vat_price_new;
                   real_total_final = real_total_show.toFixed(1);
-                  console.log(
-                    "real_total_final home_visit_task:: ",
-                    real_total_final
-                  );
+                  // console.log("real_total_final home_visit_task:: ", real_total_final);
                   real_total = parseFloat(
                     Number(homeSubTotal) + Number(real_total_final)
                   ).toFixed(1);
@@ -386,10 +374,6 @@ export default class Booking extends Component {
 
             let sun_total = parseFloat(real_total).toFixed(1);
 
-            console.log("vat_price_new:: ", vat_price_new);
-            console.log("real_total:: ", real_total);
-            console.log("real_total_final:: ", real_total_final);
-            console.log("show_real_price:: ", show_real_price);
             this.setState({
               homeVisitSubTotalPrice: homeSubTotal,
               homeVisitVat: homeVat, //0.0,
@@ -444,9 +428,6 @@ export default class Booking extends Component {
                     time: nameArr_time[m],
                     time_status: false,
                   });
-                  consolepro.consolelog(
-                    "-------- new_time_online if ------- " + new_time_online
-                  );
 
                   if (!ar1) {
                     ar1 = true;
@@ -499,7 +480,7 @@ export default class Booking extends Component {
                 onlineSubTotal = parseFloat(
                   Number(this.state.booking_data.online_base_task[0].task_price)
                 ).toFixed(1);
-                console.log("sub_total online_base_task :: ", onlineSubTotal);
+                // console.log("sub_total online_base_task :: ", onlineSubTotal);
                 real_total_show = (onlineSubTotal / 100) * vat_price_new;
                 real_total_final = real_total_show.toFixed(1);
                 real_total = parseFloat(
@@ -518,7 +499,7 @@ export default class Booking extends Component {
                 onlineSubTotal = parseFloat(
                   Number(this.state.booking_data.online_base_task[0].task_price)
                 ).toFixed(1);
-                console.log("sub_total online_base_task :: ", onlineSubTotal);
+                // console.log("sub_total online_base_task :: ", onlineSubTotal);
                 real_total_show = (onlineSubTotal / 100) * vat_price_new;
                 real_total_final = real_total_show.toFixed(1);
                 real_total = parseFloat(
@@ -540,10 +521,6 @@ export default class Booking extends Component {
             }
             let sun_total = parseFloat(real_total).toFixed(1);
 
-            console.log("vat_price_new:: ", vat_price_new);
-            console.log("real_total:: ", real_total);
-            console.log("real_total_final:: ", real_total_final);
-            console.log("show_real_price:: ", show_real_price);
             this.setState({
               onlineSubTotalPrice: onlineSubTotal,
               onlineVisitVat: onlineVat, //0.0,
@@ -574,7 +551,6 @@ export default class Booking extends Component {
           return false;
         }
 
-        console.log("muskan", real_total);
       })
       .catch((error) => {
         consolepro.consolelog("-------- error ------- " + error);
@@ -583,26 +559,21 @@ export default class Booking extends Component {
 
   getLabTimeDate = async () => {
     let url = config.baseURL + "api-patient-lab-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
     data.append("date", this.state.set_date);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("misdhfbs lab", obj);
+        console.log("getLabTimeDate", obj);
 
         if (obj.status == true) {
-          consolepro.consolelog("obj.result", obj.result);
           if (obj.result.task_time != "") {
             var names = obj.result.task_time;
             var nameArr = names.split(",");
-
-            console.log("Arr2", Arr2);
 
             const newTaskTime = [];
             const Arr1 = [];
@@ -677,7 +648,6 @@ export default class Booking extends Component {
 
   getTimeDate = async () => {
     let url = config.baseURL + "api-patient-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
@@ -685,19 +655,17 @@ export default class Booking extends Component {
     data.append("task_type", this.state.set_task);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
+    console.log('getTimeDate request.....', data);
+
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("misdhfbs ", obj);
+        console.log("getTimeDate ", obj);
 
         if (obj.status == true) {
-          consolepro.consolelog("obj.result", obj.result);
           if (obj.result.task_time != "") {
             var names = obj.result.task_time;
             var nameArr = names.split(",");
-
-            console.log("Arr2", Arr2);
 
             const new_time_dlot = [];
             const Arr1 = [];
@@ -843,20 +811,15 @@ export default class Booking extends Component {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url = config.baseURL + "api-patient-family-member";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
 
         if (obj.status == true) {
-          console.log("hello hello", obj.result);
-
           this.setState({ person_arr: obj.result });
         } else {
           this.setState({ person_arr: obj.result });
@@ -872,19 +835,14 @@ export default class Booking extends Component {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url = config.baseURL + "api-delete-patient-family-member";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("id", this.state.id);
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
 
         if (obj.status == true) {
-          console.log("hello hello", obj.result);
-
           this.getPerson();
         } else {
           msgProvider.showError(obj.message);
@@ -897,10 +855,8 @@ export default class Booking extends Component {
   };
 
   getData(value) {
-    console.log("value", value);
     if (value.text != null) {
       this.state.symptomText = value.text;
-      // console.log("text", value.text);
     }
     if (value.audio != null) {
       this.state.symptomsRecording = value.audio;
@@ -909,7 +865,6 @@ export default class Booking extends Component {
       this.setState({ indexPosition: value.tab, time_take_data: "" });
     }
     if (value.image != null) {
-      console.log("image", value.image);
       this.state.prescriptionsImage = value.image;
     }
   }
@@ -942,25 +897,21 @@ export default class Booking extends Component {
       (this.state.providerId !== "497"
         ? "api-patient-lab-booking-init-details"
         : "api-patient-rclab-booking-init-details");
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
     data.append("lgoin_user_id", user_id);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("dsiuvuhg bd lab", JSON.stringify(obj));
         if (obj.status == true) {
           if (obj.result.task_base_task.length === 0) {
             this.setState({
               indexPosition: 1,
             });
           }
-          console.log("task_time", obj.result.task_time);
           if (obj.result.task_time != undefined && obj.result.task_time != "") {
             var names = obj.result.task_time;
             var nameArr = names.split(",");
@@ -1060,7 +1011,6 @@ export default class Booking extends Component {
             only_vatprice_show: show_real_price,
           });
 
-          console.log("muskan", real_total);
 
           if (
             obj.result.hour_base_enable == 0 &&
@@ -1128,20 +1078,16 @@ export default class Booking extends Component {
       });
     }
     let url = config.baseURL + "api-patient-doctor-booking-init-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
     data.append("lgoin_user_id", user_id);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("dsiuvuhg bd doctor", JSON.stringify(obj));
         if (obj.status == true) {
-          console.log("home_visit_time", obj.result.home_visit_time);
           if (
             obj.result.home_visit_time != undefined &&
             obj.result.home_visit_time != ""
@@ -1194,7 +1140,6 @@ export default class Booking extends Component {
             obj.result.online_task_time != undefined &&
             obj.result.online_task_time != ""
           ) {
-            console.log("online_task_time");
             var names = obj.result.online_task_time;
             var nameArr = names.split(",");
           }
@@ -1262,16 +1207,12 @@ export default class Booking extends Component {
                   Number(obj.result.home_visit_task[0].task_price) +
                   Number(obj.result.distance_fare)
                 ).toFixed(1);
-                console.log("sub_total home_visit_task :: ", homeSubTotal);
                 real_total_show =
                   (parseFloat(homeSubTotal + Number(obj.result.distance_fare)) /
                     100) *
                   vat_price_new;
                 real_total_final = real_total_show.toFixed(1);
-                console.log(
-                  "real_total_final home_visit_task:: ",
-                  real_total_final
-                );
+
                 real_total = parseFloat(
                   Number(homeSubTotal) + Number(real_total_final)
                 ).toFixed(1);
@@ -1289,7 +1230,6 @@ export default class Booking extends Component {
               onlineSubTotal = parseFloat(
                 Number(obj.result.online_base_task[0].task_price)
               ).toFixed(1);
-              console.log("sub_total online_base_task :: ", onlineSubTotal);
               real_total_show = (onlineSubTotal / 100) * vat_price_new;
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
@@ -1308,7 +1248,6 @@ export default class Booking extends Component {
               onlineSubTotal = parseFloat(
                 Number(obj.result.online_base_task[0].task_price)
               ).toFixed(1);
-              console.log("sub_total online_base_task :: ", onlineSubTotal);
               real_total_show = (onlineSubTotal / 100) * vat_price_new;
               real_total_final = real_total_show.toFixed(1);
               real_total = parseFloat(
@@ -1328,10 +1267,6 @@ export default class Booking extends Component {
           }
           let sun_total = parseFloat(real_total).toFixed(1);
 
-          console.log("vat_price_new:: ", vat_price_new);
-          console.log("real_total:: ", real_total);
-          console.log("real_total_final:: ", real_total_final);
-          console.log("show_real_price:: ", show_real_price);
           this.setState({
             onlineSubTotalPrice: onlineSubTotal,
             homeVisitSubTotalPrice: homeSubTotal,
@@ -1358,8 +1293,6 @@ export default class Booking extends Component {
             final_hour_two: online_Arr2,
             only_vatprice_show: show_real_price,
           });
-
-          console.log("muskan", real_total);
 
           if (
             obj.result.hour_base_enable == 0 &&
@@ -1427,18 +1360,15 @@ export default class Booking extends Component {
       });
     }
     let url = config.baseURL + "api-patient-booking-init-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.providerId);
     data.append("lgoin_user_id", user_id);
     data.append("service_type", this.state.providerType);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        console.log("dsiuvuhg bd", obj);
 
         if (obj.status == true) {
           if (obj.result.task_time != "") {
@@ -1586,8 +1516,6 @@ export default class Booking extends Component {
             only_vatprice_show: show_real_price,
           });
 
-          console.log("muskan", real_total);
-
           if (
             obj.result.hour_base_enable == 0 &&
             obj.result.task_base_enable == 1
@@ -1660,9 +1588,7 @@ export default class Booking extends Component {
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-insert-cart";
-    console.log("url", url);
     var data = new FormData();
-    // console.log("data", data);
 
     data.append(
       "hospital_id",
@@ -1703,16 +1629,11 @@ export default class Booking extends Component {
       });
     }
 
-    console.log("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        consolepro.consolelog("obj", obj.status);
         if (obj.status == true) {
-          console.log("hello");
 
-          // msgProvider.toast(msgText.sucess_message_login[config.language])
           setTimeout(() => {
             this.props.navigation.navigate("Cart");
           }, 700);
@@ -1763,7 +1684,6 @@ export default class Booking extends Component {
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-insert-cart";
-    console.log("url", url);
     var data = new FormData();
 
 
@@ -1790,15 +1710,10 @@ export default class Booking extends Component {
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.final_total_price);
 
-    console.log("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        consolepro.consolelog("obj", obj.status);
         if (obj.status == true) {
-          console.log("hello");
-
           // msgProvider.toast(msgText.sucess_message_login[config.language])
           setTimeout(() => {
             this.props.navigation.navigate("Cart");
@@ -1838,9 +1753,7 @@ export default class Booking extends Component {
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-insert-cart";
-    console.log("url", url);
     var data = new FormData();
-    console.log("data", data);
 
     if (this.state.providerType === "lab") {
       data.append("hospital_id", this.state.booking_data.hospital_id);
@@ -1864,15 +1777,11 @@ export default class Booking extends Component {
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.hour_total_price);
 
-    console.log("hello data", data);
     //return false
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        consolepro.consolelog("obj", obj.status);
         if (obj.status == true) {
-          console.log("hello");
 
           // msgProvider.toast(msgText.sucess_message_login[config.language])
           setTimeout(() => {
@@ -1899,7 +1808,6 @@ export default class Booking extends Component {
 
     //  let task_base_task1=this.state.task_base_task
     let data1 = this.state.task_base_task1;
-    console.log("this.state.task_base_task1", this.state.task_base_task1);
     if (data1 != "") {
       const newData = data1.filter((item) => {
         //applying filter for the inserted text in search bar
@@ -1907,7 +1815,6 @@ export default class Booking extends Component {
         const textData = text.toLowerCase();
         return item.name.toLowerCase().indexOf(textData) >= 0;
       });
-      consolepro.consolelog("newdataa", newData);
       if (newData.length > 0) {
         this.setState({ task_base_task: newData });
       } else if (newData.length <= 0) {
@@ -1990,7 +1897,6 @@ export default class Booking extends Component {
 
   hourbooking = (item, index) => {
     let data = this.state.hour_base_task;
-    console.log("new data hour booking", data);
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2007,8 +1913,6 @@ export default class Booking extends Component {
     let show_total_price;
     let hour_add = "";
     let subTotal = "";
-    console.log("only_vatprice_show ", this.state.only_vatprice_show);
-
     if (
       this.state.only_vatprice_show == 0 ||
       this.state.only_vatprice_show == 0.0
@@ -2037,7 +1941,6 @@ export default class Booking extends Component {
         parseFloat(show_total_price)
       ).toFixed(1);
     }
-    console.log("dnhcnfby", hour_add);
 
     this.setState({
       hour_base_task: data,
@@ -2051,7 +1954,6 @@ export default class Booking extends Component {
 
   checkDate = (item, index) => {
     let data = this.state.date_array;
-    console.log("new data", data);
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2065,7 +1967,6 @@ export default class Booking extends Component {
 
   time_tick = (item, index) => {
     let data = this.state.time_Arr;
-    console.log("new data", data);
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2079,7 +1980,6 @@ export default class Booking extends Component {
 
   hour_time_tick = (item, index) => {
     let data = this.state.hour_time;
-    console.log("new data", data);
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2102,7 +2002,6 @@ export default class Booking extends Component {
         data[index].status = true;
       }
     }
-    console.log("data", data);
     for (let i = 0; i < data.length; i++) {
       if (data[i].status == false) {
         price_arr.push(data[i].price);
@@ -2115,7 +2014,6 @@ export default class Booking extends Component {
     for (let k = 0; k < result.length; k++) {
       sum -= result[k];
     }
-    console.log("muska test", sum);
     this.setState({
       task_base_task: data,
       new_task_arr: data,
@@ -2124,7 +2022,9 @@ export default class Booking extends Component {
   };
 
   render() {
+    const { providerType } = this.state
     if (this.state.booking_data != "" && this.state.booking_data != null) {
+
       var item = this.state.booking_data;
       if (this.state.providerType === "doctor") {
         this.state.set_task =
@@ -2142,321 +2042,268 @@ export default class Booking extends Component {
             ? item.online_base_task[0].task_price
             : item.home_visit_task[0].task_price;
       }
-      console.log("display ", this.state.display);
-      console.log("item ", item);
+
 
       return (
-        <View style={Styles.container1}>
-          <View style={Styles.container3}>
-            <View
-              style={{
-                backgroundColor: "#fff",
-                paddingVertical: (windowWidth * 2) / 100,
-                borderBottomWidth: 1,
-                borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
-              }}>
+        <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+
+          <ScreenHeader
+            title={Lang_chg.Booking[config.language]}
+            navigation={this.props.navigation}
+            onBackPress={() => this.props.navigation.pop()}
+            leftIcon={leftArrow}
+            rightIcon={Notification}
+          />
+
+          <ScrollView
+            style={Styles.container2}
+            contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="always"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* -------------User Info------------- */}
+
+            <View style={styles.infoContainer}>
               <View
                 style={{
-                  padding: (windowWidth * 2.5) / 100,
                   flexDirection: "row",
-                  width: "99%",
-                  alignSelf: "center",
-                  paddingTop: (windowWidth * 3) / 100,
-                  backgroundColor: Colors.white_color,
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    width: "10%",
-                    alignSelf: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.goBack();
-                    }}
-                  >
-                    {/* <Image
-                      source={
-                        config.textalign == "right"
-                          ? localimag.arabic_back
-                          : localimag.backarrow
-                      }
-                      style={{
-                        resizeMode: "contain",
-                        width: (windowWidth * 9) / 100,
-                        alignSelf: "center",
-                        height: (windowWidth * 9) / 100,
-                      }}
-                    /> */}
-                  </TouchableOpacity>
+                  width: '100%',
+                  paddingHorizontal: s(11),
+                }}>
+                {/* image and Name */}
+
+                <View style={{ width: "30%", }}>
+                  {
+                    (item.image == "NA" || item.image == null || item.image == "") ?
+                      <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderColor: Colors.Border }} />
+                      :
+                      <Image
+                        source={{ uri: config.img_url3 + item.image }}
+                        style={{
+                          borderWidth: 2,
+                          borderColor: Colors.Border,
+                          width: s(75),
+                          height: s(75),
+                          borderRadius: s(75),
+                        }}
+                      />
+                  }
                 </View>
                 <View
                   style={{
-                    width: "80%",
-                  }}
-                >
+                    width: "70%",
+                    alignSelf: "center",
+                    height: '100%',
+                    paddingTop: vs(3)
+                  }} >
                   <Text
                     style={{
-                      textAlign: "center",
                       fontFamily: Font.Medium,
-                      fontSize: (windowWidth * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.Booking[config.language]}
+                      fontSize: Font.xxlarge,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles
+                    }}>
+                    {item.provider_name}
+                  </Text>
+                  {
+                    providerType != 'lab' &&
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        textAlign: config.textRotate,
+                        color: Colors.lightGrey,
+                        marginTop: vs(2)
+                      }}>
+                      {item.qualification}
+                    </Text>
+                  }
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      color: Colors.Blue,
+                      marginTop: vs(5)
+                    }}>
+                    {providerType === 'lab' ? item?.iso_text : item.speciality}
                   </Text>
                 </View>
-                <View
-                  style={{
-                    width: "10%",
-                    alignSelf: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate("Notifications");
-                    }}
-                  >
-                    {/* <Image
-                      source={
-                        this.state.notification_count > 0
-                          ? localimag.notifications
-                          : localimag.notifications_sec
-                      }
+              </View>
+
+              {/* -------------------Experience Container-------------------- */}
+              <View style={styles.experienceContainer}>
+                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      color: Colors.lightGrey,
+                      marginTop: vs(2)
+                    }}>
+                    {providerType === 'lab' ? Lang_chg.ESTABLISHED[config.language] : Lang_chg.Experience[config.language]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xlarge,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles,
+                      marginTop: vs(5)
+                    }}>
+                    {item.experience ? item.experience : '-'}
+                  </Text>
+                </View>
+                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      color: Colors.lightGrey,
+                      marginTop: vs(2),
+                      paddingHorizontal: s(15)
+                    }}>
+                    {Lang_chg.Bookings[config.language]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xlarge,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles,
+                      marginTop: vs(5),
+                      paddingHorizontal: s(15)
+                    }}>
+                    {item.booking_count ? item.booking_count : '-'}
+                  </Text>
+                </View>
+                <View style={{ flex: 1, }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      color: Colors.lightGrey,
+                      marginTop: vs(2),
+                      paddingHorizontal: s(15)
+                    }}>
+                    {Lang_chg.Rating[config.language]}
+                  </Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
+                    <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
+                    <Text
                       style={{
-                        alignSelf: "center",
-                        resizeMode: "contain",
-                        width: (windowWidth * 6) / 100,
-                        height: (windowWidth * 6) / 100,
-                      }}
-                    /> */}
-                  </TouchableOpacity>
+                        fontFamily: Font.Medium,
+                        fontSize: Font.xlarge,
+                        textAlign: config.textRotate,
+                        color: Colors.detailTitles,
+                        marginLeft: s(5)
+                      }}>
+                      {item.avg_rating ? `${item.avg_rating}.0` : 'NA'}
+                    </Text>
+                  </View>
+
                 </View>
               </View>
+
+              <View style={{ width: '93%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
+              {/* -------------------Desc Container-------------------- */}
+
+              {
+                item.description &&
+                <View style={styles.descContainer}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.xsmall,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles,
+                    }}>
+                    {item.description}
+                  </Text>
+                </View>
+              }
+
             </View>
 
-            <ScrollView
-              style={Styles.container2}
-              contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
-              keyboardDismissMode="interactive"
-              keyboardShouldPersistTaps="always"
-              showsVerticalScrollIndicator={false}
-            >
+            {/* ---------------Main------------- */}
+
+            {/* Patient flatlist */}
+            {this.state.providerType !== "lab" && (
               <View
                 style={{
-                  backgroundColor: this.state.providerType === "lab" ? Colors.white_color : "#F1F2F4",
-                  paddingVertical: (windowWidth * 5) / 100,
-                }}
-              >
-                <View
-                  style={{
-                    width: "100%",
-                    alignSelf: "center",
-                    flexDirection: "row",
-                  }}
-                >
-                  <View style={{ width: "25%" }}>
-                    {/* <Image
-                      source={
-                        item.image == "NA" ||
-                          item.image == null ||
-                          item.image == ""
-                          ? localimag.p1
-                          : { uri: config.img_url3 + item.image }
-                      }
-                      style={{
-                        width: (windowWidth * 20) / 100,
-                        height: (windowWidth * 20) / 100,
-                        borderWidth: 1,
-                        borderColor: Colors.theme_color,
-                        borderRadius: (windowWidth * 10) / 100,
-                        alignSelf: "center",
-                      }}
-                    /> */}
-                  </View>
-                  <View
-                    style={{
-                      width: "58%",
-                      marginLeft: (windowWidth * 2) / 100,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Medium,
-                        fontSize: Font.name,
-                        textAlign: config.textRotate,
-                      }}
-                    >
-                      {item.provider_name}
-                    </Text>
-                    <Text
-                      style={{
-                        textAlign: config.textRotate,
-                        paddingVertical: (windowWidth * 1.5) / 100,
-                        fontFamily: Font.ques_fontfamily,
-                        fontSize: Font.subtext,
-                        color: Colors.theme_color,
-                      }}
-                    >
-                      {this.state.providerType === "lab"
-                        ? item.iso_text
-                        : item.dispaly_provider_type + " - " + item.experience}
-                    </Text>
-                    {this.state.providerType !== "lab" && (
-                      <Text
-                        style={{
-                          textAlign: config.textRotate,
-                          fontFamily: Font.ques_fontfamily,
-                          fontSize: Font.subtext,
-                          color: "#515C6F",
-                        }}
-                      >
-                        {item.qualification}
-                      </Text>
-                    )}
-                  </View>
-                  {this.state.providerType === "lab" &&
-                    item.hospital_id !== "" ? (
-                    <View
-                      style={{
-                        backgroundColor: "#FFA800",
-                        width: "17%",
-                        height: 20,
-                        marginTop: -13,
-                        borderBottomLeftRadius: (windowWidth * 2) / 100,
-                        paddingVertical: 3,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#fff",
-                          fontFamily: Font.Medium,
-                          fontSize: (windowWidth * 2.5) / 100,
-                          alignSelf: "center",
-                        }}
-                      >
-                        {Lang_chg.Hospital[config.language]}
-                      </Text>
-                    </View>
-                  ) : (
-                    this.state.isFromHospital && (
-                      <View
-                        style={{
-                          backgroundColor: "#FFA800",
-                          width: "17%",
-                          height: 20,
-                          marginTop: -13,
-                          borderBottomLeftRadius: (windowWidth * 2) / 100,
-                          paddingVertical: 3,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#fff",
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 2.5) / 100,
-                            alignSelf: "center",
-                          }}
-                        >
-                          {Lang_chg.Hospital[config.language]}
-                        </Text>
-                      </View>
-                    )
-                  )}
-                </View>
-                {this.state.providerType === "lab" &&
-                  this.state.providerId !== "497" && (
-                    <Text
+                  backgroundColor: Colors.White,
+                  marginTop: vs(7),
+                  flexDirection: "row",
+                  paddingVertical: vs(9),
+                  paddingLeft: s(11),
+                  width: windowWidth
+                }}>
+                <View style={{ flexDirection: 'row', width: '85%' }}>
+                  {/* -------Profile------- */}
+                  <View style={{ width: '22%' }}>
+                    <TouchableOpacity
                       onPress={() => {
-                        this.props.navigation.navigate(
-                          "AllServiceProviderListing",
-                          { providerType: this.state.providerType }
-                        );
+                        this.setState({
+                          active_status: true,
+                          family_member_id: 0,
+                        });
                       }}
-                      style={{
-                        textAlign: config.textRotate,
-                        fontFamily: Font.ques_fontfamily,
-                        fontSize: Font.subtext,
-                        color: "#000",
-                        position: "absolute",
-                        bottom: 20,
-                        right: 15,
-                        textDecorationLine: "underline",
-                      }}
-                    >
-                      {Lang_chg.ChangeLab[config.language]}
-                    </Text>
-                  )}
-              </View>
-              {/* contact flatlist */}
-              {this.state.providerType !== "lab" && (
-                <View
-                  style={{
-                    backgroundColor: Colors.white_color,
-                    padding: (windowWidth * 3) / 100,
-                    flexDirection: "row",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        active_status: true,
-                        family_member_id: 0,
-                      });
-                    }}
-                    style={[
-                      {
-                        width: (windowWidth * 20) / 100,
-                        height: (windowWidth * 24) / 100,
-                        borderRadius: (windowWidth * 2) / 100,
-                        paddingVertical: (windowWidth * 3) / 100,
-                        borderColor: Colors.theme_color,
-                        justifyContent: "center",
-                      },
-                      this.state.active_status == true
-                        ? { backgroundColor: "#d1e9f6" }
-                        : { backgroundColor: "#fff" },
-                    ]}
-                  >
-                    <Image
-                      source={
-                        this.state.profile_img == "NA" ||
-                          this.state.profile_img == null
-                          ? localimag.user_img
-                          : { uri: config.img_url3 + this.state.profile_img }
-                      }
-                      style={{
-                        alignSelf: "center",
-                        width: (windowWidth * 16) / 100,
-                        height: (windowWidth * 14) / 100,
-                        borderRadius: (windowWidth * 2) / 100,
-                        borderColor: Colors.theme_color,
-                        marginTop: (windowWidth * 2) / 100,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        alignSelf: "center",
-                        fontFamily: Font.Medium,
-                        paddingBottom: (windowWidth * 2) / 100,
-                        marginTop: (windowWidth * 2) / 100,
-                        fontSize: (windowWidth * 3) / 100,
-                        paddingHorizontal: (windowWidth * 0.5) / 100,
-                      }}
-                      numberOfLines={1}
-                    >
-                      {this.state.name}
-                    </Text>
-                  </TouchableOpacity>
+                      style={[
+                        {
+                          width: (windowWidth * 20) / 100,
+                          height: (windowWidth * 24) / 100,
+                          borderRadius: (windowWidth * 2) / 100,
+                          paddingVertical: (windowWidth * 3) / 100,
+                          borderColor: 'pink',
+                          justifyContent: "center",
+                        },
+                        this.state.active_status == true
+                          ? { backgroundColor: Colors.appointmentdetaillightblue }
+                          : { backgroundColor: "#fff" },
+                      ]}>
+                      <Image
+                        source={
+                          this.state.profile_img == "NA" ||
+                            this.state.profile_img == null
+                            ? localimag.user_img
+                            : { uri: config.img_url3 + this.state.profile_img }
+                        }
+                        style={{
+                          alignSelf: "center",
+                          width: (windowWidth * 16) / 100,
+                          height: (windowWidth * 14) / 100,
+                          borderRadius: (windowWidth * 2) / 100,
+                          borderColor: Colors.theme_color,
+                          marginTop: (windowWidth * 2) / 100,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          alignSelf: "center",
+                          fontFamily: Font.Medium,
+                          paddingBottom: (windowWidth * 2) / 100,
+                          marginTop: (windowWidth * 2) / 100,
+                          fontSize: (windowWidth * 3) / 100,
+                          paddingHorizontal: (windowWidth * 0.5) / 100,
+                        }}
+                        numberOfLines={1}
+                      >
+                        {this.state.name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                   <View
                     style={{
-                      width: "60%",
+                      width: "78%",
                       alignSelf: "center",
                       marginLeft: (windowWidth * 3) / 100,
                       alignItems: "flex-start",
-                    }}
-                  >
+                    }}>
                     <FlatList
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}
@@ -2558,126 +2405,877 @@ export default class Booking extends Component {
                       }}
                     />
                   </View>
+                </View>
 
+
+                <View style={{ width: '15%', }}>
+                  {/* --------------Add_Patient------------- */}
                   <TouchableOpacity
                     onPress={() => {
                       this.props.navigation.navigate("AddPatient");
                     }}
                     style={{
-                      width: (windowWidth * 16) / 100,
-                      height: (windowWidth * 20) / 100,
-                      borderRadius: (windowWidth * 2) / 100,
-                      borderColor: Colors.theme_color,
+                      width: '100%',
+                      height: vs(80),
+                      borderTopLeftRadius: 10,
+                      borderBottomLeftRadius: 10,
                       justifyContent: "center",
-                      backgroundColor: "#d1e9f6",
-                      alignSelf: "center",
-                      right: -10,
+                      alignItems: 'center',
+                      backgroundColor: Colors.appointmentdetaillightblue,
                     }} >
-                    {/* <Image
-                      resizeMode="contain"
-                      source={localimag.addicon}
-                      style={{
-                        width: (windowWidth * 10) / 100,
-                        height: (windowWidth * 10) / 100,
-                        marginLeft: (windowWidth * 3) / 100,
-                        marginRight: (windowWidth * 3) / 100,
-                        borderColor: Colors.theme_color,
-                      }}
-                    /> */}
+                    <View style={{
+                      height: s(30),
+                      width: s(30),
+                      borderRadius: s(100),
+                      backgroundColor: Colors.Theme,
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                      <Image
+                        resizeMode="contain"
+                        source={Icons.Add}
+                        style={{
+                          width: s(15),
+                          height: s(15),
+                          tintColor: Colors.White,
+                        }}
+                      />
+                    </View>
                     <Text
                       style={{
                         fontFamily: Font.Regular,
                         fontSize: (windowWidth * 3) / 100,
                         textAlign: "center",
                         marginTop: (windowWidth * 2) / 100,
-                      }}
-                    >
+                      }}>
                       {Lang_chg.Add[config.language]}
                     </Text>
                   </TouchableOpacity>
                 </View>
-              )}
-              {this.state.providerType === "doctor" && (
-                <DoctorSymptomsAppointment
-                  navigation={this.props.navigation}
-                  indexPosition={this.props.route.params.indexPosition}
-                  isFromHospital={this.props.route.params.isFromHospital}
-                  sendData={this.getData.bind(this)}
-                />
-              )}
-              {this.state.providerType === "lab" && (
-                <LabAppointment
-                  navigation={this.props.navigation}
-                  indexPosition={this.props.route.params.indexPosition}
-                  data={item}
-                  sendData={this.getData.bind(this)}
-                />
-              )}
-              {this.state.providerType === "lab" ? (
-                <View>
-                  {this.state.indexPosition === 0 && (
+              </View>
+            )}
+
+            {this.state.providerType === "doctor" && (
+              <DoctorSymptomsAppointment
+                navigation={this.props.navigation}
+                indexPosition={this.props.route.params.indexPosition}
+                isFromHospital={this.props.route.params.isFromHospital}
+                sendData={this.getData.bind(this)}
+              />
+            )}
+
+            {this.state.providerType === "lab" && (
+              <LabAppointment
+                navigation={this.props.navigation}
+                indexPosition={this.props.route.params.indexPosition}
+                data={item}
+                sendData={this.getData.bind(this)}
+              />
+            )}
+
+            {this.state.providerType === "lab" ? (
+              <View>
+                {this.state.indexPosition === 0 && (
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      backgroundColor: Colors.White,
+                      paddingHorizontal: s(11)
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "100%",
+                        backgroundColor: Colors.White,
+                        right: 0,
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      <FlatList
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        data={this.state.new_task_arr}
+                        renderItem={({ item, index }) => {
+                          if (this.state.new_task_arr != "") {
+                            return (
+                              <View style={{ alignSelf: "center" }}>
+                                {item.status == true && (
+                                  <View
+                                    style={{
+                                      backgroundColor: Colors.theme_color,
+                                      paddingVertical: (windowWidth * 0.8) / 100,
+                                      flexDirection: "row",
+                                      paddingHorizontal:
+                                        (windowWidth * 1.5) / 100,
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      borderRadius: (windowWidth * 1) / 100,
+                                      marginRight: (windowWidth * 2) / 100,
+                                    }}
+                                  >
+                                    <Text
+                                      style={{
+                                        color: Colors.White,
+                                        fontSize: Font.textsize,
+                                        fontFamily: Font.Light,
+                                      }}
+                                    >
+                                      {item.name}
+                                    </Text>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        this.check_all_false(item, index);
+                                      }}
+                                    >
+                                      <Image
+                                        source={Icons.cross2}
+                                        style={{
+                                          alignSelf: "center",
+                                          width: (windowWidth * 2) / 100,
+                                          height: (windowWidth * 2) / 100,
+                                          marginLeft: (windowWidth * 3.5) / 100,
+                                        }}
+                                      />
+                                    </TouchableOpacity>
+                                  </View>
+
+                                  // <View
+                                  //   style={[
+                                  //     {
+                                  //       borderRadius: 10,
+                                  //       width: s(135),
+                                  //       // height: vs(150),
+                                  //       backgroundColor: Colors.Blue,
+                                  //       borderColor: Colors.Border,
+                                  //       borderWidth: 1,
+                                  //       paddingHorizontal: s(6),
+                                  //       paddingVertical: vs(7)
+                                  //     }]}>
+                                  //   <Text
+                                  //     style={{
+                                  //       fontFamily: Font.Regular,
+                                  //       textAlign: config.textRotate,
+                                  //       fontSize: Font.small,
+                                  //       color: Colors.detailTitles
+                                  //     }}>{item?.name}</Text>
+
+                                  //   <Text
+                                  //     style={{
+                                  //       fontFamily: Font.Regular,
+                                  //       textAlign: config.textRotate,
+                                  //       fontSize: Font.small,
+                                  //       color: Colors.Blue,
+                                  //       marginTop: vs(5)
+                                  //     }}>{item?.iso_certificate}</Text>
+
+
+                                  //   <View style={{ width: '92%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10), alignSelf: 'center' }}></View>
+
+                                  //   <Text
+                                  //     style={{
+                                  //       paddingVertical: vs(3),
+                                  //       fontFamily: Font.Regular,
+                                  //       textAlign: config.textRotate,
+                                  //       color: Colors.Green,
+                                  //       fontSize: Font.small,
+                                  //     }}
+                                  //   >
+                                  //     {item.dis_off}
+                                  //   </Text>
+
+                                  //   <Text
+                                  //     style={{
+                                  //       fontFamily: Font.Regular,
+                                  //       textAlign: config.textRotate,
+                                  //       fontSize: Font.small,
+                                  //       textDecorationLine: "line-through",
+                                  //       textDecorationStyle: "solid",
+                                  //       color: Colors.Black
+                                  //     }}
+                                  //   >
+                                  //     {item.maxprice}
+                                  //   </Text>
+
+
+                                  //   <View
+                                  //     style={{
+                                  //       paddingVertical: (windowWidth * 2) / 100,
+                                  //       flexDirection: "row",
+                                  //       justifyContent: "space-between",
+                                  //       alignItem: "center",
+                                  //     }}>
+                                  //     <Text
+                                  //       style={{
+                                  //         textAlign: config.textRotate,
+                                  //         fontFamily: Font.Medium,
+                                  //         fontSize: Font.medium,
+                                  //       }}>
+                                  //       {item.price}
+                                  //     </Text>
+
+                                  //     <Text
+                                  //       onPress={() => {
+                                  //         this.props.navigation.navigate(
+                                  //           "Booking",
+                                  //           {
+                                  //             providerType: providerType,
+                                  //             nurse_id: providerId,
+                                  //             display: "packageBooking",
+                                  //             indexPosition: 1,
+                                  //           }
+                                  //         );
+                                  //       }}
+                                  //       style={{
+                                  //         fontFamily: Font.SemiBold,
+                                  //         fontSize: Font.medium,
+                                  //         color: Colors.Theme,
+                                  //         textTransform: "uppercase",
+                                  //       }}
+                                  //     >
+                                  //       {Lang_chg.Book[config.language]}
+                                  //     </Text>
+                                  //   </View>
+                                  // </View>
+                                )}
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    </View>
+
                     <View
                       style={{
                         width: "100%",
                         alignSelf: "center",
-                        backgroundColor: "#fff",
+                        backgroundColor: Colors.tab_background_color,
+                        alignItems: "center",
+                        marginTop: vs(7),
                       }}
                     >
                       <View
                         style={{
-                          width: "95%",
-                          backgroundColor: "#fff",
-                          right: 0,
-                          alignSelf: "flex-end",
+                          width: "98%",
+                          alignSelf: "center",
+                          flexDirection: "row",
                         }}
                       >
+                        <TextInput
+                          ref={(text) => {
+                            this.textdata = text;
+                          }}
+                          maxLength={50}
+                          onChangeText={(text) => {
+                            this.searchFilterFunction(text);
+                          }}
+                          returnKeyLabel="done"
+                          returnKeyType="done"
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss();
+                          }}
+                          style={{
+                            fontSize: (windowWidth * 4) / 100,
+                            fontFamily: Font.ques_fontfamily,
+                            color: "#8F98A7",
+                            width: "90%",
+                            paddingVertical: (windowWidth * 3.5) / 100,
+                            textAlign: config.textalign,
+                          }}
+                          placeholderTextColor={"#8F98A7"}
+                          placeholder={Lang_chg.SearchTests[config.language]}
+                        />
+
+                        <View style={{ width: "10%", alignSelf: "center" }}>
+                          <Image
+                            style={{
+                              width: (windowWidth * 4) / 100,
+                              height: (windowWidth * 4) / 100,
+                              tintColor: "#8F98A7",
+                              alignSelf: "center",
+                            }}
+                            source={localimag.search2}
+                          />
+                        </View>
+                      </View>
+                    </View>
+
+                    {this.state.task_base_task != "" &&
+                      this.state.task_base_task != null && (
+                        <View
+                          style={[
+                            {
+                              width: "100%",
+                              alignSelf: "center",
+                              marginTop: (windowWidth * 2) / 100,
+                            },
+                            this.state.task_base_task.length >= 7
+                              ? { height: 240 }
+                              : null,
+                          ]} >
+                          <FlatList
+                            data={this.state.task_base_task}
+                            scrollEnabled={true}
+                            nestedScrollEnabled={true}
+                            renderItem={({ item, index }) => {
+                              if (this.state.task_base_task != "") {
+                                return (
+                                  <TouchableOpacity
+                                    activeOpacity={0.9}
+                                    onPress={() => {
+                                      this.check_all(item, index);
+                                    }}
+                                    style={{
+                                      alignItems: "center",
+                                      width: "100%",
+                                      alignSelf: "center",
+                                      backgroundColor: "#F8F8F8",
+                                      paddingVertical: (windowWidth * 1.7) / 100,
+                                      flexDirection: "row",
+                                      marginTop: (windowWidth * 0.3) / 100,
+                                    }}
+                                  >
+                                    <View
+                                      style={{
+                                        alignSelf: "center",
+                                        width: "11%",
+                                      }}
+                                    >
+                                      {item.status == true ? (
+                                        // <Image
+                                        //   style={{
+                                        //     width: (windowWidth * 5) / 100,
+                                        //     height: (windowWidth * 5) / 100,
+                                        //     borderRadius:
+                                        //       (windowWidth * 0.4) / 100,
+                                        //     marginRight: (windowWidth * 2) / 100,
+                                        //     marginLeft: (windowWidth * 3) / 100,
+                                        //     resizeMode: "contain",
+                                        //     alignSelf: "flex-start",
+                                        //   }}
+                                        //   source={localimag.remembertick}
+                                        // />
+                                        null
+                                      ) : (
+                                        <Image
+                                          style={{
+                                            width: (windowWidth * 5) / 100,
+                                            height: (windowWidth * 5) / 100,
+                                            borderRadius:
+                                              (windowWidth * 0.4) / 100,
+                                            marginRight: (windowWidth * 2) / 100,
+                                            marginLeft: (windowWidth * 3) / 100,
+                                            resizeMode: "contain",
+                                            alignSelf: "flex-start",
+                                          }}
+                                          source={require("../icons/graycheckbox.png")}
+                                        />
+                                      )}
+                                    </View>
+                                    <Text
+                                      style={{
+                                        width: "59%",
+                                        textAlign: config.textRotate,
+                                        alignSelf: "center",
+                                        fontSize: (windowWidth * 3.6) / 100,
+                                        fontFamily: Font.Regular,
+                                        color: "#000",
+                                      }}
+                                    >
+                                      {item.name}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        width: "25%",
+                                        fontSize: (windowWidth * 3.6) / 100,
+                                        fontFamily: Font.Regular,
+                                        color: "#000",
+
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                      {item.price}{" "}
+                                      {this.state.currency_symbol}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              }
+                            }}
+                          />
+                        </View>
+                      )}
+                  </View>
+                )}
+                {this.state.indexPosition === 1 && (
+                  <View
+                    style={{
+                      width: "100%",
+                      backgroundColor: Colors.White,
+                      paddingHorizontal: s(11),
+                      paddingVertical: vs(9),
+                    }}>
+                    <FlatList
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      data={item.package_base_task}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.hourbooking(item, index),
+                                this.getLabTimeDate(),
+                                this.setState({
+                                  hour_id: item.pid,
+                                  hour_price: item.price,
+                                  time_take_data_hour: "",
+                                });
+                            }}
+                            style={[
+                              {
+                                borderRadius: 10,
+                                width: (windowWidth * 40) / 100,
+                                backgroundColor: Colors.White,
+                              },
+                              item.status == true
+                                ? {
+                                  borderColor: Colors.Border,
+                                  borderWidth: 1,
+                                }
+                                : { borderColor: Colors.Border, borderWidth: 1 },
+                            ]}
+                          >
+                            <Text
+                              style={{
+                                width: "100%",
+                                paddingVertical: (windowWidth * 1.5) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
+                                color: Colors.theme_color,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 3.5) / 100,
+                                textAlign: "left",
+                              }}
+                            >
+                              {item.name}
+                            </Text>
+
+                            <Text
+                              style={{
+                                paddingVertical: (windowWidth * 2) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
+                                fontFamily: Font.Regular,
+                                textAlign: "left",
+                                color: Colors.tablightcolo,
+                                fontSize: Font.sregulartext_size,
+                              }}
+                            >
+                              {item.test_count}
+                            </Text>
+                            <View
+                              style={{
+                                width: "90%",
+                                alignSelf: "center",
+                                backgroundColor: Colors.backgroundcolor,
+                                height: 1.5,
+                                marginTop: (windowWidth * 1) / 100,
+                              }}
+                            />
+                            <Text
+                              style={{
+                                paddingVertical: (windowWidth * 2) / 100,
+                                paddingHorizontal: (windowWidth * 2) / 100,
+                                textAlign: config.textalign,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 4) / 100,
+                              }}
+                            >
+                              {item.price}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </View>
+                )}
+                <View
+                  style={{
+                    width: "100%",
+                    marginTop: vs(7),
+                    marginBottom: (windowWidth * 1.5) / 100,
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "93%",
+                      alignSelf: "center",
+                      paddingTop: (windowWidth * 4) / 100,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.name,
+                        width: "65%",
+                        textAlign: config.textRotate,
+                        fontSize: (windowWidth * 3.5) / 100,
+                      }}
+                    >
+                      {Lang_chg.Appointmentschedule[config.language]}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        width: "35%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <View style={{ width: "20%", alignSelf: "center" }}>
+                        <Image
+                          style={{
+                            width: (windowWidth * 5) / 100,
+                            height: (windowWidth * 5) / 100,
+                            alignSelf: "center",
+                          }}
+                          source={Icons.Calendar}
+                        />
+                      </View>
+
+                      <Text
+                        style={{
+                          color: Colors.theme_color,
+                          fontFamily: Font.Medium,
+                          fontSize: Font.name,
+                          alignSelf: "center",
+                          marginLeft: (windowWidth * 1) / 100,
+                          textAlign: "right",
+                        }}
+                      >
+                        {this.state.set_date}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: Colors.gainsboro,
+                      width: "100%",
+                      marginTop: (windowWidth * 1.5) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      width: "93%",
+                      alignSelf: "center",
+                      paddingBottom: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.subtext,
+                        textAlign: config.textRotate,
+                        color: "#000",
+                      }}
+                    >
+                      {Lang_chg.SelectDate[config.language]}
+                    </Text>
+                    <View style={{ width: "100%" }}>
+                      <FlatList
+                        horizontal={true}
+                        data={this.state.date_array}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.setState({
+                                  set_date: item.date1,
+                                  set_task: "task_base",
+                                  time_take_data: "",
+                                }),
+                                  this.getLabTimeDate(),
+                                  this.checkDate(item, index);
+                              }}
+                              style={{ width: (windowWidth * 15) / 100 }}
+                            >
+                              <Text
+                                style={{
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                  color: item.tick == 1 ? Colors.White : Colors.Black,
+                                  textAlign: "center",
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  fontFamily: Font.ques_fontfamily,
+                                  fontSize: Font.sregulartext_size,
+                                  lineHeight: (windowWidth * 5) / 100,
+                                }}
+                              >
+                                {item.day}
+                                {"\n"}
+
+                                {item.datenew}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: Colors.gainsboro,
+                      width: "100%",
+                      marginTop: (windowWidth * 1.5) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      width: "93%",
+                      alignSelf: "center",
+                      paddingBottom: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.subtext,
+                        color: "#000",
+                        textAlign: config.textRotate,
+                      }}
+                    >
+                      {Lang_chg.Select_start_time[config.language]}
+                    </Text>
+
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      <View style={{ width: "100%", alignItems: "center" }}>
+                        <View style={{ width: "100%", alignItems: "center" }}>
+                          {this.state.time_Arr != "" ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                alignItems: "center",
+                              }}
+                            >
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={this.state.final_one}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          this.state.indexPosition === 0
+                                            ? this.setState({
+                                              time_take_data: item.time,
+                                            })
+                                            : this.setState({
+                                              time_take_data_hour:
+                                                item.time,
+                                            });
+                                        }}
+                                      >
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop: (windowWidth * 3) / 100,
+                                              fontFamily:
+                                                Font.ques_fontfamily,
+                                              fontSize:
+                                                Font.sregulartext_size,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              (this.state.indexPosition === 0
+                                                ? this.state.time_take_data
+                                                : this.state
+                                                  .time_take_data_hour)
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+
+                              {/* ----------Date Time--------- */}
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={this.state.final_arr2}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          this.state.indexPosition === 0
+                                            ? this.setState({
+                                              time_take_data: item.time,
+                                            })
+                                            : this.setState({
+                                              time_take_data_hour:
+                                                item.time,
+                                            });
+                                        }}
+                                      >
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop: (windowWidth * 3) / 100,
+                                              fontFamily:
+                                                Font.ques_fontfamily,
+                                              fontSize:
+                                                Font.sregulartext_size,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              (this.state.indexPosition === 0
+                                                ? this.state.time_take_data
+                                                : this.state
+                                                  .time_take_data_hour)
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+                            </View>
+                          ) : (
+                            <Text
+                              style={{
+                                fontFamily: Font.MediumItalic,
+                                fontSize: (windowWidth * 4) / 100,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                                textAlign: "center",
+                                marginLeft: (windowWidth * 32) / 100,
+                              }}
+                            >
+                              {Lang_chg.no_data_Found[config.language]}
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </View>
+                  {/* border */}
+                </View>
+
+                <View>
+                  {/* border */}
+
+                  {/* Payment section */}
+                  <View
+                    style={{
+                      width: "100%",
+                      paddingVertical: vs(9),
+                      marginTop: vs(7),
+                      backgroundColor: Colors.White,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "90%",
+                        alignSelf: "center",
+                      }}
+                    >
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 4) / 100,
+                            color: Colors.theme_color,
+                            textAlign: config.textRotate,
+                          }}
+                        >
+                          {Lang_chg.Payment[config.language]}
+                        </Text>
+                      </View>
+                      {this.state.new_task_arr != "" && (
                         <FlatList
-                          horizontal={true}
-                          showsHorizontalScrollIndicator={false}
                           data={this.state.new_task_arr}
                           renderItem={({ item, index }) => {
                             if (this.state.new_task_arr != "") {
                               return (
-                                <View style={{ alignSelf: "center" }}>
+                                <View>
                                   {item.status == true && (
                                     <View
                                       style={{
-                                        backgroundColor: Colors.theme_color,
-                                        paddingVertical: (windowWidth * 0.8) / 100,
                                         flexDirection: "row",
-                                        paddingHorizontal:
-                                          (windowWidth * 1.5) / 100,
-                                        marginTop: (windowWidth * 2) / 100,
+                                        width: "100%",
                                         justifyContent: "space-between",
-                                        alignItems: "center",
-                                        borderRadius: (windowWidth * 1) / 100,
-                                        marginRight: (windowWidth * 2) / 100,
+                                        marginTop: (windowWidth * 1.5) / 100,
+                                        alignSelf: "center",
                                       }}
                                     >
                                       <Text
                                         style={{
-                                          color: Colors.white_color,
-                                          fontSize: Font.textsize,
-                                          fontFamily: Font.Light,
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          width: "70%",
+                                          textAlign: config.textRotate,
                                         }}
                                       >
                                         {item.name}
                                       </Text>
-                                      <TouchableOpacity
-                                        onPress={() => {
-                                          this.check_all_false(item, index);
+                                      <Text
+                                        style={{
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          width: "30%",
+                                          textAlign: "right",
                                         }}
                                       >
-                                        <Image
-                                          source={localimag.cross2}
-                                          style={{
-                                            alignSelf: "center",
-                                            width: (windowWidth * 2) / 100,
-                                            height: (windowWidth * 2) / 100,
-                                            marginLeft: (windowWidth * 3.5) / 100,
-                                          }}
-                                        />
-                                      </TouchableOpacity>
+                                        {item.price}{" "}
+                                        {this.state.currency_symbol}
+                                      </Text>
                                     </View>
                                   )}
                                 </View>
@@ -2685,291 +3283,219 @@ export default class Booking extends Component {
                             }
                           }}
                         />
-                      </View>
-
-                      <View
-                        style={{
-                          width: "100%",
-                          alignSelf: "center",
-                          backgroundColor: Colors.tab_background_color,
-                          alignItems: "center",
-                          marginTop: (windowWidth * 3) / 100,
-                        }}
-                      >
-                        <View
-                          style={{
-                            width: "98%",
-                            alignSelf: "center",
-                            flexDirection: "row",
-                          }}
-                        >
-                          <TextInput
-                            ref={(text) => {
-                              this.textdata = text;
-                            }}
-                            maxLength={50}
-                            onChangeText={(text) => {
-                              this.searchFilterFunction(text);
-                            }}
-                            returnKeyLabel="done"
-                            returnKeyType="done"
-                            onSubmitEditing={() => {
-                              Keyboard.dismiss();
-                            }}
-                            style={{
-                              fontSize: (windowWidth * 4) / 100,
-                              fontFamily: Font.ques_fontfamily,
-                              color: "#8F98A7",
-                              width: "90%",
-                              paddingVertical: (windowWidth * 3.5) / 100,
-                              textAlign: config.textalign,
-                            }}
-                            placeholderTextColor={"#8F98A7"}
-                            placeholder={Lang_chg.SearchTests[config.language]}
-                          />
-
-                          <View style={{ width: "10%", alignSelf: "center" }}>
-                            <Image
-                              style={{
-                                width: (windowWidth * 4) / 100,
-                                height: (windowWidth * 4) / 100,
-                                tintColor: "#8F98A7",
-                                alignSelf: "center",
-                              }}
-                              source={localimag.search2}
-                            />
-                          </View>
-                        </View>
-                      </View>
-
-                      {this.state.task_base_task != "" &&
-                        this.state.task_base_task != null && (
-                          <View
-                            style={[
-                              {
-                                width: "100%",
-                                alignSelf: "center",
-                                marginTop: (windowWidth * 2) / 100,
-                              },
-                              this.state.task_base_task.length >= 7
-                                ? { height: 240 }
-                                : null,
-                            ]}
-                          >
-                            <FlatList
-                              data={this.state.task_base_task}
-                              scrollEnabled={true}
-                              nestedScrollEnabled={true}
-                              renderItem={({ item, index }) => {
-                                if (this.state.task_base_task != "") {
-                                  return (
-                                    <TouchableOpacity
-                                      activeOpacity={0.9}
-                                      onPress={() => {
-                                        this.check_all(item, index);
-                                      }}
+                      )}
+                      {this.state.hour_base_task_new != "" && (
+                        <FlatList
+                          data={this.state.hour_base_task_new}
+                          renderItem={({ item, index }) => {
+                            console.log("item dsdsds - >>>> ", item);
+                            if (this.state.hour_base_task_new != "") {
+                              return (
+                                <View>
+                                  {item.status == true && (
+                                    <View
                                       style={{
-                                        alignItems: "center",
-                                        width: "100%",
-                                        alignSelf: "center",
-                                        backgroundColor: "#F8F8F8",
-                                        paddingVertical: (windowWidth * 1.7) / 100,
                                         flexDirection: "row",
-                                        marginTop: (windowWidth * 0.3) / 100,
+                                        width: "100%",
+                                        paddingVertical: (windowWidth * 3) / 100,
+                                        justifyContent: "space-between",
+                                        alignSelf: "center",
                                       }}
                                     >
-                                      <View
-                                        style={{
-                                          alignSelf: "center",
-                                          width: "11%",
-                                        }}
-                                      >
-                                        {item.status == true ? (
-                                          // <Image
-                                          //   style={{
-                                          //     width: (windowWidth * 5) / 100,
-                                          //     height: (windowWidth * 5) / 100,
-                                          //     borderRadius:
-                                          //       (windowWidth * 0.4) / 100,
-                                          //     marginRight: (windowWidth * 2) / 100,
-                                          //     marginLeft: (windowWidth * 3) / 100,
-                                          //     resizeMode: "contain",
-                                          //     alignSelf: "flex-start",
-                                          //   }}
-                                          //   source={localimag.remembertick}
-                                          // />
-                                          null
-                                        ) : (
-                                          <Image
-                                            style={{
-                                              width: (windowWidth * 5) / 100,
-                                              height: (windowWidth * 5) / 100,
-                                              borderRadius:
-                                                (windowWidth * 0.4) / 100,
-                                              marginRight: (windowWidth * 2) / 100,
-                                              marginLeft: (windowWidth * 3) / 100,
-                                              resizeMode: "contain",
-                                              alignSelf: "flex-start",
-                                            }}
-                                            source={require("../icons/graycheckbox.png")}
-                                          />
-                                        )}
-                                      </View>
                                       <Text
                                         style={{
-                                          width: "59%",
-                                          textAlign: config.textRotate,
-                                          alignSelf: "center",
-                                          fontSize: (windowWidth * 3.6) / 100,
-                                          fontFamily: Font.Regular,
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
                                           color: "#000",
+                                          textAlign: config.textRotate,
                                         }}
                                       >
                                         {item.name}
                                       </Text>
                                       <Text
                                         style={{
-                                          width: "25%",
-                                          fontSize: (windowWidth * 3.6) / 100,
-                                          fontFamily: Font.Regular,
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
                                           color: "#000",
-
+                                          width: "30%",
                                           textAlign: "right",
                                         }}
                                       >
                                         {item.price}{" "}
                                         {this.state.currency_symbol}
                                       </Text>
-                                    </TouchableOpacity>
-                                  );
-                                }
-                              }}
-                            />
-                          </View>
-                        )}
-                    </View>
-                  )}
-                  {this.state.indexPosition === 1 && (
-                    <View
-                      style={{
-                        width: "100%",
-                        backgroundColor: "#fff",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        marginBottom: (windowWidth * 1) / 100,
-                      }}
-                    >
-                      <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={item.package_base_task}
-                        renderItem={({ item, index }) => {
-                          return (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.hourbooking(item, index),
-                                  this.getLabTimeDate(),
-                                  this.setState({
-                                    hour_id: item.pid,
-                                    hour_price: item.price,
-                                    time_take_data_hour: "",
-                                  });
-                              }}
-                              style={[
-                                {
-                                  borderRadius: (windowWidth * 2) / 100,
-                                  marginLeft: (windowWidth * 2) / 100,
-                                  width: (windowWidth * 40) / 100,
-                                  backgroundColor: "#fff",
-                                },
-                                item.status == true
-                                  ? {
-                                    borderColor: Colors.theme_color,
-                                    borderWidth: 2,
-                                  }
-                                  : { borderColor: "#DFDFDF", borderWidth: 1 },
-                              ]}
-                            >
-                              <Text
-                                style={{
-                                  width: "100%",
-                                  paddingVertical: (windowWidth * 1.5) / 100,
-                                  paddingHorizontal: (windowWidth * 2) / 100,
-                                  color: Colors.theme_color,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 3.5) / 100,
-                                  textAlign: "left",
-                                }}
-                              >
-                                {item.name}
-                              </Text>
-
-                              <Text
-                                style={{
-                                  paddingVertical: (windowWidth * 2) / 100,
-                                  paddingHorizontal: (windowWidth * 2) / 100,
-                                  fontFamily: Font.Regular,
-                                  textAlign: "left",
-                                  color: Colors.tablightcolo,
-                                  fontSize: Font.sregulartext_size,
-                                }}
-                              >
-                                {item.test_count}
-                              </Text>
-                              <View
-                                style={{
-                                  width: "90%",
-                                  alignSelf: "center",
-                                  borderColor: Colors.bordercolor,
-                                  borderBottomWidth: (windowWidth * 0.5) / 100,
-                                  marginTop: (windowWidth * 1) / 100,
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  paddingVertical: (windowWidth * 2) / 100,
-                                  paddingHorizontal: (windowWidth * 2) / 100,
-                                  textAlign: config.textalign,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 4) / 100,
-                                }}
-                              >
-                                {item.price}
-                              </Text>
-                            </TouchableOpacity>
-                          );
+                                    </View>
+                                  )}
+                                </View>
+                              );
+                            }
+                          }}
+                        />
+                      )}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderColor: Colors.backgroundcolor,
+                          marginTop: (windowWidth * 2) / 100,
                         }}
-                      />
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.distance_fare_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.distance_fare}.0 {this.state.currency_symbol}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderColor: Colors.backgroundcolor,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.subTotal[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {this.state.subTotal} {this.state.currency_symbol}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: (windowWidth * 1) / 100,
+                          borderColor: Colors.backgroundcolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.vat_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {this.state.indexPosition === 0
+                            ? this.state.vat_price_show_display
+                            : this.state.vat_price_show_hourly}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          borderTopWidth: 1.5,
+                          borderColor: Colors.backgroundcolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                          paddingVertical: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.Total[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {this.state.indexPosition === 0
+                            ? this.state.final_total_price
+                            : this.state.hour_total_price}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
+
+
                     </View>
-                  )}
-                  <View
-                    style={{
-                      width: "100%",
-                      shadowOpacity: 0.3,
-                      shadowColor: "#000",
-                      shadowOffset: { width: 2, height: 2 },
-                      elevation: 2,
-                      shadowRadius: 2,
-                      marginTop: (windowWidth * 2) / 100,
-                      marginBottom: (windowWidth * 1.5) / 100,
-                      backgroundColor: "#fff",
-                    }}
-                  >
+                  </View>
+
+                </View>
+              </View>
+            ) : this.state.providerType === "doctor" ? (
+              <>
+                <View
+                  style={{
+                    width: "100%",
+                    marginTop: vs(7),
+                    paddingVertical: vs(9),
+                    backgroundColor: Colors.White
+                  }} >
+                  <View style={{
+                    borderBottomWidth: 1.5,
+                    borderBottomColor: Colors.backgroundcolor,
+                    paddingBottom: vs(5),
+                    marginBottom: vs(5)
+                  }}>
+
+
                     <View
                       style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        width: "93%",
+                        width: "100%",
                         alignSelf: "center",
-                        paddingTop: (windowWidth * 4) / 100,
+                        paddingHorizontal: s(11)
                       }}
                     >
                       <Text
                         style={{
                           fontFamily: Font.Medium,
-                          fontSize: Font.name,
+                          fontSize: Font.medium,
                           width: "65%",
                           textAlign: config.textRotate,
-                          fontSize: (windowWidth * 3.5) / 100,
+                          color: Colors.detailTitles
                         }}
                       >
                         {Lang_chg.Appointmentschedule[config.language]}
@@ -2983,21 +3509,21 @@ export default class Booking extends Component {
                         }}
                       >
                         <View style={{ width: "20%", alignSelf: "center" }}>
-                          {/* <Image
+                          <Image
                             style={{
                               width: (windowWidth * 5) / 100,
                               height: (windowWidth * 5) / 100,
                               alignSelf: "center",
                             }}
-                            source={localimag.calendarimg}
-                          /> */}
+                            source={Icons.Calendar}
+                          />
                         </View>
 
                         <Text
                           style={{
-                            color: Colors.theme_color,
+                            color: Colors.Theme,
                             fontFamily: Font.Medium,
-                            fontSize: Font.name,
+                            fontSize: Font.medium,
                             alignSelf: "center",
                             marginLeft: (windowWidth * 1) / 100,
                             textAlign: "right",
@@ -3007,33 +3533,28 @@ export default class Booking extends Component {
                         </Text>
                       </View>
                     </View>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
+                  </View>
 
-                    <View
+                  <View
+                    style={{
+                      width: "93%",
+                      alignSelf: "center",
+                      paddingBottom: (windowWidth * 3) / 100,
+                      borderBottomWidth: 1.5,
+                      borderBottomColor: Colors.backgroundcolor
+                    }}
+                  >
+                    <Text
                       style={{
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
+                        fontFamily: Font.Regular,
+                        fontSize: Font.large,
+                        textAlign: config.textRotate,
+                        color: Colors.detailTitles,
                       }}
                     >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
-                          textAlign: config.textRotate,
-                          color: "#000",
-                        }}
-                      >
-                        {Lang_chg.SelectDate[config.language]}
-                      </Text>
+                      {Lang_chg.SelectDate[config.language]}
+                    </Text>
+                    {this.state.indexPosition === 1 ? (
                       <View style={{ width: "100%" }}>
                         <FlatList
                           horizontal={true}
@@ -3045,10 +3566,10 @@ export default class Booking extends Component {
                                 onPress={() => {
                                   this.setState({
                                     set_date: item.date1,
-                                    set_task: "task_base",
+                                    set_task: item.home_visit_text,
                                     time_take_data: "",
                                   }),
-                                    this.getLabTimeDate(),
+                                    this.getDoctorTimeDate(),
                                     this.checkDate(item, index);
                                 }}
                                 style={{ width: (windowWidth * 15) / 100 }}
@@ -3057,13 +3578,12 @@ export default class Booking extends Component {
                                   style={{
                                     marginRight: (windowWidth * 3) / 100,
                                     marginTop: (windowWidth * 3) / 100,
-                                    backgroundColor:
-                                      item.tick == 1 ? "#0787D2" : Colors.lightGrey,
-                                    color: item.tick == 1 ? "White" : "black",
+                                    backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                    color: item.tick == 1 ? Colors.White : Colors.Black,
                                     textAlign: "center",
                                     paddingVertical: (windowWidth * 2) / 100,
-                                    fontFamily: Font.ques_fontfamily,
-                                    fontSize: Font.sregulartext_size,
+                                    fontFamily: Font.Regular,
+                                    fontSize: Font.small,
 
                                     lineHeight: (windowWidth * 5) / 100,
                                   }}
@@ -3078,41 +3598,81 @@ export default class Booking extends Component {
                           }}
                         />
                       </View>
-                    </View>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
+                    ) : (
+                      <View style={{ width: "100%" }}>
+                        <FlatList
+                          horizontal={true}
+                          data={this.state.date_array}
+                          showsHorizontalScrollIndicator={false}
+                          renderItem={({ item, index }) => {
+                            return (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.setState({
+                                    set_date: item.date1,
+                                    set_task: item.online_base_text,
+                                    time_take_data_hour: "",
+                                  }),
+                                    this.getDoctorTimeDate(),
+                                    this.checkDate(item, index);
+                                }}
+                                style={{ width: (windowWidth * 15) / 100, }}
+                              >
+                                <Text
+                                  style={{
+                                    marginRight: (windowWidth * 3) / 100,
+                                    marginTop: (windowWidth * 3) / 100,
+                                    backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                    color: item.tick == 1 ? Colors.White : Colors.Black,
+                                    textAlign: "center",
+                                    paddingVertical: (windowWidth * 2) / 100,
+                                    fontFamily: Font.Regular,
+                                    fontSize: Font.small,
+                                    lineHeight: (windowWidth * 5) / 100,
+                                  }}
+                                >
+                                  {item.day}
+                                  {"\n"}
 
-                    <View
+                                  {item.datenew}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          }}
+                        />
+                      </View>
+                    )}
+                  </View>
+
+
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      paddingTop: vs(7),
+                      paddingHorizontal: s(11)
+                    }}
+                  >
+                    <Text
                       style={{
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
+                        fontFamily: Font.Regular,
+                        fontSize: Font.subtext,
+                        color: "#000",
+                        textAlign: config.textRotate,
                       }}
                     >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
-                          color: "#000",
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.Select_start_time[config.language]}
-                      </Text>
+                      {Lang_chg.Select_start_time[config.language]}
+                    </Text>
 
-                      <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                      >
-                        <View style={{ width: "100%", alignItems: "center" }}>
-                          <View style={{ width: "100%", alignItems: "center" }}>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      <View style={{ width: "100%", alignItems: "center" }}>
+                        {this.state.indexPosition === 1 ? (
+                          <View
+                            style={{ width: "100%", alignItems: "center" }}
+                          >
                             {this.state.time_Arr != "" ? (
                               <View
                                 style={{
@@ -3129,14 +3689,9 @@ export default class Booking extends Component {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.state.indexPosition === 0
-                                              ? this.setState({
-                                                time_take_data: item.time,
-                                              })
-                                              : this.setState({
-                                                time_take_data_hour:
-                                                  item.time,
-                                              });
+                                            this.setState({
+                                              time_take_data: item.time,
+                                            });
                                           }}
                                         >
                                           <Text
@@ -3144,7 +3699,9 @@ export default class Booking extends Component {
                                               {
                                                 marginRight:
                                                   (windowWidth * 3) / 100,
-                                                marginTop: (windowWidth * 3) / 100,
+                                                marginTop:
+                                                  (windowWidth * 3) / 100,
+
                                                 fontFamily:
                                                   Font.ques_fontfamily,
                                                 fontSize:
@@ -3154,19 +3711,16 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                (this.state.indexPosition === 0
-                                                  ? this.state.time_take_data
-                                                  : this.state
-                                                    .time_take_data_hour)
+                                                this.state.time_take_data
                                                 ? {
                                                   backgroundColor:
-                                                    Colors.theme_color,
-                                                  color: "#fff",
+                                                    Colors.Blue,
+                                                  color: Colors.White,
                                                 }
                                                 : {
                                                   backgroundColor:
-                                                    Colors.lightGrey,
-                                                  color: "#000",
+                                                    '#E5E5E5',
+                                                  color: Colors.Black,
                                                 },
                                             ]}
                                           >
@@ -3186,14 +3740,9 @@ export default class Booking extends Component {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.state.indexPosition === 0
-                                              ? this.setState({
-                                                time_take_data: item.time,
-                                              })
-                                              : this.setState({
-                                                time_take_data_hour:
-                                                  item.time,
-                                              });
+                                            this.setState({
+                                              time_take_data: item.time,
+                                            });
                                           }}
                                         >
                                           <Text
@@ -3201,7 +3750,9 @@ export default class Booking extends Component {
                                               {
                                                 marginRight:
                                                   (windowWidth * 3) / 100,
-                                                marginTop: (windowWidth * 3) / 100,
+                                                marginTop:
+                                                  (windowWidth * 3) / 100,
+
                                                 fontFamily:
                                                   Font.ques_fontfamily,
                                                 fontSize:
@@ -3211,19 +3762,16 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                (this.state.indexPosition === 0
-                                                  ? this.state.time_take_data
-                                                  : this.state
-                                                    .time_take_data_hour)
+                                                this.state.time_take_data
                                                 ? {
                                                   backgroundColor:
-                                                    Colors.theme_color,
-                                                  color: "#fff",
+                                                    Colors.Blue,
+                                                  color: Colors.White,
                                                 }
                                                 : {
                                                   backgroundColor:
-                                                    Colors.lightGrey,
-                                                  color: "#000",
+                                                    '#E5E5E5',
+                                                  color: Colors.Black,
                                                 },
                                             ]}
                                           >
@@ -3250,189 +3798,250 @@ export default class Booking extends Component {
                               </Text>
                             )}
                           </View>
-                        </View>
-                      </ScrollView>
-                    </View>
-                    {/* border */}
+                        ) : (
+                          <View
+                            style={{ width: "100%", alignItems: "center" }}
+                          >
+                            {this.state.hour_time != "" ? (
+                              <View
+                                style={{
+                                  width: "100%",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <View style={{ width: "100%" }}>
+                                  <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.final_hour_one}
+                                    renderItem={({ item, index }) => {
+                                      return (
+                                        <TouchableOpacity
+                                          onPress={() => {
+                                            this.setState({
+                                              time_take_data: item.time,
+                                            });
+                                          }}
+                                        >
+                                          <Text
+                                            style={[
+                                              {
+                                                marginRight:
+                                                  (windowWidth * 3) / 100,
+                                                marginTop:
+                                                  (windowWidth * 3) / 100,
+                                                fontFamily:
+                                                  Font.ques_fontfamily,
+                                                fontSize:
+                                                  Font.sregulartext_size,
+                                                padding: (windowWidth * 2) / 100,
+                                                paddingHorizontal:
+                                                  (windowWidth * 3.3) / 100,
+                                              },
+                                              item.time ==
+                                                this.state.time_take_data
+                                                ? {
+                                                  backgroundColor:
+                                                    Colors.Blue,
+                                                  color: Colors.White,
+                                                }
+                                                : {
+                                                  backgroundColor:
+                                                    '#E5E5E5',
+                                                  color: Colors.Black,
+                                                },
+                                            ]}
+                                          >
+                                            {item.time}
+                                          </Text>
+                                        </TouchableOpacity>
+                                      );
+                                    }}
+                                  />
+                                </View>
+                                <View style={{ width: "100%" }}>
+                                  <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.final_hour_two}
+                                    renderItem={({ item, index }) => {
+                                      return (
+                                        <TouchableOpacity
+                                          onPress={() => {
+                                            this.setState({
+                                              time_take_data: item.time,
+                                            });
+                                          }}
+                                        >
+                                          <Text
+                                            style={[
+                                              {
+                                                marginRight:
+                                                  (windowWidth * 3) / 100,
+                                                marginTop:
+                                                  (windowWidth * 3) / 100,
+                                                fontFamily:
+                                                  Font.ques_fontfamily,
+                                                fontSize:
+                                                  Font.sregulartext_size,
+                                                padding: (windowWidth * 2) / 100,
+                                                paddingHorizontal:
+                                                  (windowWidth * 3.3) / 100,
+                                              },
+                                              item.time ==
+                                                this.state.time_take_data
+                                                ? {
+                                                  backgroundColor:
+                                                    Colors.Blue,
+                                                  color: Colors.White,
+                                                }
+                                                : {
+                                                  backgroundColor:
+                                                    '#E5E5E5',
+                                                  color: Colors.Black,
+                                                },
+                                            ]}
+                                          >
+                                            {item.time}
+                                          </Text>
+                                        </TouchableOpacity>
+                                      );
+                                    }}
+                                  />
+                                </View>
+                              </View>
+                            ) : (
+                              <Text
+                                style={{
+                                  fontFamily: Font.MediumItalic,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 3) / 100,
+                                  textAlign: "center",
+                                  marginLeft: (windowWidth * 32) / 100,
+                                }}
+                              >
+                                {Lang_chg.no_data_Found[config.language]}
+                              </Text>
+                            )}
+                          </View>
+                        )}
+                      </View>
+                    </ScrollView>
                   </View>
+                </View>
 
-                  <View>
-                    {/* border */}
+                <View>
 
-                    {/* Payment section */}
+
+                  {/* Payment section */}
+                  <View
+                    style={{
+                      width: "100%",
+                      paddingVertical: vs(9),
+                      marginTop: vs(7),
+                      marginBottom: vs(50),
+                      backgroundColor: Colors.White,
+                      paddingHorizontal: s(11)
+                    }}>
                     <View
                       style={{
                         width: "100%",
-                        shadowOpacity: 0.3,
-                        shadowColor: "#000",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        shadowOffset: { width: 2, height: 2 },
-                        marginTop: (windowWidth * 1.5) / 100,
-                        elevation: 2,
-                        marginBottom: (windowWidth * 3) / 100,
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "90%",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <View>
+                        alignSelf: "center",
+                      }} >
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 4) / 100,
+                            color: Colors.Blue,
+                            textAlign: config.textRotate,
+                          }}
+                        >
+                          {Lang_chg.Payment[config.language]}
+                        </Text>
+                      </View>
+                      <View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            width: "100%",
+                            justifyContent: "space-between",
+                            marginTop: vs(10),
+                            alignSelf: "center",
+                          }} >
                           <Text
                             style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 4) / 100,
-                              color: Colors.theme_color,
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              color: Colors.detailTitles,
+                              width: "70%",
                               textAlign: config.textRotate,
-                            }}
-                          >
-                            {Lang_chg.Payment[config.language]}
+                            }} >
+                            {this.state.indexPosition === 0
+                              ? item.online_base_task[0].duration
+                              : item.home_visit_task[0].duration}
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              color: Colors.detailTitles,
+                              width: "30%",
+                              textAlign: "right",
+                            }}>
+                            {this.state.indexPosition === 0
+                              ? item.online_base_task[0].task_price
+                              : item.home_visit_task[0].task_price}{" "}
+                            {this.state.currency_symbol}
                           </Text>
                         </View>
-                        {this.state.new_task_arr != "" && (
-                          <FlatList
-                            data={this.state.new_task_arr}
-                            renderItem={({ item, index }) => {
-                              if (this.state.new_task_arr != "") {
-                                return (
-                                  <View>
-                                    {item.status == true && (
-                                      <View
-                                        style={{
-                                          flexDirection: "row",
-                                          width: "100%",
-                                          justifyContent: "space-between",
-                                          marginTop: (windowWidth * 1.5) / 100,
-                                          alignSelf: "center",
-                                        }}
-                                      >
-                                        <Text
-                                          style={{
-                                            fontFamily: Font.ques_fontfamily,
-                                            fontSize: Font.sregulartext_size,
-                                            color: "#000",
-                                            width: "70%",
-                                            textAlign: config.textRotate,
-                                          }}
-                                        >
-                                          {item.name}
-                                        </Text>
-                                        <Text
-                                          style={{
-                                            fontFamily: Font.ques_fontfamily,
-                                            fontSize: Font.sregulartext_size,
-                                            color: "#000",
-                                            width: "30%",
-                                            textAlign: "right",
-                                          }}
-                                        >
-                                          {item.price}{" "}
-                                          {this.state.currency_symbol}
-                                        </Text>
-                                      </View>
-                                    )}
-                                  </View>
-                                );
-                              }
-                            }}
-                          />
-                        )}
-                        {this.state.hour_base_task_new != "" && (
-                          <FlatList
-                            data={this.state.hour_base_task_new}
-                            renderItem={({ item, index }) => {
-                              console.log("item dsdsds - >>>> ", item);
-                              if (this.state.hour_base_task_new != "") {
-                                return (
-                                  <View>
-                                    {item.status == true && (
-                                      <View
-                                        style={{
-                                          flexDirection: "row",
-                                          width: "100%",
-                                          paddingVertical: (windowWidth * 3) / 100,
-                                          justifyContent: "space-between",
-                                          alignSelf: "center",
-                                        }}
-                                      >
-                                        <Text
-                                          style={{
-                                            fontFamily: Font.ques_fontfamily,
-                                            fontSize: Font.sregulartext_size,
-                                            color: "#000",
-                                            textAlign: config.textRotate,
-                                          }}
-                                        >
-                                          {item.name}
-                                        </Text>
-                                        <Text
-                                          style={{
-                                            fontFamily: Font.ques_fontfamily,
-                                            fontSize: Font.sregulartext_size,
-                                            color: "#000",
-                                            width: "30%",
-                                            textAlign: "right",
-                                          }}
-                                        >
-                                          {item.price}{" "}
-                                          {this.state.currency_symbol}
-                                        </Text>
-                                      </View>
-                                    )}
-                                  </View>
-                                );
-                              }
-                            }}
-                          />
+                        {this.state.indexPosition === 1 && (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              paddingVertical: vs(10),
+                              borderTopWidth: 1.5,
+                              borderBottomWidth: 1.5,
+                              borderTopColor: Colors.backgroundcolor,
+                              borderBottomColor: Colors.backgroundcolor,
+                              marginTop: (windowWidth * 2) / 100,
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: Font.Regular,
+                                fontSize: Font.small,
+                                color: Colors.detailTitles,
+                              }}>
+                              {item.distance_fare_text}
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: Font.ques_fontfamily,
+                                fontSize: Font.sregulartext_size,
+                                color: "#000",
+                              }}>
+                              {item.distance_fare}.0{" "}
+                              {this.state.currency_symbol}
+                            </Text>
+                          </View>
                         )}
                         <View
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
                             paddingVertical: (windowWidth * 2) / 100,
-                            borderTopWidth: (windowWidth * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
+                            borderTopWidth: 1.5,
+                            borderTopColor: Colors.backgroundcolor,
                             marginTop: (windowWidth * 2) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.ques_fontfamily,
-                              fontSize: Font.sregulartext_size,
-                              color: "#000",
-                            }}
-                          >
-                            {item.distance_fare_text}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.ques_fontfamily,
-                              fontSize: Font.sregulartext_size,
-                              color: "#000",
-                            }}
-                          >
-                            {item.distance_fare}.0 {this.state.currency_symbol}
-                          </Text>
-                        </View>
-
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (windowWidth * 2) / 100,
-                            borderTopWidth: (windowWidth * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                          }}
-                        >
+                          }}>
                           <Text
                             style={{
                               fontFamily: Font.Medium,
                               fontSize: (windowWidth * 3.7) / 100,
                               color: Colors.theme_color,
-                            }}
-                          >
+                            }}>
                             {Lang_chg.subTotal[config.language]}
                           </Text>
                           <Text
@@ -3440,12 +4049,13 @@ export default class Booking extends Component {
                               fontFamily: Font.Medium,
                               fontSize: (windowWidth * 3.7) / 100,
                               color: Colors.theme_color,
-                            }}
-                          >
-                            {this.state.subTotal} {this.state.currency_symbol}
+                            }}>
+                            {this.state.indexPosition === 0
+                              ? this.state.onlineSubTotalPrice
+                              : this.state.homeVisitSubTotalPrice}{" "}
+                            {this.state.currency_symbol}
                           </Text>
                         </View>
-
                         <View
                           style={{
                             flexDirection: "row",
@@ -3472,21 +4082,20 @@ export default class Booking extends Component {
                             }}
                           >
                             {this.state.indexPosition === 0
-                              ? this.state.vat_price_show_display
-                              : this.state.vat_price_show_hourly}{" "}
+                              ? this.state.onlineVisitVat
+                              : this.state.homeVisitVat}{" "}
                             {this.state.currency_symbol}
                           </Text>
                         </View>
-
                         <View
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            borderTopWidth: (windowWidth * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
+                            borderTopWidth: 1.5,
+                            borderTopColor: Colors.backgroundcolor,
                             marginBottom: (windowWidth * 2) / 100,
-                            paddingVertical: (windowWidth * 2) / 100,
+                            paddingTop: (windowWidth * 2) / 100,
                           }}
                         >
                           <Text
@@ -3506,906 +4115,205 @@ export default class Booking extends Component {
                             }}
                           >
                             {this.state.indexPosition === 0
-                              ? this.state.final_total_price
-                              : this.state.hour_total_price}{" "}
+                              ? this.state.onlineTaskPrice
+                              : this.state.homeVisitTaskPrice}{" "}
                             {this.state.currency_symbol}
                           </Text>
                         </View>
-
                         {/* <Appbtn
-                          onPresshandler={() => {
-                            this.state.indexPosition === 0
-                              ? this.submit_btn()
-                              : this.submit_btn_hourly();
-                          }}
-                          title={Lang_chg.PROCEEDTOcheckout[config.language]}
-                        /> */}
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              ) : this.state.providerType === "doctor" ? (
-                <View>
-                  <View
-                    style={{
-                      width: "100%",
-                      shadowOpacity: 0.3,
-                      shadowColor: "#000",
-                      shadowOffset: { width: 2, height: 2 },
-                      elevation: 2,
-                      shadowRadius: 2,
-                      marginTop: (windowWidth * 1.5) / 100,
-                      marginBottom: (windowWidth * 1.5) / 100,
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingTop: (windowWidth * 4) / 100,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.name,
-                          width: "65%",
-                          textAlign: config.textRotate,
-                          fontSize: (windowWidth * 3.5) / 100,
-                        }}
-                      >
-                        {Lang_chg.Appointmentschedule[config.language]}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          width: "35%",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <View style={{ width: "20%", alignSelf: "center" }}>
-                          {/* <Image
-                            style={{
-                              width: (windowWidth * 5) / 100,
-                              height: (windowWidth * 5) / 100,
-                              alignSelf: "center",
-                            }}
-                            source={localimag.calendarimg}
-                          /> */}
-                        </View>
-
-                        <Text
-                          style={{
-                            color: Colors.theme_color,
-                            fontFamily: Font.Medium,
-                            fontSize: Font.name,
-                            alignSelf: "center",
-                            marginLeft: (windowWidth * 1) / 100,
-                            textAlign: "right",
-                          }}
-                        >
-                          {this.state.set_date}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
-
-                    <View
-                      style={{
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
-                          textAlign: config.textRotate,
-                          color: "#000",
-                        }}
-                      >
-                        {Lang_chg.SelectDate[config.language]}
-                      </Text>
-                      {this.state.indexPosition === 1 ? (
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            data={this.state.date_array}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.setState({
-                                      set_date: item.date1,
-                                      set_task: item.home_visit_text,
-                                      time_take_data: "",
-                                    }),
-                                      this.getDoctorTimeDate(),
-                                      this.checkDate(item, index);
-                                  }}
-                                  style={{ width: (windowWidth * 15) / 100 }}
-                                >
-                                  <Text
-                                    style={{
-                                      marginRight: (windowWidth * 3) / 100,
-                                      marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor:
-                                        item.tick == 1
-                                          ? "#0787D2"
-                                          : Colors.lightGrey,
-                                      color: item.tick == 1 ? "White" : "black",
-                                      textAlign: "center",
-                                      paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.ques_fontfamily,
-                                      fontSize: Font.sregulartext_size,
-
-                                      lineHeight: (windowWidth * 5) / 100,
-                                    }}
-                                  >
-                                    {item.day}
-                                    {"\n"}
-
-                                    {item.datenew}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      ) : (
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            data={this.state.date_array}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.setState({
-                                      set_date: item.date1,
-                                      set_task: item.online_base_text,
-                                      time_take_data_hour: "",
-                                    }),
-                                      this.getDoctorTimeDate(),
-                                      this.checkDate(item, index);
-                                  }}
-                                  style={{ width: (windowWidth * 15) / 100 }}
-                                >
-                                  <Text
-                                    style={{
-                                      marginRight: (windowWidth * 3) / 100,
-                                      marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor:
-                                        item.tick == 1
-                                          ? "#0787D2"
-                                          : Colors.lightGrey,
-                                      color: item.tick == 1 ? "White" : "black",
-                                      textAlign: "center",
-                                      paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.ques_fontfamily,
-                                      fontSize: Font.sregulartext_size,
-
-                                      lineHeight: (windowWidth * 5) / 100,
-                                    }}
-                                  >
-                                    {item.day}
-                                    {"\n"}
-
-                                    {item.datenew}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      )}
-                    </View>
-
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
-
-                    <View
-                      style={{
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
-                          color: "#000",
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.Select_start_time[config.language]}
-                      </Text>
-
-                      <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                      >
-                        <View style={{ width: "100%", alignItems: "center" }}>
-                          {this.state.indexPosition === 1 ? (
-                            <View
-                              style={{ width: "100%", alignItems: "center" }}
-                            >
-                              {this.state.time_Arr != "" ? (
-                                <View
-                                  style={{
-                                    width: "100%",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_one}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_arr2}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                </View>
-                              ) : (
-                                <Text
-                                  style={{
-                                    fontFamily: Font.MediumItalic,
-                                    fontSize: (windowWidth * 4) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: (windowWidth * 3) / 100,
-                                    textAlign: "center",
-                                    marginLeft: (windowWidth * 32) / 100,
-                                  }}
-                                >
-                                  {Lang_chg.no_data_Found[config.language]}
-                                </Text>
-                              )}
-                            </View>
-                          ) : (
-                            <View
-                              style={{ width: "100%", alignItems: "center" }}
-                            >
-                              {this.state.hour_time != "" ? (
-                                <View
-                                  style={{
-                                    width: "100%",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_hour_one}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_hour_two}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                </View>
-                              ) : (
-                                <Text
-                                  style={{
-                                    fontFamily: Font.MediumItalic,
-                                    fontSize: (windowWidth * 4) / 100,
-                                    alignSelf: "center",
-                                    paddingVertical: (windowWidth * 3) / 100,
-                                    textAlign: "center",
-                                    marginLeft: (windowWidth * 32) / 100,
-                                  }}
-                                >
-                                  {Lang_chg.no_data_Found[config.language]}
-                                </Text>
-                              )}
-                            </View>
-                          )}
-                        </View>
-                      </ScrollView>
-                    </View>
-                    {/* border */}
-                  </View>
-                  <View>
-                    {/* border */}
-
-                    {/* Payment section */}
-                    <View
-                      style={{
-                        width: "100%",
-                        shadowOpacity: 0.3,
-                        shadowColor: "#000",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        shadowOffset: { width: 2, height: 2 },
-                        marginTop: (windowWidth * 1.5) / 100,
-                        elevation: 2,
-                        marginBottom: (windowWidth * 3) / 100,
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "90%",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <View>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 4) / 100,
-                              color: Colors.theme_color,
-                              textAlign: config.textRotate,
-                            }}
-                          >
-                            {Lang_chg.Payment[config.language]}
-                          </Text>
-                        </View>
-                        <View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              width: "100%",
-                              justifyContent: "space-between",
-                              marginTop: (windowWidth * 1.5) / 100,
-                              alignSelf: "center",
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                                width: "70%",
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {this.state.indexPosition === 0
-                                ? item.online_base_task[0].duration
-                                : item.home_visit_task[0].duration}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                                width: "30%",
-                                textAlign: "right",
-                              }}
-                            >
-                              {this.state.indexPosition === 0
-                                ? item.online_base_task[0].task_price
-                                : item.home_visit_task[0].task_price}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          {this.state.indexPosition === 1 && (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                paddingVertical: (windowWidth * 2) / 100,
-                                borderTopWidth: (windowWidth * 0.3) / 100,
-                                borderColor: Colors.bordercolor,
-                                marginTop: (windowWidth * 2) / 100,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.ques_fontfamily,
-                                  fontSize: Font.sregulartext_size,
-                                  color: "#000",
-                                }}
-                              >
-                                {item.distance_fare_text}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.ques_fontfamily,
-                                  fontSize: Font.sregulartext_size,
-                                  color: "#000",
-                                }}
-                              >
-                                {item.distance_fare}.0{" "}
-                                {this.state.currency_symbol}
-                              </Text>
-                            </View>
-                          )}
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (windowWidth * 2) / 100,
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginTop: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.subTotal[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {this.state.indexPosition === 0
-                                ? this.state.onlineSubTotalPrice
-                                : this.state.homeVisitSubTotalPrice}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              marginTop: (windowWidth * 1) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.vat_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {this.state.indexPosition === 0
-                                ? this.state.onlineVisitVat
-                                : this.state.homeVisitVat}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                              paddingVertical: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.Total[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {this.state.indexPosition === 0
-                                ? this.state.onlineTaskPrice
-                                : this.state.homeVisitTaskPrice}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          {/* <Appbtn
                             onPresshandler={() => {
                               this.submitButtonForDoctor();
                             }}
                             title={Lang_chg.PROCEEDTOcheckout[config.language]}
                           /> */}
-                        </View>
                       </View>
                     </View>
                   </View>
                 </View>
-              ) : (
-                <View>
+              </>
+            ) : (
+              <View>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* ------------Tabs---------- */}
+
+                  {item.task_base_enable == 0 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setState({ display: "taskbooking" });
+                      }}
+                      style={{ width: "50%", alignSelf: "center" }}
+                    >
+                      <View style={{ width: "100%" }}>
+                        <Text
+                          style={
+                            this.state.display == "taskbooking"
+                              ? {
+                                color: Colors.Blue,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 4) / 100,
+                                textAlign: config.textalign,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                              }
+                              : {
+                                color: Colors.tablightcolo,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 4) / 100,
+                                textAlign: config.textalign,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                              }
+                          }
+                        >
+                          {Lang_chg.TaskBooking[config.language]}
+                        </Text>
+
+                        <View
+                          style={
+                            this.state.display == "taskbooking"
+                              ? {
+                                width: (windowWidth * 42) / 100,
+                                alignSelf: "center",
+                                paddingVertical: 1,
+                                borderWidth: 1,
+                                borderColor: Colors.Blue,
+                                backgroundColor: Colors.Blue,
+                              }
+                              : {
+                                width: (windowWidth * 42) / 100,
+                                alignSelf: "center",
+                                borderWidth: 2,
+                                borderColor: Colors.tab_background_color,
+                                backgroundColor:
+                                  Colors.appointmentdetaillightblue,
+                              }
+                          }
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                  {item.hour_base_enable == 0 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setState({ display: "hourlybooking" });
+                      }}
+                      style={{ width: "50%", alignSelf: "center" }}
+                    >
+                      <View style={{ width: "100%" }}>
+                        <Text
+                          style={
+                            this.state.display == "hourlybooking"
+                              ? {
+                                color: Colors.Blue,
+
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 4) / 100,
+                                textAlign: config.textalign,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                              }
+                              : {
+                                color: Colors.tablightcolo,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 4) / 100,
+                                textAlign: config.textalign,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                              }
+                          }
+                        >
+                          {Lang_chg.HourlyBooking[config.language]}
+                        </Text>
+
+                        <View
+                          style={
+                            this.state.display == "hourlybooking"
+                              ? {
+                                width: (windowWidth * 42) / 100,
+                                alignSelf: "center",
+                                paddingVertical: 1,
+                                borderWidth: 1,
+                                borderColor: Colors.Blue,
+                                backgroundColor: Colors.Blue,
+                              }
+                              : {
+                                width: (windowWidth * 42) / 100,
+                                alignSelf: "center",
+                                borderWidth: 2,
+                                borderColor: Colors.tab_background_color,
+                                backgroundColor:
+                                  Colors.tab_background_color,
+                              }
+                          }
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  {/* ------------Tabs---------- */}
+
+                </View>
+
+                {this.state.display == "taskbooking" && (
                   <View
                     style={{
-                      backgroundColor: "#F1F2F4",
                       width: "100%",
-                      flexDirection: "row",
-                      alignItems: "center",
+                      alignSelf: "center",
+                      backgroundColor: "#fff",
                     }}
                   >
-                    {item.task_base_enable == 0 && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ display: "taskbooking" });
-                        }}
-                        style={{ width: "50%", alignSelf: "center" }}
-                      >
-                        <View style={{ width: "100%" }}>
-                          <Text
-                            style={
-                              this.state.display == "taskbooking"
-                                ? {
-                                  color: Colors.Blue,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 4) / 100,
-                                  textAlign: config.textalign,
-                                  alignSelf: "center",
-                                  paddingVertical: (windowWidth * 3) / 100,
-                                }
-                                : {
-                                  color: Colors.tablightcolo,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 4) / 100,
-                                  textAlign: config.textalign,
-                                  alignSelf: "center",
-                                  paddingVertical: (windowWidth * 3) / 100,
-                                }
-                            }
-                          >
-                            {Lang_chg.TaskBooking[config.language]}
-                          </Text>
-
-                          <View
-                            style={
-                              this.state.display == "taskbooking"
-                                ? {
-                                  width: (windowWidth * 42) / 100,
-                                  alignSelf: "center",
-                                  paddingVertical: 1,
-                                  borderWidth: 1,
-                                  borderColor: Colors.Blue,
-                                  backgroundColor: Colors.Blue,
-                                  borderTopLeftRadius: (windowWidth * 2) / 100,
-                                  borderTopRightRadius: (windowWidth * 2) / 100,
-                                }
-                                : {
-                                  width: (windowWidth * 42) / 100,
-                                  alignSelf: "center",
-                                  borderWidth: 2,
-                                  borderColor: Colors.tab_background_color,
-                                  backgroundColor:
-                                    Colors.tab_background_color,
-                                }
-                            }
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                    {item.hour_base_enable == 0 && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ display: "hourlybooking" });
-                        }}
-                        style={{ width: "50%", alignSelf: "center" }}
-                      >
-                        <View style={{ width: "100%" }}>
-                          <Text
-                            style={
-                              this.state.display == "hourlybooking"
-                                ? {
-                                  color: Colors.Blue,
-
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 4) / 100,
-                                  textAlign: config.textalign,
-                                  alignSelf: "center",
-                                  paddingVertical: (windowWidth * 3) / 100,
-                                }
-                                : {
-                                  color: Colors.tablightcolo,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 4) / 100,
-                                  textAlign: config.textalign,
-                                  alignSelf: "center",
-                                  paddingVertical: (windowWidth * 3) / 100,
-                                }
-                            }
-                          >
-                            {Lang_chg.HourlyBooking[config.language]}
-                          </Text>
-
-                          <View
-                            style={
-                              this.state.display == "hourlybooking"
-                                ? {
-                                  width: (windowWidth * 42) / 100,
-                                  alignSelf: "center",
-                                  paddingVertical: 1,
-                                  borderWidth: 1,
-                                  borderColor: Colors.Blue,
-                                  backgroundColor: Colors.Blue,
-                                  borderTopLeftRadius: (windowWidth * 2) / 100,
-                                  borderTopRightRadius: (windowWidth * 2) / 100,
-                                }
-                                : {
-                                  width: (windowWidth * 42) / 100,
-                                  alignSelf: "center",
-                                  borderWidth: 2,
-                                  borderColor: Colors.tab_background_color,
-                                  backgroundColor:
-                                    Colors.tab_background_color,
-                                }
-                            }
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-
-                  {this.state.display == "taskbooking" && (
                     <View
                       style={{
-                        width: "100%",
-                        alignSelf: "center",
+                        width: "95%",
                         backgroundColor: "#fff",
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "95%",
-                          backgroundColor: "#fff",
-                          right: 0,
-                          alignSelf: "flex-end",
-                        }}
-                      >
-                        <FlatList
-                          horizontal={true}
-                          showsHorizontalScrollIndicator={false}
-                          data={this.state.new_task_arr}
-                          renderItem={({ item, index }) => {
-                            if (this.state.new_task_arr != "") {
-                              return (
-                                <View style={{ alignSelf: "center" }}>
-                                  {item.status == true && (
-                                    <View
+                        right: 0,
+                        alignSelf: "flex-end",
+                      }}>
+                      {/* ----------------Selected Tasks--------------- */}
+                      <FlatList
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        data={this.state.new_task_arr}
+                        renderItem={({ item, index }) => {
+                          if (this.state.new_task_arr != "") {
+                            return (
+                              <View style={{ alignSelf: "center" }}>
+                                {item.status == true && (
+                                  <View
+                                    style={{
+                                      backgroundColor: Colors.Theme,
+                                      paddingVertical: (windowWidth * 0.8) / 100,
+                                      flexDirection: "row",
+                                      paddingHorizontal:
+                                        (windowWidth * 1.5) / 100,
+                                      marginTop: (windowWidth * 2) / 100,
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      borderRadius: (windowWidth * 1) / 100,
+                                      marginRight: (windowWidth * 2) / 100,
+                                    }}
+                                  >
+                                    <Text
                                       style={{
-                                        backgroundColor: Colors.theme_color,
-                                        paddingVertical: (windowWidth * 0.8) / 100,
-                                        flexDirection: "row",
-                                        paddingHorizontal:
-                                          (windowWidth * 1.5) / 100,
-                                        marginTop: (windowWidth * 2) / 100,
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        borderRadius: (windowWidth * 1) / 100,
-                                        marginRight: (windowWidth * 2) / 100,
+                                        color: Colors.White,
+                                        fontSize: Font.textsize,
+                                        fontFamily: Font.Light,
                                       }}
                                     >
-                                      <Text
-                                        style={{
-                                          color: Colors.white_color,
-                                          fontSize: Font.textsize,
-                                          fontFamily: Font.Light,
-                                        }}
-                                      >
-                                        {item.name}
-                                      </Text>
-                                      <TouchableOpacity
-                                        onPress={() => {
-                                          this.check_all_false(item, index);
-                                        }}
-                                      >
-                                        {/* <Image
+                                      {item.name}
+                                    </Text>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        this.check_all_false(item, index);
+                                      }}
+                                    >
+                                      {/* <Image
                                           source={localimag.cross2}
                                           style={{
                                             alignSelf: "center",
@@ -4414,349 +4322,331 @@ export default class Booking extends Component {
                                             marginLeft: (windowWidth * 3.5) / 100,
                                           }}
                                         /> */}
-                                      </TouchableOpacity>
-                                    </View>
-                                  )}
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                      </View>
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    </View>
 
+                    <View
+                      style={{
+                        width: "100%",
+                        alignSelf: "center",
+                        backgroundColor: Colors.tab_background_color,
+                        alignItems: "center",
+                        marginTop: (windowWidth * 3) / 100,
+                      }}
+                    >
                       <View
                         style={{
                           width: "100%",
                           alignSelf: "center",
-                          backgroundColor: Colors.tab_background_color,
-                          alignItems: "center",
-                          marginTop: (windowWidth * 3) / 100,
+                          flexDirection: "row",
+                          paddingHorizontal: s(11)
                         }}
                       >
-                        <View
-                          style={{
-                            width: "98%",
-                            alignSelf: "center",
-                            flexDirection: "row",
+                        <TextInput
+                          ref={(text) => {
+                            this.textdata = text;
                           }}
-                        >
-                          <TextInput
-                            ref={(text) => {
-                              this.textdata = text;
-                            }}
-                            maxLength={50}
-                            onChangeText={(text) => {
-                              this.searchFilterFunction(text);
-                            }}
-                            returnKeyLabel="done"
-                            returnKeyType="done"
-                            onSubmitEditing={() => {
-                              Keyboard.dismiss();
-                            }}
-                            style={{
-                              fontSize: (windowWidth * 4) / 100,
-                              fontFamily: Font.ques_fontfamily,
-                              color: "#8F98A7",
-                              width: "90%",
-                              paddingVertical: (windowWidth * 3.5) / 100,
-                              textAlign: config.textalign,
-                            }}
-                            placeholderTextColor={"#8F98A7"}
-                            placeholder={Lang_chg.Searchtask[config.language]}
-                          />
+                          maxLength={50}
+                          onChangeText={(text) => {
+                            this.searchFilterFunction(text);
+                          }}
+                          returnKeyLabel="done"
+                          returnKeyType="done"
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss();
+                          }}
+                          style={{
+                            fontSize: (windowWidth * 4) / 100,
+                            fontFamily: Font.ques_fontfamily,
+                            color: "#8F98A7",
+                            width: "90%",
+                            paddingVertical: (windowWidth * 3.5) / 100,
+                            textAlign: config.textalign,
+                          }}
+                          placeholderTextColor={"#8F98A7"}
+                          placeholder={Lang_chg.Searchtask[config.language]}
+                        />
 
-                          <View style={{ width: "10%", alignSelf: "center" }}>
-                            {/* <Image
-                              style={{
-                                width: (windowWidth * 4) / 100,
-                                height: (windowWidth * 4) / 100,
-                                tintColor: "#8F98A7",
-                                alignSelf: "center",
-                              }}
-                              source={localimag.search2}
-                            /> */}
-                          </View>
+                        <View style={{ width: "10%", alignSelf: "center" }}>
+                          <Image
+                            style={{
+                              width: (windowWidth * 4) / 100,
+                              height: (windowWidth * 4) / 100,
+                              tintColor: "#8F98A7",
+                              alignSelf: "center",
+                            }}
+                            source={Icons.search2}
+                          />
                         </View>
                       </View>
+                    </View>
 
-                      {this.state.task_base_task != "" &&
-                        this.state.task_base_task != null && (
-                          <View
-                            style={[
-                              {
-                                width: "100%",
-                                alignSelf: "center",
-                                marginTop: (windowWidth * 2) / 100,
-                              },
-                              this.state.task_base_task.length >= 4
-                                ? { height: 200 }
-                                : null,
-                            ]}
-                          >
-                            <FlatList
-                              data={this.state.task_base_task}
-                              scrollEnabled={true}
-                              nestedScrollEnabled={true}
-                              renderItem={({ item, index }) => {
-                                if (this.state.task_base_task != "") {
-                                  return (
-                                    <TouchableOpacity
-                                      activeOpacity={0.9}
-                                      onPress={() => {
-                                        this.check_all(item, index);
-                                      }}
-                                      style={{
-                                        alignItems: "center",
-                                        width: "100%",
-                                        alignSelf: "center",
-                                        backgroundColor: "#F8F8F8",
-                                        paddingVertical: (windowWidth * 1.7) / 100,
-                                        flexDirection: "row",
-                                        marginTop: (windowWidth * 0.3) / 100,
-                                      }}
-                                    >
-                                      <View
+                    {/* ----------------Tasks List------------ */}
+
+                    {this.state.task_base_task != "" &&
+                      this.state.task_base_task != null && (
+                        <View
+                          style={[
+                            {
+                              width: "100%",
+                              alignSelf: "center",
+                              marginTop: (windowWidth * 2) / 100,
+                            },
+                            this.state.task_base_task.length >= 4
+                              ? { height: 200 }
+                              : null,
+                          ]}
+                        >
+                          <FlatList
+                            data={this.state.task_base_task}
+                            scrollEnabled={true}
+                            nestedScrollEnabled={true}
+                            renderItem={({ item, index }) => {
+                              if (this.state.task_base_task != "") {
+                                return (
+                                  <TouchableOpacity
+                                    activeOpacity={0.9}
+                                    onPress={() => {
+                                      this.check_all(item, index);
+                                    }}
+                                    style={{
+                                      width: '100%',
+                                      paddingVertical: vs(7),
+                                      flexDirection: 'row',
+                                      justifyContent: 'space-between',
+                                      paddingHorizontal: s(11)
+                                    }} >
+                                    <View style={{ flexDirection: 'row' }}>
+                                      <TouchableOpacity
                                         style={{
-                                          alignSelf: "center",
-                                          width: "11%",
+                                          height: 20,
+                                          width: 20,
+                                          borderRadius: 5,
+                                          backgroundColor: item.status == true ? Colors.Theme : Colors.White,
+                                          justifyContent: 'center',
+                                          alignItems: 'center',
+                                          borderWidth: item.status == true ? 0 : 1.3,
+                                          borderColor: Colors.Border
                                         }}
                                       >
                                         {item.status == true ? (
-                                          // <Image
-                                          //   style={{
-                                          //     width: (windowWidth * 5) / 100,
-                                          //     height: (windowWidth * 5) / 100,
-                                          //     borderRadius:
-                                          //       (windowWidth * 0.4) / 100,
-                                          //     marginRight: (windowWidth * 2) / 100,
-                                          //     marginLeft: (windowWidth * 3) / 100,
-                                          //     resizeMode: "contain",
-                                          //     alignSelf: "flex-start",
-                                          //   }}
-                                          //   source={localimag.remembertick}
-                                          // />
-                                          null
-                                        ) : (
                                           <Image
                                             style={{
-                                              width: (windowWidth * 5) / 100,
-                                              height: (windowWidth * 5) / 100,
-                                              borderRadius:
-                                                (windowWidth * 0.4) / 100,
-                                              marginRight: (windowWidth * 2) / 100,
-                                              marginLeft: (windowWidth * 3) / 100,
-                                              resizeMode: "contain",
-                                              alignSelf: "flex-start",
+                                              height: 14,
+                                              width: 14,
+                                              tintColor: Colors.White
                                             }}
-                                            source={require("../icons/graycheckbox.png")}
+                                            source={Icons.Tick}
                                           />
-                                        )}
-                                      </View>
+
+                                        ) : null}
+                                      </TouchableOpacity>
                                       <Text
                                         style={{
-                                          width: "59%",
                                           textAlign: config.textRotate,
                                           alignSelf: "center",
                                           fontSize: (windowWidth * 3.6) / 100,
                                           fontFamily: Font.Regular,
-
                                           color: "#000",
-                                        }}
-                                      >
+                                          marginLeft: s(10)
+                                        }}>
                                         {item.name}
                                       </Text>
-                                      <Text
-                                        style={{
-                                          width: "25%",
+                                    </View>
+                                    <Text
+                                      style={{
+                                        fontSize: (windowWidth * 3.6) / 100,
+                                        fontFamily: Font.Regular,
+                                        color: Colors.Black,
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                      {item.price}{" "}
+                                      {this.state.currency_symbol}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              }
+                            }}
+                          />
+                        </View>
+                      )}
+                  </View>
+                )}
 
-                                          fontSize: (windowWidth * 3.6) / 100,
-                                          fontFamily: Font.Regular,
-                                          color: "#000",
-
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </TouchableOpacity>
-                                  );
-                                }
-                              }}
-                            />
-                          </View>
-                        )}
-                    </View>
-                  )}
-
-                  {this.state.display == "hourlybooking" && (
-                    <View
-                      style={{
-                        width: "100%",
-                        backgroundColor: "#fff",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        marginBottom: (windowWidth * 1) / 100,
-                      }}
-                    >
-                      <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={item.hour_base_task}
-                        renderItem={({ item, index }) => {
-                          return (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.hourbooking(item, index),
-                                  this.getTimeDate(),
-                                  this.setState({
-                                    hour_id: item.id,
-                                    hour_price: item.price,
-                                    time_take_data_hour: "",
-                                  });
-                              }}
-                              style={[
-                                {
-                                  borderRadius: (windowWidth * 2) / 100,
-                                  marginLeft: (windowWidth * 2) / 100,
-                                  width: (windowWidth * 35) / 100,
-                                  backgroundColor: "#fff",
-                                },
-                                item.status == true
-                                  ? {
-                                    borderColor: Colors.theme_color,
-                                    borderWidth: 2,
-                                  }
-                                  : { borderColor: "#DFDFDF", borderWidth: 1 },
-                              ]}
-                            >
-                              <View
-                                style={{
-                                  backgroundColor: "#0168B3",
-                                  borderTopLeftRadius: (windowWidth * 1.1) / 100,
-                                  borderTopRightRadius: (windowWidth * 1.1) / 100,
-                                  width: "100%",
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    paddingVertical: (windowWidth * 1.5) / 100,
-                                    color: Colors.white_color,
-                                    fontFamily: Font.Medium,
-                                    fontSize: (windowWidth * 3) / 100,
-                                    textTransform: "uppercase",
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  {item.duration}
-                                </Text>
-                              </View>
-
-                              <Text
-                                style={{
-                                  paddingVertical: (windowWidth * 2) / 100,
-                                  fontFamily: Font.Medium,
-                                  textAlign: "center",
-                                  fontSize: Font.sregulartext_size,
-                                }}
-                              >
-                                {item.price} {this.state.currency_symbol}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        }}
-                      />
-                    </View>
-                  )}
-
+                {this.state.display == "hourlybooking" && (
                   <View
                     style={{
                       width: "100%",
-                      shadowOpacity: 0.3,
-                      shadowColor: "#000",
-                      shadowOffset: { width: 2, height: 2 },
-                      elevation: 2,
-                      shadowRadius: 2,
-                      marginTop: (windowWidth * 1.5) / 100,
-                      marginBottom: (windowWidth * 1.5) / 100,
                       backgroundColor: "#fff",
+                      paddingVertical: (windowWidth * 3) / 100,
+                      marginBottom: (windowWidth * 1) / 100,
                     }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingTop: (windowWidth * 4) / 100,
+                    <FlatList
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      data={item.hour_base_task}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.hourbooking(item, index),
+                                this.getTimeDate(),
+                                this.setState({
+                                  hour_id: item.id,
+                                  hour_price: item.price,
+                                  time_take_data_hour: "",
+                                });
+                            }}
+                            style={[
+                              {
+                                borderRadius: (windowWidth * 2) / 100,
+                                marginLeft: (windowWidth * 2) / 100,
+                                width: (windowWidth * 35) / 100,
+                                backgroundColor: "#fff",
+                              },
+                              item.status == true
+                                ? {
+                                  borderColor: Colors.theme_color,
+                                  borderWidth: 2,
+                                }
+                                : { borderColor: "#DFDFDF", borderWidth: 1 },
+                            ]}
+                          >
+                            <View
+                              style={{
+                                backgroundColor: "#0168B3",
+                                borderTopLeftRadius: (windowWidth * 1.1) / 100,
+                                borderTopRightRadius: (windowWidth * 1.1) / 100,
+                                width: "100%",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  paddingVertical: (windowWidth * 1.5) / 100,
+                                  color: Colors.White,
+                                  fontFamily: Font.Medium,
+                                  fontSize: (windowWidth * 3) / 100,
+                                  textTransform: "uppercase",
+                                  textAlign: "center",
+                                }}
+                              >
+                                {item.duration}
+                              </Text>
+                            </View>
+
+                            <Text
+                              style={{
+                                paddingVertical: (windowWidth * 2) / 100,
+                                fontFamily: Font.Medium,
+                                textAlign: "center",
+                                fontSize: Font.sregulartext_size,
+                              }}
+                            >
+                              {item.price} {this.state.currency_symbol}
+                            </Text>
+                          </TouchableOpacity>
+                        );
                       }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.name,
-                          width: "65%",
-                          textAlign: config.textRotate,
-                          fontSize: (windowWidth * 3.5) / 100,
-                        }}
-                      >
-                        {Lang_chg.Appointmentschedule[config.language]}
-                      </Text>
+                    />
+                  </View>
+                )}
+
+                {/* ------------------Date Time--------------- */}
+                <>
+                  <View
+                    style={{
+                      width: "100%",
+                      marginTop: vs(7),
+                      paddingVertical: vs(9),
+                      backgroundColor: Colors.White
+                    }} >
+                    <View style={{
+                      borderBottomWidth: 1.5,
+                      borderBottomColor: Colors.backgroundcolor,
+                      paddingBottom: vs(5),
+                      marginBottom: vs(5)
+                    }}>
+
+
                       <View
                         style={{
                           flexDirection: "row",
                           alignItems: "center",
-                          width: "35%",
-                          justifyContent: "flex-end",
+                          width: "100%",
+                          alignSelf: "center",
+                          paddingHorizontal: s(11)
                         }}
                       >
-                        <View style={{ width: "20%", alignSelf: "center" }}>
-                          {/* <Image
-                            style={{
-                              width: (windowWidth * 5) / 100,
-                              height: (windowWidth * 5) / 100,
-                              alignSelf: "center",
-                            }}
-                            source={localimag.calendarimg}
-                          /> */}
-                        </View>
-
                         <Text
                           style={{
-                            color: Colors.theme_color,
                             fontFamily: Font.Medium,
-                            fontSize: Font.name,
-                            alignSelf: "center",
-                            marginLeft: (windowWidth * 1) / 100,
-                            textAlign: "right",
+                            fontSize: Font.medium,
+                            width: "65%",
+                            textAlign: config.textRotate,
+                            color: Colors.detailTitles
                           }}
                         >
-                          {this.state.set_date}
+                          {Lang_chg.Appointmentschedule[config.language]}
                         </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            width: "35%",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <View style={{ width: "20%", alignSelf: "center" }}>
+                            <Image
+                              style={{
+                                width: (windowWidth * 5) / 100,
+                                height: (windowWidth * 5) / 100,
+                                alignSelf: "center",
+                              }}
+                              source={Icons.Calendar}
+                            />
+                          </View>
+
+                          <Text
+                            style={{
+                              color: Colors.Theme,
+                              fontFamily: Font.Medium,
+                              fontSize: Font.medium,
+                              alignSelf: "center",
+                              marginLeft: (windowWidth * 1) / 100,
+                              textAlign: "right",
+                            }}
+                          >
+                            {this.state.set_date}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
 
                     <View
                       style={{
                         width: "93%",
                         alignSelf: "center",
                         paddingBottom: (windowWidth * 3) / 100,
+                        borderBottomWidth: 1.5,
+                        borderBottomColor: Colors.backgroundcolor
                       }}
                     >
                       <Text
                         style={{
                           fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
+                          fontSize: Font.large,
                           textAlign: config.textRotate,
-                          color: "#000",
+                          color: Colors.detailTitles,
                         }}
                       >
                         {Lang_chg.SelectDate[config.language]}
@@ -4785,16 +4675,12 @@ export default class Booking extends Component {
                                     style={{
                                       marginRight: (windowWidth * 3) / 100,
                                       marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor:
-                                        item.tick == 1
-                                          ? "#0787D2"
-                                          : Colors.lightGrey,
-                                      color: item.tick == 1 ? "White" : "black",
+                                      backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                      color: item.tick == 1 ? Colors.White : Colors.Black,
                                       textAlign: "center",
                                       paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.ques_fontfamily,
-                                      fontSize: Font.sregulartext_size,
-
+                                      fontFamily: Font.Regular,
+                                      fontSize: Font.small,
                                       lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
@@ -4826,22 +4712,18 @@ export default class Booking extends Component {
                                       this.getTimeDate(),
                                       this.checkDate(item, index);
                                   }}
-                                  style={{ width: (windowWidth * 15) / 100 }}
+                                  style={{ width: (windowWidth * 15) / 100, }}
                                 >
                                   <Text
                                     style={{
                                       marginRight: (windowWidth * 3) / 100,
                                       marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor:
-                                        item.tick == 1
-                                          ? "#0787D2"
-                                          : Colors.lightGrey,
-                                      color: item.tick == 1 ? "White" : "black",
+                                      backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                      color: item.tick == 1 ? Colors.White : Colors.Black,
                                       textAlign: "center",
                                       paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.ques_fontfamily,
-                                      fontSize: Font.sregulartext_size,
-
+                                      fontFamily: Font.Regular,
+                                      fontSize: Font.small,
                                       lineHeight: (windowWidth * 5) / 100,
                                     }}
                                   >
@@ -4858,21 +4740,13 @@ export default class Booking extends Component {
                       )}
                     </View>
 
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "100%",
-                        marginTop: (windowWidth * 1.5) / 100,
-                        marginBottom: (windowWidth * 1.5) / 100,
-                      }}
-                    />
 
                     <View
                       style={{
-                        width: "93%",
+                        width: "100%",
                         alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
+                        paddingTop: vs(7),
+                        paddingHorizontal: s(11)
                       }}
                     >
                       <Text
@@ -4892,9 +4766,7 @@ export default class Booking extends Component {
                       >
                         <View style={{ width: "100%", alignItems: "center" }}>
                           {this.state.display == "taskbooking" ? (
-                            <View
-                              style={{ width: "100%", alignItems: "center" }}
-                            >
+                            <View style={{ width: "100%", alignItems: "center" }}>
                               {this.state.time_Arr != "" ? (
                                 <View
                                   style={{
@@ -4914,8 +4786,7 @@ export default class Booking extends Component {
                                               this.setState({
                                                 time_take_data: item.time,
                                               });
-                                            }}
-                                          >
+                                            }}>
                                             <Text
                                               style={[
                                                 {
@@ -4923,6 +4794,7 @@ export default class Booking extends Component {
                                                     (windowWidth * 3) / 100,
                                                   marginTop:
                                                     (windowWidth * 3) / 100,
+
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
@@ -4935,13 +4807,13 @@ export default class Booking extends Component {
                                                   this.state.time_take_data
                                                   ? {
                                                     backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
+                                                      Colors.Blue,
+                                                    color: Colors.White,
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
+                                                      '#E5E5E5',
+                                                    color: Colors.Black,
                                                   },
                                               ]}
                                             >
@@ -4986,13 +4858,13 @@ export default class Booking extends Component {
                                                   this.state.time_take_data
                                                   ? {
                                                     backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
+                                                      Colors.Blue,
+                                                    color: Colors.White,
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
+                                                      '#E5E5E5',
+                                                    color: Colors.Black,
                                                   },
                                               ]}
                                             >
@@ -5063,13 +4935,13 @@ export default class Booking extends Component {
                                                   this.state.time_take_data_hour
                                                   ? {
                                                     backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
+                                                      Colors.Blue,
+                                                    color: Colors.White,
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
+                                                      '#E5E5E5',
+                                                    color: Colors.Black,
                                                   },
                                               ]}
                                             >
@@ -5101,7 +4973,6 @@ export default class Booking extends Component {
                                                     (windowWidth * 3) / 100,
                                                   marginTop:
                                                     (windowWidth * 3) / 100,
-
                                                   fontFamily:
                                                     Font.ques_fontfamily,
                                                   fontSize:
@@ -5114,13 +4985,13 @@ export default class Booking extends Component {
                                                   this.state.time_take_data_hour
                                                   ? {
                                                     backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
+                                                      Colors.Blue,
+                                                    color: Colors.White,
                                                   }
                                                   : {
                                                     backgroundColor:
-                                                      Colors.lightGrey,
-                                                    color: "#000",
+                                                      '#E5E5E5',
+                                                    color: Colors.Black,
                                                   },
                                               ]}
                                             >
@@ -5151,651 +5022,624 @@ export default class Booking extends Component {
                         </View>
                       </ScrollView>
                     </View>
-                    {/* border */}
                   </View>
-                  <View style={{}}>
-                    {/* border */}
+                </>
+                <View style={{}}>
 
-                    {/* Payment section */}
-                    {this.state.display == "taskbooking" && (
-                      <View
+                  {/* Payment section */}
+                  {this.state.display == "taskbooking" && (
+                    <View
+                      style={{
+                        width: "100%",
+                        paddingVertical: vs(9),
+                        marginTop: vs(7),
+                        backgroundColor: Colors.White,
+                        paddingHorizontal: s(11)
+                      }} >
+                      <Text
                         style={{
-                          width: "100%",
-                          shadowOpacity: 0.3,
-                          shadowColor: "#000",
-                          paddingVertical: (windowWidth * 3) / 100,
-                          shadowOffset: { width: 2, height: 2 },
-                          marginTop: (windowWidth * 1.5) / 100,
-                          elevation: 2,
-                          marginBottom: (windowWidth * 3) / 100,
-                          backgroundColor: "#fff",
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.theme_color,
+                          textAlign: config.textRotate,
                         }}
                       >
-                        <View
+                        {Lang_chg.Payment[config.language]}
+                      </Text>
+                      {this.state.new_task_arr != "" && (
+                        <FlatList
+                          data={this.state.new_task_arr}
+                          renderItem={({ item, index }) => {
+                            if (this.state.new_task_arr != "") {
+                              return (
+                                <View>
+                                  {item.status == true && (
+                                    <View
+                                      style={{
+                                        flexDirection: "row",
+                                        width: "100%",
+                                        justifyContent: "space-between",
+                                        marginTop: (windowWidth * 1.5) / 100,
+                                        alignSelf: "center",
+                                      }}
+                                    >
+                                      <Text
+                                        style={{
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          width: "70%",
+                                          textAlign: config.textRotate,
+                                        }}
+                                      >
+                                        {item.name}
+                                      </Text>
+                                      <Text
+                                        style={{
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          width: "30%",
+                                          textAlign: "right",
+                                        }}
+                                      >
+                                        {item.price}{" "}
+                                        {this.state.currency_symbol}
+                                      </Text>
+                                    </View>
+                                  )}
+                                </View>
+                              );
+                            }
+                          }}
+                        />
+                      )}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                          marginTop: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
                           style={{
-                            width: "90%",
-                            alignSelf: "center",
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
                           }}
                         >
-                          <View>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                color: Colors.theme_color,
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Payment[config.language]}
-                            </Text>
-                          </View>
-                          {this.state.new_task_arr != "" && (
-                            <FlatList
-                              data={this.state.new_task_arr}
-                              renderItem={({ item, index }) => {
-                                if (this.state.new_task_arr != "") {
-                                  return (
-                                    <View>
-                                      {item.status == true && (
-                                        <View
-                                          style={{
-                                            flexDirection: "row",
-                                            width: "100%",
-                                            justifyContent: "space-between",
-                                            marginTop: (windowWidth * 1.5) / 100,
-                                            alignSelf: "center",
-                                          }}
-                                        >
-                                          <Text
-                                            style={{
-                                              fontFamily: Font.ques_fontfamily,
-                                              fontSize: Font.sregulartext_size,
-                                              color: "#000",
-                                              width: "70%",
-                                              textAlign: config.textRotate,
-                                            }}
-                                          >
-                                            {item.name}
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontFamily: Font.ques_fontfamily,
-                                              fontSize: Font.sregulartext_size,
-                                              color: "#000",
-                                              width: "30%",
-                                              textAlign: "right",
-                                            }}
-                                          >
-                                            {item.price}{" "}
-                                            {this.state.currency_symbol}
-                                          </Text>
-                                        </View>
-                                      )}
-                                    </View>
-                                  );
-                                }
-                              }}
-                            />
-                          )}
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (windowWidth * 2) / 100,
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginTop: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.distance_fare_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.distance_fare}.0{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
+                          {item.distance_fare_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.distance_fare}.0{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
 
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (windowWidth * 2) / 100,
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              // marginTop: windowWidth * 0.5 / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.subTotal[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                                // marginTop: windowWidth * 1 / 100,
-                              }}
-                            >
-                              {this.state.subTotal} {this.state.currency_symbol}
-                            </Text>
-                          </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                          // marginTop: windowWidth * 0.5 / 100,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.subTotal[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                            // marginTop: windowWidth * 1 / 100,
+                          }}
+                        >
+                          {this.state.subTotal} {this.state.currency_symbol}
+                        </Text>
+                      </View>
 
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              marginTop: (windowWidth * 1) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.vat_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {this.state.vat_price_show_display}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: (windowWidth * 1) / 100,
+                          borderColor: Colors.bordercolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.vat_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {this.state.vat_price_show_display}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
 
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                              paddingVertical: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.Total[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {this.state.final_total_price}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                          paddingVertical: vs(5),
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.Total[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {this.state.final_total_price}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
 
-                          {/* <Appbtn
+                      {/* <Appbtn
                             onPresshandler={() => {
                               this.submit_btn();
                             }}
                             title={Lang_chg.PROCEEDTOcheckout[config.language]}
                           /> */}
-                        </View>
-                      </View>
-                    )}
-                    {this.state.display == "hourlybooking" && (
-                      <View
+                    </View>
+                  )}
+                  {this.state.display == "hourlybooking" && (
+                    <View
+                      style={{
+                        width: "100%",
+                        paddingVertical: vs(9),
+                        marginTop: vs(7),
+                        backgroundColor: Colors.White,
+                        paddingHorizontal: s(11)
+                      }} >
+
+                      <Text
                         style={{
-                          width: "100%",
-                          shadowOpacity: 0.3,
-                          shadowColor: "#000",
-                          paddingVertical: (windowWidth * 3) / 100,
-                          shadowOffset: { width: 2, height: 2 },
-                          marginTop: (windowWidth * 1.5) / 100,
-                          elevation: 2,
-                          marginBottom: (windowWidth * 3) / 100,
-                          backgroundColor: "#fff",
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.theme_color,
+                          textAlign: config.textRotate,
                         }}
                       >
-                        <View
+                        {Lang_chg.Payment[config.language]}
+                      </Text>
+                      {this.state.hour_base_task_new != "" && (
+                        <FlatList
+                          data={this.state.hour_base_task_new}
+                          renderItem={({ item, index }) => {
+                            if (this.state.hour_base_task_new != "") {
+                              return (
+                                <View>
+                                  {item.status == true && (
+                                    <View
+                                      style={{
+                                        flexDirection: "row",
+                                        width: "100%",
+                                        paddingVertical:
+                                          (windowWidth * 3) / 100,
+                                        justifyContent: "space-between",
+                                        alignSelf: "center",
+                                      }}
+                                    >
+                                      <Text
+                                        style={{
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          textAlign: config.textRotate,
+                                        }}
+                                      >
+                                        {item.duration}
+                                      </Text>
+                                      <Text
+                                        style={{
+                                          fontFamily: Font.ques_fontfamily,
+                                          fontSize: Font.sregulartext_size,
+                                          color: "#000",
+                                          width: "30%",
+                                          textAlign: "right",
+                                        }}
+                                      >
+                                        {item.price}{" "}
+                                        {this.state.currency_symbol}
+                                      </Text>
+                                    </View>
+                                  )}
+                                </View>
+                              );
+                            }
+                          }}
+                        />
+                      )}
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                          marginTop: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
                           style={{
-                            width: "90%",
-                            alignSelf: "center",
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
                           }}
                         >
-                          <View>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                color: Colors.theme_color,
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.Payment[config.language]}
-                            </Text>
-                          </View>
-                          {this.state.hour_base_task_new != "" && (
-                            <FlatList
-                              data={this.state.hour_base_task_new}
-                              renderItem={({ item, index }) => {
-                                if (this.state.hour_base_task_new != "") {
-                                  return (
-                                    <View>
-                                      {item.status == true && (
-                                        <View
-                                          style={{
-                                            flexDirection: "row",
-                                            width: "100%",
-                                            paddingVertical:
-                                              (windowWidth * 3) / 100,
-                                            justifyContent: "space-between",
-                                            alignSelf: "center",
-                                          }}
-                                        >
-                                          <Text
-                                            style={{
-                                              fontFamily: Font.ques_fontfamily,
-                                              fontSize: Font.sregulartext_size,
-                                              color: "#000",
-                                              textAlign: config.textRotate,
-                                            }}
-                                          >
-                                            {item.duration}
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontFamily: Font.ques_fontfamily,
-                                              fontSize: Font.sregulartext_size,
-                                              color: "#000",
-                                              width: "30%",
-                                              textAlign: "right",
-                                            }}
-                                          >
-                                            {item.price}{" "}
-                                            {this.state.currency_symbol}
-                                          </Text>
-                                        </View>
-                                      )}
-                                    </View>
-                                  );
-                                }
-                              }}
-                            />
-                          )}
-
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (windowWidth * 2) / 100,
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginTop: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.distance_fare_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.distance_fare}.0{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (windowWidth * 2) / 100,
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.subTotal[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {this.state.subTotal} {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {item.vat_text}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}
-                            >
-                              {this.state.vat_price_show_hourly}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              borderTopWidth: (windowWidth * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              marginBottom: (windowWidth * 2) / 100,
-                              paddingVertical: (windowWidth * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {Lang_chg.Total[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.7) / 100,
-                                color: Colors.theme_color,
-                              }}
-                            >
-                              {this.state.hour_total_price}{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-
-                          {/* <Appbtn
-                            onPresshandler={() => {
-                              this.submit_btn_hourly();
-                            }}
-                            title={Lang_chg.PROCEEDTOcheckout[config.language]}
-                          /> */}
-                        </View>
+                          {item.distance_fare_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.distance_fare}.0{" "}
+                          {this.state.currency_symbol}
+                        </Text>
                       </View>
-                    )}
-                  </View>
-                </View>
-              )}
-            </ScrollView>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingVertical: (windowWidth * 2) / 100,
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.subTotal[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {this.state.subTotal} {this.state.currency_symbol}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          borderColor: Colors.bordercolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {item.vat_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.ques_fontfamily,
+                            fontSize: Font.sregulartext_size,
+                            color: "#000",
+                          }}
+                        >
+                          {this.state.vat_price_show_hourly}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
 
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.state.modalVisible3}
-              onRequestClose={() => {
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          borderTopWidth: 1.5,
+                          borderTopColor: Colors.backgroundcolor,
+                          marginBottom: (windowWidth * 2) / 100,
+                          paddingTop: vs(5)
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {Lang_chg.Total[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: (windowWidth * 3.7) / 100,
+                            color: Colors.theme_color,
+                          }}
+                        >
+                          {this.state.hour_total_price}{" "}
+                          {this.state.currency_symbol}
+                        </Text>
+                      </View>
+
+                    </View>
+                  )}
+                </View>
+              </View>
+            )}
+          </ScrollView>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible3}
+            onRequestClose={() => {
+              this.setState({ modalVisible3: false });
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
                 this.setState({ modalVisible3: false });
               }}
+              style={{
+                backgroundColor: "#00000080",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingHorizontal: 20,
+                marginTop: -50,
+              }}
             >
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => {
-                  this.setState({ modalVisible3: false });
-                }}
+              <StatusBar
+                backgroundColor={"#fff"}
+                barStyle="default"
+                hidden={false}
+                translucent={false}
+                networkActivityIndicatorVisible={true}
+              />
+              <View
                 style={{
-                  backgroundColor: "#00000080",
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingHorizontal: 20,
-                  marginTop: -50,
+                  borderRadius: 20,
+                  width: (windowWidth * 90) / 100,
+                  position: "absolute",
+                  alignSelf: "center",
                 }}
               >
-                <StatusBar
-                  backgroundColor={"#fff"}
-                  barStyle="default"
-                  hidden={false}
-                  translucent={false}
-                  networkActivityIndicatorVisible={true}
-                />
                 <View
                   style={{
-                    borderRadius: 20,
-                    width: (windowWidth * 90) / 100,
-                    position: "absolute",
-                    alignSelf: "center",
+                    backgroundColor: "#fff",
+                    borderRadius: 2,
+                    width: "100%",
                   }}
                 >
                   <View
                     style={{
-                      backgroundColor: "#fff",
-                      borderRadius: 2,
-                      width: "100%",
+                      alignSelf: "flex-start",
+                      paddingVertical: (windowWidth * 3) / 100,
+                      marginTop: (windowWidth * 2) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
+                      flexDirection: "row",
+                      alignItems: "center",
                     }}
                   >
-                    <View
+                    <Image
                       style={{
-                        alignSelf: "flex-start",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        marginTop: (windowWidth * 2) / 100,
+                        width: (windowWidth * 6) / 100,
+                        height: (windowWidth * 6) / 100,
+                      }}
+                      source={Icons.logoPlain}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        color: "#000",
+                        fontSize: (windowWidth * 5) / 100,
                         paddingLeft: (windowWidth * 4) / 100,
-                        flexDirection: "row",
-                        alignItems: "center",
+                        width: "90%",
+                        textAlign: config.textRotate,
+                      }}
+                      numberOfLines={2}
+                    >
+                      {Lang_chg.DeleteMember[config.language]}{this.state.first_name} {this.state.last_name}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      paddingLeft: (windowWidth * 4) / 100,
+                      width: "95%",
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        color: "#000",
+                        fontSize: (windowWidth * 4.4) / 100,
+                        textAlign: config.textRotate,
                       }}
                     >
-                      <Image
-                        style={{
-                          width: (windowWidth * 6) / 100,
-                          height: (windowWidth * 6) / 100,
-                        }}
-                        source={Icons.logoPlain}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          color: "#000",
-                          fontSize: (windowWidth * 5) / 100,
-                          paddingLeft: (windowWidth * 4) / 100,
-                          width: "90%",
-                          textAlign: config.textRotate,
-                        }}
-                        numberOfLines={2}
-                      >
-                        {Lang_chg.DeleteMember[config.language]}{this.state.first_name} {this.state.last_name}
-                      </Text>
-                    </View>
+                      {Lang_chg.delete_msg[config.language]}
+                    </Text>
+                  </View>
 
-                    <View
+                  <View
+                    style={{
+                      paddingBottom: (windowWidth * 5) / 100,
+                      marginTop: (windowWidth * 9) / 100,
+                      alignSelf: "flex-end",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingHorizontal: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setState({ modalVisible3: false });
+                      }}
                       style={{
-                        paddingLeft: (windowWidth * 4) / 100,
-                        width: "95%",
+                        width: (windowWidth * 15) / 100,
+                        flexDirection: "row",
                         alignSelf: "center",
                       }}
                     >
                       <Text
                         style={{
                           fontFamily: Font.Regular,
-                          color: "#000",
-                          fontSize: (windowWidth * 4.4) / 100,
-                          textAlign: config.textRotate,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.theme_color,
+                          alignSelf: "center",
+                          textAlign: config.textalign,
                         }}
                       >
-                        {Lang_chg.delete_msg[config.language]}
+                        {Lang_chg.no_txt[config.language]}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View
+                    <TouchableOpacity
+                      onPress={() => {
+                        setTimeout(() => {
+                          this.setState({ modalVisible3: false }),
+                            this.delete_click();
+                        }, 200);
+                      }}
                       style={{
-                        paddingBottom: (windowWidth * 5) / 100,
-                        marginTop: (windowWidth * 9) / 100,
-                        alignSelf: "flex-end",
+                        width: (windowWidth * 15) / 100,
                         flexDirection: "row",
-                        alignItems: "center",
-                        paddingHorizontal: (windowWidth * 3) / 100,
+                        alignSelf: "center",
                       }}
                     >
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ modalVisible3: false });
-                        }}
+                      <Text
                         style={{
-                          width: (windowWidth * 15) / 100,
-                          flexDirection: "row",
+                          fontFamily: Font.Regular,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.theme_color,
                           alignSelf: "center",
+                          textAlign: config.textalign,
                         }}
                       >
-                        <Text
-                          style={{
-                            fontFamily: Font.Regular,
-                            fontSize: (windowWidth * 4) / 100,
-                            color: Colors.theme_color,
-                            alignSelf: "center",
-                            textAlign: config.textalign,
-                          }}
-                        >
-                          {Lang_chg.no_txt[config.language]}
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        onPress={() => {
-                          setTimeout(() => {
-                            this.setState({ modalVisible3: false }),
-                              this.delete_click();
-                          }, 200);
-                        }}
-                        style={{
-                          width: (windowWidth * 15) / 100,
-                          flexDirection: "row",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.Regular,
-                            fontSize: (windowWidth * 4) / 100,
-                            color: Colors.theme_color,
-                            alignSelf: "center",
-                            textAlign: config.textalign,
-                          }}
-                        >
-                          {Lang_chg.Delete[config.language]}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                        {Lang_chg.Delete[config.language]}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </TouchableOpacity>
-            </Modal>
+              </View>
+            </TouchableOpacity>
+          </Modal>
 
-            <View
+          {/* ------------------Checkout------------- */}
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              backgroundColor: Colors.White,
+              paddingHorizontal: (windowWidth * 5) / 100,
+              paddingVertical: (windowWidth * 2) / 100,
+              height: 80,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                this.state.providerType === "doctor"
+                  ? this.submitButtonForDoctor()
+                  : this.state.providerType === "lab"
+                    ? this.state.indexPosition === 0
+                      ? this.submit_btn()
+                      : this.submit_btn_hourly()
+                    : this.state.display == "hourlybooking"
+                      ? this.submit_btn_hourly()
+                      : this.submit_btn();
+              }}
               style={{
                 width: "100%",
-                alignSelf: "center",
-                backgroundColor: Colors.white_color,
-                paddingHorizontal: (windowWidth * 5) / 100,
-                paddingVertical: (windowWidth * 2) / 100,
-                height: 80,
-                justifyContent: "center",
-                alignItems: "center",
+                borderRadius: (windowWidth * 3) / 100,
+                backgroundColor: Colors.Theme,
+                paddingVertical: (windowWidth * 3) / 100,
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  this.state.providerType === "doctor"
-                    ? this.submitButtonForDoctor()
-                    : this.state.providerType === "lab"
-                      ? this.state.indexPosition === 0
-                        ? this.submit_btn()
-                        : this.submit_btn_hourly()
-                      : this.state.display == "hourlybooking"
-                        ? this.submit_btn_hourly()
-                        : this.submit_btn();
-                }}
+              <Text
                 style={{
-                  width: "100%",
-                  borderRadius: (windowWidth * 3) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (windowWidth * 3) / 100,
+                  color: Colors.White,
+                  fontFamily: Font.Medium,
+                  fontSize: Font.buttontextsize,
+                  alignSelf: "flex-end",
+                  textAlign: config.textalign,
+                  alignSelf: "center",
                 }}
               >
-                <Text
-                  style={{
-                    color: Colors.White,
-                    fontFamily: Font.Medium,
-                    fontSize: Font.buttontextsize,
-                    alignSelf: "flex-end",
-                    textAlign: config.textalign,
-                    alignSelf: "center",
-                  }}
-                >
-                  {Lang_chg.PROCEEDTOcheckout[config.language]}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                {Lang_chg.PROCEEDTOcheckout[config.language]}
+              </Text>
+            </TouchableOpacity>
           </View>
-
-
         </View>
+
+
       );
     } else {
       return (
-        <View>
+        <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+          <ScreenHeader
+            title={Lang_chg.Booking[config.language]}
+            navigation={this.props.navigation}
+            onBackPress={() => this.props.navigation.pop()}
+            leftIcon={leftArrow}
+            rightIcon={Notification}
+          />
           {/* ============================error================================= */}
           <Modal
             animationType="slide"
@@ -5941,5 +5785,35 @@ const styles = StyleSheet.create({
     borderRadius: (windowWidth * 1) / 100,
     color: "#4E4E4E",
     fontSize: (windowWidth * 3.5) / 100,
+  },
+  infoContainer: {
+    paddingVertical: vs(11),
+    backgroundColor: Colors.White,
+    marginTop: vs(7),
+    // shadowColor: Colors.Black,
+    // shadowOffset: { width: 1, height: 1 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 3,
+    zIndex: 999
+  },
+  experienceContainer: {
+    width: '100%',
+    paddingVertical: vs(18),
+    flexDirection: 'row',
+    paddingHorizontal: s(11),
+  },
+  descContainer: {
+    borderBottomWidth: 1.5,
+    borderTopWidth: 1.5,
+    borderBottomColor: Colors.backgroundcolor,
+    borderTopColor: Colors.backgroundcolor,
+    paddingTop: vs(11),
+    paddingBottom: vs(15),
+    paddingHorizontal: s(11),
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    marginTop: vs(11),
+    paddingHorizontal: s(11),
   },
 });

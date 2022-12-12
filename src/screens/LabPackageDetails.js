@@ -74,7 +74,6 @@ const LabPackageDetails = ({navigation, route}) => {
           <>
               <View
                 style={{
-                  backgroundColor: "pink",
                   paddingHorizontal:s(11)
                 }}>
                 <Text
@@ -175,7 +174,6 @@ const LabPackageDetails = ({navigation, route}) => {
             <View
               style={{
                 width:'100%',
-                backgroundColor: "red",
                 alignSelf: "center",
                 alignItems: "flex-start",
                 marginTop: vs(7),

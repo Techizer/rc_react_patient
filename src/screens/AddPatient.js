@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Keyboard,
+  FlatList,
 } from "react-native";
 import Footer from "../Footer";
 import {
@@ -26,6 +27,11 @@ import {
 } from "../Provider/utilslib/Utils";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthInputBoxSec, Button } from "../components";
+import ScreenHeader from "../components/ScreenHeader";
+import { s, vs } from "react-native-size-matters";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SvgXml } from "react-native-svg";
+import { dummyUser, Edit } from "../icons/SvgIcons/Index";
 
 export default class AddPatient extends Component {
   constructor(props) {
@@ -53,7 +59,7 @@ export default class AddPatient extends Component {
       email: "",
       mediamodal: false,
       profile_img: "",
-      gender: "male",
+      gender: -1,
       profile_image: "",
     };
   }
@@ -69,7 +75,6 @@ export default class AddPatient extends Component {
           this.setState({
             profile_img: obj.path,
             mediamodal: false,
-            profile_image: obj.path,
           });
         }
       })
@@ -88,7 +93,7 @@ export default class AddPatient extends Component {
           this.setState({ cover_img: obj.path, mediamodal: false });
         } else {
           this.setState({
-            profile_img: obj.path,
+            profile_img:  obj.path,
             mediamodal: false,
             profile_image: obj.path,
           });
@@ -201,704 +206,214 @@ export default class AddPatient extends Component {
   };
 
   render() {
+
+    const { gender, profile_image } = this.state
     return (
-      <View style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-          <SafeAreaView style={{ backgroundColor: "#fff", flex: 0 }} />
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+
+        <ScreenHeader
+          title={Lang_chg.AddPatient[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon
+          rightIcon
+        />
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{
+            justifyContent: 'center',
+            paddingBottom: vs(30),
+          }}
+          showsVerticalScrollIndicator={false}>
+
           <View
             style={{
-              backgroundColor: "#fff",
               width: "100%",
-              paddingVertical: (windowWidth * 3) / 100,
-              borderBottomColor: Colors.Border,
-              borderBottomWidth: 1,
-              // shadowColor:'#000',
-              // shadowOffset:{width:1,height:1},
-              // elevation:3,
+              marginTop: vs(7),
+              paddingVertical: vs(9),
+              backgroundColor: Colors.White
+            }}>
 
-              // shadowOpacity:0.6,
-              // shadowRadius:4,
-            }}
-          >
-            <View
-              style={{
-                width: "95%",
-                alignSelf: "center",
-                backgroundColor: "White",
-                //  height: (windowWidth * 12) / 100,
-                flexDirection: "row",
-              }}
-            >
+            <View style={{ flexDirection: 'row', width: '21%', alignSelf: 'center' }}>
+              {
+                (profile_image != '' && profile_image != null) ?
+                  <Image source={{uri:profile_image}} style={{
+                    height: s(65),
+                    width: s(65),
+                    borderRadius: s(100)
+                  }} />
+                  :
+                  <SvgXml xml={dummyUser} height={s(65)} width={s(65)} />
+              }
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.goBack();
+                  this.setState({ mediamodal: true })
                 }}
-                style={{ width: "10%", alignSelf: "center" }}
-              >
-                <Image
-                  source={
-                    config.textalign == "right"
-                      ? Icons.arabic_back
-                      : Icons.backarrow
-                  }
-                  style={{
-                    height: (windowWidth * 8) / 100,
-                    width: (windowWidth * 8) / 100,
-                  }}
-                >
-                  {/* {Icons.backarrow} */}
-                </Image>
+                style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: vs(2), right: s(6), borderWidth: 1.2, borderColor: Colors.Blue }}>
+                <SvgXml xml={Edit} />
               </TouchableOpacity>
-
-              <View style={{ width: "80%", alignSelf: "center" }}>
-                <Text
-                  style={{
-                    color: Colors.Black,
-                    fontFamily: Font.blackheadingfontfamily,
-                    fontSize: Font.headingblack_txt_size_edit,
-                    alignSelf: "flex-end",
-
-                    alignSelf: "center",
-                  }}
-                >
-                  {Lang_chg.AddPatient[config.language]}
-                </Text>
-              </View>
-              {/* <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate("Notifications");
-                }}
-              >
-                <View style={{ width: "10%", alignSelf: "center" }}>
-                  <Image
-                    source={
-                      this.state.notification_count > 0
-                        ? Icons.notifications
-                        : Icons.notifications_sec
-                    }
-                    style={{
-                      height: (windowWidth * 6) / 100,
-                      width: (windowWidth * 6) / 100,
-                      resizeMode: "contain",
-                    }}
-                  >
-                  </Image>
-                </View>
-              </TouchableOpacity> */}
             </View>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              alignSelf: "center",
-              backgroundColor: Colors.White,
-              marginTop: (windowWidth * 3) / 100,
-              paddingBottom: (windowWidth * 10) / 100,
-              shadowColor: "#000",
-              shadowOffset: { width: 1, height: 1 },
-              shadowOpacity: 0.5,
-              shadowRadius: 2,
-              elevation: 3,
-            }}
-          >
-            {/* user Profile */}
+
             <View
               style={{
                 alignSelf: "center",
-                width: "100%",
+                width: "90%",
                 alignItems: "center",
-              }}
-            >
-              <Cameragallery
-                mediamodal={this.state.mediamodal}
-                Camerapopen={() => {
-                  this.Camerapopen();
-                }}
-                Galleryopen={() => {
-                  this.Galleryopen();
-                }}
-                Canclemedia={() => {
-                  this.setState({ mediamodal: false });
-                }}
-              />
+              }}>
 
-              <View
-                style={{
-                  width: "28%",
-                  alignSelf: "center",
-                  paddingVertical: (windowWidth * 5) / 100,
-                }}
-              >
-                <View
-                  style={{
-                    width: (windowWidth * 23) / 100,
-                    height: (windowWidth * 23) / 100,
-                    borderRadius: (windowWidth * 11.5) / 100,
-                    borderWidth: 4,
-                    borderColor: Colors.bordercolor_light_blue,
-                    // backgroundColor:'red'
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: (windowWidth * 21) / 100,
-                      height: (windowWidth * 21) / 100,
-                      borderRadius: (windowWidth * 10.5) / 100,
-                    }}
-                    source={
-                      this.state.profile_img == "NA" ||
-                      this.state.profile_img == null ||
-                      this.state.profile_img == ""
-                        ? Icons.profileimg
-                        : { uri: this.state.profile_img }
-                    }
-                  />
-                </View>
-              </View>
-
-              <View
-                style={{
-                  width: "20%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * -15) / 100,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({ mediamodal: true });
-                  }}
-                  style={{
-                    width: (windowWidth * 8) / 100,
-                    height: (windowWidth * 8) / 100,
-                    borderRadius: (windowWidth * 4) / 100,
-                    borderWidth: 2,
-                    borderColor: Colors.bordercolor_light_blue,
-                    backgroundColor: "White",
-                    alignSelf: "flex-end",
-                  }}
-                >
-                  <Image
-                    style={{
-                      height: (windowWidth * 3.5) / 100,
-                      width: (windowWidth * 3.5) / 100,
-                      alignSelf: "center",
-                      marginTop: (windowWidth * 1.8) / 100,
-                    }}
-                    source={Icons.camera}
-                  />
-                </TouchableOpacity>
-              </View>
 
               {/* first name */}
-              <View
-                style={{
-                  width: "90%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 3) / 100,
-                  // borderColor: this.state.PatientFirstNamefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (windowWidth * 0.3) / 100,
-                  // borderRadius: (windowWidth * 1) / 100, marginTop: windowWidth * 10 / 100
+              <AuthInputBoxSec
+                mainContainer={{ marginTop: vs(18), width: '100%' }}
+                lableText={Lang_chg.PatientFirstName[config.language]}
+                inputRef={(ref) => {
+                  this.first_nameInput = ref;
                 }}
-              >
-                <AuthInputBoxSec
-                  mainContainer={{
-                    width: "100%",
-                  }}
-                  // icon={layer9_icon}
-                  lableText={Lang_chg.PatientFirstName[config.language]}
-                  inputRef={(ref) => {
-                    this.first_nameInput = ref;
-                  }}
-                  maxLength={50}
-                  onChangeText={(text) => this.setState({ first_name: text })}
-                  value={this.state.first_name}
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                />
-                {/* <View style={{ width: '95%', alignSelf: 'center' }}>
-                  <TextInput
-                    style={{
-                      width: '100%',
-                      color: Colors.Black,
-                      fontSize: Font.placeholdersize,
-                      textAlign: config.textalign,
-                      height: Font.placeholder_height,
-                      fontFamily: Font.Light,
-                      padding: windowWidth * 0.5 / 100
-                    }}
-                    maxLength={50}
-                    placeholder={
-                      this.state.PatientFirstNamefocus != true
-                        ? Lang_chg.PatientFirstName[config.language]
-                        : null
-                    }
-                    DarkGrey={Colors.DarkGrey}
-                    onChangeText={txt => {
-                      this.setState({ first_name: txt });
-                    }}
+                maxLength={50}
+                onChangeText={(text) => this.setState({ first_name: text })}
+                value={this.state.first_name}
+                keyboardType="default"
+                autoCapitalize="none"
+                returnKeyLabel="done"
+                returnKeyType="next"
+                editable
+              />
 
-                    onFocus={() => {
-                      this.setState({ PatientFirstNamefocus: true });
-                    }}
-                    onBlur={() => {
-                      this.setState({
-                        PatientFirstNamefocus:
-                          this.state.first_name.length > 0 ? true : false,
-                      });
-                    }}
-                    keyboardType='default'
-                    returnKeyLabel="done"
-                    returnKeyType="done"
-                  />
-                </View>
-                {this.state.PatientFirstNamefocus == true && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      backgroundColor: 'White',
-                      left: (windowWidth * 4) / 100,
-                      top: (-windowWidth * 2.5) / 100,
-                      paddingHorizontal: (windowWidth * 1) / 100,
-                    }}>
-                    <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientFirstName[config.language]}</Text>
-                  </View>
-                )} */}
-              </View>
 
               {/* last name */}
-              <View
-                style={{
-                  width: "90%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 3) / 100,
-                  // borderColor: this.state.PatientLastNamefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (windowWidth * 0.3) / 100,
-                  // borderRadius: (windowWidth * 1) / 100,
-                }}
-              >
-                <AuthInputBoxSec
-                  mainContainer={{
-                    width: "100%",
-                  }}
-                  // icon={layer9_icon}
-                  lableText={Lang_chg.PatientLastName[config.language]}
-                  inputRef={(ref) => {
-                    this.last_nameInput = ref;
-                  }}
-                  maxLength={50}
-                  onChangeText={(text) => this.setState({ last_name: text })}
-                  value={this.state.last_name}
-                  keyboardType="default"
-                  autoCapitalize="none"
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                />
-                {/* <View style={{ width: '95%', alignSelf: 'center' }}>
-                  <TextInput
-                    style={{
-                      width: '100%',
-                      color: Colors.Black,
-                      fontSize: Font.placeholdersize,
-                      textAlign: config.textalign,
-                      height: Font.placeholder_height,
-                      fontFamily: Font.Light,
-                      padding: windowWidth * 0.5 / 100
-                    }}
-                    maxLength={50}
-                    placeholder={
-                      this.state.PatientLastNamefocus != true
-                        ? Lang_chg.PatientLastName[config.language]
-                        : null
-                    }
-                    DarkGrey={Colors.DarkGrey}
-                    onChangeText={txt => {
-                      this.setState({ last_name: txt });
-                    }}
 
-                    onFocus={() => {
-                      this.setState({ PatientLastNamefocus: true });
-                    }}
-                    onBlur={() => {
-                      this.setState({
-                        PatientLastNamefocus:
-                          this.state.last_name.length > 0 ? true : false,
-                      });
-                    }}
-                    keyboardType='default'
-                    returnKeyLabel="done"
-                    returnKeyType="done"
-                  />
-                </View>
-                {this.state.PatientLastNamefocus == true && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      backgroundColor: 'White',
-                      left: (windowWidth * 4) / 100,
-                      top: (-windowWidth * 2.5) / 100,
-                      paddingHorizontal: (windowWidth * 1) / 100,
-                    }}>
-                    <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientLastName[config.language]}</Text>
-                  </View>
-                )} */}
-              </View>
+              <AuthInputBoxSec
+                mainContainer={{ marginTop: vs(8), width: '100%' }}
+                lableText={Lang_chg.PatientLastName[config.language]}
+                inputRef={(ref) => {
+                  this.last_nameInput = ref;
+                }}
+                maxLength={50}
+                onChangeText={(text) => this.setState({ last_name: text })}
+                value={this.state.last_name}
+                keyboardType="default"
+                autoCapitalize="none"
+                returnKeyLabel="done"
+                returnKeyType="next"
+                editable
+              />
 
               {/* PatientEmail */}
-              <View
-                style={{
-                  width: "90%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 3) / 100,
-                  // borderColor: this.state.PatientEmailfocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (windowWidth * 0.3) / 100,
-                  // borderRadius: (windowWidth * 1) / 100,
-                }}
-              >
-                <AuthInputBoxSec
-                  mainContainer={{
-                    width: "100%",
-                  }}
-                  // icon={layer9_icon}
-                  lableText={Lang_chg.PatientEmail[config.language]}
-                  inputRef={(ref) => {
-                    this.emailInput = ref;
-                  }}
-                  maxLength={100}
-                  onChangeText={(text) => this.setState({ email: text })}
-                  value={this.state.email}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                />
-                {/* <View style={{ width: '95%', alignSelf: 'center' }}>
-                  <TextInput
-                    style={{
-                      width: '100%',
-                      color: Colors.Black,
-                      fontSize: Font.placeholdersize,
-                      textAlign: config.textalign,
-                      height: Font.placeholder_height,
-                      fontFamily: Font.Light,
-                      padding: windowWidth * 0.5 / 100
-                    }}
-                    maxLength={100}
-                    placeholder={
-                      this.state.PatientEmailfocus != true
-                        ? Lang_chg.PatientEmail[config.language]
-                        : null
-                    }
-                    DarkGrey={Colors.DarkGrey}
-                    onChangeText={txt => {
-                      this.setState({ email: txt });
-                    }}
 
-                    onFocus={() => {
-                      this.setState({ PatientEmailfocus: true });
-                    }}
-                    onBlur={() => {
-                      this.setState({
-                        PatientEmailfocus:
-                          this.state.email.length > 0 ? true : false,
-                      });
-                    }}
-                    keyboardType='email-address'
-                    returnKeyLabel="done"
-                    returnKeyType="done"
-                  />
-                </View>
-                {this.state.PatientEmailfocus == true && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      backgroundColor: 'White',
-                      left: (windowWidth * 4) / 100,
-                      top: (-windowWidth * 2.5) / 100,
-                      paddingHorizontal: (windowWidth * 1) / 100,
-                    }}>
-                    <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientEmail[config.language]}</Text>
-                  </View>
-                )} */}
-              </View>
+              <AuthInputBoxSec
+                mainContainer={{ marginTop: vs(8), width: '100%' }}
+                lableText={Lang_chg.PatientEmail[config.language]}
+                inputRef={(ref) => {
+                  this.emailInput = ref;
+                }}
+                maxLength={100}
+                onChangeText={(text) => this.setState({ email: text })}
+                value={this.state.email}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyLabel="done"
+                returnKeyType="next"
+                editable
+              />
 
               {/* PatientAge */}
-              <View
-                style={{
-                  width: "90%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 3) / 100,
-                  // borderColor: this.state.PatientAgefocus == true ? Colors.placholderactive : Colors.placeholder_border,
-                  // borderWidth: (windowWidth * 0.3) / 100,
-                  // borderRadius: (windowWidth * 1) / 100,
+
+              <AuthInputBoxSec
+                mainContainer={{ marginTop: vs(8), width: '100%' }}
+                lableText={Lang_chg.PatientAge[config.language]}
+                inputRef={(ref) => {
+                  this.ageInput = ref;
                 }}
-              >
-                <AuthInputBoxSec
-                  mainContainer={{
-                    width: "100%",
-                  }}
-                  // icon={layer9_icon}
-                  lableText={Lang_chg.PatientAge[config.language]}
-                  inputRef={(ref) => {
-                    this.ageInput = ref;
-                  }}
-                  maxLength={3}
-                  onChangeText={(text) => this.setState({ age: text })}
-                  value={this.state.age}
-                  autoCapitalize="none"
-                  keyboardType="number-pad"
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                />
-                {/* <View style={{ width: '95%', alignSelf: 'center' }}>
-                  <TextInput
-                    style={{
-                      width: '100%',
-                      color: Colors.Black,
-                      fontSize: Font.placeholdersize,
-                      textAlign: config.textalign,
+                maxLength={3}
+                onChangeText={(text) => this.setState({ age: text })}
+                value={this.state.age}
+                autoCapitalize="none"
+                keyboardType="number-pad"
+                returnKeyLabel="done"
+                returnKeyType="done"
+                editable
+              />
 
-                      height: Font.placeholder_height,
-                      fontFamily: Font.Light,
-                      padding: windowWidth * 0.5 / 100
-                    }}
-                    maxLength={3}
-                    placeholder={
-                      this.state.PatientAgefocus != true
-                        ? Lang_chg.PatientAge[config.language]
-                        : null
-                    }
-                    DarkGrey={Colors.DarkGrey}
-                    onChangeText={txt => {
-                      this.setState({ age: txt });
-                    }}
-
-                    onFocus={() => {
-                      this.setState({ PatientAgefocus: true });
-                    }}
-                    onBlur={() => {
-                      this.setState({
-                        PatientAgefocus:
-                          this.state.age.length > 0 ? true : false,
-                      });
-                    }}
-                    keyboardType='number-pad'
-                    returnKeyLabel="done"
-                    returnKeyType="done"
-                  />
-                </View>
-                {this.state.PatientAgefocus == true && (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      backgroundColor: 'White',
-                      left: (windowWidth * 4) / 100,
-                      top: (-windowWidth * 2.5) / 100,
-                      paddingHorizontal: (windowWidth * 1) / 100,
-                    }}>
-                    <Text style={{ color: '#0057A5' }}>{Lang_chg.PatientAge[config.language]}</Text>
-                  </View>
-                )} */}
-              </View>
 
               {/* gender option */}
 
-              <View
-                style={{
-                  width: "88%",
-                  alignSelf: "center",
-                  marginTop: (windowWidth * 5) / 100,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ width: "17%" }}>
-                  <Text
-                    style={{
-                      color: Colors.textGender,
-                      fontFamily: Font.placeholderfontfamily,
-                      fontSize: (windowWidth * 3.8) / 100,
+              <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginVertical: vs(20), paddingHorizontal: s(15) }}>
 
-                      textAlign: config.textRotate,
-                      marginTop: (windowWidth * 3) / 100,
-                    }}
-                  >
-                    {Lang_chg.Gender[config.language]}
-                  </Text>
-                </View>
-
-                <View
+                <Text
                   style={{
-                    width: "60%",
+                    fontSize: Font.small,
+                    fontFamily: Font.Regular,
+                    textAlign: config.textRotate,
+                    color: Colors.lightGrey,
+                    paddingRight: s(20)
 
-                    marginTop: (windowWidth * 3) / 100,
-                    flexDirection: "row",
-                    marginLeft: (windowWidth * 2) / 100,
-                    // justifyContent:'space-evenly',
-                    alignItems: "center",
+                  }}>{Lang_chg.Gender[config.language]}</Text>
+
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  data={['Male', 'Female']}
+                  ItemSeparatorComponent={() => {
+                    return (
+                      <View style={{ width: s(25) }} />
+                    )
                   }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ gender: "Female" });
-                    }}
-                    style={{
-                      width: "40%",
-                      alignSelf: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <View style={{ width: "24%", alignSelf: "center" }}>
-                      <View
-                        style={{
-                          width: (windowWidth * 5) / 100,
-                          alignSelf: "center",
-                          flexDirection: "row",
-                        }}
-                      >
-                        {this.state.gender == "Female" ? (
-                          <Icon
-                            style={{ alignSelf: "center" }}
-                            name="dot-circle-o"
-                            size={22}
-                            color={"#0168B3"}
-                          />
-                        ) : (
-                          <Icon
-                            style={{ alignSelf: "center" }}
-                            name="circle-thin"
-                            size={22}
-                            color={Colors.textGender}
-                          ></Icon>
-                        )}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            this.setState({ gender: index })
+                          }}
+                          style={{
+                            height: s(16),
+                            width: s(16),
+                            borderRadius: s(16),
+                            borderWidth: index === gender ? 5 : 1,
+                            borderColor: index === gender ? Colors.Blue : Colors.lightGrey
+                          }}>
+
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            fontSize: Font.small,
+                            fontFamily: Font.Regular,
+                            textAlign: config.textRotate,
+                            color: Colors.darkText,
+                            marginLeft: s(8)
+
+                          }}>{item}</Text>
                       </View>
-                    </View>
 
-                    <Text
-                      style={{
-                        color: Colors.textGender,
-                        marginLeft: (windowWidth * 2) / 100,
-                        fontSize: (windowWidth * 3.5) / 100,
-                        textAlign: "center",
-                        fontFamily: Font.placeholderfontfamily,
-                      }}
-                    >
-                      {Lang_chg.female[config.language]}
-                    </Text>
-                  </TouchableOpacity>
+                    );
+                  }}
+                />
 
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => {
-                      this.setState({ gender: "Male" });
-                    }}
-                    style={{
-                      width: "40%",
-                      alignSelf: "center",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <View style={{ width: "24%", alignSelf: "center" }}>
-                      <View
-                        style={{
-                          width: (windowWidth * 5) / 100,
-                          alignSelf: "center",
-                          flexDirection: "row",
-                        }}
-                      >
-                        {this.state.gender == "Male" ? (
-                          <Icon
-                            name="dot-circle-o"
-                            size={22}
-                            color={"#0168B3"}
-                          ></Icon>
-                        ) : (
-                          <Icon
-                            name="circle-thin"
-                            size={22}
-                            color={Colors.textGender}
-                          ></Icon>
-                        )}
-                      </View>
-                    </View>
-
-                    <Text
-                      style={{
-                        color: Colors.textGender,
-                        //  width: '50%',
-                        textAlign: "center",
-                        fontFamily: Font.placeholderfontfamily,
-                        alignSelf: "center",
-                        fontSize: (windowWidth * 3.5) / 100,
-                        marginLeft: (windowWidth * 2) / 100,
-                      }}
-                    >
-                      {Lang_chg.male[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
               </View>
 
               <Button
                 text={Lang_chg.SAVEPATIENT[config.language]}
                 onPress={() => this.submit_click()}
               />
-              
+
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
-        {/* <HideWithKeyboard>
-          <Footer
-            activepage="More"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: Icons.Home,
-                activeimage: Icons.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: Icons.Appointment,
-                activeimage: Icons.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: Icons.Cart,
-                activeimage: Icons.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: Icons.More,
-                activeimage: Icons.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: "White",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          />
-        </HideWithKeyboard> */}
+        <Cameragallery
+          mediamodal={this.state.mediamodal}
+          Camerapopen={() => {
+            this.Camerapopen();
+          }}
+          Galleryopen={() => {
+            this.Galleryopen();
+          }}
+          Canclemedia={() => {
+            this.setState({ mediamodal: false });
+          }}
+        />
       </View>
     );
   }

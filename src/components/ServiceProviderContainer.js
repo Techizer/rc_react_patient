@@ -139,7 +139,7 @@ const ServiceProviderContainer = ({
           {/* ----------Info Container--------- */}
 
           <View
-            key={Index}
+            // key={Index}
             style={{
               width: "100%",
               // height: '79%',
@@ -150,15 +150,30 @@ const ServiceProviderContainer = ({
             <View style={{ width: "40%" }}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate(
-                    "ServiceProviderDetails",
-                    {
-                      providerType: providerType,
-                      providerId: Item.user_id,
-                      isFromHospital: false,
-                      hospitalId: Item?.hospital_id,
-                    }
-                  );
+                  if ((Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined)) {
+                    navigation.navigate(
+                      "ServiceProviderDetails",
+                      {
+                        providerType: providerType,
+                        providerId: Item.user_id,
+                        isFromHospital: true,
+                        hospitalId: Item?.hospital_id,
+                        indexPosition: 0
+                      }
+                    )
+                  } else {
+                    navigation.navigate(
+                      "ServiceProviderDetails",
+                      {
+                        providerType: providerType,
+                        providerId: Item.user_id,
+                        isFromHospital: false,
+                        hospitalId: '',
+                        indexPosition: 0
+                      }
+                    );
+                  }
+
                 }}
                 style={{ width: "100%" }}
               >
@@ -272,7 +287,7 @@ const ServiceProviderContainer = ({
               }
 
               {
-                providerType != 'lab' &&
+                (Item.speciality) ?
                 <Text
                   style={{
                     fontFamily: Font.Bold,
@@ -284,6 +299,8 @@ const ServiceProviderContainer = ({
                 >
                   {Item.speciality}
                 </Text>
+                :
+                <></>
               }
 
               {
@@ -422,17 +439,20 @@ const ServiceProviderContainer = ({
               (Item.provider_available == "0") &&
               <TouchableOpacity
                 onPress={() => {
+                  // if ((Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined)) {
                   navigation.navigate("Booking", {
-                    pass_status: "doctor",
-                    nurse_id: Item.user_id,
-                    indexPosition: 0,
-                    isFromHospital: true,
-                    // hospitalId: this.state.hospitalId,
-                  });
+                    providerType: providerType,
+                    providerId: Item.user_id,
+                    // isFromHospital: true,
+                    // hospitalId: Item?.hospital_id,
+                    indexPosition: 0
+                  })
+
                 }}
                 style={{
                   height: vs(25),
-                  width: '40%',
+                  // width: '40%',
+                  paddingHorizontal:s(10),
                   backgroundColor: Colors.Blue,
                   borderRadius: 6,
                   justifyContent: "center",

@@ -5,7 +5,7 @@ export const Icons = {
   remembertick: require("../icons/chcek-icon.png"),
   rememberdeactivate: require("../icons/graycheckbox.png"),
   // backarrow: require('../icons/backarrow.png'),
-  // play: require("../icons/play.png"),
+  play: require("../icons/play.png"),
   pause: require("../icons/pause.png"),
   stop: require("../icons/stop_btn.png"),
   // camera: require('../icons/camera.png'),
@@ -77,7 +77,6 @@ export const Icons = {
   rightimg: require("../icons/Group1336-22x.png"),
   //--05-03-22 gunjan 
   crossimg: require("../icons/Group10883x.png"),
-  calendarimg: require("../icons/date.png"),
   arabic_back: require("../icons/next.png"),
   arabic_next: require("../icons/left-arrow.png"),
   arabic_call: require("../icons/arabic_call.png"),
@@ -88,7 +87,10 @@ export const Icons = {
 
   //--Ahsan
   Tick: require('../icons/tick.png'),
-  Notification: require('../icons/notification.png')
+  Notification: require('../icons/notification.png'),
+  Add: require('../icons/add.png'),
+  Upload: require('../icons/upload.png'),
+  Calendar: require('../icons/calendar.png'),
   
 };
 

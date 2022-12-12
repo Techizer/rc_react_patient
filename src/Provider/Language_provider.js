@@ -79,8 +79,8 @@ class Language_provider {
   donot = ["Don't have an account, click below?", "ليس لديك حساب ، انقر أدناه؟"];
   createnewaccountbtn = ["Create a new account", "انشاء حساب جديد"];
   swipe_text = ["Swipe right to left", " اسحب من اليمين إلى اليسار  "];
-  Trouble_SignIn=["Trouble signing in? Get Help?", "هل تواجه مشكلة في تسجيل الدخول؟ احصل على مساعدة؟"];
-  Skip=["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
+  Trouble_SignIn = ["Trouble signing in? Get Help?", "هل تواجه مشكلة في تسجيل الدخول؟ احصل على مساعدة؟"];
+  Skip = ["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
   //---------------------splash------------------
   Splashtext1 = [
     "The Best Company for Medicial Services & Home Healthcare",
@@ -187,7 +187,7 @@ class Language_provider {
 
   DoctorConsultation = ["Doctor Consultation", "استشارة الطبيب"];
   Lab_Test_Booking = ["Lab Test Booking", "حجز الاختبارات المعملية"];
-  Find_Labs=["Find Labs","البحث عن المعامل"]
+  Find_Labs = ["Find Labs", "البحث عن المعامل"]
   MyAppointments = ["My Appointments", "واعيدي  "];
   CartItem = ["Cart Item", "عربة التسوق  "];
   BOOKNOW = ["BOOK NOW", "احجز الآن"];
@@ -327,7 +327,7 @@ class Language_provider {
   past_heading = ["Past Appointment", "الموعد السابق  "];
   past_text = ["Completed, Closed Or Cancelled.", ".مكتمل أو مغلق أو ملغى "];
 
-  
+
   drawerversion = ["RC Version 1.0(1)", "RC Version 1.0(1)"];
   titleexitapp = ["Exit app", "الخروج من التطبيق"];
   exitappmessage = ["Do you want to exit", "هل تريد الخروج"];
@@ -375,7 +375,6 @@ class Language_provider {
   Nurse_assistant = ["Nurse Assistant", "مساعد ممرض    "];
   Babysitter = ["Babysitter", "جليسه اطفال    "];
   Rating = ["Rating", "التقييم "];
-  Booking = ["Booking", "الحجوزات"];
   Booking = ["Booking", "حجز "];
   Experience = ["Experience", "الخبرة  "];
   ESTABLISHED = ["Established", "أنشئت"];
@@ -399,7 +398,8 @@ class Language_provider {
   ];
   Splashtext_five = ["Healthcare Company in The", "شركة رعاية صحية في"];
   Splashtext_six = ["Saudi Arabia", "المملكة العربية السعودية"];
-  BookOnlineAppointment = ["BOOK ONLINE APPOINTMENT", "حجز موعداستشارة عن بعد"];
+  BookOnlineAppointment = ["BOOK ONLINE APPOINTMENT",
+    "حجز موعداستشارة عن بعد"];
   BookHomeVisitAppointment = [
     "BOOK HOME VISIT APPOINTMENT",
     "حجز موعد زيارة منزلية",
@@ -447,7 +447,7 @@ class Language_provider {
   Select_start_time = ["Select start time", "حدد وقت البدء "];
   no_data_Found = ["No data found", "لاتوجد بيانات   "];
   Packages_Unavailable = ["Packages not available", "الباقة غير مُتاحة"];
-  SelectDate = [" Select Date", "حدد التاريخ  "];
+  SelectDate = [" Select Date:", "حدد التاريخ  "];
   delete_msg = [
     "Are you sure to delete this family member?",
     "هل أنت متأكد من حذف فرد العائلة هذا؟  ",
@@ -569,31 +569,31 @@ class Language_provider {
   Lab_Test = ["Lab Test", "اختبار معمل"];
   Profile = ["Profile", "الملف الشخصي"];
   All_Consultations = ["All Consultations, Orders, & Bookings", "جميع الاستشارات والطلبات والحجوزات"];
-  Appointment_Bookings=['Appointment Bookings', 'حجوزات المواعيد'];
-  Appointment_Booking_Details=['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، ممرضة مؤخرة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
-  Doctor_Consultations=['Doctor Consultations', 'استشارات الطبيب'];
-  Doctor_Consultation_Details=['Doctor Consul, Ongoing, Past, etc.', 'طبيب قنصل ، مستمر ، سابق ، إلخ.'];
-  Lab_Test_Bookings=['Lab Test Bookings', 'حجوزات الاختبارات المعملية'];
-  Lab_Test_Booking_Details=['Completed, Closed, Or Cancelled.', 'مكتمل أو مغلق أو ملغى.'];
-  Orders=['Orders', 'ترتيب'];
-  Order_Details=['Medicines & Other Equipments', 'الأدوية والمعدات الأخرى'];
+  Appointment_Bookings = ['Appointment Bookings', 'حجوزات المواعيد'];
+  Appointment_Booking_Details = ['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، ممرضة مؤخرة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
+  Doctor_Consultations = ['Doctor Consultations', 'استشارات الطبيب'];
+  Doctor_Consultation_Details = ['Doctor Consul, Ongoing, Past, etc.', 'طبيب قنصل ، مستمر ، سابق ، إلخ.'];
+  Lab_Test_Bookings = ['Lab Test Bookings', 'حجوزات الاختبارات المعملية'];
+  Lab_Test_Booking_Details = ['Completed, Closed, Or Cancelled.', 'مكتمل أو مغلق أو ملغى.'];
+  Orders = ['Orders', 'ترتيب'];
+  Order_Details = ['Medicines & Other Equipments', 'الأدوية والمعدات الأخرى'];
   Acccount_and_More = ["Account & More", "الحساب  & المزيد  "];
   Acccount_Setting = ['Account Settings', 'إعدادت الحساب'];
   Manage_Address = ["Manage Address", "إدارة العنوان"];
   Manage_Members = ["Manage Members | Health Record", "إدارة الأعضاء | السجل الصحي"];
   Find_Location = ["Find Location", "البحث عن الموقع"];
-  Health_Record=['My Health Record', 'سجلي الصحي']
+  Health_Record = ['My Health Record', 'سجلي الصحي']
   Support_and_More = ["Support & More", " الدعم & المزيد "];
   Like_Us = ["Like Us? Give 5 Star Review", "مثلنا؟ أعط مراجعة 5 نجوم"];
   SignOut = ["Sign Out", "خروج"];
-  About_App=['Making healthcare digital & easy', 'جعل الرعاية الصحية رقمية وسهلة'];
-  About_App_Details=['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة'];
-  Nurse_Booking=['Nurse Booking', 'ممرضة الحجز'];
+  About_App = ['Making healthcare digital & easy', 'جعل الرعاية الصحية رقمية وسهلة'];
+  About_App_Details = ['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة'];
+  Nurse_Booking = ['Nurse Booking', 'ممرضة الحجز'];
   RootsCare = ["Roots Care", "روتس كير "];
   Howitworks = ["How it works", "How it works"];
   BookConsultation = ["BOOK CONSULTATION", "استشارة كتاب"];
   NearBy = ["Near by", "مجاور"];
-  OtpTime=['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.'];
+  OtpTime = ['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.'];
   NeedSupport = ["Need Support", "تحتاج مساعدة"];
   Add_Address = ["Add This Address", "أضف هذا العنوان"];
   Saved_Address = ["Saved Addresses", "العناوين المحفوظة"];
@@ -611,6 +611,9 @@ class Language_provider {
   Archive = ["ARCHIVE", "أرشيف"];
   Merge = ["MERGE", "دمج"];
   Default_Address = ["Default Address", "العنوان الافتراضي"];
+  Advance_Filter = ["Advance Filter", "مرشح متقدم"];
+  Consult_Type = ["Consultation Type", "نوع الاستشارة"];
+  Doc_Exp = ["Doctor Experience", "خبرة الطبيب"];
 
 
 }

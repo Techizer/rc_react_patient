@@ -35,6 +35,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { AUDIO_STATUS, pausePlayer, startPlayer } from "./AudioManager";
 import SoundPlayer from "react-native-sound-player";
 import { Alert } from "react-native";
+import { s, vs } from "react-native-size-matters";
 var Sound = require("react-native-sound");
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
@@ -292,9 +293,9 @@ const DoctorSymptomsAppointment = (props) => {
         // loaded successfully
         console.log(
           "duration in seconds: " +
-            sound.getDuration() +
-            "number of channels: " +
-            sound.getNumberOfChannels()
+          sound.getDuration() +
+          "number of channels: " +
+          sound.getNumberOfChannels()
         );
         setPlayState(isPlay ? "playing" : "paused");
         setDuration(sound.getDuration());
@@ -384,11 +385,11 @@ const DoctorSymptomsAppointment = (props) => {
 
         if (
           grants["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
+          PermissionsAndroid.RESULTS.GRANTED &&
           grants["android.permission.READ_EXTERNAL_STORAGE"] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
+          PermissionsAndroid.RESULTS.GRANTED &&
           grants["android.permission.RECORD_AUDIO"] ===
-            PermissionsAndroid.RESULTS.GRANTED
+          PermissionsAndroid.RESULTS.GRANTED
         ) {
           console.log("permissions granted");
           // const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
@@ -468,9 +469,9 @@ const DoctorSymptomsAppointment = (props) => {
             obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
           setImageName(fileName);
         } else {
-           fileName =
-             obj.path !== undefined &&
-             obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
+          fileName =
+            obj.path !== undefined &&
+            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
           setImageName(fileName);
         }
         sendData({
@@ -568,15 +569,13 @@ const DoctorSymptomsAppointment = (props) => {
       indicatorStyle={{
         backgroundColor: Colors.Blue,
         height: (windowWidth * 1) / 100,
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
       }}
       activeColor={Colors.Blue}
       inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{
         textTransform: "capitalize",
-        fontSize: (windowWidth * 4) / 100,
+        fontSize: Font.large,
         textAlign: config.textalign,
         fontFamily: Font.Medium,
         alignSelf: "center",
@@ -615,28 +614,33 @@ const DoctorSymptomsAppointment = (props) => {
   const currentTimeString = getAudioTimeString(playSeconds);
   const durationString = getAudioTimeString(duration);
   return (
-    <View style={{ flex: 1 }}>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{
-          width: layout.width,
-          height: layout.height,
-        }}
-        renderTabBar={renderTabBar}
-      />
+    <View style={{ backgroundColor: Colors.White, marginTop: vs(7) }}>
+      <View style={{ width: windowWidth, backgroundColor: Colors.backgroundcolor }}>
+        <View style={{ paddingHorizontal: s(11), backgroundColor: Colors.backgroundcolor }}>
+
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{
+              width: layout.width,
+              height: layout.height,
+            }}
+            style={{ height: 40, }}
+            renderTabBar={renderTabBar}
+          />
+        </View>
+      </View>
       <View
         style={{
           width: "100%",
-          shadowOpacity: 0.3,
-          shadowColor: "#000",
-          shadowOffset: { width: 2, height: 2 },
-          elevation: 2,
-          shadowRadius: 2,
-          // marginTop: (windowWidth * 1.5) / 100,
-          marginBottom: (windowWidth * 1.5) / 100,
-          backgroundColor: "#fff",
+          // shadowOpacity: 0.3,
+          // shadowColor: "#000",
+          // shadowOffset: { width: 2, height: 2 },
+          // elevation: 2,
+          // shadowRadius: 2,
+          paddingLeft: s(11),
+          paddingVertical:vs(9)
         }}
       >
         <View
@@ -645,23 +649,20 @@ const DoctorSymptomsAppointment = (props) => {
             // alignItems: "center",
             // alignSelf: "center",
             justifyContent: "flex-start",
-            paddingTop: (windowWidth * 4) / 100,
           }}
         >
           <View
             style={{
-              width: "75%",
+              width: "80%",
               height: isStopped ? 150 : 100,
-              marginStart: 20,
             }}
           >
             <Text
               style={{
                 fontFamily: Font.Regular,
-                fontSize: Font.name,
+                fontSize: Font.medium,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.TalkToDoctor[config.language]}
@@ -669,11 +670,10 @@ const DoctorSymptomsAppointment = (props) => {
             <Text
               style={{
                 fontFamily: Font.Regular,
-                fontSize: Font.name,
+                fontSize: Font.small,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
                 color: Colors.lightGrey,
-                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.Optional[config.language]}
@@ -681,7 +681,7 @@ const DoctorSymptomsAppointment = (props) => {
             {isStopped && (
               <View
                 style={{
-                  width: "120%",
+                  width: "100%",
                   alignSelf: "center",
                   justifyContent: "center",
                   borderBottomWidth: (windowWidth * 0.3) / 100,
@@ -692,7 +692,6 @@ const DoctorSymptomsAppointment = (props) => {
                   // flex: 1,
                   flexDirection: "row",
                   marginTop: 60,
-                  marginLeft: 50,
                 }}
               >
                 <TouchableOpacity
@@ -734,11 +733,8 @@ const DoctorSymptomsAppointment = (props) => {
           <View
             style={{
               justifyContent: "center",
-              width: (windowWidth * 16) / 100,
+              width: '20%',
               alignItems: "center",
-              position: "absolute",
-              right: 20,
-              top: 10,
             }}
           >
             <TouchableOpacity
@@ -746,16 +742,16 @@ const DoctorSymptomsAppointment = (props) => {
                 isRecording ? onStopRecord() : onStartRecord();
               }}
               style={{
-                height: (windowWidth * 20) / 100,
-                borderRadius: (windowWidth * 2) / 100,
+                height: vs(50),
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
                 borderColor: Colors.Theme,
-                width: (windowWidth * 20) / 100,
+                width: '90%',
                 justifyContent: "center",
                 alignContent: "center",
                 alignItems: "center",
-                backgroundColor: "#d1e9f6",
-                alignSelf: "center",
-                right: -20,
+                backgroundColor: Colors.appointmentdetaillightblue,
+                alignSelf: 'flex-end'
               }}
             >
               <Image
@@ -773,9 +769,7 @@ const DoctorSymptomsAppointment = (props) => {
             <Text
               style={{
                 fontFamily: Font.Regular,
-                fontSize: (windowWidth * 3) / 100,
-                alignSelf: "flex-end",
-                right: -5,
+                fontSize: Font.medium,
                 marginTop: (windowWidth * 2) / 100,
               }}
             >
@@ -783,35 +777,28 @@ const DoctorSymptomsAppointment = (props) => {
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.gainsboro,
-            width: "100%",
-            marginTop: (windowWidth * 1.5) / 100,
-            marginBottom: (windowWidth * 1.5) / 100,
-          }}
-        />
+
+        <View style={{ width: '100%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(6) }}></View>
+
+        {/* ---------------------------------------- */}
         <View
           style={{
             alignItems: "flex-start",
             alignSelf: "auto",
-            paddingTop: (windowWidth * 4) / 100,
+            paddingTop: vs(6),
           }}
         >
           <View
             style={{
-              width: "91%",
+              width: "100%",
               alignSelf: "center",
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontFamily: Font.Regular,
-                fontSize: Font.name,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
-                fontSize: (windowWidth * 3.5) / 100,
+                fontSize: Font.medium,
               }}
             >
               {Lang_chg.TalkToUs[config.language]}
@@ -819,15 +806,17 @@ const DoctorSymptomsAppointment = (props) => {
             <Text
               style={{
                 fontFamily: Font.Regular,
-                fontSize: Font.name,
+                fontSize: Font.small,
                 textAlign: config.textRotate,
                 alignSelf: "baseline",
                 color: Colors.lightGrey,
-                fontSize: (windowWidth * 3.5) / 100,
               }}
             >
               {Lang_chg.Optional[config.language]}
             </Text>
+
+            {/* ----------------Input------------- */}
+
             <View style={customStyle}>
               <TextInput
                 // ref={(text) => {
@@ -854,6 +843,7 @@ const DoctorSymptomsAppointment = (props) => {
                 multiline={true}
               />
             </View>
+
             <TouchableOpacity
               onPress={() => {
                 // this.setState({ mediamodal: true });
@@ -861,15 +851,14 @@ const DoctorSymptomsAppointment = (props) => {
               }}
               style={{
                 width: "100%",
-                height: (windowWidth * 20) / 100,
-                justifyContent: "flex-start",
                 flexDirection: "row",
+                alignItems:'center',
                 alignSelf: "center",
               }}
             >
               <Image
                 resizeMode="contain"
-                source={Icons.upload}
+                source={Icons.Upload}
                 style={{
                   width: 20,
                   height: 20,
@@ -880,10 +869,8 @@ const DoctorSymptomsAppointment = (props) => {
               <Text
                 style={{
                   fontFamily: Font.Regular,
-                  fontSize: (windowWidth * 3) / 100,
+                  fontSize: Font.small,
                   textAlign: "auto",
-                  alignItems: "baseline",
-                  marginTop: 5,
                 }}
               >
                 {imageName === ""
@@ -894,6 +881,7 @@ const DoctorSymptomsAppointment = (props) => {
           </View>
         </View>
       </View>
+
       <Cameragallery
         mediamodal={mediaModal}
         Camerapopen={() => {
@@ -913,30 +901,33 @@ const DoctorSymptomsAppointment = (props) => {
 const styles = StyleSheet.create({
   textInputFocus: {
     borderColor: Colors.Blue,
-    backgroundColor: Colors.white2,
-    borderBottomWidth: 1,
+    backgroundColor: Colors.White,
     borderWidth: 1,
     marginBottom: 10,
+    paddingHorizontal:s(5),
+    paddingVertical:vs(5),
+    borderRadius:8,
     marginTop: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
+    width:'96.5%'
   },
   textInput: {
     borderColor: Colors.lightGrey,
-    backgroundColor: Colors.white2,
-    borderBottomWidth: 1,
+    backgroundColor: Colors.White,
     borderWidth: 1,
     marginBottom: 10,
+    paddingHorizontal:s(5),
+    paddingVertical:vs(5),
+    borderRadius:8,
     marginTop: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
+    width:'96.5%'
+
   },
   textInputArea: {
-    fontSize: (windowWidth * 4) / 100,
+    fontSize: Font.medium,
     fontFamily: Font.ques_fontfamily,
-    color: "#8F98A7",
+    color: Colors.detailTitles,
     height: 100,
-    width: "90%",
+    width: "100%",
     justifyContent: "flex-start",
     textAlign: "center",
     textAlignVertical: "top",

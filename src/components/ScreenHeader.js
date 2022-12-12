@@ -101,6 +101,7 @@ const ScreenHeader = ({
                                     textAlign: "center",
                                     fontFamily: Font.Medium,
                                     fontSize: (windowWidth * 4) / 100,
+                                    color:Colors.darkText
                                 }}>{title}</Text>
                         </View>
                         {
