@@ -12,6 +12,7 @@ global.MapAddress = "NA";
 global.screens = "Splash";
 global.fcmtoken = "123456";
 global.isLogin = true;
+global.isPage = ""
 import RNRestart from "react-native-restart";
 console.reportErrorsAsExceptions = false;
 class App extends Component {
