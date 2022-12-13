@@ -31,6 +31,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { Button } from "../components";
+import { StackActions } from "@react-navigation/native";
 
 export default class OTPPage extends Component {
   _didFocusSubscription;
@@ -46,7 +47,7 @@ export default class OTPPage extends Component {
       device_lang: "AR",
       mobile: "",
       country_name: this.props.route?.params?.country_name || '',
-      fcm_token: 123456,
+      fcm_token: global.fcmtoken,
       otp: "",
       modalVisible3: false,
       error_msg: "",
@@ -118,10 +119,12 @@ export default class OTPPage extends Component {
       .then((obj) => {
         consolepro.consolelog("obj", obj);
         if (obj.status == true) {
-          this.setState({ error_msg: obj.message });
-
           setTimeout(() => {
-            this.setState({ modalVisible3: true });
+            this.setState({
+              userdetails: obj.result,
+              error_msg: obj.message,
+              modalVisible3: true
+            });
           }, 500);
         } else {
           setTimeout(() => {
@@ -135,6 +138,23 @@ export default class OTPPage extends Component {
         this.setState({ loading: false });
       });
   };
+  loginUser = () => {
+    var user_details = this.state.userdetails;
+    consolepro.consolelog("user_details", user_details);
+    localStorage.setItemString('Guest', 'false')
+    // localStorage.setItemObject("user_login", uservalue);
+    localStorage.setItemObject("user_arr", user_details);
+    // msgProvider.showError(msgText.sucess_message_login[config.language])
+    setTimeout(() => {
+      // this.props.navigation.navigate("Home");
+      global.isLogin = true
+      this.props.navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+
+    }, 700);
+  }
   sendagain = async () => {
     let user_details = await localStorage.getItemObject("user_login");
     let item = user_details;
@@ -348,7 +368,7 @@ export default class OTPPage extends Component {
         </KeyboardAwareScrollView>
 
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalVisible3}
           onRequestClose={() => {
@@ -437,8 +457,9 @@ export default class OTPPage extends Component {
                   <TouchableOpacity
                     onPress={() => {
                       setTimeout(() => {
-                        this.setState({ modalVisible3: false }),
-                          this.props.navigation.navigate("Login");
+                        this.setState({ modalVisible3: false })
+                        // this.props.navigation.navigate("Login");
+                        this.loginUser()
                       }, 200);
                     }}
                     style={{

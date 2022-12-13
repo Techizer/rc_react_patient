@@ -183,6 +183,7 @@ export default class Splash extends Component {
         } else {
           // this.props.navigation.navigate("Login");
           global.isLogin = false
+          global.isPage = ""
           this.props.navigation.reset({
             index: 0,
             routes: [{ name: "AuthStack" }],
@@ -221,6 +222,7 @@ export default class Splash extends Component {
     await localStorage.removeItem("user_arr");
     await localStorage.removeItem("user_login");
     global.isLogin = false
+    global.isPage = ""
     this.props.navigation.reset({
       index: 0,
       routes: [{ name: "AuthStack" }],
@@ -236,6 +238,7 @@ export default class Splash extends Component {
       this.checkLogout(result, logindetail)
     } else {
       global.isLogin = false
+      global.isPage = ""
       this.props.navigation.reset({
         index: 0,
         routes: [{ name: "AuthStack" }],

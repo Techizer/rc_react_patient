@@ -17,6 +17,7 @@ class firbase_pushnotification {
     if (fcmToken) {
       console.log("fcmToken", fcmToken);
       fcmtoken = fcmToken;
+      global.fcmtoken = fcmtoken
     } else {
       this.showAlert("Failed", "No token received");
     }

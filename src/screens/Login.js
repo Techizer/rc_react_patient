@@ -81,9 +81,9 @@ export default class Login extends Component {
     let address_arr = await localStorage.getItemObject("address_arr");
     console.log("jdkfgvy", address_arr);
     this.setState({ address_new: address_arr });
-    if (address_arr == "" || address_arr == "NA" || address_arr == null) {
-      this.getlatlong();
-    }
+    //if (address_arr == "" || address_arr == "NA" || address_arr == null) {
+    this.getlatlong();
+    //}
   };
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
@@ -287,6 +287,7 @@ export default class Login extends Component {
     )
       .then((response) => response.json())
       .then((resp) => {
+        console.log("respresp:: ", resp);
         let responseJson = resp.results[0];
         let city = "";
         let administrative_area_level_1 = "";
@@ -463,10 +464,21 @@ export default class Login extends Component {
           setTimeout(() => {
             // this.props.navigation.navigate("Home");
             global.isLogin = true
-            this.props.navigation.reset({
-              index: 0,
-              routes: [{ name: "DashboardStack" }],
-            });
+            if (global.isPage == "") {
+              this.props.navigation.reset({
+                index: 0,
+                routes: [{ name: "DashboardStack" }],
+              });
+            } else if(global.isPage == "providerList") {
+              this.props.navigation.goBack()
+            }
+
+
+
+            // pop(
+            //   "AllServiceProviderListing",
+            //   //{ pass_status: item.pass_status }
+            // )
           }, 700);
         } else {
           // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
@@ -736,6 +748,7 @@ export default class Login extends Component {
               onPress={() => {
                 localStorage.setItemString('Guest', 'true')
                 global.isLogin = false
+                global.isPage = ""
                 setTimeout(() => {
                   this.props.navigation.reset({
                     index: 0,

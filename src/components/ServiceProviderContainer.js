@@ -288,19 +288,19 @@ const ServiceProviderContainer = ({
 
               {
                 (Item.speciality) ?
-                <Text
-                  style={{
-                    fontFamily: Font.Bold,
-                    color: Colors.DarkGrey,
-                    fontSize: Font.small,
-                    textAlign: config.textRotate,
-                    marginTop: vs(3)
-                  }}
-                >
-                  {Item.speciality}
-                </Text>
-                :
-                <></>
+                  <Text
+                    style={{
+                      fontFamily: Font.Bold,
+                      color: Colors.DarkGrey,
+                      fontSize: Font.small,
+                      textAlign: config.textRotate,
+                      marginTop: vs(3)
+                    }}
+                  >
+                    {Item.speciality}
+                  </Text>
+                  :
+                  <></>
               }
 
               {
@@ -440,19 +440,37 @@ const ServiceProviderContainer = ({
               <TouchableOpacity
                 onPress={() => {
                   // if ((Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined)) {
-                  navigation.navigate("Booking", {
-                    providerType: providerType,
-                    providerId: Item.user_id,
-                    // isFromHospital: true,
-                    // hospitalId: Item?.hospital_id,
-                    indexPosition: 0
-                  })
+                  if (global.isLogin == false) {
+                    console.log("navigation:: ", navigation)
+                    // navigation.reset({
+                    //   index: 0,
+                    //   routes: [{ name: "AuthStack" }],
+                    // });
+                    global.isPage = "providerList"
+                    // navigation.push("Login");
+                    navigation.navigate("AuthStack", {
+                      providerType: providerType,
+                      providerId: Item.user_id,
+                      // isFromHospital: true,
+                      // hospitalId: Item?.hospital_id,
+                      indexPosition: 0
+                    })
+                  } else {
+                    navigation.navigate("Booking", {
+                      providerType: providerType,
+                      providerId: Item.user_id,
+                      // isFromHospital: true,
+                      // hospitalId: Item?.hospital_id,
+                      indexPosition: 0
+                    })
+                  }
+
 
                 }}
                 style={{
                   height: vs(25),
                   // width: '40%',
-                  paddingHorizontal:s(10),
+                  paddingHorizontal: s(10),
                   backgroundColor: Colors.Blue,
                   borderRadius: 6,
                   justifyContent: "center",
