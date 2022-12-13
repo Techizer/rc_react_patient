@@ -56,7 +56,7 @@ export default class AllServiceProviderListing extends Component {
       providersList: [1, 2, 3, 4, 5, 6, 7],
       availability: [],
       isLoading: true,
-      isFilter:false
+      isFilter: false
     };
     screens = "Login";
   }
@@ -198,6 +198,24 @@ export default class AllServiceProviderListing extends Component {
       // longitudes: -122.406417
       // work_area: UAE
       // docEnableFor: ONLINE_CONSULT
+      let addressDetails = await localStorage.getItemObject("addressDetails");
+      console.log("addressDetails", addressDetails);
+      var device_lang;
+      if (config.language == 0) {
+        device_lang = "ENG";
+      } else {
+        device_lang = "AR";
+      }
+
+      data.append("login_user_id", 0);
+      data.append("service_type", this.state.pass_status);
+      // data.append("work_area", "UAE");
+      data.append("provider_name", "");
+      data.append("device_lang", device_lang);
+      data.append("latitude", addressDetails?.latitude);
+      data.append("longitudes", addressDetails?.longitude);
+      // data.append("docEnableFor", "ONLINE_CONSULT");
+      data.append("page_count", 1);
 
     } else {
       let user_details = await localStorage.getItemObject("user_arr");
@@ -219,8 +237,8 @@ export default class AllServiceProviderListing extends Component {
         data.append("docEnableFor", this.state.enableFor);
       }
     }
-
-    // consolepro.consolelog("get_Services-query-data......", data);
+    console.log("url::", url)
+    consolepro.consolelog("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {
       consolepro.consolelog("get_Services-response ", JSON.stringify(res));
 
@@ -290,8 +308,8 @@ export default class AllServiceProviderListing extends Component {
           Keyboard.dismiss();
         }}
         onPressSearch={() => this.get_Services()}
-        onFilterPress={()=>{
-          this.setState({isFilter:true})
+        onFilterPress={() => {
+          this.setState({ isFilter: true })
         }}
       />
     )
@@ -468,10 +486,10 @@ export default class AllServiceProviderListing extends Component {
         </Modal>
 
         <FilterBottomSheet
-        visible={this.state.isFilter}
-        onRequestClose={()=>{
-          this.setState({isFilter:false})
-        }}
+          visible={this.state.isFilter}
+          onRequestClose={() => {
+            this.setState({ isFilter: false })
+          }}
         />
       </View >
     );

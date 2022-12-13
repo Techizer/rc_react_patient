@@ -54,7 +54,7 @@ export default class Signup extends Component {
       confirm: "",
       device_lang: "AR",
       mobile: "",
-      fcm_token: 123456,
+      fcm_token: global.fcmtoken,
       modalVisible3: false,
       error_msg: "",
       country_codefocus: false,
@@ -877,7 +877,7 @@ export default class Signup extends Component {
         </Modal>
 
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalVisible3}
           onRequestClose={() => {

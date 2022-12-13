@@ -127,7 +127,10 @@ export default class Booking extends Component {
   componentDidMount() {
     if (this.props.route.params.display != undefined) {
       let display = this.props.route.params.display;
-      this.setState({ display: display });
+      this.setState({
+        display: display,
+        set_task: (display == "taskbooking") ? "task_base" : "hour_base"
+      });
 
     }
     this.props.navigation.addListener("focus", () => {
@@ -1862,7 +1865,7 @@ export default class Booking extends Component {
       this.state.only_vatprice_show == 0 ||
       this.state.only_vatprice_show == "0.0"
     ) {
-      real_total = parseFloat(this.state.vat_price_show_display).toFixed(1);
+      real_total = 0 //parseFloat(this.state.vat_price_show_display).toFixed(1);
       show_total_price = parseFloat(
         parseInt(this.state.distance_fare_pass) + sum
       ).toFixed(1);
@@ -1917,7 +1920,7 @@ export default class Booking extends Component {
       this.state.only_vatprice_show == 0 ||
       this.state.only_vatprice_show == 0.0
     ) {
-      show_total_price = this.state.vat_price_show;
+      show_total_price = 0 //this.state.vat_price_show;
       subTotal = parseFloat(
         parseInt(this.state.distance_fare_pass) + parseInt(prize)
       ).toFixed(1);
@@ -2997,9 +3000,10 @@ export default class Booking extends Component {
                                   set_date: item.date1,
                                   set_task: "task_base",
                                   time_take_data: "",
-                                }),
+                                },()=>{
                                   this.getLabTimeDate(),
-                                  this.checkDate(item, index);
+                                  this.checkDate(item, index)
+                                })
                               }}
                               style={{ width: (windowWidth * 15) / 100 }}
                             >
@@ -3568,9 +3572,10 @@ export default class Booking extends Component {
                                     set_date: item.date1,
                                     set_task: item.home_visit_text,
                                     time_take_data: "",
-                                  }),
+                                  },()=>{
                                     this.getDoctorTimeDate(),
-                                    this.checkDate(item, index);
+                                    this.checkDate(item, index)
+                                  })
                                 }}
                                 style={{ width: (windowWidth * 15) / 100 }}
                               >
@@ -3612,9 +3617,10 @@ export default class Booking extends Component {
                                     set_date: item.date1,
                                     set_task: item.online_base_text,
                                     time_take_data_hour: "",
-                                  }),
+                                  },()=>{
                                     this.getDoctorTimeDate(),
-                                    this.checkDate(item, index);
+                                    this.checkDate(item, index)
+                                  })
                                 }}
                                 style={{ width: (windowWidth * 15) / 100, }}
                               >
@@ -4145,7 +4151,10 @@ export default class Booking extends Component {
                   {item.task_base_enable == 0 && (
                     <TouchableOpacity
                       onPress={() => {
-                        this.setState({ display: "taskbooking" });
+                        this.setState({
+                          display: "taskbooking",
+                          set_task: "task_base"
+                        });
                       }}
                       style={{ width: "50%", alignSelf: "center" }}
                     >
@@ -4201,7 +4210,10 @@ export default class Booking extends Component {
                   {item.hour_base_enable == 0 && (
                     <TouchableOpacity
                       onPress={() => {
-                        this.setState({ display: "hourlybooking" });
+                        this.setState({
+                          display: "hourlybooking",
+                          set_task: "hour_base"
+                        });
                       }}
                       style={{ width: "50%", alignSelf: "center" }}
                     >
@@ -4665,9 +4677,10 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: "task_base",
                                       time_take_data: "",
-                                    }),
+                                    },()=>{
                                       this.getTimeDate(),
-                                      this.checkDate(item, index);
+                                      this.checkDate(item, index)
+                                    })
                                   }}
                                   style={{ width: (windowWidth * 15) / 100 }}
                                 >
@@ -4708,9 +4721,10 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: "hour_base",
                                       time_take_data_hour: "",
-                                    }),
+                                    },()=>{
                                       this.getTimeDate(),
-                                      this.checkDate(item, index);
+                                      this.checkDate(item, index)
+                                    })
                                   }}
                                   style={{ width: (windowWidth * 15) / 100, }}
                                 >
