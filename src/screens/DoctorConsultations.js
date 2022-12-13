@@ -43,8 +43,8 @@ const DoctorConsultations = ({ navigation }) => {
           index: 0,
           routes: [{ name: 'Home' }],
         })}
-        rightIcon={Notification}
-        leftIcon={true}
+        rightIcon
+        leftIcon
       />
     </View>
   );

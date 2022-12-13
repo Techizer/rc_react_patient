@@ -238,7 +238,7 @@ export default class ServiceProviderDetails extends Component {
                     fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     textAlign: config.textRotate,
-                    color: Colors.detailTitles
+                    color: Colors.darkText
                   }}>
                   {provider_details.provider_name}
                 </Text>
@@ -286,7 +286,7 @@ export default class ServiceProviderDetails extends Component {
                     fontFamily: Font.Medium,
                     fontSize: Font.xlarge,
                     textAlign: config.textRotate,
-                    color: Colors.detailTitles,
+                    color: Colors.darkText,
                     marginTop: vs(5)
                   }}>
                   {provider_details.experience ? provider_details.experience : '-'}
@@ -309,7 +309,7 @@ export default class ServiceProviderDetails extends Component {
                     fontFamily: Font.Medium,
                     fontSize: Font.xlarge,
                     textAlign: config.textRotate,
-                    color: Colors.detailTitles,
+                    color: Colors.darkText,
                     marginTop: vs(5),
                     paddingHorizontal: s(15)
                   }}>
@@ -335,7 +335,7 @@ export default class ServiceProviderDetails extends Component {
                       fontFamily: Font.Medium,
                       fontSize: Font.xlarge,
                       textAlign: config.textRotate,
-                      color: Colors.detailTitles,
+                      color: Colors.darkText,
                       marginLeft: s(5)
                     }}>
                     {provider_details.avg_rating ? `${provider_details.avg_rating}.0` : 'NA'}
@@ -369,7 +369,7 @@ export default class ServiceProviderDetails extends Component {
                     fontFamily: Font.Regular,
                     fontSize: Font.medium,
                     textAlign: config.textRotate,
-                    color: Colors.DarkGrey,
+                    color: Colors.darkText,
                   }}>
                   {'Availability'}
                 </Text>
@@ -380,7 +380,7 @@ export default class ServiceProviderDetails extends Component {
                   style={{
                     fontFamily: Font.Medium,
                     color: Colors.Blue,
-                    fontSize: Font.medium,
+                    fontSize: Font.small,
                     textAlign: config.textRotate,
                   }}>
                   {available_days}
@@ -567,7 +567,7 @@ export default class ServiceProviderDetails extends Component {
                     textAlign: config.textRotate,
                     fontFamily: Font.Regular,
                     fontSize: Font.xlarge,
-                    color: Colors.detailTitles
+                    color: Colors.darkText
                   }}
                 >
 
@@ -745,7 +745,7 @@ export default class ServiceProviderDetails extends Component {
                     textAlign: config.textRotate,
                     fontFamily: Font.Regular,
                     fontSize: Font.xlarge,
-                    color: Colors.detailTitles
+                    color: Colors.darkText
                   }}
                 >
                   {`${providerType === 'nurse' ? Lang_chg.AvailableNurse[config.language] : providerType === 'physiotherapy' ? Lang_chg.Availablephysotharpst[config.language] : providerType === 'caregiver' ? Lang_chg.Availableassistent[config.language] : providerType === 'babysitter' ? Lang_chg.Availablebabysitter[config.language] : providerType === 'doctor' ? Lang_chg.AvailableDoctor[config.language] : Lang_chg.AvailableLab[config.language]}`}

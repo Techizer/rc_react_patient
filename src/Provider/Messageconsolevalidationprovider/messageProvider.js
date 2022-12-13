@@ -265,7 +265,13 @@ class messageTextProvider {
 	sucess_message_login=['Login Successfully','تم تسجيل الدخول بنجاح']
 	emptyComingsoon=['Coming Soon','Coming Soon']
 	PaymentIntention=['Payment Initiation' , ' بدء الدفع ']
-	validIDnumberUAE=['Id number must start with 7','يجب أن يبدأ رقم الهوية بالرقم 7']
+	validIDnumberUAE=['Id number must start with 7','يجب أن يبدأ رقم الهوية بالرقم 7'];
+	allergyName=['Please enter Allergy Name','الرجاء إدخال اسم الحساسية'];
+	currentMedicine=['Please enter current medicine','الرجاء إدخال الطب الحالي'];
+	pastMedicine=['Please enter past medicine','الرجاء إدخال الطب السابق'];
+	injuries=['Please enter any injuries','الرجاء إدخال أي إصابات'];
+	surgeries=['Please enter any injuries','الرجاء إدخال أي عمليات جراحية'];
+	chronicDisease=['Please enter any chronic disease','الرجاء إدخال أي مرض مزمن'];
 }
 
 export const msgText = new messageTextProvider();

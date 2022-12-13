@@ -2233,7 +2233,7 @@ export default class Booking extends Component {
             {/* ---------------Main------------- */}
 
             {/* Patient flatlist */}
-            {this.state.providerType !== "lab" && (
+            {/* {this.state.providerType !== "lab" && (
               <View
                 style={{
                   backgroundColor: Colors.White,
@@ -2244,7 +2244,6 @@ export default class Booking extends Component {
                   width: windowWidth
                 }}>
                 <View style={{ flexDirection: 'row', width: '85%' }}>
-                  {/* -------Profile------- */}
                   <View style={{ width: '22%' }}>
                     <TouchableOpacity
                       onPress={() => {
@@ -2409,7 +2408,7 @@ export default class Booking extends Component {
 
 
                 <View style={{ width: '15%', }}>
-                  {/* --------------Add_Patient------------- */}
+
                   <TouchableOpacity
                     onPress={() => {
                       this.props.navigation.navigate("AddPatient");
@@ -2453,7 +2452,7 @@ export default class Booking extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            )}
+            )} */}
 
             {this.state.providerType === "doctor" && (
               <DoctorSymptomsAppointment

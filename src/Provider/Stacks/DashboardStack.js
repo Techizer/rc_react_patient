@@ -7,15 +7,12 @@ import { DrawerActions } from '@react-navigation/native';
 
 
 import TabItem from '../../components/TabItem'
-import EditProfile from "../../screens/EditProfile";
 import Home from "../../screens/Home";
 import Appointment from "../../screens/Appointment";
-import Cart from "../../screens/Cart";
+import Index from "../../screens/Appointments/Index";
 import Profile from "../../screens/Profile";
 import DoctorConsultations from '../../screens/DoctorConsultations';
 import LabTests from '../../screens/LabTests';
-import AllServiceProviderListing from "../../screens/AllServiceProviderListing";
-import Booking from "../../screens/Booking";
 
 import Drawerscreen from "../../Drawerscreen";
 import Cart2 from "../../Cart2";
@@ -23,10 +20,8 @@ import Cart2 from "../../Cart2";
 
 import App_payment from "../../App_payment";
 
-import AddPatient from "../../screens/AddPatient";
 import ShowOtherAppointments from "../../screens/ShowOtherAppointments";
 import AppointmentDetails from "../../screens/AppointmentDetails";
-import ServiceProviderDetails from "../../screens/ServiceProviderDetails";
 import VideoCall from "../../screens/VideoCall";
 
 
@@ -197,7 +192,7 @@ const DashboardStack = ({ navigation }) => {
       />
       <Tab.Screen
         name={'Apointment'}
-        component={Appointment}
+        component={Index}
       />
       <Tab.Screen
         name={'Consultation'}

@@ -11,7 +11,7 @@ import Notifications from '../../screens/Notifications';
 import CovidPackageDetails from '../../screens/CovidPackageDetails';
 import AllServiceProviderListing from '../../screens/AllServiceProviderListing';
 import SupportandMore from '../../screens/SupportandMore';
-import EditProfile from '../../screens/EditProfile';
+import EditProfile from '../../screens/EditProfile/Index';
 import FindAddress from '../../FindAddress';
 import Booking from '../../screens/Booking';
 import ServiceProviderDetails from '../../screens/ServiceProviderDetails';

@@ -216,7 +216,7 @@ class Language_provider {
   //medical tab
   allergies = ["Allergies", "الحساسية"];
   q1 = ["Are you allergic to anything?", "هل لديك حساسية من أي شيء؟ "];
-  textinputallierdies = ["Enter Allergies", "أدخل الحساسية "];
+  textinputallergies = ["Enter Allergies", "أدخل الحساسية "];
 
   current = ["Current Medication", "الأدوية الحالية "];
   q2 = [
@@ -294,7 +294,7 @@ class Language_provider {
   textinputaddress = ["Address", "العنوان  "];
 
   need_text = [
-    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at \n +44 24776 9200 number",
+    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at +44 24776 9200 number",
     " اكتب مشكلتك هنا، وسوف نتواصل معك في غضون 24–48 ساعة عمل،أو إذا كان لديك أي شيء عاجل اتصل بنا على الرقم  24776 9200",
   ];
   text_input_topic = [
@@ -614,6 +614,7 @@ class Language_provider {
   Advance_Filter = ["Advance Filter", "مرشح متقدم"];
   Consult_Type = ["Consultation Type", "نوع الاستشارة"];
   Doc_Exp = ["Doctor Experience", "خبرة الطبيب"];
+  Select_Nationality = ["Select Nationality", "اختر الجنسية"];
 
 
 }

@@ -29,6 +29,8 @@ import { WebView } from "react-native-webview";
 import Styles from "../Styles";
 import Footer from "../Footer";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
+import ScreenHeader from "../components/ScreenHeader";
+import { vs } from "react-native-size-matters";
 
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
@@ -565,121 +567,30 @@ export default class Cart extends Component {
         <View
           style={{
             flex: 1,
-            backgroundColor: "#fff",
-            paddingBottom: (windowWidth * 10) / 100,
-          }}
-        >
-          {/* <Text>Home</Text> */}
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              alignSelf: "center",
-              paddingVertical: (windowWidth * 3) / 100,
-              backgroundColor: Colors.White,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.Border,
+            backgroundColor: Colors.backgroundcolor,
+          }} >
 
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                padding: (windowWidth * 2.5) / 100,
-                flexDirection: "row",
-                width: "100%",
+          <ScreenHeader
+            title={Lang_chg.CartItem[config.language]}
+            navigation={this.props.navigation}
+            onBackPress={() => this.props.navigation.pop()}
+            leftIcon
+            rightIcon
+          />
 
-                alignSelf: "center",
-                paddingTop: (windowWidth * 3) / 100,
-                backgroundColor: Colors.White,
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  width: "10%",
-                  // backgroundColor: 'pink',
-                  alignSelf: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Home");
-                  }}
-                >
-                  <Image
-                    source={
-                      config.textalign == "right"
-                        ? Icons.arabic_back
-                        : Icons.backarrow
-                    }
-                    style={{
-                      resizeMode: "contain",
-                      width: (windowWidth * 9) / 100,
-                      alignSelf: "center",
-                      height: (windowWidth * 9) / 100,
-                    }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  // backgroundColor: 'yellow',
-                  width: "80%",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontFamily: Font.Medium,
-                    fontSize: (windowWidth * 4) / 100,
-                  }}
-                >
-                  {Lang_chg.CartItem[config.language]}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: "10%",
-                  alignSelf: "center",
-                  // backgroundColor: 'red',
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Notifications");
-                  }}
-                >
-                  <Image
-                    // tintColor="#fff"
-                    source={
-                      this.state.notification_count > 0
-                        ? Icons.notifications
-                        : Icons.notifications_sec
-                    }
-                    style={{
-                      alignSelf: "center",
-                      resizeMode: "contain",
-                      width: (windowWidth * 6) / 100,
-                      height: (windowWidth * 6) / 100,
-                    }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          
           {this.state.cart_arr != "" && this.state.cart_arr != null && (
             <ScrollView
               style={{
                 flex: 1,
-                backgroundColor: "#fff",
+                backgroundColor: Colors.White,
               }}
               contentContainerStyle={{ paddingBottom: (windowWidth * 2) / 100 }}
               showsVerticalScrollIndicator={false}
             >
               <View
                 style={[
-                  { backgroundColor: "#fff" },
+                  { backgroundColor: Colors.White },
                   this.state.task_details.length <= 3
                     ? { height: (windowHeight * 77) / 100 }
                     : { height: (windowHeight * 95) / 100 },
@@ -687,14 +598,7 @@ export default class Cart extends Component {
               >
                 <View
                   style={{
-                    backgroundColor: "#fff",
-                    marginBottom: (windowWidth * 3) / 100,
-                    marginTop: (windowWidth * 2) / 100,
-                    shadowOpacity: 0.3,
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 1 },
-                    elevation: 3,
-                    shadowRadius: 2,
+                    marginTop: vs(7),
                   }}
                 >
                   <View>
@@ -768,9 +672,8 @@ export default class Cart extends Component {
                     {/* border */}
                     <View
                       style={{
-                        borderTopWidth: 0.5,
-                        borderColor: Colors.gainsboro,
-
+                        borderTopWidth: 1,
+                        borderColor: Colors.backgroundcolor,
                         marginTop: (windowWidth * 1) / 100,
                         // marginVertical: (windowWidth * 3) / 100,
                       }}
@@ -838,7 +741,7 @@ export default class Cart extends Component {
                               <View
                                 style={{
                                   borderWidth: 1,
-                                  borderColor: Colors.Theme,
+                                  borderColor: Colors.backgroundcolor,
                                   marginTop: (windowWidth * 2) / 100,
                                   paddingVertical: (windowWidth * 1) / 100,
                                   width: "75%",
@@ -939,8 +842,6 @@ export default class Cart extends Component {
 
                     <View
                       style={{
-                        backgroundColor: "#F1F2F4",
-
                         paddingVertical: (windowWidth * 3) / 100,
                       }}
                     >
@@ -1006,8 +907,8 @@ export default class Cart extends Component {
                                 flexDirection: "row",
                                 justifyContent: "space-between",
                                 paddingVertical: (windowWidth * 2) / 100,
-                                borderTopWidth: (windowWidth * 0.3) / 100,
-                                borderColor: Colors.bordercolor,
+                                borderTopWidth: 1,
+                                borderColor: Colors.backgroundcolor,
                               }}
                             >
                               <Text
@@ -1035,9 +936,8 @@ export default class Cart extends Component {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             paddingVertical: (windowWidth * 2) / 100,
-                            borderTopWidth: (windowWidth * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                            // marginTop: windowWidth * 0.5 / 100,
+                            borderTopWidth: 1,
+                            borderColor: Colors.backgroundcolor,
                           }}
                         >
                           <Text
@@ -1067,8 +967,6 @@ export default class Cart extends Component {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             paddingVertical: (windowWidth * 2) / 100,
-                            // borderBottomWidth: (windowWidth * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
                           }}
                         >
                           <Text
@@ -1094,8 +992,8 @@ export default class Cart extends Component {
                           style={{
                             width: "100%",
 
-                            borderWidth: 0.5,
-                            borderColor: Colors.bordercolor,
+                            borderWidth: 1,
+                            borderColor: Colors.backgroundcolor,
                           }}
                         />
                         <View
@@ -1103,11 +1001,7 @@ export default class Cart extends Component {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             marginTop: (windowWidth * 2) / 100,
-                            // paddingVertical: (windowWidth * 3) / 100,
-                            // borderTopWidth: (windowWidth * 0.3) / 100,
-                            // borderColor: Colors.bordercolor,
-                          }}
-                        >
+                          }}>
                           <Text
                             style={{
                               fontFamily: Font.Medium,
@@ -1132,43 +1026,11 @@ export default class Cart extends Component {
                     </View>
                   </View>
                 </View>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    if (this.state.payment_status == "true") {
-                      this.startSDK();
-                      //     this.get_payment(),this.setState({total_price:show_data.total_price})
-                    } else {
-                      this.submit_btn(),
-                        this.setState({ total_price: show_data.total_price });
-                    }
-                  }}
-                  style={{
-                    width: "90%",
-                    alignSelf: "center",
-                    borderRadius: (windowWidth * 2) / 100,
-                    backgroundColor: Colors.Theme,
-                    paddingVertical: (windowWidth * 4) / 100,
-                    position: "absolute",
-                    bottom: 20,
-                    marginBottom: (windowWidth * 5) / 100,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: Colors.White,
-                      fontFamily: Font.Medium,
-                      fontSize: Font.buttontextsize,
-                      alignSelf: "flex-end",
-                      textAlign: config.textalign,
-                      alignSelf: "center",
-                    }}
-                  >
-                    {Lang_chg.PROCEEDTOPAYMENT[config.language]}
-                  </Text>
-                </TouchableOpacity> */}
+               
               </View>
             </ScrollView>
           )}
+
           {this.state.cart_arr == "" ||
             (this.state.cart_arr == null && (
               <View
@@ -1202,7 +1064,7 @@ export default class Cart extends Component {
                   onPress={() => {
                     this.props.navigation.reset({
                       index: 0,
-                      routes: [{ name: "Home" }],
+                      routes: [{ name: "DashboardStack" }],
                     });
                   }}
                   style={{
@@ -1230,6 +1092,7 @@ export default class Cart extends Component {
               </View>
             ))}
         </View>
+
         <Modal
           animationType="fade"
           transparent={true}
@@ -1472,7 +1335,7 @@ export default class Cart extends Component {
                 style={{
                   // width: '15%',
                   alignSelf: "center",
-                  borderColor: Colors.Blue,
+                  borderColor: Colors.backgroundcolor,
                   borderWidth: 1,
                   padding: (windowWidth * 2) / 100,
                   paddingHorizontal: (windowWidth * 3) / 100,
@@ -1497,51 +1360,6 @@ export default class Cart extends Component {
           </View>
         </Modal>
 
-        {/* <HideWithKeyboard>
-          <Footer
-            activepage="Cart"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: Icons.Home,
-                activeimage: Icons.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: Icons.Appointment,
-                activeimage: Icons.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: Icons.Cart,
-                activeimage: Icons.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: Icons.More,
-                activeimage: Icons.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (windowWidth * 5.4) / 100,
-              backgroundColor: "White",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          />
-        </HideWithKeyboard> */}
 
         {this.state.cart_arr != "" && this.state.cart_arr != null && (
           <View

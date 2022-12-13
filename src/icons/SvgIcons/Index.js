@@ -95,8 +95,15 @@ export const rightArrow = `<svg xmlns="http://www.w3.org/2000/svg" width="6.418"
 
 export const leftArrow = `<svg xmlns="http://www.w3.org/2000/svg" width="6.418" height="11.979" viewBox="0 0 6.418 11.979">
 <path id="Subtraction_11" data-name="Subtraction 11" d="M.427,0A.427.427,0,0,0,0,.427a.421.421,0,0,0,.121.3L5.389,5.99.178,11.2l-.027.027a.426.426,0,0,0,.276.75.421.421,0,0,0,.3-.118l.089-.084L5.921,6.667l-.007-.007L6.287,6.3a.432.432,0,0,0,0-.62l-.373-.358.007-.007L.74.136.726.121A.439.439,0,0,0,.427,0Z" transform="translate(6.418 11.979) rotate(180)" fill="#0c1016"/>
-</svg>
-`
+</svg>`
+
+export const leftWhiteArrow=`<svg xmlns="http://www.w3.org/2000/svg" width="6.414" height="11.977" viewBox="0 0 6.414 11.977">
+<path id="arrow_menu_left" d="M.43,0A.431.431,0,0,0,0,.43.419.419,0,0,0,.121.723l5.27,5.27L.18,11.2.15,11.23a.423.423,0,0,0,.279.746.442.442,0,0,0,.293-.115l.088-.086L5.92,6.666l-.008-.008L6.285,6.3a.4.4,0,0,0,.129-.307.415.415,0,0,0-.129-.309l-.373-.359.008-.006L.738.135.723.121A.419.419,0,0,0,.43,0Z" transform="translate(6.414 11.977) rotate(180)" fill="#fff"/>
+</svg>`
+
+export const rightWhiteArrow=`<svg xmlns="http://www.w3.org/2000/svg" width="6.41" height="11.977" viewBox="0 0 6.41 11.977">
+<path id="arrow_menu_right" d="M9828.426,12.979a.429.429,0,0,1-.424-.432.442.442,0,0,1,.115-.293l5.271-5.264-5.215-5.215-.027-.029a.4.4,0,0,1-.145-.314.428.428,0,0,1,.424-.43.469.469,0,0,1,.3.113l.086.086,5.105,5.107-.006.008.371.357a.433.433,0,0,1,.129.316.422.422,0,0,1-.129.307l-.371.359.006.006-5.178,5.18-.014.014A.431.431,0,0,1,9828.426,12.979Z" transform="translate(-9828.002 -1.002)" fill="#fff"/>
+</svg>`
 
 export const Appointment = `<svg xmlns="http://www.w3.org/2000/svg" width="22.99" height="22.99" viewBox="0 0 22.99 22.99">
 <g id="Appointment" transform="translate(-2.101 -2.1)">

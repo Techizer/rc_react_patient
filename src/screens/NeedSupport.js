@@ -30,58 +30,19 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import ScreenHeader from "../components/ScreenHeader";
 import { leftArrow } from "../icons/SvgIcons/Index";
 import { s, vs } from "react-native-size-matters";
+import IssuesBottomSheet from "../components/ListBottomSheet";
 
-const Select_arr = [
-  {
-    id: 1,
-    select: "Account Issue",
-  },
-  {
-    id: 2,
-    select: "Transaction Issue",
-  },
-  {
-    id: 3,
-    select: "Withdrawal",
-  },
-  {
-    id: 4,
-    select: "Booking Issue",
-  },
-  {
-    id: 5,
-    select: "Account Issue",
-  },
-  {
-    id: 6,
-    select: "Login Issue",
-  },
-  {
-    id: 7,
-    select: "Signup Issue",
-  },
-  {
-    id: 8,
-    select: "Mobile OTP Issue",
-  },
-  {
-    id: 9,
-    select: "Other",
-  },
-];
+
 
 export default class NeedSupport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Select_arr: "NA",
-      selectmodal: false,
-
+      issuesList: "NA",
+      issuesModal: false,
       message: "",
       selectissuefocus: false,
-      select: "",
-      selectissue: "",
-
+      selectedIssue: "",
       successmodal: false,
     };
   }
@@ -97,11 +58,9 @@ export default class NeedSupport extends Component {
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-need-help-topic";
-    console.log("url", url);
     var data = new FormData();
     data.append("login_user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
@@ -109,7 +68,7 @@ export default class NeedSupport extends Component {
         if (obj.status == true) {
           console.log("result", obj.result);
           let result = obj.result;
-          this.setState({ Select_arr: obj.result });
+          this.setState({ issuesList: obj.result });
         } else {
           msgProvider.alert(
             msgTitle.information[config.language],
@@ -130,7 +89,7 @@ export default class NeedSupport extends Component {
     console.log("user_details user_details", user_details);
     let user_id = user_details["user_id"];
     let user_type = user_details["user_type"];
-    if (this.state.select.length <= 0) {
+    if (this.state.selectedIssue.length <= 0) {
       msgProvider.showError(msgText.emptySelecttopic[config.language]);
       return false;
     }
@@ -138,7 +97,7 @@ export default class NeedSupport extends Component {
     console.log("url", url);
     var data = new FormData();
     data.append("user_id", user_id);
-    data.append("issue_topic", this.state.select);
+    data.append("issue_topic", this.state.selectedIssue);
     data.append("message", this.state.message);
     data.append("service_type", user_type);
     consolepro.consolelog("data", data);
@@ -173,7 +132,7 @@ export default class NeedSupport extends Component {
         style={{
           alignSelf: "center",
           flex: 1,
-          backgroundColor: Colors.White,
+          backgroundColor: Colors.backgroundcolor,
         }} >
 
         <ScreenHeader
@@ -189,7 +148,10 @@ export default class NeedSupport extends Component {
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
-            paddingBottom: vs(50),
+            paddingBottom: vs(20),
+            backgroundColor: Colors.White,
+            marginTop: vs(7),
+            paddingVertical: vs(9)
           }}
           showsVerticalScrollIndicator={false}>
 
@@ -205,7 +167,6 @@ export default class NeedSupport extends Component {
                 width: "100%",
                 alignSelf: "center",
                 flexDirection: "row",
-                marginTop: vs(10),
               }}>
               <View style={{ width: "8%", alignSelf: "center" }}>
                 <Image
@@ -217,7 +178,7 @@ export default class NeedSupport extends Component {
                 style={{
                   textAlign: config.textalign,
                   fontSize: Font.large,
-                  color: Colors.Black,
+                  color: Colors.darkText,
                   fontFamily: Font.Medium,
                 }}>
                 {Lang_chg.needsupport[config.language]}{" "}
@@ -231,7 +192,7 @@ export default class NeedSupport extends Component {
             <Text
               style={{
                 textAlign: config.textRotate,
-                // fontSize: (windowWidth * 3.5) / 100,
+                fontSize: Font.medium,
                 color: Colors.DarkGrey,
                 fontFamily: Font.Regular,
               }} >
@@ -242,7 +203,7 @@ export default class NeedSupport extends Component {
               style={{
                 textAlign: config.textRotate,
                 fontSize: Font.medium,
-                color: Colors.Black,
+                color: Colors.darkText,
                 fontFamily: Font.Medium,
                 marginTop: vs(10)
               }} >
@@ -252,13 +213,13 @@ export default class NeedSupport extends Component {
 
             <DropDownboxSec
               lableText={
-                this.state.select.length <= 0
+                this.state.selectedIssue.length <= 0
                   ? Lang_chg.select_issues_text[config.language]
-                  : this.state.select
+                  : this.state.selectedIssue
               }
               boxPressAction={() => {
                 this.setState({
-                  selectmodal: true,
+                  issuesModal: true,
                   selectissuefocus: false
                 });
               }}
@@ -310,22 +271,23 @@ export default class NeedSupport extends Component {
             <Button
               text={Lang_chg.submitbtntext[config.language]}
               onPress={() => this.submit_click()}
+              btnStyle={{ marginTop: vs(25) }}
             />
 
           </View>
 
         </KeyboardAwareScrollView>
 
-        <Modal
+        {/* <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.selectmodal}
+          visible={this.state.issuesModal}
           onRequestClose={() => { }}
         >
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
-              this.setState({ selectmodal: false });
+              this.setState({ issuesModal: false });
             }}
             style={{
               flex: 1,
@@ -370,15 +332,15 @@ export default class NeedSupport extends Component {
               </View>
               <View style={{ width: "100%" }}>
                 <FlatList
-                  data={this.state.Select_arr}
+                  data={this.state.issuesList}
                   renderItem={({ item, index }) => {
                     return (
                       <View>
                         <TouchableOpacity
                           onPress={() => {
                             this.setState({
-                              selectmodal: false,
-                              select: item.name,
+                              issuesModal: false,
+                              selectedIssue: item.name,
                             });
                           }}
                         >
@@ -419,7 +381,19 @@ export default class NeedSupport extends Component {
               </View>
             </View>
           </TouchableOpacity>
-        </Modal>
+        </Modal> */}
+
+        <IssuesBottomSheet
+          visible={this.state.issuesModal}
+          onRequestClose={() => {
+            this.setState({ issuesModal: false })
+          }}
+          data={this.state.issuesList}
+          title={Lang_chg.select_topic_text[config.language]}
+          selectedIssue={(val)=>{
+            this.setState({selectedIssue:val})
+          }}
+        />
 
         <Modal
           animationType="fade"
@@ -538,6 +512,8 @@ export default class NeedSupport extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
+
+
       </View>
     );
   }

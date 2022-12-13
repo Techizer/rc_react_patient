@@ -62,7 +62,8 @@ export const Colors = {
   inActiveText:'#0C1016',
   ButtonBorder:'#E2EBF0',
   darkText:'#17181A',
-  detailTitles:'#354052'
+  detailTitles:'#354052',
+  tabsBackground:'#F1F2F4'
 
 
 };

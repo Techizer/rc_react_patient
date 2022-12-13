@@ -37,7 +37,7 @@ import { SvgXml } from 'react-native-svg';
 import { s, vs } from "react-native-size-matters";
 
 import { AuthInputBoxSec, Button } from "../components";
-import { leftArrow, Logo, rightArrow } from "../icons/SvgIcons/Index";
+import { leftArrow, leftWhiteArrow, Logo, rightArrow, rightWhiteArrow } from "../icons/SvgIcons/Index";
 import { TextInput } from "react-native-paper";
 
 global.current_lat_long = "NA";
@@ -541,7 +541,7 @@ export default class Login extends Component {
                 fontSize: Font.xxxlarge,
                 fontFamily: Font.Medium,
                 textAlign: config.textRotate,
-                color:Colors.darkText
+                color: Colors.darkText
 
               }}
             >
@@ -618,13 +618,13 @@ export default class Login extends Component {
                 alignSelf: "center",
                 marginTop: vs(15),
                 flexDirection: "row",
-                alignItems: 'center'
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }} >
 
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={{
-                  width: "37%",
                   flexDirection: "row",
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -674,6 +674,7 @@ export default class Login extends Component {
                     color: Colors.inActiveText,
                     fontFamily: Font.Regular,
                     fontSize: Font.medium,
+                    marginLeft: s(10)
                   }}>
                   {Lang_chg.Remember[config.language]}
                 </Text>
@@ -681,7 +682,7 @@ export default class Login extends Component {
               </TouchableOpacity>
 
 
-              <View style={{ width: "63%", alignSelf: "center", }}>
+              <View style={{ alignSelf: "center", }}>
                 <Text
                   onPress={() => {
                     this.props.navigation.navigate("ForgotPage");
@@ -702,7 +703,7 @@ export default class Login extends Component {
             <Button
               text={Lang_chg.Contiunebtn[config.language]}
               onPress={() => this.loginbtn()}
-              btnStyle={{marginTop:vs(15)}}
+              btnStyle={{ marginTop: vs(15) }}
             />
 
             <Text
@@ -758,20 +759,20 @@ export default class Login extends Component {
                     fontSize: Font.small,
                     color: Colors.White,
                     fontFamily: Font.Regular,
-                    textAlign: config.textRotate
+                    textAlign: config.textalign
                   }
                 ]}
               >
                 {Lang_chg.Skip[config.language]}
               </Text>
 
-              {/* <SvgXml xml={
+              <SvgXml xml={
                 config.textalign == "right"
-                  ? leftArrow : rightArrow
+                  ? leftWhiteArrow : rightWhiteArrow
               }
-                height={vs(11.98)} width={s(6.42)} color={Colors.White} /> */}
+                height={vs(11.98)} width={s(6.42)} color={Colors.White} />
 
-              <Image
+              {/* <Image
                 source={
                   config.textalign == "right"
                     ? Icons.leftarrow : Icons.arabic_back
@@ -783,7 +784,7 @@ export default class Login extends Component {
                   height: 20,
                   tintColor: Colors.White
                 }}
-              />
+              /> */}
             </TouchableOpacity>
 
           </View>
@@ -832,8 +833,8 @@ export default class Login extends Component {
             style={{
               width: "90%",
               paddingVertical: (windowWidth * 2) / 100,
-              alignSelf:'center',
-              marginTop:vs(15)
+              alignSelf: 'center',
+              marginTop: vs(15)
             }}>
             <Text
               style={[
