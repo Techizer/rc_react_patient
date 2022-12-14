@@ -31,6 +31,7 @@ import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { Button } from "../components";
 import AboutAppBottomSheet from "../components/AboutAppBottomSheet";
+import { log } from "react-native-reanimated";
 
 const rootcaresteps = [
   {
@@ -106,15 +107,36 @@ export default class ServiceProviderDetails extends Component {
   }
 
   get_Services = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
     let url = config.baseURL + "api-patient-service-provider-details";
-
+    console.log("url:: ", url)
     var data = new FormData();
-    data.append("id", this.state.providerId);
-    data.append("login_user_id", user_id);
-    data.append("service_type", this.state.providerType);
-    data.append("work_area", user_details["work_area"]);
+    if (global.isLogin == false) {
+      let addressDetails = await localStorage.getItemObject("addressDetails");
+      console.log("addressDetails", addressDetails);
+      var device_lang;
+      if (config.language == 0) {
+        device_lang = "ENG";
+      } else {
+        device_lang = "AR";
+      }
+      data.append("id", this.state.providerId);
+      data.append("login_user_id", 0);
+      data.append("service_type", this.state.providerType);
+      data.append("device_lang", device_lang);
+      data.append("latitude", addressDetails?.latitude);
+      data.append("longitudes", addressDetails?.longitude);
+      // data.append("work_area", user_details["work_area"]);
+    } else {
+      let user_details = await localStorage.getItemObject("user_arr");
+      let user_id = user_details["user_id"];
+
+
+      data.append("id", this.state.providerId);
+      data.append("login_user_id", user_id);
+      data.append("service_type", this.state.providerType);
+      data.append("work_area", user_details["work_area"]);
+    }
+
 
     consolepro.consolelog("get_Services-query-data......", data);
     // return false
@@ -402,14 +424,27 @@ export default class ServiceProviderDetails extends Component {
                     text={Lang_chg.BookOnlineAppointment[config.language]}
                     btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                     onPress={() => {
-                      this.props.navigation.navigate("Booking", {
-                        providerType: providerType,
-                        providerId: providerId,
-                        display: "taskbooking",
-                        indexPosition: 0,
-                        isFromHospital: isFromHospital,
-                        hospitalId: hospitaId,
-                      });
+                      if (global.isLogin == false) {
+                        global.isPage = "providerDetails"
+                        // navigation.push("Login");
+                        this.props.navigation.navigate("AuthStack", {
+                          providerType: providerType,
+                          providerId: providerId,
+                          display: "taskbooking",
+                          indexPosition: 0,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitaId,
+                        })
+                      } else {
+                        this.props.navigation.navigate("Booking", {
+                          providerType: providerType,
+                          providerId: providerId,
+                          display: "taskbooking",
+                          indexPosition: 0,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitaId,
+                        });
+                      }
                     }}
                   />
                   :
@@ -418,12 +453,23 @@ export default class ServiceProviderDetails extends Component {
                       text={Lang_chg.BookOnlineAppointment[config.language]}
                       btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                       onPress={() => {
-                        this.props.navigation.navigate("Booking", {
-                          providerType: providerType,
-                          providerId: providerId,
-                          display: "taskbooking",
-                          indexPosition: 0,
-                        })
+                        if (global.isLogin == false) {
+                          global.isPage = "providerDetails"
+                          // navigation.push("Login");
+                          this.props.navigation.navigate("AuthStack", {
+                            providerType: providerType,
+                            providerId: providerId,
+                            display: "taskbooking",
+                            indexPosition: 0,
+                          })
+                        } else {
+                          this.props.navigation.navigate("Booking", {
+                            providerType: providerType,
+                            providerId: providerId,
+                            display: "taskbooking",
+                            indexPosition: 0,
+                          })
+                        }
                       }}
                     />
                     :
@@ -432,12 +478,23 @@ export default class ServiceProviderDetails extends Component {
                         text={Lang_chg.BOOKLABTESTAPPOINTMENT[config.language]}
                         btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                         onPress={() => {
-                          this.props.navigation.navigate("Booking", {
-                            providerType: providerType,
-                            providerId: providerId,
-                            display: "testBooking",
-                            indexPosition: 0,
-                          })
+                          if (global.isLogin == false) {
+                            global.isPage = "providerDetails"
+                            // navigation.push("Login");
+                            this.props.navigation.navigate("AuthStack", {
+                              providerType: providerType,
+                              providerId: providerId,
+                              display: "testBooking",
+                              indexPosition: 0,
+                            })
+                          } else {
+                            this.props.navigation.navigate("Booking", {
+                              providerType: providerType,
+                              providerId: providerId,
+                              display: "testBooking",
+                              indexPosition: 0,
+                            })
+                          }
                         }}
                       />
                       :
@@ -446,11 +503,27 @@ export default class ServiceProviderDetails extends Component {
                           text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[config.language]}
                           btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                           onPress={() => {
-                            this.props.navigation.navigate("Booking", {
-                              providerType: providerType,
-                              providerId: providerId,
-                              display: "taskbooking",
-                            })
+                            if (global.isLogin == false) {
+                              // console.log("navigation:: ", navigation)
+                              // navigation.reset({
+                              //   index: 0,
+                              //   routes: [{ name: "AuthStack" }],
+                              // });
+                              global.isPage = "providerDetails"
+                              // navigation.push("Login");
+                              this.props.navigation.navigate("AuthStack", {
+                                providerType: providerType,
+                                providerId: providerId,
+                                display: "taskbooking",
+                                indexPosition: 0
+                              })
+                            } else {
+                              this.props.navigation.navigate("Booking", {
+                                providerType: providerType,
+                                providerId: providerId,
+                                display: "taskbooking",
+                              })
+                            }
                           }}
                         />
                       )
@@ -464,12 +537,25 @@ export default class ServiceProviderDetails extends Component {
                     text={Lang_chg.BookHomeVisitAppointment[config.language]}
                     btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
                     onPress={() => {
-                      this.props.navigation.navigate("Booking", {
-                        providerType: this.state.providerType,
-                        providerId: providerId,
-                        display: "hourlybooking",
-                        indexPosition: 1,
-                      })
+                      if (global.isLogin == false) {
+                        global.isPage = "providerDetails"
+                        // navigation.push("Login");
+                        this.props.navigation.navigate("AuthStack", {
+                          providerType: this.state.providerType,
+                          providerId: providerId,
+                          display: "hourlybooking",
+                          // isFromHospital: true,
+                          // hospitalId: Item?.hospital_id,
+                          indexPosition: 0
+                        })
+                      } else {
+                        this.props.navigation.navigate("Booking", {
+                          providerType: this.state.providerType,
+                          providerId: providerId,
+                          display: "hourlybooking",
+                          indexPosition: 1,
+                        })
+                      }
                     }}
                   />
                 )
@@ -480,11 +566,24 @@ export default class ServiceProviderDetails extends Component {
                         text={Lang_chg.BOOKHOURLYAPPOINTMENT[config.language]}
                         btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
                         onPress={() => {
-                          this.props.navigation.navigate("Booking", {
-                            providerType: providerType,
-                            providerId: providerId,
-                            display: "hourlybooking",
-                          })
+                          if (global.isLogin == false) {
+                            global.isPage = "providerDetails"
+                            // navigation.push("Login");
+                            this.props.navigation.navigate("AuthStack", {
+                              providerType: providerType,
+                              providerId: providerId,
+                              display: "hourlybooking",
+                              // isFromHospital: true,
+                              // hospitalId: Item?.hospital_id,
+                              indexPosition: 0
+                            })
+                          } else {
+                            this.props.navigation.navigate("Booking", {
+                              providerType: providerType,
+                              providerId: providerId,
+                              display: "hourlybooking",
+                            })
+                          }
                         }}
                       />
                     )
@@ -689,15 +788,28 @@ export default class ServiceProviderDetails extends Component {
 
                         <Text
                           onPress={() => {
-                            this.props.navigation.navigate(
-                              "Booking",
-                              {
+                            if (global.isLogin == false) {
+                              global.isPage = "providerDetails"
+                              // navigation.push("Login");
+                              this.props.navigation.navigate("AuthStack", {
                                 providerType: providerType,
                                 nurse_id: providerId,
                                 display: "packageBooking",
-                                indexPosition: 1,
-                              }
-                            );
+                                // isFromHospital: true,
+                                // hospitalId: Item?.hospital_id,
+                                indexPosition: 0
+                              })
+                            } else {
+                              this.props.navigation.navigate(
+                                "Booking",
+                                {
+                                  providerType: providerType,
+                                  nurse_id: providerId,
+                                  display: "packageBooking",
+                                  indexPosition: 1,
+                                }
+                              );
+                            }
                           }}
                           style={{
                             fontFamily: Font.SemiBold,
