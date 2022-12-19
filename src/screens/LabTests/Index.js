@@ -3,7 +3,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect } from "react";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import {
@@ -29,17 +29,12 @@ const Tabs = createMaterialTopTabNavigator()
 
 
 
-const AppoitmentIndex = ({ navigation, route }) => {
+const LabTestIndex = ({ navigation,route }) => {
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
   let finalPosition = headerHeight + (windowWidth * 13) / 100
 
-  const [appointments, setAppointments] = useState([])
-
-  useEffect(() => {
-    console.log('.............', route?.params?.todaysLength);
-  }, [])
 
 
   return (
@@ -47,7 +42,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.MyAppointments[config.language]}
+        title={Lang_chg.Lab_Test[config.language]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,
@@ -111,4 +106,4 @@ const AppoitmentIndex = ({ navigation, route }) => {
   );
 }
 
-export default AppoitmentIndex;
+export default LabTestIndex;

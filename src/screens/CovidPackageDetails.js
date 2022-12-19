@@ -104,7 +104,7 @@ const CovidPackageDetails = ({ navigation }) => {
               style={{
                 backgroundColor: Colors.White,
                 marginTop: vs(7),
-                paddingHorizontal: s(10),
+                paddingHorizontal: s(13),
                 paddingVertical: vs(10)
               }}>
               <View
@@ -205,9 +205,8 @@ const CovidPackageDetails = ({ navigation }) => {
                   stylesheet={{
                     p: {
                       fontSize: Font.medium,
-                      color: Colors.lightGrey,
+                      color: Colors.DarkGrey,
                       marginTop: vs(9),
-                      marginBottom: (windowWidth * 3) / 100,
                       fontFamily: Font.Regular,
                     },
                   }}
@@ -247,7 +246,7 @@ const CovidPackageDetails = ({ navigation }) => {
                             width: "100%",
                             justifyContent: "flex-start",
                             backgroundColor: Colors.White,
-                            paddingHorizontal: s(10),
+                            paddingHorizontal: s(13),
                             paddingVertical: vs(10),
                           }}>
                           <Text

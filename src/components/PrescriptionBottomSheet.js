@@ -1,21 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, ScrollView, StyleSheet, TouchableHighlight, Keyboard, FlatList, } from "react-native";
+import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, ScrollView, } from "react-native";
 import Modal from "react-native-modal";
-import HTMLView from "react-native-htmlview";
-import { SvgXml } from "react-native-svg";
-import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight, msgProvider } from "../Provider/utilslib/Utils";
 import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
 
-const AboutAppBottomSheet = ({
+const PrescriptionBottomSheet = ({
     visible,
     onRequestClose,
     data
 }) => {
+
+    const [reviewText, setReviewText] = useState('')
+    const [textLength, setTextLength] = useState(0)
 
     return (
         <Modal
@@ -42,23 +45,26 @@ const AboutAppBottomSheet = ({
                     <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
                 </TouchableHighlight>
 
+                {/* <Text
+                    style={{
+                        fontSize: Font.large,
+                        fontFamily: Font.SemiBold,
+                        textAlign: config.textRotate,
+                        color: Colors.darkText
 
-
-
-                <ScrollView 
-                showsVerticalScrollIndicator={true}>
-                    <View
-                        style={{
-                            paddingBottom: (windowWidth * 15) / 100,
-                            paddingTop: (windowWidth * 2) / 100,
-                        }}
-                    >
-                        <HTMLView
-                            value={data}
-                            stylesheet={HTMLstyles}
-                        />
-                    </View>
-                </ScrollView>
+                    }}>{Lang_chg.Rate_Appointment[config.language]}</Text> */}
+                <Image
+                    source={{
+                        uri: data,
+                    }}
+                    style={{
+                        resizeMode: "cover",
+                        width: "100%",
+                        height: (windowHeight * 40) / 100,
+                        marginTop: vs(15)
+                    }}
+                    resizeMode='contain'
+                />
 
             </View>
 
@@ -75,7 +81,7 @@ const styles = StyleSheet.create({
         height: deviceHeight - 300,
         backgroundColor: Colors.White,
         borderRadius: 25,
-        paddingTop: vs(55),
+        paddingTop: vs(40),
         paddingBottom: vs(20),
         paddingHorizontal: s(13),
         position: 'absolute',
@@ -93,20 +99,9 @@ const styles = StyleSheet.create({
         top: vs(30),
         right: s(11),
     }
+
 });
 
-const HTMLstyles = StyleSheet.create({
-    h4: {
-        color: "#0888D1",
-        fontSize: (windowWidth * 4.5) / 100,
-    },
-    h5: {
-        color: "#0888D1",
-        fontSize: (windowWidth * 4.3) / 100,
-        fontFamily: Font.Medium,
-    },
-});
-
-export default AboutAppBottomSheet;
+export default PrescriptionBottomSheet;
 
 

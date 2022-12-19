@@ -108,9 +108,7 @@ export default class NeedSupport extends Component {
         if (obj.status == true) {
           console.log("result", obj.result);
           let result = obj.result;
-          setTimeout(() => {
-            this.setState({ successmodal: true });
-          }, 700);
+          msgProvider.showSuccess(obj?.message)
         } else {
           msgProvider.alert(
             msgTitle.information[config.language],

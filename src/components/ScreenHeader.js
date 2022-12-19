@@ -151,6 +151,7 @@ const ScreenHeader = ({
                             alignSelf: "center",
                             justifyContent: 'center',
                             alignItems: 'center',
+                            paddingLeft:s(8)
                         }}>
                         <TouchableOpacity
                             onPress={() => {

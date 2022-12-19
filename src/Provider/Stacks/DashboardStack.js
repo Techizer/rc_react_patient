@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Platform, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -8,32 +8,32 @@ import { DrawerActions } from '@react-navigation/native';
 
 import TabItem from '../../components/TabItem'
 import Home from "../../screens/Home";
-import Appointment from "../../screens/Appointment";
-import Index from "../../screens/Appointments/Index";
+import AppointmentIndex from '../../screens/Appointments/Index'
+import ConsultIndex from "../../screens/Consultations/Index";
 import Profile from "../../screens/Profile";
-import DoctorConsultations from '../../screens/DoctorConsultations';
-import LabTests from '../../screens/LabTests';
+import LabTestIndex from "../../screens/LabTests/Index";
 
-import Drawerscreen from "../../Drawerscreen";
-import Cart2 from "../../Cart2";
+import Drawerscreen from "../../components/Drawerscreen";
 
 
 import App_payment from "../../App_payment";
 
-import ShowOtherAppointments from "../../screens/ShowOtherAppointments";
-import AppointmentDetails from "../../screens/AppointmentDetails";
-import VideoCall from "../../screens/VideoCall";
 
 
 import { Colors } from "../Colorsfont";
-import { Icons } from "../Localimage";
 import { Lang_chg } from "../Language_provider";
 import { config } from "../configProvider";
 import { vs } from "react-native-size-matters";
+import { localStorage } from "../localStorageProvider";
+import { apifuntion } from "../Apicallingprovider/apiProvider";
+import { consolepro } from "../Messageconsolevalidationprovider/Consoleprovider";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+let appoinmentList = []
+let consultList = []
+let labList = []
 
 function ProfileDrawer() {
   return (
@@ -82,7 +82,93 @@ function HomeDrawer() {
   );
 }
 
+const getAppointments = async () => {
+  let user_details = await localStorage.getItemObject("user_arr");
+  let user_id = user_details["user_id"];
+
+  let url = config.baseURL + "api-patient-today-appointment";
+
+  var data = new FormData();
+  data.append("lgoin_user_id", user_id);
+  data.append("service_type", 'all');
+  data.append("page_count", 1);
+
+  // consolepro.consolelog("data", data);
+  apifuntion
+    .postApi(url, data, 1)
+    .then((obj) => {
+      // consolepro.consolelog("getAppointments-response...", obj);
+      if (obj.status == true) {
+        appoinmentList = obj.result
+      } else {
+        appoinmentList = []
+        return false;
+      }
+    }).catch((error) => {
+      consolepro.consolelog("getAppointments-error ------- " + error);
+    });
+};
+
+const getConsultations = async () => {
+  let user_details = await localStorage.getItemObject("user_arr");
+  let user_id = user_details["user_id"];
+
+  let url = config.baseURL + "api-patient-today-appointment";
+
+  var data = new FormData();
+  data.append("lgoin_user_id", user_id);
+  data.append("service_type", 'doctor');
+  data.append("page_count", 1);
+
+  apifuntion
+    .postApi(url, data, 1)
+    .then((obj) => {
+      // consolepro.consolelog("getConsultations-response...", obj);
+      if (obj.status == true) {
+        consultList = obj.result
+      } else {
+        consultList = []
+        return false;
+      }
+    }).catch((error) => {
+      consolepro.consolelog("getConsultations-error ------- " + error);
+    });
+};
+
+const getTests = async () => {
+  let user_details = await localStorage.getItemObject("user_arr");
+  let user_id = user_details["user_id"];
+
+  let url = config.baseURL + "api-patient-today-appointment";
+
+  var data = new FormData();
+  data.append("lgoin_user_id", user_id);
+  data.append("service_type", 'lab');
+  data.append("page_count", 1);
+
+  apifuntion
+    .postApi(url, data, 1)
+    .then((obj) => {
+      // consolepro.consolelog("getTests-response...", obj);
+      if (obj.status == true) {
+        labList = obj.result
+      } else {
+        labList = []
+        return false;
+      }
+    }).catch((error) => {
+      consolepro.consolelog("getTests-error ------- " + error);
+    });
+};
+
+
 const DashboardStack = ({ navigation }) => {
+
+  useEffect(() => {
+    getAppointments()
+    getConsultations()
+    getTests()
+  }, [])
 
   return (
     <Tab.Navigator
@@ -192,15 +278,19 @@ const DashboardStack = ({ navigation }) => {
       />
       <Tab.Screen
         name={'Apointment'}
-        component={Index}
+        component={AppointmentIndex}
+        initialParams={{ todaysLength: appoinmentList.length }}
       />
+
       <Tab.Screen
         name={'Consultation'}
-        component={DoctorConsultations}
+        component={ConsultIndex}
+        initialParams={{ todaysLength: consultList.length }}
       />
       <Tab.Screen
         name={'LabTest'}
-        component={LabTests}
+        component={LabTestIndex}
+        initialParams={{ todaysLength: labList.length }}
       />
       <Tab.Screen
         name={'Profile'}

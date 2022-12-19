@@ -105,6 +105,63 @@ export default class ServiceProviderDetails extends Component {
     });
   }
 
+  getAvailableProviderDetails = async (userId) => {
+    let user_details = await localStorage.getItemObject("user_arr");
+    let user_id = user_details["user_id"];
+    let url = config.baseURL + "api-patient-service-provider-details";
+
+    var data = new FormData();
+    data.append("id", userId);
+    data.append("login_user_id", user_id);
+    data.append("service_type", this.state.providerType);
+    data.append("work_area", user_details["work_area"]);
+
+    // consolepro.consolelog("get_Services-query-data......", data);
+    // return false
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        consolepro.consolelog("get_Service-details-response", JSON.stringify(obj));
+
+        if (obj.status == true) {
+          let htmlData = '<!DOCTYPE html><html><body style="color:#0168b3">';
+          let htmlDataClosed = "</body></html>";
+
+          this.setState({
+            provider_details: obj.result,
+            message: obj.message,
+            availability_arr: obj.result.availability,
+          });
+          let how_work = obj.result.how_work_value;
+          // consolepro.consolelog("how_work", how_work);
+
+          let result_new = how_work.replace('<font color="#0888D1">', "");
+          result_new = result_new.replace("<h4>", '<h4 color="#0168b3">');
+          result_new = result_new.replace(/<\/h5>/g, "</h5><br>");
+          let result_new_tag = result_new.replace(/<\/p><p>/g, "</p>");
+          htmlData = htmlData + result_new_tag + htmlDataClosed;
+
+          this.setState({ how_work_value: htmlData });
+          let hour_task = obj.result.availability;
+          if (
+            obj.result.availability != null &&
+            obj.result.availability != ""
+          ) {
+            for (let k = 0; k < obj.result.availability.length; k++) {
+              hour_task[k] = hour_task[k].slot_day;
+            }
+          }
+          this.setState({ available_days: hour_task.toString() });
+        } else {
+          msgProvider.showError(obj.message);
+          return false;
+        }
+      })
+      .catch((error) => {
+        consolepro.consolelog("-------- error ------- " + error);
+      });
+  };
+
   get_Services = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
@@ -693,7 +750,7 @@ export default class ServiceProviderDetails extends Component {
                               "Booking",
                               {
                                 providerType: providerType,
-                                nurse_id: providerId,
+                                providerId: providerId,
                                 display: "packageBooking",
                                 indexPosition: 1,
                               }
@@ -709,23 +766,6 @@ export default class ServiceProviderDetails extends Component {
                           {Lang_chg.Book[config.language]}
                         </Text>
                       </View>
-
-                      {/* <View
-               style={{
-                 width: "90%",
-                 alignSelf: "center",
-                 borderColor: Colors.bordercolor,
-                 borderBottomWidth:
-                   (windowWidth * 0.5) / 100,
-                 marginTop: (windowWidth * 1) / 100,
-               }}
-             /> */}
-
-
-
-
-
-
 
                     </TouchableOpacity>
                   );
@@ -780,15 +820,16 @@ export default class ServiceProviderDetails extends Component {
                   return (
                     <TouchableOpacity
                       onPress={() => {
-                        this.props.navigation.navigate(
-                          "ServiceProviderDetails",
-                          {
-                            providerType: providerType,
-                            providerId: item.user_id,
-                            isFromHospital: false,
-                            hospitalId: item?.hospital_id,
-                          }
-                        );
+                        // this.props.navigation.navigate(
+                        //   "ServiceProviderDetails",
+                        //   {
+                        //     providerType: providerType,
+                        //     providerId: item.user_id,
+                        //     isFromHospital: false,
+                        //     hospitalId: item?.hospital_id,
+                        //   }
+                        // );
+                        this.getAvailableProviderDetails(item?.user_id)
                       }}
                       style={[
                         {
@@ -809,132 +850,69 @@ export default class ServiceProviderDetails extends Component {
                       </View>
 
                       <View style={{ height: '40%', paddingHorizontal: s(6), justifyContent: 'center' }}>
-                        <Text
-                          style={{
-                            color: Colors.detailTitles,
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            textAlign: config.textRotate,
-                          }}>
-                          {item?.provider_name}
-                        </Text>
+                        {
+                          (item?.provider_name) ?
+                            <Text
+                              style={{
+                                color: Colors.detailTitles,
+                                fontFamily: Font.Medium,
+                                fontSize: Font.small,
+                                textAlign: config.textRotate,
+                              }}>
+                              {item?.provider_name}
+                            </Text>
+                            :
+                            null
+                        }
 
-                        <Text
-                          style={{
-                            color: Colors.lightGrey,
-                            fontFamily: Font.Regular,
-                            fontSize: Font.xsmall,
-                            textAlign: config.textRotate,
-                            marginTop: vs(3)
-                          }}>
-                          {item?.qualification}
-                        </Text>
+                        {
+                          (item?.iso_text) ?
+                            <Text
+                              style={{
+                                color: Colors.Theme,
+                                fontFamily: Font.Regular,
+                                fontSize: Font.xsmall,
+                                textAlign: config.textRotate,
+                                marginTop: vs(3)
+                              }}>
+                              {item?.iso_text}
+                            </Text>
+                            :
+                            null
+                        }
 
-                        <Text
-                          style={{
-                            color: Colors.Blue,
-                            fontFamily: Font.Regular,
-                            fontSize: Font.xsmall,
-                            textAlign: config.textRotate,
-                            marginTop: vs(6)
-                          }}>
-                          {item?.speciality}
-                        </Text>
+                        {
+                          (item?.qualification) ?
+                            <Text
+                              style={{
+                                color: Colors.lightGrey,
+                                fontFamily: Font.Regular,
+                                fontSize: Font.xsmall,
+                                textAlign: config.textRotate,
+                                marginTop: vs(3)
+                              }}>
+                              {item?.qualification}
+                            </Text>
+                            :
+                            null
+                        }
+
+                        {
+                          (item?.speciality) ?
+                            <Text
+                              style={{
+                                color: Colors.Blue,
+                                fontFamily: Font.Regular,
+                                fontSize: Font.xsmall,
+                                textAlign: config.textRotate,
+                                marginTop: vs(6)
+                              }}>
+                              {item?.speciality}
+                            </Text>
+                            :
+                            null
+                        }
                       </View>
-
-
-                      {/* <Text
-               style={{
-                 paddingVertical: (windowWidth * 2) / 100,
-                 paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.Regular,
-                 textAlign: "left",
-                 fontSize: Font.sregulartext_size,
-               }}
-             >
-               {item.iso_certificate}
-             </Text> */}
-
-                      {/* <View
-               style={{
-                 width: "90%",
-                 alignSelf: "center",
-                 borderColor: Colors.bordercolor,
-                 borderBottomWidth:
-                   (windowWidth * 0.5) / 100,
-                 marginTop: (windowWidth * 1) / 100,
-               }}
-             /> */}
-
-                      {/* <Text
-               style={{
-                 paddingVertical: (windowWidth * 2) / 100,
-                 paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.Regular,
-                 textAlign: "left",
-                 color: Colors.Green,
-                 fontSize: Font.sregulartext_size,
-               }}
-             >
-               {item.dis_off}
-             </Text> */}
-
-                      {/* <Text
-               style={{
-                 paddingHorizontal: (windowWidth * 2) / 100,
-                 fontFamily: Font.Regular,
-                 textAlign: "left",
-                 fontSize: Font.sregulartext_size,
-                 textDecorationLine: "line-through",
-                 textDecorationStyle: "solid",
-               }}
-             >
-               {item.maxprice}
-             </Text> */}
-
-                      {/* <View
-               style={{
-                 paddingVertical: (windowWidth * 2) / 100,
-                 flexDirection: "row",
-                 justifyContent: "space-between",
-                 paddingHorizontal: (windowWidth * 2) / 100,
-                 alignItem: "center",
-               }}
-             >
-               <Text
-                 style={{
-                   textAlign: config.textalign,
-                   fontFamily: Font.Medium,
-                   fontSize: (windowWidth * 4) / 100,
-                 }}
-               >
-                 {item.price}
-               </Text>
-
-               <Text
-                 onPress={() => {
-                   this.props.navigation.navigate(
-                     "Booking",
-                     {
-                       pass_status:
-                         this.state.pass_status,
-                       nurse_id: this.state.nurse_id,
-                       display: "packageBooking",
-                       indexPosition: 1,
-                     }
-                   );
-                 }}
-                 style={{
-                   fontFamily: Font.SemiBold,
-                   fontSize: Font.regulartext_size,
-                   color: Colors.Theme,
-                   textTransform: "uppercase",
-                 }}
-               >
-                 {Lang_chg.Book[config.language]}
-               </Text>
-             </View> */}
-
                     </TouchableOpacity>
                   );
                 }}

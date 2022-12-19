@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
 
     },
     closeContainer: {
-        height: s(30),
-        width: s(30),
+        height: s(35),
+        width: s(35),
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',

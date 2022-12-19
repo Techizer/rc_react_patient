@@ -10,19 +10,8 @@ import {
 } from "react-native";
 import {
   TextInput,
-  HelperText,
-  useTheme,
-  MD2Colors,
-  MD3Colors,
-  List,
 } from "react-native-paper";
-// import OutlineInput from 'react-native-outline-input';
-import Icon from "react-native-vector-icons/MaterialIcons";
-// import { hp, wp } from "../utils/responsive";
-// import { RF } from "../utils/responsive";
-// import Fonts, { fonts, fontSizes } from "../utils/Fonts";
-// import { Color } from "../utils";
-// const { height, width } = Dimensions.get("window");
+
 import {
   Colors,
   Icons,
@@ -81,42 +70,7 @@ const AuthInputBoxSec = ({
             style={{
               width: "100%",
               alignSelf: "center",
-            }}
-          >
-            {/* <TextInput
-              style={[
-                styles.inputFieldStyle,
-                inputFieldStyle,
-                {
-                  backgroundColor:
-                    props.editable == false
-                      ? Colors.tab_background_color
-                      : "White",
-                },
-              ]}
-              ref={inputRef}
-              label={lableText}
-              mode='outlined'
-              outlineColor={Colors.Border}
-              activeOutlineColor={Colors.placholderactive}
-              autoCapitalize="none"
-              {...props}
-              value={props.value}
-              // editable={(editable) ? editable : true}
-              right={
-                disableImg && (
-                  <TextInput.Icon
-                    name={iconName}
-                    onPress={iconPressAction}
-                    forceTextInputFocus={false}
-                    color={Colors.DarkGrey}
-                    style={{
-                      marginTop: 12
-                    }}
-                  />
-                )
-              }
-            /> */}
+            }} >
 
             <TextInput
               style={[styles.inputFieldStyle,
@@ -168,14 +122,8 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: "90%",
-    //paddingLeft: 10,
-    //paddingRight: 10,
-    // borderBottomWidth: 0.5,
-    // borderBottomColor: "lightgrey",
-    //paddingVertical: 5,
     justifyContent: "center",
     alignSelf: "center",
-    // marginBottom: 10,
   },
   imgView: {
     width: "15%",

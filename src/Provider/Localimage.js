@@ -91,6 +91,10 @@ export const Icons = {
   Add: require('../icons/add.png'),
   Upload: require('../icons/upload.png'),
   Calendar: require('../icons/calendar.png'),
+  fillStar: require('../icons/fillStar.png'),
+  outlineStar: require('../icons/outlineStar.png'),
+  Attachment: require('../icons/attachment.png'),
+  
   
 };
 

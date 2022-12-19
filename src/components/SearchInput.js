@@ -95,8 +95,8 @@ const SearchInput = ({
                         alignItems: "center",
                     }}>
                     {/* search box */}
-                    <View style={{ width: '87%', height: '100%', flexDirection: 'row', borderRadius: 9, backgroundColor: Colors.White, alignItems: 'center' }}>
-                        <View style={{ width: '86%', paddingHorizontal: s(8) }}>
+                    <View style={{ width: '100%', height: '100%', flexDirection: 'row', borderRadius: 9, backgroundColor: Colors.White, alignItems: 'center' }}>
+                        <View style={{ width: '86%', paddingHorizontal: s(8), }}>
                             <TextInput
                                 placeholder={placeholder}
                                 placeholderTextColor={Colors.lightGrey}
@@ -138,23 +138,8 @@ const SearchInput = ({
 
                     </View>
 
-                    <View style={{ width: '12%', height: '100%', borderRadius: 9, justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={{
-                            height: '80%',
-                            width: '80%',
-                            borderRadius: 8,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: Colors.Blue
-                        }}>
-                            <TouchableOpacity
-                                onPress={onFilterPress}>
+                   
 
-                                <SvgXml xml={Filter} height={vs(14)} width={s(17)} />
-                            </TouchableOpacity>
-                        </View>
-                        
-                    </View>
                 </View>
 
             )
@@ -164,3 +149,21 @@ const SearchInput = ({
 
 export default SearchInput;
 
+
+
+// <View style={{ width: '12%', height: '100%', borderRadius: 9, justifyContent: 'center', alignItems: 'center' }}>
+// <View style={{
+//     height: '80%',
+//     width: '80%',
+//     borderRadius: 8,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: Colors.Blue
+// }}>
+//     <TouchableOpacity
+//         onPress={onFilterPress}>
+
+//         <SvgXml xml={Filter} height={vs(14)} width={s(17)} />
+//     </TouchableOpacity>
+// </View>
+// </View>

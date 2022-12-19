@@ -298,7 +298,7 @@ export default class Show_currentlocation extends Component {
           navigation={this.props.navigation}
           placeholder={Lang_chg.SearchLocation[config.language]}
         />
-
+ 
         <View style={{ backgroundColor: Colors.White, marginTop: vs(7), paddingHorizontal: s(11), paddingVertical: vs(15) }}>
           <TouchableOpacity onPress={() => {
             this.getlatlong()

@@ -5,41 +5,22 @@ const windowWidth = Dimensions.get("window").width;
 export const Colors = {
 
 
-  optboxcolor: "#F1F2F4",
-  discountBox: "#D1ECC8",
-  precautionText: "#041A27",
   placholderactive: "#0057A5",
-  white2: "#f8f8f8",
 
   gainsboro: "#e5e5e5",
 
   drawerblue: "#57A7DB",
   drawertextblue: "#7dbfe6",
-  lbluebtn: "#84cbff",
   gold: "#f9d800",
   arrowcolor: "#7dbfe6",
-  searchPlaceholder: "#9baac4",
-  //03-03 radhekrsiha
-  cardlighgray: "#677181",
-  //04-03 radhekrsiha
   appointmentdetaillightblue: "#e9f7ff",
   appointmentdetaillightgray: "#f5f5f5",
 
-  //28 gunja
   backgroundcolorblue: "#0057A5",
   textGreenColor: "#26720B",
 
 
-  bordercolor_light_blue: "lightblue",
   tab_background_color: "#F1F2F4",
-  allergic_heading_color: "black",
-  // yesnobtn_color:'gray',
-  ques_color: "red",
-  field_border_color: "#CCCCCC",
-  bordercolor_light_blue: "lightblue",
-  //-------------------------------04/03 gunjan
-  textgray_que: "#354052",
-  textGender: "#63666b",
 
   // ----------------------------Ahsan
   backgroundcolor: "#f1f2f4",
@@ -63,7 +44,10 @@ export const Colors = {
   ButtonBorder:'#E2EBF0',
   darkText:'#17181A',
   detailTitles:'#354052',
-  tabsBackground:'#F1F2F4'
+  tabsBackground:'#F1F2F4',
+  Yellow:'#FFA800',
+  Red:'#FF0000',
+  precautionText: "#041A27",
 
 
 };
@@ -84,13 +68,13 @@ export const Font = {
 
   // ----------------------Font Sizes-----------------
 
-  xsmall: s(9),  //----10
-  small: s(11),  //----12
-  medium: s(13),  //----14
+  xsmall:  (windowWidth*2.67)/100,  //----10
+  small: (windowWidth*3.2)/100,  //----12
+  medium: (windowWidth*3.7)/100,  //----14
   large: s(14),  //----15
-  xlarge: s(15),  //----16
-  xxlarge: s(17),  //----18
-  xxxlarge: s(19),  //----20
+  xlarge: (windowWidth*4.2)/100,  //----16
+  xxlarge: (windowWidth*4.7)/100,  //----18
+  xxxlarge: (windowWidth*5)/100,  //----20
 
 
   headingfont: (windowWidth * 4.5) / 100,

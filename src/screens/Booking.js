@@ -35,6 +35,7 @@ import ScreenHeader from "../components/ScreenHeader";
 import { Clock, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
+import { Button } from "../components";
 
 const timedata = [
   {
@@ -78,6 +79,7 @@ export default class Booking extends Component {
       providerType: this.props?.route?.params?.providerType,
       providerId: this.props?.route?.params?.providerId,
       isFromHospital: this.props?.route?.params?.isFromHospital,
+      indexPosition: this.props.route.params.indexPosition,
       display: "taskbooking",
       task_base_task: "",
       task_base_task1: "",
@@ -110,7 +112,6 @@ export default class Booking extends Component {
       vat_price_show_hourly: "",
       vat_price_show_display: "",
       currency_symbol: "",
-      indexPosition: this.props.route.params.indexPosition,
       onlineTaskPrice: "",
       homeVisitTaskPrice: "",
       onlineSubTotalPrice: "",
@@ -1633,7 +1634,7 @@ export default class Booking extends Component {
     }
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
 
@@ -1714,7 +1715,7 @@ export default class Booking extends Component {
     data.append("total_price", this.state.final_total_price);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
           // msgProvider.toast(msgText.sucess_message_login[config.language])
@@ -1782,7 +1783,7 @@ export default class Booking extends Component {
 
     //return false
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
 
@@ -2483,7 +2484,6 @@ export default class Booking extends Component {
                       width: "100%",
                       alignSelf: "center",
                       backgroundColor: Colors.White,
-                      paddingHorizontal: s(11)
                     }}
                   >
                     <View
@@ -2492,8 +2492,8 @@ export default class Booking extends Component {
                         backgroundColor: Colors.White,
                         right: 0,
                         alignSelf: "flex-end",
-                      }}
-                    >
+                      }}>
+
                       <FlatList
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
@@ -2505,11 +2505,12 @@ export default class Booking extends Component {
                                 {item.status == true && (
                                   <View
                                     style={{
-                                      backgroundColor: Colors.theme_color,
+                                      backgroundColor: Colors.Theme,
                                       paddingVertical: (windowWidth * 0.8) / 100,
                                       flexDirection: "row",
                                       paddingHorizontal:
                                         (windowWidth * 1.5) / 100,
+                                      marginTop: (windowWidth * 2) / 100,
                                       justifyContent: "space-between",
                                       alignItems: "center",
                                       borderRadius: (windowWidth * 1) / 100,
@@ -2530,115 +2531,9 @@ export default class Booking extends Component {
                                         this.check_all_false(item, index);
                                       }}
                                     >
-                                      <Image
-                                        source={Icons.cross2}
-                                        style={{
-                                          alignSelf: "center",
-                                          width: (windowWidth * 2) / 100,
-                                          height: (windowWidth * 2) / 100,
-                                          marginLeft: (windowWidth * 3.5) / 100,
-                                        }}
-                                      />
+
                                     </TouchableOpacity>
                                   </View>
-
-                                  // <View
-                                  //   style={[
-                                  //     {
-                                  //       borderRadius: 10,
-                                  //       width: s(135),
-                                  //       // height: vs(150),
-                                  //       backgroundColor: Colors.Blue,
-                                  //       borderColor: Colors.Border,
-                                  //       borderWidth: 1,
-                                  //       paddingHorizontal: s(6),
-                                  //       paddingVertical: vs(7)
-                                  //     }]}>
-                                  //   <Text
-                                  //     style={{
-                                  //       fontFamily: Font.Regular,
-                                  //       textAlign: config.textRotate,
-                                  //       fontSize: Font.small,
-                                  //       color: Colors.detailTitles
-                                  //     }}>{item?.name}</Text>
-
-                                  //   <Text
-                                  //     style={{
-                                  //       fontFamily: Font.Regular,
-                                  //       textAlign: config.textRotate,
-                                  //       fontSize: Font.small,
-                                  //       color: Colors.Blue,
-                                  //       marginTop: vs(5)
-                                  //     }}>{item?.iso_certificate}</Text>
-
-
-                                  //   <View style={{ width: '92%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10), alignSelf: 'center' }}></View>
-
-                                  //   <Text
-                                  //     style={{
-                                  //       paddingVertical: vs(3),
-                                  //       fontFamily: Font.Regular,
-                                  //       textAlign: config.textRotate,
-                                  //       color: Colors.Green,
-                                  //       fontSize: Font.small,
-                                  //     }}
-                                  //   >
-                                  //     {item.dis_off}
-                                  //   </Text>
-
-                                  //   <Text
-                                  //     style={{
-                                  //       fontFamily: Font.Regular,
-                                  //       textAlign: config.textRotate,
-                                  //       fontSize: Font.small,
-                                  //       textDecorationLine: "line-through",
-                                  //       textDecorationStyle: "solid",
-                                  //       color: Colors.Black
-                                  //     }}
-                                  //   >
-                                  //     {item.maxprice}
-                                  //   </Text>
-
-
-                                  //   <View
-                                  //     style={{
-                                  //       paddingVertical: (windowWidth * 2) / 100,
-                                  //       flexDirection: "row",
-                                  //       justifyContent: "space-between",
-                                  //       alignItem: "center",
-                                  //     }}>
-                                  //     <Text
-                                  //       style={{
-                                  //         textAlign: config.textRotate,
-                                  //         fontFamily: Font.Medium,
-                                  //         fontSize: Font.medium,
-                                  //       }}>
-                                  //       {item.price}
-                                  //     </Text>
-
-                                  //     <Text
-                                  //       onPress={() => {
-                                  //         this.props.navigation.navigate(
-                                  //           "Booking",
-                                  //           {
-                                  //             providerType: providerType,
-                                  //             nurse_id: providerId,
-                                  //             display: "packageBooking",
-                                  //             indexPosition: 1,
-                                  //           }
-                                  //         );
-                                  //       }}
-                                  //       style={{
-                                  //         fontFamily: Font.SemiBold,
-                                  //         fontSize: Font.medium,
-                                  //         color: Colors.Theme,
-                                  //         textTransform: "uppercase",
-                                  //       }}
-                                  //     >
-                                  //       {Lang_chg.Book[config.language]}
-                                  //     </Text>
-                                  //   </View>
-                                  // </View>
                                 )}
                               </View>
                             );
@@ -2653,16 +2548,15 @@ export default class Booking extends Component {
                         alignSelf: "center",
                         backgroundColor: Colors.tab_background_color,
                         alignItems: "center",
-                        marginTop: vs(7),
-                      }}
-                    >
+                        marginTop: (windowWidth * 3) / 100,
+                      }}>
                       <View
                         style={{
-                          width: "98%",
+                          width: "100%",
                           alignSelf: "center",
                           flexDirection: "row",
-                        }}
-                      >
+                          paddingHorizontal: s(11)
+                        }}>
                         <TextInput
                           ref={(text) => {
                             this.textdata = text;
@@ -2696,7 +2590,7 @@ export default class Booking extends Component {
                               tintColor: "#8F98A7",
                               alignSelf: "center",
                             }}
-                            source={localimag.search2}
+                            source={Icons.search2}
                           />
                         </View>
                       </View>
@@ -2704,107 +2598,97 @@ export default class Booking extends Component {
 
                     {this.state.task_base_task != "" &&
                       this.state.task_base_task != null && (
-                        <View
-                          style={[
-                            {
-                              width: "100%",
-                              alignSelf: "center",
-                              marginTop: (windowWidth * 2) / 100,
-                            },
-                            this.state.task_base_task.length >= 7
-                              ? { height: 240 }
-                              : null,
-                          ]} >
-                          <FlatList
-                            data={this.state.task_base_task}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (this.state.task_base_task != "") {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      this.check_all(item, index);
-                                    }}
-                                    style={{
-                                      alignItems: "center",
-                                      width: "100%",
-                                      alignSelf: "center",
-                                      backgroundColor: "#F8F8F8",
-                                      paddingVertical: (windowWidth * 1.7) / 100,
-                                      flexDirection: "row",
-                                      marginTop: (windowWidth * 0.3) / 100,
-                                    }}
-                                  >
-                                    <View
-                                      style={{
-                                        alignSelf: "center",
-                                        width: "11%",
-                                      }}
-                                    >
-                                      {item.status == true ? (
-                                        // <Image
-                                        //   style={{
-                                        //     width: (windowWidth * 5) / 100,
-                                        //     height: (windowWidth * 5) / 100,
-                                        //     borderRadius:
-                                        //       (windowWidth * 0.4) / 100,
-                                        //     marginRight: (windowWidth * 2) / 100,
-                                        //     marginLeft: (windowWidth * 3) / 100,
-                                        //     resizeMode: "contain",
-                                        //     alignSelf: "flex-start",
-                                        //   }}
-                                        //   source={localimag.remembertick}
-                                        // />
-                                        null
-                                      ) : (
-                                        <Image
-                                          style={{
-                                            width: (windowWidth * 5) / 100,
-                                            height: (windowWidth * 5) / 100,
-                                            borderRadius:
-                                              (windowWidth * 0.4) / 100,
-                                            marginRight: (windowWidth * 2) / 100,
-                                            marginLeft: (windowWidth * 3) / 100,
-                                            resizeMode: "contain",
-                                            alignSelf: "flex-start",
-                                          }}
-                                          source={require("../icons/graycheckbox.png")}
-                                        />
-                                      )}
-                                    </View>
-                                    <Text
-                                      style={{
-                                        width: "59%",
-                                        textAlign: config.textRotate,
-                                        alignSelf: "center",
-                                        fontSize: (windowWidth * 3.6) / 100,
-                                        fontFamily: Font.Regular,
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        width: "25%",
-                                        fontSize: (windowWidth * 3.6) / 100,
-                                        fontFamily: Font.Regular,
-                                        color: "#000",
+                        <>
 
-                                        textAlign: "right",
+                          <View
+                            style={[
+                              {
+                                width: "100%",
+                                alignSelf: "center",
+                                marginTop: (windowWidth * 2) / 100,
+                              },
+                              this.state.task_base_task.length >= 4
+                                ? { height: 200 }
+                                : null,
+                            ]}>
+                            <FlatList
+                              data={this.state.task_base_task}
+                              scrollEnabled={true}
+                              nestedScrollEnabled={true}
+                              renderItem={({ item, index }) => {
+                                if (this.state.task_base_task != "") {
+                                  return (
+                                    <TouchableOpacity
+                                      activeOpacity={0.9}
+                                      onPress={() => {
+                                        this.check_all(item, index);
                                       }}
-                                    >
-                                      {item.price}{" "}
-                                      {this.state.currency_symbol}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        </View>
+                                      style={{
+                                        width: '100%',
+                                        paddingVertical: vs(7),
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        paddingHorizontal: s(11)
+                                      }} >
+                                      <View style={{ flexDirection: 'row' }}>
+                                        <TouchableOpacity
+                                          onPress={() => {
+                                            this.check_all(item, index);
+                                          }}
+                                          style={{
+                                            height: 20,
+                                            width: 20,
+                                            borderRadius: 5,
+                                            backgroundColor: item.status == true ? Colors.Theme : Colors.White,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderWidth: item.status == true ? 0 : 1.3,
+                                            borderColor: Colors.Border
+                                          }}
+                                        >
+                                          {item.status == true ? (
+                                            <Image
+                                              style={{
+                                                height: 14,
+                                                width: 14,
+                                                tintColor: Colors.White
+                                              }}
+                                              source={Icons.Tick}
+                                            />
+
+                                          ) : null}
+                                        </TouchableOpacity>
+                                        <Text
+                                          style={{
+                                            textAlign: config.textRotate,
+                                            alignSelf: "center",
+                                            fontSize: (windowWidth * 3.6) / 100,
+                                            fontFamily: Font.Regular,
+                                            color: "#000",
+                                            marginLeft: s(10)
+                                          }}>
+                                          {item.name}
+                                        </Text>
+                                      </View>
+                                      <Text
+                                        style={{
+                                          fontSize: (windowWidth * 3.6) / 100,
+                                          fontFamily: Font.Regular,
+                                          color: Colors.Black,
+                                          textAlign: "right",
+                                        }}
+                                      >
+                                        {item.price}{" "}
+                                        {this.state.currency_symbol}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  );
+                                }
+                              }}
+                            />
+                          </View>
+                        </>
+
                       )}
                   </View>
                 )}
@@ -2820,6 +2704,11 @@ export default class Booking extends Component {
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       data={item.package_base_task}
+                      ItemSeparatorComponent={() => {
+                        return (
+                          <View style={{ width: s(10) }}></View>
+                        )
+                      }}
                       renderItem={({ item, index }) => {
                         return (
                           <TouchableOpacity
@@ -2840,8 +2729,8 @@ export default class Booking extends Component {
                               },
                               item.status == true
                                 ? {
-                                  borderColor: Colors.Border,
-                                  borderWidth: 1,
+                                  borderColor: Colors.Theme,
+                                  borderWidth: 1.5,
                                 }
                                 : { borderColor: Colors.Border, borderWidth: 1 },
                             ]}
@@ -2898,6 +2787,7 @@ export default class Booking extends Component {
                     />
                   </View>
                 )}
+
                 <View
                   style={{
                     width: "100%",
@@ -2999,9 +2889,9 @@ export default class Booking extends Component {
                                   set_date: item.date1,
                                   set_task: "task_base",
                                   time_take_data: "",
-                                },()=>{
+                                }, () => {
                                   this.getLabTimeDate(),
-                                  this.checkDate(item, index)
+                                    this.checkDate(item, index)
                                 })
                               }}
                               style={{ width: (windowWidth * 15) / 100 }}
@@ -3571,9 +3461,9 @@ export default class Booking extends Component {
                                     set_date: item.date1,
                                     set_task: item.home_visit_text,
                                     time_take_data: "",
-                                  },()=>{
+                                  }, () => {
                                     this.getDoctorTimeDate(),
-                                    this.checkDate(item, index)
+                                      this.checkDate(item, index)
                                   })
                                 }}
                                 style={{ width: (windowWidth * 15) / 100 }}
@@ -3616,9 +3506,9 @@ export default class Booking extends Component {
                                     set_date: item.date1,
                                     set_task: item.online_base_text,
                                     time_take_data_hour: "",
-                                  },()=>{
+                                  }, () => {
                                     this.getDoctorTimeDate(),
-                                    this.checkDate(item, index)
+                                      this.checkDate(item, index)
                                   })
                                 }}
                                 style={{ width: (windowWidth * 15) / 100, }}
@@ -4277,12 +4167,10 @@ export default class Booking extends Component {
                       width: "100%",
                       alignSelf: "center",
                       backgroundColor: "#fff",
-                    }}
-                  >
+                    }} >
                     <View
                       style={{
                         width: "95%",
-                        backgroundColor: "#fff",
                         right: 0,
                         alignSelf: "flex-end",
                       }}>
@@ -4436,6 +4324,9 @@ export default class Booking extends Component {
                                     }} >
                                     <View style={{ flexDirection: 'row' }}>
                                       <TouchableOpacity
+                                        onPress={() => {
+                                          this.check_all(item, index);
+                                        }}
                                         style={{
                                           height: 20,
                                           width: 20,
@@ -4526,8 +4417,8 @@ export default class Booking extends Component {
                               },
                               item.status == true
                                 ? {
-                                  borderColor: Colors.theme_color,
-                                  borderWidth: 2,
+                                  borderColor: Colors.Theme,
+                                  borderWidth: 1.5,
                                 }
                                 : { borderColor: "#DFDFDF", borderWidth: 1 },
                             ]}
@@ -4676,9 +4567,9 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: "task_base",
                                       time_take_data: "",
-                                    },()=>{
+                                    }, () => {
                                       this.getTimeDate(),
-                                      this.checkDate(item, index)
+                                        this.checkDate(item, index)
                                     })
                                   }}
                                   style={{ width: (windowWidth * 15) / 100 }}
@@ -4720,9 +4611,9 @@ export default class Booking extends Component {
                                       set_date: item.date1,
                                       set_task: "hour_base",
                                       time_take_data_hour: "",
-                                    },()=>{
+                                    }, () => {
                                       this.getTimeDate(),
-                                      this.checkDate(item, index)
+                                        this.checkDate(item, index)
                                     })
                                   }}
                                   style={{ width: (windowWidth * 15) / 100, }}
@@ -5606,7 +5497,22 @@ export default class Booking extends Component {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity
+
+            <Button
+              text={Lang_chg.PROCEEDTOcheckout[config.language]}
+              onPress={() => {
+                this.state.providerType === "doctor"
+                  ? this.submitButtonForDoctor()
+                  : this.state.providerType === "lab"
+                    ? this.state.indexPosition === 0
+                      ? this.submit_btn()
+                      : this.submit_btn_hourly()
+                    : this.state.display == "hourlybooking"
+                      ? this.submit_btn_hourly()
+                      : this.submit_btn();
+              }}
+            />
+            {/* <TouchableOpacity
               onPress={() => {
                 this.state.providerType === "doctor"
                   ? this.submitButtonForDoctor()
@@ -5637,7 +5543,7 @@ export default class Booking extends Component {
               >
                 {Lang_chg.PROCEEDTOcheckout[config.language]}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -5672,13 +5578,6 @@ export default class Booking extends Component {
                 marginTop: -50,
               }}
             >
-              <StatusBar
-                backgroundColor={"#fff"}
-                barStyle="default"
-                hidden={false}
-                translucent={false}
-                networkActivityIndicatorVisible={true}
-              />
               <View
                 style={{
                   borderRadius: 20,

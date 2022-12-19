@@ -39,7 +39,7 @@ const Upcoming = ({ navigation }) => {
 
     var data = new FormData();
     data.append("lgoin_user_id", user_id);
-    data.append("service_type", 'all');
+    data.append("service_type", 'doctor');
     data.append("page_count", 1);
 
     // consolepro.consolelog("data", data);
@@ -92,24 +92,24 @@ const Upcoming = ({ navigation }) => {
         ListEmptyComponent={() => {
           return (
             <View style={{ marginTop: vs(140), alignSelf: 'center', paddingHorizontal: '10%' }}>
-              <Text style={{
-                fontSize: Font.xlarge,
-                fontFamily: Font.Regular,
-                color: Colors.darkText,
-                textAlign: 'center'
-              }}>{'Sorry, no appointments found'}</Text>
-              <Text style={{
-                fontSize: Font.medium,
-                fontFamily: Font.Regular,
-                color: Colors.lightGrey,
-                textAlign: 'center',
-                marginTop: vs(10)
-              }}>{'You can start a new appointment with our qualified home service providers!'}</Text>
-            </View>
+            <Text style={{
+              fontSize: Font.xlarge,
+              fontFamily: Font.Regular,
+              color: Colors.darkText,
+              textAlign: 'center'
+            }}>{'Sorry, no consultations found'}</Text>
+            <Text style={{
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.lightGrey,
+              textAlign: 'center',
+              marginTop: vs(10)
+            }}>{'You can start a new consultation with our qualified doctors!'}</Text>
+          </View>
           )
         }}
         refreshing={isLoading}
-        onRefresh={() => setIsLoading(true)}
+        onRefresh={()=>setIsLoading(true)}
       />
 
 

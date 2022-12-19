@@ -20,7 +20,6 @@ import { Icons } from "../Localimage";
 import Otpprovider from "../Otpprovider";
 // import MapproviderLocationShow from '../MapproviderLocationShow';
 // import {notification} from '../NotificationProvider'
-import Footer from "../Footer";
 
 // import {Firstlogin} from '../../Firstlogin'
 // import {pushnotification} from '../Pushnotificationredirection';
@@ -36,7 +35,6 @@ export {
   Icons,
   apifuntion,
   Colors,
-  Footer,
   Font,
   validation,
   windowHeight,

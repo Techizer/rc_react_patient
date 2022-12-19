@@ -7,8 +7,10 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  TouchableHighlight,
   FlatList,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 
 import {
@@ -30,7 +32,10 @@ import Styles from "../Styles";
 import Footer from "../Footer";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
 import ScreenHeader from "../components/ScreenHeader";
-import { vs } from "react-native-size-matters";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { Clock, clockBlue, Cross } from "../icons/SvgIcons/Index";
+import { Button } from "../components";
 
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
@@ -107,7 +112,7 @@ export default class Cart extends Component {
 
         //-----payment end---------//
       };
-      screens = "Cart";
+
     }
     cart_customer = [];
     this.changeState = this.changeState.bind(this);
@@ -132,6 +137,7 @@ export default class Cart extends Component {
   }
 
   startSDK() {
+    console.log('starting payment sdk....');
     var appCredentialsLocal = {
       appCredentials: appCredentials,
       sessionParameters: {
@@ -189,7 +195,6 @@ export default class Cart extends Component {
         this.sdkModule &&
         this.sdkModule.startPayment(appCredentialsLocal, 0, this.handleResult);
     } catch (e) {
-      console.log("skkk");
       console.log(e);
     }
   }
@@ -364,7 +369,7 @@ export default class Cart extends Component {
 
     consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         consolepro.consolelog("obj", obj);
 
@@ -492,7 +497,7 @@ export default class Cart extends Component {
     // data.append('provider_id',this.state.provider_id)
 
     apifuntion
-      .postApi(url, data, 0)
+      .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
           console.log("obj", obj);
@@ -563,481 +568,316 @@ export default class Cart extends Component {
     consolepro.consolelog("show_data", show_data);
     //  consolepro.consolelog('muskan',item)
     return (
-      <View style={Styles.container1}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: Colors.backgroundcolor,
-          }} >
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+        <ScreenHeader
+          title={Lang_chg.CartItem[config.language]}
+          navigation={this.props.navigation}
+          onBackPress={() => this.props.navigation.pop()}
+          leftIcon
+          rightIcon
+        />
+        <>
+          {
+            (this.state.cart_arr != "" && this.state.cart_arr != null) ?
+              <View style={{ backgroundColor: Colors.White, paddingTop: vs(9), marginTop: vs(7) }}>
 
-          <ScreenHeader
-            title={Lang_chg.CartItem[config.language]}
-            navigation={this.props.navigation}
-            onBackPress={() => this.props.navigation.pop()}
-            leftIcon
-            rightIcon
-          />
+                <ScrollView showsVerticalScrollIndicator={false}>
 
-          
-          {this.state.cart_arr != "" && this.state.cart_arr != null && (
-            <ScrollView
-              style={{
-                flex: 1,
-                backgroundColor: Colors.White,
-              }}
-              contentContainerStyle={{ paddingBottom: (windowWidth * 2) / 100 }}
-              showsVerticalScrollIndicator={false}
-            >
-              <View
-                style={[
-                  { backgroundColor: Colors.White },
-                  this.state.task_details.length <= 3
-                    ? { height: (windowHeight * 77) / 100 }
-                    : { height: (windowHeight * 95) / 100 },
-                ]}
-              >
-                <View
-                  style={{
-                    marginTop: vs(7),
-                  }}
-                >
-                  <View>
-                    {/* <View style={{width: '100%', alignSelf: 'center'}}> */}
-                    <View
-                      style={{
-                        alignItems: "center",
-                        flexDirection: "row",
-                        paddingVertical: (windowWidth * 3) / 100,
-                        width: "90%",
-                        alignSelf: "center",
-                        justifyContent: "space-between",
-                        // marginTop:windowWidth*2/100
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          width: "83%",
-                          alignItems: "center",
-                        }}
-                      >
+                  {/* -----------Name------------- */}
+                  <View style={{ borderBottomWidth: 1.5, borderBottomColor: Colors.backgroundcolor, }}>
+                    <View style={{ flexDirection: 'row', paddingHorizontal: s(13), justifyContent: 'space-between', alignItems: 'center' }}>
+
+                      <View style={{ flexDirection: 'row', width: '60%', justifyContent: 'space-between' }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.9) / 100,
-                            color: Colors.lightGrey,
+                            fontSize: Font.large,
+                            color: Colors.detailTitles,
                           }}
                         >
                           {this.state.provider_name}
                         </Text>
                         <Text
                           style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.cart2subtext,
-                            color: Colors.Theme,
-                            marginLeft: (windowWidth * 4) / 100,
+                            fontFamily: Font.Regular,
+                            fontSize: Font.medium,
+                            color: Colors.detailTitles,
                           }}
                         >
-                          {show_data.service_display_type}
+                          {show_data?.service_display_type}
                         </Text>
                       </View>
 
-                      <View style={{}}>
-                        <View
-                          style={{
-                            alignSelf: "center",
-                            alignSelf: "flex-end",
-                          }}
-                        >
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.setState({ modalVisible3: true });
-                            }}
-                          >
-                            <Image
-                              source={Icons.cross}
-                              style={{
-                                resizeMode: "contain",
-                                backgroundColor: Colors.White,
-                                width: (windowWidth * 5.5) / 100,
-                                height: (windowWidth * 5.5) / 100,
-                                alignSelf: "center",
-                              }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
+                      <TouchableHighlight
+                        onPress={() => {
+                          this.setState({ modalVisible3: true });
+                        }}
+                        underlayColor={Colors.Highlight}
+                        style={styles.closeContainer}>
+                        <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+                      </TouchableHighlight>
                     </View>
+                  </View>
 
-                    {/* border */}
-                    <View
+                  {/* --------------------------------------- */}
+
+
+                  <View style={{ marginTop: vs(13), paddingHorizontal: s(13) }}>
+                    <Text
                       style={{
-                        borderTopWidth: 1,
-                        borderColor: Colors.backgroundcolor,
-                        marginTop: (windowWidth * 1) / 100,
-                        // marginVertical: (windowWidth * 3) / 100,
-                      }}
-                    />
-                    <View style={{ width: "90%", alignSelf: "center" }}>
-                      <View>
+                        fontFamily: Font.Medium,
+                        fontSize: Font.large,
+                        color: Colors.detailTitles,
+                      }}>
+                      {Lang_chg.Appointment_footer[config.language]}
+                    </Text>
+
+                    <View style={{ flexDirection: 'row', marginTop: vs(15) }}>
+                      <View style={{ flex: 1 }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
-                            fontSize: Font.cart2heading,
-                            color: Colors.Theme,
-                            paddingBottom: (windowWidth * 3.5) / 100,
-                            paddingTop: (windowWidth * 2) / 100,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Appointment_footer[config.language]}
+                            fontSize: Font.small,
+                            color: Colors.DarkGrey,
+                          }}>
+                          {Lang_chg.Date[config.language]}
                         </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          backgroundColor: "#fff",
-                          marginBottom: (windowWidth * 3.5) / 100,
-                        }}
-                      >
-                        <View style={{}}>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            {/* image and store name */}
-
-                            <View
-                              style={{
-                                width: "50%",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.Medium,
-                                  color: Colors.Theme,
-                                  fontSize: (windowWidth * 3.5) / 100,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {Lang_chg.Date[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.Medium,
-                                  fontSize: Font.cart2subtext,
-                                  textTransform: "uppercase",
-                                  color: Colors.DarkGrey,
-                                  textAlign: config.textRotate,
-
-                                  paddingTop: (windowWidth * 1) / 100,
-                                }}
-                              >
-                                {show_data.display_app_date}
-                              </Text>
-
-                              <View
-                                style={{
-                                  borderWidth: 1,
-                                  borderColor: Colors.backgroundcolor,
-                                  marginTop: (windowWidth * 2) / 100,
-                                  paddingVertical: (windowWidth * 1) / 100,
-                                  width: "75%",
-                                  justifyContent: "center",
-                                  borderRadius: (windowWidth * 1) / 100,
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    fontFamily: Font.Medium,
-                                    fontSize: (windowWidth * 3) / 100,
-                                    color: Colors.Theme,
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  {show_data.display_task_type}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View
-                              style={{
-                                width: "50%",
-                                marginRight: (windowWidth * 3) / 100,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.Medium,
-                                  color: Colors.Theme,
-                                  fontSize: (windowWidth * 3.5) / 100,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {Lang_chg.Time[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.Medium,
-                                  fontSize: Font.cart2subtext,
-                                  color: Colors.DarkGrey,
-                                  textAlign: config.textRotate,
-                                  paddingTop: (windowWidth * 1) / 100,
-                                }}
-                              >
-                                {show_data.from_time} - {show_data.to_time}
-                              </Text>
-
-                              <View
-                                style={{
-                                  width: "100%",
-                                  flexDirection: "row",
-                                  paddingVertical: (windowWidth * 2) / 100,
-                                  borderRadius: (windowWidth * 1) / 100,
-                                  alignItems: "center",
-                                  marginTop: (windowWidth * 1) / 100,
-                                }}
-                              >
-                                {config.language == 0 ? (
-                                  <Image
-                                    source={Icons.clock}
-                                    style={{
-                                      tintColor: Colors.Theme,
-                                      resizeMode: "contain",
-                                      width: (windowWidth * 4) / 100,
-                                      height: (windowWidth * 4) / 100,
-                                    }}
-                                  ></Image>
-                                ) : (
-                                  <Image
-                                    source={Icons.clock_arabic}
-                                    style={{
-                                      tintColor: Colors.Theme,
-                                      resizeMode: "contain",
-                                      width: (windowWidth * 4) / 100,
-                                      height: (windowWidth * 4) / 100,
-                                    }}
-                                  ></Image>
-                                )}
-
-                                <Text
-                                  style={{
-                                    color: Colors.Theme,
-                                    fontFamily: Font.Regular,
-                                    fontSize: (windowWidth * 3.3) / 100,
-                                    marginLeft: (windowWidth * 1.5) / 100,
-                                    textAlign: config.textRotate,
-                                  }}
-                                >
-                                  {show_data.display_task_time}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-
-                    <View
-                      style={{
-                        paddingVertical: (windowWidth * 3) / 100,
-                      }}
-                    >
-                      <View style={{ width: "90%", alignSelf: "center" }}>
-                        <View>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.DarkGrey,
+                            marginTop: vs(2)
+                          }}>
+                          {show_data?.display_app_date}
+                        </Text>
+                        <View style={{ width: '60%', marginTop: vs(5), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
                           <Text
                             style={{
                               fontFamily: Font.Medium,
-                              fontSize: Font.cart2heading,
+                              fontSize: Font.small,
                               color: Colors.Theme,
-                              textAlign: config.textRotate,
-                              paddingTop: (windowWidth * 1) / 100,
-                            }}
-                          >
-                            {Lang_chg.Payment[config.language]}
+                            }}>
+                            {show_data?.display_task_type}
                           </Text>
                         </View>
-                        <FlatList
-                          data={show_data.task_details}
-                          renderItem={({ item, index }) => {
-                            consolepro.consolelog("helooo", item);
-                            if (item.task_details != "") {
-                              return (
-                                <View
-                                  style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    paddingVertical: (windowWidth * 1.5) / 100,
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: Font.Regular,
-                                      fontSize: (windowWidth * 3.3) / 100,
-                                      textAlign: config.textRotate,
-                                      color: "#000",
-                                      width: "70%",
-                                    }}
-                                    numberOfLines={1}
-                                  >
-                                    {item.name}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      fontFamily: Font.Regular,
-                                      fontSize: (windowWidth * 3.3) / 100,
-                                      width: "30%",
-                                      textAlign: "right",
-                                      color: "#000",
-                                    }}
-                                  >
-                                    {item.price}
-                                  </Text>
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                        {show_data.display_task_type !==
-                          "Online consultation" && (
+                      </View>
+
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.DarkGrey,
+                          }}>
+                          {Lang_chg.Time[config.language]}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.DarkGrey,
+                            marginTop: vs(2)
+                          }}>
+                          {show_data?.from_time} - {show_data?.to_time}
+                        </Text>
+                        <View style={{ marginTop: vs(5), alignItems: 'center', flexDirection: 'row' }}>
+                          <SvgXml xml={clockBlue} height={vs(16)} width={s(16)} />
+                          <Text
+                            style={{
+                              fontFamily: Font.Medium,
+                              fontSize: Font.small,
+                              color: Colors.Theme,
+                              marginLeft: s(6)
+                            }}>
+                            {show_data?.display_task_time}
+                          </Text>
+                        </View>
+
+                      </View>
+
+                      {/* --------------------------------- */}
+                    </View>
+                  </View>
+
+                  {/* ---------------------------------------- */}
+                  <View style={{ marginTop: vs(13), paddingHorizontal: s(13), backgroundColor: '#FBFBFB', paddingVertical: vs(10) }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.large,
+                        color: Colors.detailTitles,
+                      }}>
+                      {Lang_chg.Payment[config.language]}
+                    </Text>
+
+                    <FlatList
+                      data={show_data?.task_details}
+                      renderItem={({ item, index }) => {
+                        if (item.task_details != "") {
+                          return (
                             <View
                               style={{
                                 flexDirection: "row",
                                 justifyContent: "space-between",
-                                paddingVertical: (windowWidth * 2) / 100,
-                                borderTopWidth: 1,
-                                borderColor: Colors.backgroundcolor,
-                              }}
-                            >
+                                paddingVertical: vs(5),
+                              }}>
                               <Text
                                 style={{
                                   fontFamily: Font.Regular,
-                                  fontSize: (windowWidth * 3.3) / 100,
-                                  color: "#000",
+                                  fontSize: Font.small,
+                                  textAlign: config.textRotate,
+                                  color: Colors.detailTitles,
                                 }}
+                                numberOfLines={1}
                               >
-                                {show_data.distance_fare_text}
+                                {item.name}
                               </Text>
                               <Text
                                 style={{
                                   fontFamily: Font.Regular,
-                                  fontSize: (windowWidth * 3.3) / 100,
-                                  color: "#000",
-                                }}
-                              >
-                                {show_data.distance_fare}
+                                  fontSize: Font.small,
+                                  textAlign: config.textRotate,
+                                  color: Colors.detailTitles,
+                                }} >
+                                {item.price}
                               </Text>
                             </View>
-                          )}
+                          );
+                        }
+                      }}
+                    />
+                    {/* ----------------------------------- */}
+                    <View
+                      style={{
+                        paddingVertical: vs(10),
+                        borderTopWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: '#00000029',
+                      }}>
+                      {show_data?.display_task_type !== "Online consultation" && (
                         <View
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            paddingVertical: (windowWidth * 2) / 100,
-                            borderTopWidth: 1,
-                            borderColor: Colors.backgroundcolor,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.Theme,
-                              // marginTop: windowWidth * 1 / 100,
-                            }}
-                          >
-                            {Lang_chg.subTotal[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.Theme,
-                              // marginTop: windowWidth * 1 / 100,
-                            }}
-                          >
-                            {show_data.sub_total_price}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (windowWidth * 2) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: (windowWidth * 3.3) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {show_data.vat_text}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: (windowWidth * 3.3) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {show_data.vat_price}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            width: "100%",
-
-                            borderWidth: 1,
-                            borderColor: Colors.backgroundcolor,
-                          }}
-                        />
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginTop: (windowWidth * 2) / 100,
                           }}>
                           <Text
                             style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.5) / 100,
-                              color: Colors.Theme,
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
                               textAlign: config.textRotate,
-                            }}
-                          >
-                            {Lang_chg.Total[config.language]}
+                              color: Colors.detailTitles,
+                            }}>
+                            {show_data?.distance_fare_text}
                           </Text>
                           <Text
                             style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.5) / 100,
-                              color: Colors.Theme,
-                            }}
-                          >
-                            {show_data.total_price} {this.state.currency_symbol}
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              textAlign: config.textRotate,
+                              color: Colors.detailTitles,
+                            }}>
+                            {show_data?.distance_fare}
                           </Text>
                         </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-               
-              </View>
-            </ScrollView>
-          )}
+                      )}
 
-          {this.state.cart_arr == "" ||
-            (this.state.cart_arr == null && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: (windowWidth * 2) / 100,
+                        }} >
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            textAlign: config.textRotate,
+                            color: Colors.detailTitles,
+                          }}>
+                          {show_data?.vat_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            textAlign: config.textRotate,
+                            color: Colors.detailTitles,
+                          }}
+                        >
+                          {show_data?.vat_price}
+                        </Text>
+                      </View>
+
+                    </View>
+
+                    {/* ----------------------------------- */}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: vs(10),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.medium,
+                          color: Colors.Theme,
+                        }}>
+                        {Lang_chg.Total[config.language]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.medium,
+                          color: Colors.Theme,
+                        }}>
+                        {show_data?.sub_total_price + ' ' + this.state.currency_symbol}
+                      </Text>
+                    </View>
+
+
+
+                    {/* <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: (windowWidth * 2) / 100,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: (windowWidth * 3.5) / 100,
+                    color: Colors.Theme,
+                    textAlign: config.textRotate,
+                  }}
+                >
+                  {Lang_chg.Total[config.language]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.medium,
+                    textAlign: config.textRotate,
+                    color: Colors.Theme,
+                  }}
+                >
+                  {'show_data.total_price'} {'this.state.currency_symbol'}
+                </Text>
+              </View> */}
+
+                  </View>
+                </ScrollView>
+
+              </View>
+              :
+
               <View
                 style={{
-                  width: "90%",
+                  width: "100%",
                   alignSelf: "center",
                   marginTop: (windowWidth * 5) / 100,
+                  paddingHorizontal: s(13)
                 }}
               >
                 <Image
@@ -1060,38 +900,60 @@ export default class Cart extends Component {
                 >
                   Cart Details not found.
                 </Text>
-                <TouchableOpacity
+
+                <Button
+                  text={Lang_chg.BOOKNOW[config.language]}
+                  btnStyle={{ marginTop: vs(20) }}
                   onPress={() => {
                     this.props.navigation.reset({
                       index: 0,
                       routes: [{ name: "DashboardStack" }],
                     });
                   }}
-                  style={{
-                    width: "90%",
-                    alignSelf: "center",
-                    borderRadius: (windowWidth * 2) / 100,
-                    backgroundColor: Colors.Theme,
-                    paddingVertical: (windowWidth * 4) / 100,
-                    marginTop: (windowWidth * 8) / 100,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: Colors.White,
-                      fontFamily: Font.Medium,
-                      fontSize: Font.buttontextsize,
-                      alignSelf: "flex-end",
-                      textAlign: config.textalign,
-                      alignSelf: "center",
-                    }}
-                  >
-                    {Lang_chg.BOOKNOW[config.language]}
-                  </Text>
-                </TouchableOpacity>
+                />
+
               </View>
-            ))}
-        </View>
+
+          }
+        </>
+
+
+
+        {
+          ((this.state.cart_arr != "" && this.state.cart_arr != null)) &&
+
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              backgroundColor: Colors.White,
+              paddingHorizontal: (windowWidth * 5) / 100,
+              paddingVertical: (windowWidth * 2) / 100,
+              height: 80,
+              justifyContent: "center",
+              alignItems: "center",
+              position:'absolute',
+              bottom:0
+            }}>
+            <Button
+              text={Lang_chg.PROCEEDTOPAYMENT[config.language]}
+              onPress={() => {
+                if (this.state.payment_status == "true") {
+                  this.startSDK();
+                  // this.get_payment(), this.setState({ total_price: show_data.total_price })
+                } else {
+                  this.submit_btn(),
+                    this.setState({ total_price: show_data.total_price });
+                }
+              }}
+
+            />
+          </View>
+
+        }
+
+
+        {/* -------------------------------------------------------------------- */}
 
         <Modal
           animationType="fade"
@@ -1361,56 +1223,20 @@ export default class Cart extends Component {
         </Modal>
 
 
-        {this.state.cart_arr != "" && this.state.cart_arr != null && (
-          <View
-            style={{
-              width: "100%",
-              alignSelf: "center",
-              backgroundColor: Colors.White,
-              paddingHorizontal: (windowWidth * 5) / 100,
-              paddingVertical: (windowWidth * 2) / 100,
-              height: 80,
-              justifyContent: "center", //Centered horizontally
-              alignItems: "center", //Centered vertically
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                if (this.state.payment_status == "true") {
-                  this.startSDK();
-                  //     this.get_payment(),this.setState({total_price:show_data.total_price})
-                } else {
-                  this.submit_btn(),
-                    this.setState({ total_price: show_data.total_price });
-                }
-              }}
-              style={{
-                width: "100%",
-                alignSelf: "center",
-                borderRadius: (windowWidth * 2) / 100,
-                backgroundColor: Colors.Theme,
-                paddingVertical: (windowWidth * 4) / 100,
-                position: "absolute",
-                bottom: 20,
-                marginBottom: (windowWidth * 5) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  color: Colors.White,
-                  fontFamily: Font.Medium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.PROCEEDTOPAYMENT[config.language]}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+
+  closeContainer: {
+    height: s(30),
+    width: s(30),
+    borderRadius: s(50),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+});

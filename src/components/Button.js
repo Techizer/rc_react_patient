@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
 const Button = ({
   text,
@@ -13,9 +13,13 @@ const Button = ({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.mainContainer, btnStyle]}>
-      <Text style={[styles.buttonText, customStyles.buttonText]}>
-        {text}
-      </Text>
+      {
+        onLoading ?
+          <ActivityIndicator size={'small'} color={Colors.White} />
+          :
+          <Text style={[styles.buttonText, customStyles.buttonText]}>{text}</Text>
+      }
+
     </TouchableOpacity>
   );
 };

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: (windowWidth * 2) / 100,
     backgroundColor: Colors.tab_background_color, //Colors.optboxcolor,
-    borderColor: Colors.field_border_color, //Colors.Border,
+    borderColor: Colors.Border,
     borderWidth: windowWidth * 0.3 / 100,
     borderRadius: (windowWidth * 1) / 100
   },

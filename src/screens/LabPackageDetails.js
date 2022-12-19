@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
@@ -19,18 +19,18 @@ import {
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
 
-const LabPackageDetails = ({navigation, route}) => {
-  
+const LabPackageDetails = ({ navigation, route }) => {
+
   const { packageId, providerId } = route.params;
   const [labDetailsData, setLabDetailsData] = useState();
   const [showTaskDetails, isShowTaskDetails] = useState(false);
   console.log("providerId ", packageId);
 
   useEffect(() => {
-    getPackageList();
+    getPackageDetails();
   }, []);
 
-  const getPackageList = async () => {
+  const getPackageDetails = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url = config.baseURL + "api-get-package-details";
@@ -45,7 +45,7 @@ const LabPackageDetails = ({navigation, route}) => {
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
-        consolepro.consolelog("response ---> ", JSON.stringify(obj));
+        consolepro.consolelog("getPackageDetails-response ---> ", JSON.stringify(obj));
 
         if (obj.status == true) {
           setLabDetailsData(obj.result);
@@ -60,221 +60,231 @@ const LabPackageDetails = ({navigation, route}) => {
   };
 
   return (
-    <View style={Styles.container1}>
-      <View style={{ backgroundColor: "#f1f2f4", flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
-        <ScreenHeader
-          title={'Package Details'}
-          navigation={navigation}
-          onBackPress={() => navigation.pop()}
-          leftIcon={leftArrow}
-          rightIcon={Notification}
-        />
-        {labDetailsData != null && labDetailsData != "" && (
-          <>
-              <View
-                style={{
-                  paddingHorizontal:s(11)
-                }}>
-                <Text
-                  style={{
-                    width: "100%",
-                    marginTop: vs(9),
-                    color: Colors.Black,
-                    fontFamily: Font.Medium,
-                    fontSize: Font.xxlarge,
-                    textAlign: "left",
-                  }}
-                >
-                  {labDetailsData.name}
-                </Text>
-                <Text
-                  style={{
-                    paddingVertical: vs(6),
-                    fontFamily: Font.Regular,
-                    textAlign: "left",
-                    color: Colors.Theme,
-                    fontSize: Font.sregulartext_size,
-                  }}
-                >
-                  {labDetailsData.task_count}
-                </Text>
-                <Text
-                  style={{
-                    paddingTop: vs(7),
-                    textAlign: config.textalign,
-                    fontFamily: Font.Medium,
-                    fontSize: Font.xxlarge,
-                  }}
-                >
-                  {labDetailsData.price}
-                </Text>
-                
-                <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+      <ScreenHeader
+        title={'Package Details'}
+        navigation={navigation}
+        onBackPress={() => navigation.pop()}
+        leftIcon={leftArrow}
+        rightIcon={Notification}
+      />
 
-                {labDetailsData.task_content != null && (
-                  <>
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.large,
-                        textAlign: config.textRotate,
-                        color: Colors.lightGrey,
-                      }}
-                    >
-                      {labDetailsData.task_heading}
-                    </Text>
-                    <HTMLView
-                      value={labDetailsData.task_content}
-                      stylesheet={{
-                        p: {
-                          fontSize: Font.medium,
-                          color: Colors.lightGrey,
-                          marginTop: vs(8),
-                          fontFamily: Font.Regular,
-                        },
-                      }}
-                    />
-                  </>
-                )}
-                {labDetailsData.task_sub_content != null && (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "flex-start",
-                      backgroundColor: "#FFF2D9",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.headingfont_booking,
-                        color: Colors.precautionText,
-                        marginTop: (windowWidth * 2) / 100,
-                        textAlign: config.textRotate,
-                      }}
-                    >
-                      {labDetailsData.task_sub_heading}
-                    </Text>
-                    <HTMLView
-                      value={labDetailsData.task_sub_content}
-                      stylesheet={{
-                        p: {
-                          fontSize: Font.subtext,
-                          color: Colors.lightGrey,
-                          marginTop: (windowWidth * 2) / 100,
-                          fontFamily: Font.Regular,
-                        },
-                      }}
-                    />
-                  </View>
-                )}
-              </View>
+      {labDetailsData != null && labDetailsData != "" && (
+        <>
+          <View
+            style={{
+              width: '100%',
+              paddingVertical: s(9),
+              backgroundColor: Colors.White,
+              marginTop: vs(7)
+            }}>
+            <View style={{
+              paddingHorizontal: s(13),
+            }}>
 
-            <View
-              style={{
-                width:'100%',
-                alignSelf: "center",
-                alignItems: "flex-start",
-                marginTop: vs(7),
-                paddingHorizontal:s(11),
-                paddingVertical:vs(10)
-              }}
-            >
               <Text
                 style={{
                   width: "100%",
-                  color: Colors.Black,
-                  fontFamily: Font.Regular,
-                  fontSize: Font.large,
+                  color: Colors.detailTitles,
+                  fontFamily: Font.Medium,
+                  fontSize: Font.xlarge,
                   textAlign: "left",
+                }}>
+                {labDetailsData.name}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  textAlign: "left",
+                  color: Colors.Theme,
+                  fontSize: Font.small,
+                  marginTop: vs(5)
                 }}
               >
-                {Lang_chg.TestsIncluded[config.language]}
+                {labDetailsData.task_count}
               </Text>
-              <FlatList
-                data={labDetailsData.task_name}
-                contentContainerStyle={{
-                  paddingBottom: (windowWidth * 10) / 100,
+              <Text
+                style={{
+                  marginTop: vs(10),
+                  textAlign: config.textalign,
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
                 }}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }) => {
-                  if (
-                    labDetailsData.task_name != "" &&
-                    labDetailsData.task_name != null &&
-                    labDetailsData.task_name.length !== 0
-                  ) {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (item.subtask !== "" && item.subtask !== null) {
-                            isShowTaskDetails(!showTaskDetails);
-                          }
-                        }}
-                      >
-                        <View
-                          style={{
-                            width: "100%",
-                            flexDirection: "row",
-                            justifyContent: "flex-start",
-                            // paddingVertical: (windowWidth * 1) / 100,
-                            marginTop: (windowWidth * 3) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              width: "90%",
-                              fontSize: Font.subtext,
-                              color: Colors.Theme,
-                              fontFamily: Font.Medium,
-                              textAlign: "left",
-                            }}
-                          >
-                            {item.name}
-                          </Text>
-                          {item.subtask !== "" && item.subtask !== null && (
-                            <View
-                              style={{
-                                width: "10%",
-                              }}
-                            >
-                              <Image
-                                style={{
-                                  height: (windowWidth * 4.5) / 100,
-                                  width: (windowWidth * 4.5) / 100,
-                                }}
-                                source={
-                                  showTaskDetails
-                                    ? Icons.upArrow
-                                    : Icons.downarrow
-                                }
-                              />
-                            </View>
-                          )}
-                        </View>
-                        {showTaskDetails && (
-                          <Text
-                            style={{
-                              paddingTop: (windowWidth * 2) / 100,
-                              paddingHorizontal: (windowWidth * 4) / 100,
-                              fontFamily: Font.Regular,
-                              textAlign: "left",
-                              color: Colors.subTaskColor,
-                              fontSize: Font.sregulartext_size,
-                            }}
-                          >
-                            {item.subtask}
-                          </Text>
-                        )}
-                      </TouchableOpacity>
-                    );
-                  }
-                }}
-              />
+              >
+                {labDetailsData.price}
+              </Text>
+
+              <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+
+              {labDetailsData.task_content != null && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.medium,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles,
+                    }}>
+                    {labDetailsData.task_heading}
+                  </Text>
+                  <HTMLView
+                    value={labDetailsData.task_content}
+                    stylesheet={{
+                      p: {
+                        fontSize: Font.xsmall,
+                        color: Colors.detailTitles,
+                        marginTop: vs(8),
+                        fontFamily: Font.Regular,
+                      },
+                    }}
+                  />
+                </>
+              )}
             </View>
-          </>
-        )}
-      </View>
+
+            {/* ----------------Precautions------------------ */}
+
+            {labDetailsData.task_sub_content != null && (
+              <View
+                style={{
+                  width: "100%",
+                  alignSelf: "flex-start",
+                  backgroundColor: "#FFF2D9",
+                  paddingHorizontal: s(13),
+                  paddingVertical: vs(9)
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Bold,
+                    fontSize: Font.xsmall,
+                    color: Colors.precautionText,
+                    textAlign: config.textRotate,
+                  }}>
+                  {labDetailsData.task_sub_heading}
+                </Text>
+                <HTMLView
+                  value={labDetailsData.task_sub_content}
+                  stylesheet={{
+                    p: {
+                      fontSize: Font.xsmall,
+                      color: Colors.detailTitles,
+                      marginTop: vs(4),
+                      fontFamily: Font.Regular,
+                    },
+                  }}
+                />
+              </View>
+            )}
+          </View>
+
+          <View
+            style={{
+              width: '100%',
+              alignSelf: "center",
+              alignItems: "flex-start",
+              marginTop: vs(7),
+              paddingHorizontal: s(13),
+              paddingVertical: vs(10),
+              backgroundColor: Colors.White
+            }}
+          >
+            <Text
+              style={{
+                width: "100%",
+                color: Colors.detailTitles,
+                fontFamily: Font.Regular,
+                fontSize: Font.xlarge,
+                textAlign: "left",
+              }}
+            >
+              {Lang_chg.TestsIncluded[config.language]}
+            </Text>
+            <FlatList
+              data={labDetailsData.task_name}
+              contentContainerStyle={{
+                // marginBottom: (windowWidth * 10) / 100,
+              }}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item, index }) => {
+                if (
+                  labDetailsData.task_name != "" &&
+                  labDetailsData.task_name != null &&
+                  labDetailsData.task_name.length !== 0
+                ) {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (item.subtask !== "" && item.subtask !== null) {
+                          isShowTaskDetails(!showTaskDetails);
+                        }
+                      }}>
+                      <View
+                        style={{
+                          width: "100%",
+                          flexDirection: "row",
+                          justifyContent: 'space-between',
+                          marginTop: (windowWidth * 2) / 100,
+                        }}>
+                        <Text
+                          style={{
+                            width: "92%",
+                            fontSize: Font.small,
+                            color: Colors.Theme,
+                            fontFamily: Font.Regular,
+                            textAlign: "left",
+                          }} >
+                          {item.name}
+                        </Text>
+                        {item.subtask !== "" && item.subtask !== null && (
+                          <TouchableHighlight
+                            underlayColor={Colors.Highlight}
+                            onPress={() => {
+                              if (item.subtask !== "" && item.subtask !== null) {
+                                isShowTaskDetails(!showTaskDetails);
+                              }
+                            }}
+                            style={{
+                              width: "8%",
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: vs(15)
+                            }}>
+                            <Image
+                              style={{
+                                height: (windowWidth * 4) / 100,
+                                width: (windowWidth * 4) / 100,
+                              }}
+                              source={
+                                showTaskDetails
+                                  ? Icons.upArrow
+                                  : Icons.downarrow
+                              }
+                            />
+                          </TouchableHighlight>
+                        )}
+                      </View>
+                      {showTaskDetails && (
+                        <Text
+                          style={{
+                            paddingVertical: vs(2),
+                            paddingHorizontal: s(15),
+                            fontFamily: Font.Regular,
+                            textAlign: "left",
+                            color: Colors.dullGrey,
+                            fontSize: Font.xsmall,
+                          }}>
+                          {item.subtask}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  );
+                }
+              }}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };

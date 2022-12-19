@@ -513,7 +513,7 @@ class Language_provider {
     "تم حجز موعدك بنجاح.",
   ];
   Gotoappointment = ["Go to appointment", " الذهاب إلى الموعد  "];
-  Reschedule = ["Reschedule", "إعادة جدولة "];
+  Reschedule = ["RESCHEDULE", "إعادة جدولة "];
   Booked = ["Booked", "تم الحجز "];
   Patient = ["Patient", "المريض   "];
   Doctor = ["Doctor", "طبيب"];
@@ -553,7 +553,6 @@ class Language_provider {
   Notification = ["Notification", " الاشعارات   "];
   MyAppointments = ["My Appointments", "مواعيدي  "];
   rated = ["Rated", "تم التقييم  "];
-  rate_appointment = ["Rate Appointment", "تقييم الموعد "];
   Write_review = ["Write a Review", "أكتب مراجعة "];
   ProvideUAE = [
     "Provide UAE Id number starting with number (7)",
@@ -563,10 +562,10 @@ class Language_provider {
   Are_you_sure = ["Are you sure ?", "هل أنت واثق ؟"];
 
   // ---------------------Ahsan---------------------
-  Home = ["Home", "مسكن"];
-  Appointment = ["Appointment", "ميعاد"];
-  Consultation = ["Consultation", "التشاور"];
-  Lab_Test = ["Lab Test", "اختبار معمل"];
+  Home = ["Home", "الرئيسية"];
+  Appointment = ["Appointment", "المواعيد"];
+  Consultation = ["Consultation", "الاستشارات"];
+  Lab_Test = ["Lab Test", "فحص مختبر"];
   Profile = ["Profile", "الملف الشخصي"];
   All_Consultations = ["All Consultations, Orders, & Bookings", "جميع الاستشارات والطلبات والحجوزات"];
   Appointment_Bookings = ['Appointment Bookings', 'حجوزات المواعيد'];
@@ -615,6 +614,19 @@ class Language_provider {
   Consult_Type = ["Consultation Type", "نوع الاستشارة"];
   Doc_Exp = ["Doctor Experience", "خبرة الطبيب"];
   Select_Nationality = ["Select Nationality", "اختر الجنسية"];
+  Type=['Type','يكتب'];
+  Rate_Appointment = ["RATE APPOINTMENT", "تحديد موعد"];
+  Appointment_Details = ["Appointment Details", "تفاصيل الموعد"];
+  Lab_Test_Details = ["Lab Test Details", "تفاصيل الاختبارات المعملية"];
+  Consultation_Details = ["Consultation Details", "تفاصيل الاستشارة"];
+  Consultation_Help= ["Need help with your consultation?", "تحتاج مساعدة في استشارتك؟"];
+  ContactUs= ["Contact Us", "اتصل بنا"];
+  Orders=['Orders','ترتيب'];
+  Voice_Recording=['Voice Recording','تسجيل صوتي'];
+  Description=['Description','وصف'];
+  Appoitment_Issue=['Post Your Appointment issue','انشر قضية موعدك'];
+  Subject=['Subject','موضوعات'];
+
 
 
 }

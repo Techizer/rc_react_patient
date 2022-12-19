@@ -20,33 +20,33 @@ import { vs } from "react-native-size-matters";
 
 
 
-const Upcoming = ({ navigation }) => {
+const Past = ({ navigation }) => {
 
   const [appointments, setAppointments] = useState([1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getAppointments()
+    getLabTest()
   }, [isLoading])
 
 
 
-  const getAppointments = async () => {
+  const getLabTest = async (page) => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
 
-    let url = config.baseURL + "api-patient-upcoming-appointment";
+    let url = config.baseURL + "api-patient-past-appointment";
 
     var data = new FormData();
     data.append("lgoin_user_id", user_id);
-    data.append("service_type", 'all');
+    data.append("service_type", 'lab');
     data.append("page_count", 1);
 
     // consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("getAppointments-response...", obj);
+        // consolepro.consolelog("getLabTest-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
             setIsLoading(false)
@@ -61,7 +61,7 @@ const Upcoming = ({ navigation }) => {
         }
       }).catch((error) => {
         setIsLoading(false)
-        consolepro.consolelog("getAppointments-error ------- " + error);
+        consolepro.consolelog("getLabTest-error ------- " + error);
       });
   };
 
@@ -75,9 +75,9 @@ const Upcoming = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: vs(100) }}
         data={appointments}
-        ItemSeparatorComponent={() => {
-          return (
-            <View style={{ height: vs(7) }}></View>
+        ItemSeparatorComponent={()=>{
+          return(
+            <View style={{height:vs(7)}}></View>
           )
         }}
         renderItem={({ item, index }) => {
@@ -85,7 +85,6 @@ const Upcoming = ({ navigation }) => {
             <AppointmentContainer
               Item={item}
               navigation={navigation}
-              isLoading={isLoading}
             />
           )
         }}
@@ -97,19 +96,19 @@ const Upcoming = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{'Sorry, no appointments found'}</Text>
+              }}>{'Sorry, no lab tests found'}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{'You can start a new appointment with our qualified home service providers!'}</Text>
+              }}>{'You can book a new lab test with our qualified labs!'}</Text>
             </View>
           )
         }}
         refreshing={isLoading}
-        onRefresh={() => setIsLoading(true)}
+        onRefresh={()=>setIsLoading(true)}
       />
 
 
@@ -117,4 +116,4 @@ const Upcoming = ({ navigation }) => {
   );
 }
 
-export default Upcoming;
+export default Past;

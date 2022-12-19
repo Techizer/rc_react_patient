@@ -3,6 +3,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { vs } from "react-native-size-matters";
 import { TabBar, TabView } from "react-native-tab-view";
 import { Colors, Font } from "../Provider/Colorsfont";
 import { config } from "../Provider/configProvider";
@@ -11,7 +12,7 @@ import { windowWidth } from "../Provider/utilslib/Utils";
 const LabAppointment = (props) => {
   // console.log("sound ::::", sound);
   const { navigation, indexPosition, sendData, data } = props;
-  const TestSelection = () => <View style={{ flex: 1 }} />;
+  const TestSelection = () => <View style={{ flex: 1,  }} />;
 
   const PackageSelection = () => <View style={{ flex: 1 }} />;
   const layout = useWindowDimensions();
@@ -100,7 +101,7 @@ const LabAppointment = (props) => {
     />
   );
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, }}>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -108,8 +109,9 @@ const LabAppointment = (props) => {
         initialLayout={{
           width: layout.width,
           height: layout.height,
+          
         }}
-        style={{ height: 40, }}
+        style={{ height: 40, width: routes.length > 1 ? '100%' : '50%',  }}
         renderTabBar={renderTabBar}
       />
     </View>
