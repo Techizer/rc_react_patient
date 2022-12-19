@@ -376,7 +376,9 @@ export default class Drawerscreen extends Component {
                 leftIcon={HealthRecord}
                 disable={isGuest === 'true' ? true : false}
                 onPress={()=>{
-                  this.props.navigation.navigate('HealthRecord')
+                  this.props.navigation.navigate('HealthRecord',{
+                    isPage: "drawer"
+                  })
                 }}
               />
 

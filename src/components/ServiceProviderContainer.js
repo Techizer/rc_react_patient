@@ -456,9 +456,11 @@ const ServiceProviderContainer = ({
                       indexPosition: 0
                     })
                   } else {
-                    navigation.navigate("Booking", {
+                    //HealthRecord
+                    navigation.navigate("HealthRecord", {
                       providerType: providerType,
                       providerId: Item.user_id,
+                      isPage: "providerList",
                       // isFromHospital: true,
                       // hospitalId: Item?.hospital_id,
                       indexPosition: 0
