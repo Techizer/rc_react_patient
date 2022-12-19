@@ -3,7 +3,11 @@ import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableW
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons } from "../Provider/utilslib/Utils";
+import {
+    windowWidth, deviceHeight, Lang_chg, config,
+    localStorage, Icons, consolepro, msgText,
+    Cameragallery, apifuntion, msgProvider,
+} from "../Provider/utilslib/Utils";
 import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -12,6 +16,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Button from "./Button";
 import Member from "./Member";
 import OutlinedButton from "./OutlinedButton";
+
 
 
 
@@ -35,6 +40,7 @@ const ManageAddressBottomSheet = ({
     const buildingRef = useRef()
     const nameRef = useRef()
     const dobRef = useRef()
+    const [mediamodal, setMediamodal] = useState(false)
 
     const getNewAddress = async () => {
         let newAddress = await localStorage.getItemObject('address_arr');
@@ -44,6 +50,142 @@ const ManageAddressBottomSheet = ({
     useEffect(() => {
         getNewAddress()
     }, [])
+
+    Camerapopen = async () => {
+        mediaprovider
+            .launchCamera(true)
+            .then((obj) => {
+                console.log(obj);
+                console.log(obj.path);
+                if (this.state.img_type == 0) {
+                    this.setState({ cover_img: obj.path, mediamodal: false });
+                } else {
+                    this.setState({
+                        profile_img: obj.path,
+                        mediamodal: false,
+                    });
+                }
+            })
+            .catch((error) => {
+                setMediamodal(false)
+            });
+    };
+    Galleryopen = () => {
+        mediaprovider
+            .launchGellery(true)
+            .then((obj) => {
+                console.log(obj);
+                console.log(obj.path);
+                // this.editImage(obj.path);
+                if (this.state.img_type == 0) {
+                    this.setState({ cover_img: obj.path, mediamodal: false });
+                } else {
+                    this.setState({
+                        profile_img: obj.path,
+                        mediamodal: false,
+                        profile_image: obj.path,
+                    });
+                }
+            })
+            .catch((error) => {
+                setMediamodal(false)
+            });
+    };
+
+    const submit_click = async () => {
+        let user_details = await localStorage.getItemObject("user_arr");
+        let user_id = user_details["user_id"];
+        console.log("dfhvgrtdb ", user_details);
+        Keyboard.dismiss();
+
+        if (
+            name.length <= 0 ||
+            name.trim().length <= 0
+        ) {
+            msgProvider.showError(msgText.emptyPaitentName[config.language]);
+            return false;
+        }
+        // if (
+        //     this.state.last_name.length <= 0 ||
+        //     this.state.last_name.trim().length <= 0
+        // ) {
+        //     msgProvider.showError(msgText.emptyPaitentLastName[config.language]);
+        //     return false;
+        // }
+        if (dob.length <= 0 || dob.trim().length <= 0) {
+            msgProvider.showError(msgText.emptyAge[config.language]);
+            return false;
+        }
+        if (gender == -1) {
+            msgProvider.showError("Please select gender");
+            return false;
+        }
+        if (
+            this.state.profile_img == "" ||
+            this.state.profile_img == "NA" ||
+            this.state.profile_img == null
+        ) {
+            msgProvider.showError(msgText.emptyImage[config.language]);
+            return false;
+            // }
+        }
+
+        let url = config.baseURL + "api-insert-patient-family";
+        console.log("url", url);
+        //         patient_id:470
+        // first_name:Test
+        // last_name:MJ
+        // gender:Male
+        // age:33
+        // image:
+        // created_date:2022-11-30
+        // updated_date:2022-11-30
+        // created_by:470
+        // updated_by:470
+        // status:1
+        var data = new FormData();
+
+        data.append("patient_id", user_id);
+        data.append("first_name", name);
+        data.append("last_name", "");
+        data.append("gender", (gender == 0) ? "Male" : "Female");
+        data.append("age", dob);
+        data.append("created_date", "2022-11-30");
+        data.append("updated_date", "2022-11-30");
+        data.append("created_by", user_id);
+        data.append("updated_by", user_id);
+        data.append("status", "1");
+        console.log("check data", data);
+        // console.log("this.state.profile_img1234", this.state.profile_image);
+        // if (this.state.profile_image != "") {
+        //     data.append("image", {
+        //         uri: this.state.profile_img,
+        //         type: "image/jpg",
+        //         name: this.state.profile_img,
+        //     });
+        // }
+
+        consolepro.consolelog("data", data);
+        //this.setState({ loading: true });
+        apifuntion
+            .postApi(url, data)
+            .then((obj) => {
+                consolepro.consolelog("obj", obj);
+                //this.setState({ loading: false });
+                if (obj.status == true) {
+                    //this.props.navigation.goBack();
+                    // msgProvider.showError(obj.message,'center')
+                    onRequestClose(obj.result)
+                } else {
+                    msgProvider.alert("", obj.message, false);
+                }
+                return false;
+            })
+            .catch((error) => {
+                consolepro.consolelog("-------- error ------- " + error);
+                this.setState({ loading: false });
+            });
+    };
 
     return (
         <Modal
@@ -97,34 +239,38 @@ const ManageAddressBottomSheet = ({
                                 (
                                     type === 'addMember' ?
                                         <>
-                                            <View style={{ flexDirection: 'row', }}>
-                                                <View style={{ width: '21%', flexDirection: 'row', }}>
-                                                    <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
-                                                    <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: vs(2), right: s(6), borderWidth: 1.2, borderColor: Colors.Blue }}>
-                                                        <SvgXml xml={Edit} />
+                                            <TouchableHighlight 
+                                            underlayColor={Colors.Highlight}
+                                            onPress={()=>{setMediamodal(true)}}>
+                                                <View style={{ flexDirection: 'row', }}>
+                                                    <View style={{ width: '21%', flexDirection: 'row', }}>
+                                                        <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
+                                                        <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: vs(2), right: s(6), borderWidth: 1.2, borderColor: Colors.Blue }}>
+                                                            <SvgXml xml={Edit} />
+                                                        </View>
+                                                    </View>
+
+                                                    <View style={{ width: '79%', justifyContent: 'center', paddingHorizontal: s(10) }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: Font.small,
+                                                                fontFamily: Font.Regular,
+                                                                textAlign: config.textRotate,
+                                                                color: Colors.darkText
+
+                                                            }}>{Lang_chg.Upload_Photo[config.language]}</Text>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: Font.xsmall,
+                                                                fontFamily: Font.Regular,
+                                                                textAlign: config.textRotate,
+                                                                color: Colors.lightGrey,
+                                                                marginTop: vs(2)
+
+                                                            }}>{Lang_chg.Photo_Size[config.language]}</Text>
                                                     </View>
                                                 </View>
-
-                                                <View style={{ width: '79%', justifyContent: 'center', paddingHorizontal: s(10) }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: Font.small,
-                                                            fontFamily: Font.Regular,
-                                                            textAlign: config.textRotate,
-                                                            color: Colors.darkText
-
-                                                        }}>{Lang_chg.Upload_Photo[config.language]}</Text>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: Font.xsmall,
-                                                            fontFamily: Font.Regular,
-                                                            textAlign: config.textRotate,
-                                                            color: Colors.lightGrey,
-                                                            marginTop: vs(2)
-
-                                                        }}>{Lang_chg.Photo_Size[config.language]}</Text>
-                                                </View>
-                                            </View>
+                                            </TouchableHighlight>
                                             <View style={{ marginTop: vs(10) }}>
                                                 <AuthInputBoxSec
                                                     mainContainer={{ width: '100%', }}
@@ -145,11 +291,11 @@ const ManageAddressBottomSheet = ({
                                                 <AuthInputBoxSec
                                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                                     inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={Lang_chg.dob[config.language]}
+                                                    lableText={Lang_chg.PatientAge[config.language]}
                                                     inputRef={dobRef}
                                                     onChangeText={(val) => setDOB(val)}
                                                     value={dob}
-                                                    keyboardType="default"
+                                                    keyboardType={"decimal-pad"}
                                                     autoCapitalize="none"
                                                     returnKeyType="done"
                                                     onSubmitEditing={() => {
@@ -369,30 +515,45 @@ const ManageAddressBottomSheet = ({
                             }
                             <Button
                                 text={type === 'addMember' ? Lang_chg.Add_Member[config.language] : type === 'editMember' ? Lang_chg.Archive[config.language] : Lang_chg.Save_Address[config.language]}
-                                onPress={() => { }}
+                                onPress={() => { submit_click() }}
                                 btnStyle={{ marginTop: vs(10) }}
                             />
                         </View>
+                        {
+                            type != 'addMember' &&
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={onRequestClose}>
+                                <Text
+                                    style={{
+                                        fontSize: Font.small,
+                                        fontFamily: Font.Medium,
+                                        textAlign: config.textRotate,
+                                        color: Colors.Theme,
+                                        marginTop: vs(15),
+                                        alignSelf: 'center'
 
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={onRequestClose}>
-                            <Text
-                                style={{
-                                    fontSize: Font.small,
-                                    fontFamily: Font.Medium,
-                                    textAlign: config.textRotate,
-                                    color: Colors.Theme,
-                                    marginTop: vs(15),
-                                    alignSelf: 'center'
+                                    }}
+                                >{Lang_chg.Delete[config.language]}</Text>
+                            </TouchableOpacity>
+                        }
 
-                                }}
-                            >{Lang_chg.Delete[config.language]}</Text>
-                        </TouchableOpacity>
                     </View>
 
 
                 </KeyboardAwareScrollView>
+                <Cameragallery
+                    mediamodal={mediamodal}
+                    Camerapopen={() => {
+                        Camerapopen()
+                    }}
+                    Galleryopen={() => {
+                        Galleryopen()
+                    }}
+                    Canclemedia={() => {
+                        setMediamodal(false)
+                    }}
+                />
             </View>
 
         </Modal>

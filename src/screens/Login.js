@@ -471,6 +471,8 @@ export default class Login extends Component {
               });
             } else if(global.isPage == "providerList") {
               this.props.navigation.goBack()
+            }else if(global.isPage == "providerDetails") {
+              this.props.navigation.goBack()
             }
 
 
