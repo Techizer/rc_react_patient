@@ -3,8 +3,8 @@ import { FlatList, Image, Text, TouchableOpacity, TouchableHighlight } from "rea
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { ScreenHeader } from "../components/ScreenHeader";
+import { leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
@@ -66,8 +66,7 @@ const LabPackageDetails = ({ navigation, route }) => {
         title={'Package Details'}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
-        leftIcon={leftArrow}
-        rightIcon={Notification}
+        leftIcon
       />
 
       {labDetailsData != null && labDetailsData != "" && (

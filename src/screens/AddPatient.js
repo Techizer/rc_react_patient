@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  ScrollView,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   Keyboard,
   FlatList,
+  Platform,
 } from "react-native";
-import Footer from "../Footer";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Colors,
   Font,
@@ -18,20 +17,18 @@ import {
   msgProvider,
   msgText,
   config,
-  windowWidth,
+  Button,
   localStorage,
   Icons,
   consolepro,
   Lang_chg,
   apifuntion,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { AuthInputBoxSec, Button } from "../components";
-import ScreenHeader from "../components/ScreenHeader";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SvgXml } from "react-native-svg";
-import { dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { dummyUser, Edit } from "../Icons/Index";
 
 export default class AddPatient extends Component {
   constructor(props) {
@@ -93,7 +90,7 @@ export default class AddPatient extends Component {
           this.setState({ cover_img: obj.path, mediamodal: false });
         } else {
           this.setState({
-            profile_img:  obj.path,
+            profile_img: obj.path,
             mediamodal: false,
             profile_image: obj.path,
           });
@@ -219,10 +216,13 @@ export default class AddPatient extends Component {
           rightIcon
         />
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
-            paddingBottom: vs(30),
+            paddingBottom: vs(15),
           }}
           showsVerticalScrollIndicator={false}>
 
@@ -237,7 +237,7 @@ export default class AddPatient extends Component {
             <View style={{ flexDirection: 'row', width: '21%', alignSelf: 'center' }}>
               {
                 (profile_image != '' && profile_image != null) ?
-                  <Image source={{uri:profile_image}} style={{
+                  <Image source={{ uri: profile_image }} style={{
                     height: s(65),
                     width: s(65),
                     borderRadius: s(100)
@@ -295,6 +295,7 @@ export default class AddPatient extends Component {
                 autoCapitalize="none"
                 returnKeyLabel="done"
                 returnKeyType="next"
+                blurOnSubmit={Platform.OS === 'ios' ? true : false}
                 editable
               />
 

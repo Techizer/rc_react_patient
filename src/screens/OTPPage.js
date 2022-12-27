@@ -25,13 +25,12 @@ import {
   msgText,
   consolepro,
   StatusbarHeight,
+  Button
 } from "../Provider/utilslib/Utils";
-import { leftArrow, rightArrow } from "../icons/SvgIcons/Index";
+import { leftArrow, rightArrow } from "../Icons/Index";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Button } from "../components";
-import { StackActions } from "@react-navigation/native";
 
 export default class OTPPage extends Component {
   _didFocusSubscription;
@@ -192,6 +191,9 @@ export default class OTPPage extends Component {
       <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
 
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',

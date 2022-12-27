@@ -23,12 +23,11 @@ import {
   consolepro,
   Icons,
   windowWidth,
+  ScreenHeader,
+  Button
 } from "../Provider/utilslib/Utils";
-import { AuthInputBoxSec, Button, DropDownboxSec } from "../components";
-// import { Nodata_foundimage } from './Provider/Nodata_foundimage';
+import DropDownboxSec from '../components/DropDownboxSec'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow } from "../icons/SvgIcons/Index";
 import { s, vs } from "react-native-size-matters";
 import IssuesBottomSheet from "../components/ListBottomSheet";
 
@@ -138,7 +137,6 @@ export default class NeedSupport extends Component {
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
           leftIcon
-          rightIcon
         />
 
 
@@ -388,8 +386,8 @@ export default class NeedSupport extends Component {
           }}
           data={this.state.issuesList}
           title={Lang_chg.select_topic_text[config.language]}
-          selectedIssue={(val)=>{
-            this.setState({selectedIssue:val})
+          selectedIssue={(val) => {
+            this.setState({ selectedIssue: val })
           }}
         />
 
@@ -423,37 +421,25 @@ export default class NeedSupport extends Component {
                 alignSelf: "center",
               }}
             >
-              {config.language == 0 ? (
-                <Image
-                  style={{
-                    width: (windowWidth * 17) / 100,
-                    height: (windowWidth * 17) / 100,
-                    alignSelf: "center",
-                    marginTop: (windowWidth * -7) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../icons/greentick.png")}
-                />
-              ) : (
-                <Image
-                  style={{
-                    width: (windowWidth * 17) / 100,
-                    height: (windowWidth * 17) / 100,
-                    alignSelf: "center",
-                    marginTop: (windowWidth * -7) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../icons/ryt_opp.png")}
-                />
-              )}
+
+              <Image
+                style={{
+                  width: (windowWidth * 17) / 100,
+                  height: (windowWidth * 17) / 100,
+                  alignSelf: "center",
+                  marginTop: (windowWidth * -7) / 100,
+                  resizeMode: "contain",
+                }}
+                source={Icons.greenTick}
+              />
+
               <Text
                 style={{
                   fontSize: (windowWidth * 8) / 100,
                   marginTop: (windowWidth * 5) / 100,
                   fontFamily: Font.Medium,
                   textAlign: config.textalign,
-                }}
-              >
+                }}>
                 {Lang_chg.thank[config.language]}
               </Text>
               <Text

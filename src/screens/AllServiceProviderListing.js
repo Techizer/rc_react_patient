@@ -4,11 +4,9 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput,
   FlatList,
   Keyboard,
   Modal,
-  ScrollView,
   Platform,
 } from "react-native";
 import {
@@ -20,13 +18,11 @@ import {
   consolepro,
   Lang_chg,
   apifuntion,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
 
-import Styles from "../Styles";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
-import { SvgXml } from "react-native-svg";
 import ServiceProviderContainer from "../components/ServiceProviderContainer";
 import SearchInput from "../components/SearchInput";
 import FilterBottomSheet from "../components/FilterBottomSheet";
@@ -189,15 +185,6 @@ export default class AllServiceProviderListing extends Component {
     var data = new FormData();
     if (global.isLogin == false) {
 
-      // service_type: nurse
-      // page_count: 1
-      // provider_name:
-      // login_user_id: 0
-      // device_lang: ENG
-      // latitude: 37.785834
-      // longitudes: -122.406417
-      // work_area: UAE
-      // docEnableFor: ONLINE_CONSULT
       let addressDetails = await localStorage.getItemObject("addressDetails");
       console.log("addressDetails", addressDetails);
       var device_lang;
@@ -209,12 +196,10 @@ export default class AllServiceProviderListing extends Component {
 
       data.append("login_user_id", 0);
       data.append("service_type", this.state.pass_status);
-      // data.append("work_area", "UAE");
       data.append("provider_name", "");
       data.append("device_lang", device_lang);
       data.append("latitude", addressDetails?.latitude);
       data.append("longitudes", addressDetails?.longitude);
-      // data.append("docEnableFor", "ONLINE_CONSULT");
       data.append("page_count", 1);
 
     } else {
@@ -243,7 +228,6 @@ export default class AllServiceProviderListing extends Component {
       consolepro.consolelog("get_Services-response ", JSON.stringify(res));
 
       if (res.status == true) {
-        console.log('if');
         setTimeout(() => {
           this.setState({
             providersList: res.result,
@@ -279,6 +263,10 @@ export default class AllServiceProviderListing extends Component {
       }
     })
       .catch((error) => {
+        this.setState({
+          providersList: [],
+          isLoading: false
+        });
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
@@ -339,8 +327,7 @@ export default class AllServiceProviderListing extends Component {
           }
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
-          leftIcon={leftArrow}
-          rightIcon={Notification}
+          leftIcon
         />
         {/* <View style={{ backgroundColor: Colors.backgroundcolor, flex: 0.97 }}> */}
         <FlatList

@@ -27,11 +27,12 @@ import {
   msgProvider,
   msgText,
   StatusbarHeight,
+  Button
 } from "../Provider/utilslib/Utils";
-import { AuthInputBoxSec, Button } from "../components";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { leftArrow, Logo, rightArrow } from "../icons/SvgIcons/Index";
+import { leftArrow, Logo, rightArrow } from "../Icons/Index";
 
 export default class Signup extends Component {
   constructor(props) {
@@ -273,6 +274,9 @@ export default class Signup extends Component {
       <View style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
 
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
@@ -352,6 +356,7 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.emailInput.focus();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -372,6 +377,7 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.mobileInput.focus();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -456,6 +462,7 @@ export default class Signup extends Component {
                   onSubmitEditing={() => {
                     //this.passwordInput.focus();
                   }}
+                  blurOnSubmit={Platform.OS === 'ios' ? true : false}
                 />
               </View>
 
@@ -479,6 +486,7 @@ export default class Signup extends Component {
                   onSubmitEditing={() => {
                     this.idInput.focus();
                   }}
+                  blurOnSubmit={Platform.OS === 'ios' ? true : false}
                   editable
                 />
 
@@ -513,6 +521,7 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.passwordInput.focus();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -572,6 +581,7 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 this.confirmInput.focus();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -615,6 +625,7 @@ export default class Signup extends Component {
               onSubmitEditing={() => {
                 // this.signup_click()
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 

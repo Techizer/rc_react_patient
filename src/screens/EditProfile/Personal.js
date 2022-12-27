@@ -27,12 +27,12 @@ import {
     msgTitle,
     Cameragallery,
     mediaprovider,
-    windowHeight,
+    AuthInputBoxSec,
+    Button
 } from "../../Provider/utilslib/Utils";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { AuthInputBoxSec, Button, DropDownboxSec } from "../../components";
 import { SvgXml } from "react-native-svg";
-import { dummyUser, Edit } from "../../icons/SvgIcons/Index";
+import { dummyUser, Edit } from "../../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import NationalityBottomSheet from "../../components/ListBottomSheet";
 
@@ -374,7 +374,7 @@ const Personal = () => {
                         setUserDetails(prevState => ({ ...prevState, profile_img: config.img_url3 + result['image'] }))
                     }
 
-                    
+
 
 
                 } else {
@@ -480,6 +480,9 @@ const Personal = () => {
 
 
             <KeyboardAwareScrollView
+                // keyboardOpeningTime={200}
+                extraScrollHeight={50}
+                enableOnAndroid={true}
                 keyboardShouldPersistTaps='handled'
                 contentContainerStyle={{
                     justifyContent: 'center',
@@ -556,6 +559,7 @@ const Personal = () => {
                         onSubmitEditing={() => {
                             //this.passwordInput.focus();
                         }}
+                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
                     />
 
@@ -577,6 +581,7 @@ const Personal = () => {
                         onSubmitEditing={() => {
                             //this.passwordInput.focus();
                         }}
+                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable={false}
                     />
 
@@ -610,6 +615,7 @@ const Personal = () => {
                                 onSubmitEditing={() => {
                                     //this.passwordInput.focus();
                                 }}
+                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                 editable={false}
                             />
                         </View>
@@ -635,6 +641,7 @@ const Personal = () => {
                                 onSubmitEditing={() => {
                                     //this.passwordInput.focus();
                                 }}
+                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                 editable
                             />
                             <Text
@@ -669,6 +676,7 @@ const Personal = () => {
                         onSubmitEditing={() => {
                             //this.passwordInput.focus();
                         }}
+                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
                     />
 
@@ -853,6 +861,7 @@ const Personal = () => {
                         onSubmitEditing={() => {
                             //this.passwordInput.focus();
                         }}
+                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
                     />
 
@@ -874,12 +883,13 @@ const Personal = () => {
                         onSubmitEditing={() => {
                             //this.passwordInput.focus();
                         }}
+                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable={false}
                     />
 
                     <Button
                         text={Lang_chg.submitbtntext[config.language]}
-                        onPress={() =>saveInfo()}
+                        onPress={() => saveInfo()}
                         btnStyle={{ marginTop: vs(15) }}
                     />
 

@@ -34,6 +34,7 @@ const NonEditableInput = ({
   inputRef,
   value,
   data,
+  title,
   ...props
 }) => {
   return (
@@ -44,7 +45,7 @@ const NonEditableInput = ({
           width: '35%',
           justifyContent:'center'
         }}>
-          <Text style={styles.Title}>{'Appointment ID'}</Text>
+          <Text style={styles.Title}>{title}</Text>
         </View>
 
         <View style={{

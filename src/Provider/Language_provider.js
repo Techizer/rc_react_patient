@@ -83,21 +83,14 @@ class Language_provider {
   Skip = ["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
   //---------------------splash------------------
   Splashtext1 = [
-    "The Best Company for Medicial Services & Home Healthcare",
-    " أفضل شركة للخدمات   \n الطبية  و الرعاية  الصحية   \n المنزلية  ",
+    "The best care, in the best place. We Take Pride In Being The Best.",
+    "أفضل رعاية في أفضل مكان. نحن نفتخر بكوننا الأفضل.",
   ];
 
   Splashtext2 = [
-    "One of The Best Licensed Home Healthcare Company in  The Saudi Arabia",
-    "واحدة من أفضل شركات الطب عن بعد والرعاية الصحية المنزلية المرخصة",
+    "It’s our duty to care for your health. We Treat our Clients like Family.",
+    "من واجبنا الاهتمام بصحتك. نتعامل مع عملائنا كعائلة.",
   ];
-  // Splashtext3 = ['Healthcare Company in  The', 'شركة رعاية صحية في'];
-  support_text = [
-    "The Best Company for Medicial Services & Home Healthcare",
-    "فضل شركةللخدمات الطبية  & الرعاية الصحية المنزلية  ",
-  ];
-  // Splashtext4 = ['Saudi Arabia', 'المملكة العربية السعودية'];
-  //-------------------------------------------------------------------------signup------------------------------------------
   Signup = ["Sign up", " التسجيل  "];
   Signuptext1 = ["Register to open your Account", "قم بالتسجيل لفتح حسابك   "];
   textinputname = ["Full Name", " الاسم الكامل  "];
@@ -141,7 +134,7 @@ class Language_provider {
   allreadyhaveaccounttext = ["Already have an account?", "هل لديك حساب؟ "];
   loginheretext = ["Login Here", "تسجيل الدخول هنا "];
   CC_code = ["CC", "CC"];
-  Country_code = ["Country Code", "الرقم الدولي"];
+  Country_code = ["Country Code", "مفتاح الدولة"];
 
   //--------------------------------------------------------------otppage-----------------------------------------
   otp = ["OTP Verification Code", "رمز التحقق لمرة واحدة  "];
@@ -157,7 +150,7 @@ class Language_provider {
     "Can't Login,Need help?",
     "لا يمكنك تسجيل الدخول ، تحتاج إلى مساعدة؟",
   ];
-  postissuetext = ["Post Issue", "إصدار آخر"];
+  postissuetext = ["Post Issue", "إبلاغ عن مشكلة"];
   create_new_pass = ["Create New Password", "إنشاء كلمة مرور جديدة  "];
   SearchLocation = [
     "Search for area, street name..",
@@ -172,26 +165,26 @@ class Language_provider {
   MyDashboard = ["Home", " الرئيسية  "];
   SearchDoctorHospitalsorLabetc = ["Search Doctor", "ابحث عن دكتور"];
   HomeHealthcareServiceAppointments = [
-    "Home Healthcare Service Appointments ",
+    "Home Healthcare Service Appointment ",
     " مواعيد خدمة الرعاية الصحية المنزلية  ",
   ];
   BookaNurse = ["Book a Nurse", "احجز ممرضة"];
   OpenforHourlyorTaskBasedBooking = [
     "Open for Hourly or Task Based Booking",
-    "مفتوح للحجز كل ساعة أو الحجز على أساس المهمة",
+    "مُتاح للحجز كل ساعة أو الحجز على أساس المهمة",
   ];
-  BookaPhysiotherapist = ["Book a Physiotherapist", "احجز معالجًا طبيعيًا"];
+  BookaPhysiotherapist = ["Book a Physiotherapist", "احجز علاج طبيعي"];
   for30mins = ["Book a Nurse Assistant", "حجز مساعد ممرض"];
   BookaNurseAssistant = ["Book a Nurse Assistant", "حجز مساعد ممرض"];
   BookaNurseAssistant = ["Book a Nurse Assistant", "حجز مساعد ممرض"];
 
-  DoctorConsultation = ["Doctor Consultation", "استشارة الطبيب"];
-  Lab_Test_Booking = ["Lab Test Booking", "حجز الاختبارات المعملية"];
-  Find_Labs = ["Find Labs", "البحث عن المعامل"]
-  MyAppointments = ["My Appointments", "واعيدي  "];
-  CartItem = ["Cart Item", "عربة التسوق  "];
+  DoctorConsultation = ["Doctor Consultation", "استشارة طبيب"];
+  Lab_Test_Booking = ["Lab Test Booking", "حجز فحص مختبر"];
+  Find_Labs = ["Find Labs", "البحث عن مختبرات"]
+  MyAppointments = ["My Appointments", "مواعيدي"];
+  CartItem = ["Cart Item", "عربة التسوق"];
   BOOKNOW = ["BOOK NOW", "احجز الآن"];
-  Nurse = ["Nurse", "ممرضة    "];
+  Nurse = ["Nurse", "ممرضة"];
   SearchNurse = [
     "Search Nurse near your address",
     "ابحث عن ممرضة بالقرب من عنوانك",
@@ -259,8 +252,8 @@ class Language_provider {
   savebtntext = ["SAVE", "حفظ  "];
   yes_txt = ["Yes", "نعم "];
   no_txt = ["NO", "لا "];
-  yes_txt_new = ["Yes", "Yes"];
-  no_txt_new = ["No", "No"];
+  yes_txt_new = ["Yes", "نعم"];
+  no_txt_new = ["No", "لا"];
   //lifestyle
   smoking = ["Smoking Habits", "عادات التدخين  "];
   Alcohol = ["Alcohol Habits", "عادات تناول الكحول  "];
@@ -283,7 +276,7 @@ class Language_provider {
   forgotbtn = ["SEND MAIL", "أرسل رسالة "];
 
   //-------------------------------------------------------------------------------supportandmore
-  supporttext = ["Support & More", " الدعم & المزيد "];
+  supporttext = ["Support & More", " الدعم و المزيد "];
   version = ["Version 1.0.0", "الإصدار 1.0.0"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
@@ -294,17 +287,17 @@ class Language_provider {
   textinputaddress = ["Address", "العنوان  "];
 
   need_text = [
-    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at +44 24776 9200 number",
-    " اكتب مشكلتك هنا، وسوف نتواصل معك في غضون 24–48 ساعة عمل،أو إذا كان لديك أي شيء عاجل اتصل بنا على الرقم  24776 9200",
+    "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at +966 920024776 number",
+    " اكتب مشكلتك هنا، وسوف نتواصل معك في غضون 24–48 ساعة عمل،أو إذا كان لديك أي شيء عاجل اتصل بنا على الرقم  920024776",
   ];
   text_input_topic = [
     "Write your issue in details here.",
     " اكتب مشكلتك بالتفصيل هنا  ",
   ];
-  select_topic_text = ["Select a Topic", "اختر عنوانا "];
+  select_topic_text = ["Select a Topic", "اختر موضوع "];
   select_issues_text = ["Select issue", "حدد المشكلة  "];
   //modal
-  thank = ["Thank You", "شكرا لك  "];
+  thank = ["Payment Successful", "تم الدفع بنجاح"];
   success = ["Successful", "ناجح  "];
   text_of_modal = [
     "Congratulation, Roots Care Submission is Successfully done",
@@ -314,7 +307,7 @@ class Language_provider {
 
   drawername = ["Sanjay Singh", "سانجاي سينغ"];
   drawerid = ["anant@outlook.com", "anant@outlook.com"];
-  draweraddress = ["Riyadh,saudi Arabia", "رياض,سعودي عربية"];
+  draweraddress = ["Riyadh,saudi Arabia", "رياض,السعودية"];
 
   upcoming_heading = ["Upcoming Appointment", " الموعد القادم  "];
   upcoming_text = [
@@ -332,12 +325,12 @@ class Language_provider {
   titleexitapp = ["Exit app", "الخروج من التطبيق"];
   exitappmessage = ["Do you want to exit", "هل تريد الخروج"];
   registration = ["Registration", "التسجيل  "];
-  cancelmedia = ["Cancel", "Cancel"];
-  Mediagallery = ["Choose from Gallery", "Choose from Gallery"];
-  MediaCamera = ["Take Photo", "Take Photo"];
-  select_option = ["Add Photo!", "Add Photo!"];
-  ENG = ["ENG", "ENG"];
-  AR = ["AR", "AR"];
+  cancelmedia = ["Cancel", "إلغاء"];
+  Mediagallery = ["Choose from Gallery", "اختر من الاستوديو"];
+  MediaCamera = ["Take Photo", "التقط صورة"];
+  select_option = ["Add Photo!", "إضافة صورة"];
+  ENG = ["English", "انجليزي"];
+  AR = ["Arabic", "عربي"];
   PrivacyPolicy = ["Privacy Policy", "سياسة الخصوصية  "];
   TermsandConditions = ["Terms and Conditions", "الشروط والأحكام  "];
   AboutRootscare = ["About Rootscare", "حول روتس كير   "];
@@ -361,9 +354,9 @@ class Language_provider {
   ActivityLevel = ["Activity Level", "مستوى النشاط   "];
   FoodPreference = ["Food Preference", "  الغذاء المفضل   "];
   Occupation = ["Occupation", "المهنة  "];
-  AvailableforBooking = ["Available for Booking", "تاح للحجز "];
+  AvailableforBooking = ["Available for Booking", "مُتاح للحجز "];
   BOOKAPPOINTMENT = ["BOOK APPOINTMENT", "حجز موعد "];
-  BOOKTEST = ["BOOK TESTS", "احجز الاختبارات"];
+  BOOKTEST = ["BOOK TESTS", "احجز فحوصات"];
   FindSpecialtyDoctor = [
     "FIND SPECIALTY & DOCTORS",
     "ابحث عن التخصصات والأطباء",
@@ -373,7 +366,7 @@ class Language_provider {
   Location = ["Location", "موقع"];
   Physiotherapist = ["Physiotherapist", "اخصائي العلاج الطبيعي  "];
   Nurse_assistant = ["Nurse Assistant", "مساعد ممرض    "];
-  Babysitter = ["Babysitter", "جليسه اطفال    "];
+  Babysitter = ["Babysitter", "جليسة أطفال    "];
   Rating = ["Rating", "التقييم "];
   Booking = ["Booking", "حجز "];
   Experience = ["Experience", "الخبرة  "];
@@ -381,23 +374,12 @@ class Language_provider {
   AVAILABLE_TESTS = ["Available Tests", "الفحوصات المتاحة"];
 
   OnlineConsultation = ["Online Consultation", "الاستشارة عبر الإنترنت"];
-  OnlineCons = ["Online Cons", "سلبيات عبر الإنترنت"];
+  OnlineCons = ["Online Cons", "استشارات عبر الإنترنت"];
   HomeVisit = ["Home Visit", "زيارة منزلية"];
 
-  Tests = ["Tests", "الاختبارات"];
+  Tests = ["Tests", "الفحوصات"];
   Not_available_for_booking = ["Not Available for Booking", "غير متاح للحجز "];
-  the_best_company = ["The Best Company", " أفضل شركة"];
-  for_mediical = ["for Medical Services", "للخدمات الطبية"];
-  home_helth = ["& Home Healthcare", "& الرعاية الصحية المنزلية"];
-  Splashtext_one = ["The Best Company for", "أفضل شركة لـ"];
-  Splashtext_two = ["Medical Services & Home", "الخدمات الطبية والمنزل"];
-  Splashtext_three = ["Healthcare", "الرعاىة الصحية"];
-  Splashtext_four = [
-    "One Of The Best Licensed Home",
-    "أحد أفضل المنازل المرخصة",
-  ];
-  Splashtext_five = ["Healthcare Company in The", "شركة رعاية صحية في"];
-  Splashtext_six = ["Saudi Arabia", "المملكة العربية السعودية"];
+
   BookOnlineAppointment = ["BOOK ONLINE APPOINTMENT",
     "حجز موعداستشارة عن بعد"];
   BookHomeVisitAppointment = [
@@ -413,18 +395,18 @@ class Language_provider {
     "حجز موعد بنظام الساعة  ",
   ];
   BOOKLABTESTAPPOINTMENT = ["BOOK LAB TESTS", "احجز الاختبارات المعملية"];
-  HealthPackages = ["Health Packages", "الحزم الصحية"];
-  PackageDetails = ["Package Details", "تفاصيل الحزمة"];
-  TestsIncluded = ["Tests Included", "وشملت الاختبارات"];
+  HealthPackages = ["Health Packages", "الباقات الصحية"];
+  PackageDetails = ["Package Details", "تفاصيل الباقة"];
+  TestsIncluded = ["Tests Included", "تشمل الفحوصات"];
   AvailableNurse = ["Available Nurse's", " ممرضة متاح "];
   See_all = ["See All", "عرض الكل  "];
-  Book = ["Book", "الكتاب"];
+  Book = ["Book", "حجز"];
   TaskBooking = [" Task Booking", " حجز  مُهمة "];
   HourlyBooking = ["Hourly Booking", "حجز بنظام الساعة "];
-  SAR = ["SAR", "SAR"];
+  SAR = ["SAR", "ر.س"];
   Searchtask = ["Search task", "بحث عن مهمة  "];
-  SearchTests = ["Search tests", "اختبارات البحث"];
-  SearchPackages = ["Search packages", "حزم البحث"];
+  SearchTests = ["Search tests", " بحث عن فحوصات"];
+  SearchPackages = ["Search packages", "بحث عن باقات "];
   TalkToDoctor = [
     "Tell to doctor regarding your symptom?",
     "أخبر طبيبك بخصوص الأعراض الخاصة بك؟",
@@ -462,8 +444,8 @@ class Language_provider {
   ];
   PROCEEDTOcheckout = ["PROCEED TO CHECKOUT", " انتقل إلى الدفع  "];
   Time = ["Time", "الوقت  "];
-  we_wii_back = ["We'll be right back.", "سوف نعود حالاً. وعد   "];
-  promise = ["Promise"];
+  we_wii_back = ["We'll be right back.", "سوف نعود حالاً  "];
+  promise = ["Promise", "وعد"];
   our_sincere = [
     "Our sincere apologies but this page is temporarily unavailable. Check back soon.",
     "  .خالص اعتذارنا ولكن هذه الصفحة غير متاحة مؤقتا. حاول مرة أخرى قريبًا  ",
@@ -471,7 +453,7 @@ class Language_provider {
   Bad_gateway = ["Bad gateway", "بوابة غير صالحة  "];
   Go_back = ["GO BACK", "الرجوع للخلف  "];
   Bookings = ["Bookings", "الحجوزات  "];
-  AddPatient = ["Add Patient", " أضف المريض    "];
+  AddPatient = ["Add Patient", " أضف مريض    "];
   Booking_detail = ["Booking", "حجز "];
   Searchphysi = [
     "Search Physiotherapist near your address",
@@ -479,7 +461,7 @@ class Language_provider {
   ];
   Searchseassistent = [
     "Search Nurse Assistant near your address",
-    "ابحث عن مساعد ممرضة بالقرب من عنوانك",
+    "ابحث عن مساعدة ممرضة بالقرب من عنوانك",
   ];
   SearchBabysitter = [
     "Search Babysitter near your address",
@@ -493,8 +475,8 @@ class Language_provider {
     "Search Hospital near your address",
     "ابحث عن مستشفى بالقرب من عنوانك",
   ];
-  SearchLab = ["Search Lab near your address", "معمل البحث بالقرب من عنوانك"];
-  DoctorsUnderHospital = ["DOCTORS UNDER HOSPITAL", "أطباء تحت المستشفى"];
+  SearchLab = ["Search Lab near your address", "ابحث عن مختبر بالقرب من عنوانك"];
+  DoctorsUnderHospital = ["DOCTORS UNDER HOSPITAL", "طاقم أطباء المستشفى"];
   Availablephysotharpst = [
     "Available Physiotherapist's",
     " أخصائي علاج طبيعي متاح ",
@@ -502,23 +484,25 @@ class Language_provider {
   Availablebabysitter = ["Available Babysitter's", " جليسة أطفال متاح "];
   Availableassistent = ["Available Nurse Assistant's", "مساعدة ممرضة متاح"];
   AvailableDoctor = ["Available Doctor's", "طبيب متاح"];
-  AvailableLab = ["Available Lab's", "المختبرات المتاحة"];
+  AvailableLab = ["Available Lab's", "الفحوصات المتاحة"];
   Add = ["Add", " إضافة  "];
   Upload = [
     "Upload photo or previous prescription",
     "قم بتحميل الصورة أو الوصفة الطبية السابقة",
   ];
-  appoinment_aucess = [
-    "Your appointment has been booked Successfully.",
-    "تم حجز موعدك بنجاح.",
+  Appoinment_Success = [
+    "Congratulations, the appointment has been booked successfully. Thank you for choosing Rootscare.",
+    "مبروك ، لقد تم حجز الموعد بنجاح. شكرًا لاختيارك روتس كير.",
   ];
-  Gotoappointment = ["Go to appointment", " الذهاب إلى الموعد  "];
+  GoToAppointment = ["Go to Appointment", " الذهاب إلى الموعد  "];
+  GoToConslt = ["Go to Consultations", "اذهب  إلى الاستشارة"];
+  GoToLabs = ["Go to Lab Tests", "اذهب إلى فحص المختبر"];
   Reschedule = ["RESCHEDULE", "إعادة جدولة "];
   Booked = ["Booked", "تم الحجز "];
   Patient = ["Patient", "المريض   "];
   Doctor = ["Doctor", "طبيب"];
   Hospital = ["Hospital", "مستشفى"];
-  ChangeLab = ["Change Lab", "تغيير المعمل"];
+  ChangeLab = ["Change Lab", "تغيير المختبر"];
   Lab = ["Lab", "مختبر"];
   AppointmentDetails = ["Appointment Details", "تفاصيل الموعد   "];
   BookingID = ["Booking ID", "رقم الحجز "];
@@ -528,17 +512,17 @@ class Language_provider {
   BookingOn = ["Booked On ", "تم الحجز في  "];
   SAVECHANGERESCHEDULE = [
     "SAVE CHANGE & RESCHEDULE",
-    " حفظ التغيير  & إعادة جدولة  ",
+    " حفظ التغيير  و إعادة جدولة  ",
   ];
   PATIENT_SYMPTOM = ["Patient Symptom", "أعراض المريض"];
   SYMPTOM_DESCRIPTION = ["Symptom description", "وصف الأعراض"];
-  VIEW = ["View", "رأي"];
-  PRESCRIPTION = ["Prescription", "روشتة"];
-  ReportAttachment = ["REPORT ATTACHMENT", "تقرير مرفق"];
+  VIEW = ["View", "عرض"];
+  PRESCRIPTION = ["Prescription", "وصفة طبية"];
+  ReportAttachment = ["REPORT ATTACHMENT", "إرفاق تقرير"];
   DOWNLOAD = ["Download", "تحميل"];
   VIDEO_CALL = ["VIDEO CALL", "مكالمة فيديو"];
   VIEWDETAILS = ["VIEW DETAILS", " عرض التفاصيل  "];
-  Refunde = ["REFUNDED", "REFUNDED"];
+  Refunde = ["REFUNDED", "المبلغ مسترد"];
   patient_details = ["Patient Details", "تفاصيل المريض   "];
   appointment_accepted_otp_text = [
     "Provide OTP at the End of Service",
@@ -568,64 +552,82 @@ class Language_provider {
   Lab_Test = ["Lab Test", "فحص مختبر"];
   Profile = ["Profile", "الملف الشخصي"];
   All_Consultations = ["All Consultations, Orders, & Bookings", "جميع الاستشارات والطلبات والحجوزات"];
-  Appointment_Bookings = ['Appointment Bookings', 'حجوزات المواعيد'];
-  Appointment_Booking_Details = ['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، ممرضة مؤخرة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
+  Appointment_Bookings = ['Appointment Bookings', 'مواعيد الحجوزات'];
+  Appointment_Booking_Details = ['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، مساعدة ممرضة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
   Doctor_Consultations = ['Doctor Consultations', 'استشارات الطبيب'];
-  Doctor_Consultation_Details = ['Doctor Consul, Ongoing, Past, etc.', 'طبيب قنصل ، مستمر ، سابق ، إلخ.'];
-  Lab_Test_Bookings = ['Lab Test Bookings', 'حجوزات الاختبارات المعملية'];
+  Doctor_Consultation_Details = ['Doctor Consul, Ongoing, Past, etc.', 'استشارة طبيب ، مستمر ، سابق ، إلخ.'];
+  Lab_Test_Bookings = ['Lab Test Bookings', 'حجوزات فحص المختبر'];
   Lab_Test_Booking_Details = ['Completed, Closed, Or Cancelled.', 'مكتمل أو مغلق أو ملغى.'];
   Orders = ['Orders', 'ترتيب'];
   Order_Details = ['Medicines & Other Equipments', 'الأدوية والمعدات الأخرى'];
-  Acccount_and_More = ["Account & More", "الحساب  & المزيد  "];
+  Acccount_and_More = ["Account & More", "الحساب  و المزيد  "];
   Acccount_Setting = ['Account Settings', 'إعدادت الحساب'];
   Manage_Address = ["Manage Address", "إدارة العنوان"];
   Manage_Members = ["Manage Members | Health Record", "إدارة الأعضاء | السجل الصحي"];
   Find_Location = ["Find Location", "البحث عن الموقع"];
   Health_Record = ['My Health Record', 'سجلي الصحي']
-  Support_and_More = ["Support & More", " الدعم & المزيد "];
-  Like_Us = ["Like Us? Give 5 Star Review", "مثلنا؟ أعط مراجعة 5 نجوم"];
-  SignOut = ["Sign Out", "خروج"];
-  About_App = ['Making healthcare digital & easy', 'جعل الرعاية الصحية رقمية وسهلة'];
-  About_App_Details = ['The best licensed home healthcare company in the kingdom', 'أفضل شركة رعاية صحية منزلية مرخصة في المملكة'];
-  Nurse_Booking = ['Nurse Booking', 'ممرضة الحجز'];
+  Support_and_More = ["Support & More", " الدعم و المزيد "];
+  Like_Us = ["Like Us? Give 5 Star Review", "أعجبك؟ أعط مراجعة 5 نجوم"];
+  SignOut = ["Sign Out", "تسجيل خروج"];
+  About_App = ['Making healthcare digital & easy', 'نجعل الرعاية الصحية رقمية وسهلة'];
+  About_App_Details = ['The best licensed home healthcare company', 'أفضل شركة رعاية صحية منزلية مرخصة'];
+  Nurse_Booking = ['Nurse Booking', 'حجز ممرضة'];
   RootsCare = ["Roots Care", "روتس كير "];
   Howitworks = ["How it works", "How it works"];
-  BookConsultation = ["BOOK CONSULTATION", "استشارة كتاب"];
-  NearBy = ["Near by", "مجاور"];
+  BookConsultation = ["BOOK CONSULTATION", "حجز استشارة "];
+  NearBy = ["Near by", "قريب من"];
   OtpTime = ['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.'];
   NeedSupport = ["Need Support", "تحتاج مساعدة"];
   Add_Address = ["Add This Address", "أضف هذا العنوان"];
   Saved_Address = ["Saved Addresses", "العناوين المحفوظة"];
   Edit_Address = ["Edit Address", "تعديل العنوان"];
-  Address_Title = ["Address Title", "عنوان عنوان"];
+  Address_Title = ["Address Title", "اسم العنوان"];
   Google_Address = ["Google Map Address", "عنوان خريطة جوجل"];
   Nearest_Address = ["Nearest Landmark", "أقرب معلم"];
   Building_Name = ["Building Name", "اسم المبنى"];
   Save_Address = ["SAVE ADDRESS", "حفظ العنوان"];
   Delete = ["DELETE", "حذف   "];
-  Add_Member = ["ADD MEMBER", "إضافة جديد"];
+  Add_Member = ["ADD MEMBER", "إضافة عضو"];
   Add_New_Member = ["ADD NEW MEMBER", "إضافة عضو جديد"];
+  Edit_Member = ["Edit Member", "تحرير العضو"];
   Upload_Photo = ["Upload a photo of the member", "قم بتحميل صورة العضو"];
   Photo_Size = ["Max. Upload Size 10 MB", "الأعلى. حجم الرفع 10 ميجا بايت"];
   Archive = ["ARCHIVE", "أرشيف"];
   Merge = ["MERGE", "دمج"];
   Default_Address = ["Default Address", "العنوان الافتراضي"];
-  Advance_Filter = ["Advance Filter", "مرشح متقدم"];
+  Advance_Filter = ["Advance Filter", "فلتر متقدم"];
   Consult_Type = ["Consultation Type", "نوع الاستشارة"];
   Doc_Exp = ["Doctor Experience", "خبرة الطبيب"];
   Select_Nationality = ["Select Nationality", "اختر الجنسية"];
-  Type=['Type','يكتب'];
+  Type = ['Type', 'نوع'];
   Rate_Appointment = ["RATE APPOINTMENT", "تحديد موعد"];
   Appointment_Details = ["Appointment Details", "تفاصيل الموعد"];
-  Lab_Test_Details = ["Lab Test Details", "تفاصيل الاختبارات المعملية"];
+  Lab_Test_Details = ["Lab Test Details", "تفاصيل فحوصات المختبر"];
   Consultation_Details = ["Consultation Details", "تفاصيل الاستشارة"];
-  Consultation_Help= ["Need help with your consultation?", "تحتاج مساعدة في استشارتك؟"];
-  ContactUs= ["Contact Us", "اتصل بنا"];
-  Orders=['Orders','ترتيب'];
-  Voice_Recording=['Voice Recording','تسجيل صوتي'];
-  Description=['Description','وصف'];
-  Appoitment_Issue=['Post Your Appointment issue','انشر قضية موعدك'];
-  Subject=['Subject','موضوعات'];
+  Consultation_Help = ["Need help with your consultation?", "تحتاج مساعدة في استشارتك؟"];
+  ContactUs = ["Contact Us", "اتصل بنا"];
+  Orders = ['Orders', 'ترتيب'];
+  Voice_Recording = ['Voice Recording', 'تسجيل صوتي'];
+  Description = ['Description', 'وصف'];
+  Appoitment_Issue = ['Post Your Appointment issue', 'ارسل مشكلة موعدك'];
+  Subject = ['Subject', 'موضوع'];
+  Default = ['default', 'افتراضي'];
+  Continue_Booking = ['CONTINUE TO BOOKING', 'تابع الحجز'];
+  Edit = ['EDIT', 'تعديل'];
+  Save = ['SAVE', 'حفظ'];
+  Add_New_Address = ['Add New Address', 'حفظ'];
+  Delete_Member = ["Delete Member", "حذف العضوية"];
+  Delete_Address = ["Delete Address", "حذف العنوان"];
+  Sure_Delete = ['Are you sure you want to delete this member?', 'هل أنت متأكد من طلب حذف العضوية؟'];
+  Sure_Delete_Address = ['Are you sure you want to delete this address?', 'هل أنت متأكد أنك تريد حذف هذا العنوان؟'];
+  Select_Member = ['Select Member', 'حدد عضو'];
+  CantDelete = [`Default address can't be removed, make another address default before you delete this address.`, `لا يمكن إزالة العنوان الافتراضي ، قم بتعيين عنوان آخر افتراضيًا قبل حذف هذا العنوان.`];
+  Email = ["Email Id", "البريد الالكتروني"];
+  PhoneNumber = ["Mobile Number", "رقم الهاتف المحمول"];
+  LoginIssue = ["Login Issue", "مشكلة تسجيل الدخول"];
+  Login_Issue = ['Post Your Login issue', 'انشر مشكلة تسجيل الدخول الخاصة بك'];
+  OrderId = ["Order ID", "رقم التعريف الخاص بالطلب"];
+
 
 
 

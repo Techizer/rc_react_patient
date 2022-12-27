@@ -9,8 +9,6 @@ import {
   Colors,
   Font,
   config,
-  windowWidth,
-  Lang_chg,
   localStorage,
   apifuntion,
   consolepro,
@@ -19,15 +17,20 @@ import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 
 
+const Upcoming = (props) => {
 
-const Upcoming = ({ navigation }) => {
+  const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const [appointments, setAppointments] = useState([1, 2, 3, 4, 5, 6, 7])
-  const [isLoading, setIsLoading] = useState(true)
+
 
   useEffect(() => {
-    getAppointments()
-  }, [isLoading])
+    // console.log('******************************', props?.route?.params?.isGuest);
+    if (props?.route?.params?.isGuest === 'false') {
+      getAppointments()
+    }
+  }, [isRefreshing])
 
 
 
@@ -49,18 +52,20 @@ const Upcoming = ({ navigation }) => {
         consolepro.consolelog("getAppointments-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
+            setIsRefreshing(false)
             setIsLoading(false)
             setAppointments(obj.result)
           }, 500);
         } else {
-          setTimeout(() => {
-            setIsLoading(false)
-            setAppointments(obj.result)
-          }, 500);
+          setIsRefreshing(false)
+          setIsLoading(false)
+          setAppointments([])
           return false;
         }
       }).catch((error) => {
+        setAppointments([])
         setIsLoading(false)
+        setIsRefreshing(false)
         consolepro.consolelog("getAppointments-error ------- " + error);
       });
   };
@@ -73,6 +78,7 @@ const Upcoming = ({ navigation }) => {
 
       <FlatList
         showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => `Appointment # ${index}`}
         contentContainerStyle={{ paddingBottom: vs(100) }}
         data={appointments}
         ItemSeparatorComponent={() => {
@@ -84,7 +90,7 @@ const Upcoming = ({ navigation }) => {
           return (
             <AppointmentContainer
               Item={item}
-              navigation={navigation}
+              navigation={props.navigation}
               isLoading={isLoading}
             />
           )
@@ -97,19 +103,19 @@ const Upcoming = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{'Sorry, no appointments found'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Appointment Found' : 'Sorry, no appointments found'}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{'You can start a new appointment with our qualified home service providers!'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? 'No Appointment record found, user type is Guest' : 'You can start a new appointment with our qualified home service providers!'}</Text>
             </View>
           )
         }}
-        refreshing={isLoading}
-        onRefresh={() => setIsLoading(true)}
+        refreshing={isRefreshing}
+        onRefresh={() => setIsRefreshing(true)}
       />
 
 

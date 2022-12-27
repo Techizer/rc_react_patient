@@ -16,26 +16,23 @@ import {
   windowHeight,
   StatusbarHeight,
 } from "../../Provider/utilslib/Utils";
-import ScreenHeader from "../../components/ScreenHeader";
-import { BlackFilter, leftArrow, Notification } from "../../icons/SvgIcons/Index";
+import { ScreenHeader } from "../../components/ScreenHeader";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";
-import { s, vs } from "react-native-size-matters";
-import { SvgXml } from "react-native-svg";
 
 const Tabs = createMaterialTopTabNavigator()
 
 
 
 
-const ConsultIndex = ({ navigation,route }) => {
+const ConsultIndex = ({ navigation, route }) => {
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
   let finalPosition = headerHeight + (windowWidth * 13) / 100
 
-  
+
 
   return (
     //
@@ -72,14 +69,14 @@ const ConsultIndex = ({ navigation,route }) => {
       <Tabs.Navigator
         initialRouteName={route?.params?.todaysLength > 0 ? 'Ongoing' : 'Upcoming'}
         screenOptions={{
-          tabBarStyle: { height: (windowWidth * 10.5) / 100, width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth:0,  },
+          tabBarStyle: { height: (windowWidth * 10.5) / 100, width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
           tabBarScrollEnabled: true,
           tabBarActiveTintColor: Colors.Theme,
           tabBarInactiveTintColor: Colors.lightGrey,
           tabBarIndicatorContainerStyle: {
             height: '100%',
-            borderWidth:0 
+            borderWidth: 0
             // marginTop:vs(7)
           },
           tabBarIndicatorStyle: {
@@ -92,9 +89,9 @@ const ConsultIndex = ({ navigation,route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={'Upcoming'} component={Upcoming} />
-        <Tabs.Screen name={'Ongoing'} component={OnGoing} />
-        <Tabs.Screen name={'Past'} component={Past} />
+        <Tabs.Screen name={'Upcoming'} component={Upcoming} initialParams={{ isGuest: route?.params?.isGuest }} />
+        <Tabs.Screen name={'Ongoing'} component={OnGoing} initialParams={{ isGuest: route?.params?.isGuest }} />
+        <Tabs.Screen name={'Past'} component={Past} initialParams={{ isGuest: route?.params?.isGuest }} />
 
       </Tabs.Navigator>
 

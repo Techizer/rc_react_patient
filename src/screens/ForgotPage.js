@@ -21,12 +21,13 @@ import {
   msgText,
   apifuntion,
   StatusbarHeight,
+  Button
 } from "../Provider/utilslib/Utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AuthInputBoxSec, Button } from "../components";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { leftArrow, Logo, rightArrow } from "../icons/SvgIcons/Index";
+import { leftArrow, Logo, rightArrow } from "../Icons/Index";
 
 export default class ForgotPage extends Component {
   constructor(props) {
@@ -85,14 +86,15 @@ export default class ForgotPage extends Component {
       <View
         style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight }}>
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
             paddingBottom: vs(30),
           }}
-          showsVerticalScrollIndicator={false}
-        >
-
+          showsVerticalScrollIndicator={false}>
 
 
           <View

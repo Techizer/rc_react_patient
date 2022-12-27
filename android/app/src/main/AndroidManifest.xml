@@ -43,9 +43,11 @@
             android:name="com.dieam.reactnativepushnotification.notification_foreground"
             android:value="false" />
         <!-- Change the resource name to your App's accent color - or any other color you want -->
-        <meta-data
+        <!-- <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_color"
-            android:resource="@color/White" /> <!-- or @android:color/{name} to use a standard color -->
+            android:resource="@color/White" 
+            
+            /> -->
 
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />

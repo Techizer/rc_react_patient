@@ -11,9 +11,9 @@ import {
   config,
   windowWidth,
   Lang_chg,
+  ScreenHeader
 } from "../../Provider/utilslib/Utils";
-import ScreenHeader from "../../components/ScreenHeader";
-import { leftArrow, Notification } from "../../icons/SvgIcons/Index";
+import { leftArrow, Notification } from "../../Icons/Index";
 import Personal from "./Personal";
 import Medical from "./Medical";
 import LifeStyle from "./LifeStyle";
@@ -34,8 +34,7 @@ const Index = ({navigation}) => {
           title={Lang_chg.Editprofile[config.language]}
           navigation={navigation}
           onBackPress={() => navigation.pop()}
-          leftIcon={leftArrow}
-          rightIcon={Notification}
+          leftIcon
         />
 
         <Tabs.Navigator

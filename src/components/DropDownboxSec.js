@@ -17,12 +17,6 @@ import {
   MD3Colors,
   List,
 } from 'react-native-paper';
-import Icon from "react-native-vector-icons/MaterialIcons";
-// import { hp, wp } from "../utils/responsive";
-// import { RF } from "../utils/responsive";
-// import Fonts, { fonts, fontSizes } from "../utils/Fonts";
-// import { Color } from "../utils";
-// const { height, width } = Dimensions.get("window");
 import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
 
 const DropDownboxSec = ({

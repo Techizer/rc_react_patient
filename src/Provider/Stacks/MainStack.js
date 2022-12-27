@@ -6,20 +6,20 @@ import Splash from '../../screens/Splash';
 import AuthStack from './AuthStack';
 import DashboardStack from './DashboardStack';
 import VideoCall from '../../screens/VideoCall';
-import Show_currentlocation from '../../Show_currentlocation';
+import ManageAddress from '../../screens/ManageAddress';
 import Notifications from '../../screens/Notifications';
 import CovidPackageDetails from '../../screens/CovidPackageDetails';
 import AllServiceProviderListing from '../../screens/AllServiceProviderListing';
 import SupportandMore from '../../screens/SupportandMore';
 import EditProfile from '../../screens/EditProfile/Index';
-import FindAddress from '../../FindAddress';
+import FindAddress from '../../screens/FindAddress';
 import Booking from '../../screens/Booking';
 import ServiceProviderDetails from '../../screens/ServiceProviderDetails';
 import LabPackageListing from '../../screens/LabPackageListing';
 import LabPackageDetails from '../../screens/LabPackageDetails';
 import TermsAndConditions from '../../screens/TermsAndConditions';
 import NeedSupport from '../../screens/NeedSupport';
-import HealthRecord from '../../HealthRecord';
+import HealthRecord from '../../screens/HealthRecord';
 // -----------------------------------------
 import { Colors } from '../Colorsfont';
 import AddPatient from '../../screens/AddPatient';
@@ -28,9 +28,19 @@ import AppointmentDetails from '../../screens/AppointmentDetails';
 import Orders from '../../screens/Orders';
 
 
+let isGuest = '';
+
 const Stack = createStackNavigator()
 
 const MainStack = () => {
+
+    const checkUserType = async () => {
+        isGuest = await localStorage.getItemString('Guest')
+    }
+
+    useEffect(() => {
+        checkUserType()
+    }, [])
 
     return (
         <NavigationContainer>
@@ -60,11 +70,6 @@ const MainStack = () => {
                 />
 
                 <Stack.Screen
-                    name="Show_currentlocation"
-                    component={Show_currentlocation}
-                />
-
-                <Stack.Screen
                     name="HealthRecord"
                     component={HealthRecord}
                 />
@@ -82,16 +87,24 @@ const MainStack = () => {
                 <Stack.Screen
                     name="AllServiceProviderListing"
                     component={AllServiceProviderListing}
+
                 />
                 <Stack.Screen
                     name="SupportandMore"
                     component={SupportandMore}
+                    initialParams={{ isGuest: isGuest }}
                 />
 
                 <Stack.Screen
                     name="EditProfile"
                     component={EditProfile}
                 />
+
+                <Stack.Screen
+                    name="ManageAddress"
+                    component={ManageAddress}
+                />
+
                 <Stack.Screen
                     name="FindAddress"
                     component={FindAddress}

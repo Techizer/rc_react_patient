@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   Platform,
+  Linking,
 } from "react-native";
 import {
   Colors,
@@ -22,7 +23,7 @@ import {
   apifuntion,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
-import { dummyUser, leftArrow, rightArrow, Appointment, Consultations, AccountSetting, ManageAddress, HealthRecord, LabTest, LikeUs, SignOut, Orders, Support } from "../icons/SvgIcons/Index";
+import { dummyUser, leftArrow, rightArrow, Appointment, Consultations, AccountSetting, ManageAddress, HealthRecord, LabTest, LikeUs, SignOut, Orders, Support } from "../Icons/Index";
 // ----------------------------------------
 import { DrawerActions } from "@react-navigation/native";
 import { ms, s, vs } from "react-native-size-matters";
@@ -30,30 +31,17 @@ import { SvgXml, SvgUri } from 'react-native-svg';
 import DrawerItemContainer from "./DrawerItem";
 let isGuest = false;
 
-global.add_location = "NA";
 export default class Drawerscreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
-      address_new: "NA",
-      address_old: "",
-      profile_img: null
+      profile_img: null,
+      name: ''
     };
-
-    //    add_location='NA'
   }
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
-      consolepro.consolelog(" add_location = data2", add_location);
-      if (add_location != "NA") {
-        this.setState({
-          address_new: add_location.address,
-          latitude: add_location.latitude,
-          longitude: add_location.longitude,
-        });
-      }
-      // console.log("address_new", add_location.address);
       this.getProfile();
       this.checkUserType()
     });
@@ -63,26 +51,20 @@ export default class Drawerscreen extends Component {
     isGuest = await localStorage.getItemString('Guest')
   }
   getProfile = async () => {
+
+
     let user_details = await localStorage.getItemObject("user_arr");
-    let address_arr = await localStorage.getItemObject("address_arr");
-    console.log("user_details in side menu", user_details);
-    // console.log("address_arr", address_arr);
-    this.setState({ address_new: address_arr });
-
-    // console.log('...................', user_details.image);
-    this.setState({
-      name: user_details["first_name"],
-      email: user_details["email"],
-
-      mobile: user_details["phone_number"],
-      address_old: user_details["current_address"],
-    });
-    if (user_details.image != null) {
+    if (user_details != null && user_details != '' && user_details != undefined) {
       this.setState({
-        profile_img: config.img_url3 + user_details["image"],
+        name: user_details["first_name"],
       });
+      if (user_details.image != null) {
+        this.setState({
+          profile_img: config.img_url3 + user_details["image"],
+        });
+      }
     }
-  };
+  }
 
   confirm_click = async () => {
     this.logoutApi();
@@ -99,9 +81,12 @@ export default class Drawerscreen extends Component {
     })
   };
   logoutApi = async () => {
+    let user_id = ''
     let user_details = await localStorage.getItemObject("user_arr");
-    // console.log("user_details", user_details);
-    let user_id = user_details["user_id"];
+
+    if (user_details != null && user_details != '' && user_details != undefined) {
+      user_id = user_details["user_id"];
+    }
 
     let url = config.baseURL + "api-logout";
     var data = new FormData();
@@ -177,10 +162,10 @@ export default class Drawerscreen extends Component {
                         fontFamily: Font.Medium,
                         fontSize: Font.xxxlarge,
                         textAlign: config.textRotate,
-                        opacity: (isGuest === 'true') ? 0.3 : 1
+
                       }}
                     >
-                      {this.state.name}
+                      {isGuest === 'true' ? 'Guest User' : this.state.name}
                       {/* {config.language == 0 ? 'Layth Ghassan Alkharouf' : 'ليث غسان الخروف'} */}
                     </Text>
                   </View>
@@ -366,7 +351,7 @@ export default class Drawerscreen extends Component {
                 leftIcon={ManageAddress}
                 disable={isGuest === 'true' ? true : false}
                 onPress={() => {
-                  this.props.navigation.navigate('Show_currentlocation')
+                  this.props.navigation.navigate('ManageAddress')
                 }}
               />
 
@@ -378,8 +363,8 @@ export default class Drawerscreen extends Component {
                 }
                 leftIcon={HealthRecord}
                 disable={isGuest === 'true' ? true : false}
-                onPress={()=>{
-                  this.props.navigation.navigate('HealthRecord',{
+                onPress={() => {
+                  this.props.navigation.navigate('HealthRecord', {
                     isPage: "drawer"
                   })
                 }}
@@ -413,6 +398,13 @@ export default class Drawerscreen extends Component {
                 }
                 leftIcon={LikeUs}
                 disable={false}
+                onPress={() => {
+                  Platform.OS === 'ios' ?
+                    Linking.openURL('https://apps.apple.com/in/app/rootscare-for-patients/id1628106272')
+                    :
+                    Linking.openURL('https://play.google.com/store/apps/details?id=com.rootscare&hl=en')
+
+                }}
               />
 
               <View style={{ width: '92%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(22) }}></View>

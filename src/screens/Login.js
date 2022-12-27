@@ -7,7 +7,7 @@ import {
   BackHandler,
   Alert,
   ScrollView,
-  SafeAreaView,
+  TouchableHighlight,
   Image,
   TouchableOpacity,
   Keyboard,
@@ -15,8 +15,12 @@ import {
 } from "react-native";
 import React, { Component } from "react";
 import { Shareratepro } from "../Provider/Sharerateapp";
-import Geolocation from "@react-native-community/geolocation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import SimpleToast from "react-native-simple-toast";
+import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
+import Geolocation from "react-native-geolocation-service";
+import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
+
 import {
   Colors,
   Icons,
@@ -31,19 +35,19 @@ import {
   msgProvider,
   localStorage,
   StatusbarHeight,
+  Button
 } from "../Provider/utilslib/Utils";
-import GestureRecognizer from "react-native-swipe-gestures";
 import { SvgXml } from 'react-native-svg';
 import { s, vs } from "react-native-size-matters";
 
-import { AuthInputBoxSec, Button } from "../components";
-import { leftArrow, leftWhiteArrow, Logo, rightArrow, rightWhiteArrow } from "../icons/SvgIcons/Index";
-import { TextInput } from "react-native-paper";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
+import { leftArrow, leftWhiteArrow, Logo, rightArrow, rightWhiteArrow } from "../Icons/Index";
 
 global.current_lat_long = "NA";
 global.myLatitude = "NA";
 global.myLongitude = "NA";
 
+var watchID = null
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -62,29 +66,20 @@ export default class Login extends Component {
       languagechange: false,
       showlanguage: false,
       engbtn_ar: false,
-      address_new: "",
+      lat: '',
+      lng: '',
+      address: '',
+      isContactUs:false
     };
 
-    screens = "Login";
     this._didFocusSubscription = props.navigation.addListener(
       "focus",
       (_payload) =>
         BackHandler.addEventListener("hardwareBackPress", this.handleBackPress)
     );
     this.get_language();
+    this.checkLocationPermission();
   }
-  get_language = async () => {
-    let textalign = await localStorage.getItemObject("language");
-    if (textalign != null) {
-      this.setState({ langaugeme: textalign });
-    }
-    let address_arr = await localStorage.getItemObject("address_arr");
-    console.log("jdkfgvy", address_arr);
-    this.setState({ address_new: address_arr });
-    //if (address_arr == "" || address_arr == "NA" || address_arr == null) {
-    this.getlatlong();
-    //}
-  };
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
       this.get_rem_data();
@@ -102,6 +97,13 @@ export default class Login extends Component {
         )
     );
   }
+  get_language = async () => {
+    let textalign = await localStorage.getItemObject("language");
+    if (textalign != null) {
+      this.setState({ langaugeme: textalign });
+    }
+  };
+
 
   checkPermission = async () => {
     const enabled = await firebase.messaging().hasPermission();
@@ -133,153 +135,87 @@ export default class Login extends Component {
     let url = "NA";
 
     url = fcmtoken;
-    console.log("url", url);
 
     Shareratepro.sharefunction(url);
   };
 
-  getlatlong = async () => {
-    let permission = await localStorage.getItemString("permission");
-    if (permission != "denied") {
-      var that = this;
-      //Checking for the permission just after component loaded
-      if (Platform.OS === "ios") {
-        this.callLocation(that);
-      } else {
-        // this.callLocation(that);
-        async function requestLocationPermission() {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-              {
-                title: "Location Access Required",
-                message: "This App needs to Access your location",
-              }
-            );
-            console.log("granted", PermissionsAndroid.RESULTS.GRANTED);
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              that.callLocation(that);
-            } else {
-              let position = {
-                coords: {
-                  latitude: config.latitude,
-                  longitude: config.latitude,
-                },
-              };
-              that.getalldata(position);
-              localStorage.setItemString("permission", "denied");
-            }
-          } catch (err) {
-            console.warn(err);
-          }
+  checkLocationPermission = () => {
+    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            this.locationPermission()
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            this.getCurrentLocation()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            localStorage.setItemString('permission', 'denied')
+            break;
         }
-        requestLocationPermission();
-      }
-    } else {
-      let position = {
-        coords: { latitude: config.latitude, longitude: config.longitude },
-      };
-      this.getalldata(position);
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
+  }
+
+  locationPermission = () => {
+    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            localStorage.setItemString('permission', 'denied')
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            this.getCurrentLocation()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            localStorage.setItemString('permission', 'denied')
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
+  }
+
+  getCurrentLocation = async () => {
+    try {
+      Geolocation.getCurrentPosition(info => {
+        console.log('current location lat,long', info)
+        localStorage.setItemObject("position", info);
+        this.getadddressfromlatlong(info)
+      });
+    } catch (err) {
+      console.log('getCurrentLocation-error', err);
     }
-  };
 
-  callLocation = async (that) => {
-    this.setState({ loading: true });
-    localStorage.getItemObject("position").then((position) => {
-      console.log("position", position);
-      if (position != null) {
-        var pointcheck1 = 0;
-        this.getalldata(position);
-        Geolocation.getCurrentPosition(
-          //Will give you the current location
-          (position) => {
-            localStorage.setItemObject("position", position);
-            this.getalldata(position);
-            pointcheck1 = 1;
-          },
-          (_error) => {
-            let position = {
-              coords: {
-                latitude: config.latitude,
-                longitude: config.longitude,
-              },
-            };
-
-            this.getalldata(position);
-          },
-          { enableHighAccuracy: true, timeout: 150000000, maximumAge: 1000 }
-        );
-        that.watchID = Geolocation.watchPosition((position) => {
-          //Will give you the location on location change
-          console.log("data", position);
-
-          if (pointcheck1 != 1) {
-            localStorage.setItemObject("position", position);
-            this.getalldata(position);
-          }
-        });
-      } else {
-        console.log("helo gkjodi");
-        var pointcheck = 0;
-        Geolocation.getCurrentPosition(
-          //Will give you the current location
-          (position) => {
-            localStorage.setItemObject("position", position);
-
-            this.getalldata(position);
-            pointcheck = 1;
-          },
-          (_error) => {
-            let position = {
-              coords: {
-                latitude: config.latitude,
-                longitude: config.longitude,
-              },
-            };
-
-            this.getalldata(position);
-          },
-          { enableHighAccuracy: true, timeout: 150000000, maximumAge: 1000 }
-        );
-        that.watchID = Geolocation.watchPosition((position) => {
-          //Will give you the location on location change
-          console.log("data", position);
-
-          if (pointcheck != 1) {
-            localStorage.setItemObject("position", position);
-            this.getalldata(position);
-          }
-        });
-      }
-    });
-  };
-
-  getalldata = (position) => {
-    let longitude = position.coords.longitude;
-    let latitude = position.coords.latitude;
-    console.log("positionlatitude", position.coords);
-    console.log("positionlongitude", longitude);
-    this.setState({ latitude: latitude, longitude: longitude, loading: false });
-    (myLatitude = latitude), (myLongitude = longitude);
-    current_lat_long = position;
-
-    let event = {
-      latitude: latitude,
-      longitude: longitude,
-      latitudeDelta: this.state.latdelta,
-      longitudeDelta: this.state.longdelta,
-    };
-    this.getadddressfromlatlong(event);
   };
 
   getadddressfromlatlong = (event) => {
-    // alert('hi')
-
     fetch(
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-      event.latitude +
+      event?.coords?.latitude +
       "," +
-      event.longitude +
+      event?.coords?.longitude +
       "&key=" +
       config.mapkey +
       "&language=" +
@@ -312,31 +248,44 @@ export default class Login extends Component {
           }
         }
         let details = responseJson;
-        let data2 = {
+        let addDetails = {
           latitude: details.geometry.location.lat,
           longitude: details.geometry.location.lng,
           address: details.formatted_address,
           city: city,
           administrative_area_level_1: administrative_area_level_1,
         };
-        add_location = data2;
-        // consolepro.consolelog('responseJson1234', add_location)
-        this.GooglePlacesRef &&
-          this.GooglePlacesRef.setAddressText(details.formatted_address);
-        this.setState({
-          latdelta: event.latitudeDelta,
-          longdelta: event.longitudeDelta,
-          latitude: event.latitude,
-          longitude: event.longitude,
-          addressselected: details.formatted_address,
-        });
-        this.setState({ add_my_location: data2 });
 
-        localStorage.setItemObject("address_arr", add_location.address);
-        localStorage.setItemObject("addressDetails", data2);
-        console.log("dfhhdfgb", data2);
-        //   return  this.props.locationget(data2);
+        this.setState({
+          lat: details.geometry.location.lat,
+          lng: details.geometry.location.lng,
+          address: details.formatted_address,
+        })
+
+        localStorage.setItemObject("addressDetails", addDetails);
       });
+  };
+
+
+
+
+
+  getalldata = (position) => {
+    let longitude = position.coords.longitude;
+    let latitude = position.coords.latitude;
+    console.log("positionlatitude", position.coords);
+    console.log("positionlongitude", longitude);
+    this.setState({ latitude: latitude, longitude: longitude, loading: false });
+    (myLatitude = latitude), (myLongitude = longitude);
+    current_lat_long = position;
+
+    let event = {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: this.state.latdelta,
+      longitudeDelta: this.state.longdelta,
+    };
+    this.getadddressfromlatlong(event);
   };
 
   handleBackPress = () => {
@@ -403,7 +352,49 @@ export default class Login extends Component {
     this.setState({ remember_me: false });
   };
 
+  updateAddress = async (userId) => {
+
+    let url = config.baseURL + "api-patient-address-update";
+    var data = new FormData();
+    data.append("user_id", userId);
+    data.append("current_address", this.state.address);
+    data.append("lat", this.state.lat);
+    data.append("lng", this.state.lng);
+    data.append("landmark", '');
+    data.append("building_name", '');
+    data.append("title", '');
+    data.append("default", '0');
+
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        consolepro.consolelog("updateAddress-res----", obj);
+        if (obj.status == true) {
+          let newAddressDetails = {
+            lat: obj?.result?.latitude,
+            lng: obj?.result?.longitudes,
+            address: obj?.result?.current_address,
+          }
+
+          localStorage.setItemObject("addressDetails", newAddressDetails);
+          localStorage.setItemString('isAddressAdded', 'true')
+          // user_details['current_address'] = obj.result.current_address
+          // localStorage.setItemObject("user_arr", user_details);
+        } else {
+          localStorage.setItemString('isAddressAdded', 'false')
+          return false;
+        }
+      })
+      .catch((error) => {
+        this.getProfile();
+        console.log("-------- error ------- " + error);
+      });
+  };
+
   loginbtn = async () => {
+
+    let isAddressAdded = await localStorage.getItemString('isAddressAdded')
     Keyboard.dismiss();
     var email = this.state.email.trim();
     if (email.length <= 0 || email.length <= 0) {
@@ -430,7 +421,6 @@ export default class Login extends Component {
     }
 
     let url = config.baseURL + "api-patient-login";
-    console.log("url", url);
     var data = new FormData();
 
     data.append("email_phone", this.state.email);
@@ -443,23 +433,30 @@ export default class Login extends Component {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        // alert('muskan')
-        consolepro.consolelog("loginAPI", obj);
-        consolepro.consolelog("loginAPI-Status", obj.status);
+        // console.log('login response.....', obj); 
         if (obj.status == true) {
-          // this.textinput.clear();
-          // this.textinput_mobile.clear();
+          if ((isAddressAdded == null || isAddressAdded === 'false') && (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined)) {
+            this.updateAddress(obj?.result?.user_id)
+          }
           var user_details = obj.result;
           this.setState({ emailfocus: false, passwordfocus: false });
-          consolepro.consolelog("user_details", user_details);
           const uservalue = {
             email_phone: this.state.email,
             email: this.state.email,
             password: this.state.password,
           };
+
+          let newAddressDetails = {
+            lat: obj?.result?.latitude,
+            lng: obj?.result?.longitudes,
+            address: obj?.result?.current_address,
+          }
+
+          localStorage.setItemObject("addressDetails", newAddressDetails);
           localStorage.setItemString('Guest', 'false')
           localStorage.setItemObject("user_login", uservalue);
           localStorage.setItemObject("user_arr", user_details);
+          localStorage.setItemObject("addressDetails", newAddressDetails);
           // msgProvider.showError(msgText.sucess_message_login[config.language])
           setTimeout(() => {
             // this.props.navigation.navigate("Home");
@@ -469,9 +466,9 @@ export default class Login extends Component {
                 index: 0,
                 routes: [{ name: "DashboardStack" }],
               });
-            } else if(global.isPage == "providerList") {
+            } else if (global.isPage == "providerList") {
               this.props.navigation.goBack()
-            }else if(global.isPage == "providerDetails") {
+            } else if (global.isPage == "providerDetails") {
               this.props.navigation.goBack()
             }
 
@@ -509,25 +506,12 @@ export default class Login extends Component {
     return (
       <View style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
 
-        {/* <GestureRecognizer
-          onSwipeLeft={(_state) => {
-            this.props.navigation.navigate("Signup");
-          }}
-          config={config4}
-          style={{
-            flex: 1,
-            backgroundColor: this.state.backgroundColor,
-          }}
-        > */}
-        {/* <StatusBar
-          barStyle="dark-content"
-          backgroundColor={Colors.White}
-          hidden={false}
-          translucent={false}
-          networkActivityIndicatorVisible={true}
-        /> */}
+
 
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
@@ -592,6 +576,7 @@ export default class Login extends Component {
               onSubmitEditing={() => {
                 this.passwordInput.focus();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -620,6 +605,7 @@ export default class Login extends Component {
               onSubmitEditing={() => {
                 Keyboard.dismiss();
               }}
+              blurOnSubmit={Platform.OS === 'ios' ? true : false}
               editable
             />
 
@@ -720,18 +706,26 @@ export default class Login extends Component {
               btnStyle={{ marginTop: vs(15) }}
             />
 
-            <Text
-              style={{
-                fontSize: Font.headinggray,
-                fontFamily: Font.headingfontfamily,
-                color: Colors.DarkGrey,
-                textAlign: config.textRotate,
-                textDecorationLine: 'underline',
-                marginTop: vs(25),
-              }}
+            <TouchableHighlight
+              underlayColor={Colors.Highlight}
+              onPress={() => this.setState({ isContactUs: true })}
+              style={{ marginTop: vs(25), paddingVertical:vs(5), width:'60%'}}
             >
-              {Lang_chg.Trouble_SignIn[config.language]}
-            </Text>
+              <Text
+                style={{
+                  fontSize: Font.medium,
+                  fontFamily: Font.Regular,
+                  color: Colors.DarkGrey,
+                  textAlign: config.textRotate,
+                  textDecorationLine: 'underline',
+                 
+                }}
+              >
+                {Lang_chg.Trouble_SignIn[config.language]}
+              </Text>
+            </TouchableHighlight>
+
+
 
           </View>
 
@@ -743,12 +737,13 @@ export default class Login extends Component {
           <View
             style={{
               width: "100%",
-              marginTop: vs(35)
+              marginTop: vs(30)
             }}>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
                 localStorage.setItemString('Guest', 'true')
+                localStorage.setItemObject("user_arr", null);
                 global.isLogin = false
                 global.isPage = ""
                 setTimeout(() => {
@@ -787,19 +782,7 @@ export default class Login extends Component {
               }
                 height={vs(11.98)} width={s(6.42)} color={Colors.White} />
 
-              {/* <Image
-                source={
-                  config.textalign == "right"
-                    ? Icons.leftarrow : Icons.arabic_back
-                }
-                style={{
-                  resizeMode: "contain",
-                  width: 20,
-                  alignSelf: "center",
-                  height: 20,
-                  tintColor: Colors.White
-                }}
-              /> */}
+
             </TouchableOpacity>
 
           </View>
@@ -949,7 +932,15 @@ export default class Login extends Component {
           </View>
 
         </KeyboardAwareScrollView>
-        {/* </GestureRecognizer> */}
+
+
+        <ContactUsBottomSheet
+          visible={this.state.isContactUs}
+          onRequestClose={() => {
+            this.setState({ isContactUs: false })
+          }}
+          route={'Login'}
+        />
 
       </View>
     );

@@ -23,7 +23,7 @@ import {
 import { vs, s } from "react-native-size-matters";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { SvgXml } from "react-native-svg";
-import { dummyUser, Star, Location, Clock, Capsule } from "../icons/SvgIcons/Index";
+import { dummyUser, Star, Location, Clock, Capsule } from "../Icons/Index";
 
 
 const ServiceProviderContainer = ({
@@ -360,7 +360,7 @@ const ServiceProviderContainer = ({
                     textAlign: config.textRotate,
                   }}
                 >
-                  {`${Item.service_radius} km`}
+                  {`${Item.distance}`}
                 </Text>
 
               </View>
@@ -387,7 +387,7 @@ const ServiceProviderContainer = ({
 
                 <View style={{ width: '60%', flexWrap: 'wrap', flexDirection: 'row', }}>
                   {
-                    Item?.availability.map((item, index) => {
+                    Item?.availability?.map((item, index) => {
                       return (
                         <Text
                           style={{
@@ -439,20 +439,13 @@ const ServiceProviderContainer = ({
               (Item.provider_available == "0") &&
               <TouchableOpacity
                 onPress={() => {
-                  // if ((Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined)) {
                   if (global.isLogin == false) {
-                    console.log("navigation:: ", navigation)
-                    // navigation.reset({
-                    //   index: 0,
-                    //   routes: [{ name: "AuthStack" }],
-                    // });
                     global.isPage = "providerList"
-                    // navigation.push("Login");
                     navigation.navigate("AuthStack", {
                       providerType: providerType,
                       providerId: Item.user_id,
-                      // isFromHospital: true,
-                      // hospitalId: Item?.hospital_id,
+                      isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
+                      hospitalId: (Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined) ? Item?.hospital_id : '',
                       indexPosition: 0
                     })
                   } else {
@@ -461,8 +454,8 @@ const ServiceProviderContainer = ({
                       providerType: providerType,
                       providerId: Item.user_id,
                       isPage: "providerList",
-                      // isFromHospital: true,
-                      // hospitalId: Item?.hospital_id,
+                      isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
+                      hospitalId: (Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined) ? Item?.hospital_id : '',
                       indexPosition: 0
                     })
                   }

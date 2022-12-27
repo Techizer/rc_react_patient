@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight, msgProvider } from "../Provider/utilslib/Utils";
-import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -23,6 +23,7 @@ const PrescriptionBottomSheet = ({
     return (
         <Modal
             isVisible={visible}
+            statusBarTranslucent={true}
             animationIn='fadeInUpBig'
             animationOut='fadeOutDownBig'
             deviceWidth={windowWidth}
@@ -78,9 +79,10 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: deviceHeight - 300,
+        height: windowHeight - 200,
         backgroundColor: Colors.White,
-        borderRadius: 25,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius:25,
         paddingTop: vs(40),
         paddingBottom: vs(20),
         paddingHorizontal: s(13),
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: vs(30),
         right: s(11),
+        zIndex: 999
     }
 
 });

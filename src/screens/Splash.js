@@ -20,13 +20,12 @@ import {
   apifuntion,
   consolepro,
 } from "../Provider/utilslib/Utils";
-global.add_location = "NA";
 global.amount_total = 0;
 global.username = "NA";
 import HTMLView from "react-native-htmlview";
 import DeviceInfo from "react-native-device-info";
 import { SvgXml } from "react-native-svg";
-import { Logo, Splash_Logo } from "../icons/SvgIcons/Index";
+import { Logo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
 const appVersion = DeviceInfo.getVersion();
 

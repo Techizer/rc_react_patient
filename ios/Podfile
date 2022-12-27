@@ -6,6 +6,9 @@ platform :ios, '13.0'
 target 'rootscare' do
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   config = use_native_modules!
 
   use_react_native!(
@@ -17,6 +20,10 @@ target 'rootscare' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
+  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
 
   target 'rootscareTests' do
     inherit! :complete

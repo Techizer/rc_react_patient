@@ -19,11 +19,15 @@ import {
   apifuntion,
   msgTitle,
   consolepro,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow, Logo, Notification, rightArrow, Splash_Logo } from "../icons/SvgIcons/Index";
+import { leftArrow, Logo, Notification, rightArrow, Splash_Logo } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
+
+let isGuest = ''
+
+
 
 export default class SupportandMore extends Component {
   constructor(props) {
@@ -47,17 +51,25 @@ export default class SupportandMore extends Component {
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
       this.get_language();
+      this.checkUserType()
+
     });
   }
+
+  checkUserType = async () => {
+    isGuest = await localStorage.getItemString('Guest')
+    console.log('.............',isGuest);
+
+  }
+
+
   launguage_setbtn = (language) => {
-    console.log("Welcome");
     Lang_chg.language_set(language);
     setTimeout(() => {
       this.submit_click();
     }, 700);
     this.setState({
       engbtn: !this.state.engbtn,
-      //   engbtn_ar:!this.state.engbtn_ar
     });
   };
 
@@ -67,7 +79,6 @@ export default class SupportandMore extends Component {
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-language-update";
-    console.log("url", url);
     var data = new FormData();
     data.append("login_user_id", user_id);
     data.append("device_lang", this.state.device_lang);
@@ -95,7 +106,7 @@ export default class SupportandMore extends Component {
         this.setState({ loading: false });
       });
   };
-  confireClick(title, message, callbackOk, callbackCancel) {
+  confirmDelete(title, message, callbackOk, callbackCancel) {
     Alert.alert(
       Lang_chg.Delete_account[config.language],
       Lang_chg.Are_you_sure[config.language],
@@ -154,15 +165,13 @@ export default class SupportandMore extends Component {
           alignSelf: "center",
           flex: 1,
           backgroundColor: Colors.White,
-        }}
-      >
+        }}>
 
         <ScreenHeader
           title={Lang_chg.supporttext[config.language]}
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
-          leftIcon={leftArrow}
-          rightIcon={Notification}
+          leftIcon
         />
 
 
@@ -468,95 +477,99 @@ export default class SupportandMore extends Component {
             marginTop: vs(12),
           }} />
 
-        <TouchableOpacity
-          onPress={() => {
-            this.confireClick();
-          }}
-          style={{
-            width: "90%",
-            height: vs(15),
-            alignSelf: "center",
-            marginTop: vs(10),
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text
-            style={{
-              textAlign: config.textalign,
-              fontSize: (windowWidth * 3.8) / 100,
-              color: Colors.DarkGrey,
-              fontFamily: Font.ques_fontfamily,
-            }}
-          >
-            {Lang_chg.Delete_account[config.language]}{" "}
-          </Text>
-          <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <SvgXml xml={config.textalign == "right" ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-          </View>
-        </TouchableOpacity>
+        {
+          isGuest != 'true' &&
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                this.confirmDelete();
+              }}
+              style={{
+                width: "90%",
+                height: vs(15),
+                alignSelf: "center",
+                marginTop: vs(10),
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: config.textalign,
+                  fontSize: (windowWidth * 3.8) / 100,
+                  color: Colors.DarkGrey,
+                  fontFamily: Font.ques_fontfamily,
+                }}
+              >
+                {Lang_chg.Delete_account[config.language]}{" "}
+              </Text>
+              <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <SvgXml xml={config.textalign == "right" ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+              </View>
+            </TouchableOpacity>
 
-        <View
-          style={{
-            width: "95%",
-            alignSelf: "flex-end",
-            borderBottomWidth: 1.5,
-            borderBottomColor: Colors.backgroundcolor,
-            marginTop: vs(12),
-          }} />
-
-        <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.navigate("NeedSupport");
-          }}
-          style={{
-            justifyContent: "space-between",
-            width: "90%",
-            height: vs(15),
-            alignSelf: "center",
-            marginTop: vs(10),
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                width: "8%",
-                alignSelf: "center",
-                marginRight: (windowWidth * 3) / 100,
-              }}
-            >
-              <Image
-                style={{ width: 20, height: 20, resizeMode: "contain" }}
-                source={Icons.needsupportimg}
-              ></Image>
-            </View>
+                width: "95%",
+                alignSelf: "flex-end",
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor,
+                marginTop: vs(12),
+              }} />
 
-            <Text
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("NeedSupport");
+              }}
               style={{
-                textAlign: config.textalign,
-                fontSize: (windowWidth * 4) / 100,
-                color: Colors.Black,
-                fontFamily: Font.Medium,
-              }}
-            >
-              {Lang_chg.needsupport[config.language]}{" "}
-            </Text>
-          </View>
-          <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <SvgXml xml={config.textalign == "right" ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-          </View>
-        </TouchableOpacity>
+                justifyContent: "space-between",
+                width: "90%",
+                height: vs(15),
+                alignSelf: "center",
+                marginTop: vs(10),
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    width: "8%",
+                    alignSelf: "center",
+                    marginRight: (windowWidth * 3) / 100,
+                  }}>
+                  <Image
+                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                    source={Icons.needsupportimg}
+                  ></Image>
+                </View>
 
-        <View
-          style={{
-            width: "95%",
-            alignSelf: "flex-end",
-            borderBottomWidth: 1.5,
-            borderBottomColor: Colors.backgroundcolor,
-            marginTop: vs(12),
-          }} />
+                <Text
+                  style={{
+                    textAlign: config.textalign,
+                    fontSize: (windowWidth * 4) / 100,
+                    color: Colors.Black,
+                    fontFamily: Font.Medium,
+                  }}>
+                  {Lang_chg.needsupport[config.language]}{" "}
+                </Text>
+              </View>
+              <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <SvgXml xml={config.textalign == "right" ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+              </View>
+            </TouchableOpacity>
+
+            <View
+              style={{
+                width: "95%",
+                alignSelf: "flex-end",
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor,
+                marginTop: vs(12),
+              }} />
+          </>
+        }
+
+
 
         <Modal
           animationType="fade"

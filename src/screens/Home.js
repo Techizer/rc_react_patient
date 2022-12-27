@@ -27,35 +27,16 @@ import messaging from "@react-native-firebase/messaging";
 import PushNotification, { Importance } from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import { s, vs } from "react-native-size-matters"
-import { SvgXml, SvgUri } from "react-native-svg";
-;
+import { ScreenHeader } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
-import { Appheading } from "../Allcomponents";
-import { BannerOne, BannerTwo, dummyUser } from "../icons/SvgIcons/Index";
-import Footer from "../Footer";
-import { Images } from "../Provider/Localimage";
+// import Appheading
 import BannerCrousel from "../components/BannerCrousel";
-import ScreenHeader from "../components/ScreenHeader";
+import moment from "moment";
 global.current_lat_long = "NA";
 global.myLatitude = "NA";
 global.myLongitude = "NA";
-global.post_location = "NA";
-global.cart_customer = [];
 
-const bannersList = [
-  {
-    id: '1',
-    image: Images.BannerOne
-  },
-  {
-    id: '2',
-    image: Images.BannerTwo
-  },
-  {
-    id: '3',
-    image: Images.BannerTwo
-  },
-]
+
 const HomeHealthcareServiceAppointments = [
   {
     id: 1,
@@ -132,7 +113,7 @@ const DoctorConsultation = [
     title: "Home Visit Consultation",
     arabic_title: "استشارة زيارة منزلية  ",
     arabic_details: "لمدة 30 دقيقة    ",
-    details: "for 30 mins",
+    details: "for 45 mins",
     pass_status: "doctor",
     enableFor: 'HOME_VISIT_CONSULT'
   },
@@ -174,12 +155,11 @@ export default class Home extends Component {
       profile_img: "",
       title: "Booking",
       body: "",
-      address_new: "",
-      address_old: "",
+      address: "",
       notification_count: "",
       app_status: "",
+      bannersList: []
     };
-    screens = "Home";
   }
   componentDidMount() {
     // this.getnotification();
@@ -189,10 +169,10 @@ export default class Home extends Component {
 
     PushNotification.configure({
       onNotification: function (notification) {
-        console.log("NOTIFICATION:", notification);
+        // console.log("NOTIFICATION:", notification);
         if (notification.userInteraction) {
           // Handle notification click
-          console.log("PushNotification.configure", notification);
+          // console.log("PushNotification.configure", notification);
 
           if (notification.data?.type == "doctor_to_patient_video_call") {
             let data;
@@ -200,7 +180,7 @@ export default class Home extends Component {
               data = JSON.parse(notification.data.notidata);
             } else {
               data = notification.data;
-              console.log("data", data);
+              // console.log("data", data);
             }
             Alert.alert(
               "Video call",
@@ -209,7 +189,6 @@ export default class Home extends Component {
                 {
                   text: "Reject",
                   onPress: () => {
-                    console.log("Cancel Pressed");
                     that.callRejectNotification(data);
                   },
                   style: "cancel",
@@ -217,7 +196,6 @@ export default class Home extends Component {
                 {
                   text: "Accept",
                   onPress: () => {
-                    console.log("Accept Pressed");
                     // val messageBody = json.optString("message")
                     // val roomName = json.getString("room_name")
                     // val fromUserName = json.optString("fromUserName")
@@ -248,17 +226,76 @@ export default class Home extends Component {
     this.messageListener();
 
     this.props.navigation.addListener("focus", () => {
-      if (global.isLogin == false) {
-        this.getProfile();
-      } else {
-        this.getAllCount();
+      // if (global.isLogin == false) {
+      if (global.isLogin == true) {
+        this.getNotificationCount();
+        this.getTopBanners()
       }
+      this.getAddress();
+      this.removeExpiredCart()
     });
   }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
+
+  removeExpiredCart = async () => {
+    let cartId = await localStorage.getItemString('cartId')
+    let cartTime = await localStorage.getItemString('cartTime')
+    console.log({ cartId });
+    if (cartId != null && cartId != '' && cartId != undefined) {
+      let currentTime = moment().format('x')
+      currentTime = JSON.parse(currentTime)
+      currentTime = moment(currentTime).format('HH:mm:ss')
+      cartTime = JSON.parse(cartTime)
+      cartTime = moment(cartTime).format('HH:mm:ss')
+      console.log('cart time...', cartTime);
+      let currentSplitTime = currentTime.split(':')
+      let cartSplitTime = cartTime.split(':')
+
+      let hourDiff = currentSplitTime[0] - cartSplitTime[0]
+      let minsDiff = currentSplitTime[1] - cartSplitTime[1]
+      let secDiff = currentSplitTime[2] - cartSplitTime[2]
+
+      console.log(hourDiff);
+      console.log(minsDiff);
+      console.log(secDiff);
+      // return false
+
+      if (hourDiff > 0 || (minsDiff > 0)) {
+        console.log('Time is greater than 1 min');
+        this.remove_cart(cartId).then(() => {
+          localStorage.removeItem('cartId')
+          localStorage.removeItem('cartTime')
+        })
+      }
+
+    }
+  }
+
+  remove_cart = async (cartId) => {
+
+
+    let url = config.baseURL + "api-patient-remove-cart";
+    var data = new FormData();
+    data.append("cart_id", cartId)
+
+    consolepro.consolelog("remove_cart-data", data);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        consolepro.consolelog("remove_cart-response...", obj);
+        if (obj.status == true) {
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        consolepro.consolelog("-------- error ------- " + error);
+      });
+  };
+
   logout = async () => {
     await localStorage.removeItem("user_arr");
     await localStorage.removeItem("user_login");
@@ -272,7 +309,7 @@ export default class Home extends Component {
     });
   };
   handleBackButton = () => {
-    console.log('Back button is pressed', this.props.route.name);
+    // console.log('Back button is pressed', this.props.route.name);
     if (this.props.route.name == "Home") {
       return true;
     } else {
@@ -444,70 +481,66 @@ export default class Home extends Component {
       });
   };
 
-  getAllCount = async () => {
+  getTopBanners = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details count", user_details);
     let user_id = user_details["user_id"];
 
-    let url = config.baseURL + "api-notification-count";
-    console.log("url", url);
+    let url = config.baseURL + "api-patient-dashboard";
     var data = new FormData();
     data.append("login_user_id", user_id);
 
-    consolepro.consolelog("data", data);
+    apifuntion.postApi(url, data, 1)
+      .then((obj) => {
+        consolepro.consolelog("getTopBanners-response.............", obj.result?.bannerimage);
+        if (obj.status == true) {
+          this.setState({ bannersList: obj.result?.bannerimage })
+        } else {
+          return false;
+        }
+      }).catch((error) => {
+        console.log("getTopBanners-error ------- " + error);
+      });
+  };
+
+  getNotificationCount = async () => {
+    let user_details = await localStorage.getItemObject("user_arr");
+    let user_id = user_details["user_id"];
+
+    let url = config.baseURL + "api-notification-count";
+    var data = new FormData();
+    data.append("login_user_id", user_id);
+
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        // consolepro.consolelog("getNotificationCount-response", obj);
         if (obj.status == true) {
-          this.setState({ notification_count: obj.result });
-          console.log("notification_count", obj.result);
-          this.getProfile();
+          localStorage.setItemString('notiCount', JSON.stringify(obj?.result))
         } else {
           return false;
         }
       })
       .catch((error) => {
-        this.getProfile();
         console.log("-------- error ------- " + error);
       });
   };
 
-  getProfile = async () => {
-    if (global.isLogin == false) {
-      let address_arr = await localStorage.getItemObject("address_arr");
-      console.log("address_arr", address_arr);
-      this.setState({
-        address_show: address_arr,
-        address_old: null,
-      }, () => {
-        console.log("global.isLogin", global.isLogin);
-        console.log("this.state.address_old", this.state.address_old);
-        console.log("this.state.address_show", this.state.address_show);
-      });
 
-      // if (user_details.image != null) {
-      //   this.setState({
-      //     profile_img: config.img_url3 + user_details["image"],
-      //   });
-      // }
+
+  getAddress = async () => {
+    let addDetails = await localStorage.getItemObject("addressDetails");
+
+    if (addDetails != null && addDetails != '' && addDetails != undefined) {
+      this.setState({
+        address: addDetails.address,
+      });
+    }
+    if (global.isLogin == false) {
+      this.setState({
+        profile_img: '',
+      });
     } else {
       let user_details = await localStorage.getItemObject("user_arr");
-      let address_arr = await localStorage.getItemObject("address_arr");
-      console.log("user_details user_details else", user_details);
-      console.log("address_arr", address_arr);
-      this.setState({
-        address_show: address_arr,
-        address_old: user_details.current_address,
-      }, () => {
-        console.log("global.isLogin", global.isLogin);
-        console.log("this.state.address_old", this.state.address_old);
-        console.log("this.state.address_show", this.state.address_show);
-        if (global.isLogin == true && this.state.address_old == null ||
-          this.state.address_old == "") {
-          this.updateAddress()
-        }
-      });
 
       if (user_details.image != null) {
         this.setState({
@@ -518,55 +551,20 @@ export default class Home extends Component {
 
   };
 
-  updateAddress = async () => {
-    var user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details address", user_details);
 
-    let address_arr = await localStorage.getItemObject("addressDetails");
-    console.log("addressDetailsaddressDetails", address_arr);
-    let user_id = user_details["user_id"];
-
-    let url = config.baseURL + "api-patient-address-update";
-    console.log("url", url);
-    var data = new FormData();
-    data.append("user_id", user_id);
-    data.append("lat", address_arr.latitude);
-    data.append("lng", address_arr.longitude);
-
-    consolepro.consolelog("data", data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        if (obj.status == true) {
-          this.setState({ address_old: obj.result.current_address });
-          localStorage.setItemObject("address_arr", obj.result.current_address);
-          user_details['current_address'] = obj.result.current_address
-          localStorage.setItemObject("user_arr", user_details);
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        this.getProfile();
-        console.log("-------- error ------- " + error);
-      });
-  };
 
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <View style={Styles.container3}>
 
-          
+
           <ScreenHeader
             navigation={this.props.navigation}
-            title={'Home'}
+            title={Lang_chg.Home[config.language]}
             leftIcon={this.state.profile_img}
             rightIcon={true}
-            addressOld={this.state.address_old}
-            addressShow={this.state.address_show}
-            notiCount={this.state.notification_count}
+            address={this.state.address}
           />
 
           <ScrollView
@@ -579,15 +577,21 @@ export default class Home extends Component {
                 alignSelf: "center",
               }}>
               {/* -----------------Header Banner----------------- */}
-              <BannerCrousel data={bannersList} navigation={this.props.navigation} />
+              {
+                this.state.bannersList.length > 0 &&
+                <BannerCrousel data={this.state.bannersList} navigation={this.props.navigation} />
+              }
 
               {/* FlatList 1 */}
               <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9) }}>
-                <Appheading
-                  title={
-                    Lang_chg.HomeHealthcareServiceAppointments[config.language]
-                  }
-                />
+                <Text style={{
+                  fontSize: Font.medium,
+                  fontFamily: Font.Medium,
+                  color: Colors.darkText,
+                  marginBottom: vs(7)
+                }}>
+                  {Lang_chg.HomeHealthcareServiceAppointments[config.language]}
+                </Text>
                 <FlatList
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
@@ -682,11 +686,14 @@ export default class Home extends Component {
 
               {/* FlatList 2 */}
               <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), }}>
-                <Appheading
-                  title={
-                    Lang_chg.DoctorConsultation[config.language]
-                  }
-                />
+                <Text style={{
+                  fontSize: Font.medium,
+                  fontFamily: Font.Medium,
+                  color: Colors.darkText,
+                  marginBottom: vs(7)
+                }}>
+                  {Lang_chg.DoctorConsultation[config.language]}
+                </Text>
                 <FlatList
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
@@ -783,11 +790,14 @@ export default class Home extends Component {
 
               {/* FlatList 3 */}
               <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
-                <Appheading
-                  title={
-                    Lang_chg.Lab_Test_Booking[config.language]
-                  }
-                />
+                <Text style={{
+                  fontSize: Font.medium,
+                  fontFamily: Font.Medium,
+                  color: Colors.darkText,
+                  marginBottom: vs(7)
+                }}>
+                  {Lang_chg.Lab_Test_Booking[config.language]}
+                </Text>
                 <FlatList
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}

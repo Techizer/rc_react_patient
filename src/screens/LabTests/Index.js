@@ -15,21 +15,18 @@ import {
   deviceHeight,
   windowHeight,
   StatusbarHeight,
+  ScreenHeader
 } from "../../Provider/utilslib/Utils";
-import ScreenHeader from "../../components/ScreenHeader";
-import { BlackFilter, leftArrow, Notification } from "../../icons/SvgIcons/Index";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";
-import { s, vs } from "react-native-size-matters";
-import { SvgXml } from "react-native-svg";
 
 const Tabs = createMaterialTopTabNavigator()
 
 
 
 
-const LabTestIndex = ({ navigation,route }) => {
+const LabTestIndex = ({ navigation, route }) => {
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -92,9 +89,9 @@ const LabTestIndex = ({ navigation,route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={'Upcoming'} component={Upcoming} />
-        <Tabs.Screen name={'Ongoing'} component={OnGoing} />
-        <Tabs.Screen name={'Past'} component={Past} />
+        <Tabs.Screen name={'Upcoming'} component={Upcoming} initialParams={{ isGuest: route?.params?.isGuest }} />
+        <Tabs.Screen name={'Ongoing'} component={OnGoing} initialParams={{ isGuest: route?.params?.isGuest }} />
+        <Tabs.Screen name={'Past'} component={Past} initialParams={{ isGuest: route?.params?.isGuest }} />
 
       </Tabs.Navigator>
 

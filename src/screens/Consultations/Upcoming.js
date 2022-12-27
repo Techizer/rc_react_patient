@@ -20,14 +20,17 @@ import { vs } from "react-native-size-matters";
 
 
 
-const Upcoming = ({ navigation }) => {
+const Upcoming = (props) => {
 
-  const [appointments, setAppointments] = useState([1, 2, 3, 4, 5, 6, 7])
-  const [isLoading, setIsLoading] = useState(true)
+  const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
-    getAppointments()
-  }, [isLoading])
+    if (props?.route?.params?.isGuest === 'false') {
+      getAppointments()
+    }
+  }, [isRefreshing])
 
 
 
@@ -49,18 +52,20 @@ const Upcoming = ({ navigation }) => {
         consolepro.consolelog("getAppointments-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
+            setIsRefreshing(false)
             setIsLoading(false)
             setAppointments(obj.result)
           }, 500);
         } else {
-          setTimeout(() => {
-            setIsLoading(false)
-            setAppointments(obj.result)
-          }, 500);
+          setIsRefreshing(false)
+          setIsLoading(false)
+          setAppointments([])
           return false;
         }
       }).catch((error) => {
+        setAppointments([])
         setIsLoading(false)
+        setIsRefreshing(false)
         consolepro.consolelog("getAppointments-error ------- " + error);
       });
   };
@@ -84,7 +89,7 @@ const Upcoming = ({ navigation }) => {
           return (
             <AppointmentContainer
               Item={item}
-              navigation={navigation}
+              navigation={props.navigation}
               isLoading={isLoading}
             />
           )
@@ -92,24 +97,24 @@ const Upcoming = ({ navigation }) => {
         ListEmptyComponent={() => {
           return (
             <View style={{ marginTop: vs(140), alignSelf: 'center', paddingHorizontal: '10%' }}>
-            <Text style={{
-              fontSize: Font.xlarge,
-              fontFamily: Font.Regular,
-              color: Colors.darkText,
-              textAlign: 'center'
-            }}>{'Sorry, no consultations found'}</Text>
-            <Text style={{
-              fontSize: Font.medium,
-              fontFamily: Font.Regular,
-              color: Colors.lightGrey,
-              textAlign: 'center',
-              marginTop: vs(10)
-            }}>{'You can start a new consultation with our qualified doctors!'}</Text>
-          </View>
+              <Text style={{
+                fontSize: Font.xlarge,
+                fontFamily: Font.Regular,
+                color: Colors.darkText,
+                textAlign: 'center'
+              }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Consultations Found' : 'Sorry, no consultations found'}</Text>
+              <Text style={{
+                fontSize: Font.medium,
+                fontFamily: Font.Regular,
+                color: Colors.lightGrey,
+                textAlign: 'center',
+                marginTop: vs(10)
+              }}>{props?.route?.params?.isGuest === 'true' ? 'No Consultations record found, user type is Guest' : 'You can start a new consultation with our qualified doctors!'}</Text>
+            </View>
           )
         }}
-        refreshing={isLoading}
-        onRefresh={()=>setIsLoading(true)}
+        refreshing={isRefreshing}
+        onRefresh={() => setIsRefreshing(true)}
       />
 
 

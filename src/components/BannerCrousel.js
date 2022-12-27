@@ -109,64 +109,8 @@ const BannerCrousel = ({ data, navigation }) => {
     }, [currentIndex]);
 
     return (
-        // <View style={{ flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
 
-        //     <FlatList
-        //         data={data}
-        //         renderItem={({ item, index }) => {
-        //             return (
-        //                 <View
-        //                     style={[
-        //                         { width: windowWidth },
-        //                         config.language == 1
-        //                             ? { marginLeft: (windowWidth * 1) / 100 }
-        //                             : null,
-        //                         { paddingHorizontal: s(12) }
-        //                     ]}>
-        //                     <TouchableOpacity
-        //                         onPress={() =>
-        //                             navigation.navigate("CovidPackageDetails")
-        //                         }>
-        //                         <Image
-        //                             source={
-        //                                 config.language == 0
-        //                                     ? item.image : item.image
-        //                             }
-        //                             style={{
-        //                                 width: "100%",
-        //                                 resizeMode: "stretch",
-        //                                 height: '100%',
-        //                             }}
-        //                         />
-        //                     </TouchableOpacity>
-        //                 </View>
-        //             )
-        //         }}
-        //         horizontal
-        //         contentContainerStyle={{ width: '100%', height: '100%' }}
-        //         showsHorizontalScrollIndicator={false}
-        //         pagingEnabled
-        //         bounces={false}
-        //         onScroll={
-        //             Animated.event([{
-        //                 nativeEvent: {
-        //                     contentOffset: { x: scrollX }
-        //                 }
-        //             }], {
-        //                 useNativeDriver: false
-        //             })
-        //         }
-        //         scrollEventThrottle={0}
-        //         viewabilityConfig={viewConfig}
-        //         ref={slidesRef}
-        //         centerContent
-        //         style={{
-        //             margin: 0,
-        //             padding: 0
-        //         }} />
-        // </View>
-
-        <View style={{ marginTop: vs(7), flexDirection: 'column', width: windowWidth, height: vs(150), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
+        <View style={{ marginTop: vs(7), flexDirection: 'column', width: windowWidth, backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', paddingVertical: vs(9) }}>
 
             <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -184,14 +128,12 @@ const BannerCrousel = ({ data, navigation }) => {
                             ]}>
                             <TouchableOpacity
                                 activeOpacity={0.7}
-                                onPress={() =>
-                                    navigation.navigate("CovidPackageDetails")
-                                }>
+                            // onPress={() =>
+                            //     navigation.navigate("CovidPackageDetails")
+                            // }
+                            >
                                 <Image
-                                    source={
-                                        config.language == 0
-                                            ? item.image : item.image
-                                    }
+                                    source={{ uri: config.img_url3 + item?.bannerimage }}
                                     style={{
                                         width: "100%",
                                         // resizeMode: "contain",

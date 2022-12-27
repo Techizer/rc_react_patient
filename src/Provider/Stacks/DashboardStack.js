@@ -34,6 +34,7 @@ const Tab = createBottomTabNavigator();
 let appoinmentList = []
 let consultList = []
 let labList = []
+let isGuest = ''
 
 function ProfileDrawer() {
   return (
@@ -161,6 +162,10 @@ const getTests = async () => {
     });
 };
 
+const checkUserType = async () => {
+  isGuest = await localStorage.getItemString('Guest')
+}
+
 
 const DashboardStack = ({ navigation }) => {
 
@@ -168,6 +173,7 @@ const DashboardStack = ({ navigation }) => {
     getAppointments()
     getConsultations()
     getTests()
+    checkUserType()
   }, [])
 
   return (
@@ -279,22 +285,23 @@ const DashboardStack = ({ navigation }) => {
       <Tab.Screen
         name={'Apointment'}
         component={AppointmentIndex}
-        initialParams={{ todaysLength: appoinmentList.length }}
+        initialParams={{ todaysLength: appoinmentList.length, isGuest: isGuest }}
       />
 
       <Tab.Screen
         name={'Consultation'}
         component={ConsultIndex}
-        initialParams={{ todaysLength: consultList.length }}
+        initialParams={{ todaysLength: consultList.length, isGuest: isGuest }}
       />
       <Tab.Screen
         name={'LabTest'}
         component={LabTestIndex}
-        initialParams={{ todaysLength: labList.length }}
+        initialParams={{ todaysLength: labList.length, isGuest: isGuest }}
       />
       <Tab.Screen
         name={'Profile'}
         component={ProfileDrawer}
+        initialParams={{ isGuest: isGuest }}
       />
 
     </Tab.Navigator>

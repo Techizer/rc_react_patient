@@ -7,7 +7,7 @@ import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight } from "../Provider/utilslib/Utils";
-import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { Cross, dummyUser, Edit } from "../Icons/Index";
 
 
 
@@ -20,6 +20,7 @@ const AboutAppBottomSheet = ({
     return (
         <Modal
             isVisible={visible}
+            statusBarTranslucent={true}
             animationIn='fadeInUpBig'
             animationOut='fadeOutDownBig'
             deviceWidth={windowWidth}
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: deviceHeight - 300,
+        height: windowHeight-200,
         backgroundColor: Colors.White,
         borderRadius: 25,
         paddingTop: vs(55),
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: vs(30),
         right: s(11),
+        zIndex: 999
     }
 });
 

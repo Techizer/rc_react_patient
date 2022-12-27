@@ -12,17 +12,14 @@ import { validation } from "../Messageconsolevalidationprovider/Validation_provi
 import { Currentltlg } from "../Curentlatlong";
 import Cameragallery from "../Mediaprovider/Cameragallery";
 import { mediaprovider } from "../Mediaprovider/Mediaprovider";
-// import {SocialLogin} from '../Apicallingprovider/SocialLoginProvider';
 import { apifuntion } from "../Apicallingprovider/apiProvider";
 import { Colors, Font } from "../Colorsfont";
-import { Icons } from "../Localimage";
-// import Mapprovider from '../Mapprovider';
+import { Icons } from "../../Icons/Index";
 import Otpprovider from "../Otpprovider";
-// import MapproviderLocationShow from '../MapproviderLocationShow';
-// import {notification} from '../NotificationProvider'
+import { ScreenHeader } from "../../components/ScreenHeader";
+import { Button } from "../../components/Button";
+import AuthInputBoxSec from "../../components/AuthInputBoxSec";
 
-// import {Firstlogin} from '../../Firstlogin'
-// import {pushnotification} from '../Pushnotificationredirection';
 const windowHeight = Math.round(Dimensions.get("window").height);
 const windowWidth = Math.round(Dimensions.get("window").width);
 const deviceHeight = Dimensions.get('screen').height;
@@ -49,5 +46,8 @@ export {
   msgText,
   Currentltlg,
   deviceHeight,
-  StatusbarHeight
+  StatusbarHeight,
+  ScreenHeader,
+  Button,
+  AuthInputBoxSec,
 };

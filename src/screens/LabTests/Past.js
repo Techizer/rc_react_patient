@@ -20,14 +20,17 @@ import { vs } from "react-native-size-matters";
 
 
 
-const Past = ({ navigation }) => {
+const Past = (props) => {
 
-  const [appointments, setAppointments] = useState([1, 2, 3, 4, 5, 6, 7])
-  const [isLoading, setIsLoading] = useState(true)
+  const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   useEffect(() => {
-    getLabTest()
-  }, [isLoading])
+    if (props?.route?.params?.isGuest === 'false') {
+      getLabTest()
+    }
+  }, [isRefreshing])
 
 
 
@@ -49,19 +52,21 @@ const Past = ({ navigation }) => {
         // consolepro.consolelog("getLabTest-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
+            setIsRefreshing(false)
             setIsLoading(false)
             setAppointments(obj.result)
           }, 500);
         } else {
-          setTimeout(() => {
-            setIsLoading(false)
-            setAppointments(obj.result)
-          }, 500);
+          setIsRefreshing(false)
+          setIsLoading(false)
+          setAppointments([])
           return false;
         }
       }).catch((error) => {
+        setAppointments([])
         setIsLoading(false)
-        consolepro.consolelog("getLabTest-error ------- " + error);
+        setIsRefreshing(false)
+        consolepro.consolelog("getAppointments-error ------- " + error);
       });
   };
 
@@ -75,40 +80,40 @@ const Past = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: vs(100) }}
         data={appointments}
-        ItemSeparatorComponent={()=>{
-          return(
-            <View style={{height:vs(7)}}></View>
+        ItemSeparatorComponent={() => {
+          return (
+            <View style={{ height: vs(7) }}></View>
           )
         }}
         renderItem={({ item, index }) => {
           return (
             <AppointmentContainer
               Item={item}
-              navigation={navigation}
+              navigation={props.navigation}
             />
           )
         }}
         ListEmptyComponent={() => {
           return (
             <View style={{ marginTop: vs(140), alignSelf: 'center', paddingHorizontal: '10%' }}>
-              <Text style={{
-                fontSize: Font.xlarge,
-                fontFamily: Font.Regular,
-                color: Colors.darkText,
-                textAlign: 'center'
-              }}>{'Sorry, no lab tests found'}</Text>
-              <Text style={{
-                fontSize: Font.medium,
-                fontFamily: Font.Regular,
-                color: Colors.lightGrey,
-                textAlign: 'center',
-                marginTop: vs(10)
-              }}>{'You can book a new lab test with our qualified labs!'}</Text>
-            </View>
+            <Text style={{
+              fontSize: Font.xlarge,
+              fontFamily: Font.Regular,
+              color: Colors.darkText,
+              textAlign: 'center'
+            }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Lab Tests Found' : 'Sorry, no lab tests found'}</Text>
+            <Text style={{
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.lightGrey,
+              textAlign: 'center',
+              marginTop: vs(10)
+            }}>{props?.route?.params?.isGuest === 'true' ? 'No  Lab Tests record found, user type is Guest' : 'You can book a new lab test with our qualified labs!'}</Text>
+          </View>
           )
         }}
-        refreshing={isLoading}
-        onRefresh={()=>setIsLoading(true)}
+        refreshing={isRefreshing}
+        onRefresh={() => setIsRefreshing(true)}
       />
 
 

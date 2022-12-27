@@ -19,7 +19,7 @@ import {
     Lang_chg,
 } from "../Provider/utilslib/Utils";
 
-import { Filter, Search } from "../icons/SvgIcons/Index";
+import { Filter, Search } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 

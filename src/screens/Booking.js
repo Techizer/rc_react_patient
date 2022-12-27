@@ -21,21 +21,21 @@ import {
   config,
   windowWidth,
   localStorage,
-  localimag,
   consolepro,
   Lang_chg,
   apifuntion,
   Icons,
+  Button,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
 
 import DoctorSymptomsAppointment from "../components/DoctorSymptomsAppointment";
 import LabAppointment from "../components/LabAppointment";
-import ScreenHeader from "../components/ScreenHeader";
-import { Clock, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
-import { Button } from "../components";
+import moment from "moment";
 
 const timedata = [
   {
@@ -79,7 +79,8 @@ export default class Booking extends Component {
       providerType: this.props?.route?.params?.providerType,
       providerId: this.props?.route?.params?.providerId,
       isFromHospital: this.props?.route?.params?.isFromHospital,
-      indexPosition: this.props.route.params.indexPosition,
+      indexPosition: this.props?.route?.params?.indexPosition,
+      family_member_id: this.props?.route?.params?.family_member_id,
       display: "taskbooking",
       task_base_task: "",
       task_base_task1: "",
@@ -97,7 +98,6 @@ export default class Booking extends Component {
       task_price_total: "",
       sub_total_price: "",
       total_price: "",
-      family_member_id: "",
       time_take_data: "",
       time_take_data_hour: "",
       total_price_show: "",
@@ -123,6 +123,8 @@ export default class Booking extends Component {
       prescriptionsImage: "",
       packageId: "",
       packagePrice: "",
+      subTotal: '',
+      hour_base_task_new: ''
     };
   }
   componentDidMount() {
@@ -135,6 +137,7 @@ export default class Booking extends Component {
 
     }
     this.props.navigation.addListener("focus", () => {
+      this.resetState()
       this.state.providerType === "lab" ?
         this.getLabServices()
         : this.state.providerType === "doctor" ?
@@ -143,10 +146,60 @@ export default class Booking extends Component {
       this.getDay();
       this.getAllNotification();
       this.getPerson()
-      // console.log('..........................', this.props?.route?.params?.providerType);
+      console.log('..........................', this.props?.route?.params?.family_member_id);
 
     });
   }
+
+  resetState = () => {
+    this.setState({
+      display: "taskbooking",
+      task_base_task: "",
+      task_base_task1: "",
+      new_task_arr: "",
+      // set_date: "",
+      timedata: timedata,
+      distance_fare_pass: "",
+      person_arr: "",
+      modalVisible3: false,
+      Error_popup: false,
+      select_task: "",
+      time_add: "",
+      time_take: "",
+      notification_count: "",
+      task_price_total: "",
+      sub_total_price: "",
+      total_price: "",
+      time_take_data: "",
+      time_take_data_hour: "",
+      total_price_show: "",
+      hour_id: "",
+      only_vatprice_show: "",
+      hour_total_amount: "",
+      hour_time: "",
+      active_status: true,
+      vat_price_show: "",
+      final_total_price: "",
+      hour_total_price: "",
+      vat_price_show_hourly: "",
+      vat_price_show_display: "",
+      currency_symbol: "",
+      onlineTaskPrice: "",
+      homeVisitTaskPrice: "",
+      onlineSubTotalPrice: "",
+      homeVisitSubTotalPrice: "",
+      homeVisitVat: "",
+      onlineVisitVat: "",
+      symptomsRecording: "",
+      symptomText: "",
+      prescriptionsImage: "",
+      packageId: "",
+      packagePrice: "",
+      subTotal: '',
+      hour_base_task_new: ''
+    })
+  }
+
   getAllNotification = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
@@ -231,6 +284,7 @@ export default class Booking extends Component {
 
   getDoctorTimeDate = async () => {
 
+
     let url = config.baseURL + "api-patient-doctor-next-date-time";
 
     var data = new FormData();
@@ -238,11 +292,11 @@ export default class Booking extends Component {
     data.append("date", this.state.set_date);
     data.append("service_type", this.state.providerType);
 
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("getDoctorTimeDate ", obj);
 
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        console.log("getDoctorTimeDate....... ", obj);
         if (obj.status == true) {
           if (obj.result.home_visit_time != "") {
             var names = obj.result.home_visit_time;
@@ -316,14 +370,16 @@ export default class Booking extends Component {
 
             if (vat_price_new != 0) {
               if (obj.result.home_visit_time != "") {
+                console.log('If..............');
                 if (this.state.booking_data.distance_fare != 0) {
+                  console.log('If distance_fare..............');
                   real_total = "";
                   real_total_show = "";
                   real_total_final = "";
                   show_real_price = "";
                   homeSubTotal = parseFloat(
                     Number(
-                      this.state.booking_data.home_visit_task[0].task_price
+                      this.state.booking_data?.home_visit_task[0]?.task_price
                     ) + Number(this.state.booking_data.distance_fare)
                   ).toFixed(1);
                   // console.log("sub_total home_visit_task :: ", homeSubTotal);
@@ -343,23 +399,19 @@ export default class Booking extends Component {
                   homeVisitTotalPrice = real_total;
                   homeVat = real_total_final;
                 } else {
+                  console.log('No distance_fare..............');
                   real_total = "";
                   real_total_show = "";
                   real_total_final = "";
                   show_real_price = "";
-                  homeSubTotal = parseFloat(
-                    Number(
-                      this.state.booking_data.home_visit_task[0].task_price
-                    )
-                  ).toFixed(1);
-                  // console.log("sub_total home_visit_task :: ", homeSubTotal);
-                  real_total_show =
-                    (parseFloat(homeSubTotal) / 100) * vat_price_new;
+                  homeSubTotal = parseFloat(Number(this.state.booking_data?.home_visit_task[0]?.task_price)).toFixed(1);
+                  real_total_show = (parseFloat(homeSubTotal) / 100) * vat_price_new;
+
                   real_total_final = real_total_show.toFixed(1);
+
                   // console.log("real_total_final home_visit_task:: ", real_total_final);
-                  real_total = parseFloat(
-                    Number(homeSubTotal) + Number(real_total_final)
-                  ).toFixed(1);
+                  real_total = parseFloat(Number(homeSubTotal) + Number(real_total_final)).toFixed(1);
+
                   show_real_price = parseFloat(vat_price_new).toFixed(1);
                   homeVisitTotalPrice = real_total;
                   homeVat = real_total_final;
@@ -486,7 +538,7 @@ export default class Booking extends Component {
                 ).toFixed(1);
                 // console.log("sub_total online_base_task :: ", onlineSubTotal);
                 real_total_show = (onlineSubTotal / 100) * vat_price_new;
-                real_total_final = real_total_show.toFixed(1);
+                real_total_final = parseFloat(real_total_show).toFixed(1);
                 real_total = parseFloat(
                   Number(onlineSubTotal) + Number(real_total_final)
                 ).toFixed(1);
@@ -570,7 +622,7 @@ export default class Booking extends Component {
     data.append("service_type", this.state.providerType);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         console.log("getLabTimeDate", obj);
 
@@ -662,7 +714,7 @@ export default class Booking extends Component {
     console.log('getTimeDate request.....', data);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         console.log("getTimeDate ", obj);
 
@@ -908,7 +960,7 @@ export default class Booking extends Component {
     data.append("service_type", this.state.providerType);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
           if (obj.result.task_base_task.length === 0) {
@@ -1089,8 +1141,9 @@ export default class Booking extends Component {
     data.append("service_type", this.state.providerType);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
+        console.log('getDoctorServices-response.....', obj.result);
         if (obj.status == true) {
           if (
             obj.result.home_visit_time != undefined &&
@@ -1203,14 +1256,30 @@ export default class Booking extends Component {
           if (vat_price_new != 0) {
             if (obj.result.home_visit_time != "") {
               if (obj.result.distance_fare != 0) {
-                real_total = "";
-                real_total_show = "";
-                real_total_final = "";
-                show_real_price = "";
                 homeSubTotal = parseFloat(
                   Number(obj.result.home_visit_task[0].task_price) +
                   Number(obj.result.distance_fare)
                 ).toFixed(1);
+
+                console.log('..................homeSubTotal', homeSubTotal);
+                real_total_show =
+                  (parseFloat(homeSubTotal + Number(obj.result.distance_fare)) /
+                    100) *
+                  vat_price_new;
+                real_total_final = real_total_show.toFixed(1);
+
+                real_total = parseFloat(
+                  Number(homeSubTotal) + Number(real_total_final)
+                ).toFixed(1);
+                show_real_price = parseFloat(vat_price_new).toFixed(1);
+                homeVisitTotalPrice = real_total;
+                homeVat = real_total_final;
+              } else {
+                homeSubTotal = parseFloat(
+                  Number(obj.result.home_visit_task[0].task_price) +
+                  Number(obj.result.distance_fare)
+                ).toFixed(1);
+
                 real_total_show =
                   (parseFloat(homeSubTotal + Number(obj.result.distance_fare)) /
                     100) *
@@ -1244,6 +1313,7 @@ export default class Booking extends Component {
               onlineVat = real_total_final;
             }
             if (this.state.isFromHospital) {
+              console.log('calculating hospital doc fare....');
               onlineSubTotal = "";
               real_total = "";
               real_total_show = "";
@@ -1371,7 +1441,7 @@ export default class Booking extends Component {
     data.append("service_type", this.state.providerType);
 
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
 
         if (obj.status == true) {
@@ -1616,6 +1686,8 @@ export default class Booking extends Component {
     data.append("sub_total_price", subTotalPrice);
     data.append("total_price", totalPrice);
     data.append("symptom_text", this.state.symptomText);
+    data.append('distance', this.state.booking_data.distancetext)
+
 
     if (this.state.prescriptionsImage != "") {
       data.append("upload_prescription", {
@@ -1633,13 +1705,15 @@ export default class Booking extends Component {
       });
     }
 
+    // console.log(data);
+    // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
-
+          localStorage.setItemString('cartTime', moment().format('x'))
           setTimeout(() => {
-            this.props.navigation.navigate("Cart");
+            this.props.navigation.navigate("Cart", { providerType: this.state.providerType });
           }, 700);
         } else {
           // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
@@ -1713,14 +1787,16 @@ export default class Booking extends Component {
     data.append("task_price_total", this.state.total_price_show);
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.final_total_price);
+    data.append('distance', this.state.booking_data.distancetext)
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
+          localStorage.setItemString('cartTime', moment().format('x'))
           // msgProvider.toast(msgText.sucess_message_login[config.language])
           setTimeout(() => {
-            this.props.navigation.navigate("Cart");
+            this.props.navigation.navigate("Cart", { providerType: this.state.providerType })
           }, 700);
         } else {
           // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
@@ -1780,16 +1856,19 @@ export default class Booking extends Component {
     data.append("task_price_total", this.state.hour_total_amount);
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.hour_total_price);
+    data.append('distance', this.state.booking_data.distancetext)
 
-    //return false
+    console.log(data);
+
+    // return false
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
-
+          localStorage.setItemString('cartTime', moment().format('x'))
           // msgProvider.toast(msgText.sucess_message_login[config.language])
           setTimeout(() => {
-            this.props.navigation.navigate("Cart");
+            this.props.navigation.navigate("Cart", { providerType: this.state.providerType })
           }, 700);
         } else {
           // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
@@ -1827,77 +1906,7 @@ export default class Booking extends Component {
     }
   };
 
-  check_all = (item, index) => {
-    let data = this.state.task_base_task;
-    let comma_arr = [];
-    let price_arr = [];
-    if (data[index].status == true) {
-      data[index].status = false;
-    } else {
-      if (data[index].status == false) {
-        data[index].status = true;
-      }
-    }
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].status == true) {
-        comma_arr.push(data[i].id);
-        price_arr.push(data[i].price);
-      }
-    }
 
-    let result = price_arr.map((i) => Number(i));
-    let sum = 0;
-
-    for (let k = 0; k < result.length; k++) {
-      sum += result[k];
-    }
-    let subTotal = "";
-    let real_total = "";
-    let real_total_show = "";
-    let real_total_final = "";
-    let show_total_price;
-
-
-    let vat_sum_per =
-      parseFloat(sum) + parseFloat(this.state.distance_fare_pass); //sum
-    subTotal = vat_sum_per.toFixed(1);
-
-    if (
-      this.state.only_vatprice_show == 0 ||
-      this.state.only_vatprice_show == "0.0"
-    ) {
-      real_total = 0 //parseFloat(this.state.vat_price_show_display).toFixed(1);
-      show_total_price = parseFloat(
-        parseInt(this.state.distance_fare_pass) + sum
-      ).toFixed(1);
-    } else {
-      real_total_show = (vat_sum_per / 100) * this.state.vat_price;
-      real_total_final = real_total_show.toFixed(2);
-      real_total = real_total_final;
-      show_total_price = parseFloat(
-        parseInt(this.state.distance_fare_pass) + parseFloat(real_total) + sum
-      ).toFixed(2);
-    }
-
-    let final_data = comma_arr.toString();
-    let set_price = price_arr.toString();
-    let total_sum = parseInt(sum);
-
-    this.setState({
-      subTotal: subTotal,
-      task_base_task: data,
-      new_task_arr: data,
-      select_task: comma_arr,
-      final_data: final_data,
-      set_price: set_price,
-      sum_arr: price_arr,
-      total_price_show: total_sum,
-      vat_price_show: real_total,
-      vat_price_show_display: real_total,
-      distance_fare: show_total_price,
-      final_total_price: show_total_price,
-    });
-  };
 
   hourbooking = (item, index) => {
     let data = this.state.hour_base_task;
@@ -1995,34 +2004,155 @@ export default class Booking extends Component {
     this.setState({ hour_time: data });
   };
 
-  check_all_false = (item, index) => {
+  check_all = (index) => {
+    let data = this.state.task_base_task;
+    let totalSelected = 0;
+    let comma_arr = [];
+    let price_arr = [];
+    if (index != -1) {
+      if (data[index].status == true) {
+        data[index].status = false;
+      } else {
+        if (data[index].status == false) {
+          data[index].status = true;
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status == true) {
+          totalSelected = totalSelected + 1
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status == true) {
+          comma_arr.push(data[i].id);
+          price_arr.push(data[i].price);
+        }
+      }
+
+      let result = price_arr.map((i) => Number(i));
+      let sum = 0;
+
+      for (let k = 0; k < result.length; k++) {
+        sum += result[k];
+      }
+      let subTotal = "";
+      let real_total = "";
+      let real_total_show = "";
+      let real_total_final = "";
+      let show_total_price;
+
+
+      let vat_sum_per =
+        parseFloat(sum) + parseFloat(this.state.distance_fare_pass); //sum
+      subTotal = vat_sum_per.toFixed(1);
+
+      if (
+        this.state.only_vatprice_show == 0 ||
+        this.state.only_vatprice_show == "0.0"
+      ) {
+        real_total = 0 //parseFloat(this.state.vat_price_show_display).toFixed(1);
+        show_total_price = parseFloat(
+          parseInt(this.state.distance_fare_pass) + sum
+        ).toFixed(1);
+      } else {
+        real_total_show = (vat_sum_per / 100) * this.state.vat_price;
+        real_total_final = real_total_show.toFixed(2);
+        real_total = real_total_final;
+        show_total_price = parseFloat(
+          parseInt(this.state.distance_fare_pass) + parseFloat(real_total) + sum
+        ).toFixed(2);
+      }
+
+      let final_data = comma_arr.toString();
+      let set_price = price_arr.toString();
+      let total_sum = parseInt(sum);
+
+      this.setState({
+        subTotal: subTotal,
+        task_base_task: data,
+        select_task: comma_arr,
+        final_data: final_data,
+        set_price: set_price,
+        sum_arr: price_arr,
+        total_price_show: total_sum,
+        vat_price_show: real_total,
+        vat_price_show_display: real_total,
+        distance_fare: show_total_price,
+        final_total_price: show_total_price,
+      })
+      if (totalSelected != 0) {
+        console.log('totalSelected', totalSelected);
+        this.setState({
+          new_task_arr: data
+        })
+      } else {
+        this.setState({
+          new_task_arr: ''
+        })
+      }
+    }
+  };
+
+  check_all_false = (index) => {
+    let totalSelected = 0;
     let price_arr = [];
     let data = this.state.new_task_arr;
 
-    if (data[index].status == true) {
-      data[index].status = false;
-    } else {
-      if (data[index].status == false) {
-        data[index].status = true;
+    if (index != -1) {
+      if (data[index].status == true) {
+        data[index].status = false;
+      } else {
+        if (data[index].status == false) {
+          data[index].status = true;
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status == true) {
+          totalSelected = totalSelected + 1
+        }
+      }
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].status == false) {
+          price_arr.push(data[i].price);
+        }
+      }
+
+      let result = price_arr.map((i) => Number(i));
+      var sum = 0;
+
+      for (let k = 0; k < result.length; k++) {
+        sum -= result[k];
+      }
+      this.setState({
+        task_base_task: data,
+        total_price_show: sum,
+      });
+      if (totalSelected != 0) {
+        this.setState({
+          new_task_arr: data
+        })
+      } else {
+        this.setState({
+          new_task_arr: ''
+        })
       }
     }
+  };
+
+  unCheck_all = (tab) => {
+    let data = tab === 0 ? this.state.new_task_arr : this.state.booking_data.hour_base_task;
+
     for (let i = 0; i < data.length; i++) {
-      if (data[i].status == false) {
-        price_arr.push(data[i].price);
+      if (data[i].status == true) {
+        data[i].status = false;
       }
     }
 
-    let result = price_arr.map((i) => Number(i));
-    var sum = 0;
-
-    for (let k = 0; k < result.length; k++) {
-      sum -= result[k];
-    }
     this.setState({
-      task_base_task: data,
+      // task_base_task: data,
       new_task_arr: data,
-      total_price_show: sum,
     });
+
   };
 
   render() {
@@ -2055,8 +2185,7 @@ export default class Booking extends Component {
             title={Lang_chg.Booking[config.language]}
             navigation={this.props.navigation}
             onBackPress={() => this.props.navigation.pop()}
-            leftIcon={leftArrow}
-            rightIcon={Notification}
+            leftIcon
           />
 
           <ScrollView
@@ -2234,229 +2363,7 @@ export default class Booking extends Component {
 
             </View>
 
-            {/* ---------------Main------------- */}
 
-            {/* Patient flatlist */}
-            {/* {this.state.providerType !== "lab" && (
-              <View
-                style={{
-                  backgroundColor: Colors.White,
-                  marginTop: vs(7),
-                  flexDirection: "row",
-                  paddingVertical: vs(9),
-                  paddingLeft: s(11),
-                  width: windowWidth
-                }}>
-                <View style={{ flexDirection: 'row', width: '85%' }}>
-                  <View style={{ width: '22%' }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          active_status: true,
-                          family_member_id: 0,
-                        });
-                      }}
-                      style={[
-                        {
-                          width: (windowWidth * 20) / 100,
-                          height: (windowWidth * 24) / 100,
-                          borderRadius: (windowWidth * 2) / 100,
-                          paddingVertical: (windowWidth * 3) / 100,
-                          borderColor: 'pink',
-                          justifyContent: "center",
-                        },
-                        this.state.active_status == true
-                          ? { backgroundColor: Colors.appointmentdetaillightblue }
-                          : { backgroundColor: "#fff" },
-                      ]}>
-                      <Image
-                        source={
-                          this.state.profile_img == "NA" ||
-                            this.state.profile_img == null
-                            ? localimag.user_img
-                            : { uri: config.img_url3 + this.state.profile_img }
-                        }
-                        style={{
-                          alignSelf: "center",
-                          width: (windowWidth * 16) / 100,
-                          height: (windowWidth * 14) / 100,
-                          borderRadius: (windowWidth * 2) / 100,
-                          borderColor: Colors.theme_color,
-                          marginTop: (windowWidth * 2) / 100,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          alignSelf: "center",
-                          fontFamily: Font.Medium,
-                          paddingBottom: (windowWidth * 2) / 100,
-                          marginTop: (windowWidth * 2) / 100,
-                          fontSize: (windowWidth * 3) / 100,
-                          paddingHorizontal: (windowWidth * 0.5) / 100,
-                        }}
-                        numberOfLines={1}
-                      >
-                        {this.state.name}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    style={{
-                      width: "78%",
-                      alignSelf: "center",
-                      marginLeft: (windowWidth * 3) / 100,
-                      alignItems: "flex-start",
-                    }}>
-                    <FlatList
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                      data={this.state.person_arr}
-                      renderItem={({ item, index }) => {
-                        if (
-                          this.state.person_arr != "" ||
-                          this.state.person_arr != null
-                        ) {
-                          return (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.setState({
-                                  family_member_id: item.id,
-                                  active_status: false,
-                                });
-                              }}
-                              style={[
-                                {
-                                  width: (windowWidth * 20) / 100,
-                                  height: (windowWidth * 24) / 100,
-                                  borderRadius: (windowWidth * 2) / 100,
-                                  paddingVertical: (windowWidth * 3) / 100,
-                                  borderColor: Colors.theme_color,
-                                  justifyContent: "center",
-                                  paddingHorizontal: (windowWidth * 0.2) / 100,
-                                  marginRight: (windowWidth * 1) / 100,
-                                },
-                                this.state.family_member_id == item.id
-                                  ? { backgroundColor: "#d1e9f6" }
-                                  : { backgroundColor: "#fff" },
-                              ]}
-                            >
-                              <View
-                                style={{
-                                  borderWidth: 2,
-                                  borderColor: Colors.gainsboro,
-                                  width: (windowWidth * 14) / 100,
-                                  alignItems: "center",
-                                  marginLeft: (windowWidth * 2.5) / 100,
-                                  borderRadius: (windowWidth * 3) / 100,
-                                  alignItems: "center",
-                                  marginTop: (windowWidth * 2) / 100,
-                                }}
-                              >
-                                <ImageBackground
-                                  imageStyle={{
-                                    borderRadius: (windowWidth * 2.5) / 100,
-                                  }}
-                                  source={
-                                    item.image == "NA" || item.image == null
-                                      ? localimag.user_img
-                                      : { uri: config.img_url3 + item.image }
-                                  }
-                                  style={{
-                                    alignSelf: "center",
-                                    width: (windowWidth * 13) / 100,
-                                    height: (windowWidth * 13) / 100,
-                                    alignSelf: "center",
-                                  }}
-                                >
-                                  <TouchableOpacity
-                                    onPress={() => {
-                                      this.setState({ modalVisible3: true }),
-                                        this.setState({
-                                          id: item.id,
-                                          first_name: item.first_name,
-                                          last_name: item.last_name,
-                                        });
-                                    }}
-                                  >
-                                    <Image
-                                      style={{
-                                        width: 20,
-                                        height: 20,
-                                        alignSelf: "flex-end",
-                                        top: 0,
-                                      }}
-                                      source={localimag.crossimg}
-                                    />
-                                  </TouchableOpacity>
-                                </ImageBackground>
-                              </View>
-                              <Text
-                                style={{
-                                  fontFamily: Font.Light,
-                                  paddingBottom: (windowWidth * 2) / 100,
-                                  textAlign: "center",
-                                  marginTop: (windowWidth * 1.2) / 100,
-                                  fontSize: (windowWidth * 3.2) / 100,
-                                }}
-                                numberOfLines={1}
-                              >
-                                {item.first_name}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        }
-                      }}
-                    />
-                  </View>
-                </View>
-
-
-                <View style={{ width: '15%', }}>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate("AddPatient");
-                    }}
-                    style={{
-                      width: '100%',
-                      height: vs(80),
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      justifyContent: "center",
-                      alignItems: 'center',
-                      backgroundColor: Colors.appointmentdetaillightblue,
-                    }} >
-                    <View style={{
-                      height: s(30),
-                      width: s(30),
-                      borderRadius: s(100),
-                      backgroundColor: Colors.Theme,
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                      <Image
-                        resizeMode="contain"
-                        source={Icons.Add}
-                        style={{
-                          width: s(15),
-                          height: s(15),
-                          tintColor: Colors.White,
-                        }}
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: (windowWidth * 3) / 100,
-                        textAlign: "center",
-                        marginTop: (windowWidth * 2) / 100,
-                      }}>
-                      {Lang_chg.Add[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )} */}
 
             {this.state.providerType === "doctor" && (
               <DoctorSymptomsAppointment
@@ -2464,6 +2371,17 @@ export default class Booking extends Component {
                 indexPosition={this.props.route.params.indexPosition}
                 isFromHospital={this.props.route.params.isFromHospital}
                 sendData={this.getData.bind(this)}
+                resetState={() => {
+                  this.state.providerType === "lab" ?
+                    this.getLabServices()
+                    : this.state.providerType === "doctor" ?
+                      this.getDoctorServices()
+                      : this.getServices();
+                  this.getDay();
+                  this.getAllNotification();
+                  this.getPerson()
+                  this.resetState()
+                }}
               />
             )}
 
@@ -2473,6 +2391,17 @@ export default class Booking extends Component {
                 indexPosition={this.props.route.params.indexPosition}
                 data={item}
                 sendData={this.getData.bind(this)}
+                resetState={() => {
+                  this.state.providerType === "lab" ?
+                    this.getLabServices()
+                    : this.state.providerType === "doctor" ?
+                      this.getDoctorServices()
+                      : this.getServices();
+                  this.getDay();
+                  this.getAllNotification();
+                  this.getPerson()
+                  this.resetState()
+                }}
               />
             )}
 
@@ -2484,8 +2413,7 @@ export default class Booking extends Component {
                       width: "100%",
                       alignSelf: "center",
                       backgroundColor: Colors.White,
-                    }}
-                  >
+                    }}>
                     <View
                       style={{
                         width: "100%",
@@ -2493,10 +2421,10 @@ export default class Booking extends Component {
                         right: 0,
                         alignSelf: "flex-end",
                       }}>
-
                       <FlatList
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: s(13) }}
                         data={this.state.new_task_arr}
                         renderItem={({ item, index }) => {
                           if (this.state.new_task_arr != "") {
@@ -2621,7 +2549,7 @@ export default class Booking extends Component {
                                     <TouchableOpacity
                                       activeOpacity={0.9}
                                       onPress={() => {
-                                        this.check_all(item, index);
+                                        this.check_all(index);
                                       }}
                                       style={{
                                         width: '100%',
@@ -2633,7 +2561,7 @@ export default class Booking extends Component {
                                       <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.check_all(item, index);
+                                            this.check_all(index);
                                           }}
                                           style={{
                                             height: 20,
@@ -3102,21 +3030,19 @@ export default class Booking extends Component {
                 <View>
                   {/* border */}
 
-                  {/* Payment section */}
+                  {/* Payment section for labs*/}
                   <View
                     style={{
                       width: "100%",
                       paddingVertical: vs(9),
                       marginTop: vs(7),
                       backgroundColor: Colors.White,
-                    }}
-                  >
+                    }}>
                     <View
                       style={{
                         width: "90%",
                         alignSelf: "center",
-                      }}
-                    >
+                      }}>
                       <View>
                         <Text
                           style={{
@@ -3129,6 +3055,7 @@ export default class Booking extends Component {
                           {Lang_chg.Payment[config.language]}
                         </Text>
                       </View>
+
                       {this.state.new_task_arr != "" && (
                         <FlatList
                           data={this.state.new_task_arr}
@@ -3225,6 +3152,7 @@ export default class Booking extends Component {
                           }}
                         />
                       )}
+
                       <View
                         style={{
                           flexDirection: "row",
@@ -3233,8 +3161,7 @@ export default class Booking extends Component {
                           borderTopWidth: 1.5,
                           borderColor: Colors.backgroundcolor,
                           marginTop: (windowWidth * 2) / 100,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
@@ -3242,16 +3169,17 @@ export default class Booking extends Component {
                             color: "#000",
                           }}
                         >
-                          {item.distance_fare_text}
+                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+
                         </Text>
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {item.distance_fare}.0 {this.state.currency_symbol}
+                          }}>
+                          {(this.state.new_task_arr != "" || this.state.hour_base_task_new != '') ? `${item.distance_fare}.0  ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
+
                         </Text>
                       </View>
 
@@ -3262,15 +3190,13 @@ export default class Booking extends Component {
                           paddingVertical: (windowWidth * 2) / 100,
                           borderTopWidth: 1.5,
                           borderColor: Colors.backgroundcolor,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
+                          }}>
                           {Lang_chg.subTotal[config.language]}
                         </Text>
                         <Text
@@ -3278,9 +3204,8 @@ export default class Booking extends Component {
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
-                          {this.state.subTotal} {this.state.currency_symbol}
+                          }}>
+                          {(this.state.new_task_arr != "" || this.state.hour_base_task_new != '') ? `${this.state.subTotal}.0  ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
@@ -3291,15 +3216,13 @@ export default class Booking extends Component {
                           marginTop: (windowWidth * 1) / 100,
                           borderColor: Colors.backgroundcolor,
                           marginBottom: (windowWidth * 2) / 100,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
+                          }}>
                           {item.vat_text}
                         </Text>
                         <Text
@@ -3307,12 +3230,18 @@ export default class Booking extends Component {
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {this.state.indexPosition === 0
-                            ? this.state.vat_price_show_display
-                            : this.state.vat_price_show_hourly}{" "}
-                          {this.state.currency_symbol}
+                          }}>
+
+                          {
+                            ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 0) ?
+                              `${this.state.vat_price_show_display} ${this.state.currency_symbol}`
+                              :
+                              ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 1) ?
+                                `${this.state.vat_price_show_hourly} ${this.state.currency_symbol}`
+                                :
+                                ` ${this.state.currency_symbol}`
+                          }
+
                         </Text>
                       </View>
 
@@ -3325,15 +3254,13 @@ export default class Booking extends Component {
                           borderColor: Colors.backgroundcolor,
                           marginBottom: (windowWidth * 2) / 100,
                           paddingVertical: (windowWidth * 2) / 100,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
+                          }}>
                           {Lang_chg.Total[config.language]}
                         </Text>
                         <Text
@@ -3341,12 +3268,16 @@ export default class Booking extends Component {
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
-                          {this.state.indexPosition === 0
-                            ? this.state.final_total_price
-                            : this.state.hour_total_price}{" "}
-                          {this.state.currency_symbol}
+                          }}>
+                          {
+                            ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 0) ?
+                              `${this.state.final_total_price} ${this.state.currency_symbol}`
+                              :
+                              ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 1) ?
+                                `${this.state.hour_total_price} ${this.state.currency_symbol}`
+                                :
+                                ` ${this.state.currency_symbol}`
+                          }
                         </Text>
                       </View>
 
@@ -3829,7 +3760,7 @@ export default class Booking extends Component {
                 <View>
 
 
-                  {/* Payment section */}
+                  {/* Payment section for Docs */}
                   <View
                     style={{
                       width: "100%",
@@ -3856,6 +3787,7 @@ export default class Booking extends Component {
                           {Lang_chg.Payment[config.language]}
                         </Text>
                       </View>
+
                       <View>
                         <View
                           style={{
@@ -3897,10 +3829,6 @@ export default class Booking extends Component {
                               flexDirection: "row",
                               justifyContent: "space-between",
                               paddingVertical: vs(10),
-                              borderTopWidth: 1.5,
-                              borderBottomWidth: 1.5,
-                              borderTopColor: Colors.backgroundcolor,
-                              borderBottomColor: Colors.backgroundcolor,
                               marginTop: (windowWidth * 2) / 100,
                             }}>
                             <Text
@@ -3909,7 +3837,8 @@ export default class Booking extends Component {
                                 fontSize: Font.small,
                                 color: Colors.detailTitles,
                               }}>
-                              {item.distance_fare_text}
+                              {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+
                             </Text>
                             <Text
                               style={{
@@ -4033,17 +3962,25 @@ export default class Booking extends Component {
                     width: "100%",
                     flexDirection: "row",
                     alignItems: "center",
-                  }}
-                >
-                  {/* ------------Tabs---------- */}
+                  }}>
+                  {/* ------------Appoitment Tabs---------- */}
 
                   {item.task_base_enable == 0 && (
                     <TouchableOpacity
                       onPress={() => {
                         this.setState({
                           display: "taskbooking",
-                          set_task: "task_base"
+                          set_task: "task_base",
                         });
+                        this.state.providerType === "lab" ?
+                          this.getLabServices()
+                          : this.state.providerType === "doctor" ?
+                            this.getDoctorServices()
+                            : this.getServices();
+                        this.getDay();
+                        this.getAllNotification();
+                        this.getPerson()
+                        this.resetState()
                       }}
                       style={{ width: "50%", alignSelf: "center" }}
                     >
@@ -4101,8 +4038,17 @@ export default class Booking extends Component {
                       onPress={() => {
                         this.setState({
                           display: "hourlybooking",
-                          set_task: "hour_base"
+                          set_task: "hour_base",
                         });
+                        this.state.providerType === "lab" ?
+                          this.getLabServices()
+                          : this.state.providerType === "doctor" ?
+                            this.getDoctorServices()
+                            : this.getServices();
+                        this.getDay();
+                        this.getAllNotification();
+                        this.getPerson()
+                        this.resetState()
                       }}
                       style={{ width: "50%", alignSelf: "center" }}
                     >
@@ -4157,10 +4103,11 @@ export default class Booking extends Component {
                     </TouchableOpacity>
                   )}
 
-                  {/* ------------Tabs---------- */}
+                  {/* -------------------------------------- */}
 
                 </View>
 
+                {/* ------------Appoitment Tabs Data---------- */}
                 {this.state.display == "taskbooking" && (
                   <View
                     style={{
@@ -4313,7 +4260,7 @@ export default class Booking extends Component {
                                   <TouchableOpacity
                                     activeOpacity={0.9}
                                     onPress={() => {
-                                      this.check_all(item, index);
+                                      this.check_all(index);
                                     }}
                                     style={{
                                       width: '100%',
@@ -4325,7 +4272,7 @@ export default class Booking extends Component {
                                     <View style={{ flexDirection: 'row' }}>
                                       <TouchableOpacity
                                         onPress={() => {
-                                          this.check_all(item, index);
+                                          this.check_all(index);
                                         }}
                                         style={{
                                           height: 20,
@@ -4461,6 +4408,8 @@ export default class Booking extends Component {
                     />
                   </View>
                 )}
+
+
 
                 {/* ------------------Date Time--------------- */}
                 <>
@@ -4930,7 +4879,7 @@ export default class Booking extends Component {
                 </>
                 <View style={{}}>
 
-                  {/* Payment section */}
+                  {/* Payment section for task and hour */}
                   {this.state.display == "taskbooking" && (
                     <View
                       style={{
@@ -4946,8 +4895,7 @@ export default class Booking extends Component {
                           fontSize: (windowWidth * 4) / 100,
                           color: Colors.theme_color,
                           textAlign: config.textRotate,
-                        }}
-                      >
+                        }} >
                         {Lang_chg.Payment[config.language]}
                       </Text>
                       {this.state.new_task_arr != "" && (
@@ -5015,7 +4963,8 @@ export default class Booking extends Component {
                             color: "#000",
                           }}
                         >
-                          {item.distance_fare_text}
+                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+
                         </Text>
                         <Text
                           style={{
@@ -5024,8 +4973,7 @@ export default class Booking extends Component {
                             color: "#000",
                           }}
                         >
-                          {item.distance_fare}.0{" "}
-                          {this.state.currency_symbol}
+                          {this.state.new_task_arr != '' ? `${item.distance_fare}.0 ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
@@ -5054,9 +5002,9 @@ export default class Booking extends Component {
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
                             // marginTop: windowWidth * 1 / 100,
-                          }}
-                        >
-                          {this.state.subTotal} {this.state.currency_symbol}
+                          }}>
+                          {this.state.new_task_arr != '' ? `${this.state.subTotal} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
+
                         </Text>
                       </View>
 
@@ -5083,10 +5031,8 @@ export default class Booking extends Component {
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {this.state.vat_price_show_display}{" "}
-                          {this.state.currency_symbol}
+                          }}>
+                          {this.state.new_task_arr != '' ? `${this.state.vat_price_show_display} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
@@ -5115,10 +5061,8 @@ export default class Booking extends Component {
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
-                          {this.state.final_total_price}{" "}
-                          {this.state.currency_symbol}
+                          }} >
+                          {this.state.new_task_arr != '' ? `${this.state.final_total_price} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
@@ -5166,16 +5110,14 @@ export default class Booking extends Component {
                                           (windowWidth * 3) / 100,
                                         justifyContent: "space-between",
                                         alignSelf: "center",
-                                      }}
-                                    >
+                                      }}>
                                       <Text
                                         style={{
                                           fontFamily: Font.ques_fontfamily,
                                           fontSize: Font.sregulartext_size,
                                           color: "#000",
                                           textAlign: config.textRotate,
-                                        }}
-                                      >
+                                        }}>
                                         {item.duration}
                                       </Text>
                                       <Text
@@ -5185,8 +5127,7 @@ export default class Booking extends Component {
                                           color: "#000",
                                           width: "30%",
                                           textAlign: "right",
-                                        }}
-                                      >
+                                        }}>
                                         {item.price}{" "}
                                         {this.state.currency_symbol}
                                       </Text>
@@ -5214,19 +5155,16 @@ export default class Booking extends Component {
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {item.distance_fare_text}
+                          }}>
+                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
                         </Text>
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {item.distance_fare}.0{" "}
-                          {this.state.currency_symbol}
+                          }}>
+                          {this.state.hour_base_task_new != '' ? `${item.distance_fare} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
                       <View
@@ -5236,15 +5174,13 @@ export default class Booking extends Component {
                           paddingVertical: (windowWidth * 2) / 100,
                           borderTopWidth: 1.5,
                           borderTopColor: Colors.backgroundcolor,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
+                          }}>
                           {Lang_chg.subTotal[config.language]}
                         </Text>
                         <Text
@@ -5252,9 +5188,8 @@ export default class Booking extends Component {
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
-                          {this.state.subTotal} {this.state.currency_symbol}
+                          }}>
+                          {this.state.hour_base_task_new != '' ? `${this.state.subTotal} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
                       <View
@@ -5263,15 +5198,13 @@ export default class Booking extends Component {
                           justifyContent: "space-between",
                           borderColor: Colors.bordercolor,
                           marginBottom: (windowWidth * 2) / 100,
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
+                          }}>
                           {item.vat_text}
                         </Text>
                         <Text
@@ -5279,10 +5212,8 @@ export default class Booking extends Component {
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}
-                        >
-                          {this.state.vat_price_show_hourly}{" "}
-                          {this.state.currency_symbol}
+                          }}>
+                          {this.state.hour_base_task_new != '' ? `${this.state.vat_price_show_hourly} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
@@ -5295,15 +5226,13 @@ export default class Booking extends Component {
                           borderTopColor: Colors.backgroundcolor,
                           marginBottom: (windowWidth * 2) / 100,
                           paddingTop: vs(5)
-                        }}
-                      >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
+                          }}>
                           {Lang_chg.Total[config.language]}
                         </Text>
                         <Text
@@ -5311,15 +5240,15 @@ export default class Booking extends Component {
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}
-                        >
-                          {this.state.hour_total_price}{" "}
-                          {this.state.currency_symbol}
+                          }}>
+                          {this.state.hour_base_task_new != '' ? `${this.state.hour_total_price} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
                         </Text>
                       </View>
 
                     </View>
                   )}
+
+
                 </View>
               </View>
             )}
@@ -5512,38 +5441,7 @@ export default class Booking extends Component {
                       : this.submit_btn();
               }}
             />
-            {/* <TouchableOpacity
-              onPress={() => {
-                this.state.providerType === "doctor"
-                  ? this.submitButtonForDoctor()
-                  : this.state.providerType === "lab"
-                    ? this.state.indexPosition === 0
-                      ? this.submit_btn()
-                      : this.submit_btn_hourly()
-                    : this.state.display == "hourlybooking"
-                      ? this.submit_btn_hourly()
-                      : this.submit_btn();
-              }}
-              style={{
-                width: "100%",
-                borderRadius: (windowWidth * 3) / 100,
-                backgroundColor: Colors.Theme,
-                paddingVertical: (windowWidth * 3) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  color: Colors.White,
-                  fontFamily: Font.Medium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.PROCEEDTOcheckout[config.language]}
-              </Text>
-            </TouchableOpacity> */}
+
           </View>
         </View>
 

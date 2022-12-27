@@ -25,9 +25,9 @@ import {
     msgProvider,
     msgText,
     msgTitle,
+    Button
 } from "../../Provider/utilslib/Utils";
 import ListBottomSheet from "../../components/ListBottomSheet";
-import { Button } from "../../components";
 
 
 
@@ -332,460 +332,464 @@ const LifeStyle = () => {
         <View style={{ flex: 0.98, backgroundColor: Colors.White }}>
 
 
-            <KeyboardAwareScrollView
-                keyboardShouldPersistTaps='handled'
-                contentContainerStyle={{
-                    justifyContent: 'center',
-                    paddingTop: vs(10),
-                    paddingBottom: vs(30),
-                }}
-                showsVerticalScrollIndicator={false}>
 
-                <View style={{
-                    width: '93%',
-                    alignSelf: 'center'
-                }}>
+                <KeyboardAwareScrollView
+                    // keyboardOpeningTime={200}
+                    extraScrollHeight={50}
+                    enableOnAndroid={true}
+                    keyboardShouldPersistTaps='handled'
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        paddingTop: vs(10),
+                        paddingBottom: vs(30),
+                    }}
+                    showsVerticalScrollIndicator={false}>
 
-                    {/* ----------------------------------------------------- */}
-                    <View>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.smoking[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.smokingPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, smokingPopup: true, type: 1 }))
+                    <View style={{
+                        width: '93%',
+                        alignSelf: 'center'
+                    }}>
+
+                        {/* ----------------------------------------------------- */}
+                        <View>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.smoking[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.smokingPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
                                 }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, smokingPopup: true, type: 1 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
                                         style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
                                         }}>
-                                        {lifeStyleDetails.smoking == '' ? Lang_chg.smoking[config.language] : lifeStyleDetails.smoking}
-                                    </Text>
-                                </View>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.smoking == '' ? Lang_chg.smoking[config.language] : lifeStyleDetails.smoking}
+                                        </Text>
+                                    </View>
 
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
                         </View>
+
+                        {/* ----------------------------------------------------- */}
+
+                        <View style={{ marginTop: vs(15) }}>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.Alcohol[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.alcoholPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: true, type: 2 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.alcohol === '' ? Lang_chg.Alcohol[config.language] : lifeStyleDetails.alcohol}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* ----------------------------------------------------- */}
+
+                        <View style={{ marginTop: vs(15) }}>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.blood[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.bloodGroupPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: true, type: 3 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.bloodGroup === '' ? Lang_chg.blood[config.language] : lifeStyleDetails.bloodGroup}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* ----------------------------------------------------- */}
+
+                        <View style={{ marginTop: vs(15) }}>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.activity[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.activityPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, activityPopup: true, type: 4 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.activity === '' ? Lang_chg.activity[config.language] : lifeStyleDetails.activity}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* ----------------------------------------------------- */}
+
+                        <View style={{ marginTop: vs(15) }}>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.food[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.foodPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, foodPopup: true, type: 5 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.food === '' ? Lang_chg.food[config.language] : lifeStyleDetails.food}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* ----------------------------------------------------- */}
+
+                        <View style={{ marginTop: vs(15) }}>
+                            <Text
+                                style={{
+                                    fontSize: Font.medium,
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    includeFontPadding: false,
+                                }}>
+                                {Lang_chg.occupation[config.language]}
+                            </Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 50,
+                                    alignSelf: "center",
+                                    marginTop: vs(8),
+                                    flexDirection: "row",
+                                    borderColor: lifeStyleDetails.occupationPopup ? Colors.Theme : Colors.Border,
+                                    borderWidth: 1,
+                                    borderRadius: 3,
+                                    paddingHorizontal: s(9)
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setLifeStyleDetails(prevState => ({ ...prevState, occupationPopup: true, type: 6 }))
+                                    }}
+                                    style={{ width: "100%", flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                            width: "85%",
+                                            height: '100%',
+                                            justifyContent: "center",
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: Font.medium,
+                                                textAlign: config.textalign,
+                                                fontFamily: Font.Regular,
+                                                includeFontPadding: false,
+                                            }}>
+                                            {lifeStyleDetails.occupation === '' ? Lang_chg.occupation[config.language] : lifeStyleDetails.occupation}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: "15%",
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Image
+                                            source={Icons.downarrow}
+                                            style={{ height: 18, width: 18 }}
+                                        ></Image>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <Button
+                            text={Lang_chg.submitbtntext[config.language]}
+                            onPress={() => saveLifeStyle()}
+                            btnStyle={{ marginTop: vs(15) }}
+                        />
+
+
                     </View>
 
-                    {/* ----------------------------------------------------- */}
 
-                    <View style={{ marginTop: vs(15) }}>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.Alcohol[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.alcoholPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: true, type: 2 }))
-                                }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
-                                        }}>
-                                        {lifeStyleDetails.alcohol === '' ? Lang_chg.Alcohol[config.language] : lifeStyleDetails.alcohol}
-                                    </Text>
-                                </View>
+                </KeyboardAwareScrollView>
 
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* ----------------------------------------------------- */}
-
-                    <View style={{ marginTop: vs(15) }}>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.blood[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.bloodGroupPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: true, type: 3 }))
-                                }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
-                                        }}>
-                                        {lifeStyleDetails.bloodGroup === '' ? Lang_chg.blood[config.language] : lifeStyleDetails.bloodGroup}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* ----------------------------------------------------- */}
-
-                    <View style={{ marginTop: vs(15) }}>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.activity[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.activityPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, activityPopup: true, type: 4 }))
-                                }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
-                                        }}>
-                                        {lifeStyleDetails.activity === '' ? Lang_chg.activity[config.language] : lifeStyleDetails.activity}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* ----------------------------------------------------- */}
-
-                    <View style={{ marginTop: vs(15) }}>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.food[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.foodPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, foodPopup: true, type: 5 }))
-                                }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
-                                        }}>
-                                        {lifeStyleDetails.food === '' ? Lang_chg.food[config.language] : lifeStyleDetails.food}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* ----------------------------------------------------- */}
-
-                    <View style={{ marginTop: vs(15) }}>
-                        <Text
-                            style={{
-                                fontSize: Font.medium,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                includeFontPadding: false,
-                            }}>
-                            {Lang_chg.occupation[config.language]}
-                        </Text>
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 50,
-                                alignSelf: "center",
-                                marginTop: vs(8),
-                                flexDirection: "row",
-                                borderColor: lifeStyleDetails.occupationPopup ? Colors.Theme : Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                paddingHorizontal: s(9)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setLifeStyleDetails(prevState => ({ ...prevState, occupationPopup: true, type: 6 }))
-                                }}
-                                style={{ width: "100%", flexDirection: "row" }}>
-                                <View
-                                    style={{
-                                        width: "85%",
-                                        height: '100%',
-                                        justifyContent: "center",
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: Font.medium,
-                                            textAlign: config.textalign,
-                                            fontFamily: Font.Regular,
-                                            includeFontPadding: false,
-                                        }}>
-                                        {lifeStyleDetails.occupation === '' ? Lang_chg.occupation[config.language] : lifeStyleDetails.occupation}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <Button
-                        text={Lang_chg.submitbtntext[config.language]}
-                        onPress={() => saveLifeStyle()}
-                        btnStyle={{ marginTop: vs(15) }}
-                    />
-
-
-                </View>
-
-
-            </KeyboardAwareScrollView>
-
-            <ListBottomSheet
-                visible={lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup || lifeStyleDetails.bloodGroupPopup || lifeStyleDetails.activityPopup || lifeStyleDetails.foodPopup || lifeStyleDetails.occupationPopup}
-                onRequestClose={() => {
-                    lifeStyleDetails.smokingPopup ?
-                        setLifeStyleDetails(prevState => ({ ...prevState, smokingPopup: false }))
-                        :
-                        lifeStyleDetails.alcoholPopup ?
-                            setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: false }))
+                <ListBottomSheet
+                    visible={lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup || lifeStyleDetails.bloodGroupPopup || lifeStyleDetails.activityPopup || lifeStyleDetails.foodPopup || lifeStyleDetails.occupationPopup}
+                    onRequestClose={() => {
+                        lifeStyleDetails.smokingPopup ?
+                            setLifeStyleDetails(prevState => ({ ...prevState, smokingPopup: false }))
                             :
-                            lifeStyleDetails.bloodGroupPopup ?
-                                setLifeStyleDetails(prevState => ({ ...prevState, bloodGroupPopup: false }))
+                            lifeStyleDetails.alcoholPopup ?
+                                setLifeStyleDetails(prevState => ({ ...prevState, alcoholPopup: false }))
                                 :
-                                lifeStyleDetails.activityPopup ?
-                                    setLifeStyleDetails(prevState => ({ ...prevState, activityPopup: false }))
+                                lifeStyleDetails.bloodGroupPopup ?
+                                    setLifeStyleDetails(prevState => ({ ...prevState, bloodGroupPopup: false }))
                                     :
-                                    lifeStyleDetails.foodPopup ?
-                                        setLifeStyleDetails(prevState => ({ ...prevState, foodPopup: false }))
+                                    lifeStyleDetails.activityPopup ?
+                                        setLifeStyleDetails(prevState => ({ ...prevState, activityPopup: false }))
                                         :
-                                        setLifeStyleDetails(prevState => ({ ...prevState, occupationPopup: false }))
-
-                }}
-                data={(lifeStyleDetails.type === 1 || lifeStyleDetails.type === 2) ? generalList : lifeStyleDetails.type === 3 ? bloodGroupList : lifeStyleDetails.type === 4 ? activityList : lifeStyleDetails.type === 5 ? foodList : lifeStyleDetails.type === 6 ? occupationList : null}
-                title={lifeStyleDetails.type === 1 ?
-                    Lang_chg.smoking[config.language]
-                    : lifeStyleDetails.type === 2 ?
-                        Lang_chg.Alcohol[config.language]
-                        : lifeStyleDetails.type === 3 ?
-                            Lang_chg.blood[config.language]
-                            : lifeStyleDetails.type === 4 ?
-                                Lang_chg.activity[config.language]
-                                : lifeStyleDetails.type === 5 ?
-                                    Lang_chg.food[config.language]
-                                    : lifeStyleDetails.type === 6 ?
-                                        Lang_chg.occupation[config.language]
-                                        : null}
-                selectedIssue={(val) => {
-                    lifeStyleDetails.type === 1 ?
-                        setLifeStyleDetails(prevState => ({ ...prevState, smoking: val }))
-                        :
-                        lifeStyleDetails.type === 2 ?
-                            setLifeStyleDetails(prevState => ({ ...prevState, alcohol: val }))
-                            :
-                            lifeStyleDetails.type === 3 ?
-                                setLifeStyleDetails(prevState => ({ ...prevState, bloodGroup: val }))
-                                :
-                                lifeStyleDetails.type === 4 ?
-                                    setLifeStyleDetails(prevState => ({ ...prevState, activity: val }))
-                                    :
-                                    lifeStyleDetails.type === 5 ?
-                                        setLifeStyleDetails(prevState => ({ ...prevState, food: val }))
-                                        :
-                                        lifeStyleDetails.type === 6 ?
-                                            setLifeStyleDetails(prevState => ({ ...prevState, occupation: val }))
+                                        lifeStyleDetails.foodPopup ?
+                                            setLifeStyleDetails(prevState => ({ ...prevState, foodPopup: false }))
                                             :
-                                            null
-                }}
-            />
+                                            setLifeStyleDetails(prevState => ({ ...prevState, occupationPopup: false }))
+
+                    }}
+                    data={(lifeStyleDetails.type === 1 || lifeStyleDetails.type === 2) ? generalList : lifeStyleDetails.type === 3 ? bloodGroupList : lifeStyleDetails.type === 4 ? activityList : lifeStyleDetails.type === 5 ? foodList : lifeStyleDetails.type === 6 ? occupationList : null}
+                    title={lifeStyleDetails.type === 1 ?
+                        Lang_chg.smoking[config.language]
+                        : lifeStyleDetails.type === 2 ?
+                            Lang_chg.Alcohol[config.language]
+                            : lifeStyleDetails.type === 3 ?
+                                Lang_chg.blood[config.language]
+                                : lifeStyleDetails.type === 4 ?
+                                    Lang_chg.activity[config.language]
+                                    : lifeStyleDetails.type === 5 ?
+                                        Lang_chg.food[config.language]
+                                        : lifeStyleDetails.type === 6 ?
+                                            Lang_chg.occupation[config.language]
+                                            : null}
+                    selectedIssue={(val) => {
+                        lifeStyleDetails.type === 1 ?
+                            setLifeStyleDetails(prevState => ({ ...prevState, smoking: val }))
+                            :
+                            lifeStyleDetails.type === 2 ?
+                                setLifeStyleDetails(prevState => ({ ...prevState, alcohol: val }))
+                                :
+                                lifeStyleDetails.type === 3 ?
+                                    setLifeStyleDetails(prevState => ({ ...prevState, bloodGroup: val }))
+                                    :
+                                    lifeStyleDetails.type === 4 ?
+                                        setLifeStyleDetails(prevState => ({ ...prevState, activity: val }))
+                                        :
+                                        lifeStyleDetails.type === 5 ?
+                                            setLifeStyleDetails(prevState => ({ ...prevState, food: val }))
+                                            :
+                                            lifeStyleDetails.type === 6 ?
+                                                setLifeStyleDetails(prevState => ({ ...prevState, occupation: val }))
+                                                :
+                                                null
+                    }}
+                />
 
         </View>
     )

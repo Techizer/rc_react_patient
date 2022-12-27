@@ -6,10 +6,11 @@ import {
     StyleSheet,
     TouchableHighlight,
     Image,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
-import { Icons, msgProvider } from "../Provider/utilslib/Utils";
+import { Icons, msgProvider, windowHeight } from "../Provider/utilslib/Utils";
 import moment from "moment-timezone";
 import Modal from "react-native-modal";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -25,12 +26,11 @@ import {
     consolepro,
     apifuntion,
     deviceHeight,
+    Button
 } from "../Provider/utilslib/Utils";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Cross, VideoCall, whiteStar } from "../icons/SvgIcons/Index";
-import RescheduleBottomSheet from "./RescheduleBottomSheet";
-import Button from "./Button";
+import { Cross, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "./RatingBottomSheet";
 import StarRating from "react-native-star-rating";
 
@@ -61,7 +61,9 @@ const AppointmentContainer = ({
         set_task: '',
         check_currentdate: '',
         timcurrent_for_check: '',
-        isRescheduleModal: false
+        isRescheduleModal: false,
+        isLoading: false,
+        isScheduleagain: false,
     })
 
     const [ratingData, setRatingData] = useState({
@@ -69,11 +71,29 @@ const AppointmentContainer = ({
         rating: 0,
         review: ''
     })
+    const [currency, setCurrency] = useState('')
+
+    const getUserCountry = async () => {
+        let user_details = await localStorage.getItemObject("user_arr");
+        if (user_details?.work_area === 'UAE') {
+            setCurrency('AED')
+        } else {
+            setCurrency('SAR')
+        }
+    }
+
 
     useEffect(() => {
         checkVideoCallStatus()
         splitOtp()
-    }, [])
+        getUserCountry()
+        setRescheduleData(prevState => ({
+            ...prevState,
+            set_task: Item?.booking_type,
+            service_status: Item?.provider_type,
+        }))
+        // console.log('************************', Item?.provider_type);
+    }, [Item])
 
     const splitOtp = () => {
         let tempArr = []
@@ -89,7 +109,7 @@ const AppointmentContainer = ({
         }
     }
     const checkVideoCallStatus = () => {
-        if (Item.provider_type === "doctor") {
+        if (Item.provider_type == "doctor") {
             videoCallButton = false;
             var currentDate = moment().unix();
             var appointmentDate = moment(Item.app_date).format("YYYY-MM-DD");
@@ -114,27 +134,31 @@ const AppointmentContainer = ({
 
 
     const reschedule = async (Id, type) => {
-        let url = config.baseURL + "api-patient-reschedule-appointment";
+
+
+        let url = config.baseURL + (type == 'doctor' ? "api-patient-doctor-reschedule-appointment" : type == 'lab' ? "api-patient-lab-reschedule-appointment" : "api-patient-reschedule-appointment");
 
         var data = new FormData();
         data.append("order_id", Id);
         data.append("service_type", type);
+        if (type === 'lab') {
+            data.append("task_type", rescheduleData?.set_task);
+        }
 
-        consolepro.consolelog("data", data);
-        // return false
-        apifuntion
-            .postApi(url, data)
-            .then((obj) => {
-                consolepro.consolelog("reschedule-response...", obj);
-
-                if (obj.status == true) {
-                    if (obj.result.task_time != "") {
-                        var names = obj.result.task_time;
-                        var nameArr = names.split(",");
-                        const new_time_slot = [];
-                        const Arr1 = [];
-                        const Arr2 = [];
+        consolepro.consolelog("reschedule-bodydata", data);
+        return false /
+            apifuntion
+                .postApi(url, data)
+                .then((obj) => {
+                    var names = obj.result.task_time;
+                    var nameArr = names.split(",");
+                    const new_time_slot = [];
+                    const Arr1 = [];
+                    const Arr2 = [];
+                    if (obj.status == true) {
+                        consolepro.consolelog("reschedule-response...", obj);
                         if (obj.result.task_time != "") {
+                            console.log('if reschdule.....');
                             for (let l = 0; l < nameArr.length; l++) {
                                 new_time_slot.push({ time: nameArr[l], time_status: false });
                                 if ((l + 2) % 2 == 0) {
@@ -143,33 +167,44 @@ const AppointmentContainer = ({
                                     Arr2.push({ time: nameArr[l], time_status: false });
                                 }
                             }
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2,
+                                isRescheduleModal: true,
+                                set_date: obj.result.app_date,
+                                rescdule_data: obj.result,
+                                check_booking: obj.result.slot_booking_id
+                            }))
+
+                        } else {
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2,
+                                isRescheduleModal: true,
+                                set_date: obj.result.app_date,
+                                rescdule_data: obj.result,
+                                check_booking: obj.result.slot_booking_id
+                            }))
                         }
+                    } else {
+                        console.log('else reschdule.....');
                         setRescheduleData(prevState => ({
                             ...prevState,
-                            time_Arr: new_time_slot,
-                            final_one: Arr1,
-                            final_arr_two: Arr2,
-                            isRescheduleModal: true,
-                            set_date: obj.result.app_date,
                             rescdule_data: obj.result,
-                            check_booking: obj.result.slot_booking_id
+                            message: obj.message,
+                            task_details: obj?.result?.task_details,
+                            isRescheduleModal: true,
+
                         }))
-
                     }
-                } else {
-                    setRescheduleData(prevState => ({
-                        ...prevState,
-                        rescdule_data: obj.result,
-                        message: obj.message,
-                        task_details: obj?.result?.task_details,
-
-                    }))
-                    return false;
-                }
-            })
-            .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
-            });
+                })
+                .catch((error) => {
+                    consolepro.consolelog("-------- error ------- " + error);
+                });
     };
 
     const getDay = (Id) => {
@@ -240,21 +275,33 @@ const AppointmentContainer = ({
         console.log("check date...", arr);
     };
 
-    const get_time_date = async (selectedDate) => {
 
-        let url = config.baseURL + "api-patient-next-date-time";
+
+    const getTimeDate = async (selectedDate, serviceType) => {
+
+        setRescheduleData(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
+        let url = config.baseURL + (rescheduleData?.service_status == 'doctor' ? 'api-patient-doctor-next-date-time' : rescheduleData?.service_status == 'lab' ? 'api-patient-lab-next-date-time' : 'api-patient-next-date-time');
 
         var bodyData = new FormData();
         bodyData.append("provider_id", rescheduleData?.send_id);
-        bodyData.append("date", rescheduleData?.set_date);
-        bodyData.append(" task_type", rescheduleData?.set_task);
+        bodyData.append("date", selectedDate);
+        // bodyData.append(" task_type", (rescheduleData?.service_status === 'doctor' ? 'doctorslot' : rescheduleData?.set_task));
         bodyData.append("service_type", rescheduleData?.service_status);
 
-        console.log(bodyData);
+        // console.log(bodyData);
+        // console.log(rescheduleData?.check_booking);
+        console.log(serviceType, '............', rescheduleData?.set_task);
 
         // return;
-        apifuntion.postApi(url, bodyData)
+        apifuntion.postApi(url, bodyData, 1)
             .then((obj) => {
+                setRescheduleData(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
                 if (obj.status == true) {
                     var current = new Date();
                     var timcurrent = current.getHours() + ":" + current.getMinutes();
@@ -263,7 +310,142 @@ const AppointmentContainer = ({
                         timcurrent_for_check: timcurrent
                     }))
                     consolepro.consolelog("get_time_date.response", obj.result);
-                    if (rescheduleData?.check_booking == "TASK_BOOKING") {
+
+                    // ---------------------------------------------------
+                    if (serviceType == 'doctor' && rescheduleData?.set_task == 'online_task') {
+                        if (obj.result.online_task_time != "") {
+                            var names = obj.result.online_task_time;
+                            var nameArr = names.split(",");
+
+                            const new_time_slot = [];
+                            const Arr1 = [];
+                            const Arr2 = [];
+                            if (obj.result.online_task_time != "") {
+                                for (let l = 0; l < nameArr.length; l++) {
+                                    if (rescheduleData?.check_currentdate == selectedDate) {
+                                        const timeStr = nameArr[l];
+
+                                        const convertTime = (timeStr) => {
+                                            const [time, modifier] = timeStr.split(" ");
+                                            let [hours, minutes] = time.split(":");
+                                            if (hours === "12") {
+                                                hours = "00";
+                                            }
+                                            if (modifier === "PM") {
+                                                hours = parseInt(hours, 10) + 12;
+                                            }
+                                            return `${hours}:${minutes}`;
+                                        };
+                                        var finaltime = convertTime(timeStr);
+                                        if (finaltime >= rescheduleData?.timcurrent_for_check) {
+                                            new_time_slot.push({
+                                                time: nameArr[l],
+                                                time_status: false,
+                                            });
+                                            if ((l + 2) % 2 == 0) {
+                                                Arr1.push({ time: nameArr[l], time_status: false });
+                                            } else {
+                                                Arr2.push({ time: nameArr[l], time_status: false });
+                                            }
+                                        }
+                                    } else {
+                                        new_time_slot.push({
+                                            time: nameArr[l],
+                                            time_status: false,
+                                        });
+                                        if ((l + 2) % 2 == 0) {
+                                            Arr1.push({ time: nameArr[l], time_status: false });
+                                        } else {
+                                            Arr2.push({ time: nameArr[l], time_status: false });
+                                        }
+                                    }
+                                }
+                            }
+
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2
+                            }))
+                        } else {
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: obj.result.online_task_time,
+                            }))
+                        }
+                    }
+                    // ----------------------------------------------
+
+                    if (serviceType == 'doctor' && rescheduleData?.set_task == 'home_visit') {
+
+                        if (obj.result.home_visit_time != "") {
+                            var names = obj.result.home_visit_time;
+                            var nameArr = names.split(",");
+
+                            const new_time_slot = [];
+                            const Arr1 = [];
+                            const Arr2 = [];
+                            if (obj.result.home_visit_time != "") {
+                                for (let l = 0; l < nameArr.length; l++) {
+                                    if (rescheduleData?.check_currentdate == selectedDate) {
+                                        const timeStr = nameArr[l];
+
+                                        const convertTime = (timeStr) => {
+                                            const [time, modifier] = timeStr.split(" ");
+                                            let [hours, minutes] = time.split(":");
+                                            if (hours === "12") {
+                                                hours = "00";
+                                            }
+                                            if (modifier === "PM") {
+                                                hours = parseInt(hours, 10) + 12;
+                                            }
+                                            return `${hours}:${minutes}`;
+                                        };
+                                        var finaltime = convertTime(timeStr);
+                                        if (finaltime >= rescheduleData?.timcurrent_for_check) {
+                                            new_time_slot.push({
+                                                time: nameArr[l],
+                                                time_status: false,
+                                            });
+                                            if ((l + 2) % 2 == 0) {
+                                                Arr1.push({ time: nameArr[l], time_status: false });
+                                            } else {
+                                                Arr2.push({ time: nameArr[l], time_status: false });
+                                            }
+                                        }
+                                    } else {
+                                        new_time_slot.push({
+                                            time: nameArr[l],
+                                            time_status: false,
+                                        });
+                                        if ((l + 2) % 2 == 0) {
+                                            Arr1.push({ time: nameArr[l], time_status: false });
+                                        } else {
+                                            Arr2.push({ time: nameArr[l], time_status: false });
+                                        }
+                                    }
+                                }
+                            }
+
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2
+                            }))
+                        } else {
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: obj.result.home_visit_time,
+                            }))
+                        }
+                    }
+
+                    // ----------------------------------------------
+
+                    if (serviceType == 'lab' && (rescheduleData?.set_task == 'task_base' || rescheduleData?.set_task == 'package_base')) {
+
                         if (obj.result.task_time != "") {
                             var names = obj.result.task_time;
                             var nameArr = names.split(",");
@@ -325,90 +507,154 @@ const AppointmentContainer = ({
                                 time_Arr: obj.result.task_time,
                             }))
                         }
-                    } else {
-                        if (obj.result.hourly_time != "") {
-                            var names_time = obj.result.hourly_time;
-                            var nameArr_time = names_time.split(",");
-                        }
+                    }
 
-                        const new_time_hourl = [];
-                        const Arr_hour = [];
-                        const Arr2_hour = [];
-                        if (obj.result.hourly_time != "") {
-                            for (let m = 0; m < nameArr_time.length; m++) {
-                                const timeStr_hour = nameArr_time[m];
-                                if (rescheduleData?.check_currentdate == selectedDate) {
-                                    const convertTime_hour = (timeStr_hour) => {
-                                        const [time, modifier] = timeStr_hour.split(" ");
-                                        let [hours, minutes] = time.split(":");
-                                        if (hours === "12") {
-                                            hours = "00";
-                                        }
-                                        if (modifier === "PM") {
-                                            hours = parseInt(hours, 10) + 12;
-                                        }
-                                        return `${hours}:${minutes}`;
-                                    };
-                                    var finaltime_hour = convertTime_hour(timeStr_hour);
-                                    if (finaltime_hour >= timcurrent) {
-                                        new_time_hourl.push({
-                                            time: nameArr_time[m],
-                                            time_status: false,
-                                        });
+                    // ----------------------------------------------
 
-                                        if ((m + 2) % 2 == 0) {
-                                            Arr_hour.push({
-                                                time: nameArr_time[m],
+                    if ((serviceType != 'doctor' && serviceType != 'lab') && rescheduleData?.set_task == 'task_base') {
+                        if (obj.result.task_time != "") {
+                            var names = obj.result.task_time;
+                            var nameArr = names.split(",");
+
+                            const new_time_slot = [];
+                            const Arr1 = [];
+                            const Arr2 = [];
+                            if (obj.result.task_time != "") {
+                                for (let l = 0; l < nameArr.length; l++) {
+                                    if (rescheduleData?.check_currentdate == selectedDate) {
+                                        const timeStr = nameArr[l];
+
+                                        const convertTime = (timeStr) => {
+                                            const [time, modifier] = timeStr.split(" ");
+                                            let [hours, minutes] = time.split(":");
+                                            if (hours === "12") {
+                                                hours = "00";
+                                            }
+                                            if (modifier === "PM") {
+                                                hours = parseInt(hours, 10) + 12;
+                                            }
+                                            return `${hours}:${minutes}`;
+                                        };
+                                        var finaltime = convertTime(timeStr);
+                                        if (finaltime >= rescheduleData?.timcurrent_for_check) {
+                                            new_time_slot.push({
+                                                time: nameArr[l],
                                                 time_status: false,
                                             });
-                                        } else {
-                                            Arr2_hour.push({
-                                                time: nameArr_time[m],
-                                                time_status: false,
-                                            });
+                                            if ((l + 2) % 2 == 0) {
+                                                Arr1.push({ time: nameArr[l], time_status: false });
+                                            } else {
+                                                Arr2.push({ time: nameArr[l], time_status: false });
+                                            }
                                         }
-                                    }
-                                } else {
-                                    new_time_hourl.push({
-                                        time: nameArr_time[m],
-                                        time_status: false,
-                                    });
-                                    if ((m + 2) % 2 == 0) {
-                                        Arr_hour.push({
-                                            time: nameArr_time[m],
-                                            time_status: false,
-                                        });
                                     } else {
-                                        Arr2_hour.push({
-                                            time: nameArr_time[m],
+                                        new_time_slot.push({
+                                            time: nameArr[l],
                                             time_status: false,
                                         });
+                                        if ((l + 2) % 2 == 0) {
+                                            Arr1.push({ time: nameArr[l], time_status: false });
+                                        } else {
+                                            Arr2.push({ time: nameArr[l], time_status: false });
+                                        }
                                     }
                                 }
                             }
+
                             setRescheduleData(prevState => ({
                                 ...prevState,
-                                time_Arr: new_time_hourl,
-                                final_one: Arr_hour,
-                                final_arr_two: Arr2_hour
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2
+                            }))
+                        } else {
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: obj.result.task_time,
+                            }))
+                        }
+                    }
+
+                    // ----------------------------------------------
+
+                    if ((serviceType != 'doctor' && serviceType != 'lab') && rescheduleData?.set_task == 'hour_base') {
+                        if (obj.result.hourly_time != "") {
+                            var names = obj.result.hourly_time;
+                            var nameArr = names.split(",");
+
+                            const new_time_slot = [];
+                            const Arr1 = [];
+                            const Arr2 = [];
+                            if (obj.result.hourly_time != "") {
+                                for (let l = 0; l < nameArr.length; l++) {
+                                    if (rescheduleData?.check_currentdate == selectedDate) {
+                                        const timeStr = nameArr[l];
+
+                                        const convertTime = (timeStr) => {
+                                            const [time, modifier] = timeStr.split(" ");
+                                            let [hours, minutes] = time.split(":");
+                                            if (hours === "12") {
+                                                hours = "00";
+                                            }
+                                            if (modifier === "PM") {
+                                                hours = parseInt(hours, 10) + 12;
+                                            }
+                                            return `${hours}:${minutes}`;
+                                        };
+                                        var finaltime = convertTime(timeStr);
+                                        if (finaltime >= rescheduleData?.timcurrent_for_check) {
+                                            new_time_slot.push({
+                                                time: nameArr[l],
+                                                time_status: false,
+                                            });
+                                            if ((l + 2) % 2 == 0) {
+                                                Arr1.push({ time: nameArr[l], time_status: false });
+                                            } else {
+                                                Arr2.push({ time: nameArr[l], time_status: false });
+                                            }
+                                        }
+                                    } else {
+                                        new_time_slot.push({
+                                            time: nameArr[l],
+                                            time_status: false,
+                                        });
+                                        if ((l + 2) % 2 == 0) {
+                                            Arr1.push({ time: nameArr[l], time_status: false });
+                                        } else {
+                                            Arr2.push({ time: nameArr[l], time_status: false });
+                                        }
+                                    }
+                                }
+                            }
+
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                time_Arr: new_time_slot,
+                                final_one: Arr1,
+                                final_arr_two: Arr2
                             }))
                         } else {
                             setRescheduleData(prevState => ({
                                 ...prevState,
                                 time_Arr: obj.result.hourly_time,
-                                final_one: Arr_hour,
-                                final_arr_two: Arr2_hour
                             }))
                         }
                     }
+
+                    // ----------------------------------------------------
                 } else {
                     return false;
                 }
             })
             .catch((error) => {
+                setRescheduleData(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
                 consolepro.consolelog("-------- error ------- " + error);
             });
     };
+
 
     const check_date = (item, index) => {
         let newData = rescheduleData?.date_array;
@@ -427,26 +673,35 @@ const AppointmentContainer = ({
         }))
     };
 
-    const bookTime = async () => {
+    const bookTime = async (orderId, serviceType) => {
         if (rescheduleData.time_take_data.length <= 0) {
-            msgProvider.showError(msgText.EmptyTime[config.language]);
+            msgProvider.showError('Please select time');
             return false;
         }
 
+        setRescheduleData(prevState => ({
+            ...prevState,
+            isScheduleagain: true
+        }))
 
-        let url = config.baseURL + "api-patient-update-reschedule-appointment";
+        let url = config.baseURL + (serviceType == 'doctor' ? 'api-patient-update-doctor-reschedule-appointment' : serviceType == 'lab' ? 'api-patient-update-lab-reschedule-appointment' : 'api-patient-update-reschedule-appointment')
+        console.log(url);
         var bodyData = new FormData();
 
-        bodyData.append("service_type", rescheduleData?.service_status);
-        bodyData.append("order_id", rescheduleData?.order_id);
+        bodyData.append("service_type", serviceType);
+        bodyData.append("order_id", orderId);
         bodyData.append("from_date", rescheduleData?.set_date);
         bodyData.append("from_time", rescheduleData?.time_take_data);
 
-        console.log(bodyData);
-
+        // console.log('bookTime-request body.......', bodyData);
+        // return;
         apifuntion
             .postApi(url, bodyData)
             .then((obj) => {
+                setRescheduleData(prevState => ({
+                    ...prevState,
+                    isScheduleagain: false
+                }))
                 if (obj.status == true) {
                     console.log('bookTime-response....', obj);
                     setRescheduleData(prevState => ({
@@ -465,16 +720,35 @@ const AppointmentContainer = ({
                         date_array: '',
                         set_task: '',
                         check_currentdate: '',
-                        isRescheduleModal: false
+                        isRescheduleModal: false,
+                        isScheduleagain: false
                     }))
-                    // setTimeout(() => {
-                    //     this.get_Services(1);
-                    //     msgProvider.showSuccess(obj.message);
-                    // }, 700);
+                    setTimeout(() => {
+                        msgProvider.showSuccess(obj.message);
+                    }, 700);
                 } else {
+                    setRescheduleData(prevState => ({
+                        order_id: '',
+                        service_status: '',
+                        send_id: '',
+                        time_take_data: '',
+                        time_Arr: '',
+                        final_one: '',
+                        final_arr_two: '',
+                        set_date: '',
+                        rescdule_data: '',
+                        check_booking: '',
+                        message: '',
+                        task_details: '',
+                        date_array: '',
+                        set_task: '',
+                        check_currentdate: '',
+                        isRescheduleModal: false,
+                        isScheduleagain: false
+                    }))
                     setTimeout(() => {
                         msgProvider.showError(obj.message);
-                        //  msgProvider.alert('',obj.message, false);
+                        msgProvider.alert('', obj.message, false);
                     }, 700);
 
                     return false;
@@ -890,7 +1164,7 @@ const AppointmentContainer = ({
                                                 emptyStar={Icons.outlineStar}
                                                 maxStars={5}
                                                 starSize={15}
-                                                rating={Item.avg_rating}
+                                                rating={parseInt(Item.avg_rating)}
                                             />
                                         </View>
                                     )
@@ -921,10 +1195,13 @@ const AppointmentContainer = ({
                                                 }}
                                             >{Lang_chg.Rate_Appointment[config.language]}</Text>
                                         </TouchableOpacity>
+
+
                                 }
 
                             </View>
                             :
+
                             <View style={{
                                 flexDirection: "row",
                                 alignItems: 'center',
@@ -932,23 +1209,41 @@ const AppointmentContainer = ({
                                 width: Item?.dispaly_provider_type === 'Doctor' ? '100%' : "80%",
                                 marginTop: vs(7),
                             }}>
-                                <View style={{ width: '55%' }}>
+                                <View>
                                     <Text
                                         style={{
                                             fontSize: Font.medium,
                                             fontFamily: Font.Regular,
                                             color: Colors.Theme
-                                        }}
-                                    >{'SAR '}
+                                        }}>{`${currency} `}
                                         <Text
                                             style={{
                                                 fontSize: Font.medium,
                                                 fontFamily: Font.Medium,
                                                 color: Colors.Theme
-                                            }}
-                                        >{Item?.total_price}</Text>
+                                            }}>{Item?.total_price + "   "}
+
+                                            {
+                                                Item.acceptance_status == "Rejected" &&
+                                                Item.rf_text != "" && (
+
+                                                    <Text
+                                                        style={{
+                                                            textAlign: "center",
+                                                            color: '#FF4500',
+                                                            textTransform: "uppercase",
+                                                            fontFamily: Font.SemiBold,
+                                                            fontSize: Font.xsmall,
+                                                        }}>
+                                                        {Lang_chg.Refunde[config.language]}
+                                                    </Text>
+
+                                                )
+                                            }
+                                        </Text>
                                     </Text>
                                 </View>
+
 
                                 {
                                     (Item?.dispaly_provider_type != 'Doctor' && Item?.dispaly_provider_type != 'Lab') &&
@@ -1008,7 +1303,7 @@ const AppointmentContainer = ({
                                 }
 
                                 {
-                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && videoCallButton === false) &&
+                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && videoCallButton === true) &&
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
@@ -1096,7 +1391,26 @@ const AppointmentContainer = ({
 
                     <View style={styles.modalContainer}>
 
+                        {
+                            rescheduleData?.isLoading &&
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: 'rgba(0,0,0,0.3)',
+                                // opacity: 0.8,
+                                width: windowWidth,
+                                height: windowHeight - 200,
+                                borderRadius: 25,
+                                position: 'absolute',
+                                bottom: 0,
+                                zIndex: 999,
+                            }}>
+                                <ActivityIndicator size={'small'} color={Colors.Theme} />
+                            </View>
+                        }
+
                         <ScrollView
+                            pointerEvents={(rescheduleData.isLoading || rescheduleData.isScheduleagain) ? 'none' : 'auto'}
                             showsVerticalScrollIndicator={false}
                             contentContainerStyle={{
                                 paddingBottom: (windowWidth * 7) / 100,
@@ -1373,13 +1687,14 @@ const AppointmentContainer = ({
                                                         return (
                                                             <TouchableOpacity
                                                                 onPress={() => {
+                                                                    console.log(rescheduleData?.service_status);
                                                                     setRescheduleData(prevState => ({
                                                                         ...prevState,
                                                                         set_date: item.date1,
-                                                                        set_task: "task_base",
                                                                         time_take_data: '',
                                                                     }))
-                                                                    get_time_date(item.date1)
+
+                                                                    getTimeDate(item.date1, Item?.provider_type)
                                                                     check_date(item, index);
                                                                 }}
                                                                 style={{ width: (windowWidth * 15) / 100 }} >
@@ -1557,8 +1872,9 @@ const AppointmentContainer = ({
 
                                         <Button
                                             text={Lang_chg.SAVECHANGERESCHEDULE[config.language]}
-                                            onPress={() => bookTime()}
+                                            onPress={() => bookTime(Item?.id, Item?.provider_type)}
                                             btnStyle={{ marginTop: vs(25) }}
+                                            onLoading={rescheduleData.isScheduleagain}
                                         />
 
 
@@ -1580,15 +1896,16 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: deviceHeight - 300,
+        height: windowHeight - 250,
         backgroundColor: Colors.White,
-        borderRadius: 25,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
         paddingHorizontal: s(13),
         position: 'absolute',
         bottom: 0,
         zIndex: 999,
-      },
-      closeContainer: {
+    },
+    closeContainer: {
         height: s(35),
         width: s(35),
         borderRadius: s(50),
@@ -1597,7 +1914,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: vs(20),
         right: 0,
-      },
+        zIndex: 999
+    },
     Title: {
         fontSize: 20,
         fontFamily: Font.Regular,

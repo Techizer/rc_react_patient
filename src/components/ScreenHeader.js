@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import {
     Text,
     View,
@@ -15,35 +15,42 @@ import {
     windowWidth,
     deviceHeight,
     StatusbarHeight,
-    localStorage,
-    Icons,
-    consolepro,
     Lang_chg,
-    apifuntion,
+    localStorage,
 } from "../Provider/utilslib/Utils";
 
-import { leftArrow, rightArrow, Notification, dummyUser } from "../icons/SvgIcons/Index";
+import { leftArrow, rightArrow, Notification, dummyUser, Icons, redNoti } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 let headerHeight = deviceHeight - windowHeight + StatusbarHeight;
 headerHeight += (Platform.OS === 'ios') ? 28 : -50
 
+let notiCount = 0
+
 // console.log(headerHeight + '   ' + Platform.OS);
 // console.log(deviceHeight + '   ' + Platform.OS);
 // console.log(windowHeight + '   ' + Platform.OS);
 // console.log('Status Bar Height', StatusbarHeight + '   ' + Platform.OS);
 
-const ScreenHeader = ({
+export const ScreenHeader = ({
     onBackPress,
     title,
     navigation,
     rightIcon,
     leftIcon,
-    addressOld,
-    addressShow,
-    notiCount
+    address,
 }) => {
+
+    const checkCount = async () => {
+        notiCount = await localStorage.getItemString('notiCount')
+        notiCount = JSON.parse(notiCount)
+        // console.log({notiCount});
+    }
+
+    useEffect(() => {
+        checkCount()
+    }, [title])
     return (
         title != 'Home' ?
             (
@@ -101,7 +108,7 @@ const ScreenHeader = ({
                                     textAlign: "center",
                                     fontFamily: Font.Medium,
                                     fontSize: (windowWidth * 4) / 100,
-                                    color:Colors.darkText
+                                    color: Colors.darkText
                                 }}>{title}</Text>
                         </View>
                         {
@@ -118,7 +125,7 @@ const ScreenHeader = ({
                                         alignItems: 'center',
 
                                     }}>
-                                    <SvgXml xml={Notification} height={vs(20.26)} width={s(16.21)} />
+                                    <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
                                 </TouchableHighlight>
                                 :
                                 <View style={{ width: '14%' }}></View>
@@ -151,7 +158,7 @@ const ScreenHeader = ({
                             alignSelf: "center",
                             justifyContent: 'center',
                             alignItems: 'center',
-                            paddingLeft:s(8)
+                            paddingLeft: s(8)
                         }}>
                         <TouchableOpacity
                             onPress={() => {
@@ -181,7 +188,9 @@ const ScreenHeader = ({
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate("Show_currentlocation");
+                                if (global.isLogin == true) {
+                                    navigation.navigate("ManageAddress");
+                                }
                             }}
                             style={{
                                 flexDirection: "row",
@@ -196,7 +205,7 @@ const ScreenHeader = ({
                                 {Lang_chg.MyDashboard[config.language]}
                             </Text>
                             <Image
-                                source={require("../icons/back-svg.png")}
+                                source={Icons.downarrow}
                                 style={{
                                     marginLeft: (windowWidth * 2) / 100,
                                     width: 11,
@@ -205,9 +214,13 @@ const ScreenHeader = ({
                                 }}
                             />
                         </TouchableOpacity>
-                        {(addressOld != null && addressOld != "") ? (
+                        {(address != null && address != "") ? (
                             <Text
-                                onPress={() => { navigation.navigate("Show_currentlocation"); }}
+                                onPress={() => {
+                                    if (global.isLogin == true) {
+                                        navigation.navigate("ManageAddress");
+                                    }
+                                }}
                                 numberOfLines={1}
                                 style={{
                                     color: Colors.dullGrey,
@@ -220,37 +233,31 @@ const ScreenHeader = ({
 
                                 }}
                             >
-                                {addressOld}
+                                {address}
                             </Text>
                         ) : (
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    color: Colors.dullGrey,
-                                    fontFamily: Font.Regular,
-                                    fontSize: Font.medium,
-                                    textAlign: config.textRotate,
-                                }}
-                            >{addressShow}</Text>
+                            null
                         )}
                     </View>
 
                     {
                         rightIcon ?
-                            <TouchableHighlight
-                                underlayColor={Colors.Highlight}
-                                onPress={() => {
-                                    navigation.navigate("Notifications");
-                                }}
-                                style={{
-                                    width: "14%",
-                                    height: '100%',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                            <>
+                                <TouchableHighlight
+                                    underlayColor={Colors.Highlight}
+                                    onPress={() => {
+                                        navigation.navigate("Notifications");
+                                    }}
+                                    style={{
+                                        width: "14%",
+                                        height: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
 
-                                }}>
-                                <SvgXml xml={Notification} height={vs(20.26)} width={s(16.21)} />
-                            </TouchableHighlight>
+                                    }}>
+                                    <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
+                                </TouchableHighlight>
+                            </>
                             :
                             <></>
                     }
@@ -286,5 +293,4 @@ const ScreenHeader = ({
     )
 }
 
-export default ScreenHeader;
 

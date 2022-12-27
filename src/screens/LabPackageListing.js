@@ -3,8 +3,7 @@ import { FlatList, Image, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native-animatable";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import ScreenHeader from "../components/ScreenHeader";
-import { dummyUser, leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { dummyUser, leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
@@ -16,8 +15,8 @@ import {
   localStorage,
   windowWidth,
   msgProvider,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
 
 const LabPackageListing = ({ navigation, route }) => {
   const { providerId } = route?.params || '';
@@ -60,8 +59,7 @@ const LabPackageListing = ({ navigation, route }) => {
         title={Lang_chg.HealthPackages[config.language]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
-        leftIcon={leftArrow}
-        rightIcon={Notification}
+        leftIcon
       />
 
       <View

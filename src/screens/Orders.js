@@ -16,7 +16,7 @@ import {
   apifuntion,
   consolepro,
 } from "../Provider/utilslib/Utils";
-import ScreenHeader from "../components/ScreenHeader";
+import { ScreenHeader } from "../components/ScreenHeader";
 
 
 
@@ -24,13 +24,6 @@ const Orders = ({ navigation }) => {
 
   const [appointments, setAppointments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
-
-
-
-
-
-
 
 
   return (
@@ -42,7 +35,6 @@ const Orders = ({ navigation }) => {
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
-        rightIcon
       />
 
       <FlatList
@@ -67,14 +59,14 @@ const Orders = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{'Buy Home Medical Supplies & Equipment online'}</Text>
+              }}>{'Buy Home Medical Supplies & Equipments online'}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop:vs(10)
-              }}>{'We are coming soon in your location with this option'}</Text>
+              }}>{'We are coming soon at your location with ordering option'}</Text>
             </View>
           )
         }}

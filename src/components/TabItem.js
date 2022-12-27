@@ -1,40 +1,55 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TouchableOpacity, Image, Text, TouchableHighlight, View, Platform } from 'react-native'
 import { ms, mvs, s, vs } from 'react-native-size-matters';
 import { SvgXml } from 'react-native-svg';
 import { DrawerActions } from '@react-navigation/native';
 
-import { Tab1, Tab2, Tab3, Tab4, Tab5 } from '../icons/SvgIcons/Index';
+import { Tab1, Tab2, Tab3, Tab4, Tab5 } from '../Icons/Index';
 import { Colors, Font } from '../Provider/Colorsfont';
 import { config } from '../Provider/configProvider';
+import { msgProvider } from '../Provider/Messageconsolevalidationprovider/messageProvider';
+import { localStorage } from '../Provider/localStorageProvider';
+
+let isGuest = false;
 
 const TabItemSimple = ({ navigation, icon, path, index, activeIndex, reset = false, title }) => {
 
 
+    const checkUserType = async () => {
+        isGuest = await localStorage.getItemString('Guest')
+    }
+
+    useEffect(() => {
+        checkUserType()
+    }, [path])
+
     return (
         <TouchableOpacity
             activeOpacity={0.8}
-            onPress={(reset && index != 4) ? () => {
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: path }],
-                })
-            } :
-                () => {
+            onPress={() => {
+                // if ((isGuest === 'true' && (path === 'Apointment' || path === 'Consultation' || path === 'LabTest'))) {
+                //     msgProvider.showError('Please login first')
+                // } else {
+                (reset && index != 4) ?
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: path }],
+                    })
+                    :
                     // navigation.toggleDrawer();
                     navigation.reset({
                         index: 0,
                         routes: [{ name: path }],
                     })
-                    // navigation.dispatch(DrawerActions.toggleDrawer());
+                // navigation.dispatch(DrawerActions.toggleDrawer());
+            }}
+            style={[{
+                flex: (config.language === 1 ? 1 : (index === 0 || index === 3 || index === 4) ? 0.18 : 0.23),
+                paddingTop: vs(9),
+                alignItems: 'center',
+                backgroundColor: index === activeIndex ? Colors.tabBackground : 'transparent'
+            }]}>
 
-                }} style={[{
-                    flex: (config.language === 1 ? 1 : (index === 0 || index === 3 || index === 4) ? 0.18 : 0.23),
-                    paddingTop: vs(9),
-                    alignItems: 'center',
-                    backgroundColor: index === activeIndex ? Colors.tabBackground : 'transparent'
-                }]}>
-                    
             <SvgXml xml={
                 index === 0 ?
                     `<svg xmlns="http://www.w3.org/2000/svg" width="17.352" height="18.363" viewBox="0 0 17.352 18.363">
@@ -69,13 +84,13 @@ const TabItemSimple = ({ navigation, icon, path, index, activeIndex, reset = fal
                     </svg>`
 
             } />
-           
+
             <Text style={{
                 fontSize: Font.xsmall,
                 color: (index === activeIndex) ? Colors.Theme : Colors.inActiveTab,
                 fontFamily: Font.Regular,
                 position: 'absolute',
-                bottom: Platform.OS==='ios' ? vs(30) : vs(20)
+                bottom: Platform.OS === 'ios' ? vs(30) : vs(20)
             }} >{title}</Text>
 
         </TouchableOpacity>

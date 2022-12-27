@@ -3,15 +3,11 @@ import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableW
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight, msgProvider } from "../Provider/utilslib/Utils";
-import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { windowWidth, deviceHeight, Lang_chg, config, Button, Icons, msgProvider, windowHeight } from "../Provider/utilslib/Utils";
+import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import AuthInputBoxSec from "./AuthInputBoxSec";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Button from "./Button";
-import Member from "./Member";
-import OutlinedButton from "./OutlinedButton";
 import StarRating from "react-native-star-rating";
 
 
@@ -32,6 +28,7 @@ const RatingBottomSheet = ({
     return (
         <Modal
             isVisible={visible}
+            statusBarTranslucent={true}
             animationIn='fadeInUpBig'
             animationOut='fadeOutDownBig'
             deviceWidth={windowWidth}
@@ -64,6 +61,9 @@ const RatingBottomSheet = ({
                     }}>{Lang_chg.Rate_Appointment[config.language]}</Text>
 
                 <KeyboardAwareScrollView
+                    // keyboardOpeningTime={200}
+                    extraScrollHeight={50}
+                    enableOnAndroid={true}
                     keyboardShouldPersistTaps='handled'
                     contentContainerStyle={{
                         justifyContent: 'center',
@@ -91,7 +91,7 @@ const RatingBottomSheet = ({
                                     emptyStar={Icons.outlineStar}
                                     maxStars={5}
                                     starSize={40}
-                                    rating={value}
+                                    rating={parseInt(value)}
                                     selectedStar={(rating) => {
                                         onSelectRating(rating)
                                     }}
@@ -111,11 +111,13 @@ const RatingBottomSheet = ({
                                     maxLength={200}
                                     multiline
                                     placeholder={Lang_chg.Write_review[config.language]}
+                                    placeholderTextColor={Colors.lightGrey}
                                     onChangeText={onChangeText}
                                     value={reviewValue}
                                     keyboardType="default"
                                     returnKeyLabel="done"
                                     returnKeyType="done"
+                                    onSubmitEditing={() => Keyboard.dismiss()}
                                 />
 
                                 {/* {this.state.emailfocus == true && (
@@ -180,9 +182,10 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: deviceHeight - 300,
+        height: windowHeight - 200,
         backgroundColor: Colors.White,
-        borderRadius: 25,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
         paddingTop: vs(40),
         paddingBottom: vs(20),
         paddingHorizontal: s(13),
@@ -200,6 +203,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: vs(30),
         right: s(11),
+        zIndex: 999
     },
 
     textInput: {
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         marginTop: (windowWidth * 7) / 100,
         paddingHorizontal: s(7),
-        paddingVertical: s(7),
+        paddingVertical: s(0),
         height: (windowWidth * 30) / 100
     },
 

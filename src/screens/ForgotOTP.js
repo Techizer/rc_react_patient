@@ -24,12 +24,13 @@ import {
   msgText,
   consolepro,
   StatusbarHeight,
+  Button
 } from "../Provider/utilslib/Utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { leftArrow, rightArrow } from "../icons/SvgIcons/Index";
-import { AuthInputBoxSec, Button } from "../components";
+import { leftArrow, rightArrow } from "../Icons/Index";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
 
 export default class ForgotOTP extends Component {
   _didFocusSubscription;
@@ -177,12 +178,15 @@ export default class ForgotOTP extends Component {
       <View
         style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight }}>
         <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
           keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             justifyContent: 'center',
             paddingBottom: vs(30),
           }}
-          showsVerticalScrollIndicator={false} >
+          showsVerticalScrollIndicator={false}>
 
           <View
             style={{
@@ -305,7 +309,7 @@ export default class ForgotOTP extends Component {
               {Lang_chg.Signuptext3[config.language]}
             </Text>
 
-          <Button
+            <Button
               text={Lang_chg.submitbtntext[config.language]}
               onPress={() => this.otpVerify()}
               btnStyle={{ marginTop: vs(30) }}
@@ -356,9 +360,9 @@ export default class ForgotOTP extends Component {
             </Text>
           </View>
 
-          
 
-          
+
+
 
         </KeyboardAwareScrollView>
       </View>

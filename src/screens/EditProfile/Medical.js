@@ -8,6 +8,7 @@ import {
     Modal,
     FlatList,
     Keyboard,
+    Platform,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -25,9 +26,9 @@ import {
     msgProvider,
     msgText,
     msgTitle,
+    Button
 } from "../../Provider/utilslib/Utils";
-import { AuthInputBoxSec, Button } from "../../components";
-
+import AuthInputBoxSec from "../../components/AuthInputBoxSec";
 
 
 
@@ -152,27 +153,27 @@ const Medical = () => {
     const saveMedical = async () => {
 
         Keyboard.dismiss()
-        if (medicalDetails.Allergic === 0 & medicalDetails.allergyName ==='') {
+        if (medicalDetails.Allergic === 0 & medicalDetails.allergyName === '') {
             msgProvider.showError(msgText.allergyName[config.language]);
             return false;
         }
-        if (medicalDetails.currentMed === 0 & medicalDetails.currentMedName ==='') {
+        if (medicalDetails.currentMed === 0 & medicalDetails.currentMedName === '') {
             msgProvider.showError(msgText.currentMedicine[config.language]);
             return false;
         }
-        if (medicalDetails.pastMed === 0 & medicalDetails.pastMedName ==='') {
+        if (medicalDetails.pastMed === 0 & medicalDetails.pastMedName === '') {
             msgProvider.showError(msgText.pastMedicine[config.language]);
             return false;
         }
-        if (medicalDetails.Injuries === 0 & medicalDetails.injuryName ==='') {
+        if (medicalDetails.Injuries === 0 & medicalDetails.injuryName === '') {
             msgProvider.showError(msgText.injuries[config.language]);
             return false;
         }
-        if (medicalDetails.Surgeries === 0 & medicalDetails.surgeryName ==='') {
+        if (medicalDetails.Surgeries === 0 & medicalDetails.surgeryName === '') {
             msgProvider.showError(msgText.surgeries[config.language]);
             return false;
         }
-        if (medicalDetails.chronicDisease === 0 & medicalDetails.chronicDiseaseName ==='') {
+        if (medicalDetails.chronicDisease === 0 & medicalDetails.chronicDiseaseName === '') {
             msgProvider.showError(msgText.chronicDisease[config.language]);
             return false;
         }
@@ -217,16 +218,19 @@ const Medical = () => {
         <View style={{ flex: 0.98, backgroundColor: Colors.White }}>
 
 
-            <KeyboardAwareScrollView
-                keyboardShouldPersistTaps='handled'
-                contentContainerStyle={{
-                    justifyContent: 'center',
-                    paddingTop: vs(10),
-                    paddingBottom: vs(30),
-                }}
-                showsVerticalScrollIndicator={false}>
+           
 
-
+                <KeyboardAwareScrollView
+                    // keyboardOpeningTime={200}
+                    extraScrollHeight={50}
+                    enableOnAndroid={true}
+                    keyboardShouldPersistTaps='handled'
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        paddingTop: vs(10),
+                        paddingBottom: vs(30),
+                    }}
+                    showsVerticalScrollIndicator={false}>
 
 
                 <View
@@ -293,7 +297,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, Allergic: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -336,6 +340,7 @@ const Medical = () => {
                                     onSubmitEditing={() => {
                                         //this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -411,7 +416,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, currentMed: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, currentMedName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, currentMedName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -452,8 +457,9 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        // this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -529,7 +535,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, pastMed: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, pastMedName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, pastMedName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -572,6 +578,7 @@ const Medical = () => {
                                     onSubmitEditing={() => {
                                         //this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -647,7 +654,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, Injuries: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, injuryName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, injuryName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -690,6 +697,7 @@ const Medical = () => {
                                     onSubmitEditing={() => {
                                         //this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -765,7 +773,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, Surgeries: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, surgeryName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, surgeryName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -808,6 +816,7 @@ const Medical = () => {
                                     onSubmitEditing={() => {
                                         //this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -883,7 +892,7 @@ const Medical = () => {
                                                     activeOpacity={0.8}
                                                     onPress={() => {
                                                         setMedicalDetails(prevState => ({ ...prevState, chronicDisease: index }))
-                                                        if(index===1)  setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: '' }))
+                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: '' }))
                                                     }}
                                                     style={{
                                                         height: s(16),
@@ -926,6 +935,7 @@ const Medical = () => {
                                     onSubmitEditing={() => {
                                         //this.passwordInput.focus();
                                     }}
+                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
                                 />
                             )}
@@ -936,12 +946,12 @@ const Medical = () => {
                 </View>
 
 
-                <View style={{width:'93%', alignSelf:'center'}}>
-                <Button
-                    text={Lang_chg.submitbtntext[config.language]}
-                    onPress={() => saveMedical()}
-                    btnStyle={{ marginTop: vs(15) }}
-                />
+                <View style={{ width: '93%', alignSelf: 'center' }}>
+                    <Button
+                        text={Lang_chg.submitbtntext[config.language]}
+                        onPress={() => saveMedical()}
+                        btnStyle={{ marginTop: vs(15) }}
+                    />
                 </View>
 
             </KeyboardAwareScrollView>

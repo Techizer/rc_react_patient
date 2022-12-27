@@ -24,9 +24,7 @@ import {
 } from "../Provider/utilslib/Utils";
 
 import Styles from "../Styles";
-import { leftArrow, rightArrow, Notification } from "../icons/SvgIcons/Index";
-import { s, vs } from "react-native-size-matters";
-import ScreenHeader from "../components/ScreenHeader";
+import { ScreenHeader } from "../components/ScreenHeader";
 
 const LabTests = ({navigation}) => {
 
@@ -41,8 +39,7 @@ const LabTests = ({navigation}) => {
           index: 0,
           routes: [{ name: 'Home' }],
         })}
-        rightIcon={Notification}
-        leftIcon={true}
+        leftIcon
       />
 
 

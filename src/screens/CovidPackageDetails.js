@@ -9,8 +9,8 @@ import {
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { ScreenHeader } from "../Provider/utilslib/Utils";
+import { leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
@@ -23,7 +23,6 @@ import {
   windowWidth,
   msgProvider,
 } from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
 
 const CovidPackageDetails = ({ navigation }) => {
 
@@ -46,12 +45,10 @@ const CovidPackageDetails = ({ navigation }) => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let url = config.baseURL + "api-covid-test-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("lgoin_user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {

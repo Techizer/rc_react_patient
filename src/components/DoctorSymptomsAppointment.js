@@ -561,7 +561,7 @@ const DoctorSymptomsAppointment = (props) => {
           />
         );
     }
-  };
+  }; 
 
   const renderTabBar = (props) => (
     <TabBar
@@ -626,7 +626,7 @@ const DoctorSymptomsAppointment = (props) => {
               width: layout.width,
               height: layout.height,
             }}
-            style={{ height: 40, }}
+            style={{ height: 40, width: routes.length > 1 ? '100%' : '50%',  }}
             renderTabBar={renderTabBar}
           />
         </View>

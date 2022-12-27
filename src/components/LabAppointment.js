@@ -9,10 +9,11 @@ import { Colors, Font } from "../Provider/Colorsfont";
 import { config } from "../Provider/configProvider";
 import { Lang_chg } from "../Provider/Language_provider";
 import { windowWidth } from "../Provider/utilslib/Utils";
+
 const LabAppointment = (props) => {
   // console.log("sound ::::", sound);
   const { navigation, indexPosition, sendData, data } = props;
-  const TestSelection = () => <View style={{ flex: 1,  }} />;
+  const TestSelection = () => <View style={{ flex: 1, }} />;
 
   const PackageSelection = () => <View style={{ flex: 1 }} />;
   const layout = useWindowDimensions();
@@ -71,15 +72,13 @@ const LabAppointment = (props) => {
       indicatorStyle={{
         backgroundColor: Colors.Blue,
         height: (windowWidth * 1) / 100,
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
       }}
       activeColor={Colors.Blue}
       inactiveColor={Colors.lightGrey}
       style={{ backgroundColor: "#F1F2F4" }}
       labelStyle={{
         textTransform: "capitalize",
-        fontSize: (windowWidth * 4) / 100,
+        fontSize: Font.large,
         textAlign: config.textalign,
         fontFamily: Font.Medium,
         alignSelf: "center",
@@ -101,20 +100,21 @@ const LabAppointment = (props) => {
     />
   );
   return (
-    <View style={{ flex: 1, }}>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{
-          width: layout.width,
-          height: layout.height,
-          
-        }}
-        style={{ height: 40, width: routes.length > 1 ? '100%' : '50%',  }}
-        renderTabBar={renderTabBar}
-      />
-    </View>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={(val) => {
+        setIndex(val)
+        props.resetState()
+      }}
+      initialLayout={{
+        width: layout.width,
+        height: layout.height,
+
+      }}
+      style={{ height: 40, width: routes.length > 1 ? '98%' : '49%', }}
+      renderTabBar={renderTabBar}
+    />
   );
 };
 export default LabAppointment;

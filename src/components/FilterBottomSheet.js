@@ -7,7 +7,7 @@ import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight } from "../Provider/utilslib/Utils";
-import { Cross, dummyUser, Edit } from "../icons/SvgIcons/Index";
+import { Cross, dummyUser, Edit } from "../Icons/Index";
 
 
 
@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: vs(30),
         right: s(11),
+        zIndex: 999
     },
     dropdownContainer: {
         width: '100%',

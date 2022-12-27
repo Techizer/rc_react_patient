@@ -19,10 +19,9 @@ import {
   consolepro,
   Lang_chg,
   apifuntion,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
-import { AppHeader4 } from "../Allcomponents";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow } from "../icons/SvgIcons/Index";
+import { leftArrow } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 
 export default class Notifications extends Component {
@@ -118,7 +117,7 @@ export default class Notifications extends Component {
           title={Lang_chg.NotificationsList[config.language]}
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
-          leftIcon={leftArrow}
+          leftIcon
         />
 
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>

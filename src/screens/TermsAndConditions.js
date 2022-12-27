@@ -8,13 +8,10 @@ import {
   Dimensions,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import ScreenHeader from "../components/ScreenHeader";
-import { leftArrow } from "../icons/SvgIcons/Index";
+import { ScreenHeader } from "../components/ScreenHeader";
+import { leftArrow } from "../Icons/Index";
 import {
   Colors,
-  localimag,
-  Font,
-  mobileW,
   config,
   Lang_chg,
 } from "../Provider/utilslib/Utils";
@@ -61,7 +58,7 @@ export default class TermsAndConditions extends Component {
           title={this.state.pagename === 0 ? Lang_chg.AboutRootscare[config.language] : this.state.pagename === 1 ? Lang_chg.PrivacyPolicy[config.language] : Lang_chg.TermsandConditions[config.language]}
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
-          leftIcon={leftArrow}
+          leftIcon
         />
 
         {config.language == 1 ? (

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, Image, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
-const Button = ({
+import { Colors, Icons, Font, windowHeight, config, windowWidth} from '../Provider/utilslib/Utils';
+
+export const Button = ({
   text,
   customStyles,
   onPress,
@@ -61,4 +62,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Button;

@@ -5,7 +5,7 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
+  ActivityIndicator,
   Image,
   TouchableOpacity,
   FlatList,
@@ -27,25 +27,24 @@ import {
   Lang_chg,
   apifuntion,
   deviceHeight,
+  Button,
+  ScreenHeader
 } from "../Provider/utilslib/Utils";
-import { CarAppHeader2 } from "../Allcomponents";
 import StarRating from "react-native-star-rating";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AuthInputBoxSec, Button } from "../components";
 import moment from "moment-timezone";
 import Slider from "@react-native-community/slider";
 import SoundPlayer from "react-native-sound-player";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import RNFetchBlob from "rn-fetch-blob";
-import { TextInput } from "react-native";
-import ScreenHeader from "../components/ScreenHeader";
 import { s, vs } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import { SvgXml } from "react-native-svg";
-import { contactUs, Cross, rightBlue, whiteStar } from "../icons/SvgIcons/Index";
+import { contactUs, Cross, rightBlue, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "../components/RatingBottomSheet";
 import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
+
 var Sound = require("react-native-sound");
 
 export default class AppointmentDetails extends Component {
@@ -73,7 +72,9 @@ export default class AppointmentDetails extends Component {
       playSeconds: 0,
       duration: 0,
       showPatientDetails: false,
-      isContactUsModal: false
+      isContactUsModal: false,
+      isLoading: false,
+      isScheduleagain: false
     };
     this.sliderEditing = false;
     Sound.setCategory("Playback", true); // true = mixWithOthers
@@ -400,6 +401,7 @@ export default class AppointmentDetails extends Component {
   };
 
   getDoctorTimeDate = async () => {
+    this.setState({ isLoading: true })
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
 
@@ -411,11 +413,11 @@ export default class AppointmentDetails extends Component {
     data.append("date", this.state.set_date);
     data.append("service_type", this.state.status_pass);
 
-    consolepro.consolelog("data", data);
+    // consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-
+        this.setState({ isLoading: false })
         if (obj.status == true) {
           consolepro.consolelog("obj.result", obj.result);
           if (
@@ -596,23 +598,25 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
+        this.setState({ isLoading: false })
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
 
   getLabTimeDate = async () => {
+    this.setState({ isLoading: true })
+
     let url = config.baseURL + "api-patient-lab-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.send_id);
     data.append("date", this.state.set_date);
     data.append("service_type", this.state.status_pass);
 
-    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
+        this.setState({ isLoading: false })
         if (obj.status == true) {
           var cureent = new Date();
           let min =
@@ -703,26 +707,27 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
+        this.setState({ isLoading: false })
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
 
   getTimeDate = async () => {
+    this.setState({ isLoading: true })
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("provider_id", this.state.send_id);
     data.append("date", this.state.set_date);
     data.append("task_type", this.state.set_task);
     data.append("service_type", this.state.status_pass);
-    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
+        this.setState({ isLoading: false })
         if (obj.status == true) {
           var cureent = new Date();
           let min =
@@ -888,6 +893,7 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
+        this.setState({ isLoading: false })
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
@@ -969,6 +975,7 @@ export default class AppointmentDetails extends Component {
 
 
   submit_btn = async () => {
+    this.setState({ isScheduleagain: true })
     if (this.state.time_take_data.length <= 0) {
       msgProvider.showError(msgText.EmptyTime[config.language]);
       return false;
@@ -984,9 +991,7 @@ export default class AppointmentDetails extends Component {
         : this.state.status_pass === "doctor"
           ? "api-patient-update-doctor-reschedule-appointment"
           : "api-patient-update-reschedule-appointment");
-    console.log("url", url);
     var data = new FormData();
-    console.log("data", data);
 
     data.append("service_type", this.state.status_pass);
     data.append("order_id", this.state.order_id);
@@ -996,6 +1001,7 @@ export default class AppointmentDetails extends Component {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
+        this.setState({ isScheduleagain: false })
         if (obj.status == true) {
           this.setState({ modalVisible: false });
           setTimeout(() => {
@@ -1010,6 +1016,7 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
+        this.setState({ isScheduleagain: false })
         consolepro.consolelog("-------- error ------- " + error);
         this.setState({ loading: false });
       });
@@ -1210,11 +1217,15 @@ export default class AppointmentDetails extends Component {
             navigation={this.props.navigation}
             onBackPress={() => this.props.navigation.pop()}
             leftIcon
+            rightIcon
           />
 
 
 
           <KeyboardAwareScrollView
+            // keyboardOpeningTime={200}
+            extraScrollHeight={50}
+            enableOnAndroid={true}
             keyboardShouldPersistTaps='handled'
             contentContainerStyle={{
               justifyContent: 'center',
@@ -1706,102 +1717,92 @@ export default class AppointmentDetails extends Component {
                 item.service_type == "Doctor" && (
                   <View
                     style={{
-                      width: "90%",
+                      width: "100%",
                       alignSelf: "center",
-                      // justifyContent: 'space-between',
-                      // flexDirection: 'row',
-                      borderBottomWidth: (windowWidth * 0.3) / 100,
-                      borderColor: Colors.gainsboro,
-                      paddingVertical: (windowWidth * 4.5) / 100,
-                    }}
-                  >
+                      paddingVertical: vs(10),
+                      paddingHorizontal: s(13),
+                    }}>
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.headingfont_booking,
+                        fontSize: Font.small,
                         color: Colors.Theme,
                         textAlign: config.textRotate,
                         paddingBottom: (windowWidth * 4) / 100,
-                      }}
-                    >
+                      }}>
                       {Lang_chg.PRESCRIPTION[config.language]}
                     </Text>
                     <View
                       style={{
                         flexDirection: "row",
                         width: "100%",
-                      }}
-                    >
+                        paddingVertical: vs(10),
+                        borderBottomWidth: 1,
+                        borderBottomColor: Colors.Border
+                      }}>
                       <View
                         style={{
-                          width: "25%",
-                          // backgroundColor: 'red'
-                        }}
-                      >
+                          width: "17%",
+                        }}>
                         <Image
                           source={Icons.prescription}
                           style={{
-                            width: (windowWidth * 20.5) / 100,
-                            height: (windowWidth * 17.2) / 100,
-                            // borderWidth: 1,
-                            // borderColor: Colors.gainsboro,
-                            // borderRadius: 15, //(windowWidth * 11.5) / 100,
+                            width: vs(40),
+                            height: s(40)
                           }}
+                          resizeMode='contain'
                         />
                       </View>
                       <View
                         style={{
-                          width: "75%",
-                          // backgroundColor: 'blue'
-                        }}
-                      >
+                          width: "83%",
+                        }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              color: Colors.detailTitles,
+                              textAlign: config.textRotate,
+                              width: '70%'
+                            }} >
+                            {item.provider_prescription}
+                          </Text>
+
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (item.provider_prescription != "") {
+                                this.downloadPrescription(
+                                  config.img_url3 +
+                                  item.provider_prescription,
+                                  item.provider_prescription
+                                );
+                              }
+                            }}>
+                            <Text
+                              style={{
+                                textAlign: "right",
+                                fontFamily: Font.Regular,
+                                fontSize: Font.xsmall,
+                                color: Colors.Theme,
+                              }}>
+                              {Lang_chg.DOWNLOAD[config.language]}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+
                         <Text
-                          numberOfLines={1}
                           style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.smallheadingfont,
-                            color: Colors.DarkGrey,
+                            fontFamily: Font.Regular,
+                            fontSize: Font.xsmall,
+                            color: Colors.lightGrey,
                             textAlign: config.textRotate,
-                            marginTop: (windowWidth * 2) / 100,
-                            marginBottom: (windowWidth * 2) / 100,
-                          }}
-                        >
-                          {item.provider_prescription}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.ssubtext,
-                            color: Colors.Theme,
-                            textAlign: config.textRotate,
-                            marginBottom: (windowWidth * 1) / 100,
-                          }}
-                        >
+                            marginTop: vs(3)
+                          }}>
                           {item.provider_upd}
                         </Text>
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (item.provider_prescription != "") {
-                              this.downloadPrescription(
-                                config.img_url3 +
-                                item.provider_prescription,
-                                item.provider_prescription
-                              );
-                            }
-                          }}
-                        >
-                          <Text
-                            style={{
-                              textAlign: "right",
-                              fontFamily: Font.Medium,
-                              fontSize: Font.tabtextsize,
-                              color: Colors.Theme,
-                              marginBottom: (windowWidth * 3) / 100,
-                            }}
-                          >
-                            {Lang_chg.DOWNLOAD[config.language]}
-                          </Text>
-                        </TouchableOpacity>
+
                       </View>
                     </View>
                   </View>
@@ -1812,15 +1813,13 @@ export default class AppointmentDetails extends Component {
                 item.service_type == "Lab" && (
                   <View
                     style={{
-                      width: "90%",
+                      width: "100%",
                       alignSelf: "center",
-                      // justifyContent: 'space-between',
-                      // flexDirection: 'row',
+                      paddingHorizontal: s(13),
                       borderBottomWidth: (windowWidth * 0.3) / 100,
                       borderColor: Colors.gainsboro,
                       paddingVertical: (windowWidth * 2.5) / 100,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         fontFamily: Font.Medium,
@@ -1836,17 +1835,6 @@ export default class AppointmentDetails extends Component {
                       data={item.report}
                       scrollEnabled={true}
                       nestedScrollEnabled={true}
-                      ItemSeparatorComponent={({ }) => {
-                        return (
-                          <View
-                            style={{
-                              height: 1,
-                              width: "100%",
-                              backgroundColor: Colors.gainsboro,
-                            }}
-                          />
-                        );
-                      }}
                       renderItem={({ item, index }) => {
                         if (item.report != "") {
                           return (
@@ -1854,76 +1842,71 @@ export default class AppointmentDetails extends Component {
                               style={{
                                 flexDirection: "row",
                                 width: "100%",
-                                paddingVertical: (windowWidth * 3.5) / 100,
-                              }}
-                            >
+                                paddingVertical: vs(10),
+                                borderBottomWidth: index == this.state.appoinment_detetails?.report.length - 1 ? 0 : 1,
+                                borderBottomColor: Colors.Border
+                              }}>
                               <View
                                 style={{
-                                  width: "30%",
-                                }}
-                              >
+                                  width: "17%",
+                                }}>
                                 <Image
                                   source={Icons.report}
                                   style={{
-                                    width: (windowWidth * 14) / 100,
-                                    height: (windowWidth * 16) / 100,
-                                    // borderWidth: 1,
-                                    // borderColor: Colors.gainsboro,
-                                    // borderRadius: 15, //(windowWidth * 11.5) / 100,
+                                    width: vs(40),
+                                    height: s(40),
                                   }}
                                 />
                               </View>
                               <View
                                 style={{
-                                  width: "70%",
-                                }}
-                              >
+                                  width: "83%",
+                                }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                  <Text
+                                    numberOfLines={1}
+                                    style={{
+                                      fontFamily: Font.Regular,
+                                      fontSize: Font.small,
+                                      color: Colors.detailTitles,
+                                      textAlign: config.textRotate,
+                                      width: '70%'
+                                    }}>
+                                    {item.report}
+                                  </Text>
+
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (item.report != "") {
+                                        this.downloadPrescription(
+                                          config.img_url3 + item.report,
+                                          item.report
+                                        );
+                                      }
+                                    }}>
+                                    <Text
+                                      style={{
+                                        textAlign: "right",
+                                        fontFamily: Font.Regular,
+                                        fontSize: Font.xsmall,
+                                        color: Colors.Theme,
+                                      }}>
+                                      {Lang_chg.DOWNLOAD[config.language]}
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
+
                                 <Text
-                                  numberOfLines={1}
                                   style={{
-                                    fontFamily: Font.Medium,
-                                    fontSize: Font.smallheadingfont,
-                                    color: Colors.DarkGrey,
-                                    textAlign: config.textRotate,
-                                    marginTop: (windowWidth * 2) / 100,
-                                    marginBottom: (windowWidth * 2) / 100,
-                                  }}
-                                >
-                                  {item.report}
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontFamily: Font.Medium,
-                                    fontSize: Font.ssubtext,
+                                    fontFamily: Font.Regular,
+                                    fontSize: Font.xsmall,
                                     color: Colors.lightGrey,
                                     textAlign: config.textRotate,
-                                    marginBottom: (windowWidth * 1) / 100,
-                                  }}
-                                >
+                                    marginTop: vs(3)
+                                  }}>
                                   {item.upload_date}
                                 </Text>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    if (item.report != "") {
-                                      this.downloadPrescription(
-                                        config.img_url3 + item.report,
-                                        item.report
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      textAlign: "right",
-                                      fontFamily: Font.Medium,
-                                      fontSize: Font.tabtextsize,
-                                      color: Colors.Theme,
-                                      marginBottom: (windowWidth * 3) / 100,
-                                    }}
-                                  >
-                                    {Lang_chg.DOWNLOAD[config.language]}
-                                  </Text>
-                                </TouchableOpacity>
+
                               </View>
                             </View>
                           );
@@ -2055,7 +2038,7 @@ export default class AppointmentDetails extends Component {
                       }}>
                       {config.language == 0 ? (
                         <Image
-                          source={require("../icons/ic_settings_phone_24px3x.png")}
+                          source={Icons.arabic_call}
                           style={{
                             width: (windowWidth * 3.5) / 100,
                             height: (windowWidth * 3.5) / 100,
@@ -2311,9 +2294,9 @@ export default class AppointmentDetails extends Component {
                             fontFamily: Font.Regular,
                             fontSize: (windowWidth * 3.6) / 100,
                             color: "#000",
-                          }}
-                        >
-                          {Lang_chg.distanceFare[config.language]}
+                          }}>
+                          { }
+                          {`${Lang_chg.distanceFare[config.language]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
                         </Text>
                         <Text
                           style={{
@@ -2342,9 +2325,9 @@ export default class AppointmentDetails extends Component {
                           fontFamily: Font.Regular,
                           fontSize: Font.small,
                           color: Colors.DarkGrey,
-                        }}
-                      >
-                        {Lang_chg.distanceFare[config.language]}
+                        }}>
+                        {`${Lang_chg.distanceFare[config.language]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
+
                       </Text>
                       <Text
                         style={{
@@ -2601,28 +2584,19 @@ export default class AppointmentDetails extends Component {
 
                 {item.acceptance_status == "Rejected" &&
                   item.rf_text != "" && (
-                    <View
+
+                    <Text
                       style={{
-                        backgroundColor: "#FF4500",
-                        width: (windowWidth * 24) / 100,
-                        borderRadius: 1,
-                        paddingVertical: (windowWidth * 1) / 100,
-                        justifyContent: "center",
-                        marginLeft: (windowWidth * 2) / 100,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: Colors.White,
-                          textTransform: "uppercase",
-                          fontFamily: Font.SemiBold,
-                          fontSize: (windowWidth * 2.5) / 100,
-                        }}
-                      >
-                        {Lang_chg.Refunde[config.language]}
-                      </Text>
-                    </View>
+                        textAlign: "center",
+                        color: '#FF4500',
+                        textTransform: "uppercase",
+                        fontFamily: Font.SemiBold,
+                        fontSize: Font.xsmall,
+                        marginLeft: s(8)
+                      }}>
+                      {Lang_chg.Refunde[config.language]}
+                    </Text>
+
                   )}
               </View>
 
@@ -2630,11 +2604,9 @@ export default class AppointmentDetails extends Component {
               <View
                 style={{
                   width: "90%",
-                  paddingBottom: (windowWidth * 2) / 100,
                   alignSelf: "center",
                   alignItems: "flex-start",
-                }}
-              >
+                }}>
                 <HTMLView value={item.rf_text} stylesheet={HTMLstyles} />
               </View>
             </View>
@@ -2703,8 +2675,27 @@ export default class AppointmentDetails extends Component {
 
             <View style={styles.modalContainer}>
 
+              {
+                this.state?.isLoading &&
+                <View style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  // opacity: 0.8,
+                  width: windowWidth,
+                  height: windowHeight - 200,
+                  borderRadius: 25,
+                  position: 'absolute',
+                  bottom: 0,
+                  zIndex: 999,
+                }}>
+                  <ActivityIndicator size={'small'} color={Colors.Theme} />
+                </View>
+              }
+
               {/* task booking section */}
               <ScrollView
+                pointerEvents={(this.state.isLoading || this.state.isScheduleagain) ? 'none' : 'auto'}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                   paddingBottom: (windowWidth * 7) / 100,
@@ -3262,6 +3253,7 @@ export default class AppointmentDetails extends Component {
                       text={Lang_chg.SAVECHANGERESCHEDULE[config.language]}
                       onPress={() => this.submit_btn()}
                       btnStyle={{ marginTop: vs(25) }}
+                      onLoading={this.state.isScheduleagain}
                     />
 
                   </View>
@@ -3304,7 +3296,8 @@ export default class AppointmentDetails extends Component {
             onRequestClose={() => {
               this.setState({ isContactUsModal: false })
             }}
-            Id={item.order_id}
+            data={item.order_id}
+            route={'AppointmentDetails'}
           />
 
         </View>
@@ -3326,9 +3319,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: windowWidth,
-    height: deviceHeight - 300,
+    height: windowHeight - 200,
     backgroundColor: Colors.White,
-    borderRadius: 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     paddingHorizontal: s(13),
     position: 'absolute',
     bottom: 0,
@@ -3343,12 +3337,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: vs(20),
     right: 0,
+    zIndex: 999
   },
 
 });
 const HTMLstyles = StyleSheet.create({
   font: {
-    color: "#FF0000",
+    color: '#FF4500',
+    fontSize: Font.small,
+    fontFamily: Font.Regular,
+    marginTop: vs(5)
   },
 
 });

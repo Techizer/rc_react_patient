@@ -11,6 +11,7 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  AppState
 } from "react-native";
 
 import {
@@ -26,16 +27,17 @@ import {
   Lang_chg,
   apifuntion,
   msgTitle,
+  ScreenHeader,
+  Button
 } from "../Provider/utilslib/Utils";
 import { WebView } from "react-native-webview";
-import Styles from "../Styles";
-import Footer from "../Footer";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
-import ScreenHeader from "../components/ScreenHeader";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Clock, clockBlue, Cross } from "../icons/SvgIcons/Index";
-import { Button } from "../components";
+import { Clock, clockBlue, Cross } from "../Icons/Index";
+import SuccessPopup from "../components/SuccessPopup";
+import moment from "moment";
+
 
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
@@ -43,8 +45,10 @@ const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
 const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
-      ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      // ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
+      // : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -55,6 +59,11 @@ const appCredentials = {
 };
 
 export default class Cart extends Component {
+
+  state = {
+    appState: AppState.currentState
+  };
+
   constructor(props) {
     super(props);
     {
@@ -78,8 +87,9 @@ export default class Cart extends Component {
         payment_status: "true",
         currency_symbol: "",
         payment_mode_country: "sar",
-
-        //-----payment start ------//
+        isLoading: false,
+        appState: '',
+        isCartRemoved: false,
 
         appCredentials: {
           production_secrete_key:
@@ -133,11 +143,71 @@ export default class Cart extends Component {
       this.get_cart();
       this.get_all_notification();
       this.get_paysttus();
+      this.appStateSubscription = AppState.addEventListener(
+        "change",
+        nextAppState => {
+          console.log("nextAppState", nextAppState);
+          if (nextAppState == 'inactive' || nextAppState == 'background') {
+          }
+          if (
+            this.state.appState.match(/inactive|background/) &&
+            nextAppState === "active"
+          ) {
+            if (this.state.isCartRemoved == false) {
+              this.removeExpiredCart()
+            }
+          }
+          this.setState({ appState: nextAppState });
+        }
+      );
+
     });
   }
 
+  componentWillUnmount() {
+    this.appStateSubscription.remove();
+  }
+
+  saveCartInfoLocally = (Id) => {
+    localStorage.setItemString('cartId', Id)
+  }
+
+  removeExpiredCart = async () => {
+    let cartId = await localStorage.getItemString('cartId')
+    let cartTime = await localStorage.getItemString('cartTime')
+    let currentTime = moment().format('x')
+    currentTime = JSON.parse(currentTime)
+    currentTime = moment(currentTime).format('HH:mm:ss')
+    cartTime = JSON.parse(cartTime)
+    cartTime = moment(cartTime).format('HH:mm:ss')
+    console.log('cart time...', cartTime);
+    let currentSplitTime = currentTime.split(':')
+    let cartSplitTime = cartTime.split(':')
+
+    let hourDiff = currentSplitTime[0] - cartSplitTime[0]
+    let minsDiff = currentSplitTime[1] - cartSplitTime[1]
+    let secDiff = currentSplitTime[2] - cartSplitTime[2]
+
+    console.log(hourDiff);
+    console.log(minsDiff);
+    console.log(secDiff);
+    // return false
+    if (cartId != null && cartId != '' && cartId != undefined) {
+      if (hourDiff > 0 || (minsDiff > 0)) {
+        console.log('Time is greater than 1 min');
+        this.remove_cart().then(() => {
+          localStorage.removeItem('cartId')
+          localStorage.removeItem('cartTime')
+        })
+      }
+
+    }
+  }
+
+
   startSDK() {
     console.log('starting payment sdk....');
+    this.setState({ isLoading: true })
     var appCredentialsLocal = {
       appCredentials: appCredentials,
       sessionParameters: {
@@ -229,18 +299,17 @@ export default class Cart extends Component {
   }
 
   handleSDKResult(result) {
-    console.log("trx_mode::::", result);
-    console.log(result["trx_mode"]);
+    console.log("Payment sdk::::", result);
+
     switch (result["trx_mode"]) {
       case "CHARGE":
-        console.log("Charge");
+        this.setState({ isLoading: false })
         console.log(result);
-        console.log(result.status);
-
         if (result.status == "CAPTURED") {
           this.setState({ transaction_id: result.charge_id });
         } else {
           // console.log('payment error', msgText.Payment_fail[config.language]);
+          this.setState({ isLoading: false })
           setTimeout(function () {
             msgProvider.showError(result.message);
             return false;
@@ -300,7 +369,7 @@ export default class Cart extends Component {
     apifuntion
       .getApi(url, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj.success);
+        // consolepro.consolelog("obj", obj.success);
         if (obj.success == "true") {
           this.setState({ payment_status: obj.payment_status });
           console.log("paystatus", obj.payment_status);
@@ -338,6 +407,7 @@ export default class Cart extends Component {
         console.log("-------- error ------- " + error);
       });
   };
+
   get_cart = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
@@ -358,23 +428,20 @@ export default class Cart extends Component {
       email: user_details["email"],
     };
 
-    console.log("customer", customer);
     cart_customer = customer;
     this.setState({ user_id: user_id, customer: customer });
     let url = config.baseURL + "api-patient-cart-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("login_user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data)
+      .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        consolepro.consolelog("get_cart-response...", obj);
 
         if (obj.status == true) {
-          console.log("muskan test cart", obj.result[0]);
+          this.saveCartInfoLocally(obj.result[0].id)
           this.setState({
             family_member_id: obj.result[0].family_member_id,
             cart_arr: obj.result[0],
@@ -385,7 +452,6 @@ export default class Cart extends Component {
           });
           global.amount_total = obj.result[0].total_price;
           global.username = obj.result[0].provider_details.provider_name;
-          localStorage.setItemObject("cart_sendarr", obj.result[0]);
         } else {
           this.setState({ cart_arr: obj.result });
           return false;
@@ -398,23 +464,20 @@ export default class Cart extends Component {
 
   remove_cart = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
     let url = config.baseURL + "api-patient-remove-cart";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("cart_id", this.state.cart_id);
 
     consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        consolepro.consolelog("remove_cart-response...", obj);
 
         if (obj.status == true) {
-          console.log("hello hello", obj.result);
+          this.setState({ isCartRemoved: true })
           this.get_cart();
-
           msgProvider.showSuccess(obj.message);
         } else {
           msgProvider.showError(obj.message);
@@ -435,7 +498,6 @@ export default class Cart extends Component {
       var t = webViewState.url.split("/").pop().split("?")[0];
       if (typeof t != null) {
         var p = webViewState.url.split("?").pop().split("&");
-        console.log("file name muska", t);
         if (t == "payment_success_final.php") {
           var payment_id = 0;
           console.log("p.length", p.length);
@@ -523,9 +585,8 @@ export default class Cart extends Component {
 
           setTimeout(() => {
             this.setState({ modalvisible: false }, () => {
-              this.props.navigation.navigate("Appointment");
-            });
-
+              this.props.navigation.navigate(this.props?.route?.params?.providerType === 'doctor' ? 'Consultation' : this.props?.route?.params?.providerType === 'lab' ? 'LabTest' : 'Apointment')
+            })
           }, 5000);
 
           global.username = "NA";
@@ -564,15 +625,17 @@ export default class Cart extends Component {
 
   render() {
     var show_data = this.state.cart_arr;
-    //  var item = this.state.cart_arr
-    consolepro.consolelog("show_data", show_data);
-    //  consolepro.consolelog('muskan',item)
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+      <View pointerEvents={this.state.isLoading ? 'none' : 'auto'} style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
         <ScreenHeader
           title={Lang_chg.CartItem[config.language]}
           navigation={this.props.navigation}
-          onBackPress={() => this.props.navigation.pop()}
+          onBackPress={() => {
+            this.props.navigation.pop()
+            if (this.state.isCartRemoved == false) {
+              this.remove_cart()
+            }
+          }}
           leftIcon
           rightIcon
         />
@@ -768,7 +831,9 @@ export default class Cart extends Component {
                               textAlign: config.textRotate,
                               color: Colors.detailTitles,
                             }}>
-                            {show_data?.distance_fare_text}
+                            {/* {show_data?.distance_fare_text} */}
+                          {`${show_data.distance_fare_text} ${show_data?.distancetext == '' ? '' : `(${show_data.distancetext})`}`}
+
                           </Text>
                           <Text
                             style={{
@@ -832,7 +897,7 @@ export default class Cart extends Component {
                           fontSize: Font.medium,
                           color: Colors.Theme,
                         }}>
-                        {show_data?.sub_total_price + ' ' + this.state.currency_symbol}
+                        {show_data?.total_price + ' ' + this.state.currency_symbol}
                       </Text>
                     </View>
 
@@ -932,8 +997,8 @@ export default class Cart extends Component {
               height: 80,
               justifyContent: "center",
               alignItems: "center",
-              position:'absolute',
-              bottom:0
+              position: 'absolute',
+              bottom: 0
             }}>
             <Button
               text={Lang_chg.PROCEEDTOPAYMENT[config.language]}
@@ -946,7 +1011,7 @@ export default class Cart extends Component {
                     this.setState({ total_price: show_data.total_price });
                 }
               }}
-
+              onLoading={this.state.isLoading}
             />
           </View>
 
@@ -1119,108 +1184,15 @@ export default class Cart extends Component {
           />
         </Modal>
         {/* ----------------------------------------------sucess model -------------------------- */}
-        <Modal
-          animationType="fade"
-          transparent={true}
+
+        <SuccessPopup
           visible={this.state.modalvisible}
-          onRequestClose={() => { }}
-        >
-          <View
-            style={{
-              flex: 1,
-              alignSelf: "center",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              width: "100%",
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: "White",
-                borderRadius: (windowWidth * 4) / 100,
-                position: "absolute",
-                bottom: 0,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: (windowWidth * 5) / 100,
-                alignSelf: "center",
-              }}
-            >
-              <Image
-                style={{
-                  width: (windowWidth * 15) / 100,
-                  height: (windowWidth * 15) / 100,
-                  alignSelf: "center",
-                  marginTop: (windowWidth * -5) / 100,
-                }}
-                source={Icons.greentick}
-              />
-              <Text
-                style={{
-                  fontSize: (windowWidth * 8) / 100,
-                  marginTop: (windowWidth * 5) / 100,
-                  fontFamily: Font.Medium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.thank[config.language]}
-              </Text>
-              <Text
-                style={{
-                  fontSize: (windowWidth * 3) / 100,
-                  marginTop: (windowWidth * 5) / 100,
-                  fontFamily: Font.Medium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.success[config.language]}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: (windowWidth * 3) / 100,
-                  marginTop: (windowWidth * 1) / 100,
-                  fontFamily: Font.Medium,
-                  textAlign: config.textalign,
-                  color: Colors.lightGrey,
-                }}
-              >
-                {Lang_chg.appoinment_aucess[config.language]}
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ modalvisible: false });
-                  this.props.navigation.navigate("Appointment");
-                }}
-                style={{
-                  // width: '15%',
-                  alignSelf: "center",
-                  borderColor: Colors.backgroundcolor,
-                  borderWidth: 1,
-                  padding: (windowWidth * 2) / 100,
-                  paddingHorizontal: (windowWidth * 3) / 100,
-                  marginTop: (windowWidth * 5) / 100,
-                  borderRadius: (windowWidth * 2) / 100,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: (windowWidth * 3) / 100,
-                    alignSelf: "center",
-                    fontFamily: Font.SemiBold,
-                    textAlign: config.textalign,
-                    alignSelf: "center",
-                    color: Colors.Theme,
-                  }}
-                >
-                  {Lang_chg.Gotoappointment[config.language]}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          onRequestClose={() => {
+            this.setState({ modalvisible: false })
+          }}
+          type={this.props?.route?.params?.providerType}
+          navigation={this.props.navigation}
+        />
 
 
 
@@ -1237,6 +1209,7 @@ const styles = StyleSheet.create({
     borderRadius: s(50),
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 999
   },
 
 });

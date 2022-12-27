@@ -20,59 +20,18 @@ import {
   config,
   windowWidth,
   localStorage,
-  Icons,
+  ScreenHeader,
   consolepro,
   Lang_chg,
   apifuntion,
+  Button
 } from "../Provider/utilslib/Utils";
-import ScreenHeader from "../components/ScreenHeader";
-import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../icons/SvgIcons/Index";
+import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Button } from "../components";
-import AboutAppBottomSheet from "../components/AboutAppBottomSheet";
-import { log } from "react-native-reanimated";
+import AboutAppBottomSheet from '../components/AboutAppBottomSheet'
 
-const rootcaresteps = [
-  {
-    id: 1,
-    detail:
-      "Choose from wide range of providers list available on home/dashboard window.(You can chose among Nurse, NurseAssistant, Babysitter, Physiotherapist,Doctor, Hospital & Labs, etc)",
-  },
-  {
-    id: 2,
-    detail:
-      "According to your location preference you will get the providers list whom you can chose from, and move forward to booking |screen. ;",
-  },
-  {
-    id: 3,
-    detail: "Select a date and time slot for your booking. ",
-  },
-  {
-    id: 4,
-    detail: "Make the payment to confirm booking.",
-  },
-  {
-    id: 5,
-    detail:
-      "Wait for the RootsCare Service Provider to come to your location for your booking.",
-  },
-  {
-    id: 6,
-    detail:
-      "Confirm OTP after our medical professional completes their service.",
-  },
-  {
-    id: 7,
-    detail:
-      "Provide a review/feedback to our professional after the completion of the service sharing your experience.  ",
-  },
-  {
-    id: 8,
-    detail:
-      "You can contact us from Help & Support if you face any issues during the entire process. We are available 24x7 to help you. |",
-  },
-];
+
 
 export default class ServiceProviderDetails extends Component {
   constructor(props) {
@@ -89,7 +48,6 @@ export default class ServiceProviderDetails extends Component {
       how_work_value: "",
       available_days: "",
     };
-    screens = "Login";
   }
 
   setModalVisible = (visible) => {
@@ -245,7 +203,6 @@ export default class ServiceProviderDetails extends Component {
 
   render() {
     const { modalVisible } = this.state;
-    const { modal2Visible } = this.state;
     const { provider_details, available_days, providerType, providerId, isFromHospital, hospitaId } = this.state;
     return (
       <View style={{ flex: 0.98, backgroundColor: Colors.backgroundcolor }}>
@@ -266,8 +223,7 @@ export default class ServiceProviderDetails extends Component {
           }
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
-          leftIcon={leftArrow}
-          rightIcon={Notification}
+          leftIcon
         />
 
 
@@ -481,26 +437,29 @@ export default class ServiceProviderDetails extends Component {
                     text={Lang_chg.BookOnlineAppointment[config.language]}
                     btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                     onPress={() => {
+
                       if (global.isLogin == false) {
                         global.isPage = "providerDetails"
-                        // navigation.push("Login");
-                        this.props.navigation.navigate("AuthStack", {
+                        navigation.navigate("AuthStack", {
                           providerType: providerType,
                           providerId: providerId,
                           display: "taskbooking",
-                          indexPosition: 0,
                           isFromHospital: isFromHospital,
                           hospitalId: hospitaId,
+                          indexPosition: 0,
+                          isPage:'providerDetails'
                         })
                       } else {
-                        this.props.navigation.navigate("Booking", {
+                        //HealthRecord
+                        this.props.navigation.navigate("HealthRecord", {
                           providerType: providerType,
                           providerId: providerId,
                           display: "taskbooking",
-                          indexPosition: 0,
                           isFromHospital: isFromHospital,
                           hospitalId: hospitaId,
-                        });
+                          indexPosition: 0,
+                          isPage:'providerDetails'
+                        })
                       }
                     }}
                   />
@@ -517,14 +476,19 @@ export default class ServiceProviderDetails extends Component {
                             providerType: providerType,
                             providerId: providerId,
                             display: "taskbooking",
-                            indexPosition: 0,
+                            isFromHospital: isFromHospital,
+                            hospitalId: hospitaId,
+                            indexPosition: 0
                           })
                         } else {
-                          this.props.navigation.navigate("Booking", {
+                          this.props.navigation.navigate("HealthRecord", {
                             providerType: providerType,
                             providerId: providerId,
                             display: "taskbooking",
+                            isFromHospital: isFromHospital,
+                            hospitalId: hospitaId,
                             indexPosition: 0,
+                            isPage:'providerDetails'
                           })
                         }
                       }}
@@ -537,19 +501,19 @@ export default class ServiceProviderDetails extends Component {
                         onPress={() => {
                           if (global.isLogin == false) {
                             global.isPage = "providerDetails"
-                            // navigation.push("Login");
                             this.props.navigation.navigate("AuthStack", {
                               providerType: providerType,
                               providerId: providerId,
                               display: "testBooking",
-                              indexPosition: 0,
+                              indexPosition: 0
                             })
                           } else {
-                            this.props.navigation.navigate("Booking", {
+                            this.props.navigation.navigate("HealthRecord", {
                               providerType: providerType,
                               providerId: providerId,
                               display: "testBooking",
                               indexPosition: 0,
+                              isPage:'providerDetails'
                             })
                           }
                         }}
@@ -561,13 +525,7 @@ export default class ServiceProviderDetails extends Component {
                           btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
                           onPress={() => {
                             if (global.isLogin == false) {
-                              // console.log("navigation:: ", navigation)
-                              // navigation.reset({
-                              //   index: 0,
-                              //   routes: [{ name: "AuthStack" }],
-                              // });
                               global.isPage = "providerDetails"
-                              // navigation.push("Login");
                               this.props.navigation.navigate("AuthStack", {
                                 providerType: providerType,
                                 providerId: providerId,
@@ -575,10 +533,11 @@ export default class ServiceProviderDetails extends Component {
                                 indexPosition: 0
                               })
                             } else {
-                              this.props.navigation.navigate("Booking", {
+                              this.props.navigation.navigate("HealthRecord", {
                                 providerType: providerType,
                                 providerId: providerId,
                                 display: "taskbooking",
+                              isPage:'providerDetails'
                               })
                             }
                           }}
@@ -596,21 +555,21 @@ export default class ServiceProviderDetails extends Component {
                     onPress={() => {
                       if (global.isLogin == false) {
                         global.isPage = "providerDetails"
-                        // navigation.push("Login");
                         this.props.navigation.navigate("AuthStack", {
                           providerType: this.state.providerType,
                           providerId: providerId,
                           display: "hourlybooking",
-                          // isFromHospital: true,
-                          // hospitalId: Item?.hospital_id,
-                          indexPosition: 0
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitaId,
+                          indexPosition: 1
                         })
                       } else {
-                        this.props.navigation.navigate("Booking", {
-                          providerType: this.state.providerType,
+                        this.props.navigation.navigate("HealthRecord", {
+                          providerType: providerType,
                           providerId: providerId,
                           display: "hourlybooking",
                           indexPosition: 1,
+                          isPage:'providerDetails'
                         })
                       }
                     }}
@@ -625,20 +584,23 @@ export default class ServiceProviderDetails extends Component {
                         onPress={() => {
                           if (global.isLogin == false) {
                             global.isPage = "providerDetails"
-                            // navigation.push("Login");
                             this.props.navigation.navigate("AuthStack", {
                               providerType: providerType,
                               providerId: providerId,
                               display: "hourlybooking",
-                              // isFromHospital: true,
-                              // hospitalId: Item?.hospital_id,
+                              isFromHospital: isFromHospital,
+                              hospitalId: hospitaId,
                               indexPosition: 0
                             })
                           } else {
-                            this.props.navigation.navigate("Booking", {
+                            this.props.navigation.navigate("HealthRecord", {
                               providerType: providerType,
                               providerId: providerId,
                               display: "hourlybooking",
+                              isFromHospital: isFromHospital,
+                              hospitalId: hospitaId,
+                              indexPosition: 0,
+                              isPage:'providerDetails'
                             })
                           }
                         }}
@@ -932,15 +894,6 @@ export default class ServiceProviderDetails extends Component {
                   return (
                     <TouchableOpacity
                       onPress={() => {
-                        // this.props.navigation.navigate(
-                        //   "ServiceProviderDetails",
-                        //   {
-                        //     providerType: providerType,
-                        //     providerId: item.user_id,
-                        //     isFromHospital: false,
-                        //     hospitalId: item?.hospital_id,
-                        //   }
-                        // );
                         this.getAvailableProviderDetails(item?.user_id)
                       }}
                       style={[

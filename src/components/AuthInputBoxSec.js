@@ -18,14 +18,7 @@ import {
   Font,
   windowHeight,
   config,
-  windowWidth,
-  Lang_chg,
-  apifuntion,
-  msgText,
-  msgTitle,
-  consolepro,
-  msgProvider,
-  localStorage,
+
 } from "../Provider/utilslib/Utils";
 
 const AuthInputBoxSec = ({
@@ -49,12 +42,25 @@ const AuthInputBoxSec = ({
   isEditable,
   onChangeText,
   value,
+  numberOfLines,
+  multiline,
+  blurOnSubmit,
+  onSubmitEditing,
+  onFocus,
+  elementPosition=()=>{},
   ...props
 }) => {
-  //console.log(props.onSubmitEditing)
+
+  let position = null
+
   return (
     <>
-      <View style={[styles.mainContainer, mainContainer]}>
+      <View
+        onLayout={event => {
+          position = event.nativeEvent.layout
+          // console.log('event.nativeEvent.layout:', event.nativeEvent.layout);
+        }}
+        style={[styles.mainContainer, mainContainer]}>
 
         <View
           style={[
@@ -73,11 +79,12 @@ const AuthInputBoxSec = ({
             }} >
 
             <TextInput
+              numberOfLines={numberOfLines}
               style={[styles.inputFieldStyle,
               {
                 backgroundColor: props.editable ? Colors.White : Colors.backgroundcolor
               },
-              inputFieldStyle
+                inputFieldStyle
               ]}
               ref={inputRef}
               label={lableText}
@@ -87,6 +94,12 @@ const AuthInputBoxSec = ({
               autoCapitalize="none"
               onChangeText={onChangeText}
               value={value}
+              onFocus={() => {
+                elementPosition(position)
+              }}
+              blurOnSubmit={blurOnSubmit}
+              onSubmitEditing={onSubmitEditing}
+              // maxLength={26}
               right={
                 disableImg && (
                   <TextInput.Icon
