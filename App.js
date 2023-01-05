@@ -18,6 +18,7 @@ global.isLogin = true;
 global.isPage = ""
 import RNRestart from "react-native-restart";
 console.reportErrorsAsExceptions = false;
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -49,8 +50,6 @@ class App extends Component {
       }
       localStorage.setItemObject("languagesetenglish", 3);
     }
-    //// I18nManager.forceRTL(false);
-    // config.language = value;
   };
   render() {
     ((Platform.OS === 'android') ? () => {

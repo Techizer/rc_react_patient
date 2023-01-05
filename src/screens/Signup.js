@@ -219,12 +219,6 @@ export default class Signup extends Component {
             // this.props.navigation.navigate('OTPPage')
           }, 500);
         } else {
-          // if (obj.active_status == 0 || obj.msg == msgTitle.user_not_exist[config.language]) {
-          //   setTimeout(() => {
-          //     msgProvider.alert(msgTitle.information[config.language], obj.msg[config.language], false);
-          //   }, 200)
-          //   config.checkUserDeactivate(this.props.navigation)
-          // } else {
           setTimeout(() => {
             this.setState({
               error_msg: obj.message,

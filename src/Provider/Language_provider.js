@@ -16,9 +16,6 @@ class Language_provider {
   };
 
   language_set = async (languagem) => {
-    // var item = await AsyncStorage.getItem('language');
-    //  localStorage.setItemObject('language', 1)
-    console.log("I18nManager.isRTL", I18nManager.isRTL);
     if (languagem == 0) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
@@ -35,34 +32,12 @@ class Language_provider {
       localStorage.removeItem("languagesetenglish");
       config.language = 1;
     }
-    // if(I18nManager.isRTL){
-    //    console.log('HI Vikas')
-    //    I18nManager.forceRTL(false);
-    //      I18nManager.allowRTL(false);f
-    //      config.textalign='left';
-    //      localStorage.setItemObject('language',0)
-    //      localStorage.setItemObject('languagecathc',0)
-    //      config.language = 0
-    //  }else if(!I18nManager.isRTL){
-    //   console.log('HI Vaishali')
-
-    //    I18nManager.forceRTL(true);
-    //    I18nManager.allowRTL(true);
-    //    config.textalign='right';
-    //    localStorage.setItemObject('language',1)
-    //    localStorage.removeItem('languagecathc')
-    //    localStorage.removeItem('languagesetenglish');
-    //    config.language = 1
-    //  }
+    
     setTimeout(() => {
       RNRestart.Restart();
     }, 500);
 
-    //// I18nManager.forceRTL(false);
-    // config.language = value;
   };
-  //----------------------------------------------by gunjan
-  //------------------login------------------
   Help = ["Help", "مساعدة"];
   Update = ["UPDATE", "تحديث"];
   OK = ["OK", "موافق  "];

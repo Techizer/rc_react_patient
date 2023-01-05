@@ -55,17 +55,7 @@ export class AppProvider extends Component {
     });
   };
 
-  selectcamerimage = async () => {
-    await mediaprovider
-      .launchCamera()
-      .then((res) => {
-        this.setState({ mediaopen: false });
-        return (Mediaresult = res);
-      })
-      .catch((error) => {
-        Mediaresult = error;
-      });
-  };
+ 
   render() {
     const { loading } = this.state;
     const funcs = {

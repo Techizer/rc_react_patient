@@ -69,7 +69,7 @@ export default class Splash extends Component {
         this.setState({ language: 1 },
           () => {
             this.updateAppVersion();
-          }
+          } 
         );
       } else {
         localStorage.setItemObject("languagesetenglish", 3);
