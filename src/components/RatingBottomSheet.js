@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, } from "react-native";
+import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, Pressable, } from "react-native";
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
@@ -24,6 +24,7 @@ const RatingBottomSheet = ({
 
     const [reviewText, setReviewText] = useState('')
     const [textLength, setTextLength] = useState(0)
+    const inputRef = useRef()
 
     return (
         <Modal
@@ -99,8 +100,11 @@ const RatingBottomSheet = ({
                             </View>
 
 
-                            <View style={styles.textInput}>
+                            <Pressable
+                                onPress={() => inputRef.current.focus()}
+                                style={styles.textInput}>
                                 <TextInput
+                                    ref={inputRef}
                                     style={{
                                         color: Colors.Black,
                                         fontSize: Font.medium,
@@ -140,7 +144,7 @@ const RatingBottomSheet = ({
                                             </Text>
                                         </View>
                                     )} */}
-                            </View>
+                            </Pressable>
 
                             <Text
                                 style={{
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: windowHeight - 200,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,

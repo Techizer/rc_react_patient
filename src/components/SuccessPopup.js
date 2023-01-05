@@ -20,21 +20,6 @@ const SuccessPopup = ({
     navigation
 }) => {
 
-    const [title, setTitle] = useState('')
-    const [googleAddress, setGoogleAddress] = useState('')
-    const [nearest, setNearest] = useState('')
-    const [building, setBuilding] = useState('')
-    const [name, setName] = useState('')
-    const [dob, setDOB] = useState('')
-    const [gender, setGender] = useState(-1)
-    const [defaultAddress, setDefaultAddress] = useState(false)
-    const titleRef = useRef()
-    const addressRef = useRef()
-    const landmarkRef = useRef()
-    const buildingRef = useRef()
-    const nameRef = useRef()
-    const dobRef = useRef()
-
 
     useEffect(() => {
         // console.log('........................',type);
@@ -73,7 +58,8 @@ const SuccessPopup = ({
                         height: (windowWidth * 15) / 100,
                         alignSelf: "center",
                     }}
-                    source={Icons.greentick}
+                    resizeMode='contain'
+                    source={Icons.Success}
                 />
                 <Text
                     style={{
@@ -118,10 +104,6 @@ const SuccessPopup = ({
 }
 const styles = StyleSheet.create({
 
-    mainContainer: {
-        flex: 1,
-        backdropColor: 'pink',
-    },
     modalContainer: {
         width: (windowWidth * 90) / 100,
         height: (windowWidth * 60) / 100,

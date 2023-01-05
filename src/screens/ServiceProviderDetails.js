@@ -123,7 +123,6 @@ export default class ServiceProviderDetails extends Component {
 
   get_Services = async () => {
     let url = config.baseURL + "api-patient-service-provider-details";
-    console.log("url:: ", url)
     var data = new FormData();
     if (global.isLogin == false) {
       let addressDetails = await localStorage.getItemObject("addressDetails");
@@ -224,7 +223,7 @@ export default class ServiceProviderDetails extends Component {
           navigation={this.props.navigation}
           onBackPress={() => this.props.navigation.pop()}
           leftIcon
-        />
+        /> 
 
 
         <ScrollView

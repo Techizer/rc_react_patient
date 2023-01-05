@@ -170,9 +170,11 @@ const checkUserType = async () => {
 const DashboardStack = ({ navigation }) => {
 
   useEffect(() => {
-    getAppointments()
-    getConsultations()
-    getTests()
+    if (global.isLogin == true) {
+      getAppointments()
+      getConsultations()
+      getTests()
+    }
     checkUserType()
   }, [])
 

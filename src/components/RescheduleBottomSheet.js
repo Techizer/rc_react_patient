@@ -720,7 +720,7 @@ const RescheduleBottomSheet = ({
                                                     marginLeft: (windowWidth * 32) / 100,
                                                 }}
                                             >
-                                                {Lang_chg.no_data_Found[config.language]}
+                                                {Lang_chg.noTime[config.language]}
                                             </Text>
                                         )}
                                     </View>
@@ -778,7 +778,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         width: windowWidth,
-        height: windowHeight - 200,
+        height: windowHeight/1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
         borderTopRightRadius:25,

@@ -60,40 +60,7 @@ export default Styles = StyleSheet.create({
     fontFamily: Font.Medium,
     fontSize: Font.medium,
     color: Colors.Black,
-  },
-  details: {
-    textAlign: config.textalign,
-    fontSize: Font.small,
-    fontFamily: Font.Regular,
-    color: Colors.Black,
-    lineHeight: (windowWidth * 3.9) / 100,
-    marginTop: vs(7),
-  },
-  subDetails: {
-    textAlign: config.textalign,
-    fontSize: Font.xsmall,
-    fontFamily: Font.Regular,
-    
-  },
-
-  ///drawer style
-  drawercardicon: {
-    //  alignSelf: 'center',
-    resizeMode: "contain",
-    width: (windowWidth * 6.5) / 100,
-    height: (windowWidth * 6.5) / 100,
-    marginTop: (windowWidth * 1) / 100,
-    alignSelf: "center",
-    // marginHorizontal: (windowWidth * 15) / 100,
-  },
-  placeholder_style: {
-    width: "100%",
-    color: Colors.Black,
-    fontSize: Font.placeholdersize,
-    textAlign: config.textRotate,
-    height: (windowWidth * 12) / 100,
-    fontFamily: Font.placeholderfontfamily,
-    paddingLeft: (windowWidth * 2.5) / 100,
-    borderRadius: (windowWidth * 1) / 100,
+    // flex:1,
+    // flexWrap:'wrap'
   },
 });

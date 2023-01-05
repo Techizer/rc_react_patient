@@ -17,6 +17,7 @@ import {
 } from "../../Provider/utilslib/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
+import { useIsFocused } from "@react-navigation/native";
 
 
 
@@ -25,12 +26,14 @@ const Upcoming = (props) => {
   const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const isFocused = useIsFocused()
+
 
   useEffect(() => {
     if (props?.route?.params?.isGuest === 'false') {
       getLabTest()
     }
-  }, [isRefreshing])
+  }, [isRefreshing, isFocused])
 
 
 
@@ -49,7 +52,7 @@ const Upcoming = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("getLabTest-response...", obj);
+        // consolepro.consolelog("getLabTest-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
             setIsRefreshing(false)
@@ -88,6 +91,7 @@ const Upcoming = (props) => {
         renderItem={({ item, index }) => {
           return (
             <AppointmentContainer
+              Index={index}
               Item={item}
               navigation={props.navigation}
               isLoading={isLoading}
@@ -102,14 +106,14 @@ const Upcoming = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Lab Tests Found' : 'Sorry, no lab tests found'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestLabsTitle[config.language] : Lang_chg.noLabsTitle[config.language]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{props?.route?.params?.isGuest === 'true' ? 'No  Lab Tests record found, user type is Guest' : 'You can book a new lab test with our qualified labs!'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestLabsDesc[config.language] : Lang_chg.noLabsDesc[config.language]}</Text>
             </View>
           )
         }}

@@ -40,28 +40,28 @@ export default class MapproviderSearch extends Component {
       markers:
         [
           {
-            title: 'hello',
+            title: '1',
             coordinates: {
               latitude: 55.447285,
               longitude: 3.631201
             },
           },
           {
-            title: 'hello',
+            title: '2',
             coordinates: {
               latitude: 55.3781,
               longitude: 3.2860
             },
           },
           {
-            title: 'hello',
+            title: '3',
             coordinates: {
               latitude: 55.2881,
               longitude: 3.1360
             },
           },
           {
-            title: 'hello',
+            title: '4',
             coordinates: {
               latitude: 55.3681,
               longitude: 3.3760
@@ -159,7 +159,7 @@ export default class MapproviderSearch extends Component {
 
 
   render() {
-    return ( 
+    return (
       // <Modal
       //   animationType="slide"
       //   transparent={true}
@@ -211,7 +211,6 @@ export default class MapproviderSearch extends Component {
             // onRegionChangeComplete={(event) => { this.getadddressfromlatlong(event) }}
             draggable
             ref={this.setMapRef}
-          // onCalloutPress={()=>alert("Hello")}
           >
             <Marker.Animated
               coordinate={{
@@ -242,7 +241,7 @@ export default class MapproviderSearch extends Component {
                 latitudeDelta: parseFloat(this.state.latdelta),
                 longitudeDelta: parseFloat(this.state.longdelta),
               }}
-              radius={(this.props.circle_radius)?parseFloat(this.props.circle_radius):2000}
+              radius={(this.props.circle_radius) ? parseFloat(this.props.circle_radius) : 2000}
 
               zIndex={0}
               strokeColor={Colors.Theme}
@@ -270,10 +269,10 @@ export default class MapproviderSearch extends Component {
                     {
                       item.provider_image == 'NA' || item.provider_image == '' || item.provider_image == null
                         ?
-                        <Image style={{ resizeMode: 'cover', marginTop:windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }}
+                        <Image style={{ resizeMode: 'cover', marginTop: windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }}
                           source={Icons.pro}></Image>
                         :
-                        <Image source={{ uri: config.img_url + item.provider_image }} style={{ resizeMode: 'cover', marginTop:windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }} />
+                        <Image source={{ uri: config.img_url + item.provider_image }} style={{ resizeMode: 'cover', marginTop: windowWidth * 0.007, alignSelf: 'center', width: windowWidth * 0.060, height: windowWidth * 0.060, borderRadius: windowWidth * 0.025 }} />
                     }
                   </ImageBackground>
 
@@ -282,7 +281,7 @@ export default class MapproviderSearch extends Component {
                     <View style={{ width: windowWidth * 45 / 100, height: windowHeight * 8 / 100, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }} >
                       <View style={{ width: windowWidth * 44 / 100, height: windowHeight * 8 / 100, alignSelf: 'center', flexDirection: 'row' }}>
                         <View style={{ width: windowWidth * 12 / 100, height: windowHeight * 12 / 100, }}>
-                          <Text style={{ width: '100%', height: '100%', marginTop:config.device_type=='ios'?-14: -30 }}>
+                          <Text style={{ width: '100%', height: '100%', marginTop: config.device_type == 'ios' ? -14 : -30 }}>
                             {
                               item.provider_image == 'NA' || item.provider_image == '' || item.provider_image == null
                                 ?

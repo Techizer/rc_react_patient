@@ -6,7 +6,7 @@ import { Colors, Font } from "../Provider/Colorsfont";
 import {
     windowWidth, deviceHeight, Lang_chg, config,
     localStorage, Button, consolepro, msgText,
-    Cameragallery, apifuntion, msgProvider, mediaprovider,
+    Cameragallery, apifuntion, msgProvider, mediaprovider, windowHeight,
 } from "../Provider/utilslib/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
@@ -75,7 +75,7 @@ const AddandEditMembers = ({
                 setMediamodal(false)
             });
     };
-   const Galleryopen = () => {
+    const Galleryopen = () => {
         mediaprovider
             .launchGellery(true)
             .then((obj) => {
@@ -484,9 +484,9 @@ const AddandEditMembers = ({
                                 :
                                 (type === 'editMember') ?
                                     <>
-                                        <View style={{ flexDirection: 'row', }}>
+                                        <View style={{ flexDirection: 'row', width: '100%' }}>
                                             <View style={{ width: '23%', flexDirection: 'row', height: vs(58) }}>
-                                                <View style={{ width: '90%%', flexDirection: 'row', height: '100%' }}>
+                                                <View style={{ width: '90%', flexDirection: 'row', height: '100%' }}>
                                                     {
                                                         (profileImg != '' && profileImg != null) ?
                                                             <Image source={{ uri: profileImg }} style={{
@@ -497,15 +497,13 @@ const AddandEditMembers = ({
                                                             :
                                                             <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
                                                     }
-                                                    {
-                                                        (isEditable && type === 'editMember') &&
-                                                        <TouchableOpacity
-                                                            activeOpacity={0.8}
-                                                            onPress={() => setMediamodal(true)}
-                                                            style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 0, right: s(4), borderWidth: 1.2, borderColor: Colors.Blue }}>
-                                                            <SvgXml xml={Edit} />
-                                                        </TouchableOpacity>
-                                                    }
+
+                                                    <TouchableOpacity
+                                                        activeOpacity={0.8}
+                                                        onPress={() => setMediamodal(true)}
+                                                        style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 0, right: s(4), borderWidth: 1.2, borderColor: Colors.Blue }}>
+                                                        <SvgXml xml={Edit} />
+                                                    </TouchableOpacity>
 
                                                 </View>
                                             </View>
@@ -732,7 +730,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         width: windowWidth,
-        height: deviceHeight - 300,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderRadius: 25,
         paddingTop: vs(40),

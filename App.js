@@ -5,7 +5,10 @@ import { AppProvider, AppConsumer } from "./src/Provider/context/AppProvider";
 import MainStack from "./src/Provider/Stacks/MainStack";
 import { firebapushnotification } from "./src/firbase_pushnotification";
 import {
+  Font,
   localStorage,
+  StatusbarHeight,
+  windowWidth,
 } from "./src/Provider/utilslib/Utils";
 import FlashMessage from "react-native-flash-message";
 global.MapAddress = "NA";
@@ -64,15 +67,16 @@ class App extends Component {
           }}
         </AppConsumer>
         <FlashMessage
-          // style={{
-          //   marginTop: Platform.OS == "ios" ? 0 : StatusBar.currentHeight,
-          // }}
+          hideStatusBar={Platform.OS === 'ios' ? true : false}
+          textStyle={{ fontSize: Font.medium, fontFamily: Font.Regular }}
+          titleStyle={{ 
+            marginTop: Platform.OS === 'ios' ? ((windowWidth * 10) / 100) : StatusbarHeight+20,
+           fontSize: Font.medium,
+            fontFamily: Font.Medium 
+          }}
           position="top"
           animated={true}
-        // titleStyle={{
-        //   fontFamily: Font.Regular,
-        //   fontSize: 20
-        // }}
+
         />
       </AppProvider>
     );

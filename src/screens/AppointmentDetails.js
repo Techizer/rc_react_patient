@@ -40,7 +40,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import { s, vs } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import { SvgXml } from "react-native-svg";
-import { contactUs, Cross, rightBlue, whiteStar } from "../Icons/Index";
+import { contactUs, Cross, Info, rightBlue, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "../components/RatingBottomSheet";
 import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
@@ -233,7 +233,6 @@ export default class AppointmentDetails extends Component {
     // this.setState({ name: user_details['first_name'], currency_symbol: user_details['currency_symbol'] })
 
     let url = config.baseURL + "api-patient-appointment-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("id", this.state.appointment_id);
@@ -307,6 +306,7 @@ export default class AppointmentDetails extends Component {
           var timcurrent = hour + ":" + min;
           this.setState({ timcurrent_for_check: timcurrent });
           let time_slot = obj.result.task_time;
+
           if (obj.result.task_time != "") {
             var names = obj.result.task_time;
             var nameArr = names.split(",");
@@ -316,6 +316,7 @@ export default class AppointmentDetails extends Component {
             const Arr2 = [];
             var ar1 = false;
             var ar2 = true;
+
             if (obj.result.task_time != "") {
               for (let l = 0; l < nameArr.length; l++) {
                 if (this.state.check_currentdate == this.state.set_date) {
@@ -362,7 +363,7 @@ export default class AppointmentDetails extends Component {
                 }
               }
             }
-
+            //////////////////////////
             this.setState({
               time_Arr: new_time_dlot,
               final_one: Arr1,
@@ -970,7 +971,6 @@ export default class AppointmentDetails extends Component {
       arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
     }
     this.setState({ date_array: arr });
-    console.log("check date muskan", arr);
   };
 
 
@@ -1256,7 +1256,7 @@ export default class AppointmentDetails extends Component {
                 }}>
                 <Text
                   style={{
-                    fontSize: Font.xsmall,
+                    fontSize: Font.small,
                     fontFamily: Font.Medium,
                     color: Colors.Theme
                   }}
@@ -1265,10 +1265,9 @@ export default class AppointmentDetails extends Component {
                 </Text>
                 <Text
                   style={{
-                    fontSize: Font.xsmall,
+                    fontSize: Font.small,
                     fontFamily: Font.Medium,
                     color: item?.acceptance_status === 'Pending' ? Colors.Yellow : (item?.acceptance_status === 'Completed' || item?.acceptance_status === 'Accepted') ? Colors.Green : Colors.Red,
-                    textTransform: 'uppercase'
                   }}
                 >
                   {item.acceptance_status}
@@ -1311,10 +1310,8 @@ export default class AppointmentDetails extends Component {
                         fontFamily: Font.Medium,
                         color: Colors.Theme,
                         fontSize: Font.small,
-                        textTransform: "uppercase",
                         textAlign: config.textRotate,
-                      }}
-                    >
+                      }}>
                       {item.service_type}
                     </Text>
                     {item.hospital_id != "" && (
@@ -1369,7 +1366,7 @@ export default class AppointmentDetails extends Component {
                   style={{
                     fontFamily: Font.Medium,
                     fontSize: Font.small,
-                    color: Colors.Theme,
+                    color: Colors.darkText,
                     textAlign: config.textRotate,
                     paddingBottom: (windowWidth * 3) / 100,
                   }}
@@ -1927,8 +1924,7 @@ export default class AppointmentDetails extends Component {
                   width: "100%",
                   alignSelf: "center",
                   paddingVertical: (windowWidth * 3) / 100,
-                }}
-              >
+                }}>
                 <View
                   style={{
                     width: "100%",
@@ -1941,7 +1937,7 @@ export default class AppointmentDetails extends Component {
                     style={{
                       fontFamily: Font.Medium,
                       fontSize: Font.small,
-                      color: Colors.Theme,
+                      color: Colors.darkText,
                       textAlign: config.textRotate,
                     }}
                   >
@@ -2213,9 +2209,9 @@ export default class AppointmentDetails extends Component {
                   <Text
                     style={{
                       fontFamily: Font.Medium,
-                      fontSize: Font.medium,
+                      fontSize: Font.small,
                       textAlign: config.textRotate,
-                      color: Colors.Theme,
+                      color: Colors.darkText,
                     }}>
                     {Lang_chg.Payment[config.language]}
                   </Text>
@@ -2349,16 +2345,16 @@ export default class AppointmentDetails extends Component {
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.medium,
-                        color: Colors.Theme,
+                        fontSize: Font.small,
+                        color: Colors.darkText,
                       }}>
                       {Lang_chg.subTotal[config.language]}
                     </Text>
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.medium,
-                        color: Colors.Theme,
+                        fontSize: Font.small,
+                        color: Colors.darkText,
                       }}>
                       {item.sub_total_price}
                     </Text>
@@ -2588,13 +2584,12 @@ export default class AppointmentDetails extends Component {
                     <Text
                       style={{
                         textAlign: "center",
-                        color: '#FF4500',
-                        textTransform: "uppercase",
-                        fontFamily: Font.SemiBold,
+                        color: Colors.Red,
+                        fontFamily: Font.Medium,
                         fontSize: Font.xsmall,
                         marginLeft: s(8)
                       }}>
-                      {Lang_chg.Refunde[config.language]}
+                      {Lang_chg.Refunded[config.language]}
                     </Text>
 
                   )}
@@ -2611,6 +2606,40 @@ export default class AppointmentDetails extends Component {
               </View>
             </View>
 
+            {/* --------------------Note----------------- */}
+
+            <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
+
+              <SvgXml xml={Info} />
+
+              <View style={{ marginLeft: s(10) }}>
+                <Text
+                  style={{
+                    fontSize: Font.small,
+                    fontFamily: Font.Medium,
+                    textAlign: config.textRotate,
+                    color: Colors.detailTitles
+
+                  }}>{Lang_chg.Booking_Note[config.language]}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  underlayColor={Colors.Highlight}
+                  onPress={() => {
+                    this.setState({ isContactUsModal: true })
+                  }}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      fontFamily: Font.Regular,
+                      textAlign: config.textRotate,
+                      color: Colors.detailTitles
+
+                    }}>{Lang_chg.Booking_Desc[config.language]}</Text>
+
+                </TouchableOpacity>
+              </View>
+            </View>
             {/* -----------------Contact Us---------------- */}
             <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
 
@@ -2646,6 +2675,7 @@ export default class AppointmentDetails extends Component {
               </View>
 
             </View>
+
 
 
           </KeyboardAwareScrollView>
@@ -2750,6 +2780,8 @@ export default class AppointmentDetails extends Component {
                       </Text>
                     </View>
 
+                    {/* ----------Ordered Task--------- */}
+
                     <View
                       style={[
                         {
@@ -2832,8 +2864,7 @@ export default class AppointmentDetails extends Component {
                                     paddingVertical: (windowWidth * 1.7) / 100,
                                     flexDirection: "row",
                                     marginTop: (windowWidth * 0.3) / 100,
-                                  }}
-                                >
+                                  }} >
                                   <Text
                                     style={{
                                       width: "70%",
@@ -2841,10 +2872,8 @@ export default class AppointmentDetails extends Component {
                                       alignSelf: "center",
                                       fontSize: (windowWidth * 3.6) / 100,
                                       fontFamily: Font.Regular,
-
                                       color: "#000",
-                                    }}
-                                  >
+                                    }}>
                                     {item.name}
                                   </Text>
                                   <Text
@@ -2921,12 +2950,13 @@ export default class AppointmentDetails extends Component {
                             return (
                               <View
                                 style={{
-                                  alignItems: "center",
-                                  width: "100%",
-                                  alignSelf: "center",
-                                  paddingVertical: (windowWidth * 1.7) / 100,
-                                  flexDirection: "row",
-                                  marginTop: (windowWidth * 0.3) / 100,
+                                  borderRadius: (windowWidth * 2) / 100,
+                                  marginRight: (windowWidth * 2) / 100,
+                                  marginTop: (windowWidth * 2) / 100,
+                                  borderColor: "#0168B3",
+                                  borderWidth: 2,
+                                  width: (windowWidth * 30) / 100,
+                                  backgroundColor: "#fff",
                                 }}>
                                 <View
                                   style={{
@@ -2969,6 +2999,8 @@ export default class AppointmentDetails extends Component {
                         />
                       )}
                     </View>
+
+                    {/* ----------Ordered Task--------- */}
 
                     <View
                       style={{
@@ -3242,7 +3274,7 @@ export default class AppointmentDetails extends Component {
                                 marginLeft: (windowWidth * 32) / 100,
                               }}
                             >
-                              {Lang_chg.no_data_Found[config.language]}
+                              {Lang_chg.noTime[config.language]}
                             </Text>
                           )}
                         </View>
@@ -3343,7 +3375,7 @@ const styles = StyleSheet.create({
 });
 const HTMLstyles = StyleSheet.create({
   font: {
-    color: '#FF4500',
+    color: Colors.Red,
     fontSize: Font.small,
     fontFamily: Font.Regular,
     marginTop: vs(5)

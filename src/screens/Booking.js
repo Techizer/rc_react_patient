@@ -144,7 +144,6 @@ export default class Booking extends Component {
           this.getDoctorServices()
           : this.getServices();
       this.getDay();
-      this.getAllNotification();
       this.getPerson()
       console.log('..........................', this.props?.route?.params?.family_member_id);
 
@@ -153,7 +152,7 @@ export default class Booking extends Component {
 
   resetState = () => {
     this.setState({
-      display: "taskbooking",
+      // display: "taskbooking",
       task_base_task: "",
       task_base_task1: "",
       new_task_arr: "",
@@ -199,29 +198,6 @@ export default class Booking extends Component {
       hour_base_task_new: ''
     })
   }
-
-  getAllNotification = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
-    let url = config.baseURL + "api-notification-count";
-    var data = new FormData();
-    data.append("login_user_id", user_id);
-
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // consolepro.consolelog("getAllNotification", obj);
-        if (obj.status == true) {
-          this.setState({ notification_count: obj.result });
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  };
 
   getDay = () => {
     var today = new Date();
@@ -1443,7 +1419,7 @@ export default class Booking extends Component {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-
+        console.log('getServices-res**********', obj.result);
         if (obj.status == true) {
           if (obj.result.task_time != "") {
             var names = obj.result.task_time;
@@ -1539,6 +1515,7 @@ export default class Booking extends Component {
           let vat_price_new = obj.result.vat_price;
 
           if (vat_price_new != 0) {
+            console.log('vat_price_new != 0');
             if (obj.result.distance_fare != 0) {
               real_total_show =
                 (obj.result.distance_fare / 100) * vat_price_new;
@@ -1556,15 +1533,19 @@ export default class Booking extends Component {
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             }
           } else {
+            console.log('vat_price_new == 0');
+            console.log({ real_total_show });
             real_total_show = (obj.result.distance_fare / 100) * vat_price_new;
             real_total_final = real_total_show.toFixed(1);
-            real_total = (
-              parseFloat(vat_price_new) + parseFloat(obj.result.distance_fare)
-            ).toFixed(1);
+            console.log({ real_total_final });
+            real_total = (parseFloat(vat_price_new) + parseFloat(obj.result.distance_fare)).toFixed(1);
+            console.log({ real_total });
             show_real_price = parseFloat(vat_price_new).toFixed(1);
+            console.log({ show_real_price });
+
           }
           let sun_total = parseFloat(real_total).toFixed(2);
-
+          console.log({ sun_total });
           this.setState({
             subTotal: obj.result.distance_fare,
             vat_price_show_display: real_total_final, //0.0,
@@ -1628,7 +1609,7 @@ export default class Booking extends Component {
           this.setState({ Error_popup: true });
         }, 700);
 
-        consolepro.consolelog("-------- error ------- " + error);
+        consolepro.consolelog("getServices-error ------- " + error);
       });
   };
 
@@ -1686,7 +1667,12 @@ export default class Booking extends Component {
     data.append("sub_total_price", subTotalPrice);
     data.append("total_price", totalPrice);
     data.append("symptom_text", this.state.symptomText);
-    data.append('distance', this.state.booking_data.distancetext)
+
+    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
+      data.append('distance', this.state.booking_data.distancetext)
+    } else {
+      data.append('distance', '')
+    }
 
 
     if (this.state.prescriptionsImage != "") {
@@ -1705,7 +1691,7 @@ export default class Booking extends Component {
       });
     }
 
-    // console.log(data);
+    // console.log('submitButtonForDoctor', data);
     // return
     apifuntion
       .postApi(url, data)
@@ -1787,7 +1773,12 @@ export default class Booking extends Component {
     data.append("task_price_total", this.state.total_price_show);
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.final_total_price);
-    data.append('distance', this.state.booking_data.distancetext)
+
+    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
+      data.append('distance', this.state.booking_data.distancetext)
+    } else {
+      data.append('distance', '')
+    }
 
     apifuntion
       .postApi(url, data)
@@ -1856,10 +1847,13 @@ export default class Booking extends Component {
     data.append("task_price_total", this.state.hour_total_amount);
     data.append("sub_total_price", this.state.subTotal);
     data.append("total_price", this.state.hour_total_price);
-    data.append('distance', this.state.booking_data.distancetext)
 
-    console.log(data);
-
+    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
+      data.append('distance', this.state.booking_data.distancetext)
+    } else {
+      data.append('distance', '')
+    }
+    // console.log(data);
     // return false
     apifuntion
       .postApi(url, data)
@@ -1926,20 +1920,26 @@ export default class Booking extends Component {
     let show_total_price;
     let hour_add = "";
     let subTotal = "";
+
+    console.log(this.state.only_vatprice_show);
+    console.log(this.state.vat_price_show);
     if (
       this.state.only_vatprice_show == 0 ||
-      this.state.only_vatprice_show == 0.0
+      this.state.only_vatprice_show == "0.0"
     ) {
+      console.log('if');
       show_total_price = 0 //this.state.vat_price_show;
       subTotal = parseFloat(
         parseInt(this.state.distance_fare_pass) + parseInt(prize)
       ).toFixed(1);
       hour_add = parseFloat(
         parseInt(this.state.distance_fare_pass) +
-        parseInt(prize) +
-        parseFloat(this.state.vat_price_show)
+        parseInt(prize) 
+        // parseFloat(this.state.vat_price_show)
       ).toFixed(1);
     } else {
+      console.log('else');
+
       let vat_sum_per = prize;
       subTotal = parseFloat(
         parseInt(this.state.distance_fare_pass) + parseInt(vat_sum_per)
@@ -1955,6 +1955,7 @@ export default class Booking extends Component {
       ).toFixed(1);
     }
 
+    console.log({ hour_add });
     this.setState({
       hour_base_task: data,
       hour_base_task_new: data,
@@ -1963,45 +1964,6 @@ export default class Booking extends Component {
       hour_total_price: hour_add,
       subTotal: subTotal,
     });
-  };
-
-  checkDate = (item, index) => {
-    let data = this.state.date_array;
-
-    for (let i = 0; i < data.length; i++) {
-      if (i == index) {
-        data[i].tick = 1;
-      } else {
-        data[i].tick = 0;
-      }
-    }
-    this.setState({ date_array: data });
-  };
-
-  time_tick = (item, index) => {
-    let data = this.state.time_Arr;
-
-    for (let i = 0; i < data.length; i++) {
-      if (i == index) {
-        data[i].time_status = true;
-      } else {
-        data[i].time_status = false;
-      }
-    }
-    this.setState({ time_Arr: data });
-  };
-
-  hour_time_tick = (item, index) => {
-    let data = this.state.hour_time;
-
-    for (let i = 0; i < data.length; i++) {
-      if (i == index) {
-        data[i].time_status = true;
-      } else {
-        data[i].time_status = false;
-      }
-    }
-    this.setState({ hour_time: data });
   };
 
   check_all = (index) => {
@@ -2092,6 +2054,45 @@ export default class Booking extends Component {
       }
     }
   };
+  checkDate = (item, index) => {
+    let data = this.state.date_array;
+
+    for (let i = 0; i < data.length; i++) {
+      if (i == index) {
+        data[i].tick = 1;
+      } else {
+        data[i].tick = 0;
+      }
+    }
+    this.setState({ date_array: data });
+  };
+
+  time_tick = (item, index) => {
+    let data = this.state.time_Arr;
+
+    for (let i = 0; i < data.length; i++) {
+      if (i == index) {
+        data[i].time_status = true;
+      } else {
+        data[i].time_status = false;
+      }
+    }
+    this.setState({ time_Arr: data });
+  };
+
+  hour_time_tick = (item, index) => {
+    let data = this.state.hour_time;
+
+    for (let i = 0; i < data.length; i++) {
+      if (i == index) {
+        data[i].time_status = true;
+      } else {
+        data[i].time_status = false;
+      }
+    }
+    this.setState({ hour_time: data });
+  };
+
 
   check_all_false = (index) => {
     let totalSelected = 0;
@@ -2378,7 +2379,6 @@ export default class Booking extends Component {
                       this.getDoctorServices()
                       : this.getServices();
                   this.getDay();
-                  this.getAllNotification();
                   this.getPerson()
                   this.resetState()
                 }}
@@ -2398,7 +2398,6 @@ export default class Booking extends Component {
                       this.getDoctorServices()
                       : this.getServices();
                   this.getDay();
-                  this.getAllNotification();
                   this.getPerson()
                   this.resetState()
                 }}
@@ -3017,7 +3016,7 @@ export default class Booking extends Component {
                                 marginLeft: (windowWidth * 32) / 100,
                               }}
                             >
-                              {Lang_chg.no_data_Found[config.language]}
+                              {Lang_chg.noTime[config.language]}
                             </Text>
                           )}
                         </View>
@@ -3613,14 +3612,14 @@ export default class Booking extends Component {
                               <Text
                                 style={{
                                   fontFamily: Font.MediumItalic,
-                                  fontSize: (windowWidth * 4) / 100,
+                                  fontSize: Font.medium,
                                   alignSelf: "center",
                                   paddingVertical: (windowWidth * 3) / 100,
                                   textAlign: "center",
-                                  marginLeft: (windowWidth * 32) / 100,
+                                  marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.no_data_Found[config.language]}
+                                {Lang_chg.noTime[config.language]}
                               </Text>
                             )}
                           </View>
@@ -3740,14 +3739,14 @@ export default class Booking extends Component {
                               <Text
                                 style={{
                                   fontFamily: Font.MediumItalic,
-                                  fontSize: (windowWidth * 4) / 100,
+                                  fontSize: Font.medium,
                                   alignSelf: "center",
                                   paddingVertical: (windowWidth * 3) / 100,
                                   textAlign: "center",
-                                  marginLeft: (windowWidth * 32) / 100,
+                                  marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.no_data_Found[config.language]}
+                                {Lang_chg.noTime[config.language]}
                               </Text>
                             )}
                           </View>
@@ -3944,12 +3943,6 @@ export default class Booking extends Component {
                             {this.state.currency_symbol}
                           </Text>
                         </View>
-                        {/* <Appbtn
-                            onPresshandler={() => {
-                              this.submitButtonForDoctor();
-                            }}
-                            title={Lang_chg.PROCEEDTOcheckout[config.language]}
-                          /> */}
                       </View>
                     </View>
                   </View>
@@ -3978,7 +3971,6 @@ export default class Booking extends Component {
                             this.getDoctorServices()
                             : this.getServices();
                         this.getDay();
-                        this.getAllNotification();
                         this.getPerson()
                         this.resetState()
                       }}
@@ -4046,7 +4038,6 @@ export default class Booking extends Component {
                             this.getDoctorServices()
                             : this.getServices();
                         this.getDay();
-                        this.getAllNotification();
                         this.getPerson()
                         this.resetState()
                       }}
@@ -4733,14 +4724,14 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.MediumItalic,
-                                    fontSize: (windowWidth * 4) / 100,
+                                    fontSize: Font.medium,
                                     alignSelf: "center",
                                     paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (windowWidth * 32) / 100,
+                                    marginLeft: (windowWidth * 25) / 100,
                                   }}
                                 >
-                                  {Lang_chg.no_data_Found[config.language]}
+                                  {Lang_chg.noTime[config.language]}
                                 </Text>
                               )}
                             </View>
@@ -4860,14 +4851,14 @@ export default class Booking extends Component {
                                 <Text
                                   style={{
                                     fontFamily: Font.MediumItalic,
-                                    fontSize: (windowWidth * 4) / 100,
+                                    fontSize: Font.medium,
                                     alignSelf: "center",
                                     paddingVertical: (windowWidth * 3) / 100,
                                     textAlign: "center",
-                                    marginLeft: (windowWidth * 32) / 100,
+                                    marginLeft: (windowWidth * 25) / 100,
                                   }}
                                 >
-                                  {Lang_chg.no_data_Found[config.language]}
+                                  {Lang_chg.noTime[config.language]}
                                 </Text>
                               )}
                             </View>
@@ -5454,8 +5445,7 @@ export default class Booking extends Component {
             title={Lang_chg.Booking[config.language]}
             navigation={this.props.navigation}
             onBackPress={() => this.props.navigation.pop()}
-            leftIcon={leftArrow}
-            rightIcon={Notification}
+            leftIcon
           />
           {/* ============================error================================= */}
           <Modal
@@ -5544,8 +5534,7 @@ export default class Booking extends Component {
                       fontSize: (windowWidth * 5) / 100,
                       textAlign: "center",
                       marginTop: (windowWidth * 5) / 100,
-                    }}
-                  >
+                    }}>
                     {Lang_chg.Bad_gateway[config.language]}
                   </Text>
 

@@ -12,9 +12,11 @@ import {
   localStorage,
   apifuntion,
   consolepro,
+  Lang_chg,
 } from "../../Provider/utilslib/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
+import { useIsFocused } from "@react-navigation/native";
 
 
 const Upcoming = (props) => {
@@ -22,6 +24,7 @@ const Upcoming = (props) => {
   const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const isFocused = useIsFocused()
 
 
 
@@ -30,7 +33,7 @@ const Upcoming = (props) => {
     if (props?.route?.params?.isGuest === 'false') {
       getAppointments()
     }
-  }, [isRefreshing])
+  }, [isRefreshing, isFocused])
 
 
 
@@ -49,13 +52,13 @@ const Upcoming = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("getAppointments-response...", obj);
+        // consolepro.consolelog("getAppointments-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
             setIsRefreshing(false)
             setIsLoading(false)
             setAppointments(obj.result)
-          }, 500);
+          }, 250);
         } else {
           setIsRefreshing(false)
           setIsLoading(false)
@@ -89,6 +92,7 @@ const Upcoming = (props) => {
         renderItem={({ item, index }) => {
           return (
             <AppointmentContainer
+              Index={index}
               Item={item}
               navigation={props.navigation}
               isLoading={isLoading}
@@ -103,14 +107,14 @@ const Upcoming = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Appointment Found' : 'Sorry, no appointments found'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestAppoitmentTitle[config.language] : Lang_chg.noAppoitmentTitle[config.language]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{props?.route?.params?.isGuest === 'true' ? 'No Appointment record found, user type is Guest' : 'You can start a new appointment with our qualified home service providers!'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestAppoitmentDesc[config.language] : Lang_chg.noAppoitmentDesc[config.language]}</Text>
             </View>
           )
         }}

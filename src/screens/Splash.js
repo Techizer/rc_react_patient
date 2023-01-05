@@ -24,9 +24,11 @@ global.amount_total = 0;
 global.username = "NA";
 import HTMLView from "react-native-htmlview";
 import DeviceInfo from "react-native-device-info";
+import messaging from '@react-native-firebase/messaging';
 import { SvgXml } from "react-native-svg";
 import { Logo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
+
 const appVersion = DeviceInfo.getVersion();
 
 export default class Splash extends Component {
@@ -37,32 +39,36 @@ export default class Splash extends Component {
       password: "",
       engbtn: true,
       device_lang: "AR",
-      fcm_token: 123456,
       language: 1,
       openAppScreen: undefined,
       modalVisible3: false,
+      fcmToken:''
     };
 
-    this.language_fun();
     add_location = "NA";
 
-    console.log("App Version", appVersion);
   }
-  componentDidMount() { }
-  language_fun = async () => {
-    let textalign = await localStorage.getItemObject("language");
+  componentDidMount() {
+    this.props.navigation.addListener("focus", () => {
+      this.getLanguage();
+      this.getFcm()
+    });
 
+  }
+
+  getFcm = async () => {
+    let token = await localStorage.getItemString('DeviceToken')
+    this.setState({ fcmToken: token })
+  }
+  getLanguage = async () => {
+    let textalign = await localStorage.getItemObject("language");
     if (textalign != null) {
       if (textalign == 1) {
         config.textalign = "right";
-        // config.textalign = 'left';
         config.language = 1;
-        this.setState(
-          {
-            language: 1,
-          },
+        this.setState({ language: 1 },
           () => {
-            this.authenticateSession();
+            this.updateAppVersion();
           }
         );
       } else {
@@ -71,7 +77,7 @@ export default class Splash extends Component {
         config.textalign = "left";
         config.language = 0;
         this.setState({ language: 0 }, () => {
-          this.authenticateSession();
+          this.updateAppVersion();
         });
       }
     } else {
@@ -79,33 +85,17 @@ export default class Splash extends Component {
       config.language = 1;
       localStorage.setItemObject("language", 1);
       this.setState({ language: 1 }, () => {
-        this.authenticateSession();
+        this.updateAppVersion();
       });
     }
   };
-  authenticateSession = async () => {
-    this.apiIosPatientUpdate();
-    // setTimeout(() => {
-    //   if (this.state.openAppScreen == undefined) {
-    //     this.apiIosPatientUpdate()
-    //   }
-    //   // this.new_authenticatesessinon()
-    // }, 2000);
-  };
 
-  apiIosPatientUpdate = async () => {
+  updateAppVersion = async () => {
     let lang = this.state.language == 1 ? "AR" : "ENG";
-    let url =
-      config.baseURL + "api-ios-patient-update" + "?divice_lang=" + lang;
-    console.log("url", url, config.language);
-    // var data = new FormData();
-    // data.append('divice_lang',"AR")
-
-    // consolepro.consolelog('data', data)
-    apifuntion
-      .getApi(url, 1)
+    let url = config.baseURL + "api-ios-patient-update" + "?divice_lang=" + lang;
+    apifuntion.getApi(url, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        // consolepro.consolelog("updateAppVersion-res...", obj);
         if (obj.status == true) {
           if (parseFloat(obj.result.appVer) > parseFloat(appVersion)) {
             this.setState({
@@ -122,33 +112,63 @@ export default class Splash extends Component {
               modalVisible3: true,
             });
           } else {
-            this.checkAuth();
+            this.new_authenticatesessinon();
           }
-
-          console.log("get area", obj.result);
         } else {
-          this.checkAuth();
+          this.new_authenticatesessinon();
           return false;
         }
-      })
-      .catch((error) => {
-        this.checkAuth();
+      }).catch((error) => {
+        this.new_authenticatesessinon();
         console.log("-------- error ------- " + error);
       });
   };
 
-  checkAuth = () => {
-    setTimeout(() => {
-      this.new_authenticatesessinon();
-    }, 2000);
+  new_authenticatesessinon = async () => {
+    let result = await localStorage.getItemObject("user_arr");
+    let logindetail = await localStorage.getItemObject("user_login");
+
+    // console.log('new_authenticatesessinon',result);
+    console.log('new_authenticatesessinon',logindetail);
+    if (logindetail != null) {
+      this.checkAuthUserLogin(result, logindetail)
+    } else {
+      global.isLogin = false
+      global.isPage = ""
+      this.props.navigation.reset({
+        index: 0,
+        routes: [{ name: "AuthStack" }],
+      });
+    }
   };
 
-  checkAuthUserLogin = async (result, logindetail) => {
-    // let result1 = await localStorage.getItemObject("user_signup");
 
+  checkSession = async (result, logindetail) => {
+    let user_id = result.user_id;
+    let url = config.baseURL + "api-check-login";
+    var data = new FormData();
+    data.append("user_id", user_id);
+    data.append("fcm_token", global.fcmtoken);
+
+    console.log('on splash checkSession ', data);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // console.log("checkSession: ", obj);
+        if (obj.result == true) {
+          this.checkAuthUserLogin(result, logindetail);
+        } else {
+          this.logout()
+        }
+      })
+      .catch((error) => {
+        console.log("-------- error ------- " + error);
+      });
+  }
+
+  checkAuthUserLogin = async (result, logindetail) => {
     let email = logindetail.email_phone;
     let password = logindetail.password;
-    let user_type = result.user_type;
     var device_lang;
     if (config.language == 0) {
       device_lang = "ENG";
@@ -162,13 +182,12 @@ export default class Splash extends Component {
     data.append("password", password);
     data.append("device_type", config.device_type);
     data.append("device_lang", device_lang);
-    data.append("fcm_token", fcmtoken);
+    data.append("fcm_token", this.state.fcmToken);
 
-    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log("obj", obj);
+        // console.log("checkAuthUserLogin------", obj);
         if (obj.status == true) {
           var user_details = obj.result;
           localStorage.setItemObject("user_arr", user_details);
@@ -177,10 +196,7 @@ export default class Splash extends Component {
             index: 0,
             routes: [{ name: "DashboardStack" }],
           });
-
-          // this.props.navigation.navigate("Home");
         } else {
-          // this.props.navigation.navigate("Login");
           global.isLogin = false
           global.isPage = ""
           this.props.navigation.reset({
@@ -194,28 +210,7 @@ export default class Splash extends Component {
       });
   }
 
-  checkLogout = async (result, logindetail) => {
-    let user_id = result.user_id;
-    let url = config.baseURL + "api-check-login";
-    var data = new FormData();
-    data.append("user_id", user_id);
-    data.append("fcm_token", fcmtoken);
-    console.log("url", url);
-    console.log("data", data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        console.log("obj checkLogout: ", obj);
-        if (obj.result == true) {
-          this.checkAuthUserLogin(result, logindetail);
-        } else {
-          this.logout()
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  }
+
 
   logout = async () => {
     await localStorage.removeItem("user_arr");
@@ -228,30 +223,12 @@ export default class Splash extends Component {
     });
   };
 
-  new_authenticatesessinon = async () => {
-    let result = await localStorage.getItemObject("user_arr");
-    let logindetail = await localStorage.getItemObject("user_login");
-    console.log("splasedata", logindetail);
-    if (result != null) {
-      console.log("result ", result);
-      this.checkLogout(result, logindetail)
-    } else {
-      global.isLogin = false
-      global.isPage = ""
-      this.props.navigation.reset({
-        index: 0,
-        routes: [{ name: "AuthStack" }],
-      });
-      // this.props.navigation.navigate("Login");
-    }
-  };
+
 
   openAppStoreUrl = async (url) => {
     const supported = await Linking.canOpenURL(url);
-    console.log("supported:: ", supported, url);
+    // console.log("supported:: ", supported, url);
     if (supported) {
-      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-      // by some browser in the mobile
       await Linking.openURL(url);
     } else {
       Alert.alert(`Don't know how to open this URL: ${url}`);
@@ -278,7 +255,7 @@ export default class Splash extends Component {
         />
         {/* <SvgXml xml={Splash_Logo} /> */}
 
-        <Image source={Icons.splashLogo} style={{height:windowWidth-100, height: windowWidth-100}} resizeMode='contain' />
+        <Image source={Icons.splashLogo} style={{ height: windowWidth - 100, height: windowWidth - 100 }} resizeMode='contain' />
 
         <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
 
@@ -307,7 +284,7 @@ export default class Splash extends Component {
           style={{
             width: "63%",
             alignSelf: "center",
-            marginTop: vs(35),
+            marginTop: vs(15),
           }}
         >
           <Text

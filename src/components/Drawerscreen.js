@@ -23,7 +23,7 @@ import {
   apifuntion,
 } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
-import { dummyUser, leftArrow, rightArrow, Appointment, Consultations, AccountSetting, ManageAddress, HealthRecord, LabTest, LikeUs, SignOut, Orders, Support } from "../Icons/Index";
+import { dummyUser, leftArrow, rightArrow, Appointment, Consultations, AccountSetting, ManageAddress, HealthRecord, LabTest, LikeUs, SignOut, Orders, Support, Login } from "../Icons/Index";
 // ----------------------------------------
 import { DrawerActions } from "@react-navigation/native";
 import { ms, s, vs } from "react-native-size-matters";
@@ -115,7 +115,7 @@ export default class Drawerscreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, }}>
+      <View style={{ flex: 1, paddingTop: (windowWidth * 10) / 100, }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(150) : vs(65), }}
@@ -124,10 +124,8 @@ export default class Drawerscreen extends Component {
             style={{
               flex: 1,
               width: "100%",
-              // paddingHorizontal: s(15),
               paddingBottom: Platform.OS === 'ios' ? vs(90) : vs(80),
-            }}
-          >
+            }}>
             {/* user Profile */}
             <TouchableOpacity
               disabled={isGuest === 'true' ? true : false}
@@ -135,27 +133,27 @@ export default class Drawerscreen extends Component {
               activeOpacity={0.7}
               style={{ width: '100%', alignItems: "center", flexDirection: 'row', paddingTop: vs(20), height: vs(140), backgroundColor: Colors.White }}>
 
-              <View style={{ width: '31%', height: '100%' }} >
+              <View style={{ width: '31%' }} >
                 {
                   (this.state.profile_img == "NA" || this.state.profile_img == "" || this.state.profile_img == null) ?
                     <SvgXml xml={dummyUser} style={{
                       alignSelf: "center",
-                      marginTop: vs(5)
                     }} />
                     :
                     // <SvgUri uri={this.state.profile_img} />
                     <Image
                       source={{ uri: this.state.profile_img }}
-                      style={{ height: s(85), width: s(85), borderRadius: s(85), backgroundColor: Colors.backgroundcolor, marginTop: vs(5), alignSelf: 'center' }}
+                      style={{ height: s(85), width: s(85), borderRadius: s(85), backgroundColor: Colors.backgroundcolor, alignSelf: 'center' }}
                     />
 
                 }
               </View>
 
-              <View style={{ width: '69%', height: '100%', }} >
+              <View style={{ width: '69%' }} >
 
-                <View style={{ width: '100%', height: '60%', flexDirection: 'row' }} >
-                  <View style={{ width: '80%', height: '100%', justifyContent: 'center' }}>
+                <View style={{ width: '100%', flexDirection: 'row', }} >
+
+                  <View style={{ width: '80%', justifyContent: 'center' }}>
                     <Text
                       style={{
                         color: Colors.Black,
@@ -163,13 +161,12 @@ export default class Drawerscreen extends Component {
                         fontSize: Font.xxxlarge,
                         textAlign: config.textRotate,
 
-                      }}
-                    >
+                      }}>
                       {isGuest === 'true' ? 'Guest User' : this.state.name}
-                      {/* {config.language == 0 ? 'Layth Ghassan Alkharouf' : 'ليث غسان الخروف'} */}
                     </Text>
                   </View>
-                  <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
+
+                  <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                     <SvgXml xml={
                       config.textalign == "right"
                         ? leftArrow : rightArrow
@@ -177,7 +174,7 @@ export default class Drawerscreen extends Component {
                   </View>
                 </View>
 
-                <View style={{ width: '100%', height: '40%' }}>
+                <View style={{ width: '100%', }}>
                   <TouchableOpacity
                     disabled={isGuest === 'true' ? true : false}
                     activeOpacity={0.7}
@@ -186,18 +183,17 @@ export default class Drawerscreen extends Component {
                       setTimeout(() => {
                         this.props.navigation.navigate("EditProfile")
                       }, 350);
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: Colors.Primary,
                         fontFamily: Font.Medium,
                         fontSize: Font.medium,
                         textAlign: config.textRotate,
-                        opacity: (isGuest === 'true') ? 0.3 : 1
+                        opacity: (isGuest === 'true') ? 0.3 : 1,
+                        marginTop:vs(5)
 
-                      }}
-                    >
+                      }}>
                       {config.language == 0 ? 'View & edit profile' : 'عرض وتحرير الملف الشخصي'}
                     </Text>
                   </TouchableOpacity>
@@ -211,14 +207,11 @@ export default class Drawerscreen extends Component {
                         fontSize: Font.small,
                         textAlign: config.textRotate,
                         marginTop: vs(4)
-                      }}
-                    >
-                      {/* {'this.state.name'} */}
+                      }}>
                       {config.language == 0 ? '25% Completed' : '25٪ اكتمل'}
                     </Text>
                   }
                 </View>
-
               </View>
             </TouchableOpacity>
 
@@ -409,16 +402,35 @@ export default class Drawerscreen extends Component {
 
               <View style={{ width: '92%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(22) }}></View>
 
-              <DrawerItemContainer
-                title={Lang_chg.SignOut[config.language]}
-                rightIcon={
-                  config.textalign == "right"
-                    ? leftArrow : rightArrow
-                }
-                leftIcon={SignOut}
-                disable={isGuest === 'true' ? true : false}
-                onPress={() => this.setState({ modalVisible: true })}
-              />
+              {
+                isGuest === 'true' ?
+                  <DrawerItemContainer
+                    title={Lang_chg.loginheretext[config.language]}
+                    rightIcon={
+                      config.textalign == "right"
+                        ? leftArrow : rightArrow
+                    }
+                    leftIcon={Login}
+                    disable={false}
+                    onPress={() => {
+                      this.props.navigation.reset({
+                        index: 0,
+                        routes: [{ name: "AuthStack" }],
+                      });
+                    }}
+                  />
+                  :
+                  <DrawerItemContainer
+                    title={Lang_chg.SignOut[config.language]}
+                    rightIcon={
+                      config.textalign == "right"
+                        ? leftArrow : rightArrow
+                    }
+                    leftIcon={SignOut}
+                    disable={false}
+                    onPress={() => this.setState({ modalVisible: true })}
+                  />
+              }
             </View>
 
             <View style={{ paddingLeft: s(19), paddingRight: s(100), marginTop: vs(35) }}>
@@ -608,7 +620,7 @@ export default class Drawerscreen extends Component {
             </Modal>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 }

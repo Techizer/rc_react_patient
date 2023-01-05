@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -41,6 +42,8 @@ var Sound = require("react-native-sound");
 const audioRecorderPlayer = new AudioRecorderPlayer();
 let arr = [];
 var sound = null;
+let sliderEditing = false;
+let timeout = null
 
 const DoctorSymptomsAppointment = (props) => {
   // console.log("sound ::::", sound);
@@ -68,6 +71,8 @@ const DoctorSymptomsAppointment = (props) => {
   const [duration, setDuration] = useState(0);
   const [sliderIcon, setSliderIcon] = useState();
   const [audioFile, setAudioFile] = useState();
+  const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
+
 
   useEffect(() => {
     FontAwesome.getImageSource("circle", 20, Colors.Theme).then(
@@ -77,26 +82,26 @@ const DoctorSymptomsAppointment = (props) => {
       }
     );
     setRoutes();
-    _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
+    let _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
       "FinishedPlaying",
       ({ success }) => {
         console.log("finished playing", success);
       }
     );
-    _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
+    let _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
       "FinishedLoading",
       ({ success }) => {
         console.log("finished loading", success);
       }
     );
-    _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
+    let _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
       "FinishedLoadingFile",
       ({ success, name, type }) => {
         console.log("finished loading file", success, name, type);
         SoundPlayer.play();
       }
     );
-    _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
+    let _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
       "FinishedLoadingURL",
       ({ success, url }) => {
         console.log("finished loading url", success, url);
@@ -106,12 +111,11 @@ const DoctorSymptomsAppointment = (props) => {
       sound = null;
     };
   }, []);
-  sliderEditing = false;
   const customStyle = isFocused ? styles.textInputFocus : styles.textInput;
   var dirs = RNFetchBlob.fs.dirs;
   var path = Platform.select({
-    ios: "hello.m4a",
-    android: `${dirs.CacheDir}/hello.mp3`,
+    ios: "audio.m4a",
+    android: `${dirs.CacheDir}/audio.mp3`,
   });
   audioRecorderPlayer.setSubscriptionDuration(0.1); // optional. Default is 0.5
 
@@ -256,7 +260,7 @@ const DoctorSymptomsAppointment = (props) => {
   };
 
   const onSliderEditing = (value) => {
-    console.log('value value:: ', value, sliderEditing);
+    console.log('onSliderEditing:: ', value, sliderEditing);
     if (sound && playState == 'pause' && !sliderEditing) {
       sound.setCurrentTime(value);
       setPlaySeconds(value);
@@ -323,7 +327,7 @@ const DoctorSymptomsAppointment = (props) => {
     sound.setCurrentTime(0);
   }
 
-  playMusic = () => {
+  const playMusic = () => {
     console.log(sound, sound.isLoaded());
     timeout = setInterval(() => {
 
@@ -404,7 +408,7 @@ const DoctorSymptomsAppointment = (props) => {
           const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
           audioRecorderPlayer.addRecordBackListener((e) => {
             // console.log("Recording . . . ", e.currentPosition);
-            console.log("isRecording . . . ", e);
+            // console.log("isRecording . . . ", e);
             setStopped(false);
             setRecording(true);
             setRecordSecs(e.currentPosition);
@@ -455,7 +459,7 @@ const DoctorSymptomsAppointment = (props) => {
     });
   };
 
-  Camerapopen = async () => {
+  const Camerapopen = async () => {
     mediaprovider
       .launchCamera()
       .then((obj) => {
@@ -485,7 +489,8 @@ const DoctorSymptomsAppointment = (props) => {
         setMedialModal(false);
       });
   };
-  Galleryopen = () => {
+
+  const Galleryopen = () => {
     mediaprovider
       .launchGellery()
       .then((obj) => {
@@ -561,7 +566,7 @@ const DoctorSymptomsAppointment = (props) => {
           />
         );
     }
-  }; 
+  };
 
   const renderTabBar = (props) => (
     <TabBar
@@ -616,7 +621,7 @@ const DoctorSymptomsAppointment = (props) => {
   return (
     <View style={{ backgroundColor: Colors.White, marginTop: vs(7) }}>
       <View style={{ width: windowWidth, backgroundColor: Colors.backgroundcolor }}>
-        <View style={{ paddingHorizontal: s(11), backgroundColor: Colors.backgroundcolor }}>
+        <View style={{ paddingHorizontal: s(13), backgroundColor: Colors.backgroundcolor }}>
 
           <TabView
             navigationState={{ index, routes }}
@@ -626,261 +631,267 @@ const DoctorSymptomsAppointment = (props) => {
               width: layout.width,
               height: layout.height,
             }}
-            style={{ height: 40, width: routes.length > 1 ? '100%' : '50%',  }}
+            style={{ height: 40, width: routes.length > 1 ? '100%' : '50%', }}
             renderTabBar={renderTabBar}
           />
         </View>
       </View>
-      <View
-        style={{
-          width: "100%",
-          // shadowOpacity: 0.3,
-          // shadowColor: "#000",
-          // shadowOffset: { width: 2, height: 2 },
-          // elevation: 2,
-          // shadowRadius: 2,
-          paddingLeft: s(11),
-          paddingVertical:vs(9)
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            // alignItems: "center",
-            // alignSelf: "center",
-            justifyContent: "flex-start",
-          }}
-        >
-          <View
+
+
+      {/* ----------------------------------------- */}
+
+      <View style={{ paddingVertical: vs(9), marginTop: vs(7), paddingHorizontal: s(13), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
+
+        <View>
+          <Text
             style={{
-              width: "80%",
-              height: isStopped ? 150 : 100,
+              fontFamily: Font.Medium,
+              fontSize: Font.medium,
+              textAlign: config.textRotate,
+              color: Colors.detailTitles
+            }}>
+            {Lang_chg.TalkToDoctor[config.language]}
+          </Text>
+          <Text
+            style={{
+              fontFamily: Font.Regular,
+              fontSize: Font.small,
+              textAlign: config.textRotate,
+              color: Colors.lightGrey,
+            }}>
+            {Lang_chg.Optional[config.language]}
+          </Text>
+        </View>
+
+        <TouchableHighlight
+          onPress={() => {
+            setIsShowRecordingPanel(!isShowRecordingPanle)
+            console.log(isShowRecordingPanle);
+          }}
+          underlayColor={Colors.Highlight}
+          style={{
+            height: 30,
+            width: 30,
+            borderRadius: 6,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <Image
+            style={{
+              height: s(15),
+              width: vs(15),
+              transform: [{ rotate: isShowRecordingPanle ? "180deg" : "0deg" }]
             }}
-          >
+            resizeMode='contain'
+            source={Icons.Down}
+          />
+        </TouchableHighlight>
+
+
+      </View>
+
+      <View style={{ width: '100%', alignSelf: 'center', height: vs(7), backgroundColor: Colors.backgroundcolor, marginTop: vs(6) }}></View>
+
+      {
+        isShowRecordingPanle &&
+        <View style={{ paddingVertical: vs(9), marginTop: vs(7), width: '100%', }}>
+          <View style={{ paddingHorizontal: s(13), }}>
             <Text
               style={{
-                fontFamily: Font.Regular,
+                fontFamily: Font.Medium,
                 fontSize: Font.medium,
                 textAlign: config.textRotate,
-                alignSelf: "baseline",
-              }}
-            >
+                color: Colors.detailTitles
+              }}>
               {Lang_chg.TalkToDoctor[config.language]}
             </Text>
-            <Text
+
+            <View
               style={{
-                fontFamily: Font.Regular,
-                fontSize: Font.small,
-                textAlign: config.textRotate,
-                alignSelf: "baseline",
-                color: Colors.lightGrey,
-              }}
-            >
-              {Lang_chg.Optional[config.language]}
-            </Text>
-            {isStopped && (
+                paddingVertical: vs(15),
+                flexDirection: isStopped ? 'row' : 'column',
+                justifyContent: 'space-around',
+                alignItems: 'center'
+              }}>
+              {/* --------------Recoring Container-------------- */}
+
+
               <View
                 style={{
-                  width: "100%",
-                  alignSelf: "center",
                   justifyContent: "center",
-                  borderBottomWidth: (windowWidth * 0.3) / 100,
-                  borderColor: Colors.gainsboro,
-                  paddingVertical: (windowWidth * 4.5) / 100,
                   alignItems: "center",
-                  alignContent: "center",
-                  // flex: 1,
-                  flexDirection: "row",
-                  marginTop: 60,
-                }}
-              >
+                  flexDirection: 'row'
+                }} >
                 <TouchableOpacity
                   onPress={() => {
-                    playState == "paused" ? onStartPlay(true) : pause();
+                    isRecording ? onStopRecord() : onStartRecord();
                   }}
-                >
+                  style={{
+                    justifyContent: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                    alignSelf: 'center'
+
+                  }}>
                   <Image
-                    source={
-                      playState == "paused" ? Icons.play : Icons.pause
-                    }
+                    resizeMode="contain"
+                    source={isRecording ? Icons.stop : Icons.mic}
                     style={{
                       width: (windowWidth * 10) / 100,
                       height: (windowWidth * 10) / 100,
+                      borderColor: Colors.Theme,
                     }}
                   />
                 </TouchableOpacity>
-                <Slider
-                  onTouchStart={onSliderEditStart}
-                  onTouchEnd={onSliderEditEnd}
-                  onValueChange={onSliderEditing}
-                  value={playSeconds}
-                  maximumValue={duration}
-                  maximumTrackTintColor="gray"
-                  minimumTrackTintColor={Colors.Theme}
-                  thumbImage={sliderIcon}
+                <Text
                   style={{
-                    flex: 1,
-                    alignSelf: "center",
-                    marginHorizontal: Platform.select({ ios: 5 }),
-                    height: (windowWidth * 10) / 100,
-                    // transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
-                  }}
-                />
+                    fontFamily: Font.Regular,
+                    fontSize: Font.medium,
+                    marginLeft: (windowWidth * 1) / 100,
+                  }}>
+                  {recordTime}
+                </Text>
               </View>
-            )}
-          </View>
 
-          <View
-            style={{
-              justifyContent: "center",
-              width: '20%',
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                isRecording ? onStopRecord() : onStartRecord();
-              }}
-              style={{
-                height: vs(50),
-                borderTopLeftRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderColor: Colors.Theme,
-                width: '90%',
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                backgroundColor: Colors.appointmentdetaillightblue,
-                alignSelf: 'flex-end'
-              }}
-            >
-              <Image
-                resizeMode="contain"
-                source={isRecording ? Icons.stop : Icons.mic}
-                style={{
-                  width: (windowWidth * 10) / 100,
-                  height: (windowWidth * 10) / 100,
-                  marginLeft: (windowWidth * 3) / 100,
-                  marginRight: (windowWidth * 3) / 100,
-                  borderColor: Colors.Theme,
-                }}
-              />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontFamily: Font.Regular,
-                fontSize: Font.medium,
-                marginTop: (windowWidth * 2) / 100,
-              }}
-            >
-              {recordTime}
-            </Text>
-          </View>
-        </View>
+              {isStopped && (
+                <View
+                  style={{
+                    width: "65%",
+                    alignSelf: "center",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignContent: "center",
+                    flexDirection: "row",
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      playState == "paused" ? onStartPlay(true) : pause();
+                    }}
+                  >
+                    <Image
+                      source={
+                        playState == "paused" ? Icons.play : Icons.pause
+                      }
+                      style={{
+                        width: (windowWidth * 10) / 100,
+                        height: (windowWidth * 10) / 100,
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <Slider
+                    onTouchStart={onSliderEditStart}
+                    onTouchEnd={onSliderEditEnd}
+                    onValueChange={onSliderEditing}
+                    value={playSeconds}
+                    maximumValue={duration}
+                    maximumTrackTintColor="gray"
+                    minimumTrackTintColor={Colors.Theme}
+                    thumbImage={sliderIcon}
+                    style={{
+                      flex: 1,
+                      alignSelf: "center",
+                      marginHorizontal: Platform.select({ ios: 5 }),
+                      height: (windowWidth * 10) / 100,
+                    }}
+                  />
+                </View>
+              )}
 
-        <View style={{ width: '100%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(6) }}></View>
-
-        {/* ---------------------------------------- */}
-        <View
-          style={{
-            alignItems: "flex-start",
-            alignSelf: "auto",
-            paddingTop: vs(6),
-          }}
-        >
-          <View
-            style={{
-              width: "100%",
-              alignSelf: "center",
-            }}>
-            <Text
-              style={{
-                fontFamily: Font.Regular,
-                textAlign: config.textRotate,
-                alignSelf: "baseline",
-                fontSize: Font.medium,
-              }}
-            >
-              {Lang_chg.TalkToUs[config.language]}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Font.Regular,
-                fontSize: Font.small,
-                textAlign: config.textRotate,
-                alignSelf: "baseline",
-                color: Colors.lightGrey,
-              }}
-            >
-              {Lang_chg.Optional[config.language]}
-            </Text>
-
-            {/* ----------------Input------------- */}
-
-            <View style={customStyle}>
-              <TextInput
-                // ref={(text) => {
-                //   this.textdata = text;
-                // }}
-                onChangeText={(text) => {
-                  sendData({
-                    text: text,
-                    audio: null,
-                    tab: null,
-                    image: null,
-                  });
-                  // this.SearchFilterFunction(text);
-                }}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                returnKeyLabel="done"
-                returnKeyType="done"
-                onSubmitEditing={() => {
-                  Keyboard.dismiss();
-                }}
-                style={styles.textInputArea}
-                numberOfLines={10}
-                multiline={true}
-              />
             </View>
+          </View>
 
-            <TouchableOpacity
-              onPress={() => {
-                // this.setState({ mediamodal: true });
-                setMedialModal(true);
-              }}
+          <View style={{ width: '100%', alignSelf: 'center', height: vs(1.5), backgroundColor: Colors.backgroundcolor, marginTop: vs(6) }}></View>
+
+          <View
+            style={{
+              alignItems: "flex-start",
+              alignSelf: "auto",
+              paddingTop: vs(14),
+              paddingHorizontal: s(13)
+            }}>
+            <View
               style={{
                 width: "100%",
-                flexDirection: "row",
-                alignItems:'center',
                 alignSelf: "center",
-              }}
-            >
-              <Image
-                resizeMode="contain"
-                source={Icons.Upload}
-                style={{
-                  width: 20,
-                  height: 20,
-                  marginRight: (windowWidth * 3) / 100,
-                  borderColor: Colors.Theme,
-                }}
-              />
+              }}>
               <Text
                 style={{
                   fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  textAlign: "auto",
+                  textAlign: config.textRotate,
+                  alignSelf: "baseline",
+                  fontSize: Font.medium,
                 }}
               >
-                {imageName === ""
-                  ? Lang_chg.Upload[config.language]
-                  : imageName}
+                {Lang_chg.TalkToUs[config.language]}
               </Text>
-            </TouchableOpacity>
+
+              {/* ----------------Input------------- */}
+
+              <View style={customStyle}>
+                <TextInput
+                  placeholder="Example symptoms… I am felling down, my head is paining from last 2 days."
+                  onChangeText={(text) => {
+                    sendData({
+                      text: text,
+                      audio: null,
+                      tab: null,
+                      image: null,
+                    });
+                    // this.SearchFilterFunction(text);
+                  }}
+                  onFocus={() => setFocused(true)}
+                  onBlur={() => setFocused(false)}
+                  returnKeyLabel="done"
+                  returnKeyType="done"
+                  onSubmitEditing={() => {
+                    Keyboard.dismiss();
+                  }}
+                  style={styles.textInputArea}
+                  numberOfLines={10}
+                  multiline={true}
+                />
+              </View>
+
+
+              <TouchableOpacity
+                onPress={() => {
+                  // this.setState({ mediamodal: true });
+                  setMedialModal(true);
+                }}
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  alignItems: 'center',
+                  alignSelf: "center",
+                  marginTop: vs(10)
+                }}>
+                <Image
+                  resizeMode="contain"
+                  source={Icons.Attachment}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    marginRight: (windowWidth * 3) / 100,
+                    borderColor: Colors.Theme,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.darkText,
+                    textAlign: config.textRotate
+                  }}>
+                  {imageName === ""
+                    ? Lang_chg.Upload[config.language]
+                    : imageName}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
         </View>
-      </View>
+      }
 
       <Cameragallery
         mediamodal={mediaModal}
@@ -904,36 +915,33 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.White,
     borderWidth: 1,
     marginBottom: 10,
-    paddingHorizontal:s(5),
-    paddingVertical:vs(5),
-    borderRadius:8,
+    paddingHorizontal: s(5),
+    paddingVertical: vs(5),
+    borderRadius: 8,
     marginTop: 10,
-    width:'96.5%'
+    width: '100%'
   },
   textInput: {
     borderColor: Colors.lightGrey,
     backgroundColor: Colors.White,
     borderWidth: 1,
+    borderColor: Colors.Border,
     marginBottom: 10,
-    paddingHorizontal:s(5),
-    paddingVertical:vs(5),
-    borderRadius:8,
+    paddingHorizontal: s(5),
+    paddingVertical: vs(3),
+    borderRadius: 8,
     marginTop: 10,
-    width:'96.5%'
+    width: '100%'
 
   },
   textInputArea: {
-    fontSize: Font.medium,
-    fontFamily: Font.ques_fontfamily,
+    fontSize: Font.small,
+    fontFamily: Font.Regular,
     color: Colors.detailTitles,
     height: 100,
     width: "100%",
     justifyContent: "flex-start",
-    textAlign: "center",
     textAlignVertical: "top",
-    color: "#000",
-    // paddingTop: 10,
-    paddingVertical: (windowWidth * 2) / 100,
     textAlign: config.textalign,
   },
   viewBarWrapper: {

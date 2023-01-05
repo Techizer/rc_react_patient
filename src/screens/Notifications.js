@@ -46,22 +46,18 @@ export default class Notifications extends Component {
     let apishow = "api-get-all-notification";
 
     let url = config.baseURL + apishow;
-    console.log("url", url);
 
     var data = new FormData();
     data.append("id", user_id);
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
 
         if (obj.status == true) {
           this.setState({ notificationdata: obj.result, message: obj.message });
           console.log("obj.result", obj.result);
         } else {
           this.setState({ notificationdata: obj.result, message: obj.message });
-          console.log("obj.result", obj.result);
           return false;
         }
       })
@@ -69,22 +65,20 @@ export default class Notifications extends Component {
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
+
   update_notification = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let apishow = "api-update-notification";
 
     let url = config.baseURL + apishow;
-    console.log("url", url);
 
     var data = new FormData();
     data.append("id", this.state.notificat_id);
     data.append("read", 1);
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
 
         this.get_notification(1);
         if (obj.status == true) {
@@ -95,7 +89,6 @@ export default class Notifications extends Component {
             appoinment_detetails: obj.result,
             message: obj.message,
           });
-          console.log("obj.result", obj.result);
           return false;
         }
       })
@@ -293,13 +286,14 @@ export default class Notifications extends Component {
                           paddingTop: (windowWidth * 4) / 100,
                           paddingRight: (windowWidth * 2) / 100,
                         }}>
+                        {/* <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} /> */}
                         <Image
                           source={Icons.Notification}
                           style={{
                             alignSelf: "center",
-                            width: 25,
-                            height: 25,
-                            tintColor: item.read == "0" ? Colors.Blue :Colors.DarkGrey
+                            width: s(16.21),
+                            height: vs(20.26),
+                            tintColor: item.read == "0" ? Colors.Blue : Colors.DarkGrey
                           }}
                           resizeMode={'contain'}
                         />

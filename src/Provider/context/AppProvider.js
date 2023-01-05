@@ -29,10 +29,9 @@ export class AppProvider extends Component {
   }
   componentDidMount() {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      console.log("check screnns", screens);
 
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
+      // console.log("Connection type", state.type);
+      // console.log("Is connected?", state.isConnected);
       this.setState({ isConnected: state.isConnected });
       if (state.isConnected == false) {
         this.checkconnection();
@@ -69,7 +68,6 @@ export class AppProvider extends Component {
   };
   render() {
     const { loading } = this.state;
-    console.log("check screnns", screens);
     const funcs = {
       showLoader: this.showProgress,
       hideLoader: this.hideProgress,

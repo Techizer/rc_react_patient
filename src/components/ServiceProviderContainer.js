@@ -31,6 +31,7 @@ const ServiceProviderContainer = ({
   navigation,
   isLoading,
   providerType,
+  docType,
   Index
 }) => {
   return (
@@ -38,7 +39,6 @@ const ServiceProviderContainer = ({
 
     isLoading ?
       <View style={{
-        height: vs(160),
         width: windowWidth,
         backgroundColor: Colors.White,
         alignItems: "center",
@@ -49,12 +49,10 @@ const ServiceProviderContainer = ({
         <View
           style={{
             width: "100%",
-            height: '79%',
             flexDirection: "row",
             alignSelf: "center",
             paddingHorizontal: s(11)
-          }}
-        >
+          }}>
           <View style={{ width: "40%" }}>
             <SkeletonPlaceholder>
               <SkeletonPlaceholder.Item width={s(95)} height={s(95)} borderRadius={s(90)} />
@@ -73,12 +71,7 @@ const ServiceProviderContainer = ({
             </View>
           </View>
 
-          <View
-            style={{
-              width: "60%",
-              height: '100%',
-            }}>
-
+          <View style={{ width: '60%' }}>
             <SkeletonPlaceholder>
               <SkeletonPlaceholder.Item width={s(90)} height={s(12)} borderRadius={s(4)} />
             </SkeletonPlaceholder>
@@ -102,13 +95,12 @@ const ServiceProviderContainer = ({
 
         </View>
 
-        <View style={{ width: '100%', height: '4%', }}>
+        <View style={{ width: '100%', paddingVertical: vs(7) }}>
           <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
         </View>
         <View
           style={{
             width: "100%",
-            height: '17%',
             alignItems: "center",
             flexDirection: "row",
             justifyContent: 'space-between',
@@ -116,11 +108,11 @@ const ServiceProviderContainer = ({
           }}>
 
           <SkeletonPlaceholder>
-            <SkeletonPlaceholder.Item width={s(80)} height={s(12)} borderRadius={s(4)} marginTop={vs(6)} />
+            <SkeletonPlaceholder.Item width={s(80)} height={s(12)} borderRadius={s(4)} />
           </SkeletonPlaceholder>
 
           <SkeletonPlaceholder>
-            <SkeletonPlaceholder.Item width={s(100)} height={s(24)} borderRadius={s(4)} marginTop={vs(6)} />
+            <SkeletonPlaceholder.Item width={s(100)} height={s(24)} borderRadius={s(4)} />
           </SkeletonPlaceholder>
         </View>
 
@@ -158,7 +150,7 @@ const ServiceProviderContainer = ({
                         providerId: Item.user_id,
                         isFromHospital: true,
                         hospitalId: Item?.hospital_id,
-                        indexPosition: 0
+                        indexPosition: (docType && docType == 'ONLINE_CONSULT') ? 0 : 1
                       }
                     )
                   } else {
@@ -169,7 +161,7 @@ const ServiceProviderContainer = ({
                         providerId: Item.user_id,
                         isFromHospital: false,
                         hospitalId: '',
-                        indexPosition: 0
+                        indexPosition: (docType && docType == 'ONLINE_CONSULT') ? 0 : 1
                       }
                     );
                   }
@@ -204,7 +196,6 @@ const ServiceProviderContainer = ({
                     paddingHorizontal: s(5),
                     backgroundColor: Colors.Green,
                     flexDirection: "row",
-                    // paddingHorizontal: (windowWidth * 1.5) / 100,
                     paddingVertical: (windowWidth * 0.5) / 100,
                     borderRadius: 4,
                     alignItems: "center",
@@ -275,7 +266,7 @@ const ServiceProviderContainer = ({
                 ((providerType === 'doctor' || providerType === 'lab') && Item.hospital_name != '') &&
                 <Text
                   style={{
-                    fontFamily: Font.Bold,
+                    fontFamily: Font.Medium,
                     color: Colors.Blue,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -290,7 +281,7 @@ const ServiceProviderContainer = ({
                 (Item.speciality) ?
                   <Text
                     style={{
-                      fontFamily: Font.Bold,
+                      fontFamily: Font.Medium,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -305,10 +296,10 @@ const ServiceProviderContainer = ({
 
               {
                 providerType != 'lab' &&
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ width: '100%', }}>
                   <Text
                     style={{
-                      fontFamily: Font.Medium,
+                      fontFamily: Font.Regular,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -318,11 +309,10 @@ const ServiceProviderContainer = ({
                     {Item.experience}
                   </Text>
 
-                  <Text style={{ fontSize: 3.5, marginTop: 2, color: Colors.DarkGrey }}>{'     \u2B24     '}</Text>
 
                   <Text
                     style={{
-                      fontFamily: Font.Medium,
+                      fontFamily: Font.Regular,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
                       textAlign: config.textRotate,
@@ -334,6 +324,7 @@ const ServiceProviderContainer = ({
                 </View>
               }
 
+
               <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -342,7 +333,7 @@ const ServiceProviderContainer = ({
                 <SvgXml xml={Location} height={vs(12)} width={s(12)} />
                 <Text
                   style={{
-                    fontFamily: Font.Medium,
+                    fontFamily: Font.Regular,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -354,7 +345,7 @@ const ServiceProviderContainer = ({
 
                 <Text
                   style={{
-                    fontFamily: Font.Medium,
+                    fontFamily: Font.Regular,
                     color: Colors.Blue,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -375,7 +366,7 @@ const ServiceProviderContainer = ({
                 <Text
                   style={{
                     width: '35%',
-                    fontFamily: Font.Medium,
+                    fontFamily: Font.Regular,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
                     textAlign: config.textRotate,
@@ -391,7 +382,7 @@ const ServiceProviderContainer = ({
                       return (
                         <Text
                           style={{
-                            fontFamily: Font.Medium,
+                            fontFamily: Font.Regular,
                             color: Colors.Blue,
                             fontSize: Font.small,
                             textAlign: config.textRotate,
@@ -446,7 +437,7 @@ const ServiceProviderContainer = ({
                       providerId: Item.user_id,
                       isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
                       hospitalId: (Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined) ? Item?.hospital_id : '',
-                      indexPosition: 0
+                      indexPosition: (docType && docType == 'ONLINE_CONSULT') ? 0 : 1
                     })
                   } else {
                     //HealthRecord
@@ -456,7 +447,7 @@ const ServiceProviderContainer = ({
                       isPage: "providerList",
                       isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
                       hospitalId: (Item?.hospital_id != '' || Item?.hospital_id != null || Item?.hospital_id != undefined) ? Item?.hospital_id : '',
-                      indexPosition: 0
+                      indexPosition: (docType && docType == 'ONLINE_CONSULT') ? 0 : 1
                     })
                   }
 

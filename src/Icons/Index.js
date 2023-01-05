@@ -358,6 +358,32 @@ export const redNoti=`<svg xmlns="http://www.w3.org/2000/svg" width="17.672" hei
 </g>
 </svg>`
 
+export const Login=`<svg xmlns="http://www.w3.org/2000/svg" width="19.218" height="23" viewBox="0 0 19.218 23">
+<g id="Signin" transform="translate(0.5 0.5)">
+  <rect id="Rectangle_1916" data-name="Rectangle 1916" width="9" height="18" transform="translate(7 1)" fill="#c9e7f9"/>
+  <path id="Path_151" data-name="Path 151" d="M16.943,2.276V19.724H6.069V22H19.218V0H6.069V2.276Z" transform="translate(-1)" fill="#515c6f" stroke="#fff" stroke-width="1"/>
+  <path id="Path_11894" data-name="Path 11894" d="M7.081,18.207l-1.77-1.77,4.046-4.046H0V9.862H9.609L5.31,5.816l1.77-1.77,6.828,6.828Z" transform="translate(0 0)" fill="#515c6f" stroke="#fff" stroke-width="1"/>
+</g>
+</svg>`
+
+export const Info=`<svg id="info" xmlns="http://www.w3.org/2000/svg" width="21.288" height="21.288" viewBox="0 0 21.288 21.288">
+<g id="Group_3921" data-name="Group 3921" transform="translate(0 0)">
+  <g id="Group_3920" data-name="Group 3920">
+    <path id="Path_11895" data-name="Path 11895" d="M10.644,0A10.644,10.644,0,1,0,21.288,10.644,10.638,10.638,0,0,0,10.644,0Zm0,19.8A9.159,9.159,0,1,1,19.8,10.644,9.169,9.169,0,0,1,10.644,19.8Z" transform="translate(0 0)" fill="#0168b3"/>
+  </g>
+</g>
+<g id="Group_3923" data-name="Group 3923" transform="translate(9.565 8.873)">
+  <g id="Group_3922" data-name="Group 3922">
+    <path id="Path_11896" data-name="Path 11896" d="M231.138,213.4c-.63,0-1.079.266-1.079.659v5.338c0,.336.448.672,1.079.672.6,0,1.093-.336,1.093-.672v-5.338C232.231,213.663,231.74,213.4,231.138,213.4Z" transform="translate(-230.059 -213.397)" fill="#0168b3"/>
+  </g>
+</g>
+<g id="Group_3925" data-name="Group 3925" transform="translate(9.495 5.58)">
+  <g id="Group_3924" data-name="Group 3924">
+    <path id="Path_11897" data-name="Path 11897" d="M229.524,134.208a1.01,1.01,0,1,0,1.135.995A1.085,1.085,0,0,0,229.524,134.208Z" transform="translate(-228.375 -134.208)" fill="#0168b3"/>
+  </g>
+</g>
+</svg>`
+
 
 export const Icons = {
   splashLogo: require("./SplashLogo.png"),
@@ -385,6 +411,8 @@ export const Icons = {
   search2: require("./searchTwo.png"),
   downarrow: require("./arrowDown.png"),
   upArrow: require("./arrowUp.png"),
+  Up: require("./up.png"),
+  Down: require("./down.png"),
 
   location: require("./location.png"),
   purse: require("./purse.png"),
@@ -404,7 +432,7 @@ export const Icons = {
   outlineStar: require('./outlineStar.png'),
   Attachment: require('./attachment.png'),
   currentLoc:require('./locationCurrent.png'),
-  greenTick:'require("./greentick.png")',
+  Success:require("./success.png"),
   call:'require("./phoneCall.png")',
   
 };

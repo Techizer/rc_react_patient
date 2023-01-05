@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: windowHeight-200,
+        height: windowHeight/1.5,
         backgroundColor: Colors.White,
         borderRadius: 25,
         paddingTop: vs(55),

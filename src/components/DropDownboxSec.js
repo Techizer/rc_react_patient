@@ -52,7 +52,7 @@ const DropDownboxSec = ({
             width: '95%', alignSelf: 'center', justifyContent: 'center',
             justifyContent: 'center',
             textAlignVertical: 'center',
-            height: 48, //(windowWidth * 12) / 100,
+            height: 42, //(windowWidth * 12) / 100,
           }}>
             {
               (isDisabled) ? null :

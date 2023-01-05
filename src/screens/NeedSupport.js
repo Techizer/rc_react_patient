@@ -8,6 +8,7 @@ import {
   FlatList,
   ScrollView,
   TextInput,
+  Pressable,
 } from "react-native";
 import React, { Component } from "react";
 import {
@@ -222,7 +223,10 @@ export default class NeedSupport extends Component {
               mainContainer={{ marginTop: vs(10) }}
             />
 
-            <View
+            <Pressable
+            onPress={()=>{
+              this.Input.focus()
+            }}
               style={{
                 width: "100%",
                 alignSelf: "center",
@@ -236,6 +240,9 @@ export default class NeedSupport extends Component {
               }}>
 
               <TextInput
+                ref={(ref) => {
+                  this.Input = ref;
+                }}
                 style={{
                   width: "100%",
                   color: Colors.Black,
@@ -262,7 +269,8 @@ export default class NeedSupport extends Component {
                 keyboardType="default"
                 returnKeyLabel="done"
               />
-            </View>
+
+            </Pressable>
 
             <Button
               text={Lang_chg.submitbtntext[config.language]}

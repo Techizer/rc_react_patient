@@ -28,10 +28,10 @@ headerHeight += (Platform.OS === 'ios') ? 28 : -50
 
 let notiCount = 0
 
+// console.log('Status Bar Height', StatusbarHeight + '   ' + Platform.OS);
 // console.log(headerHeight + '   ' + Platform.OS);
 // console.log(deviceHeight + '   ' + Platform.OS);
 // console.log(windowHeight + '   ' + Platform.OS);
-// console.log('Status Bar Height', StatusbarHeight + '   ' + Platform.OS);
 
 export const ScreenHeader = ({
     onBackPress,
@@ -45,21 +45,22 @@ export const ScreenHeader = ({
     const checkCount = async () => {
         notiCount = await localStorage.getItemString('notiCount')
         notiCount = JSON.parse(notiCount)
-        // console.log({notiCount});
     }
 
     useEffect(() => {
         checkCount()
     }, [title])
     return (
-        title != 'Home' ?
+        title != Lang_chg.Home[config.language] ?
             (
                 <View
                     style={{
                         width: windowWidth,
-                        height: headerHeight + StatusbarHeight,
+                        // height: headerHeight + StatusbarHeight,
+                        // paddingTop: StatusbarHeight + 10,
+                        height: (windowWidth * 23) / 100,
+                        paddingTop: (windowWidth * 10) / 100,
                         backgroundColor: Colors.White,
-                        paddingTop: StatusbarHeight + 10,
                         borderBottomWidth: 0.9,
                         borderBottomColor: Colors.Border
                     }}
@@ -71,8 +72,7 @@ export const ScreenHeader = ({
                             height: '100%',
                             alignSelf: "center",
                             alignItems: "center",
-                        }}
-                    >
+                        }}>
                         {
                             leftIcon ?
                                 <TouchableHighlight
@@ -85,8 +85,7 @@ export const ScreenHeader = ({
                                         alignSelf: "center",
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                    }}
-                                >
+                                    }} >
                                     <SvgXml xml={
                                         config.textalign == "right"
                                             ? rightArrow : leftArrow
@@ -136,9 +135,11 @@ export const ScreenHeader = ({
             :
             (<View style={{
                 width: windowWidth,
-                height: headerHeight + StatusbarHeight,
+                // height: headerHeight + StatusbarHeight,
+                // paddingTop: StatusbarHeight + 10,
+                height: (windowWidth * 23) / 100,
+                paddingTop: (windowWidth * 10) / 100,
                 backgroundColor: Colors.White,
-                paddingTop: StatusbarHeight + 10,
                 borderBottomWidth: 0.9,
                 borderBottomColor: Colors.Border
             }}>
@@ -149,8 +150,7 @@ export const ScreenHeader = ({
                         height: '100%',
                         alignSelf: "center",
                         // alignItems: "center",
-                    }}
-                >
+                    }}>
                     <View
                         style={{
                             width: "13%",

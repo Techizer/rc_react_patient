@@ -1,10 +1,10 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { Colors, Font, config, windowWidth, localStorage, consolepro, Lang_chg, apifuntion,ScreenHeader,Button } from '../Provider/utilslib/Utils';
+import { Colors, Font, config, windowWidth, localStorage, consolepro, Lang_chg, apifuntion, ScreenHeader, Button } from '../Provider/utilslib/Utils';
 import { s, vs } from 'react-native-size-matters';
 import AddEditMembers from '../components/Add_Edit_Members'
-import { Add} from '../Icons/Index';
+import { Add } from '../Icons/Index';
 import Member from '../components/Member';
 
 const HealthRecord = (props) => {
@@ -20,7 +20,7 @@ const HealthRecord = (props) => {
   const propsData = props.route.params
 
   useEffect(() => {
-    // console.log("props:: ", propsData)
+    console.log("props:: ", propsData.indexPosition)
     getMember()
   }, []);
 
@@ -148,7 +148,7 @@ const HealthRecord = (props) => {
       </View>
 
       {
-        (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') &&
+        ((propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') && !isLoading) &&
         <View
           style={{
             width: "100%",

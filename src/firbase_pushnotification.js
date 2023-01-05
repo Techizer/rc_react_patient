@@ -1,4 +1,5 @@
 import messaging from "@react-native-firebase/messaging";
+import { localStorage } from "./Provider/localStorageProvider";
 class firbase_pushnotification {
   
   requestUserPermission = async () => {
@@ -8,16 +9,15 @@ class firbase_pushnotification {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log("Authorization status:", authStatus);
+      // console.log("Authorization status:", authStatus);
       this.getFcmToken();
     }
   };
   getFcmToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
-      console.log("fcmToken", fcmToken);
-      fcmtoken = fcmToken;
-      global.fcmtoken = fcmtoken
+      localStorage.setItemString('DeviceToken',fcmToken )
+      global.fcmtoken = fcmToken
     } else {
       this.showAlert("Failed", "No token received");
     }

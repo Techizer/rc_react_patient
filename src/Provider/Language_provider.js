@@ -18,7 +18,7 @@ class Language_provider {
   language_set = async (languagem) => {
     // var item = await AsyncStorage.getItem('language');
     //  localStorage.setItemObject('language', 1)
-    console.log("I18nManager.isRTL muskan", I18nManager.isRTL);
+    console.log("I18nManager.isRTL", I18nManager.isRTL);
     if (languagem == 0) {
       I18nManager.forceRTL(false);
       I18nManager.allowRTL(false);
@@ -277,7 +277,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 1.0.0", "الإصدار 1.0.0"];
+  version = ["Version 3.6.1", "الإصدار 3.6.1"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "];
@@ -408,14 +408,14 @@ class Language_provider {
   SearchTests = ["Search tests", " بحث عن فحوصات"];
   SearchPackages = ["Search packages", "بحث عن باقات "];
   TalkToDoctor = [
-    "Tell to doctor regarding your symptom?",
-    "أخبر طبيبك بخصوص الأعراض الخاصة بك؟",
+    "Tell Doctor Symptom & Health Issue",
+    "أخبر الطبيب بالأعراض والمشكلة الصحية",
   ];
   TalkToUs = [
     "Tell us more about your symptom?",
     "أخبرنا المزيد عن الأعراض الخاصة بك؟",
   ];
-  Optional = ["(Optional)", "(اختياري)"];
+  Optional = ["(Optional: It can help doctor during consultation)", "(اختياري: يمكن أن يساعد الطبيب أثناء الاستشارة)"];
   Appointmentschedule = ["Appointment Schedule", "جدول الموعد "];
   SAVEPATIENT = ["SAVE PATIENT", "حفظ المريض   "];
   PatientFirstName = ["Patient First Name", "الاسم الأول للمريض   "];
@@ -427,7 +427,7 @@ class Language_provider {
   subTotal = ["Sub Total", "المجموع الفرعي"];
   Payment = ["Payment", " الدفع  "];
   Select_start_time = ["Select start time", "حدد وقت البدء "];
-  no_data_Found = ["No data found", "لاتوجد بيانات   "];
+  noTime = ["No time slots available", "لا توجد فترة زمنية متاحة"];
   Packages_Unavailable = ["Packages not available", "الباقة غير مُتاحة"];
   SelectDate = [" Select Date:", "حدد التاريخ  "];
   delete_msg = [
@@ -439,7 +439,7 @@ class Language_provider {
   PROCEEDTOPAYMENT = [" PROCEED TO PAYMENT", " الانتقال إلى الدفع  "];
   confimation = ["Confirmation", "تأكيد  "];
   remove_msg = [
-    "Are you sure to delete this item ?",
+    "Are you sure you want to delete this item from cart ?",
     "هل أنت متأكد من حذف هذا العنصر؟ ",
   ];
   PROCEEDTOcheckout = ["PROCEED TO CHECKOUT", " انتقل إلى الدفع  "];
@@ -506,7 +506,7 @@ class Language_provider {
   Lab = ["Lab", "مختبر"];
   AppointmentDetails = ["Appointment Details", "تفاصيل الموعد   "];
   BookingID = ["Booking ID", "رقم الحجز "];
-  AppointmentDate = ["Appointment Date", " تاريخ الموعد   "];
+  AppointmentDate = ["Date", "تاريخ"];
   appointment_schedule = ["Appointment Schedule ", "جدول الموعد "];
   AppointmentTime = ["Appointment Time", "وقت الموعد "];
   BookingOn = ["Booked On ", "تم الحجز في  "];
@@ -522,7 +522,7 @@ class Language_provider {
   DOWNLOAD = ["Download", "تحميل"];
   VIDEO_CALL = ["VIDEO CALL", "مكالمة فيديو"];
   VIEWDETAILS = ["VIEW DETAILS", " عرض التفاصيل  "];
-  Refunde = ["REFUNDED", "المبلغ مسترد"];
+  Refunded = ["Refunded", "المبلغ مسترد"];
   patient_details = ["Patient Details", "تفاصيل المريض   "];
   appointment_accepted_otp_text = [
     "Provide OTP at the End of Service",
@@ -627,6 +627,40 @@ class Language_provider {
   LoginIssue = ["Login Issue", "مشكلة تسجيل الدخول"];
   Login_Issue = ['Post Your Login issue', 'انشر مشكلة تسجيل الدخول الخاصة بك'];
   OrderId = ["Order ID", "رقم التعريف الخاص بالطلب"];
+  Booking_Note=['Booking Notes','ملاحظات الحجز'];
+  Booking_Desc=['Solutions and drugs to be injected are not included','لا تشمل المحاليل والأدوية المراد حقنها']
+  noAppoitmentTitle = ['Sorry, no appointments found', 'نعتذر ، لم يتم العثور على مواعيد'];
+noAppoitmentDesc = ['You can start a new appointment with our qualified home healthcare service providers', 'يمكنك بدء موعد جديد مع مقدمي خدمات الرعاية الصحية المنزلية المؤهلين لدينا'];
+guestAppoitmentTitle = ['Oops! No Appointment Found', 'عفوًا! لم يتم العثور على موعد'];
+guestAppoitmentDesc = ['No Appointment record found, user type is Guest', ''];
+
+noConsultTitle = ['Sorry, no consultations found', 'عذرا ، لم يتم العثور على استشارات'];
+noConsultDesc = ['You can start a new consultation with our qualified doctors!', 'يمكنك بدء استشارة جديدة مع أطبائنا المؤهلين'];
+guestConsultTitle = ['Oops! No Consultations Found', 'عفوًا! لم يتم العثور على استشارات'];
+guestConsultDesc = ['No Consultations record found, user type is Guest', 'لم يتم العثور على أي سجل للاستشارات،ونوع المستخدم ضيف'];
+
+noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
+noLabsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
+guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
+guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
+
+noNursesTitle = ['Sorry, no Nurse found.', 'عذرا ، لم يتم العثور على ممرضة'];
+noNursesDesc = ['We have not found any Nurses at your location, as soon as we are available we will notify you.', 'لم نعثر على أي ممرضات في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+
+noDocsTitle = ['Sorry, no Doctors found.', 'عذرا ، لم يتم العثور على أطباء'];
+noDocsDesc = ['We have not found any Doctors at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أطباء في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
+
+noPhysiotherapistsTitle = ['Sorry, no Physiotherapists found.', 'عذرا ، لم يتم العثور على أخصائيين علاج طبيعي'];
+noPhysiotherapistsDesc = ['We have not found any Physiotherapists at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أخصائي علاج طبيعي في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
+
+noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين ممرضات'];
+noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين للممرضات في موقعك ، بمجرد تواجدنا سنبلغك '];
+
+noBabySitterTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
+noBabySitterDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+
+noLabsTitle = ['Sorry, no Labs found.', 'عذرا ، لم يتم العثور على مختبرات'];
+noLabsDesc = ['We have not found any Labs at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مختبرات في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
 
 
 

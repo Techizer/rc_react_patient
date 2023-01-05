@@ -397,7 +397,7 @@ const AppointmentSchedule = (props) => {
                     marginLeft: (windowWidth * 32) / 100,
                   }}
                 >
-                  {Lang_chg.no_data_Found[config.language]}
+                  {Lang_chg.noTime[config.language]}
                 </Text>
               )}
             </View>

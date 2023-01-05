@@ -56,7 +56,7 @@ const VideoCall = (props, { navigation }) => {
     console.log(props);
     // returned function will be called on component unmount
     return () => {
-      console.log("countTimeInterval", countTimeInterval, "timerId", timerId);
+      // console.log("countTimeInterval", countTimeInterval, "timerId", timerId);
       clearInterval(countTimeInterval);
       clearInterval(timerId);
     };
@@ -77,7 +77,7 @@ const VideoCall = (props, { navigation }) => {
           setSecs(0);
         } else {
           setSecs(s => s + 1)
-          console.log('secs:: ', secs);
+          // console.log('secs:: ', secs);
         }
 
       }, 1000);
@@ -97,13 +97,13 @@ const VideoCall = (props, { navigation }) => {
     setMins(0);
     setSecs(0);
     clearInterval(timerId);
-    props.navigation.goBack();
+    // props.navigation.pop();
   };
 
   const countTimeCall = () => {
     countTimeInterval = setInterval(() => {
       ctc = parseInt(ctc) + parseInt(1);
-      console.log("ctc:: ", ctc);
+      // console.log("ctc:: ", ctc);
       if (ctc > 30) {
         _onEndButtonPress();
         clearInterval(countTimeInterval);
@@ -115,7 +115,7 @@ const VideoCall = (props, { navigation }) => {
   const timerClear = () => {
     // consolepro.consolelog("countTimeInterval ", countTimeInterval);
     // clearInterval(countTimeInterval);
-    props.navigation.goBack();
+    // props.navigation.pop();
     // get_call_token('patient_to_doctor_video_call_reject')
   };
 
@@ -123,14 +123,12 @@ const VideoCall = (props, { navigation }) => {
     let user_details = await localStorage.getItemObject("user_arr");
     let user_id = user_details["user_id"];
     let user_type = user_details["user_type"];
-    console.log("this.props.pageName:: ", this.props.pageName);
 
     let apiname = "api-get-video-access-token-with-push-notification";
 
     let apishow = apiname; //"api-provider-past-appointment-list" //"api-patient-all-appointment"
 
     let url = config.baseURL + apishow;
-    console.log("url", url);
 
     var data = new FormData();
     // data.append('lgoin_user_id', user_id)
@@ -145,25 +143,11 @@ const VideoCall = (props, { navigation }) => {
     data.append("toUserName", props.route.params.item.provider_name);
     data.append("type", callType);
 
-    consolepro.consolelog("data", data);
-
-    // var myData = JSON.stringify({
-    //   "fromUserId": "406",
-    //   "fromUserName": "Mohammad Nabi",
-    //   "order_id": "ORD22-4486588",
-    //   "room_name": "rootvideo_room_443_406",
-    //   "toUserId": "443", "toUserName": "Binay raut",
-    //   "type": "doctor_to_patient_video_call"
-    // });
-
-    // consolepro.consolelog('myDatamyData', myData)
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        // apifuntion.postRawApi(url, myData).then((obj) => {
         consolepro.consolelog("obj", obj);
-        // this.setState({ appoinment_detetails: '' })
         if (obj.status == true) {
           console.log("obj.result", obj.result);
           setToken(obj.result.token);
@@ -189,7 +173,6 @@ const VideoCall = (props, { navigation }) => {
     let apishow = apiname; //"api-provider-past-appointment-list" //"api-patient-all-appointment"
 
     let url = config.baseURL + apishow;
-    console.log("url", url);
 
     var data = new FormData();
     data.append("identity", user_id);
@@ -200,8 +183,6 @@ const VideoCall = (props, { navigation }) => {
     data.append("toUserId", props.route.params.item.toUserId);
     data.append("toUserName", props.route.params.item.toUserName);
     data.append("type", props.route.params.item.type);
-
-    consolepro.consolelog("data", data);
 
     // var myData = JSON.stringify({
     //   "fromUserId": "406",
@@ -250,6 +231,14 @@ const VideoCall = (props, { navigation }) => {
 
   const _onEndButtonPress = () => {
     twilioVideo.current.disconnect();
+    setStatus("disconnected");
+    setVideoTracks(null);
+    setTimeout(() => {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+    }, 1500);
   };
 
   const _onMuteButtonPress = () => {
@@ -270,12 +259,26 @@ const VideoCall = (props, { navigation }) => {
     console.log("ERROR _onRoomDidDisconnect: ", error);
     timerClear();
     setStatus("disconnected");
+    setVideoTracks(null);
+    setTimeout(() => {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+    }, 2000);
   };
 
   const _onRoomDidFailToConnect = (error) => {
-    console.log("ERROR: ", error);
+    console.log("ERROR: _onRoomDidFailToConnect ", error);
     // timerClear()
     setStatus("disconnected");
+    setVideoTracks(null);
+    setTimeout(() => {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+    }, 2000);
   };
 
   const _onParticipantAddedVideoTrack = ({ participant, track }) => {
@@ -297,23 +300,31 @@ const VideoCall = (props, { navigation }) => {
 
   const _onParticipantRemovedVideoTrack = ({ participant, track }) => {
     console.log("onParticipantRemovedVideoTrack: ", participant, track);
+    setStatus("disconnected");
+    setVideoTracks(null);
+    callTimeCallClear();
+
+    setTimeout(() => {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+    }, 2000);
 
     const newVideoTracks = new Map(videoTracks);
     newVideoTracks.delete(track.trackSid);
-
-    setVideoTracks(newVideoTracks);
-    callTimeCallClear();
+    // setVideoTracks(newVideoTracks);
   };
 
   const _onNetworkLevelChanged = ({ participant, isLocalUser, quality }) => {
-    console.log(
-      "Participant",
-      participant,
-      "isLocalUser",
-      isLocalUser,
-      "quality",
-      quality
-    );
+    // console.log(
+    //   "Participant",
+    //   participant,
+    //   "isLocalUser",
+    //   isLocalUser,
+    //   "quality",
+    //   quality
+    // );
     if (isLocalUser == false && localTrackVideo == false) {
       setLocalTrackVideo(true);
     }
@@ -324,8 +335,7 @@ const VideoCall = (props, { navigation }) => {
       "onDominantSpeakerDidChange",
       `roomName: ${roomName}`,
       `roomSid: ${roomSid}`,
-      "participant:",
-      participant
+      "participant:", participant
     );
   };
 
@@ -353,38 +363,28 @@ const VideoCall = (props, { navigation }) => {
 
   return (
     <View style={style1.container}>
-      {/* {status === "disconnected" && (
-        <View>
-          <Text style={style1.welcome}>React Native Twilio Video</Text>
-          <TextInput
-            style={style1.input}
-            autoCapitalize="none"
-            value={token}
-            onChangeText={(text) => setToken(text)}
-           />
-          <Button
-            title="Connect"
-            style={style1.button}
-            onPress={_onConnectButtonPress}
-          />
-        </View>
-      )} */}
 
-      {(status === "connected" || status === "connecting") && (
+
+      {(status == "connected" || status == "connecting") && (
         <View style={style1.callContainer}>
           {status === "connected" && (
             <View style={style1.remoteGrid}>
-              {Array.from(videoTracks, ([trackSid, trackIdentifier]) => {
-                return (
-                  <TwilioVideoParticipantView
-                    style={style1.remoteVideo}
-                    key={trackSid}
-                    trackIdentifier={trackIdentifier}
-                  />
-                );
-              })}
+              {
+                Array.from(videoTracks, ([trackSid, trackIdentifier]) => {
+                  return (
+                    <TwilioVideoParticipantView
+                      style={style1.remoteVideo}
+                      key={trackSid}
+                      trackIdentifier={trackIdentifier}
+                    />
+                  );
+                })
+              }
+
             </View>
           )}
+
+          {/* ---------------Controls---------------- */}
           <View style={style1.optionsContainer}>
             <View
               style={{
@@ -417,8 +417,7 @@ const VideoCall = (props, { navigation }) => {
                   style={{
                     color: "#E2E7EE",
                     marginLeft: 5,
-                  }}
-                >
+                  }}>
                   {mins < 10 && 0}
                   {mins}:{secs < 10 && 0}
                   {secs}
@@ -480,6 +479,9 @@ const VideoCall = (props, { navigation }) => {
 
             {/* <TwilioVideoLocalView enabled={true} style={style1.localVideo} /> */}
           </View>
+
+          {/* ---------------My---------------- */}
+
           <View style={style1.localVideo}>
             {localTrackVideo && (
               <TwilioVideoLocalView
@@ -495,16 +497,17 @@ const VideoCall = (props, { navigation }) => {
         </View>
       )}
 
-      <TwilioVideo
-        ref={twilioVideo}
-        onRoomDidConnect={_onRoomDidConnect}
-        onRoomDidDisconnect={_onRoomDidDisconnect}
-        onRoomDidFailToConnect={_onRoomDidFailToConnect}
-        onParticipantAddedVideoTrack={_onParticipantAddedVideoTrack}
-        onParticipantRemovedVideoTrack={_onParticipantRemovedVideoTrack}
-        onNetworkQualityLevelsChanged={_onNetworkLevelChanged}
-        onDominantSpeakerDidChange={_onDominantSpeakerDidChange}
-      />
+        <TwilioVideo
+          ref={twilioVideo}
+          onRoomDidConnect={_onRoomDidConnect}
+          onRoomDidDisconnect={_onRoomDidDisconnect}
+          onRoomDidFailToConnect={_onRoomDidFailToConnect}
+          onParticipantAddedVideoTrack={_onParticipantAddedVideoTrack}
+          onParticipantRemovedVideoTrack={_onParticipantRemovedVideoTrack}
+          onNetworkQualityLevelsChanged={_onNetworkLevelChanged}
+          onDominantSpeakerDidChange={_onDominantSpeakerDidChange}
+        />
+
     </View>
   );
 };

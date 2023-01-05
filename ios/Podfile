@@ -9,6 +9,10 @@ target 'rootscare' do
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
   config = use_native_modules!
 
   use_react_native!(
@@ -38,6 +42,22 @@ target 'rootscare' do
   use_flipper!()
 
   post_install do |installer|
+    find_and_replace("./node_modules/react-native/React/Base/RCTKeyCommands.m",
+                                "_modifierFlags",
+                                "_modifierEventFlags")
+        find_and_replace("./node_modules/react-native/React/Base/RCTKeyCommands.m",
+                                "_modifiedInput",
+                                "_modifiedEventInput")
+        find_and_replace("./node_modules/react-native/React/Base/RCTKeyCommands.m",
+                                "_isKeyDown",
+                                "_isKeyEventDown")
+        find_and_replace("./node_modules/react-native/React/DevSupport/RCTPackagerClient.h",
+                                "handleNotification",
+                                "handlePackageNotification")
+
+        find_and_replace("./node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm",
+                                "handleNotification",
+                                "handlePackageNotification")
     react_native_post_install(installer)
     fix_library_search_paths(installer)
     installer.pods_project.build_configurations.each do |config|
@@ -46,6 +66,19 @@ target 'rootscare' do
   end
 end
 
+
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+      text = File.read(name)
+      replace = text.gsub(findstr,replacestr)
+      if text != replace
+          puts "Fix: " + name
+          File.open(name, "w") { |file| file.puts replace }
+          STDOUT.flush
+      end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
+end
 
 def fix_library_search_paths(installer)
   def fix_config(config)
@@ -63,6 +96,9 @@ def fix_library_search_paths(installer)
       end
     end
   end
+
+
+  
 
   projects = installer.aggregate_targets
     .map{ |t| t.user_project }

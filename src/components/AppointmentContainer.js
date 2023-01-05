@@ -39,6 +39,7 @@ var videoCallButton = false;
 
 const AppointmentContainer = ({
     Item,
+    Index,
     navigation,
     isLoading
 }) => {
@@ -82,9 +83,11 @@ const AppointmentContainer = ({
         }
     }
 
+    useEffect(() => {
+        // console.log('**********************', rescheduleData.final_one);
+    }, [rescheduleData.final_one, rescheduleData.final_arr_two])
 
     useEffect(() => {
-        checkVideoCallStatus()
         splitOtp()
         getUserCountry()
         setRescheduleData(prevState => ({
@@ -92,8 +95,10 @@ const AppointmentContainer = ({
             set_task: Item?.booking_type,
             service_status: Item?.provider_type,
         }))
-        // console.log('************************', Item?.provider_type);
+        // console.log('************************', Item);
     }, [Item])
+
+
 
     const splitOtp = () => {
         let tempArr = []
@@ -109,95 +114,152 @@ const AppointmentContainer = ({
         }
     }
     const checkVideoCallStatus = () => {
-        if (Item.provider_type == "doctor") {
-            videoCallButton = false;
-            var currentDate = moment().unix();
-            var appointmentDate = moment(Item.app_date).format("YYYY-MM-DD");
-            var appointmentTime = Item.app_time;
-            var isSameDay = moment().isSame(appointmentDate, "day");
-            var myDate = moment(appointmentDate + " " + appointmentTime, "YYYY-MM-DD hh:mm A").unix();
-            if (isSameDay) {
-                if (currentDate < myDate) {
-                    let diff = (myDate - currentDate) / 60; //mins
-                    if (diff <= 10) {
-                        videoCallButton = true;
-                    }
-                } else {
-                    videoCallButton = true;
-                }
-            } else {
-                videoCallButton = false;
-            }
+        if (!isLoading) {
+            console.log('/////////////', Item.videoCall);
         }
     }
 
-
-
     const reschedule = async (Id, type) => {
-
-
+        let user_details = await localStorage.getItemObject("user_arr");
+        let user_id = user_details["user_id"];
         let url = config.baseURL + (type == 'doctor' ? "api-patient-doctor-reschedule-appointment" : type == 'lab' ? "api-patient-lab-reschedule-appointment" : "api-patient-reschedule-appointment");
 
         var data = new FormData();
+        data.append("login_user_id", user_id);
         data.append("order_id", Id);
         data.append("service_type", type);
         if (type === 'lab') {
             data.append("task_type", rescheduleData?.set_task);
         }
 
-        consolepro.consolelog("reschedule-bodydata", data);
+        // consolepro.consolelog("reschedule-bodydata", data);
         return false /
             apifuntion
                 .postApi(url, data)
                 .then((obj) => {
-                    var names = obj.result.task_time;
-                    var nameArr = names.split(",");
-                    const new_time_slot = [];
-                    const Arr1 = [];
-                    const Arr2 = [];
+                    // consolepro.consolelog("reschedule-response...", obj);
                     if (obj.status == true) {
-                        consolepro.consolelog("reschedule-response...", obj);
+                        var currentDate = new Date();
+                        let min = currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes();
+                        let hour = currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours();
+                        var timcurrent = hour + ":" + min;
+                        console.log('((((((((((((())))))))))))',timcurrent);
+                        setRescheduleData(prevState => ({
+                            ...prevState,
+                            timcurrent_for_check: timcurrent
+                        }))
+
                         if (obj.result.task_time != "") {
-                            console.log('if reschdule.....');
-                            for (let l = 0; l < nameArr.length; l++) {
-                                new_time_slot.push({ time: nameArr[l], time_status: false });
-                                if ((l + 2) % 2 == 0) {
-                                    Arr1.push({ time: nameArr[l], time_status: false });
-                                } else {
-                                    Arr2.push({ time: nameArr[l], time_status: false });
+
+                            var names = obj.result.task_time;
+                            var nameArr = names.split(",");
+                            const new_time_slot = [];
+                            const Arr1 = [];
+                            const Arr2 = [];
+                            var ar1 = false;
+                            var ar2 = true
+
+                            if (obj.result.task_time != "") {
+                                for (let l = 0; l < nameArr.length; l++) {
+                                    if (rescheduleData.check_currentdate == rescheduleData.set_date) {
+                                        console.log(`rescheduleData.check_currentdate == rescheduleData.set_date, ${l}`);
+                                        const timeStr = nameArr[l];
+                                        const convertTime = (timeStr) => {
+                                            const [time, modifier] = timeStr.split(" ");
+                                            let [hours, minutes] = time.split(":");
+                                            if (hours === "12") {
+                                                hours = "00";
+                                            }
+                                            if (modifier === "PM") {
+                                                hours = parseInt(hours, 10) + 12;
+                                            }
+                                            return `${hours}:${minutes}`;
+                                        };
+
+                                        var finaltime = convertTime(timeStr);
+                                        if (finaltime >= timcurrent) {
+                                            console.log('finaltime >= rescheduleData.timcurrent_for_check', finaltime);
+                                            console.log(timcurrent);
+                                            new_time_slot.push({
+                                                time: nameArr[l],
+                                                time_status: false,
+                                            });
+                                            if (!ar1) {
+                                                console.log('==============if');
+                                                ar1 = true;
+                                                ar2 = false;
+                                                Arr1.push({ time: nameArr[l], time_status: false });
+                                            } else {
+                                                console.log('==============else');
+                                                ar1 = false;
+                                                ar2 = true;
+                                                Arr2.push({ time: nameArr[l], time_status: false });
+                                            }
+                                            console.log('???????????????????', Arr1);
+
+                                        }
+                                    } else {
+                                        if (!ar1) {
+                                            ar1 = true;
+                                            ar2 = false;
+                                            Arr1.push({ time: nameArr[l], time_status: false });
+                                        } else {
+                                            ar1 = false;
+                                            ar2 = true;
+                                            Arr2.push({ time: nameArr[l], time_status: false });
+                                        }
+                                        new_time_slot.push({ time: nameArr[l], time_status: false });
+                                        console.log('???????????????????', Arr1);
+
+                                    }
                                 }
+
                             }
+
+
                             setRescheduleData(prevState => ({
                                 ...prevState,
                                 time_Arr: new_time_slot,
                                 final_one: Arr1,
                                 final_arr_two: Arr2,
-                                isRescheduleModal: true,
-                                set_date: obj.result.app_date,
-                                rescdule_data: obj.result,
-                                check_booking: obj.result.slot_booking_id
                             }))
+
+                            /////////////////Main If/////////////////////
 
                         } else {
                             setRescheduleData(prevState => ({
                                 ...prevState,
-                                time_Arr: new_time_slot,
-                                final_one: Arr1,
-                                final_arr_two: Arr2,
-                                isRescheduleModal: true,
-                                set_date: obj.result.app_date,
-                                rescdule_data: obj.result,
-                                check_booking: obj.result.slot_booking_id
+                                time_Arr: [],
+                                final_one: [],
+                                final_arr_two: [],
                             }))
+
                         }
+
+                        setRescheduleData(prevState => ({
+                            ...prevState,
+                            set_date: obj.result.app_date,
+                            rescdule_data: obj.result,
+                            check_booking: obj.result.slot_booking_id,
+                            message: obj.message,
+                            task_details: obj.result.task_details,
+
+                        }))
+
+                        setTimeout(() => {
+                            setRescheduleData(prevState => ({
+                                ...prevState,
+                                isRescheduleModal: true
+                            }))
+                        }, 700);
+
                     } else {
                         console.log('else reschdule.....');
                         setRescheduleData(prevState => ({
                             ...prevState,
                             rescdule_data: obj.result,
                             message: obj.message,
-                            task_details: obj?.result?.task_details,
-                            isRescheduleModal: true,
+                            // isRescheduleModal: true,
 
                         }))
                     }
@@ -272,7 +334,7 @@ const AppointmentContainer = ({
             ...prevState,
             date_array: arr
         }))
-        console.log("check date...", arr);
+        // console.log("check date...", arr);
     };
 
 
@@ -313,6 +375,7 @@ const AppointmentContainer = ({
 
                     // ---------------------------------------------------
                     if (serviceType == 'doctor' && rescheduleData?.set_task == 'online_task') {
+                        console.log(serviceType, rescheduleData?.set_task);
                         if (obj.result.online_task_time != "") {
                             var names = obj.result.online_task_time;
                             var nameArr = names.split(",");
@@ -378,7 +441,7 @@ const AppointmentContainer = ({
                     // ----------------------------------------------
 
                     if (serviceType == 'doctor' && rescheduleData?.set_task == 'home_visit') {
-
+                        console.log(serviceType, rescheduleData?.set_task);
                         if (obj.result.home_visit_time != "") {
                             var names = obj.result.home_visit_time;
                             var nameArr = names.split(",");
@@ -445,7 +508,7 @@ const AppointmentContainer = ({
                     // ----------------------------------------------
 
                     if (serviceType == 'lab' && (rescheduleData?.set_task == 'task_base' || rescheduleData?.set_task == 'package_base')) {
-
+                        console.log(serviceType, rescheduleData?.set_task);
                         if (obj.result.task_time != "") {
                             var names = obj.result.task_time;
                             var nameArr = names.split(",");
@@ -512,6 +575,8 @@ const AppointmentContainer = ({
                     // ----------------------------------------------
 
                     if ((serviceType != 'doctor' && serviceType != 'lab') && rescheduleData?.set_task == 'task_base') {
+                        console.log(serviceType, rescheduleData?.set_task);
+                        console.log(serviceType, rescheduleData?.set_task);
                         if (obj.result.task_time != "") {
                             var names = obj.result.task_time;
                             var nameArr = names.split(",");
@@ -578,6 +643,7 @@ const AppointmentContainer = ({
                     // ----------------------------------------------
 
                     if ((serviceType != 'doctor' && serviceType != 'lab') && rescheduleData?.set_task == 'hour_base') {
+                        console.log(serviceType, rescheduleData?.set_task);
                         if (obj.result.hourly_time != "") {
                             var names = obj.result.hourly_time;
                             var nameArr = names.split(",");
@@ -936,9 +1002,11 @@ const AppointmentContainer = ({
 
                         <Text
                             style={{
-                                fontSize: Font.medium,
+                                fontSize: Font.small,
                                 fontFamily: Font.Medium,
-                                color: Item?.acceptance_status === 'Pending' ? Colors.Yellow : (Item?.acceptance_status === 'Completed' || Item?.acceptance_status === 'Accepted') ? Colors.Green : Colors.Red
+                                color: Item?.acceptance_status === 'Pending' ? Colors.Yellow : (Item?.acceptance_status === 'Completed' || Item?.acceptance_status === 'Accepted') ? Colors.Green : Colors.Red,
+                                // textTransform: 'uppercase'
+
                             }}
                         >{Item?.acceptance_status}</Text>
                     </View>
@@ -953,7 +1021,7 @@ const AppointmentContainer = ({
                         marginTop: vs(7),
                         paddingBottom: vs(7)
                     }}>
-                        <View style={{ flex: 1, }}>
+                        <View style={{ flex: 1.3 }}>
                             <Text
                                 style={{
                                     fontSize: Font.small,
@@ -1012,7 +1080,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     marginTop: vs(3)
                                 }}
-                            >{Item?.app_date}</Text>
+                            >{Item?.booking_date}</Text>
                         </View>
 
                     </View>
@@ -1027,7 +1095,7 @@ const AppointmentContainer = ({
                         marginTop: vs(7),
                         paddingBottom: vs(7)
                     }}>
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1.3 }}>
                             <Text
                                 style={{
                                     fontSize: Font.small,
@@ -1100,8 +1168,7 @@ const AppointmentContainer = ({
                                         fontSize: Font.medium,
                                         fontFamily: Font.Regular,
                                         color: Colors.Theme
-                                    }}
-                                >{'SAR '}
+                                    }}>{`${currency} `}
                                     <Text
                                         style={{
                                             fontSize: Font.medium,
@@ -1230,12 +1297,11 @@ const AppointmentContainer = ({
                                                     <Text
                                                         style={{
                                                             textAlign: "center",
-                                                            color: '#FF4500',
-                                                            textTransform: "uppercase",
-                                                            fontFamily: Font.SemiBold,
+                                                            color: Colors.Red,
+                                                            fontFamily: Font.Medium,
                                                             fontSize: Font.xsmall,
                                                         }}>
-                                                        {Lang_chg.Refunde[config.language]}
+                                                        {Lang_chg.Refunded[config.language]}
                                                     </Text>
 
                                                 )
@@ -1303,7 +1369,7 @@ const AppointmentContainer = ({
                                 }
 
                                 {
-                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && videoCallButton === true) &&
+                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && Item.videoCall == true) &&
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
@@ -1399,7 +1465,7 @@ const AppointmentContainer = ({
                                 backgroundColor: 'rgba(0,0,0,0.3)',
                                 // opacity: 0.8,
                                 width: windowWidth,
-                                height: windowHeight - 200,
+                                height: windowHeight - 250,
                                 borderRadius: 25,
                                 position: 'absolute',
                                 bottom: 0,
@@ -1504,12 +1570,10 @@ const AppointmentContainer = ({
                                                                         alignItems: "center",
                                                                         width: "100%",
                                                                         alignSelf: "center",
-
                                                                         paddingVertical: (windowWidth * 1.7) / 100,
                                                                         flexDirection: "row",
                                                                         marginTop: (windowWidth * 0.3) / 100,
-                                                                    }}
-                                                                >
+                                                                    }}>
                                                                     <Text
                                                                         style={{
                                                                             width: "70%",
@@ -1517,7 +1581,6 @@ const AppointmentContainer = ({
                                                                             alignSelf: "center",
                                                                             fontSize: (windowWidth * 3.6) / 100,
                                                                             fontFamily: Font.Regular,
-
                                                                             color: "#000",
                                                                         }}
                                                                     >
@@ -1555,20 +1618,16 @@ const AppointmentContainer = ({
                                                                     marginTop: (windowWidth * 2) / 100,
                                                                     borderColor: "#0168B3",
                                                                     borderWidth: 2,
-
                                                                     width: (windowWidth * 30) / 100,
                                                                     backgroundColor: "#fff",
-                                                                }}
-                                                            >
+                                                                }}>
                                                                 <View
                                                                     style={{
                                                                         backgroundColor: "#0168B3",
-
                                                                         borderTopLeftRadius: (windowWidth * 1.2) / 100,
                                                                         borderTopRightRadius: (windowWidth * 1.2) / 100,
                                                                         width: "100%",
-                                                                    }}
-                                                                >
+                                                                    }} >
                                                                     <Text
                                                                         style={{
                                                                             // backgroundColor:'red',
@@ -1863,7 +1922,7 @@ const AppointmentContainer = ({
                                                                 marginLeft: (windowWidth * 32) / 100,
                                                             }}
                                                         >
-                                                            {Lang_chg.no_data_Found[config.language]}
+                                                            {Lang_chg.noTime[config.language]}
                                                         </Text>
                                                     )}
                                                 </View>

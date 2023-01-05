@@ -17,7 +17,8 @@ import {
 } from "../../Provider/utilslib/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
-
+import moment from "moment-timezone";
+import { useIsFocused } from "@react-navigation/native";
 
 
 const OnGoing = (props) => {
@@ -25,14 +26,57 @@ const OnGoing = (props) => {
   const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const isFocused = useIsFocused()
 
   useEffect(() => {
     if (props?.route?.params?.isGuest === 'false') {
       getAppointments()
     }
-  }, [isRefreshing])
+  }, [isRefreshing,isFocused])
 
 
+  const checkVideoCallStatus = (list) => {
+
+    let tempArr = []
+    for (const iterator of list) {
+      var currentTime = moment().unix();
+      var appointmentDate = moment(iterator.appoitment_date).format("YYYY-MM-DD");
+      var appointmentTime = iterator.app_time;
+      var isSameDay = moment().isSame(appointmentDate, "day");
+      appointmentTime = moment(appointmentDate + " " + appointmentTime, "YYYY-MM-DD hh:mm A").unix();
+      if (isSameDay) {
+        // console.log('isSameDay');
+        if (currentTime < appointmentTime) {
+          // console.log('currentTime < appointmentTime');
+          let diff = (appointmentTime - currentTime) / 60; //mins
+          if (diff <= 10) {
+            // console.log('diff');
+            tempArr.push({
+              ...iterator,
+              videoCall: true
+            })
+          } else {
+            tempArr.push({
+              ...iterator,
+              videoCall: false
+            })
+          }
+        } else {
+          tempArr.push({
+            ...iterator,
+            videoCall: true
+          })
+          // console.log('currentTime > appointmentTime');
+        }
+      } else {
+        tempArr.push({
+          ...iterator,
+          videoCall: false
+        })
+      }
+    }
+    setAppointments(tempArr)
+  }
 
   const getAppointments = async (page) => {
     let user_details = await localStorage.getItemObject("user_arr");
@@ -48,14 +92,14 @@ const OnGoing = (props) => {
     // consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
-      .then((obj) => {
+      .then(async (obj) => {
         // consolepro.consolelog("getAppointments-response...", obj);
         if (obj.status == true) {
+          checkVideoCallStatus(obj.result)
           setTimeout(() => {
             setIsRefreshing(false)
             setIsLoading(false)
-            setAppointments(obj.result)
-          }, 500);
+          }, 250);
         } else {
           setIsRefreshing(false)
           setIsLoading(false)
@@ -88,6 +132,7 @@ const OnGoing = (props) => {
         renderItem={({ item, index }) => {
           return (
             <AppointmentContainer
+              Index={index}
               Item={item}
               navigation={props.navigation}
               isLoading={isLoading}
@@ -103,14 +148,14 @@ const OnGoing = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{props?.route?.params?.isGuest === 'true' ? 'Oops! No Consultations Found' : 'Sorry, no consultations found'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestConsultTitle[config.language] : Lang_chg.noConsultTitle[config.language]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{props?.route?.params?.isGuest === 'true' ? 'No Consultations record found, user type is Guest' : 'You can start a new consultation with our qualified doctors!'}</Text>
+              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestConsultDesc[config.language] : Lang_chg.noConsultDesc[config.language]}</Text>
             </View>
           )
         }}

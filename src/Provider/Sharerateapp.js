@@ -7,7 +7,6 @@ class ShareappPro {
 	//----------------- message buttons
       sharefunction(link)
          {
-            console.log('hello')
         let shareOptions={
         title: 'roots care ap',
          subject:'roots care app APP',

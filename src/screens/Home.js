@@ -23,74 +23,54 @@ import {
   apifuntion,
   windowHeight,
 } from "../Provider/utilslib/Utils";
-import messaging from "@react-native-firebase/messaging";
-import PushNotification, { Importance } from "react-native-push-notification";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
+
 import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
-// import Appheading
 import BannerCrousel from "../components/BannerCrousel";
 import moment from "moment";
 global.current_lat_long = "NA";
 global.myLatitude = "NA";
 global.myLongitude = "NA";
 
+const type = 'notification';
 
 const HomeHealthcareServiceAppointments = [
   {
     id: 1,
     img: Icons.nurse,
-    star: " 5.0",
-    arabic_title: "حجز ممرضة  ",
     title: "Book a Nurse",
-    arabic_details: "متاح للحجز بنظام الساعة أو الحجز بنظام المهمة  ",
+    arabic_title: "حجز ممرضة  ",
     details: "Open for Hourly or Task Based Booking",
-    status: 0,
+    arabic_details: "متاح للحجز بنظام الساعة أو الحجز بنظام المهمة",
     pass_status: "nurse",
-    arabic_status: 1,
   },
   {
     id: 2,
     img: Icons.Physiotherapist,
-    star: "4.7",
-    title: "Book a ",
-    arabic_title: "حجز علاج طبيعي  ",
-    title2: "Physiotherapist",
-    arabic_title2: "اخصائي علاج طبيعي",
-    details: "for 30 mins",
+    title: "Book a Physiotherapist ",
+    arabic_title: "حجز علاج طبيعي اخصائي علاج طبيعي",
+    details: "For 30 mins",
     arabic_details: "لمدة 30 دقيقة",
-    status: 1,
     pass_status: "physiotherapy",
-    arabic_status: 1,
   },
   {
     id: 3,
     img: Icons.NurseAssistant,
-    star: "4.3",
-    title: "Book Nurse",
-    arabic_title: "حجز مساعدة ممرضة ",
-    title2: "Assistant",
-    arabic_title2: "مساعد",
+    title: "Book Nurse Assistant",
+    arabic_title: "حجز مساعدة ممرضة مساعد",
     details: "Available 2,4,6,8 hrs",
     arabic_details: "متاح 8،6،4،2 ساعة  ",
     pass_status: "caregiver",
-    status: 1,
-    arabic_status: 1,
   },
   {
     id: 4,
     img: Icons.Babysitter,
-    star: "4.3",
-    title: "Book a",
-    arabic_title: "حجز ",
-    arabic_title2: "جليسة أطفال  ",
-    title2: "Babysitter",
+    title: "Book a Babysitter",
+    arabic_title: "حجز جليسة أطفال",
     pass_status: "babysitter",
-    arabic_details: "متاح 8،6،4،2 ساعة  ",
     details: "Available 2,4,6,8 hrs",
-    status: 1,
-    arabic_status: 0,
+    arabic_details: "متاح 8،6،4،2 ساعة  ",
   },
 ];
 
@@ -98,22 +78,20 @@ const DoctorConsultation = [
   {
     id: 1,
     img: Icons.InstantVideoConsultation,
-    star: "5.0",
     title: "Instant Video Consultation",
     arabic_title: "استشارة فيديو فورية",
-    details: "15-30 mins",
-    arabic_details: "30-15 دقيقة",
+    details: "5-15 mins",
+    arabic_details: "15-5 دقيقة",
     pass_status: "doctor",
     enableFor: 'ONLINE_CONSULT'
   },
   {
     id: 2,
     img: Icons.HomeVisitConsultation,
-    star: "5.0",
     title: "Home Visit Consultation",
-    arabic_title: "استشارة زيارة منزلية  ",
-    arabic_details: "لمدة 30 دقيقة    ",
+    arabic_title: "استشارة زيارة منزلية",
     details: "for 45 mins",
+    arabic_details: "لمدة 45 دقيقة",
     pass_status: "doctor",
     enableFor: 'HOME_VISIT_CONSULT'
   },
@@ -123,26 +101,16 @@ const LabTest = [
   {
     id: 1,
     img: Icons.BookaLabTest,
-    star: "5.0",
     title: "Book a Lab Test",
     arabic_title: "احجز اختبارًا معمليًا",
     details: "Get test report within 24 hours of sample collected. All Rootscare labs are 100% safe.",
-    arabic_details: "30-15 دقيقة",
+    arabic_details: "احصل على تقرير الاختبار في غضون 24 ساعة من جمع العينة. جميع معامل Rootscare آمنة بنسبة 100٪.",
     status: '1 day report guaranteed.',
+    arabic_status: 'تقرير ليوم واحد مضمون.',
     terms: "T&C Apply",
+    arabic_terms: 'تطبق الشروط والأحكام',
     pass_status: "lab",
   },
-  // {
-  //   id: 2,
-  //   img: Icons.BookaLabTest,
-  //   star: "5.0",
-  //   title: "Book a Lab Test",
-  //   arabic_title: "احجز اختبارًا معمليًا",
-  //   details: "Get test report within 24 hours of sample collected. All Rootscare labs are 100% safe.",
-  //   arabic_details: "30-15 دقيقة",
-  //   status: '1 day report guaranteed.',
-  //   pass_status: "T&C Apply",
-  // },
 ];
 
 export default class Home extends Component {
@@ -162,69 +130,8 @@ export default class Home extends Component {
     };
   }
   componentDidMount() {
-    // this.getnotification();
 
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    var that = this;
-
-    PushNotification.configure({
-      onNotification: function (notification) {
-        // console.log("NOTIFICATION:", notification);
-        if (notification.userInteraction) {
-          // Handle notification click
-          // console.log("PushNotification.configure", notification);
-
-          if (notification.data?.type == "doctor_to_patient_video_call") {
-            let data;
-            if (Platform.OS === "ios") {
-              data = JSON.parse(notification.data.notidata);
-            } else {
-              data = notification.data;
-              // console.log("data", data);
-            }
-            Alert.alert(
-              "Video call",
-              "video call from " + data?.fromUserName,
-              [
-                {
-                  text: "Reject",
-                  onPress: () => {
-                    that.callRejectNotification(data);
-                  },
-                  style: "cancel",
-                },
-                {
-                  text: "Accept",
-                  onPress: () => {
-                    // val messageBody = json.optString("message")
-                    // val roomName = json.getString("room_name")
-                    // val fromUserName = json.optString("fromUserName")
-                    // val fromUserId = json.getString("fromUserId")
-                    // val toUserName = json.getString("toUserName")
-                    // val toUserId = json.getString("toUserId")
-                    // val orderId = json.getString("order_id")
-                    that.showVideoCallAlert(data);
-                  },
-                  style: "default",
-                },
-              ],
-              {
-                cancelable: true,
-                // onDismiss: () =>
-                //   Alert.alert(
-                //     "This alert was dismissed by tapping outside of the alert dialog."
-                //   ),
-              }
-            );
-          }
-        }
-
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-    });
-
-    this.messageListener();
-
     this.props.navigation.addListener("focus", () => {
       // if (global.isLogin == false) {
       if (global.isLogin == true) {
@@ -234,6 +141,9 @@ export default class Home extends Component {
       this.getAddress();
       this.removeExpiredCart()
     });
+    // PushNotification.getChannels(function (channel_ids) {
+    //   console.log(channel_ids); 
+    // });
   }
 
   componentWillUnmount() {
@@ -275,8 +185,6 @@ export default class Home extends Component {
   }
 
   remove_cart = async (cartId) => {
-
-
     let url = config.baseURL + "api-patient-remove-cart";
     var data = new FormData();
     data.append("cart_id", cartId)
@@ -292,7 +200,7 @@ export default class Home extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        consolepro.consolelog("remove_cart- error ------- " + error);
       });
   };
 
@@ -318,168 +226,6 @@ export default class Home extends Component {
 
   }
 
-  getNotificationCall = async () => {
-    PushNotification.createChannel(
-      {
-        channelId: "rootscares1", // (required)
-        channelName: "rootscare messasge", // (required)
-
-        importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-        priority: "high",
-        soundName: "default",
-        playSound: true,
-        ignoreInForeground: false,
-        smallIcon: "app_icon",
-      },
-      (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-    );
-
-    // consolepro.consolelog('logmy',remoteMessage.notification.body)
-    // consolepro.consolelog('logmy',remoteMessage.notification.title)
-  };
-
-  // messageListener = async () => {
-  //   //alert('come')
-  //   // console.log('inside message listener ****** ')
-  //   PushNotification.createChannel(
-  //     {
-  //       channelId: "rootscares1", // (required)
-  //       channelName: "rootscare messasge", // (required)
-
-  //       importance: 4, // (optional) default: 4. Int value of the Android notification importance
-  //       vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-  //     },
-  //     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-  //   );
-  //   messaging().onMessage(async (remoteMessage) => {
-  //     console.log("hello", JSON.stringify(remoteMessage));
-  //     console.log("remoteMessage", JSON.stringify(remoteMessage.data));
-  //     // console.log("remoteMessage ", JSON.parse(remoteMessage.data?.notidata));
-  //     var notificationData = JSON.parse(remoteMessage.data?.notidata);
-  //     if (notificationData.type == "doctor_to_patient_video_call") {
-  //       Alert.alert(
-  //         notificationData.body,
-  //         notificationData.message,
-  //         [
-  //           {
-  //             text: "Reject",
-  //             onPress: () => {
-  //               console.log("Cancel Pressed");
-  //               this.callRejectNotification(notificationData);
-  //             },
-  //             style: "cancel",
-  //           },
-  //           {
-  //             text: "Accept",
-  //             onPress: () => {
-  //               console.log("Accept Pressed onMessage");
-  //               this.showVideoCallAlert(notificationData);
-  //             },
-  //             style: "default",
-  //           },
-  //         ],
-  //         {
-  //           cancelable: true,
-  //           // onDismiss: () =>
-  //           //   Alert.alert(
-  //           //     "This alert was dismissed by tapping outside of the alert dialog."
-  //           //   ),
-  //         }
-  //       );
-  //     }
-  //     //alert(JSON.stringify(remoteMessage));
-
-  //     PushNotification.localNotification({
-  //       channelId: "rootscares1", //his must be same with channelid in createchannel
-  //       title: remoteMessage.data.title, //'Appointment Booking',
-  //       message: remoteMessage.data.body,
-  //       userInfo: remoteMessage.data,
-  //     });
-  //   });
-  // };
-
-  messageListener = async () => {
-    //alert('come')
-    // console.log('inside message listener ****** ')
-    PushNotification.createChannel(
-      {
-        channelId: "rootscares1", // (required)
-        channelName: "rootscare messasge", // (required)
-
-        smallIcon: "app_icon",
-        importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
-        vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-        ignoreInForeground: false,
-      },
-      (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-    );
-    var that = this;
-    messaging().onMessage(async (remoteMessage) => {
-      console.log("hello", JSON.stringify(remoteMessage));
-      //alert(JSON.stringify(remoteMessage));
-      console.log('remoteMessage.data?.type', remoteMessage.data?.type)
-      if (remoteMessage.data?.type == "Logout") {
-        that.logout();
-      }
-      // if (remoteMessage.data?.type !== "doctor_to_patient_video_call") {
-      PushNotification.localNotification({
-        channelId: "rootscares1", //his must be same with channelId in create channel
-        title: remoteMessage.data.title, //'Appointment Booking',
-        message: remoteMessage.data.body,
-        userInfo: remoteMessage.data,
-      });
-      // }
-      // msgProvider.showSuccess("yes call coming")
-    });
-  };
-
-  showVideoCallAlert = (data) => {
-    console.log("showVideoCallAlert", data);
-    var myData = {
-      fromUserId: data.fromUserId,
-      fromUserName: data.fromUserName,
-      order_id: data.order_id,
-      room_name: data.room_name,
-      toUserId: data.toUserId,
-      toUserName: data.toUserName,
-      type: data.type,
-      isPage: "accept",
-    };
-    this.props.navigation.navigate("VideoCall", {
-      item: myData,
-    });
-  };
-
-  callRejectNotification = async (data) => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-    let apiName = "api-get-video-access-token-with-push-notification";
-    let url = config.baseURL + apiName;
-
-    var data = new FormData();
-    data.append("fromUserId", user_id);
-    data.append("fromUserName", data.toUserName);
-    data.append("order_id", data.order_id);
-    data.append("room_name", data.room_name);
-    data.append("toUserId", data.fromUserId);
-    data.append("toUserName", data.fromUserName);
-    data.append("type", "patient_to_doctor_video_call_reject");
-
-    consolepro.consolelog("data", data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        if (obj.status == true) {
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  };
 
   getTopBanners = async () => {
     let user_details = await localStorage.getItemObject("user_arr");
@@ -491,7 +237,7 @@ export default class Home extends Component {
 
     apifuntion.postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("getTopBanners-response.............", obj.result?.bannerimage);
+        // consolepro.consolelog("getTopBanners-response.............", obj.result?.bannerimage);
         if (obj.status == true) {
           this.setState({ bannersList: obj.result?.bannerimage })
         } else {
@@ -521,7 +267,7 @@ export default class Home extends Component {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getNotificationCount- error ------- " + error);
       });
   };
 
@@ -563,7 +309,7 @@ export default class Home extends Component {
             navigation={this.props.navigation}
             title={Lang_chg.Home[config.language]}
             leftIcon={this.state.profile_img}
-            rightIcon={true}
+            rightIcon={global.isLogin}
             address={this.state.address}
           />
 
@@ -588,7 +334,8 @@ export default class Home extends Component {
                   fontSize: Font.medium,
                   fontFamily: Font.Medium,
                   color: Colors.darkText,
-                  marginBottom: vs(7)
+                  marginBottom: vs(7),
+                  textAlign: config.textRotate
                 }}>
                   {Lang_chg.HomeHealthcareServiceAppointments[config.language]}
                 </Text>
@@ -596,89 +343,60 @@ export default class Home extends Component {
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
                   data={HomeHealthcareServiceAppointments}
+                  ItemSeparatorComponent={() => {
+                    return (
+                      <View style={{ width: s(8) }}>
+
+                      </View>
+                    )
+                  }}
                   renderItem={({ item, index }) => {
                     return (
-                      <View
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.props.navigation.navigate(
+                            "AllServiceProviderListing",
+                            { pass_status: item.pass_status }
+                          )
+                        }
                         style={[
-                          { width: (windowWidth * 43) / 100 },
-                          config.language == 1
-                            ? { marginLeft: (windowWidth * 1) / 100 }
-                            : null,
-                        ]}
-                      >
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.props.navigation.navigate(
-                              "AllServiceProviderListing",
-                              { pass_status: item.pass_status }
-                            )
-                          }
-                          style={{
-                            width: (windowWidth * 40) / 100,
-                            marginRight: (windowWidth * 4) / 100,
-                            // shadowOpacity: 0.3,
-                            // shadowColor:'#000',
-                            // shadowOffset:{width:1,height:1},
-                            // elevation:5,
-                            // shadowRadius: 2,
-                            backgroundColor: "#fff",
-                            borderColor: "#DFDFDF",
+                          {
+                            borderRadius: 10,
+                            width: s(140),
+                            backgroundColor: Colors.White,
+                            borderColor: Colors.Border,
                             borderWidth: 1,
-                            borderRadius: (windowWidth * 2) / 100,
-                            paddingBottom: (windowWidth * 3) / 100,
-                            marginBottom: 3,
-                            // alignItems:'center'
-                          }}
-                        >
+                            paddingBottom: vs(10)
+                          }]}>
+                        <View style={{ width: '100%', }}>
                           <Image
-
                             style={{
-                              borderTopLeftRadius: (windowWidth * 1.5) / 100,
-                              borderTopRightRadius: (windowWidth * 1.5) / 100,
+                              borderTopLeftRadius: 9,
+                              borderTopRightRadius: 9,
                               width: "100%",
-                              height: (windowWidth * 28) / 100,
+                              height: vs(110),
                               alignSelf: "center",
                             }}
                             source={item.img}
                           />
-                          <View
-                            style={{
-                              paddingTop: (windowWidth * 2) / 100,
-                              paddingHorizontal: (windowWidth * 3) / 100,
-                            }}
-                          >
-                            {config.language == 1 ? (
-                              <Text style={Styles.cardtitle}>
-                                {item.arabic_title}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.cardtitle}>{item.title}</Text>
-                            )}
-                            {item.status != 0 && (
-                              <View>
-                                {config.language != 1 && (
-                                  <Text style={Styles.cardtitle}>
-                                    {item.title2}
-                                  </Text>
-                                )}
-                                {config.language == 1 &&
-                                  item.arabic_status == 0 && (
-                                    <Text style={Styles.cardtitle}>
-                                      {item.arabic_title2}
-                                    </Text>
-                                  )}
-                              </View>
-                            )}
-                            {config.language == 1 ? (
-                              <Text style={Styles.details}>
-                                {item.arabic_details}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.details}>{item.details}</Text>
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                      </View>
+                        </View>
+
+                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                          <Text style={Styles.cardtitle}>
+                            {config.language == 0 ? item.title : item?.arabic_title}
+                          </Text>
+                        </View>
+                        <Text style={{
+                          textAlign: config.textalign,
+                          fontSize: Font.small,
+                          fontFamily: Font.Regular,
+                          color: Colors.Black,
+                          paddingHorizontal: s(6)
+                        }}>
+                          {config.language == 0 ? item.details : item?.arabic_details}
+                        </Text>
+
+                      </TouchableOpacity>
                     );
                   }}
                 />
@@ -690,7 +408,8 @@ export default class Home extends Component {
                   fontSize: Font.medium,
                   fontFamily: Font.Medium,
                   color: Colors.darkText,
-                  marginBottom: vs(7)
+                  marginBottom: vs(7),
+                  textAlign: config.textRotate
                 }}>
                   {Lang_chg.DoctorConsultation[config.language]}
                 </Text>
@@ -698,90 +417,63 @@ export default class Home extends Component {
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
                   data={DoctorConsultation}
+                  ItemSeparatorComponent={() => {
+                    return (
+                      <View style={{ width: s(8) }}>
+
+                      </View>
+                    )
+                  }}
                   renderItem={({ item, index }) => {
                     return (
-                      <View
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.props.navigation.navigate(
+                            "AllServiceProviderListing",
+                            {
+                              pass_status: item.pass_status,
+                              enableFor: item.enableFor
+                            }
+                          )
+                        }
                         style={[
-                          { width: (windowWidth * 43) / 100 },
-                          config.language == 1
-                            ? { marginLeft: (windowWidth * 1) / 100 }
-                            : null,
-                        ]}
-                      >
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.props.navigation.navigate(
-                              "AllServiceProviderListing",
-                              {
-                                pass_status: item.pass_status,
-                                enableFor: item.enableFor
-                              }
-                            )
-                          }
-                          style={{
-                            width: (windowWidth * 40) / 100,
-                            marginRight: (windowWidth * 4) / 100,
-                            // shadowOpacity: 0.3,
-                            // shadowColor:'#000',
-                            // shadowOffset:{width:1,height:1},
-                            // elevation:5,
-                            // shadowRadius: 2,
-                            backgroundColor: "#fff",
-                            borderColor: "#DFDFDF",
+                          {
+                            borderRadius: 10,
+                            width: s(140),
+                            backgroundColor: Colors.White,
+                            borderColor: Colors.Border,
                             borderWidth: 1,
-                            borderRadius: (windowWidth * 2) / 100,
-                            paddingBottom: (windowWidth * 3) / 100,
-                            marginBottom: 3,
-                            // alignItems:'center'
-                          }}>
+                            paddingBottom: vs(10)
+                          }]}>
+                        <View style={{ width: '100%', }}>
                           <Image
                             style={{
-                              borderTopLeftRadius: (windowWidth * 1.5) / 100,
-                              borderTopRightRadius: (windowWidth * 1.5) / 100,
+                              borderTopLeftRadius: 9,
+                              borderTopRightRadius: 9,
                               width: "100%",
-                              height: (windowWidth * 28) / 100,
+                              height: vs(110),
                               alignSelf: "center",
                             }}
                             source={item.img}
                           />
-                          <View
-                            style={{
-                              paddingTop: (windowWidth * 2) / 100,
-                              paddingHorizontal: (windowWidth * 3) / 100,
-                            }}
-                          >
-                            {config.language == 1 ? (
-                              <Text style={Styles.cardtitle}>
-                                {item.arabic_title}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.cardtitle}>{item.title}</Text>
-                            )}
-                            {item.status != 0 && (
-                              <View>
-                                {config.language != 1 && (
-                                  <Text style={Styles.cardtitle}>
-                                    {item.title2}
-                                  </Text>
-                                )}
-                                {config.language == 1 &&
-                                  item.arabic_status == 0 && (
-                                    <Text style={Styles.cardtitle}>
-                                      {item.arabic_title2}
-                                    </Text>
-                                  )}
-                              </View>
-                            )}
-                            {config.language == 1 ? (
-                              <Text style={Styles.details}>
-                                {item.arabic_details}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.details}>{item.details}</Text>
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                      </View>
+                        </View>
+
+                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                          <Text style={Styles.cardtitle}>
+                            {config.language == 0 ? item.title : item?.arabic_title}
+                          </Text>
+                        </View>
+
+                        <Text style={{
+                          textAlign: config.textalign,
+                          fontSize: Font.small,
+                          fontFamily: Font.Regular,
+                          color: Colors.Black,
+                          paddingHorizontal: s(6)
+                        }}>
+                          {config.language == 0 ? item.details : item?.arabic_details}
+                        </Text>
+                      </TouchableOpacity>
                     );
                   }}
                 />
@@ -794,14 +486,23 @@ export default class Home extends Component {
                   fontSize: Font.medium,
                   fontFamily: Font.Medium,
                   color: Colors.darkText,
-                  marginBottom: vs(7)
+                  marginBottom: vs(7),
+                  textAlign: config.textRotate
                 }}>
                   {Lang_chg.Lab_Test_Booking[config.language]}
                 </Text>
                 <FlatList
+                  pagingEnabled
                   showsHorizontalScrollIndicator={false}
                   horizontal={true}
                   data={LabTest}
+                  ItemSeparatorComponent={() => {
+                    return (
+                      <View style={{ width: s(8) }}>
+
+                      </View>
+                    )
+                  }}
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity
@@ -812,16 +513,10 @@ export default class Home extends Component {
                             { pass_status: item.pass_status }
                           )
                         }
-                        style={[
-                          { width: windowWidth },
-                          // { backgroundColor: 'pink' },
-                          { flexDirection: 'row' },
-                          config.language == 1
-                            ? { marginLeft: (windowWidth * 1) / 100 }
-                            : null,
-                        ]}
-                      >
-
+                        style={{
+                          width: windowWidth,
+                          flexDirection: 'row'
+                        }}>
 
                         <View style={{ width: '42%', justifyContent: 'center' }}>
                           <Image
@@ -859,7 +554,8 @@ export default class Home extends Component {
                               style={{
                                 fontSize: Font.small,
                                 fontFamily: Font.Medium,
-                                color: Colors.Blue
+                                color: Colors.Blue,
+                                textAlign: config.textRotate
                               }}
                             >{Lang_chg.Find_Labs[config.language]}</Text>
                           </TouchableOpacity>
@@ -868,38 +564,39 @@ export default class Home extends Component {
                         <View style={{ width: '48%', }}>
 
                           <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
-                            {config.language == 1 ? (
-                              <Text style={Styles.cardtitle}>
-                                {item.arabic_title}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.cardtitle}>{item.title}</Text>
-                            )}
 
-                            {config.language == 1 ? (
-                              <Text style={Styles.details}>
-                                {item.arabic_details}
-                              </Text>
-                            ) : (
-                              <Text style={Styles.details}>{item.details}</Text>
-                            )}
+                            <Text style={Styles.cardtitle}>{config.language == 0 ? item.title : item.arabic_title}</Text>
+                            <Text style={{
+                              textAlign: config.textRotate,
+                              fontSize: Font.small,
+                              fontFamily: Font.Regular,
+                              color: Colors.Black,
+                              marginTop: vs(7),
+                            }}>
+                              {config.language == 0 ? item.details : item.arabic_details}
+                            </Text>
 
-                            {config.language == 1 ? (
-                              <Text style={[Styles.subDetails, { color: Colors.Blue, marginTop: vs(8), }]}>
-                                {item.status}
-                              </Text>
-                            ) : (
-                              <Text style={[Styles.subDetails, { color: Colors.Blue, marginTop: vs(8), }]}>{item.status}</Text>
-                            )}
+                            <Text style={[{
+                              textAlign: config.textRotate,
+                              fontSize: Font.xsmall,
+                              fontFamily: Font.Regular,
+                              color: Colors.Blue,
+                              marginTop: vs(8)
+                            }]}>
+                              {config.language == 0 ? item.status : item.arabic_status}
+                            </Text>
 
-                            {config.language == 1 ? (
-                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>
-                                {item.terms}
-                              </Text>
-                            ) : (
-                              <Text style={[Styles.subDetails, { color: Colors.Black, marginTop: vs(4), }]}>{item.terms}</Text>
-                            )}
-
+                            <Text style={[{
+                              textAlign: config.textRotate,
+                              fontSize: Font.xsmall,
+                              fontFamily: Font.Regular,
+                              color: Colors.Blue,
+                              marginTop: vs(8),
+                              color: Colors.Black,
+                              marginTop: vs(4),
+                            }]}>
+                              {config.language == 0 ? item.terms : item.arabic_terms}
+                            </Text>
                           </View>
                         </View>
 
@@ -913,13 +610,13 @@ export default class Home extends Component {
 
 
           </ScrollView>
-        </View>
+        </View >
 
 
 
 
 
-      </View>
+      </View >
     );
   }
 }

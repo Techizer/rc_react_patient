@@ -59,34 +59,8 @@ export default class AllServiceProviderListing extends Component {
   componentDidMount() {
     this.props.navigation.addListener("focus", () => {
       this.get_Services();
-      this.get_all_notification();
     });
   }
-  get_all_notification = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
-    let user_id = user_details["user_id"];
-
-    let url = config.baseURL + "api-notification-count";
-
-    var data = new FormData();
-    data.append("login_user_id", user_id);
-
-    consolepro.consolelog("data", data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        if (obj.status == true) {
-          this.setState({ notification_count: obj.result });
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("get_all_notification-error------- " + error);
-      });
-  };
 
   getHospitalSpecialties = async () => {
     let url = config.baseURL + "api-hospital-doctor-speciality-list";
@@ -118,58 +92,6 @@ export default class AllServiceProviderListing extends Component {
       });
   };
 
-  // getHospitalDoctorList = async () => {
-  //   let user_details = await localStorage.getItemObject("user_arr");
-  //   console.log("user_details user_details", user_details);
-  //   let user_id = user_details["user_id"];
-
-  //   let url = config.baseURL + "api-patient-hospital-doctor-list";
-
-  //   console.log("url", url);
-
-  //   var data = new FormData();
-  //   data.append("login_user_id", user_id);
-  //   data.append("hospital_id", this.state.hospitalId);
-  //   data.append("service_type", "doctor");
-  //   data.append("provider_name", "");
-  //   data.append("page_count", 1);
-  //   data.append("work_area", user_details["work_area"]);
-  //   data.append("specility", this.state.specialtyData);
-
-  //   consolepro.consolelog("data", data);
-  //   apifuntion
-  //     .postApi(url, data)
-  //     .then((obj) => {
-  //       consolepro.consolelog("obj", JSON.stringify(obj));
-  //       if (obj.status == true) {
-  //         this.setState({
-  //           availableDoctorsUnderHospital: obj.result,
-  //           availableDoctorsMessage: obj.message,
-  //         });
-  //         let day_task = obj.result;
-  //         if (obj.result != null && obj.result != "") {
-  //           for (let k = 0; k < obj.result.length; k++) {
-  //             let availability = day_task[k].availability;
-  //             for (let l = 0; l < availability.length; l++) {
-  //               day_task[k].availability[l] = availability[l].slot_day;
-  //             }
-  //             day_task[k].new_availablity = day_task[k].availability.toString();
-  //           }
-  //         }
-  //         console.log("availableDoctorsUnderHospital ", day_task);
-  //         this.setState({ availableDoctorsUnderHospital: day_task });
-  //       } else {
-  //         this.setState({
-  //           availableDoctorsUnderHospital: obj.result,
-  //           availableDoctorsMessage: obj.message,
-  //         });
-  //         return false;
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("-------- error ------- " + error);
-  //     });
-  // };
 
   get_Services = async () => {
     if (this.state.searchProvider != '') {
@@ -183,6 +105,9 @@ export default class AllServiceProviderListing extends Component {
       (this.state.pass_status === "hospital" ? "api-patient-hospital-list" : "api-patient-service-provider-list");
 
     var data = new FormData();
+    if (this.state.pass_status === "doctor") {
+      data.append("docEnableFor", this.state.enableFor);
+    }
     if (global.isLogin == false) {
 
       let addressDetails = await localStorage.getItemObject("addressDetails");
@@ -201,7 +126,6 @@ export default class AllServiceProviderListing extends Component {
       data.append("latitude", addressDetails?.latitude);
       data.append("longitudes", addressDetails?.longitude);
       data.append("page_count", 1);
-
     } else {
       let user_details = await localStorage.getItemObject("user_arr");
       let user_id = user_details["user_id"];
@@ -217,13 +141,9 @@ export default class AllServiceProviderListing extends Component {
       } else {
         data.append("provider_name", '');
       }
-
-      if (this.state.pass_status === "doctor") {
-        data.append("docEnableFor", this.state.enableFor);
-      }
     }
-    console.log("url::", url)
-    consolepro.consolelog("get_Services-query-data......", data);
+    // consolepro.consolelog("get_Services-query-data......", data);
+    // return
     apifuntion.postApi(url, data, 1).then((res) => {
       consolepro.consolelog("get_Services-response ", JSON.stringify(res));
 
@@ -338,12 +258,44 @@ export default class AllServiceProviderListing extends Component {
           ListHeaderComponent={this.listHeader(pass_status)}
           ListEmptyComponent={() => {
             return (
-              <View style={{ marginTop: vs(140), alignSelf: 'center' }}>
+              <View style={{ marginTop: vs(140), alignSelf: 'center', paddingHorizontal: '10%' }}>
                 <Text style={{
-                  fontSize: Font.xxlarge,
-                  fontFamily: Font.Medium,
-                  color: Colors.darkText
-                }}>{message}</Text>
+                  fontSize: Font.xlarge,
+                  fontFamily: Font.Regular,
+                  color: Colors.darkText,
+                  textAlign: 'center'
+                }}>{
+                    this.state.pass_status == "nurse"
+                      ? Lang_chg.noNursesTitle[config.language]
+                      : pass_status == "physiotherapy"
+                        ? Lang_chg.noPhysiotherapistsTitle[config.language]
+                        : pass_status == "caregiver"
+                          ? Lang_chg.noNurseAssisTitle[config.language]
+                          : pass_status == "babysitter"
+                            ? Lang_chg.noBabySitterTitle[config.language]
+                            : pass_status == "doctor"
+                              ? Lang_chg.noDocsTitle[config.language]
+                              : Lang_chg.noLabsTitle[config.language]
+                  }</Text>
+                <Text style={{
+                  fontSize: Font.medium,
+                  fontFamily: Font.Regular,
+                  color: Colors.lightGrey,
+                  textAlign: 'center',
+                  marginTop: vs(10)
+                }}>{
+                    this.state.pass_status == "nurse"
+                      ? Lang_chg.noNursesDesc[config.language]
+                      : pass_status == "physiotherapy"
+                        ? Lang_chg.noPhysiotherapistsDesc[config.language]
+                        : pass_status == "caregiver"
+                          ? Lang_chg.noNurseAssisDesc[config.language]
+                          : pass_status == "babysitter"
+                            ? Lang_chg.noBabySitterDesc[config.language]
+                            : pass_status == "doctor"
+                              ? Lang_chg.noDocsDesc[config.language]
+                              : Lang_chg.noLabsDesc[config.language]
+                  }</Text>
               </View>
             )
           }}
@@ -354,7 +306,9 @@ export default class AllServiceProviderListing extends Component {
                 navigation={this.props.navigation}
                 isLoading={isLoading}
                 providerType={pass_status}
-                Index={index} />
+                Index={index}
+                docType={this.state.enableFor}
+              />
             );
           }
           }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TextInput, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, Platform, } from "react-native";
+import { Text, TextInput, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, Platform, Pressable, } from "react-native";
 import Modal from "react-native-modal";
 import DeviceInfo from "react-native-device-info";
 
@@ -129,10 +129,6 @@ const ContactUsBottomSheet = ({
         let user_details = await localStorage.getItemObject("user_arr");
         let user_id = user_details["user_id"];
         let user_type = user_details["user_type"];
-        if (!subject) {
-            msgProvider.showError('Please write your subject');
-            return false;
-        }
         if (!desc) {
             msgProvider.showError('Please write your description');
             return false;
@@ -291,7 +287,8 @@ const ContactUsBottomSheet = ({
                             </>
                         }
 
-                        <View
+                        <Pressable
+                            onPress={() => descRef.current.focus()}
                             style={{
                                 width: "100%",
                                 alignSelf: "center",
@@ -327,7 +324,7 @@ const ContactUsBottomSheet = ({
                                     Keyboard.dismiss()
                                 }}
                             />
-                        </View>
+                        </Pressable>
 
 
                         <View style={{ marginTop: vs(35) }}>
@@ -362,7 +359,7 @@ const ContactUsBottomSheet = ({
 const styles = StyleSheet.create({
     modalContainer: {
         width: windowWidth,
-        height: windowHeight - 200,
+        height: windowHeight/1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
