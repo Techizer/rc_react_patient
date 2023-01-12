@@ -12,11 +12,12 @@ import {
   TouchableOpacity,
   Keyboard,
   StatusBar,
+  I18nManager,
 } from "react-native";
-import React, { Component } from "react";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import RNRestart from "react-native-restart";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import messaging from '@react-native-firebase/messaging';
-import SimpleToast from "react-native-simple-toast";
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import Geolocation from "react-native-geolocation-service";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
@@ -30,7 +31,6 @@ import {
   Lang_chg,
   apifuntion,
   msgText,
-  consolepro,
   msgProvider,
   localStorage,
   StatusbarHeight,
@@ -41,416 +41,367 @@ import { s, vs } from "react-native-size-matters";
 
 import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { leftWhiteArrow, rightWhiteArrow } from "../Icons/Index";
+import { useDispatch, useSelector } from "react-redux";
+import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCredentials, UserDetails } from "../Redux/Actions";
 
-global.current_lat_long = "NA";
-global.myLatitude = "NA";
-global.myLongitude = "NA";
 
-var watchID = null
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSecurePassword: true,
-      cheackbox: false,
-      emailfocus: false,
-      email: "",
-      passwordfocus: false,
-      password: "",
-      engbtn: false,
-      device_lang: "AR",
-      langaugeme: 0,
-      remember_me: "",
-      fcmToken: '',
-      languagechange: false,
-      showlanguage: false,
-      engbtn_ar: false,
-      lat: '',
-      lng: '',
-      address: '',
-      isContactUs: false
-    };
+const Login = ({ navigation }) => {
 
-    this._didFocusSubscription = props.navigation.addListener(
-      "focus",
-      (_payload) =>
-        BackHandler.addEventListener("hardwareBackPress", this.handleBackPress)
-    );
-    this.get_language();
-    this.checkLocationPermission();
-  }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", () => {
-      this.get_rem_data();
-      this.get_language();
-      this.getFcm()
-    });
-    this._willBlurSubscription = this.props.navigation.addListener(
-      "blur",
-      (_payload) =>
-        BackHandler.removeEventListener(
-          "hardwareBackPress",
-          this.handleBackPress
-        )
-    );
-  }
-  get_language = async () => {
-    let textalign = await localStorage.getItemObject("language");
-    if (textalign != null) {
-      this.setState({ langaugeme: textalign });
+  const { appLanguage, deviceToken, deviceType, credentials, appVersion, contentAlign, address, rememberMe } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const [loginData, setLoginData] = useState({
+    isSecurePassword: true,
+    email: rememberMe ? credentials?.email : '',
+    password: rememberMe ? credentials?.password : '',
+    lat: '',
+    lng: '',
+    address: '',
+    isContactUs: false,
+    languageIndex: appLanguage == 'ar' ? 1 : 0,
+    isLoading: false
+  })
+  const insets = useSafeAreaInsets();
+  const emailRef = useRef()
+  const passRef = useRef()
+
+  useEffect(() => {
+    // console.log(
+    //   { appLanguage },
+    //   { deviceToken },
+    //   { deviceType },
+    //   { contentAlign },
+    //   { rememberMe },
+    //   { appVersion },
+    //   { credentials },
+    //   loginData.languageIndex
+    // );
+
+    // navigation.addListener(
+    //   "focus",
+    //   (payload) =>
+    //     BackHandler.removeEventListener(
+    //       "hardwareBackPress",
+    //       handleBackPress()
+    //     )
+    // );
+
+    if (Platform.OS == 'android') {
+      navigation.addListener(
+        "blur",
+        (payload) =>
+          BackHandler.removeEventListener(
+            "hardwareBackPress",
+            handleBackPress()
+          )
+      );
     }
+    checkLocationPermission();
+  }, [])
+
+
+  const checkLocationPermission = () => {
+    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            locationPermission()
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            getCurrentLocation()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            localStorage.setItemString('permission', 'denied')
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
+  }
+
+  const locationPermission = () => {
+    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            getCurrentLocation()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
+  }
+
+  const getCurrentLocation = async () => {
+    try {
+      Geolocation.getCurrentPosition(info => {
+        // console.log('current location lat,long', info)
+        getadddressfromlatlong(info)
+      });
+    } catch (err) {
+      console.log('getCurrentLocation-error', err);
+    }
+
   };
 
-  getFcm = async () => {
-    let token = await localStorage.getItemString('DeviceToken')
-    console.log('?????????????',token);
-    this.setState({ fcmToken: token })
-  }
-
-
-checkLocationPermission = () => {
-  check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-    .then((result) => {
-      switch (result) {
-        case RESULTS.UNAVAILABLE:
-          console.log('This feature is not available (on this device / in this context)');
-          break;
-        case RESULTS.DENIED:
-          console.log('The permission has not been requested / is denied but requestable');
-          this.locationPermission()
-          break;
-        case RESULTS.LIMITED:
-          console.log('The permission is limited: some actions are possible');
-          break;
-        case RESULTS.GRANTED:
-          console.log('The permission is granted');
-          this.getCurrentLocation()
-          break;
-        case RESULTS.BLOCKED:
-          console.log('The permission is denied and not requestable anymore');
-          localStorage.setItemString('permission', 'denied')
-          break;
-      }
-    })
-    .catch((error) => {
-      console.log("locationPermission-error", error);
-    });
-}
-
-locationPermission = () => {
-  request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-    .then((result) => {
-      switch (result) {
-        case RESULTS.UNAVAILABLE:
-          console.log('This feature is not available (on this device / in this context)');
-          break;
-        case RESULTS.DENIED:
-          console.log('The permission has not been requested / is denied but requestable');
-          localStorage.setItemString('permission', 'denied')
-          break;
-        case RESULTS.LIMITED:
-          console.log('The permission is limited: some actions are possible');
-          break;
-        case RESULTS.GRANTED:
-          console.log('The permission is granted');
-          this.getCurrentLocation()
-          break;
-        case RESULTS.BLOCKED:
-          console.log('The permission is denied and not requestable anymore');
-          localStorage.setItemString('permission', 'denied')
-          break;
-      }
-    })
-    .catch((error) => {
-      console.log("locationPermission-error", error);
-    });
-}
-
-getCurrentLocation = async () => {
-  try {
-    Geolocation.getCurrentPosition(info => {
-      // console.log('current location lat,long', info)
-      localStorage.setItemObject("position", info);
-      this.getadddressfromlatlong(info)
-    });
-  } catch (err) {
-    console.log('getCurrentLocation-error', err);
-  }
-
-};
-
-getadddressfromlatlong = (event) => {
-  fetch(
-    "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-    event?.coords?.latitude +
-    "," +
-    event?.coords?.longitude +
-    "&key=" +
-    config.mapkey +
-    "&language=" +
-    config.maplanguage
-  )
-    .then((response) => response.json())
-    .then((resp) => {
-      // console.log("respresp:: ", resp);
-      let responseJson = resp.results[0];
-      let city = "";
-      let administrative_area_level_1 = "";
-      for (let i = 0; i < responseJson.address_components.length; i++) {
-        if (responseJson.address_components[i].types[0] == "locality") {
-          city = responseJson.address_components[i].long_name;
-          break;
-        } else if (
-          responseJson.address_components[i].types[0] ==
-          "administrative_area_level_2"
-        ) {
-          city = responseJson.address_components[i].long_name;
+  const getadddressfromlatlong = (event) => {
+    fetch(
+      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      event?.coords?.latitude +
+      "," +
+      event?.coords?.longitude +
+      "&key=" +
+      config.mapkey +
+      "&language=" +
+      appLanguage
+    ).then((response) => response.json())
+      .then((resp) => {
+        // console.log("respresp:: ", resp);
+        let responseJson = resp.results[0];
+        let city = "";
+        let administrative_area_level_1 = "";
+        for (let i = 0; i < responseJson.address_components.length; i++) {
+          if (responseJson.address_components[i].types[0] == "locality") {
+            city = responseJson.address_components[i].long_name;
+            break;
+          } else if (
+            responseJson.address_components[i].types[0] ==
+            "administrative_area_level_2"
+          ) {
+            city = responseJson.address_components[i].long_name;
+          }
         }
-      }
-      for (let j = 0; j < responseJson.address_components.length; j++) {
-        if (
-          responseJson.address_components[j].types[0] ==
-          "administrative_area_level_1"
-        ) {
-          administrative_area_level_1 =
-            responseJson.address_components[j].long_name;
+        for (let j = 0; j < responseJson.address_components.length; j++) {
+          if (
+            responseJson.address_components[j].types[0] ==
+            "administrative_area_level_1"
+          ) {
+            administrative_area_level_1 =
+              responseJson.address_components[j].long_name;
+          }
         }
-      }
-      let details = responseJson;
-      let addDetails = {
-        latitude: details.geometry.location.lat,
-        longitude: details.geometry.location.lng,
-        address: details.formatted_address,
-        city: city,
-        administrative_area_level_1: administrative_area_level_1,
-      };
-
-      this.setState({
-        lat: details.geometry.location.lat,
-        lng: details.geometry.location.lng,
-        address: details.formatted_address,
-      })
-
-      localStorage.setItemObject("addressDetails", addDetails);
-    });
-};
-
-
-handleBackPress = () => {
-  Alert.alert(
-    Lang_chg.titleexitapp[config.language],
-    Lang_chg.exitappmessage[config.language],
-    [
-      {
-        text: Lang_chg.no_txt[config.language],
-        onPress: () => console.log("Cancel Pressed"),
-        style: Lang_chg.no_txt[config.language],
-      },
-      {
-        text: Lang_chg.yes_txt[config.language],
-        onPress: () => BackHandler.exitApp(),
-      },
-    ],
-    {
-      cancelable: false,
-    }
-  ); // works best when the goBack is async
-  return true;
-};
-launguage_setbtn = (language) => {
-  Lang_chg.language_set(language);
-  this.setState({
-    engbtn: !this.state.engbtn,
-    engbtn_ar: !this.state.engbtn_ar,
-  });
-};
-
-get_rem_data = async () => {
-  let remeberdata_arr = await localStorage.getItemObject("remeberdata");
-
-  if (remeberdata_arr != null) {
-    this.setState({ email: remeberdata_arr.email });
-    this.setState({ password: remeberdata_arr.password });
-    this.setState({ remember_me: true });
-  }
-};
-
-remember_me_fun = async () => {
-  // if (this.state.email.length <= 0 ||  this.state.email.trim().length <= 0) {
-  //   msgProvider.showError(msgText.emptyEmailmobile[config.language])
-  //   return false
-  // }
-
-  if (this.state.remember_me == false) {
-    let data = { email: this.state.email, password: this.state.password };
-    localStorage.setItemObject("remeberdata", data);
-  } else {
-    localStorage.setItemObject("remeberdata", null);
-  }
-  this.setState({ remember_me: !this.state.remember_me });
-  this.setState({ remember_me: true });
-};
-
-remove_remember_me_fun = async () => {
-  await localStorage.removeItem("remeberdata");
-  this.setState({ remember_me: false });
-};
-
-updateAddress = async (userId) => {
-
-  let url = config.baseURL + "api-patient-address-update";
-  var data = new FormData();
-  data.append("user_id", userId);
-  data.append("current_address", this.state.address);
-  data.append("lat", this.state.lat);
-  data.append("lng", this.state.lng);
-  data.append("landmark", '');
-  data.append("building_name", '');
-  data.append("title", '');
-  data.append("default", '0');
-
-
-  apifuntion
-    .postApi(url, data, 1)
-    .then((obj) => {
-      // consolepro.consolelog("updateAddress-res----", obj);
-      if (obj.status == true) {
-        let newAddressDetails = {
-          lat: obj?.result?.latitude,
-          lng: obj?.result?.longitudes,
-          address: obj?.result?.current_address,
-        }
-
-        localStorage.setItemObject("addressDetails", newAddressDetails);
-        localStorage.setItemString('isAddressAdded', 'true')
-        // user_details['current_address'] = obj.result.current_address
-        // localStorage.setItemObject("user_arr", user_details);
-      } else {
-        localStorage.setItemString('isAddressAdded', 'false')
-        return false;
-      }
-    })
-    .catch((error) => {
-      console.log("-------- error ------- " + error);
-    });
-};
-
-loginbtn = async () => {
-
-  let isAddressAdded = await localStorage.getItemString('isAddressAdded')
-  Keyboard.dismiss();
-  var email = this.state.email.trim();
-  if (email.length <= 0 || email.length <= 0) {
-    msgProvider.showError(msgText.emptyEmailmobile[config.language]);
-    return false;
-  }
-
-  if (
-    this.state.password.length <= 0 ||
-    this.state.password.trim().length <= 0
-  ) {
-    msgProvider.showError(msgText.emptyPassword[config.language]);
-    return false;
-  }
-  // if (this.state.password.length < 8) {
-  //     msgProvider.showError(msgText.emptyPasswordValid[config.language])
-  //     return false
-  // }
-  var device_lang;
-  if (config.language == 0) {
-    device_lang = "ENG";
-  } else {
-    device_lang = "AR";
-  }
-
-  let url = config.baseURL + "api-patient-login";
-  var data = new FormData();
-
-  data.append("email_phone", this.state.email);
-  data.append("password", this.state.password);
-  data.append("device_type", config.device_type);
-  data.append("device_lang", device_lang);
-  data.append("fcm_token", this.state.fcmToken);
-
-  console.log('login body...',data);
-
-  apifuntion
-    .postApi(url, data)
-    .then((obj) => {
-      // console.log('login response.....', obj); 
-      if (obj.status == true) {
-        if ((isAddressAdded == null || isAddressAdded === 'false') && (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined)) {
-          this.updateAddress(obj?.result?.user_id)
-        }
-        var user_details = obj.result;
-        this.setState({ emailfocus: false, passwordfocus: false });
-        const uservalue = {
-          email_phone: this.state.email,
-          email: this.state.email,
-          password: this.state.password,
+        let details = responseJson;
+        let addDetails = {
+          latitude: details.geometry.location.lat,
+          longitude: details.geometry.location.lng,
+          address: details.formatted_address,
+          city: city,
+          administrative_area_level_1: administrative_area_level_1,
+          isAddressAdded: false
         };
 
-        let newAddressDetails = {
-          lat: obj?.result?.latitude,
-          lng: obj?.result?.longitudes,
-          address: obj?.result?.current_address,
-        }
-
-        localStorage.setItemObject("addressDetails", newAddressDetails);
-        localStorage.setItemString('Guest', 'false')
-        localStorage.setItemObject("user_login", uservalue);
-        localStorage.setItemObject("user_arr", user_details);
-        localStorage.setItemObject("addressDetails", newAddressDetails);
-        // msgProvider.showError(msgText.sucess_message_login[config.language])
-        setTimeout(() => {
-          // this.props.navigation.navigate("Home");
-          global.isLogin = true
-          if (global.isPage == "") {
-            this.props.navigation.reset({
-              index: 0,
-              routes: [{ name: "DashboardStack" }],
-            });
-          } else if (global.isPage == "providerList") {
-            this.props.navigation.goBack()
-          } else if (global.isPage == "providerDetails") {
-            this.props.navigation.goBack()
-          }
-
-
-
-          // pop(
-          //   "AllServiceProviderListing",
-          //   //{ pass_status: item.pass_status }
-          // )
-        }, 700);
-      } else {
-        // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-        //   usernotfound.loginFirst(this.props, obj.msg[config.language])
-        // } else {
-        setTimeout(() => {
-          // msgProvider.alert('', obj.message, false);
-          msgProvider.showError(obj.message);
-        }, 700);
-        // }
-        return false;
-      }
-    })
-    .catch((error) => {
-      consolepro.consolelog("-------- error ------- " + error);
-      this.setState({ loading: false });
-    });
-};
-render() {
-  const config4 = {
-    velocityThreshold: 1,
-    directionalOffsetThreshold: windowWidth,
-    // gestureIsClickThreshold:1
+        dispatch(Address(addDetails))
+        setLoginData(prevState => ({
+          ...prevState,
+          lat: details.geometry.location.lat,
+          lng: details.geometry.location.lng,
+          address: details.formatted_address,
+        }))
+      });
   };
 
+
+  const handleBackPress = () => {
+    Alert.alert(
+      Lang_chg.titleexitapp[loginData.languageIndex],
+      Lang_chg.exitappmessage[loginData.languageIndex],
+      [
+        {
+          text: Lang_chg.no_txt[loginData.languageIndex],
+          onPress: () => console.log("Cancel Pressed"),
+          style: Lang_chg.no_txt[loginData.languageIndex],
+        },
+        {
+          text: Lang_chg.yes_txt[loginData.languageIndex],
+          onPress: () => BackHandler.exitApp(),
+        },
+      ],
+      {
+        cancelable: false,
+      }
+    ); // works best when the goBack is async
+    return true;
+  };
+
+  updateAddress = async (userId) => {
+
+    let url = config.baseURL + "api-patient-address-update";
+    var data = new FormData();
+    data.append("user_id", userId);
+    data.append("current_address", loginData.address);
+    data.append("lat", loginData.lat);
+    data.append("lng", loginData.lng);
+    data.append("landmark", '');
+    data.append("building_name", '');
+    data.append("title", '');
+    data.append("default", '0');
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // console.log("updateAddress-res----", obj);
+        let newAddressDetails = null
+        if (obj.status == true) {
+          newAddressDetails = {
+            latitude: obj?.result?.latitude,
+            longitude: obj?.result?.longitudes,
+            address: obj?.result?.current_address,
+            isAddressAdded: true
+          }
+          dispatch(Address(newAddressDetails))
+        } else {
+          newAddressDetails = {
+            latitude: '',
+            longitude: '',
+            address: '',
+            isAddressAdded: false
+          }
+          dispatch(Address(newAddressDetails))
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log("-------- error ------- " + error);
+      });
+  };
+
+  const LoginUser = async () => {
+
+    Keyboard.dismiss();
+
+    var email = loginData.email.trim();
+    if (email.length <= 0 || email.length <= 0) {
+      msgProvider.showError(msgText.emptyEmailmobile[loginData.languageIndex]);
+      return false;
+    }
+
+    if (
+      loginData.password.length <= 0 ||
+      loginData.password.trim().length <= 0
+    ) {
+      msgProvider.showError(msgText.emptyPassword[loginData.languageIndex]);
+      return false;
+    }
+    setLoginData(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
+    let url = config.baseURL + "api-patient-login";
+    var data = new FormData();
+
+    data.append("email_phone", loginData.email);
+    data.append("password", loginData.password);
+    data.append("device_type", deviceType);
+    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
+    data.append("fcm_token", deviceToken);
+
+    console.log('login body...', data);
+
+    // return
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        setLoginData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log('login response.....', obj);
+        if (obj.status == true) {
+          if ((address.isAddressAdded == false) && (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined)) {
+            updateAddress(obj?.result?.user_id)
+          }
+          const credentials = {
+            email: loginData.email,
+            password: loginData.password,
+          };
+
+          let newAddressDetails = {
+            latitude: obj?.result?.latitude,
+            longitude: obj?.result?.longitudes,
+            address: obj?.result?.current_address,
+            isAddressAdded: true
+          }
+          dispatch(Address(newAddressDetails))
+          dispatch(Guest(false))
+          if (rememberMe) {
+            dispatch(UserCredentials(credentials))
+          }
+          dispatch(UserDetails(obj?.result))
+          setTimeout(() => {
+            global.isLogin = true
+            if (global.isPage == "") {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "DashboardStack" }],
+              });
+            } else if (global.isPage == "providerList") {
+              navigation.goBack()
+            } else if (global.isPage == "providerDetails") {
+              navigation.goBack()
+            }
+          }, 700);
+        } else {
+          setTimeout(() => {
+            msgProvider.showError(obj.message);
+          }, 700);
+          return false;
+        }
+      })
+      .catch((error) => {
+        setLoginData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log("LoginUser-error ------- " + error);
+      });
+  };
+
+  
+  const ChangeLanguage = (lan) => {
+    if (lan == 'en') {
+      console.log('English...');
+      dispatch(AppLanguage('en'))
+      // dispatch(Restart(true))
+    } else {
+      console.log('Arabic...');
+      I18nManager.forceRTL(true);
+      I18nManager.allowRTL(true);
+      dispatch(AppLanguage('ar'))
+      setTimeout(() => {
+        RNRestart.Restart();
+      }, 350);
+    }
+
+  }
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.White, paddingTop: StatusbarHeight + 10 }}>
-
-
+    <View
+      pointerEvents={loginData.isLoading ? 'none' : 'auto'}
+      style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.White, paddingTop: insets.top, paddingBottom: insets.bottom }}>
 
       <KeyboardAwareScrollView
         // keyboardOpeningTime={200}
@@ -482,24 +433,26 @@ render() {
             style={{
               fontSize: Font.xxxlarge,
               fontFamily: Font.Medium,
-              textAlign: config.textalign,
+              alignSelf: 'flex-start',
+              // textAlign: contentAlign,
               color: Colors.darkText
 
             }}
           >
-            {Lang_chg.Login[config.language]}
+            {Lang_chg.Login[loginData.languageIndex]}
           </Text>
 
           <Text
             style={{
-              textAlign: config.textalign,
+              // textAlign: contentAlign,
+              alignSelf: 'flex-start',
               fontSize: Font.medium,
               fontFamily: Font.Regular,
               color: Colors.inActiveText,
               marginTop: vs(4)
             }}
           >
-            {Lang_chg.Logintext[config.language]}
+            {Lang_chg.Logintext[loginData.languageIndex]}
           </Text>
 
           {/* ----------------------------------------email------------------------------------ */}
@@ -507,18 +460,21 @@ render() {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(18), width: '100%' }}
-            lableText={Lang_chg.Mobileno[config.language]}
-            inputRef={(ref) => {
-              this.emailInput = ref;
+            lableText={Lang_chg.Mobileno[loginData.languageIndex]}
+            inputRef={emailRef}
+            onChangeText={(val) => {
+              setLoginData(prevState => ({
+                ...prevState,
+                email: val
+              }))
             }}
-            onChangeText={(text) => this.setState({ email: text })}
-            value={this.state.email}
+            value={loginData.email}
             keyboardType="email-address"
             autoCapitalize="none"
             DarkGrey={Colors.DarkGrey}
             returnKeyType="next"
             onSubmitEditing={() => {
-              this.passwordInput.focus();
+              passRef.current.focus();
             }}
             blurOnSubmit={Platform.OS === 'ios' ? true : false}
             editable
@@ -528,23 +484,27 @@ render() {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: '100%' }}
-            lableText={Lang_chg.password[config.language]}
-            inputRef={(ref) => {
-              this.passwordInput = ref;
+            lableText={Lang_chg.password[loginData.languageIndex]}
+            inputRef={passRef}
+            onChangeText={(val) => {
+              setLoginData(prevState => ({
+                ...prevState,
+                password: val
+              }))
             }}
-            onChangeText={(text) => this.setState({ password: text })}
-            value={this.state.password}
+            value={loginData.password}
             keyboardType="default"
             autoCapitalize="none"
             returnKeyLabel="done"
             returnKeyType="done"
-            secureTextEntry={this.state.isSecurePassword}
+            secureTextEntry={loginData.isSecurePassword}
             disableImg={true}
-            iconName={this.state.isSecurePassword ? "eye-off" : "eye"}
+            iconName={loginData.isSecurePassword ? "eye-off" : "eye"}
             iconPressAction={() => {
-              this.setState({
-                isSecurePassword: !this.state.isSecurePassword,
-              });
+              setLoginData(prevState => ({
+                ...prevState,
+                isSecurePassword: !isSecurePassword
+              }))
             }}
             onSubmitEditing={() => {
               Keyboard.dismiss();
@@ -574,32 +534,32 @@ render() {
                 alignItems: 'center',
               }}
               onPress={() => {
-                this.state.remember_me == false ?
-                  this.remember_me_fun()
-                  :
-                  this.remove_remember_me_fun();
+                dispatch(RememberMe(!rememberMe))
+                if (!rememberMe) {
+                  dispatch(UserCredentials(null))
+                }
               }}>
 
 
               <TouchableOpacity
                 onPress={() => {
-                  this.state.remember_me == false ?
-                    this.remember_me_fun()
-                    :
-                    this.remove_remember_me_fun();
+                  dispatch(RememberMe(!rememberMe))
+                  if (!rememberMe) {
+                    dispatch(UserCredentials(null))
+                  }
                 }}
                 style={{
                   height: 20,
                   width: 20,
                   borderRadius: 5,
-                  backgroundColor: this.state.remember_me ? Colors.Theme : Colors.White,
+                  backgroundColor: rememberMe ? Colors.Theme : Colors.White,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderWidth: this.state.remember_me ? 0 : 1.3,
+                  borderWidth: rememberMe ? 0 : 1.3,
                   borderColor: Colors.Border
                 }}>
                 {
-                  this.state.remember_me ?
+                  rememberMe ?
                     <Image
                       style={{
                         height: 14,
@@ -620,7 +580,7 @@ render() {
                   fontSize: Font.medium,
                   marginLeft: s(10)
                 }}>
-                {Lang_chg.Remember[config.language]}
+                {Lang_chg.Remember[loginData.languageIndex]}
               </Text>
 
             </TouchableOpacity>
@@ -629,30 +589,35 @@ render() {
             <View style={{ alignSelf: "center", }}>
               <Text
                 onPress={() => {
-                  this.props.navigation.navigate("ForgotPage");
+                  navigation.navigate("ForgotPage");
                 }}
                 style={{
                   color: Colors.Blue,
                   fontFamily: Font.Regular,
                   fontSize: Font.Forgot,
-                  textAlign: config.textalign,
                   alignSelf: 'flex-end'
                 }}
               >
-                {Lang_chg.Forgotpassword[config.language]}
+                {Lang_chg.Forgotpassword[loginData.languageIndex]}
               </Text>
             </View>
           </View>
 
           <Button
-            text={Lang_chg.Contiunebtn[config.language]}
-            onPress={() => this.loginbtn()}
+            text={Lang_chg.Contiunebtn[loginData.languageIndex]}
+            onPress={() => LoginUser()}
             btnStyle={{ marginTop: vs(15) }}
+            onLoading={loginData.isLoading}
           />
 
           <TouchableHighlight
             underlayColor={Colors.Highlight}
-            onPress={() => this.setState({ isContactUs: true })}
+            onPress={() => {
+              setLoginData(prevState => ({
+                ...prevState,
+                isContactUs: true
+              }))
+            }}
             style={{ marginTop: vs(25), paddingVertical: vs(5), width: '100%' }}
           >
             <Text
@@ -660,12 +625,12 @@ render() {
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.DarkGrey,
-                textAlign: config.textalign,
+                alignSelf: 'flex-start',
                 textDecorationLine: 'underline',
 
               }}
             >
-              {Lang_chg.Trouble_SignIn[config.language]}
+              {Lang_chg.Trouble_SignIn[loginData.languageIndex]}
             </Text>
           </TouchableHighlight>
 
@@ -686,22 +651,20 @@ render() {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-              localStorage.setItemString('Guest', 'true')
-              localStorage.setItemObject("user_arr", null);
-              global.isLogin = false
-              global.isPage = ""
+              dispatch(UserDetails(null))
+              dispatch(Guest(true))
               setTimeout(() => {
-                this.props.navigation.reset({
+                navigation.reset({
                   index: 0,
                   routes: [{ name: "DashboardStack" }],
                 });
-              }, 350);
+              }, 250);
             }}
             style={{
               justifyContent: "space-between",
               alignItems: "center",
               width: "100%",
-              flexDirection: config.textalign=='right'?'row-reverse':'row',
+              flexDirection: 'row',
               justifyContent: "space-between",
               backgroundColor: Colors.Theme,
               paddingVertical: vs(6),
@@ -713,21 +676,16 @@ render() {
                   fontSize: Font.small,
                   color: Colors.White,
                   fontFamily: Font.Regular,
-                  textAlign: config.textRotate
+                  textAlign: contentAlign
                 }
               ]}
             >
-              {Lang_chg.Skip[config.language]}
+              {Lang_chg.Skip[loginData.languageIndex]}
             </Text>
 
-            <SvgXml xml={
-              config.textalign == "right"
-                ? leftWhiteArrow : rightWhiteArrow
-            }
+            <SvgXml xml={contentAlign == "right" ? leftWhiteArrow : rightWhiteArrow}
               height={vs(11.98)} width={s(6.42)} color={Colors.White}
-              />
-
-
+            />
           </TouchableOpacity>
 
         </View>
@@ -743,29 +701,27 @@ render() {
 
           <Text
             style={{
-              textAlign: config.textRotate,
+              alignSelf: 'flex-start',
               fontFamily: Font.Regular,
               fontSize: Font.headinggray,
               color: Colors.DarkGrey,
-            }}
-          >
-            {Lang_chg.donot[config.language]}
+            }}>
+            {Lang_chg.donot[loginData.languageIndex]}
           </Text>
 
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => this.props.navigation.navigate('Signup')}
+            onPress={() => navigation.navigate('Signup')}
           >
             <Text
               style={{
-                textAlign: config.textRotate,
+                alignSelf: 'flex-start',
                 fontFamily: Font.Medium,
                 fontSize: Font.medium,
                 color: Colors.Blue,
                 marginTop: (windowWidth * 2) / 100,
-              }}
-            >
-              {Lang_chg.createnewaccountbtn[config.language]}
+              }}>
+              {Lang_chg.createnewaccountbtn[loginData.languageIndex]}
             </Text>
           </TouchableOpacity>
         </View>
@@ -784,14 +740,12 @@ render() {
               {
                 fontSize: (windowWidth * 3.8) / 100,
                 color: Colors.Black,
-                fontFamily: Font.ques_fontfamily,
-              },
-              Platform.OS == "ios"
-                ? { textAlign: config.textalign }
-                : null,
+                fontFamily: Font.Regular,
+                alignSelf: 'flex-start',
+              }
             ]}
           >
-            {Lang_chg.languagetxt[config.language]}{" "}
+            {Lang_chg.languagetxt[loginData.languageIndex]}{" "}
           </Text>
 
           <View
@@ -804,19 +758,11 @@ render() {
           >
             <TouchableOpacity
               onPress={() => {
-                if (this.state.langaugeme == 1) {
-                  this.launguage_setbtn(0),
-                    this.setState({ device_lang: "ENG" });
-                } else {
-                  null;
-                }
+                ChangeLanguage('en')
               }}
               style={{
                 width: "47%",
-                backgroundColor:
-                  this.state.langaugeme == 0
-                    ? Colors.lightBlue
-                    : "#fff",
+                backgroundColor: appLanguage == 'en' ? Colors.lightBlue : Colors.White,
                 borderColor: Colors.lightGrey,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
@@ -825,34 +771,26 @@ render() {
 
               <Text
                 style={{
-                  textAlign: config.textalign,
+                  textAlign: contentAlign,
                   fontSize: (windowWidth * 3.5) / 100,
                   color: Colors.Black,
-                  fontFamily: Font.ques_fontfamily,
+                  fontFamily: Font.Regular,
                   alignSelf: "center",
                 }}
               >
-                {Lang_chg.ENG[config.language]}
+                {Lang_chg.ENG[loginData.languageIndex]}
               </Text>
 
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => {
-                if (this.state.langaugeme == 0) {
-                  this.launguage_setbtn(1),
-                    this.setState({ device_lang: "AR" });
-                } else {
-                  null;
-                }
+                ChangeLanguage('ar')
               }}
               style={{
                 width: "47%",
                 alignSelf: "center",
-                backgroundColor:
-                  this.state.langaugeme == 1
-                    ? Colors.lightBlue
-                    : "#fff",
+                backgroundColor: appLanguage == 'ar' ? Colors.lightBlue : Colors.White,
                 borderColor: Colors.lightGrey,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
@@ -860,14 +798,14 @@ render() {
               }}>
               <Text
                 style={{
-                  textAlign: config.textalign,
+                  textAlign: contentAlign,
                   fontSize: (windowWidth * 3.5) / 100,
                   color: Colors.Black,
-                  fontFamily: Font.ques_fontfamily,
+                  fontFamily: Font.Regular,
                   alignSelf: "center",
                 }}
               >
-                {Lang_chg.AR[config.language]}
+                {Lang_chg.AR[loginData.languageIndex]}
               </Text>
             </TouchableOpacity>
 
@@ -880,9 +818,12 @@ render() {
 
 
       <ContactUsBottomSheet
-        visible={this.state.isContactUs}
+        visible={loginData.isContactUs}
         onRequestClose={() => {
-          this.setState({ isContactUs: false })
+          setLoginData(prevState => ({
+            ...prevState,
+            isContactUs: false
+          }))
         }}
         route={'Login'}
       />
@@ -890,4 +831,5 @@ render() {
     </View>
   );
 }
-}
+
+export default Login;

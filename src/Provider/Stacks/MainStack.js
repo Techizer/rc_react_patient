@@ -30,7 +30,6 @@ import AddPatient from '../../screens/AddPatient';
 import Cart from '../../screens/Cart';
 import AppointmentDetails from '../../screens/AppointmentDetails';
 import Orders from '../../screens/Orders';
-import { localStorage } from '../localStorageProvider';
 import { config } from '../configProvider';
 import { apifuntion } from '../Apicallingprovider/apiProvider';
 import SimpleToast from 'react-native-simple-toast';
@@ -169,83 +168,83 @@ const MainStack = () => {
         routeNameRef?.current?.navigate("VideoCall", { item: myData, })
     };
 
-    const callRejectNotification = async (data) => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
-        let apiName = "api-get-video-access-token-with-push-notification";
-        let url = config.baseURL + apiName;
+    // const callRejectNotification = async (data) => {
+    //     let user_details = await localStorage.getItemObject("user_arr");
+    //     let user_id = user_details["user_id"];
+    //     let apiName = "api-get-video-access-token-with-push-notification";
+    //     let url = config.baseURL + apiName;
 
-        var data = new FormData();
-        data.append("fromUserId", user_id);
-        data.append("fromUserName", data.toUserName);
-        data.append("order_id", data.order_id);
-        data.append("room_name", data.room_name);
-        data.append("toUserId", data.fromUserId);
-        data.append("toUserName", data.fromUserName);
-        data.append("type", "patient_to_doctor_video_call_reject");
+    //     var data = new FormData();
+    //     data.append("fromUserId", user_id);
+    //     data.append("fromUserName", data.toUserName);
+    //     data.append("order_id", data.order_id);
+    //     data.append("room_name", data.room_name);
+    //     data.append("toUserId", data.fromUserId);
+    //     data.append("toUserName", data.fromUserName);
+    //     data.append("type", "patient_to_doctor_video_call_reject");
 
-        apifuntion
-            .postApi(url, data, 1)
-            .then((obj) => {
-                if (obj.status == true) {
-                } else {
-                    return false;
-                }
-            })
-            .catch((error) => {
-                console.log("-------- error ------- " + error);
-            });
-    };
+    //     apifuntion
+    //         .postApi(url, data, 1)
+    //         .then((obj) => {
+    //             if (obj.status == true) {
+    //             } else {
+    //                 return false;
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log("-------- error ------- " + error);
+    //         });
+    // };
 
-    const checkUserType = async () => {
-        isGuest = await localStorage.getItemString('Guest')
-    }
+    // const checkUserType = async () => {
+    //     isGuest = await localStorage.getItemString('Guest')
+    // }
 
-    const checkSession = async () => {
+    // const checkSession = async () => {
 
-        let user_details = await localStorage.getItemObject("user_arr");
-        let token = await localStorage.getItemString('DeviceToken')
+    //     let user_details = await localStorage.getItemObject("user_arr");
+    //     let token = await localStorage.getItemString('DeviceToken')
 
-        if (user_details != null && user_details != undefined && user_details != '') {
-            let user_id = user_details["user_id"];
+    //     if (user_details != null && user_details != undefined && user_details != '') {
+    //         let user_id = user_details["user_id"];
 
-            let url = config.baseURL + "api-check-login";
-            var data = new FormData();
+    //         let url = config.baseURL + "api-check-login";
+    //         var data = new FormData();
 
-            data.append("fcm_token", token);
-            data.append("user_id", user_id);
+    //         data.append("fcm_token", token);
+    //         data.append("user_id", user_id);
 
-            console.log('on MainStack checkSession ', data);
-            apifuntion.postApi(url, data, 1).then((obj) => {
-                console.log("sessionExpire-response...: ", Platform.OS, obj);
-                if (obj.result == false) {
-                    logout()
-                }
-            }).catch((error) => {
-                console.log("-------- error ------- " + error);
-            });
-        }
+    //         console.log('on MainStack checkSession ', data);
+    //         apifuntion.postApi(url, data, 1).then((obj) => {
+    //             console.log("sessionExpire-response...: ", Platform.OS, obj);
+    //             if (obj.result == false) {
+    //                 logout()
+    //             }
+    //         }).catch((error) => {
+    //             console.log("-------- error ------- " + error);
+    //         });
+    //     }
 
-    }
+    // }
 
-    const logout = async () => {
-        await localStorage.removeItem("user_arr");
-        await localStorage.removeItem("user_login");
-        global.isLogin = false
-        global.isPage = ""
-        // console.log(routeNameRef.current.reset);
-        // return
-        SimpleToast.show('Session has expired!')
-        setTimeout(() => {
-            routeNameRef?.current?.reset({
-                index: 0,
-                routes: [{ name: "AuthStack" }],
-            });
-        }, 350);
-    }
+    // const logout = async () => {
+    //     await localStorage.removeItem("user_arr");
+    //     await localStorage.removeItem("user_login");
+    //     global.isLogin = false
+    //     global.isPage = ""
+    //     // console.log(routeNameRef.current.reset);
+    //     // return
+    //     SimpleToast.show('Session has expired!')
+    //     setTimeout(() => {
+    //         routeNameRef?.current?.reset({
+    //             index: 0,
+    //             routes: [{ name: "AuthStack" }],
+    //         });
+    //     }, 350);
+    // }
 
     useEffect(() => {
-        checkSession()
+        // checkSession()
         configureNotifications()
         messageListener()
     }, [])
@@ -258,7 +257,7 @@ const MainStack = () => {
             //     console.log('................',routeNameRef.current)
             // }}
             onStateChange={() => {
-                checkSession()
+                // checkSession()
             }}>
             <Stack.Navigator
                 screenOptions={{
@@ -308,7 +307,6 @@ const MainStack = () => {
                 <Stack.Screen
                     name="SupportandMore"
                     component={SupportandMore}
-                    initialParams={{ isGuest: isGuest }}
                 />
 
                 <Stack.Screen

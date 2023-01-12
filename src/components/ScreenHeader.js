@@ -7,6 +7,7 @@ import {
     TouchableHighlight,
     Platform,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
     Colors,
     Font,
@@ -22,11 +23,11 @@ import {
 import { leftArrow, rightArrow, Notification, dummyUser, Icons, redNoti } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
+import { useSelector } from "react-redux";
 
-let headerHeight = deviceHeight - windowHeight + StatusbarHeight;
+let headerHeight = deviceHeight - windowHeight;
 headerHeight += (Platform.OS === 'ios') ? 28 : -50
 
-let notiCount = 0
 
 // console.log('Status Bar Height', StatusbarHeight + '   ' + Platform.OS);
 // console.log(headerHeight + '   ' + Platform.OS);
@@ -39,17 +40,15 @@ export const ScreenHeader = ({
     navigation,
     rightIcon,
     leftIcon,
-    address,
+    defaultAddress,
 }) => {
 
-    const checkCount = async () => {
-        notiCount = await localStorage.getItemString('notiCount')
-        notiCount = JSON.parse(notiCount)
-    }
+    const insets = useSafeAreaInsets()
 
-    useEffect(() => {
-        checkCount()
-    }, [title])
+
+    const { appLanguage, notiCount, contentAlign, } = useSelector(state => state.StorageReducer)
+
+
     return (
         title != Lang_chg.Home[config.language] ?
             (
@@ -59,7 +58,8 @@ export const ScreenHeader = ({
                         // height: headerHeight + StatusbarHeight,
                         // paddingTop: StatusbarHeight + 10,
                         height: (windowWidth * 23) / 100,
-                        paddingTop: (windowWidth * 10) / 100,
+                        // height: headerHeight + insets,
+                        paddingTop: insets.top,
                         backgroundColor: Colors.White,
                         borderBottomWidth: 0.9,
                         borderBottomColor: Colors.Border
@@ -87,8 +87,8 @@ export const ScreenHeader = ({
                                         alignItems: 'center',
                                     }} >
                                     <SvgXml xml={
-                                        config.textalign == "right"
-                                            ? rightArrow : leftArrow
+                                        appLanguage == 'en' ?
+                                            leftArrow : rightArrow
                                     } height={vs(17.11)} width={s(9.72)} fill={'red'} fillOpacity={1} />
 
                                 </TouchableHighlight>
@@ -202,7 +202,7 @@ export const ScreenHeader = ({
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
                                 }}>
-                                {Lang_chg.MyDashboard[config.language]}
+                                {Lang_chg.MyDashboard[appLanguage == 'ar' ? 1 : 0]}
                             </Text>
                             <Image
                                 source={Icons.downarrow}
@@ -214,7 +214,7 @@ export const ScreenHeader = ({
                                 }}
                             />
                         </TouchableOpacity>
-                        {(address != null && address != "") ? (
+                        {(defaultAddress != null && defaultAddress != "") ? (
                             <Text
                                 onPress={() => {
                                     if (global.isLogin == true) {
@@ -233,7 +233,7 @@ export const ScreenHeader = ({
 
                                 }}
                             >
-                                {address}
+                                {defaultAddress}
                             </Text>
                         ) : (
                             null

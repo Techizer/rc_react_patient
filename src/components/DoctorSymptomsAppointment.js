@@ -37,6 +37,7 @@ import { AUDIO_STATUS, pausePlayer, startPlayer } from "./AudioManager";
 import SoundPlayer from "react-native-sound-player";
 import { Alert } from "react-native";
 import { s, vs } from "react-native-size-matters";
+import { useSelector } from "react-redux";
 var Sound = require("react-native-sound");
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
@@ -46,9 +47,13 @@ let sliderEditing = false;
 let timeout = null
 
 const DoctorSymptomsAppointment = (props) => {
+
+  const { address, loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+
   // console.log("sound ::::", sound);
-  const { indexPosition, isFromHospital, sendData } = props;
+  const { indexPosition, isFromHospital, sendData = () => { } } = props;
   const { navigation } = props;
+  const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1,)
   const [isFocused, setFocused] = useState(false);
   const [currentPositionSec, setCurrentPositionSec] = useState(0);
   const [currentDurationSec, setCurrentDurationSec] = useState(0);
@@ -529,16 +534,16 @@ const DoctorSymptomsAppointment = (props) => {
     if (isFromHospital) {
       tabArray.push({
         key: "online",
-        title: Lang_chg.OnlineConsultation[config.language],
+        title: Lang_chg.OnlineConsultation[languageIndex],
       });
     } else if (!isFromHospital) {
       tabArray.push({
         key: "online",
-        title: Lang_chg.OnlineCons[config.language],
+        title: Lang_chg.OnlineCons[languageIndex],
       });
       tabArray.push({
         key: "home",
-        title: Lang_chg.HomeVisit[config.language],
+        title: Lang_chg.HomeVisit[languageIndex],
       });
     }
     //set route here
@@ -581,7 +586,7 @@ const DoctorSymptomsAppointment = (props) => {
       labelStyle={{
         textTransform: "capitalize",
         fontSize: Font.large,
-        textAlign: config.textalign,
+        alignSelf: 'flex-start',
         fontFamily: Font.Medium,
         alignSelf: "center",
       }}
@@ -647,19 +652,19 @@ const DoctorSymptomsAppointment = (props) => {
             style={{
               fontFamily: Font.Medium,
               fontSize: Font.medium,
-              textAlign: config.textRotate,
+              alignSelf: 'flex-start',
               color: Colors.detailTitles
             }}>
-            {Lang_chg.TalkToDoctor[config.language]}
+            {Lang_chg.TalkToDoctor[languageIndex]}
           </Text>
           <Text
             style={{
               fontFamily: Font.Regular,
               fontSize: Font.small,
-              textAlign: config.textRotate,
+              alignSelf: 'flex-start',
               color: Colors.lightGrey,
             }}>
-            {Lang_chg.Optional[config.language]}
+            {Lang_chg.Optional[languageIndex]}
           </Text>
         </View>
 
@@ -700,10 +705,10 @@ const DoctorSymptomsAppointment = (props) => {
               style={{
                 fontFamily: Font.Medium,
                 fontSize: Font.medium,
-                textAlign: config.textRotate,
+                alignSelf: 'flex-start',
                 color: Colors.detailTitles
               }}>
-              {Lang_chg.TalkToDoctor[config.language]}
+              {Lang_chg.TalkToDoctor[languageIndex]}
             </Text>
 
             <View
@@ -817,12 +822,12 @@ const DoctorSymptomsAppointment = (props) => {
               <Text
                 style={{
                   fontFamily: Font.Regular,
-                  textAlign: config.textRotate,
+                  alignSelf: 'flex-start',
                   alignSelf: "baseline",
                   fontSize: Font.medium,
                 }}
               >
-                {Lang_chg.TalkToUs[config.language]}
+                {Lang_chg.TalkToUs[languageIndex]}
               </Text>
 
               {/* ----------------Input------------- */}
@@ -880,10 +885,10 @@ const DoctorSymptomsAppointment = (props) => {
                     fontFamily: Font.Regular,
                     fontSize: Font.small,
                     color: Colors.darkText,
-                    textAlign: config.textRotate
+                    alignSelf: 'flex-start',
                   }}>
                   {imageName === ""
-                    ? Lang_chg.Upload[config.language]
+                    ? Lang_chg.Upload[languageIndex]
                     : imageName}
                 </Text>
               </TouchableOpacity>
@@ -942,7 +947,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     textAlignVertical: "top",
-    textAlign: config.textalign,
+    alignSelf: 'flex-start',
   },
   viewBarWrapper: {
     marginTop: -15,

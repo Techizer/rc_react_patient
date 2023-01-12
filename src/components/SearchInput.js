@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 import {
     Text,
     View,
@@ -19,20 +19,27 @@ import {
     Lang_chg,
 } from "../Provider/utilslib/Utils";
 
-import { Filter, Search } from "../Icons/Index";
+import { Cross, Filter, Search } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
 
 
 
 const SearchInput = ({
     placeholder,
     onChangeText,
+    value,
     onSubmitEditing,
     onPressSearch,
+    onCrossPress,
+    isSearch,
     onFilterPress,
     navigation
 }) => {
+    const {appLanguage, } = useSelector(state => state.StorageReducer)
+    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1);
+    const inputRef = useRef()
     return (
         navigation ?
             (
@@ -57,7 +64,7 @@ const SearchInput = ({
                                         width: "100%",
                                         fontFamily: Font.Regular,
                                         fontSize: Font.small,
-                                        textAlign: config.textalign,
+                                        alignSelf:'flex-start',
                                         color: Colors.lightGrey
                                     },
                                 ]}
@@ -74,7 +81,7 @@ const SearchInput = ({
                                 alignItems: 'center',
                                 backgroundColor: Colors.Green
                             }}>
-                                <SvgXml xml={Search} height={vs(14)} width={s(14)} />
+                                <SvgXml xml={isSearch ? Cross : Search} height={vs(14)} width={s(14)} />
                             </View>
                         </View>
 
@@ -97,10 +104,12 @@ const SearchInput = ({
                     {/* search box */}
                     <View style={{ width: '100%', height: '100%', flexDirection: 'row', borderRadius: 9, backgroundColor: Colors.White, alignItems: 'center' }}>
                         <View style={{ width: '86%', paddingHorizontal: s(8), }}>
-                            <TextInput
+                            <TextInput 
+                                ref={inputRef}
                                 placeholder={placeholder}
                                 placeholderTextColor={Colors.lightGrey}
                                 onChangeText={onChangeText}
+                                value={value}
                                 returnKeyLabel="done"
                                 returnKeyType="done"
                                 onSubmitEditing={onSubmitEditing}
@@ -110,7 +119,7 @@ const SearchInput = ({
                                         width: "100%",
                                         fontFamily: Font.Regular,
                                         fontSize: Font.small,
-                                        textAlign: config.textalign,
+                                        textAlign: languageIndex == 0 ? 'left' : 'right',
                                     },
                                     // this.state.pass_status == "physiotherapy" || "caregiver"
                                     // ? { fontSize: (mobileW * 3.7) / 100 }
@@ -129,16 +138,23 @@ const SearchInput = ({
                                 backgroundColor: Colors.Green
                             }}>
                                 <TouchableOpacity
-                                    onPress={onPressSearch}>
+                                    onPress={() => {
+                                        if (isSearch) {
+                                            onCrossPress()
+                                            inputRef.current.blur()
+                                        } else {
+                                            onPressSearch()
+                                        }
+                                    }}>
 
-                                    <SvgXml xml={Search} height={vs(14)} width={s(14)} />
+                                    <SvgXml xml={isSearch ? Cross : Search} height={vs(14)} width={s(14)} />
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                     </View>
 
-                   
+
 
                 </View>
 

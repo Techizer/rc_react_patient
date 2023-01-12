@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
+import { Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
-    windowWidth, deviceHeight, Lang_chg, config,
-    localStorage, Button, consolepro, msgText,
+    windowWidth, Lang_chg, config, Button, msgText,
     Cameragallery, apifuntion, msgProvider, mediaprovider, windowHeight,
 } from "../Provider/utilslib/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
@@ -14,6 +13,7 @@ import { SvgXml } from "react-native-svg";
 import AuthInputBoxSec from "./AuthInputBoxSec";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import OutlinedButton from "./OutlinedButton";
+import { useSelector } from "react-redux";
 
 
 
@@ -29,6 +29,7 @@ const AddandEditMembers = ({
     editMemberDetails = () => { }
 }) => {
 
+    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
     const [name, setName] = useState('')
     const [dob, setDOB] = useState('')
     const [gender, setGender] = useState('')
@@ -36,6 +37,7 @@ const AddandEditMembers = ({
     const nameRef = useRef()
     const dobRef = useRef()
     const [mediamodal, setMediamodal] = useState(false)
+    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1)
     const [isLoading, setIsLoading] = useState({
         load: false,
         type: ''
@@ -91,14 +93,14 @@ const AddandEditMembers = ({
 
     const confirmDelete = (title, message, callbackOk, callbackCancel) => {
         Alert.alert(
-            Lang_chg.Delete_Member[config.language],
-            Lang_chg.Sure_Delete[config.language],
+            Lang_chg.Delete_Member[languageIndex],
+            Lang_chg.Sure_Delete[languageIndex],
             [
                 {
-                    text: Lang_chg.no_txt[config.language],
+                    text: Lang_chg.no_txt[languageIndex],
                 },
                 {
-                    text: Lang_chg.yes_txt[config.language],
+                    text: Lang_chg.yes_txt[languageIndex],
                     onPress: () => deleteMember(),
                 },
             ],
@@ -121,7 +123,7 @@ const AddandEditMembers = ({
         apifuntion
             .postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("deleteMember-response", obj);
+                console.log("deleteMember-response", obj);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -141,7 +143,7 @@ const AddandEditMembers = ({
                 return false;
             })
             .catch((error) => {
-                consolepro.consolelog("deleteMember-error ------- " + error);
+                console.log("deleteMember-error ------- " + error);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -153,21 +155,18 @@ const AddandEditMembers = ({
             });
     }
     const addMember = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
-        console.log("dfhvgrtdb ", user_details);
         Keyboard.dismiss();
 
         if (
             name.length <= 0 ||
             name.trim().length <= 0
         ) {
-            msgProvider.showError(msgText.emptyPaitentName[config.language]);
+            msgProvider.showError(msgText.emptyPaitentName[languageIndex]);
             return false;
         }
 
         if (dob.length <= 0 || dob.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyAge[config.language]);
+            msgProvider.showError(msgText.emptyAge[languageIndex]);
             return false;
         }
         if (gender == -1) {
@@ -179,13 +178,13 @@ const AddandEditMembers = ({
 
         var data = new FormData();
 
-        data.append("patient_id", user_id);
+        data.append("patient_id", loggedInUserDetails.user_id);
         data.append("first_name", name);
         data.append("last_name", "");
         data.append("gender", gender);
         data.append("age", dob);
-        data.append("created_by", user_id);
-        data.append("updated_by", user_id);
+        data.append("created_by", loggedInUserDetails.user_id);
+        data.append("updated_by", loggedInUserDetails.user_id);
         if (profileImg != '' && profileImg != null) {
             data.append('image', {
                 uri: profileImg,
@@ -202,7 +201,7 @@ const AddandEditMembers = ({
         apifuntion
             .postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("obj", obj);
+                console.log("obj", obj);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -218,7 +217,7 @@ const AddandEditMembers = ({
                 return false;
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -256,7 +255,7 @@ const AddandEditMembers = ({
         apifuntion
             .postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("editMember-response", obj);
+                console.log("editMember-response", obj);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -276,7 +275,7 @@ const AddandEditMembers = ({
                 return false;
             })
             .catch((error) => {
-                consolepro.consolelog("editMember-error ------- " + error);
+                console.log("editMember-error ------- " + error);
                 msgProvider.showError(error?.message)
                 setIsLoading(prevState => ({
                     ...prevState,
@@ -323,10 +322,10 @@ const AddandEditMembers = ({
                     style={{
                         fontSize: Font.large,
                         fontFamily: Font.SemiBold,
-                        textAlign: config.textRotate,
+                        alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{type === 'addMember' ? Lang_chg.Add_New_Member[config.language] : type === 'editMember' ? Lang_chg.Edit_Member[config.language] : ''}</Text>
+                    }}>{type === 'addMember' ? Lang_chg.Add_New_Member[languageIndex] : type === 'editMember' ? Lang_chg.Edit_Member[languageIndex] : ''}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -371,19 +370,19 @@ const AddandEditMembers = ({
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
+                                                        alignSelf: 'flex-start',
                                                         color: Colors.darkText
 
-                                                    }}>{Lang_chg.Upload_Photo[config.language]}</Text>
+                                                    }}>{Lang_chg.Upload_Photo[languageIndex]}</Text>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.xsmall,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
+                                                        alignSelf: 'flex-start',
                                                         color: Colors.lightGrey,
                                                         marginTop: vs(2)
 
-                                                    }}>{Lang_chg.Photo_Size[config.language]}</Text>
+                                                    }}>{Lang_chg.Photo_Size[languageIndex]}</Text>
                                             </View>
                                         </View>
                                     </TouchableHighlight>
@@ -391,7 +390,7 @@ const AddandEditMembers = ({
                                         <AuthInputBoxSec
                                             mainContainer={{ width: '100%', }}
                                             inputFieldStyle={{ height: vs(35) }}
-                                            lableText={Lang_chg.textinputname[config.language]}
+                                            lableText={Lang_chg.textinputname[languageIndex]}
                                             inputRef={nameRef}
                                             onChangeText={(val) => setName(val)}
                                             value={name}
@@ -408,7 +407,7 @@ const AddandEditMembers = ({
                                         <AuthInputBoxSec
                                             mainContainer={{ marginTop: vs(5), width: '100%' }}
                                             inputFieldStyle={{ height: vs(35) }}
-                                            lableText={Lang_chg.PatientAge[config.language]}
+                                            lableText={Lang_chg.PatientAge[languageIndex]}
                                             inputRef={dobRef}
                                             onChangeText={(val) => setDOB(val)}
                                             value={dob}
@@ -429,11 +428,11 @@ const AddandEditMembers = ({
                                                 style={{
                                                     fontSize: Font.small,
                                                     fontFamily: Font.Regular,
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                     color: Colors.lightGrey,
                                                     paddingRight: s(20)
 
-                                                }}>{Lang_chg.Gender[config.language]}</Text>
+                                                }}>{Lang_chg.Gender[languageIndex]}</Text>
 
                                             <FlatList
                                                 showsHorizontalScrollIndicator={false}
@@ -466,7 +465,7 @@ const AddandEditMembers = ({
                                                                 style={{
                                                                     fontSize: Font.small,
                                                                     fontFamily: Font.Regular,
-                                                                    textAlign: config.textRotate,
+                                                                    alignSelf: 'flex-start',
                                                                     color: Colors.darkText,
                                                                     marginLeft: s(8)
 
@@ -513,9 +512,9 @@ const AddandEditMembers = ({
                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
                                                     <View style={{ width: '94%', }}>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText }}>{selectedPatient?.name}</Text>
+                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText }}>{selectedPatient?.name}</Text>
                                                             <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
-                                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(selectedPatient?.gender === '0' ? "Male" : 'Female') + ', ' + selectedPatient?.age + (' Year')}</Text>
+                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(selectedPatient?.gender === '0' ? "Male" : 'Female') + ', ' + selectedPatient?.age + (' Year')}</Text>
 
                                                         </View>
                                                     </View>
@@ -525,21 +524,21 @@ const AddandEditMembers = ({
                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
                                                     <View style={{ width: '94%', flexDirection: 'row' }}>
                                                         <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
-                                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.appointment_count}</Text>
+                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
+                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.appointment_count}</Text>
                                                         </View>
 
                                                         <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, justifyContent: 'center', alignItems: 'center' }}>
                                                             <View style={{ width: '80%' }}>
-                                                                <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
-                                                                <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.dc_count}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.dc_count}</Text>
                                                             </View>
                                                         </View>
 
                                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                             <View style={{ width: '80%' }}>
-                                                                <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
-                                                                <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.lab_count}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.lab_count}</Text>
                                                             </View>
                                                         </View>
 
@@ -558,7 +557,7 @@ const AddandEditMembers = ({
                                                 <AuthInputBoxSec
                                                     mainContainer={{ width: '100%', }}
                                                     inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={Lang_chg.textinputname[config.language]}
+                                                    lableText={Lang_chg.textinputname[languageIndex]}
                                                     inputRef={nameRef}
                                                     onChangeText={(val) => setName(val)}
                                                     value={name}
@@ -575,7 +574,7 @@ const AddandEditMembers = ({
                                                 <AuthInputBoxSec
                                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                                     inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={Lang_chg.PatientAge[config.language]}
+                                                    lableText={Lang_chg.PatientAge[languageIndex]}
                                                     inputRef={dobRef}
                                                     onChangeText={(val) => setDOB(val)}
                                                     value={dob}
@@ -596,11 +595,11 @@ const AddandEditMembers = ({
                                                         style={{
                                                             fontSize: Font.small,
                                                             fontFamily: Font.Regular,
-                                                            textAlign: config.textRotate,
+                                                            alignSelf: 'flex-start',
                                                             color: Colors.lightGrey,
                                                             paddingRight: s(20)
 
-                                                        }}>{Lang_chg.Gender[config.language]}</Text>
+                                                        }}>{Lang_chg.Gender[languageIndex]}</Text>
 
                                                     <FlatList
                                                         showsHorizontalScrollIndicator={false}
@@ -633,7 +632,7 @@ const AddandEditMembers = ({
                                                                         style={{
                                                                             fontSize: Font.small,
                                                                             fontFamily: Font.Regular,
-                                                                            textAlign: config.textRotate,
+                                                                            alignSelf: 'flex-start',
                                                                             color: Colors.darkText,
                                                                             marginLeft: s(8)
 
@@ -659,12 +658,12 @@ const AddandEditMembers = ({
                             {
                                 (!isEditable && type === 'editMember') &&
                                 <OutlinedButton
-                                    text={Lang_chg.Edit[config.language]}
+                                    text={Lang_chg.Edit[languageIndex]}
                                     onPress={() => { changeType('editMember') }}
                                 />
                             }
                             <Button
-                                text={type === 'addMember' ? Lang_chg.Add_Member[config.language] : Lang_chg.Save[config.language]}
+                                text={type === 'addMember' ? Lang_chg.Add_Member[languageIndex] : Lang_chg.Save[languageIndex]}
                                 onPress={() => {
                                     if (type === 'editMember') {
                                         editMember()
@@ -692,7 +691,7 @@ const AddandEditMembers = ({
                                     color: Colors.Theme,
                                     marginTop: (windowWidth * 5) / 100,
                                     alignSelf: 'center'
-                                }}>{Lang_chg.Delete[config.language]}</Text>
+                                }}>{Lang_chg.Delete[languageIndex]}</Text>
                             </TouchableOpacity>
 
 

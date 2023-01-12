@@ -1,43 +1,9 @@
 import { Alert, ToastAndroid, I18nManager, Platform } from "react-native";
 import { localStorage } from "./localStorageProvider";
-import AsyncStorage from "@react-native-community/async-storage";
 import { config } from "./configProvider";
 import RNRestart from "react-native-restart";
-global.language_key = 1;
+
 class Language_provider {
-  language_get = async () => {
-    var item = await AsyncStorage.getItem("language");
-    console.log("check launguage option", item);
-    if (item != null) {
-      console.log("kya bat h vikas bhai", config.language);
-      config.language = item;
-    }
-    console.log("language_key123", config.language);
-  };
-
-  language_set = async (languagem) => {
-    if (languagem == 0) {
-      I18nManager.forceRTL(false);
-      I18nManager.allowRTL(false);
-      config.textalign = "left";
-      localStorage.setItemObject("language", 0);
-      localStorage.setItemObject("languagecathc", 0);
-      config.language = 0;
-    } else {
-      I18nManager.forceRTL(true);
-      I18nManager.allowRTL(true);
-      config.textalign = "right";
-      localStorage.setItemObject("language", 1);
-      localStorage.removeItem("languagecathc");
-      localStorage.removeItem("languagesetenglish");
-      config.language = 1;
-    }
-    
-    setTimeout(() => {
-      RNRestart.Restart();
-    }, 500);
-
-  };
   Help = ["Help", "مساعدة"];
   Update = ["UPDATE", "تحديث"];
   OK = ["OK", "موافق  "];
@@ -74,10 +40,7 @@ class Language_provider {
     "Please enter valid mobile number",
     "الرجاء إدخال رقم هاتف محمول صحيح",
   ];
-  //--------------------------------------------change(2-3)
-
   textinputemails = ["Email Address", "البريد الالكتروني  "];
-
   Logintext3 = [
     "Your 12 digit mobile number should start with country code. Do not include any signs (- + or #)",
     "يجب أن يبدأ رقم الجوال المكون من 12 رقمًا برمز البلد. لا تقم بتضمين أي علامات (- + أو #)",
@@ -95,9 +58,7 @@ class Language_provider {
     "Both passwords must match.",
     " .يجب أن تتطابق كلمتا المرور  ",
   ];
-  //--------------------------------------------change(2-3)
   confirmpassword1 = ["Confirm Password", "تأكيد كلمة المرور "];
-
   btntext = ["CREATE ACCOUNT", " إنشاء حساب  "];
   termsandconditiontext1 = [
     "By creating an account, You agree to our  ",
@@ -110,8 +71,6 @@ class Language_provider {
   loginheretext = ["Login Here", "تسجيل الدخول هنا "];
   CC_code = ["CC", "CC"];
   Country_code = ["Country Code", "مفتاح الدولة"];
-
-  //--------------------------------------------------------------otppage-----------------------------------------
   otp = ["OTP Verification Code", "رمز التحقق لمرة واحدة  "];
   otptext = [
     "We have sent the code verification to your email",
@@ -164,11 +123,6 @@ class Language_provider {
     "Search Nurse near your address",
     "ابحث عن ممرضة بالقرب من عنوانك",
   ];
-  // BOOKNOW = ["BOOK NOW", "احجز الآن"];
-
-  // ------------------------------------------------------------editprofile-----------------------------------------------
-
-  //profile tab
   Editprofile = ["Edit Account", "تعديل الحساب  "];
   tabnameprofile = ["Personal", " شخصي     "];
   tabnamemedical = ["Medical", " طبي    "];
@@ -180,19 +134,15 @@ class Language_provider {
   female = ["Female", "أنثى  "];
   select = ["Select", "حدد"];
   selectSpecialty = ["Select Specialty", "حدد التخصص"];
-
-  //medical tab
   allergies = ["Allergies", "الحساسية"];
   q1 = ["Are you allergic to anything?", "هل لديك حساسية من أي شيء؟ "];
   textinputallergies = ["Enter Allergies", "أدخل الحساسية "];
-
   current = ["Current Medication", "الأدوية الحالية "];
   q2 = [
     "Are you taking any medicines at the moment? ",
     "هل تتناول أي أدوية في الوقت الحالي؟  ",
   ];
   textinputcurrent = ["Enter Current Medication", "أدخل الأدوية الحالية "];
-
   pastmedication = ["Past Medication", "الأدوية السابقة  "];
   q3 = [
     "Have you been on medications in the past?",
@@ -202,46 +152,35 @@ class Language_provider {
     "Enter Past Medication",
     " أدخل الأدوية السابقة  ",
   ];
-
   injuries = ["Injuries", " الاصابات  "];
   q4 = [
     "Have you hade any injuires in the past?",
     " هل تعرضت لأي إصابات في الماضي؟  ",
   ];
   textinputinjuries = ["Enter Injuries", "أدخل الاصابات  "];
-
   surgeries = ["Surgeries", " العمليات الجراحية "];
   q5 = [
     "Have you had any surgeries in the past?",
     "هل أجريت أي عمليات جراحية في الماضي؟  ",
   ];
   textinputsurgeries = ["Enter surgeries", " أدخل العمليات الجراحية  "];
-
   chronic = ["Chronic Diseases", "الأمراض المزمنة "];
   q6 = [
     "Have you had chronic diseases in the past?",
     " هل عانيت من أي أمراض مزمنة في الماضي؟  ",
   ];
   textinputchronic = ["Enter chronic diseases", " أدخل الأمراض المزمنة  "];
-
   savebtntext = ["SAVE", "حفظ  "];
   yes_txt = ["Yes", "نعم "];
   no_txt = ["NO", "لا "];
   yes_txt_new = ["Yes", "نعم"];
   no_txt_new = ["No", "لا"];
-  //lifestyle
   smoking = ["Smoking Habits", "عادات التدخين  "];
   Alcohol = ["Alcohol Habits", "عادات تناول الكحول  "];
   blood = ["Blood Group", "فصيلة الدم  "];
   activity = ["Activity Level", "مستوى النشاط  "];
   food = ["Food Preference", " الغذاء المفضل  "];
   occupation = ["Occupation", "المهنة "];
-
-  //------------------booking
-
-  //28-02 gunjan
-  //----------------------------------------------------------------------------------------forgot
-
   Forgot = ["Forgot Password ?", "نسيت كلمة المرور؟ "];
   Forgottext = [
     "Enter the email association with your account and we'll send an email with instruction to reset your password.",
@@ -260,7 +199,6 @@ class Language_provider {
   needsupport = ["Need Support ?", "تحتاج مساعدة؟  "];
   nationality = ["Nationality", "  الجنسية  "];
   textinputaddress = ["Address", "العنوان  "];
-
   need_text = [
     "Post your issue here,we will call you in 24-48 business hours. or you if you ave anything urgent call at +966 920024776 number",
     " اكتب مشكلتك هنا، وسوف نتواصل معك في غضون 24–48 ساعة عمل،أو إذا كان لديك أي شيء عاجل اتصل بنا على الرقم  920024776",
@@ -271,7 +209,6 @@ class Language_provider {
   ];
   select_topic_text = ["Select a Topic", "اختر موضوع "];
   select_issues_text = ["Select issue", "حدد المشكلة  "];
-  //modal
   thank = ["Payment Successful", "تم الدفع بنجاح"];
   success = ["Successful", "ناجح  "];
   text_of_modal = [
@@ -279,11 +216,9 @@ class Language_provider {
     "شكرا لك، تم فتح التذكرة بنجاح",
   ];
   close_txt = ["Close", "إغلاق  "];
-
   drawername = ["Sanjay Singh", "سانجاي سينغ"];
   drawerid = ["anant@outlook.com", "anant@outlook.com"];
   draweraddress = ["Riyadh,saudi Arabia", "رياض,السعودية"];
-
   upcoming_heading = ["Upcoming Appointment", " الموعد القادم  "];
   upcoming_text = [
     "Booked, Pending Or Accepted.",
@@ -294,8 +229,6 @@ class Language_provider {
 
   past_heading = ["Past Appointment", "الموعد السابق  "];
   past_text = ["Completed, Closed Or Cancelled.", ".مكتمل أو مغلق أو ملغى "];
-
-
   drawerversion = ["RC Version 1.0(1)", "RC Version 1.0(1)"];
   titleexitapp = ["Exit app", "الخروج من التطبيق"];
   exitappmessage = ["Do you want to exit", "هل تريد الخروج"];
@@ -602,42 +535,51 @@ class Language_provider {
   LoginIssue = ["Login Issue", "مشكلة تسجيل الدخول"];
   Login_Issue = ['Post Your Login issue', 'انشر مشكلة تسجيل الدخول الخاصة بك'];
   OrderId = ["Order ID", "رقم التعريف الخاص بالطلب"];
-  Booking_Note=['Booking Notes','ملاحظات الحجز'];
-  Booking_Desc=['Solutions and drugs to be injected are not included','لا تشمل المحاليل والأدوية المراد حقنها']
+  Booking_Note = ['Booking Notes', 'ملاحظات الحجز'];
+  Booking_Desc = ['Solutions and drugs to be injected are not included', 'لا تشمل المحاليل والأدوية المراد حقنها']
   noAppoitmentTitle = ['Sorry, no appointments found', 'نعتذر ، لم يتم العثور على مواعيد'];
-noAppoitmentDesc = ['You can start a new appointment with our qualified home healthcare service providers', 'يمكنك بدء موعد جديد مع مقدمي خدمات الرعاية الصحية المنزلية المؤهلين لدينا'];
-guestAppoitmentTitle = ['Oops! No Appointment Found', 'عفوًا! لم يتم العثور على موعد'];
-guestAppoitmentDesc = ['No Appointment record found, user type is Guest', ''];
+  noAppoitmentDesc = ['You can start a new appointment with our qualified home healthcare service providers', 'يمكنك بدء موعد جديد مع مقدمي خدمات الرعاية الصحية المنزلية المؤهلين لدينا'];
+  guestAppoitmentTitle = ['Oops! No Appointment Found', 'عفوًا! لم يتم العثور على موعد'];
+  guestAppoitmentDesc = ['No Appointment record found, user type is Guest', 'لم يتم العثور على سجل موعد ، نوع المستخدم هو ضيف'];
 
-noConsultTitle = ['Sorry, no consultations found', 'عذرا ، لم يتم العثور على استشارات'];
-noConsultDesc = ['You can start a new consultation with our qualified doctors!', 'يمكنك بدء استشارة جديدة مع أطبائنا المؤهلين'];
-guestConsultTitle = ['Oops! No Consultations Found', 'عفوًا! لم يتم العثور على استشارات'];
-guestConsultDesc = ['No Consultations record found, user type is Guest', 'لم يتم العثور على أي سجل للاستشارات،ونوع المستخدم ضيف'];
+  noConsultTitle = ['Sorry, no consultations found', 'عذرا ، لم يتم العثور على استشارات'];
+  noConsultDesc = ['You can start a new consultation with our qualified doctors!', 'يمكنك بدء استشارة جديدة مع أطبائنا المؤهلين'];
+  guestConsultTitle = ['Oops! No Consultations Found', 'عفوًا! لم يتم العثور على استشارات'];
+  guestConsultDesc = ['No Consultations record found, user type is Guest', 'لم يتم العثور على أي سجل للاستشارات،ونوع المستخدم ضيف'];
 
-noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
-noLabsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
-guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
-guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
+  noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
+  noLabsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
+  guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
+  guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
 
-noNursesTitle = ['Sorry, no Nurse found.', 'عذرا ، لم يتم العثور على ممرضة'];
-noNursesDesc = ['We have not found any Nurses at your location, as soon as we are available we will notify you.', 'لم نعثر على أي ممرضات في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+  noNursesTitle = ['Sorry, no Nurse found.', 'عذرا ، لم يتم العثور على ممرضة'];
+  noNursesDesc = ['We have not found any Nurses at your location, as soon as we are available we will notify you.', 'لم نعثر على أي ممرضات في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
 
-noDocsTitle = ['Sorry, no Doctors found.', 'عذرا ، لم يتم العثور على أطباء'];
-noDocsDesc = ['We have not found any Doctors at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أطباء في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
+  noDocsTitle = ['Sorry, no Doctors found.', 'عذرا ، لم يتم العثور على أطباء'];
+  noDocsDesc = ['We have not found any Doctors at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أطباء في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
 
-noPhysiotherapistsTitle = ['Sorry, no Physiotherapists found.', 'عذرا ، لم يتم العثور على أخصائيين علاج طبيعي'];
-noPhysiotherapistsDesc = ['We have not found any Physiotherapists at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أخصائي علاج طبيعي في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
+  noPhysiotherapistsTitle = ['Sorry, no Physiotherapists found.', 'عذرا ، لم يتم العثور على أخصائيين علاج طبيعي'];
+  noPhysiotherapistsDesc = ['We have not found any Physiotherapists at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أخصائي علاج طبيعي في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
 
-noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين ممرضات'];
-noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين للممرضات في موقعك ، بمجرد تواجدنا سنبلغك '];
+  noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين ممرضات'];
+  noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين للممرضات في موقعك ، بمجرد تواجدنا سنبلغك '];
 
-noBabySitterTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
-noBabySitterDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+  noBabySitterTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
+  noBabySitterDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
 
-noLabsTitle = ['Sorry, no Labs found.', 'عذرا ، لم يتم العثور على مختبرات'];
-noLabsDesc = ['We have not found any Labs at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مختبرات في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
+  noLabsTitle = ['Sorry, no Labs found.', 'عذرا ، لم يتم العثور على مختبرات'];
+  noLabsDesc = ['We have not found any Labs at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مختبرات في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
 
+  Upcoming = ['Upcoming', 'القادمة'];
+  Ongoing = ['Ongoing', 'جاري التنفيذ'];
+  Past = ['Past', 'ماضي'];
 
+  Personal = ['Personal', 'الشخصية'];
+  Medical = ['Medical', 'طبي '];
+  LifeStyle = ['LifeStyle', 'لايف ستايل'];
+
+  OrdersTitle=['Buy Home Medical Supplies & Equipments online','شراء المستلزمات والمعدات الطبية المنزلية عبر الإنترنت'];
+  OrdersDesc=['We are coming soon at your location with ordering option','سنصل قريبًا إلى موقعك مع خيار الطلب'];
 
 
 }

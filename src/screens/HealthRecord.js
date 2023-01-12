@@ -1,13 +1,17 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
-import { Colors, Font, config, windowWidth, localStorage, consolepro, Lang_chg, apifuntion, ScreenHeader, Button } from '../Provider/utilslib/Utils';
+import { Colors, Font, config, windowWidth, Lang_chg, apifuntion, ScreenHeader, Button } from '../Provider/utilslib/Utils';
 import { s, vs } from 'react-native-size-matters';
 import AddEditMembers from '../components/Add_Edit_Members'
 import { Add } from '../Icons/Index';
 import Member from '../components/Member';
+import { useSelector } from 'react-redux';
 
 const HealthRecord = (props) => {
+
+  const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
 
   const [isBottomSheet, setIsBottomSheet] = useState(false)
   const [type, setType] = useState('addMember')
@@ -17,10 +21,11 @@ const HealthRecord = (props) => {
   const [selectedMember, setSelectedMember] = useState(-1)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditable, setIsEditable] = useState(false)
+  const insets = useSafeAreaInsets()
   const propsData = props.route.params
 
   useEffect(() => {
-    console.log("props:: ", propsData.indexPosition)
+    // console.log("props:: ", propsData.indexPosition)
     getMember()
   }, []);
 
@@ -30,14 +35,11 @@ const HealthRecord = (props) => {
     let url = config.baseURL + "api-patient-family-member";
     var data = new FormData();
 
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+    data.append("user_id", loggedInUserDetails.user_id);
 
-    data.append("user_id", user_id);
-
-    // consolepro.consolelog("get_Services-query-data......", data);
+    // console.log("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {
-      consolepro.consolelog("getMembers-response ", res);
+      console.log("getMembers-response ", res);
       setIsLoading(false)
       if (res.status == true) {
         setMemberCount(res.result.member_count)
@@ -49,16 +51,16 @@ const HealthRecord = (props) => {
       .catch((error) => {
         setMemberdetails([])
         setIsLoading(false)
-        consolepro.consolelog("getMember-error ------- " + error);
+        console.log("getMember-error ------- " + error);
       });
   };
 
   return (
 
-    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: insets.bottom }}>
 
       <ScreenHeader
-        title={(propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') ? Lang_chg.Select_Member[config.language] : Lang_chg.Manage_Members[config.language]}
+        title={(propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') ? Lang_chg.Select_Member[appLanguage == 'en' ? 0 : 1] : Lang_chg.Manage_Members[appLanguage == 'en' ? 0 : 1]}
         navigation={props.navigation}
         onBackPress={() => props.navigation.pop()}
         leftIcon
@@ -69,7 +71,7 @@ const HealthRecord = (props) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(10), marginBottom: vs(10) }}>
           <Text
             style={{
-              textAlign: config.textRotate,
+              
               fontSize: Font.xsmall,
               fontFamily: Font.Medium,
               color: Colors.Blue,
@@ -86,12 +88,12 @@ const HealthRecord = (props) => {
               <SvgXml xml={Add} />
               <Text
                 style={{
-                  textAlign: config.textRotate,
+                 
                   fontSize: Font.xsmall,
                   fontFamily: Font.Medium,
                   color: Colors.Blue,
                   marginLeft: s(5)
-                }}>{Lang_chg.Add_New_Member[config.language]}</Text>
+                }}>{Lang_chg.Add_New_Member[appLanguage == 'en' ? 0 : 1]}</Text>
             </TouchableOpacity>
           }
 
@@ -139,7 +141,7 @@ const HealthRecord = (props) => {
                 />
               );
             }}
-            contentContainerStyle={{ paddingBottom: memberdetails.length > 5 ? (windowWidth * 40) / 100 : 0 }}
+          // contentContainerStyle={{ paddingBottom: memberdetails.length > 5 ? (windowWidth * 40) / 100 : 0 }}
           />
         }
 
@@ -163,7 +165,7 @@ const HealthRecord = (props) => {
             bottom: 0
           }}>
           <Button
-            text={Lang_chg.Continue_Booking[config.language]}
+            text={Lang_chg.Continue_Booking[appLanguage == 'en' ? 0 : 1]}
             onPress={() => {
               if (propsData && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) {
                 props.navigation.navigate("Booking", {

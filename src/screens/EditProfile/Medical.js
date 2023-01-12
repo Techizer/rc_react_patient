@@ -11,15 +11,14 @@ import {
     Platform,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { vs, s, } from "react-native-size-matters";
 
 import {
-    consolepro,
     Colors,
     Font,
     config,
-    windowWidth,
     Lang_chg,
     localStorage,
     apifuntion,
@@ -29,12 +28,18 @@ import {
     Button
 } from "../../Provider/utilslib/Utils";
 import AuthInputBoxSec from "../../components/AuthInputBoxSec";
+import { useDispatch, useSelector } from "react-redux";
+import { UserDetails } from "../../Redux/Actions";
 
 
 
 const Medical = () => {
 
+    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const dispatch = useDispatch()
+    const insets = useSafeAreaInsets()
     const [medicalDetails, setMedicalDetails] = useState({
+        languageIndex: appLanguage == 'en' ? 0 : 1,
         Allergic: -1,
         allergyName: '',
         currentMed: -1,
@@ -46,26 +51,23 @@ const Medical = () => {
         Surgeries: -1,
         surgeryName: '',
         chronicDisease: -1,
-        chronicDiseaseName: ''
+        chronicDiseaseName: '',
+        isLoading: false
     })
 
     useEffect(() => {
         getMedical()
     }, [])
     const getMedical = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        console.log("user_details user_details", user_details);
-        let user_id = user_details["user_id"];
 
         let url = config.baseURL + "api-patient-profile";
         var data = new FormData();
-        data.append("user_id", user_id);
+        data.append("user_id", loggedInUserDetails.user_id);
 
         apifuntion.postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("getMedical...", obj);
+                console.log("getMedical...", obj);
                 if (obj.status == true) {
-
                     let result = obj.result;
 
                     if (result["allergies_data"] != null && result["allergies_data"] != "") {
@@ -136,8 +138,8 @@ const Medical = () => {
 
                 } else {
                     msgProvider.alert(
-                        msgTitle.information[config.language],
-                        obj.message[config.language],
+                        msgTitle.information[medicalDetails.languageIndex],
+                        obj.message[medicalDetails.languageIndex],
                         false
                     );
 
@@ -145,45 +147,46 @@ const Medical = () => {
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("getMedical-------- error ------- " + error);
-                this.setState({ loading: false });
+                console.log("getMedical-------- error ------- " + error);
             });
     };
 
     const saveMedical = async () => {
 
         Keyboard.dismiss()
+        setMedicalDetails(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         if (medicalDetails.Allergic === 0 & medicalDetails.allergyName === '') {
-            msgProvider.showError(msgText.allergyName[config.language]);
+            msgProvider.showError(msgText.allergyName[medicalDetails.languageIndex]);
             return false;
         }
         if (medicalDetails.currentMed === 0 & medicalDetails.currentMedName === '') {
-            msgProvider.showError(msgText.currentMedicine[config.language]);
+            msgProvider.showError(msgText.currentMedicine[medicalDetails.languageIndex]);
             return false;
         }
         if (medicalDetails.pastMed === 0 & medicalDetails.pastMedName === '') {
-            msgProvider.showError(msgText.pastMedicine[config.language]);
+            msgProvider.showError(msgText.pastMedicine[medicalDetails.languageIndex]);
             return false;
         }
         if (medicalDetails.Injuries === 0 & medicalDetails.injuryName === '') {
-            msgProvider.showError(msgText.injuries[config.language]);
+            msgProvider.showError(msgText.injuries[medicalDetails.languageIndex]);
             return false;
         }
         if (medicalDetails.Surgeries === 0 & medicalDetails.surgeryName === '') {
-            msgProvider.showError(msgText.surgeries[config.language]);
+            msgProvider.showError(msgText.surgeries[medicalDetails.languageIndex]);
             return false;
         }
         if (medicalDetails.chronicDisease === 0 & medicalDetails.chronicDiseaseName === '') {
-            msgProvider.showError(msgText.chronicDisease[config.language]);
+            msgProvider.showError(msgText.chronicDisease[medicalDetails.languageIndex]);
             return false;
         }
 
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
         let url = config.baseURL + "api-edit-patient-profile-medical";
 
         var data = new FormData();
-        data.append("user_id", user_id);
+        data.append("user_id", loggedInUserDetails.user_id);
         data.append("allergies", medicalDetails.Allergic);
         data.append("allergies_data", medicalDetails.allergyName);
         data.append("current_medication", medicalDetails.currentMed);
@@ -199,11 +202,14 @@ const Medical = () => {
         apifuntion
             .postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("saveMedical-response...", obj);
+                setMedicalDetails(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
+                console.log("saveMedical-response...", obj);
 
                 if (obj.status == true) {
-                    let user_details = obj.result;
-                    localStorage.setItemObject("user_arr", user_details);
+                    dispatch(UserDetails(obj?.result))
                     msgProvider.showSuccess(obj.message);
                 } else {
                     msgProvider.showError(obj.message);
@@ -211,26 +217,28 @@ const Medical = () => {
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("saveMedical-error ------- " + error);
+                setMedicalDetails(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
+                console.log("saveMedical-error ------- " + error);
             });
     };
     return (
-        <View style={{ flex: 0.98, backgroundColor: Colors.White }}>
-
-
-           
-
-                <KeyboardAwareScrollView
-                    // keyboardOpeningTime={200}
-                    extraScrollHeight={50}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        paddingTop: vs(10),
-                        paddingBottom: vs(30),
-                    }}
-                    showsVerticalScrollIndicator={false}>
+        <View
+            pointerEvents={medicalDetails.isLoading ? 'none' : 'auto'}
+            style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
+            <KeyboardAwareScrollView
+                // keyboardOpeningTime={200}
+                extraScrollHeight={50}
+                enableOnAndroid={true}
+                keyboardShouldPersistTaps='handled'
+                contentContainerStyle={{
+                    justifyContent: 'center',
+                    paddingTop: vs(10),
+                    paddingBottom: vs(30),
+                }}
+                showsVerticalScrollIndicator={false}>
 
 
                 <View
@@ -251,7 +259,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.allergies[config.language]}
+                            {Lang_chg.allergies[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -275,7 +283,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q1[config.language]}
+                                {Lang_chg.q1[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -329,7 +337,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputallergies[config.language]}
+                                    lableText={Lang_chg.textinputallergies[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, allergyName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.allergyName}
@@ -370,7 +378,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.current[config.language]}
+                            {Lang_chg.current[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -394,7 +402,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q2[config.language]}
+                                {Lang_chg.q2[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -448,7 +456,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputcurrent[config.language]}
+                                    lableText={Lang_chg.textinputcurrent[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, currentMedName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.currentMedName}
@@ -489,7 +497,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.pastmedication[config.language]}
+                            {Lang_chg.pastmedication[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -513,7 +521,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q3[config.language]}
+                                {Lang_chg.q3[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -567,7 +575,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.pastmedication[config.language]}
+                                    lableText={Lang_chg.pastmedication[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, pastMedName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.pastMedName}
@@ -608,7 +616,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.injuries[config.language]}
+                            {Lang_chg.injuries[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -632,7 +640,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q4[config.language]}
+                                {Lang_chg.q4[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -686,7 +694,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.injuries[config.language]}
+                                    lableText={Lang_chg.injuries[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, injuryName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.injuryName}
@@ -727,7 +735,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.surgeries[config.language]}
+                            {Lang_chg.surgeries[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -751,7 +759,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q5[config.language]}
+                                {Lang_chg.q5[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -805,7 +813,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputsurgeries[config.language]}
+                                    lableText={Lang_chg.textinputsurgeries[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, surgeryName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.surgeryName}
@@ -846,7 +854,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.chronic[config.language]}
+                            {Lang_chg.chronic[medicalDetails.languageIndex]}
                         </Text>
                     </View>
 
@@ -870,7 +878,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q6[config.language]}
+                                {Lang_chg.q6[medicalDetails.languageIndex]}
                             </Text>
 
 
@@ -924,7 +932,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputchronic[config.language]}
+                                    lableText={Lang_chg.textinputchronic[medicalDetails.languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.chronicDiseaseName}
@@ -948,9 +956,10 @@ const Medical = () => {
 
                 <View style={{ width: '93%', alignSelf: 'center' }}>
                     <Button
-                        text={Lang_chg.submitbtntext[config.language]}
+                        text={Lang_chg.submitbtntext[medicalDetails.languageIndex]}
                         onPress={() => saveMedical()}
                         btnStyle={{ marginTop: vs(15) }}
+                        onLoading={medicalDetails.isLoading}
                     />
                 </View>
 

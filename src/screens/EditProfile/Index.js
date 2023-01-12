@@ -8,22 +8,20 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import {
   Colors,
   Font,
-  config,
   windowWidth,
   Lang_chg,
   ScreenHeader
 } from "../../Provider/utilslib/Utils";
-import { leftArrow, Notification } from "../../Icons/Index";
 import Personal from "./Personal";
 import Medical from "./Medical";
 import LifeStyle from "./LifeStyle";
+import { useSelector } from "react-redux";
 
 const Tabs = createMaterialTopTabNavigator()
 
+const Index = ({ navigation }) => {
 
-
-
-const Index = ({navigation}) => {
+  const { appLanguage } = useSelector(state => state.StorageReducer)
 
   return (
     //
@@ -31,7 +29,7 @@ const Index = ({navigation}) => {
 
       <View style={{ flex: 1, }}>
         <ScreenHeader
-          title={Lang_chg.Editprofile[config.language]}
+          title={Lang_chg.Editprofile[appLanguage == 'en' ? 0 : 1]}
           navigation={navigation}
           onBackPress={() => navigation.pop()}
           leftIcon
@@ -57,9 +55,9 @@ const Index = ({navigation}) => {
               fontFamily: Font.Medium
             }
           }}>
-          <Tabs.Screen name={'Personal'} component={Personal} />
-          <Tabs.Screen name={'Medical'} component={Medical} />
-          <Tabs.Screen name={'LifeStyle'} component={LifeStyle} />
+          <Tabs.Screen name={Lang_chg.Personal[appLanguage == 'en' ? 0 : 1]} component={Personal} />
+          <Tabs.Screen name={Lang_chg.Medical[appLanguage == 'en' ? 0 : 1]} component={Medical} />
+          <Tabs.Screen name={Lang_chg.LifeStyle[appLanguage == 'en' ? 0 : 1]} component={LifeStyle} />
 
         </Tabs.Navigator>
 

@@ -1,16 +1,21 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, FlatList, } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { Colors, Font, msgProvider, config, windowWidth, localStorage, consolepro, Lang_chg, apifuntion, ScreenHeader } from '../Provider/utilslib/Utils';
+import { Colors, Font, msgProvider, config, windowWidth, Lang_chg, apifuntion, ScreenHeader } from '../Provider/utilslib/Utils';
 import { s, vs } from 'react-native-size-matters';
 import { SvgXml } from 'react-native-svg';
-import { Add, Address, Edit, Location } from '../Icons/Index';
+import { Add } from '../Icons/Index';
 import AddEditAddress from '../components/Add_Edit_Address';
 import AddressContainer from '../components/AddressContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import { Address } from '../Redux/Actions';
 
 
 
 const ManageAddress = ({ navigation }) => {
+
+  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
 
   const [addressSheet, setAddressSheet] = useState(false)
   const [addressList, setAddressList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -27,16 +32,13 @@ const ManageAddress = ({ navigation }) => {
   }, [isFocused])
 
   const getAddresses = async () => {
-    let user_details = await localStorage.getItemObject('user_arr')
-    let user_id = user_details['user_id']
-
     let url = config.baseURL + "api-patient-list-address";
     var data = new FormData();
-    data.append('login_user_id', user_id)
+    data.append('login_user_id', loggedInUserDetails.user_id)
 
 
     apifuntion.postApi(url, data, 1).then((obj) => {
-      consolepro.consolelog("getAddresses-response...", obj)
+      // console.log("getAddresses-response...", obj)
 
       if (obj.status == true) {
         setTimeout(() => {
@@ -58,7 +60,7 @@ const ManageAddress = ({ navigation }) => {
       setIsLoading(false)
       setAddressList([])
       msgProvider.showError(obj.message)
-      consolepro.consolelog("getAddresses-error ------- " + error);
+      console.log("getAddresses-error ------- " + error);
     });
   }
 
@@ -70,7 +72,7 @@ const ManageAddress = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Manage_Address[config.language]}
+        title={Lang_chg.Manage_Address[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -95,11 +97,11 @@ const ManageAddress = ({ navigation }) => {
                 <View style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text
                     style={{
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       fontSize: Font.medium,
                       fontFamily: Font.SemiBold,
                       color: Colors.darkText,
-                    }}>{Lang_chg.Saved_Address[config.language]}</Text>
+                    }}>{Lang_chg.Saved_Address[appLanguage == 'en' ? 0 : 1]}</Text>
 
                   <TouchableOpacity
                     style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -111,12 +113,11 @@ const ManageAddress = ({ navigation }) => {
                     <SvgXml xml={Add} />
                     <Text
                       style={{
-                        textAlign: config.textRotate,
                         fontSize: Font.xsmall,
                         fontFamily: Font.Medium,
                         color: Colors.Blue,
                         marginLeft: s(5)
-                      }}>{Lang_chg.Add_New_Address[config.language]}</Text>
+                      }}>{Lang_chg.Add_New_Address[appLanguage == 'en' ? 0 : 1]}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -171,11 +172,12 @@ const ManageAddress = ({ navigation }) => {
         editedAddress={(val) => {
           getAddresses()
           let newAddress = {
-            lat: addressList[selectedAddress]?.lat,
-            lng: addressList[selectedAddress]?.lng,
+            latitude: addressList[selectedAddress]?.lat,
+            longitude: addressList[selectedAddress]?.lng,
             address: addressList[selectedAddress]?.address,
+            isAddressAdded: true
           }
-          localStorage.setItemObject("addressDetails", newAddress);
+          dispatch(Address(newAddress))
         }}
       />
 

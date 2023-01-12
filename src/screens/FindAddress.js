@@ -1,19 +1,18 @@
 
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Platform, Text, View, Image, StyleSheet, TextInput, TouchableOpacity, Keyboard, TouchableHighlight, ImageBackground, FlatList, Modal, ToastAndroid } from 'react-native'
+import { Platform, Text, View, Image, TouchableOpacity, ImageBackground, FlatList, Modal, ToastAndroid } from 'react-native'
 import Geolocation from "react-native-geolocation-service";
-import { msgProvider, Icons, localStorage, config, Lang_chg, Font, Colors, ScreenHeader } from '../Provider/utilslib/Utils'
+import { msgProvider, Icons, config, Lang_chg, Font, Colors, ScreenHeader } from '../Provider/utilslib/Utils'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { s, vs } from 'react-native-size-matters';
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import AddEditAddress from '../components/Add_Edit_Address';
-
-var watchID = null;
-let newAddress = '';
-
+import { useSelector } from 'react-redux';
 
 
 const FindAddress = ({ navigation }) => {
+
+    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
 
     let googlePlacesRef = useRef()
 
@@ -25,18 +24,20 @@ const FindAddress = ({ navigation }) => {
         address: '',
         type: '',
         addressBottomSheet: false,
-        country: ''
+        country: '',
+        languageIndex: appLanguage == 'en' ? 0 : 1
     })
     const [isLoading, setIsLoading] = useState(false)
 
     const getUserCountry = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        if (user_details?.work_area === 'UAE') {
+
+
+        if (loggedInUserDetails?.work_area === 'UAE') {
             setAddressData(prevState => ({
                 ...prevState,
                 country: 'AE'
             }))
-        } else if (work_area === 'Saudi Arabia') {
+        } else if (loggedInUserDetails.work_area === 'Saudi Arabia') {
             setAddressData(prevState => ({
                 ...prevState,
                 country: 'SA'
@@ -69,7 +70,6 @@ const FindAddress = ({ navigation }) => {
                     case RESULTS.BLOCKED:
                         console.log('The permission is denied and not requestable anymore');
                         msgProvider.showError('Please grant location permission first')
-                        localStorage.setItemString('permission', 'denied')
                         break;
                 }
             })
@@ -87,7 +87,6 @@ const FindAddress = ({ navigation }) => {
                         break;
                     case RESULTS.DENIED:
                         console.log('The permission has not been requested / is denied but requestable');
-                        localStorage.setItemString('permission', 'denied')
                         break;
                     case RESULTS.LIMITED:
                         console.log('The permission is limited: some actions are possible');
@@ -99,7 +98,6 @@ const FindAddress = ({ navigation }) => {
                     case RESULTS.BLOCKED:
                         console.log('The permission is denied and not requestable anymore');
                         msgProvider.showError('Please grant location permission first')
-                        localStorage.setItemString('permission', 'denied')
                         break;
                 }
             })
@@ -112,7 +110,6 @@ const FindAddress = ({ navigation }) => {
         try {
             Geolocation.getCurrentPosition(info => {
                 // console.log('current location lat,long', info)
-                localStorage.setItemObject("position", info);
                 getadddressfromlatlong(info)
             });
         } catch (err) {
@@ -179,7 +176,7 @@ const FindAddress = ({ navigation }) => {
         <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, }}>
 
             <ScreenHeader
-                title={Lang_chg.Find_Location[config.language]}
+                title={Lang_chg.Find_Location[addressData.languageIndex]}
                 navigation={navigation}
                 onBackPress={() => navigation.pop()}
                 leftIcon
@@ -202,8 +199,8 @@ const FindAddress = ({ navigation }) => {
                                 }}></Image>
                         </View>
                         <View style={{ width: '91%', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(12) }}>
-                            <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.SemiBold, color: Colors.darkText }}>{Lang_chg.Currentlocation[config.language]}</Text>
-                            <Text style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{Lang_chg.Using_gpsofyoudevice[config.language]}</Text>
+                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.SemiBold, color: Colors.darkText }}>{Lang_chg.Currentlocation[addressData.languageIndex]}</Text>
+                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{Lang_chg.Using_gpsofyoudevice[addressData.languageIndex]}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -254,8 +251,6 @@ const FindAddress = ({ navigation }) => {
                             addressBottomSheet: true
                         }))
                         // console.log('add_location', add_location)
-                        // this.setState({ addressbar: true, latitude: details.geometry.location.lat, longitude: details.geometry.location.lng })
-                        // localStorage.setItemObject('addressDetails', add_location.address);
                     }}
                     query={{
 
@@ -274,7 +269,7 @@ const FindAddress = ({ navigation }) => {
                         //     // paddingHorizontal:s(10)
                         // },
                         textInput: {
-                            textAlign: config.textalign,
+                            alignSelf: 'flex-start',
                             borderRadius: 10,
                             color: Colors.Black,
                             alignSelf: 'center',
@@ -343,7 +338,9 @@ const FindAddress = ({ navigation }) => {
                     }))
 
                     if (status) {
-                        navigation.pop()
+                        setTimeout(() => {
+                            navigation.pop()
+                        }, 450);
                     }
                 }}
                 addressDetails={addressData}

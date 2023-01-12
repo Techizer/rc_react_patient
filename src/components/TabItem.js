@@ -7,41 +7,28 @@ import { DrawerActions } from '@react-navigation/native';
 import { Tab1, Tab2, Tab3, Tab4, Tab5 } from '../Icons/Index';
 import { Colors, Font } from '../Provider/Colorsfont';
 import { config } from '../Provider/configProvider';
-import { msgProvider } from '../Provider/Messageconsolevalidationprovider/messageProvider';
-import { localStorage } from '../Provider/localStorageProvider';
 
-let isGuest = false;
 
 const TabItemSimple = ({ navigation, icon, path, index, activeIndex, reset = false, title }) => {
 
 
-    const checkUserType = async () => {
-        isGuest = await localStorage.getItemString('Guest')
-    }
 
-    useEffect(() => {
-        checkUserType()
-    }, [path])
 
     return (
         <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-                // if ((isGuest === 'true' && (path === 'Apointment' || path === 'Consultation' || path === 'LabTest'))) {
-                //     msgProvider.showError('Please login first')
-                // } else {
+
                 (reset && index != 4) ?
                     navigation.reset({
                         index: 0,
                         routes: [{ name: path }],
                     })
                     :
-                    // navigation.toggleDrawer();
                     navigation.reset({
                         index: 0,
                         routes: [{ name: path }],
                     })
-                // navigation.dispatch(DrawerActions.toggleDrawer());
             }}
             style={[{
                 flex: (config.language === 1 ? 1 : (index === 0 || index === 3 || index === 4) ? 0.18 : 0.23),

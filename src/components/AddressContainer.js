@@ -5,8 +5,9 @@ import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, Lang_chg } from "../Provider/utilslib/Utils";
 import { Address, Cross, dummyUser, Edit, Menu, roundCheck } from "../Icons/Index";
+import { useSelector } from "react-redux";
 
 
 
@@ -22,6 +23,13 @@ const AddressContainer = ({
     isLoading,
     defaultAdd
 }) => {
+
+    const {
+        appLanguage,
+        contentAlign,
+        guest,
+        loggedInUserDetails,
+    } = useSelector(state => state.StorageReducer)
 
     useEffect(() => {
         // console.log({ defaultAdd });
@@ -56,7 +64,7 @@ const AddressContainer = ({
 
                         <View style={{ width: '100%', }}>
                             <SkeletonPlaceholder>
-                                <SkeletonPlaceholder.Item width={windowWidth-100} height={s(15)} borderRadius={s(5)} style={{marginTop:vs(7)}} />
+                                <SkeletonPlaceholder.Item width={windowWidth - 100} height={s(15)} borderRadius={s(5)} style={{ marginTop: vs(7) }} />
                             </SkeletonPlaceholder>
                         </View>
                     </View>
@@ -72,10 +80,10 @@ const AddressContainer = ({
                 </View>
 
                 <View style={{ width: '91%', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(12) }}>
-                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
                         <View style={{ width: '35%' }}>
-                            <Text numberOfLines={1} style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Regular, color: Colors.darkText }}>{addressDetails.title ? addressDetails.title : 'Unnamed'}</Text>
+                            <Text numberOfLines={1} style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Regular, color: Colors.darkText }}>{addressDetails.title ? addressDetails.title : 'Unnamed'}</Text>
                         </View>
 
                         <View style={{ width: '57%', }}>
@@ -84,7 +92,7 @@ const AddressContainer = ({
                                 (
                                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '33%' }}>
                                         <SvgXml xml={roundCheck} />
-                                        <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[config.language]}</Text>
+                                        <Text style={{ fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[appLanguage == 'en' ? 0 : 1]}</Text>
                                     </View>
                                 )
                             }
@@ -105,7 +113,7 @@ const AddressContainer = ({
                     </View>
 
                     <View style={{ width: '100%', }}>
-                        <Text numberOfLines={1} style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{addressDetails.address ? addressDetails?.address : '-'}</Text>
+                        <Text numberOfLines={1} style={{ alignSelf:'flex-start', fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{addressDetails.address ? addressDetails?.address : '-'}</Text>
                     </View>
                 </View>
             </View>

@@ -43,7 +43,8 @@ const NonEditableInput = ({
 
         <View style={{
           width: '35%',
-          justifyContent:'center'
+          justifyContent:'center',
+          paddingHorizontal:s(13)
         }}>
           <Text style={styles.Title}>{title}</Text>
         </View>
@@ -83,12 +84,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.Border,
     marginBottom: 7,
-    paddingLeft: s(12)
   },
   Title: {
     color: Colors.dullGrey,
     fontSize: Font.medium,
-    textAlign: config.textalign,
+    alignSelf:'flex-start',
+    textAlign:'left',
     fontFamily: Font.Regular,
     includeFontPadding: false,
   },

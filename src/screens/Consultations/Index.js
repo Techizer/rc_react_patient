@@ -9,7 +9,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import {
   Colors,
   Font,
-  config,
   windowWidth,
   Lang_chg,
   deviceHeight,
@@ -20,13 +19,14 @@ import { ScreenHeader } from "../../components/ScreenHeader";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";
+import { useSelector } from "react-redux";
 
 const Tabs = createMaterialTopTabNavigator()
 
-
-
-
 const ConsultIndex = ({ navigation, route }) => {
+
+  const { todayConsultations, appLanguage } = useSelector(state => state.StorageReducer)
+
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -39,7 +39,7 @@ const ConsultIndex = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Doctor_Consultations[config.language]}
+        title={Lang_chg.Doctor_Consultations[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,
@@ -67,7 +67,7 @@ const ConsultIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={route?.params?.todaysLength > 0 ? 'Ongoing' : 'Upcoming'}
+        initialRouteName={todayConsultations?.length > 0 ? Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1] : Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]}
         screenOptions={{
           tabBarStyle: { height: (windowWidth * 10.5) / 100, width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
@@ -89,9 +89,9 @@ const ConsultIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={'Upcoming'} component={Upcoming} initialParams={{ isGuest: route?.params?.isGuest }} />
-        <Tabs.Screen name={'Ongoing'} component={OnGoing} initialParams={{ isGuest: route?.params?.isGuest }} />
-        <Tabs.Screen name={'Past'} component={Past} initialParams={{ isGuest: route?.params?.isGuest }} />
+        <Tabs.Screen name={Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
+        <Tabs.Screen name={Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
+        <Tabs.Screen name={Lang_chg.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
 
       </Tabs.Navigator>
 

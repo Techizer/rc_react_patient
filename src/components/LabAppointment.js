@@ -5,18 +5,22 @@ import {
 } from "react-native";
 import { vs } from "react-native-size-matters";
 import { TabBar, TabView } from "react-native-tab-view";
+import { useSelector } from "react-redux";
 import { Colors, Font } from "../Provider/Colorsfont";
-import { config } from "../Provider/configProvider";
 import { Lang_chg } from "../Provider/Language_provider";
 import { windowWidth } from "../Provider/utilslib/Utils";
 
 const LabAppointment = (props) => {
+
   // console.log("sound ::::", sound);
+  const { address, loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+
   const { navigation, indexPosition, sendData, data } = props;
   const TestSelection = () => <View style={{ flex: 1, }} />;
 
   const PackageSelection = () => <View style={{ flex: 1 }} />;
   const layout = useWindowDimensions();
+  const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1,)
   const [index, setIndex] = useState(indexPosition ? indexPosition : 0);
   const [routes, setRoute] = useState([]);
   const [tabKey, setTabKey] = useState("test");
@@ -30,13 +34,13 @@ const LabAppointment = (props) => {
     if (data.task_base_task != null && data.task_base_task.length > 0) {
       tabArray.push({
         key: "test",
-        title: Lang_chg.Tests[config.language],
+        title: Lang_chg.Tests[languageIndex],
       });
     }
     if (data.package_base_task != null && data.package_base_task.length > 0) {
       tabArray.push({
         key: "package",
-        title: Lang_chg.HealthPackages[config.language],
+        title: Lang_chg.HealthPackages[languageIndex],
       });
     }
     //set route here
@@ -79,7 +83,7 @@ const LabAppointment = (props) => {
       labelStyle={{
         textTransform: "capitalize",
         fontSize: Font.large,
-        textAlign: config.textalign,
+        alignSelf:'flex-start',
         fontFamily: Font.Medium,
         alignSelf: "center",
       }}

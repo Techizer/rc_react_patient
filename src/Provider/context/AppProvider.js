@@ -16,6 +16,7 @@ import AppLoader from "./AppLoader";
 import NetInfo from "@react-native-community/netinfo";
 
 const AppContext = React.createContext({});
+
 export const AppConsumer = AppContext.Consumer;
 
 export class AppProvider extends Component {

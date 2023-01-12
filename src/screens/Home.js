@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Text,
   FlatList,
@@ -29,11 +29,10 @@ import { ScreenHeader } from "../Provider/utilslib/Utils";
 import Styles from "../Styles";
 import BannerCrousel from "../components/BannerCrousel";
 import moment from "moment";
-global.current_lat_long = "NA";
-global.myLatitude = "NA";
-global.myLongitude = "NA";
-
-const type = 'notification';
+import { useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { Notifications } from "../Redux/Actions";
 
 const HomeHealthcareServiceAppointments = [
   {
@@ -113,44 +112,31 @@ const LabTest = [
   },
 ];
 
-export default class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalVisible3: false,
-      latdelta: "0.0922",
-      longdelta: "0.0421",
-      profile_img: "",
-      title: "Booking",
-      body: "",
-      address: "",
-      notification_count: "",
-      app_status: "",
-      bannersList: []
-    };
-  }
-  componentDidMount() {
+const Home = ({ navigation }) => {
 
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    this.props.navigation.addListener("focus", () => {
-      // if (global.isLogin == false) {
-      if (global.isLogin == true) {
-        this.getNotificationCount();
-        this.getTopBanners()
-      }
-      this.getAddress();
-      this.removeExpiredCart()
-    });
-    // PushNotification.getChannels(function (channel_ids) {
-    //   console.log(channel_ids); 
-    // });
-  }
+  const { address, loggedInUserDetails, guest, appLanguage, deviceToken, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const [homeData, setHomeData] = useState({
+    languageIndex: appLanguage == 'ar' ? 1 : 0,
+    profileImg: "",
+    address: '',
+    bannersList: []
+  })
+  const isFocused = useIsFocused()
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-  }
+  useEffect(() => {
+    // console.log(address.address);
+    // console.log(loggedInUserDetails);
+    if (guest == false) {
+      getNotificationCount();
+      getTopBanners()
+    }
+    // removeExpiredCart()
+  }, [isFocused])
 
-  removeExpiredCart = async () => {
+
+
+  const removeExpiredCart = async () => {
     let cartId = await localStorage.getItemString('cartId')
     let cartTime = await localStorage.getItemString('cartTime')
     console.log({ cartId });
@@ -175,7 +161,7 @@ export default class Home extends Component {
 
       if (hourDiff > 0 || (minsDiff > 0)) {
         console.log('Time is greater than 1 min');
-        this.remove_cart(cartId).then(() => {
+        remove_cart(cartId).then(() => {
           localStorage.removeItem('cartId')
           localStorage.removeItem('cartTime')
         })
@@ -184,7 +170,7 @@ export default class Home extends Component {
     }
   }
 
-  remove_cart = async (cartId) => {
+  const remove_cart = async (cartId) => {
     let url = config.baseURL + "api-patient-remove-cart";
     var data = new FormData();
     data.append("cart_id", cartId)
@@ -204,42 +190,20 @@ export default class Home extends Component {
       });
   };
 
-  logout = async () => {
-    await localStorage.removeItem("user_arr");
-    await localStorage.removeItem("user_login");
-    // await localStorage.removeItem('password');
-    // await localStorage.clear();
-    // this.setState({ show: false });
-    global.isLogin = false
-    this.props.navigation.reset({
-      index: 0,
-      routes: [{ name: "AuthStack" }],
-    });
-  };
-  handleBackButton = () => {
-    // console.log('Back button is pressed', this.props.route.name);
-    if (this.props.route.name == "Home") {
-      return true;
-    } else {
-      return false;
-    }
-
-  }
-
-
-  getTopBanners = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getTopBanners = async () => {
 
     let url = config.baseURL + "api-patient-dashboard";
     var data = new FormData();
-    data.append("login_user_id", user_id);
+    data.append("login_user_id", loggedInUserDetails.user_id);
 
     apifuntion.postApi(url, data, 1)
       .then((obj) => {
         // consolepro.consolelog("getTopBanners-response.............", obj.result?.bannerimage);
         if (obj.status == true) {
-          this.setState({ bannersList: obj.result?.bannerimage })
+          setHomeData(prevState => ({
+            ...prevState,
+            bannersList: obj.result?.bannerimage
+          }))
         } else {
           return false;
         }
@@ -248,20 +212,18 @@ export default class Home extends Component {
       });
   };
 
-  getNotificationCount = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getNotificationCount = async () => {
 
     let url = config.baseURL + "api-notification-count";
     var data = new FormData();
-    data.append("login_user_id", user_id);
+    data.append("login_user_id", loggedInUserDetails.user_id);
 
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
         // consolepro.consolelog("getNotificationCount-response", obj);
         if (obj.status == true) {
-          localStorage.setItemString('notiCount', JSON.stringify(obj?.result))
+          dispatch(Notifications(obj?.result))
         } else {
           return false;
         }
@@ -271,354 +233,332 @@ export default class Home extends Component {
       });
   };
 
+  return (
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={Styles.container3}>
 
 
-  getAddress = async () => {
-    let addDetails = await localStorage.getItemObject("addressDetails");
+        <ScreenHeader
+          navigation={navigation}
+          // title={Lang_chg.Home[homeData.languageIndex]}
+          leftIcon={loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : ''}
+          rightIcon={!guest}
+          defaultAddress={address.address}
+        />
 
-    if (addDetails != null && addDetails != '' && addDetails != undefined) {
-      this.setState({
-        address: addDetails.address,
-      });
-    }
-    if (global.isLogin == false) {
-      this.setState({
-        profile_img: '',
-      });
-    } else {
-      let user_details = await localStorage.getItemObject("user_arr");
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+            }}>
+            {/* -----------------Header Banner----------------- */}
+            {
+              homeData.bannersList.length > 0 &&
+              <BannerCrousel data={homeData.bannersList} navigation={navigation} />
+            }
 
-      if (user_details.image != null) {
-        this.setState({
-          profile_img: config.img_url3 + user_details["image"],
-        });
-      }
-    }
-
-  };
-
-
-
-  render() {
-    return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={Styles.container3}>
-
-
-          <ScreenHeader
-            navigation={this.props.navigation}
-            title={Lang_chg.Home[config.language]}
-            leftIcon={this.state.profile_img}
-            rightIcon={global.isLogin}
-            address={this.state.address}
-          />
-
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
-            showsVerticalScrollIndicator={false}
-          >
-            <View
-              style={{
-                width: "100%",
-                alignSelf: "center",
+            {/* FlatList 1 */}
+            <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9) }}>
+              <Text style={{
+                fontSize: Font.medium,
+                fontFamily: Font.Medium,
+                color: Colors.darkText,
+                marginBottom: vs(7),
+                alignSelf: 'flex-start',
+                textAlign: 'left',
               }}>
-              {/* -----------------Header Banner----------------- */}
-              {
-                this.state.bannersList.length > 0 &&
-                <BannerCrousel data={this.state.bannersList} navigation={this.props.navigation} />
-              }
+                {Lang_chg.HomeHealthcareServiceAppointments[homeData.languageIndex]}
+              </Text>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={HomeHealthcareServiceAppointments}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(8) }}>
 
-              {/* FlatList 1 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9) }}>
-                <Text style={{
-                  fontSize: Font.medium,
-                  fontFamily: Font.Medium,
-                  color: Colors.darkText,
-                  marginBottom: vs(7),
-                  textAlign: config.textRotate
-                }}>
-                  {Lang_chg.HomeHealthcareServiceAppointments[config.language]}
-                </Text>
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={true}
-                  data={HomeHealthcareServiceAppointments}
-                  ItemSeparatorComponent={() => {
-                    return (
-                      <View style={{ width: s(8) }}>
-
+                    </View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate(
+                          "AllServiceProviderListing",
+                          { pass_status: item.pass_status }
+                        )
+                      }
+                      style={[
+                        {
+                          borderRadius: 10,
+                          width: s(140),
+                          backgroundColor: Colors.White,
+                          borderColor: Colors.Border,
+                          borderWidth: 1,
+                          paddingBottom: vs(10)
+                        }]}>
+                      <View style={{ width: '100%', }}>
+                        <Image
+                          style={{
+                            borderTopLeftRadius: 9,
+                            borderTopRightRadius: 9,
+                            width: "100%",
+                            height: vs(110),
+                            alignSelf: "center",
+                          }}
+                          source={item.img}
+                        />
                       </View>
-                    )
-                  }}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.props.navigation.navigate(
-                            "AllServiceProviderListing",
-                            { pass_status: item.pass_status }
-                          )
-                        }
-                        style={[
-                          {
-                            borderRadius: 10,
-                            width: s(140),
-                            backgroundColor: Colors.White,
-                            borderColor: Colors.Border,
-                            borderWidth: 1,
-                            paddingBottom: vs(10)
-                          }]}>
-                        <View style={{ width: '100%', }}>
-                          <Image
-                            style={{
-                              borderTopLeftRadius: 9,
-                              borderTopRightRadius: 9,
-                              width: "100%",
-                              height: vs(110),
-                              alignSelf: "center",
-                            }}
-                            source={item.img}
-                          />
-                        </View>
 
-                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
-                          <Text style={Styles.cardtitle}>
-                            {config.language == 0 ? item.title : item?.arabic_title}
-                          </Text>
-                        </View>
-                        <Text style={{
-                          textAlign: config.textalign,
-                          fontSize: Font.small,
-                          fontFamily: Font.Regular,
-                          color: Colors.Black,
-                          paddingHorizontal: s(6)
-                        }}>
-                          {config.language == 0 ? item.details : item?.arabic_details}
+                      <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                        <Text style={Styles.cardtitle}>
+                          {homeData.languageIndex == 0 ? item.title : item?.arabic_title}
                         </Text>
-
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
-              {/* FlatList 2 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), }}>
-                <Text style={{
-                  fontSize: Font.medium,
-                  fontFamily: Font.Medium,
-                  color: Colors.darkText,
-                  marginBottom: vs(7),
-                  textAlign: config.textRotate
-                }}>
-                  {Lang_chg.DoctorConsultation[config.language]}
-                </Text>
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={true}
-                  data={DoctorConsultation}
-                  ItemSeparatorComponent={() => {
-                    return (
-                      <View style={{ width: s(8) }}>
-
                       </View>
-                    )
-                  }}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.props.navigation.navigate(
-                            "AllServiceProviderListing",
-                            {
-                              pass_status: item.pass_status,
-                              enableFor: item.enableFor
-                            }
-                          )
-                        }
-                        style={[
+                      <Text style={{
+                        alignSelf: 'flex-start',
+                        textAlign: 'left',
+                        fontSize: Font.small,
+                        fontFamily: Font.Regular,
+                        color: Colors.Black,
+                        paddingHorizontal: s(6)
+                      }}>
+                        {homeData.languageIndex == 0 ? item.details : item?.arabic_details}
+                      </Text>
+
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+
+            {/* FlatList 2 */}
+            <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), }}>
+              <Text style={{
+                fontSize: Font.medium,
+                fontFamily: Font.Medium,
+                color: Colors.darkText,
+                marginBottom: vs(7),
+                alignSelf: 'flex-start',
+                textAlign: 'left',
+              }}>
+                {Lang_chg.DoctorConsultation[homeData.languageIndex]}
+              </Text>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={DoctorConsultation}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(8) }}>
+
+                    </View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate(
+                          "AllServiceProviderListing",
                           {
-                            borderRadius: 10,
-                            width: s(140),
-                            backgroundColor: Colors.White,
-                            borderColor: Colors.Border,
-                            borderWidth: 1,
-                            paddingBottom: vs(10)
-                          }]}>
-                        <View style={{ width: '100%', }}>
-                          <Image
-                            style={{
-                              borderTopLeftRadius: 9,
-                              borderTopRightRadius: 9,
-                              width: "100%",
-                              height: vs(110),
-                              alignSelf: "center",
-                            }}
-                            source={item.img}
-                          />
-                        </View>
-
-                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
-                          <Text style={Styles.cardtitle}>
-                            {config.language == 0 ? item.title : item?.arabic_title}
-                          </Text>
-                        </View>
-
-                        <Text style={{
-                          textAlign: config.textalign,
-                          fontSize: Font.small,
-                          fontFamily: Font.Regular,
-                          color: Colors.Black,
-                          paddingHorizontal: s(6)
-                        }}>
-                          {config.language == 0 ? item.details : item?.arabic_details}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
-
-              {/* FlatList 3 */}
-              <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
-                <Text style={{
-                  fontSize: Font.medium,
-                  fontFamily: Font.Medium,
-                  color: Colors.darkText,
-                  marginBottom: vs(7),
-                  textAlign: config.textRotate
-                }}>
-                  {Lang_chg.Lab_Test_Booking[config.language]}
-                </Text>
-                <FlatList
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={true}
-                  data={LabTest}
-                  ItemSeparatorComponent={() => {
-                    return (
-                      <View style={{ width: s(8) }}>
-
+                            pass_status: item.pass_status,
+                            enableFor: item.enableFor
+                          }
+                        )
+                      }
+                      style={[
+                        {
+                          borderRadius: 10,
+                          width: s(140),
+                          backgroundColor: Colors.White,
+                          borderColor: Colors.Border,
+                          borderWidth: 1,
+                          paddingBottom: vs(10)
+                        }]}>
+                      <View style={{ width: '100%', }}>
+                        <Image
+                          style={{
+                            borderTopLeftRadius: 9,
+                            borderTopRightRadius: 9,
+                            width: "100%",
+                            height: vs(110),
+                            alignSelf: "center",
+                          }}
+                          source={item.img}
+                        />
                       </View>
-                    )
-                  }}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() =>
-                          this.props.navigation.navigate(
-                            "AllServiceProviderListing",
-                            { pass_status: item.pass_status }
-                          )
-                        }
-                        style={{
-                          width: windowWidth,
-                          flexDirection: 'row'
-                        }}>
 
-                        <View style={{ width: '42%', justifyContent: 'center' }}>
-                          <Image
-                            style={{
-                              borderRadius: (windowWidth * 2) / 100,
-                              width: (windowWidth * 40) / 100,
-                              height: (windowWidth * 35) / 100,
-                            }}
-                            source={item.img}
-                          />
-                          <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate(
-                              "AllServiceProviderListing",
-                              { pass_status: item.pass_status }
-                            )}
-                            style={{
-                              borderRadius: (windowWidth * 2) / 100,
-                              width: (windowWidth * 40) / 100,
-                              height: (windowWidth * 9) / 100,
-                              marginTop: vs(8),
-                              marginHorizontal: s(1),
-                              marginBottom: vs(4),
-                              backgroundColor: Colors.White,
-                              borderWidth: 0.8,
-                              borderColor: Colors.ButtonBorder,
-                              shadowOpacity: 0.3,
-                              shadowColor: '#000',
-                              shadowOffset: { width: 1, height: 1 },
-                              elevation: 2,
-                              shadowRadius: 1,
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            <Text
-                              style={{
-                                fontSize: Font.small,
-                                fontFamily: Font.Medium,
-                                color: Colors.Blue,
-                                textAlign: config.textRotate
-                              }}
-                            >{Lang_chg.Find_Labs[config.language]}</Text>
-                          </TouchableOpacity>
-                        </View>
+                      <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                        <Text style={Styles.cardtitle}>
+                          {homeData.languageIndex == 0 ? item.title : item?.arabic_title}
+                        </Text>
+                      </View>
 
-                        <View style={{ width: '48%', }}>
-
-                          <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
-
-                            <Text style={Styles.cardtitle}>{config.language == 0 ? item.title : item.arabic_title}</Text>
-                            <Text style={{
-                              textAlign: config.textRotate,
-                              fontSize: Font.small,
-                              fontFamily: Font.Regular,
-                              color: Colors.Black,
-                              marginTop: vs(7),
-                            }}>
-                              {config.language == 0 ? item.details : item.arabic_details}
-                            </Text>
-
-                            <Text style={[{
-                              textAlign: config.textRotate,
-                              fontSize: Font.xsmall,
-                              fontFamily: Font.Regular,
-                              color: Colors.Blue,
-                              marginTop: vs(8)
-                            }]}>
-                              {config.language == 0 ? item.status : item.arabic_status}
-                            </Text>
-
-                            <Text style={[{
-                              textAlign: config.textRotate,
-                              fontSize: Font.xsmall,
-                              fontFamily: Font.Regular,
-                              color: Colors.Blue,
-                              marginTop: vs(8),
-                              color: Colors.Black,
-                              marginTop: vs(4),
-                            }]}>
-                              {config.language == 0 ? item.terms : item.arabic_terms}
-                            </Text>
-                          </View>
-                        </View>
-
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
+                      <Text style={{
+                        alignSelf: 'flex-start',
+                        textAlign: 'left',
+                        fontSize: Font.small,
+                        fontFamily: Font.Regular,
+                        color: Colors.Black,
+                        paddingHorizontal: s(6)
+                      }}>
+                        {homeData.languageIndex == 0 ? item.details : item?.arabic_details}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
             </View>
 
 
-          </ScrollView>
-        </View >
+            {/* FlatList 3 */}
+            <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
+              <Text style={{
+                fontSize: Font.medium,
+                fontFamily: Font.Medium,
+                color: Colors.darkText,
+                marginBottom: vs(7),
+                alignSelf: 'flex-start',
+                textAlign: 'left',
+              }}>
+                {Lang_chg.Lab_Test_Booking[homeData.languageIndex]}
+              </Text>
+              <FlatList
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={LabTest}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(8) }}>
+
+                    </View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() =>
+                        navigation.navigate(
+                          "AllServiceProviderListing",
+                          { pass_status: item.pass_status }
+                        )
+                      }
+                      style={{
+                        width: windowWidth,
+                        flexDirection: 'row'
+                      }}>
+
+                      <View style={{ width: '42%', justifyContent: 'center' }}>
+                        <Image
+                          style={{
+                            borderRadius: (windowWidth * 2) / 100,
+                            width: (windowWidth * 40) / 100,
+                            height: (windowWidth * 35) / 100,
+                          }}
+                          source={item.img}
+                        />
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate(
+                            "AllServiceProviderListing",
+                            { pass_status: item.pass_status }
+                          )}
+                          style={{
+                            borderRadius: (windowWidth * 2) / 100,
+                            width: (windowWidth * 40) / 100,
+                            height: (windowWidth * 9) / 100,
+                            marginTop: vs(8),
+                            marginHorizontal: s(1),
+                            marginBottom: vs(4),
+                            backgroundColor: Colors.White,
+                            borderWidth: 0.8,
+                            borderColor: Colors.ButtonBorder,
+                            shadowOpacity: 0.3,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 1, height: 1 },
+                            elevation: 2,
+                            shadowRadius: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: Font.small,
+                              fontFamily: Font.Medium,
+                              color: Colors.Blue,
+                            }}
+                          >{Lang_chg.Find_Labs[homeData.languageIndex]}</Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      <View style={{ width: '48%', }}>
+
+                        <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
+
+                          <Text style={Styles.cardtitle}>{homeData.languageIndex == 0 ? item.title : item.arabic_title}</Text>
+                          <Text style={{
+                            alignSelf: 'flex-start',
+                            textAlign: 'left',
+                            fontSize: Font.small,
+                            fontFamily: Font.Regular,
+                            color: Colors.Black,
+                            marginTop: vs(7),
+                          }}>
+                            {homeData.languageIndex == 0 ? item.details : item.arabic_details}
+                          </Text>
+
+                          <Text style={[{
+                            alignSelf: 'flex-start',
+                            textAlign: 'left',
+                            fontSize: Font.xsmall,
+                            fontFamily: Font.Regular,
+                            color: Colors.Blue,
+                            marginTop: vs(8)
+                          }]}>
+                            {homeData.languageIndex == 0 ? item.status : item.arabic_status}
+                          </Text>
+
+                          <Text style={[{
+                            alignSelf: 'flex-start',
+                            textAlign: 'left',
+                            fontSize: Font.xsmall,
+                            fontFamily: Font.Regular,
+                            color: Colors.Blue,
+                            marginTop: vs(8),
+                            color: Colors.Black,
+                            marginTop: vs(4),
+                          }]}>
+                            {homeData.languageIndex == 0 ? item.terms : item.arabic_terms}
+                          </Text>
+                        </View>
+                      </View>
+
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+
+          </View>
 
 
-
-
-
+        </ScrollView>
       </View >
-    );
-  }
+
+
+
+
+
+    </View >
+  );
+
 }
 const styles_new = StyleSheet.create({
 
@@ -813,3 +753,6 @@ const styles_new = StyleSheet.create({
     color: "#4B4B4B",
   },
 });
+
+
+export default Home;

@@ -6,7 +6,6 @@ class ApiContainer {
       NetInfo.fetch().then((state) => {
         if (state.isConnected == true) {
           if (loading_status == 0) {
-            global.props.showLoader();
           }
           fetch(url, {
             method: "GET",
@@ -22,19 +21,16 @@ class ApiContainer {
             .then((response) => response.json())
             .then((obj) => {
               if (loading_status == 0) {
-                global.props.hideLoader();
               }
               resolve(obj);
             })
             .catch((error) => {
               if (loading_status == 0) {
-                global.props.hideLoader();
               }
               reject(error);
             });
         } else {
           if (loading_status == 0) {
-            global.props.hideLoader();
           }
           reject("noNetwork");
         }
@@ -47,9 +43,7 @@ class ApiContainer {
       NetInfo.fetch().then((state) => {
         if (state.isConnected == true) {
           if (loading_status == 0) {
-            global.props.showLoader();
           }
-          // global.props.showLoader();
           fetch(url, {
             method: "POST",
             headers: {
@@ -65,19 +59,16 @@ class ApiContainer {
             .then((response) => response.json())
             .then((obj) => {
               if (loading_status == 0) {
-                global.props.hideLoader();
               }
               resolve(obj);
             })
             .catch((error) => {
               console.log("error", error);
               if (loading_status == 0) {
-                global.props.hideLoader();
               }
               reject(error);
             });
         } else {
-          // global.props.hideLoader();
           reject("noNetwork");
         }
       });

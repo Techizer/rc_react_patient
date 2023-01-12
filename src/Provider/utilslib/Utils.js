@@ -1,6 +1,6 @@
 import { config } from "../configProvider";
 import { Dimensions, Platform, StatusBar } from "react-native";
-import { localStorage } from "../localStorageProvider";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lang_chg } from "../Language_provider";
 import { consolepro } from "../Messageconsolevalidationprovider/Consoleprovider";
 import {
@@ -38,7 +38,6 @@ export {
   windowWidth,
   mediaprovider,
   Cameragallery,
-  localStorage,
   Lang_chg,
   consolepro,
   msgProvider,

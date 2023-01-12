@@ -15,15 +15,13 @@ import {
   Font,
   config,
   windowWidth,
-  localStorage,
-  consolepro,
   Lang_chg,
-  apifuntion,
 } from "../Provider/utilslib/Utils";
 import { vs, s } from "react-native-size-matters";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { SvgXml } from "react-native-svg";
 import { dummyUser, Star, Location, Clock, Capsule } from "../Icons/Index";
+import { useSelector } from "react-redux";
 
 
 const ServiceProviderContainer = ({
@@ -34,6 +32,9 @@ const ServiceProviderContainer = ({
   docType,
   Index
 }) => {
+
+  const { guest, appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
+
   return (
 
 
@@ -236,7 +237,8 @@ const ServiceProviderContainer = ({
                 style={{
                   fontFamily: Font.Medium,
                   fontSize: Font.large,
-                  textAlign: config.textRotate,
+                  alignSelf: 'flex-start',
+                  textAlign: 'left',
                   color: Colors.darkText,
                   width: '80%'
                 }}>
@@ -253,7 +255,7 @@ const ServiceProviderContainer = ({
                       fontFamily: Font.Regular,
                       color: Colors.Blue,
                       fontSize: Font.small,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       paddingHorizontal: vs(8)
                     }}
                   >
@@ -269,7 +271,7 @@ const ServiceProviderContainer = ({
                     fontFamily: Font.Medium,
                     color: Colors.Blue,
                     fontSize: Font.small,
-                    textAlign: config.textRotate,
+                    alignSelf: 'flex-start',
                     marginTop: vs(3)
                   }}
                 >
@@ -284,7 +286,7 @@ const ServiceProviderContainer = ({
                       fontFamily: Font.Medium,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       marginTop: vs(3)
                     }}
                   >
@@ -302,7 +304,7 @@ const ServiceProviderContainer = ({
                       fontFamily: Font.Regular,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       marginTop: vs(2)
                     }}
                   >
@@ -315,7 +317,7 @@ const ServiceProviderContainer = ({
                       fontFamily: Font.Regular,
                       color: Colors.DarkGrey,
                       fontSize: Font.small,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       marginTop: vs(2)
                     }}
                   >
@@ -336,11 +338,11 @@ const ServiceProviderContainer = ({
                     fontFamily: Font.Regular,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
-                    textAlign: config.textRotate,
+                    alignSelf: 'flex-start',
                     paddingHorizontal: s(7)
                   }}
                 >
-                  {Lang_chg.NearBy[config.language]}
+                  {Lang_chg.NearBy[appLanguage == 'en' ? 0 : 1]}
                 </Text>
 
                 <Text
@@ -348,7 +350,7 @@ const ServiceProviderContainer = ({
                     fontFamily: Font.Regular,
                     color: Colors.Blue,
                     fontSize: Font.small,
-                    textAlign: config.textRotate,
+                    alignSelf: 'flex-start',
                   }}
                 >
                   {`${Item.distance}`}
@@ -369,7 +371,6 @@ const ServiceProviderContainer = ({
                     fontFamily: Font.Regular,
                     color: Colors.DarkGrey,
                     fontSize: Font.small,
-                    textAlign: config.textRotate,
                     paddingHorizontal: s(7)
                   }}
                 >
@@ -385,7 +386,7 @@ const ServiceProviderContainer = ({
                             fontFamily: Font.Regular,
                             color: Colors.Blue,
                             fontSize: Font.small,
-                            textAlign: config.textRotate,
+                            alignSelf: 'flex-start',
                           }}
                         >
                           {index === Item?.availability.length - 1 ? `${item?.slot_day}` : `${item?.slot_day}, `}
@@ -421,7 +422,6 @@ const ServiceProviderContainer = ({
                 color: (Item.provider_available == "0") ? Colors.Green : Colors.DarkGrey,
                 fontSize: Font.small,
                 fontFamily: Font.Regular,
-                textAlign: config.textRotate
               }}
             >
               {Item.bavi_text}
@@ -470,7 +470,7 @@ const ServiceProviderContainer = ({
                     textAlign: "center",
                   }}
                 >
-                  {providerType === 'nurse' ? Lang_chg.BOOKAPPOINTMENT[config.language] : providerType === 'lab' ? Lang_chg.BOOKTEST[config.language] : Lang_chg.BookConsultation[config.language]}
+                  {providerType === 'nurse' ? Lang_chg.BOOKAPPOINTMENT[appLanguage == 'en' ? 0 : 1] : providerType === 'lab' ? Lang_chg.BOOKTEST[appLanguage == 'en' ? 0 : 1] : Lang_chg.BookConsultation[appLanguage == 'en' ? 0 : 1]}
                 </Text>
               </TouchableOpacity>
             }

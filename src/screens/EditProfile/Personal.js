@@ -10,17 +10,15 @@ import {
     Keyboard,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import {
-    consolepro,
     Colors,
     Icons,
     Font,
     config,
-    windowWidth,
     Lang_chg,
-    localStorage,
     apifuntion,
     msgProvider,
     msgText,
@@ -35,204 +33,17 @@ import { SvgXml } from "react-native-svg";
 import { dummyUser, Edit } from "../../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import NationalityBottomSheet from "../../components/ListBottomSheet";
+import { useDispatch, useSelector } from "react-redux";
+import { UserDetails } from "../../Redux/Actions";
 
 
+const Personal = ({ navigation }) => {
 
-const bloodModal_arr = [
-    {
-        id: 1,
-        blood: "A+",
-        line: 0,
-    },
-    {
-        id: 2,
-        blood: "O+",
-        line: 0,
-    },
-    {
-        id: 3,
-        blood: "B+",
-        line: 0,
-    },
-    {
-        id: 4,
-        blood: "AB+",
-        line: 0,
-    },
-    {
-        id: 5,
-        blood: "A-",
-        line: 0,
-    },
-    {
-        id: 5,
-        blood: "B-",
-        line: 0,
-    },
-    {
-        id: 6,
-        blood: "O-",
-        line: 0,
-    },
-    {
-        id: 7,
-        blood: "AB-",
-        line: 1,
-    },
-];
-
-const occupation_arr = [
-    {
-        id: 1,
-        name: "Technician",
-        line: 0,
-    },
-    {
-        id: 2,
-        name: "Teacher",
-        line: 0,
-    },
-    {
-        id: 3,
-        name: "Machinist",
-        line: 0,
-    },
-    {
-        id: 4,
-        name: "Technologist",
-        line: 0,
-    },
-    {
-        id: 5,
-        name: "Electrician",
-        line: 0,
-    },
-    {
-        id: 6,
-        name: "Engineering technician",
-        line: 0,
-    },
-    {
-        id: 7,
-        name: "Actuary",
-        line: 0,
-    },
-    {
-        id: 8,
-        name: "Electrician",
-        line: 0,
-    },
-    {
-        id: 9,
-        name: "Tradesman",
-        line: 0,
-    },
-    {
-        id: 10,
-        name: "Mediacl laboratory scientist",
-        line: 0,
-    },
-    {
-        id: 11,
-        name: "Quantity surveyor",
-        line: 0,
-    },
-    {
-        id: 12,
-        name: "Prosthetist",
-        line: 0,
-    },
-    {
-        id: 13,
-        name: "Paramedic",
-        line: 0,
-    },
-    {
-        id: 14,
-        name: "Bricklayer",
-        line: 0,
-    },
-    {
-        id: 15,
-        name: "Special Education Teacher",
-        line: 0,
-    },
-    {
-        id: 16,
-        name: "Lawyer",
-        line: 0,
-    },
-    {
-        id: 17,
-        name: "Physician",
-        line: 0,
-    },
-    {
-        id: 18,
-        name: "other",
-        line: 1,
-    },
-];
-
-const activity_arr = [
-    {
-        id: 1,
-        name: "Extremely inactive",
-        line: 0,
-    },
-    {
-        id: 2,
-        name: "Sedentary",
-        line: 0,
-    },
-    {
-        id: 3,
-        name: "Moderately active",
-        line: 0,
-    },
-    {
-        id: 4,
-        name: "Vigorously active",
-        line: 0,
-    },
-    {
-        id: 5,
-        name: "Extremely active",
-        line: 1,
-    },
-];
-
-const food_arr = [
-    {
-        id: 1,
-        name: "Standard",
-        line: 0,
-    },
-    {
-        id: 2,
-        name: "Pescetarian",
-        line: 0,
-    },
-    {
-        id: 3,
-        name: "Vegetarian",
-        line: 0,
-    },
-    {
-        id: 3,
-        name: "Lacto-vegetarian",
-        line: 0,
-    },
-    {
-        id: 3,
-        name: "Vegan",
-        line: 1,
-    },
-];
-
-const Personal = () => {
-
+    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const dispatch = useDispatch()
+    const insets = useSafeAreaInsets()
     const [userDetails, setUserDetails] = useState({
+        languageIndex: appLanguage == 'en' ? 0 : 1,
         name: '',
         email: '',
         user_id: '',
@@ -245,6 +56,7 @@ const Personal = () => {
         nationality: '',
         gender: -1,
         profile_img: null,
+        isLoading: false
     })
     const [mediamodal, setMediaModal] = useState(false)
     const [isCalendar, setIsCalendar] = useState(false)
@@ -283,12 +95,10 @@ const Personal = () => {
     };
 
     const getNationality = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
 
         let url = config.baseURL + "api-getnationality";
         var data = new FormData();
-        data.append("login_user_id", user_id);
+        data.append("login_user_id", loggedInUserDetails.user_id);
 
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
@@ -327,17 +137,14 @@ const Personal = () => {
 
 
     const getProfile = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        console.log("user_details user_details", user_details);
-        let user_id = user_details["user_id"];
 
         let url = config.baseURL + "api-patient-profile";
         var data = new FormData();
-        data.append("user_id", user_id);
+        data.append("user_id", loggedInUserDetails.user_id);
 
         apifuntion.postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("getProfile...", obj);
+                console.log("getProfile...", obj);
                 if (obj.status == true) {
 
                     let result = obj.result;
@@ -374,13 +181,10 @@ const Personal = () => {
                         setUserDetails(prevState => ({ ...prevState, profile_img: config.img_url3 + result['image'] }))
                     }
 
-
-
-
                 } else {
                     msgProvider.alert(
-                        msgTitle.information[config.language],
-                        obj.message[config.language],
+                        msgTitle.information[userDetails.languageIndex],
+                        obj.message[userDetails.languageIndex],
                         false
                     );
 
@@ -388,58 +192,57 @@ const Personal = () => {
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
-                this.setState({ loading: false });
+                console.log("-------- error ------- " + error);
             });
     };
 
     const saveInfo = async () => {
         Keyboard.dismiss();
-
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
-
+        setUserDetails(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         if (userDetails.name.length <= 0 || userDetails.name.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyName[config.language]);
+            msgProvider.showError(msgText.emptyName[userDetails.languageIndex]);
             return false;
         }
 
         let regemail =
             /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
         if (userDetails.email.length <= 0 || userDetails.email.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyEmail[config.language]);
+            msgProvider.showError(msgText.emptyEmail[userDetails.languageIndex]);
             return false;
         }
 
         if (regemail.test(userDetails.email) !== true) {
-            msgProvider.showError(msgText.validEmail[config.language]);
+            msgProvider.showError(msgText.validEmail[userDetails.languageIndex]);
             return false;
         }
 
         if (userDetails.mobile.length <= 0 || userDetails.mobile.trim().length <= 0) {
-            msgProvider.showError(msgText.emptymobileNumber[config.language]);
+            msgProvider.showError(msgText.emptymobileNumber[userDetails.languageIndex]);
             return false;
         }
         if (userDetails.mobile.length < 9) {
-            msgProvider.showError(msgText.validmobileNumber[config.language]);
+            msgProvider.showError(msgText.validmobileNumber[userDetails.languageIndex]);
             return false;
         }
         if (userDetails.mobile.length > 9) {
-            msgProvider.showError(msgText.validmobileNumber[config.language]);
+            msgProvider.showError(msgText.validmobileNumber[userDetails.languageIndex]);
             return false;
         }
         if (
             userDetails.identity.length <= 0 ||
             userDetails.identity.trim().length <= 0
         ) {
-            msgProvider.showError(msgText.emptyid[config.language]);
+            msgProvider.showError(msgText.emptyid[userDetails.languageIndex]);
             return false;
         }
 
         let url = config.baseURL + "api-edit-patient-profile-personal";
         var phone_number_send = userDetails.country_code + userDetails.mobile;
         var data = new FormData();
-        data.append("user_id", user_id);
+        data.append("user_id", loggedInUserDetails.user_id);
         data.append("first_name", userDetails.name);
         data.append("phone_number", phone_number_send);
         data.append("gender", userDetails.gender);
@@ -459,10 +262,13 @@ const Personal = () => {
         apifuntion
             .postApi(url, data)
             .then((obj) => {
-                consolepro.consolelog("saveInfo-response....", obj);
+                setUserDetails(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
+                console.log("saveInfo-response....", obj);
                 if (obj.status == true) {
-                    let user_details = obj.result;
-                    localStorage.setItemObject("user_arr", user_details);
+                    dispatch(UserDetails(obj?.result))
                     setTimeout(() => {
                         msgProvider.showSuccess(obj.message);
                     }, 500);
@@ -472,12 +278,17 @@ const Personal = () => {
                 return false;
             })
             .catch((error) => {
-                consolepro.consolelog("saveInfo-error ------- " + error);
+                setUserDetails(prevState => ({
+                    ...prevState,
+                    isLoading: false
+                }))
+                console.log("saveInfo-error ------- " + error);
             });
     };
     return (
-        <View style={{ flex: 0.98, backgroundColor: Colors.White }}>
-
+        <View
+            pointerEvents={userDetails.isLoading ? 'none' : 'auto'}
+            style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
 
             <KeyboardAwareScrollView
                 // keyboardOpeningTime={200}
@@ -523,7 +334,7 @@ const Personal = () => {
                                     color: Colors.darkText,
                                     fontFamily: Font.Medium,
                                     fontSize: Font.large,
-                                    textAlign: config.textRotate,
+                                    alignSelf: 'flex-start',
                                 }} >
                                 {userDetails.name}
                             </Text>
@@ -533,7 +344,7 @@ const Personal = () => {
                                     color: Colors.lightGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
-                                    textAlign: config.textRotate,
+                                    alignSelf: 'flex-start',
                                 }} >
                                 {userDetails.email}
                             </Text>
@@ -545,7 +356,7 @@ const Personal = () => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(18), width: '100%' }}
-                        lableText={Lang_chg.textinputname[config.language]}
+                        lableText={Lang_chg.textinputname[userDetails.languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -567,7 +378,7 @@ const Personal = () => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        // lableText={Lang_chg.work_area[config.language]}
+                        // lableText={Lang_chg.work_area[userDetails.languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -601,7 +412,7 @@ const Personal = () => {
                             }}>
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                lableText={Lang_chg.CC_code[config.language]}
+                                lableText={Lang_chg.CC_code[userDetails.languageIndex]}
                                 inputRef={(ref) => {
                                     this.nameInput = ref;
                                 }}
@@ -627,7 +438,7 @@ const Personal = () => {
                             }}>
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                lableText={Lang_chg.textinputnumber[config.language]}
+                                lableText={Lang_chg.textinputnumber[userDetails.languageIndex]}
                                 inputRef={(ref) => {
                                     this.nameInput = ref;
                                 }}
@@ -646,13 +457,13 @@ const Personal = () => {
                             />
                             <Text
                                 style={{
-                                    textAlign: config.textRotate,
+                                    alignSelf: 'flex-start',
                                     fontSize: Font.textsize,
-                                    fontFamily: Font.headingfontfamily,
+                                    fontFamily: Font.Regular,
                                     color: Colors.lightGrey,
                                     marginTop: vs(8)
                                 }}>
-                                {Lang_chg.mobletexttitle[config.language]}
+                                {Lang_chg.mobletexttitle[userDetails.languageIndex]}
                             </Text>
                         </View>
 
@@ -662,7 +473,7 @@ const Personal = () => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputemails[config.language]}
+                        lableText={Lang_chg.textinputemails[userDetails.languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -709,12 +520,12 @@ const Personal = () => {
                                 <Text
                                     style={{
                                         fontSize: Font.medium,
-                                        textAlign: config.textalign,
+                                        alignSelf: 'flex-start',
                                         fontFamily: Font.Regular,
                                         includeFontPadding: false,
                                         lineHeight: 48,
                                     }}>
-                                    {userDetails.dob.length <= 0 ? Lang_chg.dob[config.language] : userDetails.dob}
+                                    {userDetails.dob.length <= 0 ? Lang_chg.dob[userDetails.languageIndex] : userDetails.dob}
                                 </Text>
                             </View>
 
@@ -741,11 +552,11 @@ const Personal = () => {
                             style={{
                                 fontSize: Font.large,
                                 fontFamily: Font.Regular,
-                                textAlign: config.textRotate,
+                                alignSelf: 'flex-start',
                                 color: Colors.darkText,
                                 paddingRight: s(20)
 
-                            }}>{Lang_chg.Gender[config.language]}</Text>
+                            }}>{Lang_chg.Gender[userDetails.languageIndex]}</Text>
 
                         <FlatList
                             showsHorizontalScrollIndicator={false}
@@ -778,7 +589,7 @@ const Personal = () => {
                                             style={{
                                                 fontSize: Font.small,
                                                 fontFamily: Font.Regular,
-                                                textAlign: config.textRotate,
+                                                alignSelf: 'flex-start',
                                                 color: Colors.darkText,
                                                 marginLeft: s(8)
 
@@ -820,12 +631,12 @@ const Personal = () => {
                                 <Text
                                     style={{
                                         fontSize: Font.medium,
-                                        textAlign: config.textalign,
+                                        alignSelf: 'flex-start',
                                         fontFamily: Font.Regular,
                                         includeFontPadding: false,
                                         lineHeight: 48,
                                     }}>
-                                    {userDetails.nationality == '' ? Lang_chg.nationality[config.language] : userDetails.nationality}
+                                    {userDetails.nationality == '' ? Lang_chg.nationality[userDetails.languageIndex] : userDetails.nationality}
                                 </Text>
                             </View>
 
@@ -847,7 +658,7 @@ const Personal = () => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputaddress[config.language]}
+                        lableText={Lang_chg.textinputaddress[userDetails.languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -869,7 +680,7 @@ const Personal = () => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputidentity[config.language]}
+                        lableText={Lang_chg.textinputidentity[userDetails.languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -888,9 +699,10 @@ const Personal = () => {
                     />
 
                     <Button
-                        text={Lang_chg.submitbtntext[config.language]}
+                        text={Lang_chg.submitbtntext[userDetails.languageIndex]}
                         onPress={() => saveInfo()}
                         btnStyle={{ marginTop: vs(15) }}
+                        onLoading={userDetails.isLoading}
                     />
 
                 </View>
@@ -931,7 +743,7 @@ const Personal = () => {
                     setIsNationality(false)
                 }}
                 data={nationalityList}
-                title={Lang_chg.Select_Nationality[config.language]}
+                title={Lang_chg.Select_Nationality[userDetails.languageIndex]}
                 selectedIssue={(val) => {
                     setUserDetails(prevState => ({ ...prevState, nationality: val }))
                 }}

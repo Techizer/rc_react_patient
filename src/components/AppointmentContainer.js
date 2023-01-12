@@ -22,8 +22,6 @@ import {
     config,
     windowWidth,
     Lang_chg,
-    localStorage,
-    consolepro,
     apifuntion,
     deviceHeight,
     Button
@@ -33,6 +31,7 @@ import { SvgXml } from "react-native-svg";
 import { Cross, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "./RatingBottomSheet";
 import StarRating from "react-native-star-rating";
+import { useSelector } from "react-redux";
 
 var videoCallButton = false;
 
@@ -43,6 +42,7 @@ const AppointmentContainer = ({
     navigation,
     isLoading
 }) => {
+    const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
 
     const [otp, setOtp] = useState([])
     const [rescheduleData, setRescheduleData] = useState({
@@ -54,6 +54,7 @@ const AppointmentContainer = ({
         final_one: '',
         final_arr_two: '',
         set_date: '',
+        newDate: '',
         rescdule_data: '',
         check_booking: '',
         message: '',
@@ -75,8 +76,7 @@ const AppointmentContainer = ({
     const [currency, setCurrency] = useState('')
 
     const getUserCountry = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        if (user_details?.work_area === 'UAE') {
+        if (loggedInUserDetails?.work_area === 'UAE') {
             setCurrency('AED')
         } else {
             setCurrency('SAR')
@@ -85,7 +85,8 @@ const AppointmentContainer = ({
 
     useEffect(() => {
         // console.log('**********************', rescheduleData.final_one);
-    }, [rescheduleData.final_one, rescheduleData.final_arr_two])
+        getDay()
+    }, [rescheduleData.isRescheduleModal])
 
     useEffect(() => {
         splitOtp()
@@ -115,35 +116,37 @@ const AppointmentContainer = ({
     }
     const checkVideoCallStatus = () => {
         if (!isLoading) {
-            console.log('/////////////', Item.videoCall);
+            // console.log('/////////////', Item.videoCall);
         }
     }
 
     const reschedule = async (Id, type) => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
+
+        setRescheduleData(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         let url = config.baseURL + (type == 'doctor' ? "api-patient-doctor-reschedule-appointment" : type == 'lab' ? "api-patient-lab-reschedule-appointment" : "api-patient-reschedule-appointment");
 
         var data = new FormData();
-        data.append("login_user_id", user_id);
+        data.append("login_user_id", loggedInUserDetails.user_id);
         data.append("order_id", Id);
         data.append("service_type", type);
         if (type === 'lab') {
             data.append("task_type", rescheduleData?.set_task);
         }
 
-        // consolepro.consolelog("reschedule-bodydata", data);
+        // console.log("reschedule-bodydata", data);
         return false /
             apifuntion
                 .postApi(url, data)
                 .then((obj) => {
-                    // consolepro.consolelog("reschedule-response...", obj);
+                    // console.log("reschedule-response...", obj);
                     if (obj.status == true) {
                         var currentDate = new Date();
                         let min = currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes();
                         let hour = currentDate.getHours() < 10 ? "0" + currentDate.getHours() : currentDate.getHours();
                         var timcurrent = hour + ":" + min;
-                        console.log('((((((((((((())))))))))))',timcurrent);
                         setRescheduleData(prevState => ({
                             ...prevState,
                             timcurrent_for_check: timcurrent
@@ -159,10 +162,14 @@ const AppointmentContainer = ({
                             var ar1 = false;
                             var ar2 = true
 
+                            // console.log(
+                            //     rescheduleData.check_currentdate,
+                            //     rescheduleData.set_date
+                            // );
                             if (obj.result.task_time != "") {
                                 for (let l = 0; l < nameArr.length; l++) {
                                     if (rescheduleData.check_currentdate == rescheduleData.set_date) {
-                                        console.log(`rescheduleData.check_currentdate == rescheduleData.set_date, ${l}`);
+                                        // console.log(`rescheduleData.check_currentdate == rescheduleData.set_date, ${l}`);
                                         const timeStr = nameArr[l];
                                         const convertTime = (timeStr) => {
                                             const [time, modifier] = timeStr.split(" ");
@@ -185,17 +192,15 @@ const AppointmentContainer = ({
                                                 time_status: false,
                                             });
                                             if (!ar1) {
-                                                console.log('==============if');
                                                 ar1 = true;
                                                 ar2 = false;
                                                 Arr1.push({ time: nameArr[l], time_status: false });
                                             } else {
-                                                console.log('==============else');
                                                 ar1 = false;
                                                 ar2 = true;
                                                 Arr2.push({ time: nameArr[l], time_status: false });
                                             }
-                                            console.log('???????????????????', Arr1);
+                                            // console.log('???????????????????', Arr1);
 
                                         }
                                     } else {
@@ -215,8 +220,6 @@ const AppointmentContainer = ({
                                 }
 
                             }
-
-
                             setRescheduleData(prevState => ({
                                 ...prevState,
                                 time_Arr: new_time_slot,
@@ -224,6 +227,12 @@ const AppointmentContainer = ({
                                 final_arr_two: Arr2,
                             }))
 
+                            setTimeout(() => {
+                                setRescheduleData(prevState => ({
+                                    ...prevState,
+                                    isLoading: false
+                                }))
+                            }, 500);
                             /////////////////Main If/////////////////////
 
                         } else {
@@ -265,7 +274,7 @@ const AppointmentContainer = ({
                     }
                 })
                 .catch((error) => {
-                    consolepro.consolelog("-------- error ------- " + error);
+                    console.log("-------- error ------- " + error);
                 });
     };
 
@@ -371,7 +380,7 @@ const AppointmentContainer = ({
                         ...prevState,
                         timcurrent_for_check: timcurrent
                     }))
-                    consolepro.consolelog("get_time_date.response", obj.result);
+                    console.log("get_time_date.response", obj.result);
 
                     // ---------------------------------------------------
                     if (serviceType == 'doctor' && rescheduleData?.set_task == 'online_task') {
@@ -717,7 +726,7 @@ const AppointmentContainer = ({
                     ...prevState,
                     isLoading: false
                 }))
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
             });
     };
 
@@ -821,17 +830,14 @@ const AppointmentContainer = ({
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
             });
     };
 
     const rateProvider = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details.user_id;
-
         let url = config.baseURL + "api-patient-insert-review";
         var data = new FormData();
-        data.append("lgoin_user_id", user_id);
+        data.append("lgoin_user_id", loggedInUserDetails.user_id);
         data.append("service_type", Item?.provider_type);
         data.append("order_id", Item?.order_id);
         data.append("rating", ratingData.rating);
@@ -853,8 +859,8 @@ const AppointmentContainer = ({
                         msgProvider.showSuccess(obj.message);
                     }, 700);
                 } else {
-                    // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-                    //   usernotfound.loginFirst(this.props, obj.msg[config.language])
+                    // if (obj.active_status == msgTitle.deactivate[appLanguage == 'en' ? 0 : 1] || obj.msg[appLanguage == 'en' ? 0 : 1] == msgTitle.usererr[appLanguage == 'en' ? 0 : 1]) {
+                    //   usernotfound.loginFirst(this.props, obj.msg[appLanguage == 'en' ? 0 : 1])
                     // } else {
 
                     setTimeout(() => {
@@ -865,7 +871,7 @@ const AppointmentContainer = ({
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
             });
     };
     return (
@@ -969,7 +975,7 @@ const AppointmentContainer = ({
                             "AppointmentDetails",
                             {
                                 status: Item.provider_type,
-                                appoinment_id: Item.id,
+                                appointment_id: Item.id,
                                 send_id: Item.provider_id,
                             }
                         );
@@ -1026,7 +1032,8 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start'
                                 }}
                             >{Item?.dispaly_provider_type}</Text>
                             <Text
@@ -1034,6 +1041,7 @@ const AppointmentContainer = ({
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.provider_name}</Text>
@@ -1042,6 +1050,7 @@ const AppointmentContainer = ({
                                     fontSize: Font.small,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.speciality}</Text>
@@ -1052,14 +1061,16 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Patient[config.language]}</Text>
+                            >{Lang_chg.Patient[appLanguage == 'en' ? 0 : 1]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.patient_name}</Text>
@@ -1070,14 +1081,16 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Booked[config.language]}</Text>
+                            >{Lang_chg.Booked[appLanguage == 'en' ? 0 : 1]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.booking_date}</Text>
@@ -1100,14 +1113,16 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.AppointmentDate[config.language]}</Text>
+                            >{Lang_chg.AppointmentDate[appLanguage == 'en' ? 0 : 1]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.app_date}</Text>
@@ -1118,14 +1133,16 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Time[config.language]}</Text>
+                            >{Lang_chg.Time[appLanguage == 'en' ? 0 : 1]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.app_time}</Text>
@@ -1136,14 +1153,16 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.small,
                                     fontFamily: Font.Medium,
-                                    color: Colors.detailTitles
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Type[config.language]}</Text>
+                            >{Lang_chg.Type[appLanguage == 'en' ? 0 : 1]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
                                     fontFamily: Font.Regular,
                                     color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
                                     marginTop: vs(3)
                                 }}
                             >{Item?.appointment_type}</Text>
@@ -1167,7 +1186,7 @@ const AppointmentContainer = ({
                                     style={{
                                         fontSize: Font.medium,
                                         fontFamily: Font.Regular,
-                                        color: Colors.Theme
+                                        color: Colors.Theme,
                                     }}>{`${currency} `}
                                     <Text
                                         style={{
@@ -1179,35 +1198,48 @@ const AppointmentContainer = ({
                                 </Text>
 
                                 {Item?.acceptance_status === 'Pending' ?
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            reschedule(Item?.id, Item?.provider_type)
-                                            getDay()
-                                            setRescheduleData(prevState => ({
-                                                ...prevState,
-                                                send_id: Item?.provider_id,
-                                                service_status: Item?.provider_type,
-                                                order_id: Item?.id,
-                                                time_take_data: ''
-                                            }))
-                                        }}
-                                        activeOpacity={0.8}
-                                        style={{
-                                            paddingHorizontal: s(8),
-                                            paddingVertical: vs(4),
-                                            borderWidth: 0.8,
-                                            borderColor: Colors.Green,
-                                            borderRadius: 5
-                                        }} >
+                                    (
+                                        rescheduleData.isLoading ?
+                                            <View style={{
+                                                paddingHorizontal: s(8),
+                                                paddingVertical: vs(4),
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+                                                <ActivityIndicator size={'small'} color={Colors.Border} />
+                                            </View>
+                                            :
 
-                                        <Text
-                                            style={{
-                                                fontSize: Font.small,
-                                                fontFamily: Font.Regular,
-                                                color: Colors.Green
-                                            }}
-                                        >{Lang_chg.Reschedule[config.language]}</Text>
-                                    </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    reschedule(Item?.id, Item?.provider_type)
+                                                    getDay()
+                                                    setRescheduleData(prevState => ({
+                                                        ...prevState,
+                                                        send_id: Item?.provider_id,
+                                                        service_status: Item?.provider_type,
+                                                        order_id: Item?.id,
+                                                        time_take_data: ''
+                                                    }))
+                                                }}
+                                                activeOpacity={0.8}
+                                                style={{
+                                                    paddingHorizontal: s(8),
+                                                    paddingVertical: vs(4),
+                                                    borderWidth: 0.8,
+                                                    borderColor: Colors.Green,
+                                                    borderRadius: 5
+                                                }} >
+
+                                                <Text
+                                                    style={{
+                                                        fontSize: Font.small,
+                                                        fontFamily: Font.Regular,
+                                                        color: Colors.Green
+                                                    }}
+                                                >{Lang_chg.Reschedule[appLanguage == 'en' ? 0 : 1]}</Text>
+                                            </TouchableOpacity>
+                                    )
                                     :
                                     (Item?.acceptance_status === 'Completed' && Item.avg_rating != "" && Item.avg_rating != 0) ? (
                                         <View
@@ -1223,7 +1255,7 @@ const AppointmentContainer = ({
                                                     marginRight: (windowWidth * 2) / 100,
                                                 }}
                                             >
-                                                {Lang_chg.rated[config.language]}
+                                                {Lang_chg.rated[appLanguage == 'en' ? 0 : 1]}
                                             </Text>
                                             <StarRating
                                                 disabled={false}
@@ -1260,7 +1292,7 @@ const AppointmentContainer = ({
                                                     color: Colors.White,
                                                     marginLeft: s(7)
                                                 }}
-                                            >{Lang_chg.Rate_Appointment[config.language]}</Text>
+                                            >{Lang_chg.Rate_Appointment[appLanguage == 'en' ? 0 : 1]}</Text>
                                         </TouchableOpacity>
 
 
@@ -1301,7 +1333,7 @@ const AppointmentContainer = ({
                                                             fontFamily: Font.Medium,
                                                             fontSize: Font.xsmall,
                                                         }}>
-                                                        {Lang_chg.Refunded[config.language]}
+                                                        {Lang_chg.Refunded[appLanguage == 'en' ? 0 : 1]}
                                                     </Text>
 
                                                 )
@@ -1394,7 +1426,7 @@ const AppointmentContainer = ({
                                                 color: Colors.White,
                                                 marginLeft: s(7)
                                             }}
-                                        >{Lang_chg.VIDEO_CALL[config.language]}</Text>
+                                        >{Lang_chg.VIDEO_CALL[appLanguage == 'en' ? 0 : 1]}</Text>
                                     </TouchableOpacity>
                                 }
 
@@ -1500,10 +1532,10 @@ const AppointmentContainer = ({
                                 style={{
                                     fontSize: Font.large,
                                     fontFamily: Font.SemiBold,
-                                    textAlign: config.textRotate,
+                                    alignSelf: 'flex-start',
                                     color: Colors.darkText
 
-                                }}>{Lang_chg.Reschedule[config.language]}</Text>
+                                }}>{Lang_chg.Reschedule[appLanguage == 'en' ? 0 : 1]}</Text>
 
                             {/* ----------------------Main------------------ */}
 
@@ -1529,7 +1561,7 @@ const AppointmentContainer = ({
                                                 style={{
                                                     fontFamily: Font.Medium,
                                                     fontSize: Font.medium,
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                     color: Colors.Theme,
                                                 }} >
                                                 {rescheduleData?.rescdule_data?.order_id}
@@ -1538,7 +1570,7 @@ const AppointmentContainer = ({
                                                 style={{
                                                     fontFamily: Font.Medium,
                                                     fontSize: Font.medium,
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                     color: Colors.Theme,
                                                 }} >
                                                 {rescheduleData?.rescdule_data?.task_type}
@@ -1577,7 +1609,7 @@ const AppointmentContainer = ({
                                                                     <Text
                                                                         style={{
                                                                             width: "70%",
-                                                                            textAlign: config.textRotate,
+                                                                            alignSelf: 'flex-start',
                                                                             alignSelf: "center",
                                                                             fontSize: (windowWidth * 3.6) / 100,
                                                                             fontFamily: Font.Regular,
@@ -1676,10 +1708,10 @@ const AppointmentContainer = ({
                                                 style={{
                                                     fontFamily: Font.Medium,
                                                     fontSize: Font.name,
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.Appointmentschedule[config.language]}
+                                                {Lang_chg.Appointmentschedule[appLanguage == 'en' ? 0 : 1]}
                                             </Text>
                                             <View
                                                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -1731,10 +1763,10 @@ const AppointmentContainer = ({
                                                     fontFamily: Font.Regular,
                                                     fontSize: Font.subtext,
                                                     color: "#000",
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.SelectDate[config.language]}
+                                                {Lang_chg.SelectDate[appLanguage == 'en' ? 0 : 1]}
                                             </Text>
 
                                             <View style={{ width: "100%" }}>
@@ -1803,10 +1835,10 @@ const AppointmentContainer = ({
                                                 style={{
                                                     fontFamily: Font.Regular,
                                                     fontSize: Font.subtext,
-                                                    textAlign: config.textRotate,
+                                                    alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.Select_start_time[config.language]}
+                                                {Lang_chg.Select_start_time[appLanguage == 'en' ? 0 : 1]}
                                             </Text>
 
                                             {/* -----------------Time Arrays----------------- */}
@@ -1836,8 +1868,7 @@ const AppointmentContainer = ({
                                                                                         {
                                                                                             marginRight: (windowWidth * 3) / 100,
                                                                                             marginTop: (windowWidth * 3) / 100,
-
-                                                                                            fontFamily: Font.ques_fontfamily,
+                                                                                            fontFamily: Font.Regular,
                                                                                             fontSize: Font.sregulartext_size,
                                                                                             padding: (windowWidth * 2) / 100,
                                                                                             paddingHorizontal:
@@ -1882,8 +1913,7 @@ const AppointmentContainer = ({
                                                                                         {
                                                                                             marginRight: (windowWidth * 3) / 100,
                                                                                             marginTop: (windowWidth * 3) / 100,
-
-                                                                                            fontFamily: Font.ques_fontfamily,
+                                                                                            fontFamily: Font.Regular,
                                                                                             fontSize: Font.sregulartext_size,
                                                                                             padding: (windowWidth * 2) / 100,
                                                                                             paddingHorizontal:
@@ -1922,7 +1952,7 @@ const AppointmentContainer = ({
                                                                 marginLeft: (windowWidth * 32) / 100,
                                                             }}
                                                         >
-                                                            {Lang_chg.noTime[config.language]}
+                                                            {Lang_chg.noTime[appLanguage == 'en' ? 0 : 1]}
                                                         </Text>
                                                     )}
                                                 </View>
@@ -1930,7 +1960,7 @@ const AppointmentContainer = ({
                                         </View>
 
                                         <Button
-                                            text={Lang_chg.SAVECHANGERESCHEDULE[config.language]}
+                                            text={Lang_chg.SAVECHANGERESCHEDULE[appLanguage == 'en' ? 0 : 1]}
                                             onPress={() => bookTime(Item?.id, Item?.provider_type)}
                                             btnStyle={{ marginTop: vs(25) }}
                                             onLoading={rescheduleData.isScheduleagain}

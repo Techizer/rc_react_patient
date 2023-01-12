@@ -8,97 +8,139 @@ import {
   Linking,
   StatusBar,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Colors,
   Icons,
   Font,
   config,
   windowWidth,
-  localStorage,
   Lang_chg,
   apifuntion,
-  consolepro,
 } from "../Provider/utilslib/Utils";
-global.amount_total = 0;
-global.username = "NA";
 import HTMLView from "react-native-htmlview";
+import messaging from "@react-native-firebase/messaging";
 import DeviceInfo from "react-native-device-info";
-import messaging from '@react-native-firebase/messaging';
 import { SvgXml } from "react-native-svg";
 import { Logo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
+import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType } from "../Redux/Actions";
 
-const appVersion = DeviceInfo.getVersion();
 
-export default class Splash extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      engbtn: true,
-      device_lang: "AR",
-      language: 1,
-      openAppScreen: undefined,
-      modalVisible3: false,
-      fcmToken:''
-    };
+const Splash = ({ navigation }) => {
 
-    add_location = "NA";
+  const { appLanguage, deviceToken, deviceType, contentAlign, appVersion, loggedInUserDetails } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: '',
+    language: 'AR',
+    fcmToken: deviceToken,
+    languageIndex: appLanguage == 'ar' ? 1 : 0
+  })
+  const [updateData, setUpdateData] = useState({
+    appVer: '',
+    updTitle: '',
+    updText: '',
+    skipFlag: '',
+    skipText: '',
+    rdrTo: '',
+    rdrUrl: '',
+    showHelp: '',
+    helpTitle: '',
+    helpUrl: '',
+  })
+  const [updateAppModal, setUpdateAppModal] = useState(false)
 
-  }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", () => {
-      this.getLanguage();
-      this.getFcm()
-    });
+  useEffect(() => {
+    const promise1 = getLanguage();
+    const promise2 = requestNotificationPermission();
+    const promise3 = getFcmToken();
+    const promise4 = getDeviceID();
+    const promise5 = getDeviceName();
+    const promise6 = getDeviceType();
+    const promise7 = getAppVersion();
+    Promise.all([promise1, promise2, promise3, promise4, promise5, promise6, promise7]).then((data) => {
+      console.log('promises resolved');
+    }).catch((error) => {
+      console.log(error);
+    })
 
-  }
+  }, [])
 
-  getFcm = async () => {
-    let token = await localStorage.getItemString('DeviceToken')
-    this.setState({ fcmToken: token })
-  }
-  getLanguage = async () => {
-    let textalign = await localStorage.getItemObject("language");
-    if (textalign != null) {
-      if (textalign == 1) {
-        config.textalign = "right";
-        config.language = 1;
-        this.setState({ language: 1 },
-          () => {
-            this.updateAppVersion();
-          } 
-        );
+  const requestNotificationPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    console.log({ enabled });
+    if (enabled) {
+      // console.log("Authorization status:", authStatus);
+      getFcmToken();
+    }
+  };
+  const getFcmToken = async () => {
+    try {
+      const fcmToken = await messaging().getToken()
+      if (fcmToken) {
+        dispatch(DeviceToken(fcmToken))
       } else {
-        localStorage.setItemObject("languagesetenglish", 3);
-        localStorage.setItemObject("languagecathc", 0);
-        config.textalign = "left";
-        config.language = 0;
-        this.setState({ language: 0 }, () => {
-          this.updateAppVersion();
-        });
+        dispatch(DeviceToken(null))
       }
-    } else {
-      config.textalign = "right";
-      config.language = 1;
-      localStorage.setItemObject("language", 1);
-      this.setState({ language: 1 }, () => {
-        this.updateAppVersion();
-      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  updateAppVersion = async () => {
-    let lang = this.state.language == 1 ? "AR" : "ENG";
-    let url = config.baseURL + "api-ios-patient-update" + "?divice_lang=" + lang;
+  const getDeviceID = async () => {
+    let deviceId = DeviceInfo.getDeviceId()
+    dispatch(DeviceID(deviceId))
+  }
+
+  const getDeviceName = async () => {
+    DeviceInfo.getDeviceName().then((data) => {
+      dispatch(DeviceName(data))
+    });
+  }
+
+  const getAppVersion = async () => {
+    let appVersion = DeviceInfo.getVersion();
+    dispatch(AppVersion(appVersion))
+  }
+
+  const getDeviceType = async () => {
+    dispatch(DeviceType(Platform.OS))
+  }
+  const getLanguage = async () => {
+    if (appLanguage != null) {
+      if (appLanguage == 'ar') {
+        dispatch(AppLanguage('ar'))
+        dispatch(ContentAlign('right'))
+        updateAppVersion();
+      } else {
+        dispatch(AppLanguage('en'))
+        dispatch(ContentAlign('left'))
+        updateAppVersion();
+      }
+    } else {
+      dispatch(AppLanguage('ar'))
+      dispatch(ContentAlign('right'))
+      updateAppVersion();
+    }
+  };
+
+  const updateAppVersion = async () => {
+    let language = appLanguage == 'en' ? 'ENG' : 'AR'
+    let url = config.baseURL + `api-ios-patient-update?divice_lang=${language}`;
     apifuntion.getApi(url, 1)
       .then((obj) => {
-        // consolepro.consolelog("updateAppVersion-res...", obj);
+        console.log("updateAppVersion-res...", obj);
         if (obj.status == true) {
           if (parseFloat(obj.result.appVer) > parseFloat(appVersion)) {
-            this.setState({
+            setUpdateData(prevState => ({
+              ...prevState,
               appVer: obj.result.appVer,
               updTitle: "<h3>" + obj.result.updTitle + "</h3>",
               updText: "<p>" + obj.result.updText + "</p>",
@@ -109,123 +151,36 @@ export default class Splash extends Component {
               showHelp: obj.result.showHelp,
               helpTitle: obj.result.helpTitle,
               helpUrl: obj.result.helpUrl,
-              modalVisible3: true,
-            });
+            }))
+            setUpdateAppModal(true)
           } else {
-            this.new_authenticatesessinon();
+            new_authenticatesessinon();
           }
         } else {
-          this.new_authenticatesessinon();
+          new_authenticatesessinon();
           return false;
         }
       }).catch((error) => {
-        this.new_authenticatesessinon();
-        console.log("-------- error ------- " + error);
+        new_authenticatesessinon();
+        console.log("updateAppVersion-error ------- " + error);
       });
   };
 
-  new_authenticatesessinon = async () => {
-    let result = await localStorage.getItemObject("user_arr");
-    let logindetail = await localStorage.getItemObject("user_login");
-
-    // console.log('new_authenticatesessinon',result);
-    console.log('new_authenticatesessinon',logindetail);
-    if (logindetail != null) {
-      this.checkAuthUserLogin(result, logindetail)
+  const new_authenticatesessinon = async () => {
+    if (loggedInUserDetails != null) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
     } else {
-      global.isLogin = false
-      global.isPage = ""
-      this.props.navigation.reset({
+      navigation.reset({
         index: 0,
         routes: [{ name: "AuthStack" }],
       });
     }
   };
 
-
-  checkSession = async (result, logindetail) => {
-    let user_id = result.user_id;
-    let url = config.baseURL + "api-check-login";
-    var data = new FormData();
-    data.append("user_id", user_id);
-    data.append("fcm_token", global.fcmtoken);
-
-    console.log('on splash checkSession ', data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("checkSession: ", obj);
-        if (obj.result == true) {
-          this.checkAuthUserLogin(result, logindetail);
-        } else {
-          this.logout()
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  }
-
-  checkAuthUserLogin = async (result, logindetail) => {
-    let email = logindetail.email_phone;
-    let password = logindetail.password;
-    var device_lang;
-    if (config.language == 0) {
-      device_lang = "ENG";
-    } else {
-      device_lang = "AR";
-    }
-    let url = config.baseURL + "api-patient-login";
-    var data = new FormData();
-
-    data.append("email_phone", email);
-    data.append("password", password);
-    data.append("device_type", config.device_type);
-    data.append("device_lang", device_lang);
-    data.append("fcm_token", this.state.fcmToken);
-
-    apifuntion
-      .postApi(url, data)
-      .then((obj) => {
-        // console.log("checkAuthUserLogin------", obj);
-        if (obj.status == true) {
-          var user_details = obj.result;
-          localStorage.setItemObject("user_arr", user_details);
-          global.isLogin = true
-          this.props.navigation.reset({
-            index: 0,
-            routes: [{ name: "DashboardStack" }],
-          });
-        } else {
-          global.isLogin = false
-          global.isPage = ""
-          this.props.navigation.reset({
-            index: 0,
-            routes: [{ name: "AuthStack" }],
-          });
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  }
-
-
-
-  logout = async () => {
-    await localStorage.removeItem("user_arr");
-    await localStorage.removeItem("user_login");
-    global.isLogin = false
-    global.isPage = ""
-    this.props.navigation.reset({
-      index: 0,
-      routes: [{ name: "AuthStack" }],
-    });
-  };
-
-
-
-  openAppStoreUrl = async (url) => {
+  const openAppStoreUrl = async (url) => {
     const supported = await Linking.canOpenURL(url);
     // console.log("supported:: ", supported, url);
     if (supported) {
@@ -234,292 +189,266 @@ export default class Splash extends Component {
       Alert.alert(`Don't know how to open this URL: ${url}`);
     }
   };
+  return (
+    <View
+      style={{
+        width: "100%",
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.White,
+      }}
+    >
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={Colors.White}
+        hidden={false}
+        translucent={false}
+        networkActivityIndicatorVisible={true}
+      />
+      {/* <SvgXml xml={Splash_Logo} /> */}
 
-  render() {
-    return (
+      <Image source={Icons.splashLogo} style={{ height: windowWidth - 100, height: windowWidth - 100 }} resizeMode='contain' />
+
+      <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
+
       <View
         style={{
-          width: "100%",
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: Colors.White,
+          width: "50%",
+          alignSelf: "center",
+        }}>
+        <Text
+          style={{
+            paddingVertical: vs(14),
+            fontSize: Font.xlarge,
+            color: Colors.lightGrey,
+            fontFamily: Font.Regular,
+            alignSelf: "center",
+            textAlign: "center",
+          }}
+        >
+          {Lang_chg.Splashtext1[loginData.languageIndex]}
+        </Text>
+      </View>
+
+      <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(15) }}></View>
+
+      <View
+        style={{
+          width: "63%",
+          alignSelf: "center",
+          marginTop: vs(15),
         }}
       >
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor={Colors.White}
-          hidden={false}
-          translucent={false}
-          networkActivityIndicatorVisible={true}
-        />
-        {/* <SvgXml xml={Splash_Logo} /> */}
-
-        <Image source={Icons.splashLogo} style={{ height: windowWidth - 100, height: windowWidth - 100 }} resizeMode='contain' />
-
-        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
-
-        <View
+        <Text
           style={{
-            width: "50%",
+            fontSize: Font.medium,
+            color: Colors.lightGrey,
+            fontFamily: Font.Regular,
             alignSelf: "center",
-          }}>
-          <Text
-            style={{
-              paddingVertical: vs(14),
-              fontSize: Font.xlarge,
-              color: Colors.lightGrey,
-              fontFamily: Font.Regular,
-              alignSelf: "center",
-              textAlign: "center",
-            }}
-          >
-            {Lang_chg.Splashtext1[this.state.language]}{" "}
-          </Text>
-        </View>
-
-        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(15) }}></View>
-
-        <View
-          style={{
-            width: "63%",
-            alignSelf: "center",
-            marginTop: vs(15),
+            textAlign: "center",
           }}
         >
-          <Text
-            style={{
-              fontSize: Font.medium,
-              color: Colors.lightGrey,
-              fontFamily: Font.Regular,
-              alignSelf: "center",
-              textAlign: "center",
-            }}
-          >
-            {Lang_chg.Splashtext2[this.state.language]}{" "}
-          </Text>
-        </View>
+          {Lang_chg.Splashtext2[loginData.languageIndex]}
+        </Text>
+      </View>
 
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible3}
-          onRequestClose={() => {
-            this.setState({ modalVisible3: false });
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={updateAppModal}
+        onRequestClose={() => {
+          setUpdateAppModal(false)
+        }}
+      >
+        <TouchableOpacity
+          activeOpacity={0.9}
+          disabled={true}
+          onPress={() => {
+          }}
+          style={{
+            backgroundColor: "#00000080",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            marginTop: -50,
           }}
         >
-          <TouchableOpacity
-            activeOpacity={0.9}
-            disabled={true}
-            onPress={() => {
-              // this.setState({ modalVisible3: false })
-            }}
+          <View
             style={{
-              backgroundColor: "#00000080",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 20,
-              marginTop: -50,
+              borderRadius: 20,
+              width: (windowWidth * 90) / 100,
+              position: "absolute",
+              alignSelf: "center",
             }}
           >
             <View
               style={{
-                borderRadius: 20,
-                width: (windowWidth * 90) / 100,
-                position: "absolute",
-                alignSelf: "center",
+                backgroundColor: "#fff",
+                borderRadius: 2,
+                width: "100%",
               }}
             >
               <View
                 style={{
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
-                  width: "100%",
+                  alignSelf: "flex-start",
+                  width: (windowWidth * 80) / 100,
+                  height: (windowWidth * 14) / 100,
+                  paddingVertical: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
+                  //  backgroundColor: 'red'
                 }}
               >
-                <View
-                  style={{
-                    alignSelf: "flex-start",
-                    width: (windowWidth * 80) / 100,
-                    height: (windowWidth * 14) / 100,
-                    paddingVertical: (windowWidth * 3) / 100,
-                    marginTop: (windowWidth * 2) / 100,
-                    paddingLeft: (windowWidth * 4) / 100,
-                    flexDirection: "row",
-                    //  backgroundColor: 'red'
-                  }}
-                >
-                  {/* <Image style={{ 
+                {/* <Image style={{ 
                     width: windowWidth * 6 / 100, 
                     height: windowWidth * 6 / 100 }} source={require('./icons/logo.png')}></Image> */}
-                  {/* <Text style={{ fontFamily: Font.Medium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
-                  <HTMLView
-                    value={this.state.updTitle}
-                    stylesheet={{
-                      h3: {
-                        fontFamily: Font.Regular,
-                        color: Colors.Black, //'#000',
-                        fontSize: (windowWidth * 4.8) / 100,
-                        opacity: 0.9,
-                        // color: '#FF3366', // make links coloured pink
-                      },
+                {/* <Text style={{ fontFamily: Font.Medium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
+                <HTMLView
+                  value={updateData.updTitle}
+                  stylesheet={{
+                    h3: {
+                      fontFamily: Font.Regular,
+                      color: Colors.Black, //'#000',
+                      fontSize: (windowWidth * 4.8) / 100,
+                      opacity: 0.9,
+                    },
 
-                      paddingLeft: (windowWidth * 4) / 100,
-                    }}
-                  />
-                </View>
-                <View
-                  style={{
-                    alignSelf: "flex-start",
-                    paddingVertical: (windowWidth * 1) / 100,
                     paddingLeft: (windowWidth * 4) / 100,
-                    paddingRight: (windowWidth * 4) / 100,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    // backgroundColor: 'red'
                   }}
-                >
-                  {/* <Text style={{ fontFamily: Font.Regular, color: '#000', fontSize: windowWidth * 4 / 100, }}>{Lang_chg.logut_msg[config.language]}</Text> */}
-                  <HTMLView
-                    value={this.state.updText}
-                    stylesheet={{
-                      p: {
-                        fontFamily: Font.Regular,
-                        color: Colors.Black, //'#515C6F', //Colors.DarkGrey,
-                        fontSize: (windowWidth * 4) / 100,
-                        textAlign: "left",
-                        opacity: 0.9,
-                        // color: '#FF3366', // make links coloured pink
-                      },
-                    }}
-                  />
-                </View>
+                />
+              </View>
+              <View
+                style={{
+                  alignSelf: "flex-start",
+                  paddingVertical: (windowWidth * 1) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  paddingRight: (windowWidth * 4) / 100,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }} >
 
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: this.state.skipFlag
-                      ? "space-between"
-                      : "flex-end",
-                    width: "70%",
-                    paddingBottom: (windowWidth * 5) / 100,
-                    marginTop: (windowWidth * 9) / 100,
-                    alignSelf: "flex-end",
-                    right: 16,
-                    // backgroundColor: 'red'
+                <HTMLView
+                  value={updateData.updText}
+                  stylesheet={{
+                    p: {
+                      fontFamily: Font.Regular,
+                      color: Colors.Black, //'#515C6F', //Colors.DarkGrey,
+                      fontSize: (windowWidth * 4) / 100,
+                      textAlign: contentAlign,
+                      opacity: 0.9,
+                      // color: '#FF3366', // make links coloured pink
+                    },
                   }}
-                >
-                  {this.state.skipFlag && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState(
-                          {
-                            modalVisible3: false,
-                          },
-                          () => {
-                            this.new_authenticatesessinon();
-                          }
-                        );
-                      }}
-                      style={{
-                        width: (windowWidth * 35) / 100,
-                        flexDirection: "row",
-                        alignSelf: "center",
-                        justifyContent: "flex-end",
-                        //backgroundColor: 'blue',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: (windowWidth * 3.8) / 100,
-                          color: Colors.Theme, //Colors.Blue,
-                          alignSelf: "center",
-                        }}
-                      >
-                        {this.state.skipText}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                />
+              </View>
 
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: updateData.skipFlag
+                    ? "space-between"
+                    : "flex-end",
+                  width: "70%",
+                  paddingBottom: (windowWidth * 5) / 100,
+                  marginTop: (windowWidth * 9) / 100,
+                  alignSelf: "flex-end",
+                  right: 16,
+                }}
+              >
+                {updateData.skipFlag && (
                   <TouchableOpacity
                     onPress={() => {
-                      // this.setState({ modalVisible3: false }),
-                      this.openAppStoreUrl(this.state.rdrUrl);
+                      setUpdateAppModal(false)
+                      new_authenticatesessinon()
                     }}
-                    activeOpacity={0.8}
                     style={{
-                      width: (windowWidth * 22) / 100,
-                      height: (windowWidth * 8) / 100,
-                      justifyContent: "center",
-                      backgroundColor: "#549E36",
-                      alignSelf: "flex-end",
-                    }}
-                  >
+                      width: (windowWidth * 35) / 100,
+                      flexDirection: "row",
+                      alignSelf: "center",
+                      justifyContent: "flex-end",
+                    }}>
                     <Text
                       style={{
                         fontFamily: Font.Regular,
-                        fontSize: (windowWidth * 3.8) / 100,
-                        color: Colors.White,
+                        fontSize: Font.medium,
+                        color: Colors.Theme, //Colors.Blue,
                         alignSelf: "center",
                       }}
                     >
-                      {Lang_chg.Update[config.language]}
+                      {updateData.skipText}
                     </Text>
                   </TouchableOpacity>
-                </View>
-                {this.state.showHelp && (
-                  <View
+                )}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    openAppStoreUrl(updateData.rdrUrl);
+                  }}
+                  activeOpacity={0.8}
+                  style={{
+                    width: (windowWidth * 22) / 100,
+                    height: (windowWidth * 8) / 100,
+                    justifyContent: "center",
+                    backgroundColor: "#549E36",
+                    alignSelf: "flex-end",
+                  }}>
+                  <Text
                     style={{
-                      borderTopWidth: 1,
-                      borderTopColor: Colors.lightGrey,
-                      height: (windowWidth * 15) / 100,
-                      // backgroundColor: 'red',
-                      // justifyContent: 'flex-start',
-                      // alignContent: 'center',
-                      flexDirection: "row",
-                      alignItems: "center",
-                      // alignContent:'center',
-                      // flex:1,
-                      marginLeft: (windowWidth * 4) / 100,
-                      marginRight: (windowWidth * 4) / 100,
+                      fontFamily: Font.Regular,
+                      fontSize: Font.medium,
+                      color: Colors.White,
+                      alignSelf: "center",
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: Font.SemiBold,
-                        fontSize: (windowWidth * 3.5) / 100,
-                        color: Colors.placeholder_border,
-                        // alignSelf: 'flex-start',
-                        // justifyContent: 'flex-start',
-                      }}
-                    >
-                      {Lang_chg.Help[config.language]}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: Font.SemiBold,
-                        fontSize: (windowWidth * 3.5) / 100,
-                        color: Colors.Theme,
-                        marginLeft: 6,
-                        // alignSelf: 'flex-start',
-                        // justifyContent: 'flex-start',
-                        // textalign: 'left'
-                      }}
-                      onPress={() => {
-                        this.openAppStoreUrl(this.state.helpUrl);
-                      }}
-                    >
-                      {this.state.helpUrl}
-                    </Text>
-                  </View>
-                )}
+                    {Lang_chg.Update[loginData.languageIndex]}
+                  </Text>
+                </TouchableOpacity>
               </View>
+              {updateData.showHelp && (
+                <View
+                  style={{
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.lightGrey,
+                    height: (windowWidth * 15) / 100,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginLeft: (windowWidth * 4) / 100,
+                    marginRight: (windowWidth * 4) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.SemiBold,
+                      fontSize: (windowWidth * 3.5) / 100,
+                      color: Colors.placeholder_border,
+                    }}>
+                    {Lang_chg.Help[loginData.languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.SemiBold,
+                      fontSize: (windowWidth * 3.5) / 100,
+                      color: Colors.Theme,
+                      marginLeft: 6,
+                    }}
+                    onPress={() => {
+                      openAppStoreUrl(updateData.helpUrl);
+                    }}
+                  >
+                    {updateData.helpUrl}
+                  </Text>
+                </View>
+              )}
             </View>
-          </TouchableOpacity>
-        </Modal>
-      </View>
-    );
-  }
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
+
 }
+
+export default Splash;

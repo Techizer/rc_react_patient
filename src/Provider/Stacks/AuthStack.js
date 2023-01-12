@@ -1,7 +1,6 @@
 import React from "react";
-import { createStackNavigator,CardStyleInterpolators } from "@react-navigation/stack";
+import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 
-import Splash from "../../screens/Splash";
 import Login from "../../screens/Login";
 import Signup from "../../screens/Signup";
 import OTPPage from "../../screens/OTPPage";
@@ -30,24 +29,22 @@ const AuthStack = (navigation) => {
         name="Signup"
         component={Signup}
       />
-      <Stack.Screen
-        name="ForgotPage"
-        component={ForgotPage}
-      />
+
       <Stack.Screen
         name="TermsAndConditions"
         component={TermsAndConditions}
       />
 
       <Stack.Screen
-        name="Splash"
-        component={Splash}
-      />
-
-      <Stack.Screen
         name="OTPPage"
         component={OTPPage}
       />
+
+      <Stack.Screen
+        name="ForgotPage"
+        component={ForgotPage}
+      />
+
       <Stack.Screen
         name="ForgotOTP"
         component={ForgotOTP}

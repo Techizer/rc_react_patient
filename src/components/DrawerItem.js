@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, } from "react-native";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from 'react-native-svg';
+import { useSelector } from "react-redux";
 
 import { Colors } from "../Provider/Colorsfont";
 import { Font } from "../Provider/Colorsfont";
@@ -9,7 +10,6 @@ import { config } from "../Provider/configProvider";
 import { localStorage } from "../Provider/localStorageProvider";
 
 const deviceWidth = Dimensions.get('window').width
-let isGuest = false;
 
 
 const DrawerItemContainer = ({
@@ -20,6 +20,12 @@ const DrawerItemContainer = ({
     onPress,
     disable = false
 }) => {
+
+    const {
+        contentAlign,
+        guest,
+        loggedInUserDetails,
+    } = useSelector(state => state.StorageReducer)
 
     const styles = StyleSheet.create({
         mainContainer: {
@@ -43,32 +49,26 @@ const DrawerItemContainer = ({
             color: Colors.Black,
             fontFamily: Font.Medium,
             fontSize: Font.medium,
-            textAlign: config.textRotate,
-            opacity: (isGuest === 'true' && disable == true) ? 0.3 : 1
+            alignSelf: 'flex-start',
+            textAlign: contentAlign,
+            opacity: (disable == true) ? 0.3 : 1
         },
         desc: {
             color: Colors.DarkGrey,
             fontFamily: Font.Regular,
             fontSize: Font.small,
-            textAlign: config.textRotate,
+            alignSelf: 'flex-start',
+            textAlign: 'left',
             marginTop: vs(4),
-            opacity: (isGuest === 'true' && disable == true) ? 0.3 : 1
+            opacity: (disable == true) ? 0.3 : 1
         }
 
 
     });
-    useEffect(() => {
-        checkUserType()
-    })
-
-    const checkUserType = async () => {
-        isGuest = await localStorage.getItemString('Guest')
-        // console.log('.................', isGuest);
-    }
 
     return (
         <TouchableOpacity
-            disabled={(isGuest === 'true' && disable == true) ? true : false}
+            disabled={disable}
             activeOpacity={0.6}
             onPress={onPress ? onPress : () => { }}
             style={styles.mainContainer}>

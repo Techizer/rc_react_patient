@@ -16,6 +16,7 @@ const ListBottomSheet = ({
     onRequestClose,
     data,
     title,
+    style,
     selectedIssue = () => { }
 }) => {
 
@@ -36,7 +37,7 @@ const ListBottomSheet = ({
             style={{ margin: 0 }} >
 
 
-            <View style={styles.modalContainer}>
+            <View style={[styles.modalContainer, style]}>
                 <TouchableHighlight
                     onPress={onRequestClose}
                     underlayColor={Colors.Highlight}
@@ -106,10 +107,10 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: windowHeight/1.5,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
-        borderTopRightRadius:25,
+        borderTopRightRadius: 25,
         paddingTop: vs(40),
         paddingBottom: vs(20),
         paddingHorizontal: s(13),

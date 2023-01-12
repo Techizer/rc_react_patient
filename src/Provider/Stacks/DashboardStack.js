@@ -15,25 +15,18 @@ import LabTestIndex from "../../screens/LabTests/Index";
 
 import Drawerscreen from "../../components/Drawerscreen";
 
-
-import App_payment from "../../App_payment";
-
-
-
 import { Colors } from "../Colorsfont";
 import { Lang_chg } from "../Language_provider";
 import { config } from "../configProvider";
 import { vs } from "react-native-size-matters";
-import { localStorage } from "../localStorageProvider";
 import { apifuntion } from "../Apicallingprovider/apiProvider";
 import { consolepro } from "../Messageconsolevalidationprovider/Consoleprovider";
+import { useDispatch, useSelector } from "react-redux";
+import { TodaysAppointments, TodaysConsultations, TodaysLabTests } from "../../Redux/Actions";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
-let appoinmentList = []
-let consultList = []
-let labList = []
 let isGuest = ''
 
 function ProfileDrawer() {
@@ -72,110 +65,90 @@ function HomeDrawer() {
         component={Home}
       />
 
-      {/* <Drawer.Screen
-        options={{
-          swipeEnabled: false
-        }}
-        name="AllServiceProviderListing"
-        component={AllServiceProviderListing}
-      /> */}
     </Drawer.Navigator>
   );
-}
-
-const getAppointments = async () => {
-  let user_details = await localStorage.getItemObject("user_arr");
-  let user_id = user_details["user_id"];
-
-  let url = config.baseURL + "api-patient-today-appointment";
-
-  var data = new FormData();
-  data.append("lgoin_user_id", user_id);
-  data.append("service_type", 'all');
-  data.append("page_count", 1);
-
-  // consolepro.consolelog("data", data);
-  apifuntion
-    .postApi(url, data, 1)
-    .then((obj) => {
-      // consolepro.consolelog("getAppointments-response...", obj);
-      if (obj.status == true) {
-        appoinmentList = obj.result
-      } else {
-        appoinmentList = []
-        return false;
-      }
-    }).catch((error) => {
-      consolepro.consolelog("getAppointments-error ------- " + error);
-    });
-};
-
-const getConsultations = async () => {
-  let user_details = await localStorage.getItemObject("user_arr");
-  let user_id = user_details["user_id"];
-
-  let url = config.baseURL + "api-patient-today-appointment";
-
-  var data = new FormData();
-  data.append("lgoin_user_id", user_id);
-  data.append("service_type", 'doctor');
-  data.append("page_count", 1);
-
-  apifuntion
-    .postApi(url, data, 1)
-    .then((obj) => {
-      // consolepro.consolelog("getConsultations-response...", obj);
-      if (obj.status == true) {
-        consultList = obj.result
-      } else {
-        consultList = []
-        return false;
-      }
-    }).catch((error) => {
-      consolepro.consolelog("getConsultations-error ------- " + error);
-    });
-};
-
-const getTests = async () => {
-  let user_details = await localStorage.getItemObject("user_arr");
-  let user_id = user_details["user_id"];
-
-  let url = config.baseURL + "api-patient-today-appointment";
-
-  var data = new FormData();
-  data.append("lgoin_user_id", user_id);
-  data.append("service_type", 'lab');
-  data.append("page_count", 1);
-
-  apifuntion
-    .postApi(url, data, 1)
-    .then((obj) => {
-      // consolepro.consolelog("getTests-response...", obj);
-      if (obj.status == true) {
-        labList = obj.result
-      } else {
-        labList = []
-        return false;
-      }
-    }).catch((error) => {
-      consolepro.consolelog("getTests-error ------- " + error);
-    });
-};
-
-const checkUserType = async () => {
-  isGuest = await localStorage.getItemString('Guest')
 }
 
 
 const DashboardStack = ({ navigation }) => {
 
+  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+
+  const getAppointments = async () => {
+
+    let url = config.baseURL + "api-patient-today-appointment";
+
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'all');
+    data.append("page_count", 1);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // consolepro.consolelog("getAppointments-response...", obj);
+        if (obj.status == true) {
+          dispatch(TodaysAppointments(obj?.result))
+        } else {
+          dispatch(TodaysAppointments([]))
+          return false;
+        }
+      }).catch((error) => {
+        consolepro.consolelog("getAppointments-error ------- " + error);
+      });
+  };
+
+  const getConsultations = async () => {
+    let url = config.baseURL + "api-patient-today-appointment";
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'doctor');
+    data.append("page_count", 1);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // consolepro.consolelog("getConsultations-response...", obj);
+        if (obj.status == true) {
+          dispatch(TodaysConsultations(obj?.result))
+        } else {
+          dispatch(TodaysConsultations([]))
+          return false;
+        }
+      }).catch((error) => {
+        consolepro.consolelog("getConsultations-error ------- " + error);
+      });
+  };
+
+  const getTests = async () => {
+    let url = config.baseURL + "api-patient-today-appointment";
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'lab');
+    data.append("page_count", 1);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // consolepro.consolelog("getTests-response...", obj);
+        if (obj.status == true) {
+          dispatch(TodaysLabTests(obj?.result))
+        } else {
+          dispatch(TodaysLabTests([]))
+          return false;
+        }
+      }).catch((error) => {
+        consolepro.consolelog("getTests-error ------- " + error);
+      });
+  };
+
   useEffect(() => {
-    if (global.isLogin == true) {
+    if (loggedInUserDetails != null) {
       getAppointments()
       getConsultations()
       getTests()
     }
-    checkUserType()
   }, [])
 
   return (
@@ -239,7 +212,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Home'}
-              title={Lang_chg.Home[config.language]} />
+              title={Lang_chg.Home[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -247,7 +220,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Apointment'}
-              title={Lang_chg.Appointment[config.language]} />
+              title={Lang_chg.Appointment[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -255,7 +228,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Consultation'}
-              title={Lang_chg.Consultation[config.language]} />
+              title={Lang_chg.Consultation[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -263,7 +236,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'LabTest'}
-              title={Lang_chg.Lab_Test[config.language]} />
+              title={Lang_chg.Lab_Test[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -271,7 +244,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Profile'}
-              title={Lang_chg.Profile[config.language]} />
+              title={Lang_chg.Profile[appLanguage == 'en' ? 0 : 1]} />
 
 
           </View>
@@ -287,23 +260,19 @@ const DashboardStack = ({ navigation }) => {
       <Tab.Screen
         name={'Apointment'}
         component={AppointmentIndex}
-        initialParams={{ todaysLength: appoinmentList.length, isGuest: isGuest }}
       />
 
       <Tab.Screen
         name={'Consultation'}
         component={ConsultIndex}
-        initialParams={{ todaysLength: consultList.length, isGuest: isGuest }}
       />
       <Tab.Screen
         name={'LabTest'}
         component={LabTestIndex}
-        initialParams={{ todaysLength: labList.length, isGuest: isGuest }}
       />
       <Tab.Screen
         name={'Profile'}
         component={ProfileDrawer}
-        initialParams={{ isGuest: isGuest }}
       />
 
     </Tab.Navigator>
@@ -311,128 +280,5 @@ const DashboardStack = ({ navigation }) => {
 
   )
 }
-// const Stacknav = (navigation) => {
-//   return (
-//     <Stack.Navigator initialRouteName={"Splash"}>
 
-//       <Stack.Screen
-//         name="AppointmentDetails"
-//         component={AppointmentDetails}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       <Stack.Screen
-//         name="Cart2"
-//         component={Cart2}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       <Stack.Screen
-//         name="NeedSupport"
-//         component={NeedSupport}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="Notifications"
-//         component={Notifications}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="AddPatient"
-//         component={AddPatient}
-//         options={{ headerShown: false }}
-//       />
-
-
-
-
-//       <Stack.Screen
-//         name="Show_currentlocation"
-//         component={Show_currentlocation}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       {/* <Stack.Screen
-//         name="Splash"
-//         component={Splash}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       /> */}
-
-
-//       <Stack.Screen
-//         name="EditProfile"
-//         component={EditProfile}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="Office_address"
-//         component={Office_address}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="Home"
-//         component={Mydrawer}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       <Stack.Screen
-//         name="Appointment"
-//         component={Appointment}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       <Stack.Screen
-//         name="Cart"
-//         component={Cart}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-
-//       <Stack.Screen
-//         name="AllServiceProviderListing"
-//         component={AllServiceProviderListing}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="Booking"
-//         component={Booking}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="ServiceProviderDetails"
-//         component={ServiceProviderDetails}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="ForgotOTP"
-//         component={ForgotOTP}
-//         options={{ headerShown: false, gestureEnabled: false }}
-//       />
-//       <Stack.Screen
-//         name="ShowOtherAppointments"
-//         component={ShowOtherAppointments}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="App_payment"
-//         component={App_payment}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="VideoCall"
-//         component={VideoCall}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="LabPackageListing"
-//         component={LabPackageListing}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="LabPackageDetails"
-//         component={LabPackageDetails}
-//         options={{ headerShown: false }}
-//       />
-//       <Stack.Screen
-//         name="CovidPackageDetails"
-//         component={CovidPackageDetails}
-//         options={{ headerShown: false }}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
 export default DashboardStack;

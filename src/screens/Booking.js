@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -18,9 +18,8 @@ import {
   Font,
   msgProvider,
   msgText,
-  config,
   windowWidth,
-  localStorage,
+  config,
   consolepro,
   Lang_chg,
   apifuntion,
@@ -36,6 +35,8 @@ import { dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const timedata = [
   {
@@ -72,86 +73,86 @@ const timedata = [
   },
 ];
 
-export default class Booking extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      providerType: this.props?.route?.params?.providerType,
-      providerId: this.props?.route?.params?.providerId,
-      isFromHospital: this.props?.route?.params?.isFromHospital,
-      indexPosition: this.props?.route?.params?.indexPosition,
-      family_member_id: this.props?.route?.params?.family_member_id,
-      display: "taskbooking",
-      task_base_task: "",
-      task_base_task1: "",
-      new_task_arr: "",
-      set_date: "",
-      timedata: timedata,
-      distance_fare_pass: "",
-      person_arr: "",
-      modalVisible3: false,
-      Error_popup: false,
-      select_task: "",
-      time_add: "",
-      time_take: "",
-      notification_count: "",
-      task_price_total: "",
-      sub_total_price: "",
-      total_price: "",
-      time_take_data: "",
-      time_take_data_hour: "",
-      total_price_show: "",
-      hour_id: "",
-      only_vatprice_show: "",
-      hour_total_amount: "",
-      hour_time: "",
-      active_status: true,
-      vat_price_show: "",
-      final_total_price: "",
-      hour_total_price: "",
-      vat_price_show_hourly: "",
-      vat_price_show_display: "",
-      currency_symbol: "",
-      onlineTaskPrice: "",
-      homeVisitTaskPrice: "",
-      onlineSubTotalPrice: "",
-      homeVisitSubTotalPrice: "",
-      homeVisitVat: "",
-      onlineVisitVat: "",
-      symptomsRecording: "",
-      symptomText: "",
-      prescriptionsImage: "",
-      packageId: "",
-      packagePrice: "",
-      subTotal: '',
-      hour_base_task_new: ''
-    };
-  }
-  componentDidMount() {
-    if (this.props.route.params.display != undefined) {
-      let display = this.props.route.params.display;
-      this.setState({
+const Booking = ({ navigation, route }) => {
+
+  const { providerType, providerId, isFromHospital, indexPosition, family_member_id } = route.params
+  const { address, loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+
+  const [statesData, setStatesData] = useState({
+    languageIndex: appLanguage == 'en' ? 0 : 1,
+    display: "taskbooking",
+    task_base_task: "",
+    task_base_task1: "",
+    new_task_arr: "",
+    set_date: "",
+    timedata: timedata,
+    distance_fare_pass: "",
+    person_arr: "",
+    modalVisible3: false,
+    Error_popup: false,
+    select_task: "",
+    time_add: "",
+    time_take: "",
+    notification_count: "",
+    task_price_total: "",
+    sub_total_price: "",
+    total_price: "",
+    time_take_data: "",
+    time_take_data_hour: "",
+    total_price_show: "",
+    hour_id: "",
+    only_vatprice_show: "",
+    hour_total_amount: "",
+    hour_time: "",
+    active_status: true,
+    vat_price_show: "",
+    final_total_price: "",
+    hour_total_price: "",
+    vat_price_show_hourly: "",
+    vat_price_show_display: "",
+    currency_symbol: "",
+    onlineTaskPrice: "",
+    homeVisitTaskPrice: "",
+    onlineSubTotalPrice: "",
+    homeVisitSubTotalPrice: "",
+    homeVisitVat: "",
+    onlineVisitVat: "",
+    symptomsRecording: "",
+    symptomText: "",
+    prescriptionsImage: "",
+    packageId: "",
+    packagePrice: "",
+    subTotal: '',
+    hour_base_task_new: ''
+  })
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (route.params.display != undefined) {
+      let display = route.params.display;
+      setState({
         display: display,
         set_task: (display == "taskbooking") ? "task_base" : "hour_base"
       });
-
     }
-    this.props.navigation.addListener("focus", () => {
-      this.resetState()
-      this.state.providerType === "lab" ?
-        this.getLabServices()
-        : this.state.providerType === "doctor" ?
-          this.getDoctorServices()
-          : this.getServices();
-      this.getDay();
-      this.getPerson()
-      console.log('..........................', this.props?.route?.params?.family_member_id);
+    providerType === "lab" ?
+      getLabServices()
+      : providerType === "doctor" ?
+        getDoctorServices()
+        : getServices();
+    getDay();
+    getPerson()
+    resetState()
+  }, [isFocused])
 
-    });
+  const setState = payload => {
+    setStatesData(prev => ({
+      ...prev,
+      ...payload
+    }))
   }
 
-  resetState = () => {
-    this.setState({
+  const resetState = () => {
+    setState({
       // display: "taskbooking",
       task_base_task: "",
       task_base_task1: "",
@@ -199,7 +200,7 @@ export default class Booking extends Component {
     })
   }
 
-  getDay = () => {
+  const getDay = () => {
     var today = new Date();
     var nextweek = new Date(
       today.getFullYear(),
@@ -223,7 +224,7 @@ export default class Booking extends Component {
       show_get_date = datenew_show;
     }
     let date1_show = year_show + "-" + show_month1 + "-" + show_get_date;
-    this.setState({ set_date: date1_show, check_currentdate: date1_show });
+    setState({ set_date: date1_show, check_currentdate: date1_show });
 
     for (
       var arr = [], dt = new Date(today);
@@ -255,19 +256,16 @@ export default class Booking extends Component {
 
       arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
     }
-    this.setState({ date_array: arr });
+    setState({ date_array: arr });
   };
 
-  getDoctorTimeDate = async () => {
-
-
+  const getDoctorTimeDate = async () => {
     let url = config.baseURL + "api-patient-doctor-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("date", this.state.set_date);
-    data.append("service_type", this.state.providerType);
-
+    data.append("provider_id", providerId);
+    data.append("date", statesData.set_date);
+    data.append("service_type", providerType);
 
     apifuntion
       .postApi(url, data)
@@ -285,7 +283,7 @@ export default class Booking extends Component {
             var home_visit_ar2 = true;
             if (names != "") {
               for (let l = 0; l < nameArr.length; l++) {
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (statesData.check_currentdate == statesData.set_date) {
                   const timeStr = nameArr[l];
 
                   const convertTime = (timeStr) => {
@@ -300,7 +298,7 @@ export default class Booking extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime = convertTime(timeStr);
-                  if (finaltime >= this.state.timcurrent_for_check) {
+                  if (finaltime >= statesData.timcurrent_for_check) {
                     new_time_home.push({
                       time: nameArr[l],
                       time_status: false,
@@ -330,7 +328,7 @@ export default class Booking extends Component {
               }
             }
 
-            this.setState({
+            setState({
               time_Arr: new_time_home,
               final_one: Arr1,
               final_arr2: Arr2,
@@ -339,7 +337,7 @@ export default class Booking extends Component {
             let real_total_show = "";
             let real_total_final = "";
             let show_real_price = "";
-            let vat_price_new = this.state.booking_data.vat_price;
+            let vat_price_new = statesData.booking_data.vat_price;
             let homeSubTotal = "";
             let homeVisitTotalPrice = "";
             let homeVat = "";
@@ -347,7 +345,7 @@ export default class Booking extends Component {
             if (vat_price_new != 0) {
               if (obj.result.home_visit_time != "") {
                 console.log('If..............');
-                if (this.state.booking_data.distance_fare != 0) {
+                if (statesData.booking_data.distance_fare != 0) {
                   console.log('If distance_fare..............');
                   real_total = "";
                   real_total_show = "";
@@ -355,14 +353,14 @@ export default class Booking extends Component {
                   show_real_price = "";
                   homeSubTotal = parseFloat(
                     Number(
-                      this.state.booking_data?.home_visit_task[0]?.task_price
-                    ) + Number(this.state.booking_data.distance_fare)
+                      statesData.booking_data?.home_visit_task[0]?.task_price
+                    ) + Number(statesData.booking_data.distance_fare)
                   ).toFixed(1);
                   // console.log("sub_total home_visit_task :: ", homeSubTotal);
                   real_total_show =
                     (parseFloat(
                       homeSubTotal +
-                      Number(this.state.booking_data.distance_fare)
+                      Number(statesData.booking_data.distance_fare)
                     ) /
                       100) *
                     vat_price_new;
@@ -380,7 +378,7 @@ export default class Booking extends Component {
                   real_total_show = "";
                   real_total_final = "";
                   show_real_price = "";
-                  homeSubTotal = parseFloat(Number(this.state.booking_data?.home_visit_task[0]?.task_price)).toFixed(1);
+                  homeSubTotal = parseFloat(Number(statesData.booking_data?.home_visit_task[0]?.task_price)).toFixed(1);
                   real_total_show = (parseFloat(homeSubTotal) / 100) * vat_price_new;
 
                   real_total_final = real_total_show.toFixed(1);
@@ -395,38 +393,38 @@ export default class Booking extends Component {
               }
             } else {
               real_total_show =
-                (this.state.booking_data.distance_fare / 100) * vat_price_new;
+                (statesData.booking_data.distance_fare / 100) * vat_price_new;
               real_total_final = real_total_show.toFixed(1);
               real_total = (
                 parseFloat(vat_price_new) +
-                parseFloat(this.state.booking_data.distance_fare)
+                parseFloat(statesData.booking_data.distance_fare)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             }
 
             let sun_total = parseFloat(real_total).toFixed(1);
 
-            this.setState({
+            setState({
               homeVisitSubTotalPrice: homeSubTotal,
               homeVisitVat: homeVat, //0.0,
-              booking_data: this.state.booking_data,
-              message: this.state.booking_data.message,
+              booking_data: statesData.booking_data,
+              message: statesData.booking_data.message,
               vat_price: vat_price_new,
-              distance_fare: this.state.booking_data.distance_fare,
+              distance_fare: statesData.booking_data.distance_fare,
               final_total_price: sun_total,
               homeVisitTaskPrice: homeVisitTotalPrice,
               hour_total_price: sun_total,
-              vat_percent_used: this.state.booking_data.vat_text,
+              vat_percent_used: statesData.booking_data.vat_text,
               hour_time: new_time_online,
               vat_price_show: real_total,
               vat_price_show_hourly: 0.0,
-              distance_fare_pass: this.state.booking_data.distance_fare,
+              distance_fare_pass: statesData.booking_data.distance_fare,
               final_one: Arr1,
               final_arr2: Arr2,
               only_vatprice_show: show_real_price,
             });
           } else {
-            this.setState({ time_Arr: obj.result.home_visit_time });
+            setState({ time_Arr: obj.result.home_visit_time });
           }
 
           if (obj.result.online_task_time != "") {
@@ -442,7 +440,7 @@ export default class Booking extends Component {
           if (obj.result.online_task_time != "") {
             for (let m = 0; m < nameArr_time.length; m++) {
               const timeStr_hour = nameArr_time[m];
-              if (this.state.check_currentdate == this.state.set_date) {
+              if (statesData.check_currentdate == statesData.set_date) {
                 const convertTime_hour = (timeStr_hour) => {
                   const [time, modifier] = timeStr_hour.split(" ");
                   let [hours, minutes] = time.split(":");
@@ -455,7 +453,7 @@ export default class Booking extends Component {
                   return `${hours}:${minutes}`;
                 };
                 var finaltime_hour = convertTime_hour(timeStr_hour);
-                if (finaltime_hour >= this.state.timcurrent_for_check) {
+                if (finaltime_hour >= statesData.timcurrent_for_check) {
                   new_time_online.push({
                     time: nameArr_time[m],
                     time_status: false,
@@ -488,7 +486,7 @@ export default class Booking extends Component {
 
               }
             }
-            this.setState({
+            setState({
               hour_time: new_time_online,
               final_hour_one: online_Arr1,
               final_hour_two: online_Arr2,
@@ -497,7 +495,7 @@ export default class Booking extends Component {
             let real_total_show = "";
             let real_total_final = "";
             let show_real_price = "";
-            let vat_price_new = this.state.booking_data.vat_price;
+            let vat_price_new = statesData.booking_data.vat_price;
             let onlineSubTotal = "";
             let onlineTotalPrice = "";
             let onlineVat = "";
@@ -510,7 +508,7 @@ export default class Booking extends Component {
                 real_total_final = "";
                 show_real_price = "";
                 onlineSubTotal = parseFloat(
-                  Number(this.state.booking_data.online_base_task[0].task_price)
+                  Number(statesData.booking_data.online_base_task[0].task_price)
                 ).toFixed(1);
                 // console.log("sub_total online_base_task :: ", onlineSubTotal);
                 real_total_show = (onlineSubTotal / 100) * vat_price_new;
@@ -522,14 +520,14 @@ export default class Booking extends Component {
                 onlineTotalPrice = real_total;
                 onlineVat = real_total_final;
               }
-              if (this.state.isFromHospital) {
+              if (isFromHospital) {
                 onlineSubTotal = "";
                 real_total = "";
                 real_total_show = "";
                 real_total_final = "";
                 show_real_price = "";
                 onlineSubTotal = parseFloat(
-                  Number(this.state.booking_data.online_base_task[0].task_price)
+                  Number(statesData.booking_data.online_base_task[0].task_price)
                 ).toFixed(1);
                 // console.log("sub_total online_base_task :: ", onlineSubTotal);
                 real_total_show = (onlineSubTotal / 100) * vat_price_new;
@@ -543,37 +541,37 @@ export default class Booking extends Component {
               }
             } else {
               real_total_show =
-                (this.state.booking_data.distance_fare / 100) * vat_price_new;
+                (statesData.booking_data.distance_fare / 100) * vat_price_new;
               real_total_final = real_total_show.toFixed(1);
               real_total = (
                 parseFloat(vat_price_new) +
-                parseFloat(this.state.booking_data.distance_fare)
+                parseFloat(statesData.booking_data.distance_fare)
               ).toFixed(1);
               show_real_price = parseFloat(vat_price_new).toFixed(1);
             }
             let sun_total = parseFloat(real_total).toFixed(1);
 
-            this.setState({
+            setState({
               onlineSubTotalPrice: onlineSubTotal,
               onlineVisitVat: onlineVat, //0.0,
-              booking_data: this.state.booking_data,
-              message: this.state.booking_data.message,
+              booking_data: statesData.booking_data,
+              message: statesData.booking_data.message,
               vat_price: vat_price_new,
-              distance_fare: this.state.booking_data.distance_fare,
+              distance_fare: statesData.booking_data.distance_fare,
               final_total_price: sun_total,
               onlineTaskPrice: onlineTotalPrice,
               hour_total_price: sun_total,
-              vat_percent_used: this.state.booking_data.vat_text,
+              vat_percent_used: statesData.booking_data.vat_text,
               hour_time: new_time_online,
               vat_price_show: real_total,
               vat_price_show_hourly: 0.0,
-              distance_fare_pass: this.state.booking_data.distance_fare,
+              distance_fare_pass: statesData.booking_data.distance_fare,
               final_hour_one: online_Arr1,
               final_hour_two: online_Arr2,
               only_vatprice_show: show_real_price,
             });
           } else {
-            this.setState({
+            setState({
               hour_time: obj.result.online_task_time,
               final_hour_one: online_Arr1,
               final_hour_two: online_Arr2,
@@ -589,13 +587,13 @@ export default class Booking extends Component {
       });
   };
 
-  getLabTimeDate = async () => {
+  const getLabTimeDate = async () => {
     let url = config.baseURL + "api-patient-lab-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("date", this.state.set_date);
-    data.append("service_type", this.state.providerType);
+    data.append("provider_id", providerId);
+    data.append("date", statesData.set_date);
+    data.append("service_type", providerType);
 
     apifuntion
       .postApi(url, data)
@@ -614,7 +612,7 @@ export default class Booking extends Component {
             var task_ar2 = true;
             if (names != "") {
               for (let l = 0; l < nameArr.length; l++) {
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (statesData.check_currentdate == statesData.set_date) {
                   const timeStr = nameArr[l];
 
                   const convertTime = (timeStr) => {
@@ -629,7 +627,7 @@ export default class Booking extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime = convertTime(timeStr);
-                  if (finaltime >= this.state.timcurrent_for_check) {
+                  if (finaltime >= statesData.timcurrent_for_check) {
                     newTaskTime.push({
                       time: nameArr[l],
                       time_status: false,
@@ -659,13 +657,13 @@ export default class Booking extends Component {
               }
             }
 
-            this.setState({
+            setState({
               time_Arr: newTaskTime,
               final_one: Arr1,
               final_arr2: Arr2,
             });
           } else {
-            this.setState({
+            setState({
               time_Arr: obj.result.task_time,
             });
           }
@@ -678,14 +676,14 @@ export default class Booking extends Component {
       });
   };
 
-  getTimeDate = async () => {
+  const getTimeDate = async () => {
     let url = config.baseURL + "api-patient-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("date", this.state.set_date);
-    data.append("task_type", this.state.set_task);
-    data.append("service_type", this.state.providerType);
+    data.append("provider_id", providerId);
+    data.append("date", statesData.set_date);
+    data.append("task_type", statesData.set_task);
+    data.append("service_type", providerType);
 
     console.log('getTimeDate request.....', data);
 
@@ -706,7 +704,7 @@ export default class Booking extends Component {
             var task_ar2 = true;
             if (obj.result.task_time != "") {
               for (let l = 0; l < nameArr.length; l++) {
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (statesData.check_currentdate == statesData.set_date) {
                   const timeStr = nameArr[l];
 
                   const convertTime = (timeStr) => {
@@ -722,7 +720,7 @@ export default class Booking extends Component {
                   };
                   var finaltime = convertTime(timeStr);
 
-                  if (finaltime >= this.state.timcurrent_for_check) {
+                  if (finaltime >= statesData.timcurrent_for_check) {
                     new_time_dlot.push({
                       time: nameArr[l],
                       time_status: false,
@@ -752,13 +750,13 @@ export default class Booking extends Component {
               }
             }
 
-            this.setState({
+            setState({
               time_Arr: new_time_dlot,
               final_one: Arr1,
               final_arr2: Arr2,
             });
           } else {
-            this.setState({ time_Arr: obj.result.task_time });
+            setState({ time_Arr: obj.result.task_time });
           }
 
           if (obj.result.hourly_time != "") {
@@ -774,7 +772,7 @@ export default class Booking extends Component {
           if (obj.result.hourly_time != "") {
             for (let m = 0; m < nameArr_time.length; m++) {
               const timeStr_hour = nameArr_time[m];
-              if (this.state.check_currentdate == this.state.set_date) {
+              if (statesData.check_currentdate == statesData.set_date) {
                 const convertTime_hour = (timeStr_hour) => {
                   const [time, modifier] = timeStr_hour.split(" ");
                   let [hours, minutes] = time.split(":");
@@ -787,7 +785,7 @@ export default class Booking extends Component {
                   return `${hours}:${minutes}`;
                 };
                 var finaltime_hour = convertTime_hour(timeStr_hour);
-                if (finaltime_hour >= this.state.timcurrent_for_check) {
+                if (finaltime_hour >= statesData.timcurrent_for_check) {
                   new_time_hourl.push({
                     time: nameArr_time[m],
                     time_status: false,
@@ -818,13 +816,13 @@ export default class Booking extends Component {
                 }
               }
             }
-            this.setState({
+            setState({
               hour_time: new_time_hourl,
               final_hour_one: hour_Arr1,
               final_hour_two: hour_Arr2,
             });
           } else {
-            this.setState({
+            setState({
               hour_time: obj.result.hourly_time,
               final_hour_one: hour_Arr1,
               final_hour_two: hour_Arr2,
@@ -839,22 +837,20 @@ export default class Booking extends Component {
       });
   };
 
-  getPerson = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getPerson = async () => {
     let url = config.baseURL + "api-patient-family-member";
 
     var data = new FormData();
-    data.append("user_id", user_id);
+    data.append("user_id", loggedInUserDetails.user_id);
 
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
 
         if (obj.status == true) {
-          this.setState({ person_arr: obj.result });
+          setState({ person_arr: obj.result });
         } else {
-          this.setState({ person_arr: obj.result });
+          setState({ person_arr: obj.result });
           return false;
         }
       })
@@ -863,19 +859,16 @@ export default class Booking extends Component {
       });
   };
 
-  delete_click = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const delete_click = async () => {
     let url = config.baseURL + "api-delete-patient-family-member";
-
     var data = new FormData();
-    data.append("id", this.state.id);
+    data.append("id", statesData.id);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
 
         if (obj.status == true) {
-          this.getPerson();
+          getPerson();
         } else {
           msgProvider.showError(obj.message);
           return false;
@@ -886,28 +879,25 @@ export default class Booking extends Component {
       });
   };
 
-  getData(value) {
+  const getData = (value) => {
     if (value.text != null) {
-      this.state.symptomText = value.text;
+      statesData.symptomText = value.text;
     }
     if (value.audio != null) {
-      this.state.symptomsRecording = value.audio;
+      statesData.symptomsRecording = value.audio;
     }
     if (value.tab != null) {
-      this.setState({ indexPosition: value.tab, time_take_data: "" });
+      setState({ indexPosition: value.tab, time_take_data: "" });
     }
     if (value.image != null) {
-      this.state.prescriptionsImage = value.image;
+      statesData.prescriptionsImage = value.image;
     }
   }
 
-  getLabServices = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
-    this.setState({
-      name: user_details["first_name"],
-      currency_symbol: user_details["currency_symbol"],
+  const getLabServices = async () => {
+    setState({
+      name: loggedInUserDetails.first_name,
+      currency_symbol: loggedInUserDetails.currency_symbol
     });
 
     var current = new Date();
@@ -918,29 +908,29 @@ export default class Booking extends Component {
     let hour =
       current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
     var timcurrent = hour + ":" + min;
-    this.setState({ timcurrent_for_check: timcurrent });
-    if (user_details.image != null) {
-      this.setState({
-        profile_img: user_details["image"],
+    setState({ timcurrent_for_check: timcurrent });
+    if (loggedInUserDetails.image != null) {
+      setState({
+        profile_img: loggedInUserDetails.image
       });
     }
     let url =
       config.baseURL +
-      (this.state.providerId !== "497"
+      (providerId !== "497"
         ? "api-patient-lab-booking-init-details"
         : "api-patient-rclab-booking-init-details");
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.providerType);
+    data.append("provider_id", providerId);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", providerType);
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
           if (obj.result.task_base_task.length === 0) {
-            this.setState({
+            setState({
               indexPosition: 1,
             });
           }
@@ -1018,7 +1008,7 @@ export default class Booking extends Component {
           }
           let sun_total = parseFloat(real_total).toFixed(2);
 
-          this.setState({
+          setState({
             subTotal: obj.result.distance_fare,
             vat_price_show_display: real_total_final, //0.0,
             booking_data: obj.result,
@@ -1048,7 +1038,7 @@ export default class Booking extends Component {
             obj.result.hour_base_enable == 0 &&
             obj.result.task_base_enable == 1
           ) {
-            this.setState({ display: "hourlybooking" });
+            setState({ display: "hourlybooking" });
           }
 
           let time_slot = obj.result.task_base_task;
@@ -1068,7 +1058,7 @@ export default class Booking extends Component {
             }
           }
 
-          this.setState({
+          setState({
             task_base_task: time_slot,
             hour_base_task: hour_task,
           });
@@ -1079,20 +1069,18 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         setTimeout(() => {
-          this.setState({ Error_popup: true });
+          setState({ Error_popup: true });
         }, 700);
 
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
 
-  getDoctorServices = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getDoctorServices = async () => {
 
-    this.setState({
-      name: user_details["first_name"],
-      currency_symbol: user_details["currency_symbol"],
+    setState({
+      name: loggedInUserDetails.first_name,
+      currency_symbol: loggedInUserDetails.currency_symbol
     });
 
     var current = new Date();
@@ -1103,18 +1091,18 @@ export default class Booking extends Component {
     let hour =
       current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
     var timcurrent = hour + ":" + min;
-    this.setState({ timcurrent_for_check: timcurrent });
-    if (user_details.image != null) {
-      this.setState({
-        profile_img: user_details["image"],
+    setState({ timcurrent_for_check: timcurrent });
+    if (loggedInUserDetails.image != null) {
+      setState({
+        profile_img: loggedInUserDetails.image
       });
     }
     let url = config.baseURL + "api-patient-doctor-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.providerType);
+    data.append("provider_id", providerId);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", providerType);
 
     apifuntion
       .postApi(url, data)
@@ -1288,7 +1276,7 @@ export default class Booking extends Component {
               onlineTotalPrice = real_total;
               onlineVat = real_total_final;
             }
-            if (this.state.isFromHospital) {
+            if (isFromHospital) {
               console.log('calculating hospital doc fare....');
               onlineSubTotal = "";
               real_total = "";
@@ -1317,7 +1305,7 @@ export default class Booking extends Component {
           }
           let sun_total = parseFloat(real_total).toFixed(1);
 
-          this.setState({
+          setState({
             onlineSubTotalPrice: onlineSubTotal,
             homeVisitSubTotalPrice: homeSubTotal,
             homeVisitVat: homeVat, //0.0,
@@ -1348,7 +1336,7 @@ export default class Booking extends Component {
             obj.result.hour_base_enable == 0 &&
             obj.result.task_base_enable == 1
           ) {
-            this.setState({ display: "hourlybooking" });
+            setState({ display: "hourlybooking" });
           }
 
           let time_slot = obj.result.task_base_task;
@@ -1368,7 +1356,7 @@ export default class Booking extends Component {
             }
           }
 
-          this.setState({
+          setState({
             task_base_task: time_slot,
             hour_base_task: hour_task,
           });
@@ -1379,20 +1367,18 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         setTimeout(() => {
-          this.setState({ Error_popup: true });
+          setState({ Error_popup: true });
         }, 700);
 
         consolepro.consolelog("-------- error ------- " + error);
       });
   };
 
-  getServices = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getServices = async () => {
 
-    this.setState({
-      name: user_details["first_name"],
-      currency_symbol: user_details["currency_symbol"],
+    setState({
+      name: loggedInUserDetails.first_name,
+      currency_symbol: loggedInUserDetails.currency_symbol
     });
 
     var current = new Date();
@@ -1403,18 +1389,18 @@ export default class Booking extends Component {
     let hour =
       current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
     var timcurrent = hour + ":" + min;
-    this.setState({ timcurrent_for_check: timcurrent });
-    if (user_details.image != null) {
-      this.setState({
-        profile_img: user_details["image"],
+    setState({ timcurrent_for_check: timcurrent });
+    if (loggedInUserDetails.image != null) {
+      setState({
+        profile_img: loggedInUserDetails.image
       });
     }
     let url = config.baseURL + "api-patient-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", this.state.providerId);
-    data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.providerType);
+    data.append("provider_id", providerId);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", providerType);
 
     apifuntion
       .postApi(url, data)
@@ -1546,7 +1532,7 @@ export default class Booking extends Component {
           }
           let sun_total = parseFloat(real_total).toFixed(2);
           console.log({ sun_total });
-          this.setState({
+          setState({
             subTotal: obj.result.distance_fare,
             vat_price_show_display: real_total_final, //0.0,
             booking_data: obj.result,
@@ -1575,7 +1561,7 @@ export default class Booking extends Component {
             obj.result.hour_base_enable == 0 &&
             obj.result.task_base_enable == 1
           ) {
-            this.setState({ display: "hourlybooking" });
+            setState({ display: "hourlybooking" });
           }
 
           let time_slot = obj.result.task_base_task;
@@ -1595,7 +1581,7 @@ export default class Booking extends Component {
             }
           }
 
-          this.setState({
+          setState({
             task_base_task: time_slot,
             hour_base_task: hour_task,
           });
@@ -1606,88 +1592,86 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         setTimeout(() => {
-          this.setState({ Error_popup: true });
+          setState({ Error_popup: true });
         }, 700);
 
         consolepro.consolelog("getServices-error ------- " + error);
       });
   };
 
-  submitButtonForDoctor = async () => {
+  const submitButtonForDoctor = async () => {
     Keyboard.dismiss();
     let subTotalPrice =
-      this.state.indexPosition === 0
-        ? this.state.onlineSubTotalPrice
-        : this.state.homeVisitSubTotalPrice;
+      indexPosition === 0
+        ? statesData.onlineSubTotalPrice
+        : statesData.homeVisitSubTotalPrice;
     let vatPrice =
-      this.state.indexPosition === 0
-        ? this.state.onlineVisitVat
-        : this.state.homeVisitVat;
+      indexPosition === 0
+        ? statesData.onlineVisitVat
+        : statesData.homeVisitVat;
     let totalPrice =
-      this.state.indexPosition === 0
-        ? this.state.onlineTaskPrice
-        : this.state.homeVisitTaskPrice;
+      indexPosition === 0
+        ? statesData.onlineTaskPrice
+        : statesData.homeVisitTaskPrice;
     let distance =
-      this.state.indexPosition === 0 ? "" : this.state.distance_fare_pass;
+      indexPosition === 0 ? "" : statesData.distance_fare_pass;
     let taskType =
-      this.state.indexPosition === 0 ? "online_task" : "home_visit";
-    let appointmentType = this.state.indexPosition === 0 ? "online" : "offline";
+      indexPosition === 0 ? "online_task" : "home_visit";
+    let appointmentType = indexPosition === 0 ? "online" : "offline";
 
 
-    if (this.state.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[config.language]);
+    if (statesData.time_take_data.length <= 0) {
+      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
       return false;
     }
 
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
 
     data.append(
       "hospital_id",
-      this.state.isFromHospital ? this.props.route.params.hospitalId : ""
+      isFromHospital ? hospitalId : ""
     );
-    data.append("service_type", this.state.providerType);
-    data.append("login_user_id", user_id);
-    data.append("currency_symbol", this.state.currency_symbol);
-    data.append("family_member_id", this.state.family_member_id);
-    data.append("provider_id", this.state.providerId);
-    data.append("task_id", this.state.final_data);
-    data.append("task_price", this.state.set_price);
+    data.append("service_type", providerType);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("currency_symbol", statesData.currency_symbol);
+    data.append("family_member_id", family_member_id);
+    data.append("provider_id", providerId);
+    data.append("task_id", statesData.final_data);
+    data.append("task_price", statesData.set_price);
     data.append("task_type", taskType);
-    data.append("from_date", this.state.set_date);
-    data.append("from_time", this.state.time_take_data);
+    data.append("from_date", statesData.set_date);
+    data.append("from_time", statesData.time_take_data);
     data.append("appointment_type", appointmentType);
-    data.append("vat_percent_used", "" + this.state.vat_price);
-    data.append("task_price_total", this.state.set_price);
+    data.append("vat_percent_used", "" + statesData.vat_price);
+    data.append("task_price_total", statesData.set_price);
     data.append("vat_price", vatPrice);
     data.append("distance_fare", distance);
     data.append("sub_total_price", subTotalPrice);
     data.append("total_price", totalPrice);
-    data.append("symptom_text", this.state.symptomText);
+    data.append("symptom_text", statesData.symptomText);
 
-    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
-      data.append('distance', this.state.booking_data.distancetext)
+    if (statesData.booking_data.distancetext != '' && statesData.booking_data.distancetext != null && statesData.booking_data.distancetext != undefined) {
+      data.append('distance', statesData.booking_data.distancetext)
     } else {
       data.append('distance', '')
     }
 
 
-    if (this.state.prescriptionsImage != "") {
+    if (statesData.prescriptionsImage != "") {
       data.append("upload_prescription", {
-        uri: this.state.prescriptionsImage,
+        uri: statesData.prescriptionsImage,
         type: "image/jpg",
-        name: this.state.prescriptionsImage,
+        name: statesData.prescriptionsImage,
       });
     }
 
-    if (this.state.symptomsRecording != "") {
+    if (statesData.symptomsRecording != "") {
       data.append("symptom_recording", {
-        uri: this.state.symptomsRecording,
+        uri: statesData.symptomsRecording,
         type: "audio/m4a",
-        name: this.state.symptomsRecording,
+        name: statesData.symptomsRecording,
       });
     }
 
@@ -1697,13 +1681,13 @@ export default class Booking extends Component {
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
-          localStorage.setItemString('cartTime', moment().format('x'))
+          // localStorage.setItemString('cartTime', moment().format('x'))
           setTimeout(() => {
-            this.props.navigation.navigate("Cart", { providerType: this.state.providerType });
+            navigation.navigate("Cart", { providerType: providerType });
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-          //   usernotfound.loginFirst(this.props, obj.msg[config.language])
+          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -1714,68 +1698,65 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setState({ loading: false });
       });
   };
 
-  submit_btn = async () => {
+  const submit_btn = async () => {
     Keyboard.dismiss();
-    if (this.state.providerType === "lab") {
-      if (this.state.indexPosition === 0) {
-        if (this.state.select_task.length <= 0) {
-          msgProvider.showError(msgText.EmptyTask[config.language]);
+    if (providerType === "lab") {
+      if (indexPosition === 0) {
+        if (statesData.select_task.length <= 0) {
+          msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
           return false;
         }
       } else {
-        if (this.state.hour_id.length <= 0) {
-          msgProvider.showError(msgText.EmptyTask[config.language]);
+        if (statesData.hour_id.length <= 0) {
+          msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
           return false;
         }
       }
     } else {
-      if (this.state.select_task.length <= 0) {
-        msgProvider.showError(msgText.EmptyTask[config.language]);
+      if (statesData.select_task.length <= 0) {
+        msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
         return false;
       }
     }
 
-    if (this.state.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[config.language]);
+    if (statesData.time_take_data.length <= 0) {
+      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
       return false;
     }
-
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
 
 
 
-    if (this.state.providerType === "lab") {
-      data.append("hospital_id", this.state.booking_data.hospital_id);
+    if (providerType === "lab") {
+      data.append("hospital_id", statesData.booking_data.hospital_id);
     }
-    data.append("service_type", this.state.providerType);
-    data.append("login_user_id", user_id);
-    data.append("currency_symbol", this.state.currency_symbol);
-    data.append("family_member_id", this.state.family_member_id);
-    data.append("provider_id", this.state.providerId);
-    data.append("task_id", this.state.final_data);
-    data.append("task_price", this.state.set_price);
+    data.append("service_type", providerType);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("currency_symbol", statesData.currency_symbol);
+    data.append("family_member_id", family_member_id);
+    data.append("provider_id", providerId);
+    data.append("task_id", statesData.final_data);
+    data.append("task_price", statesData.set_price);
     data.append("task_type", "task_base");
-    data.append("from_date", this.state.set_date);
-    data.append("from_time", this.state.time_take_data);
+    data.append("from_date", statesData.set_date);
+    data.append("from_time", statesData.time_take_data);
     data.append("appointment_type", "online");
-    data.append("vat_percent_used", this.state.vat_price);
+    data.append("vat_percent_used", statesData.vat_price);
 
-    data.append("vat_price", this.state.vat_price_show);
-    data.append("distance_fare", this.state.distance_fare_pass);
-    data.append("task_price_total", this.state.total_price_show);
-    data.append("sub_total_price", this.state.subTotal);
-    data.append("total_price", this.state.final_total_price);
+    data.append("vat_price", statesData.vat_price_show);
+    data.append("distance_fare", statesData.distance_fare_pass);
+    data.append("task_price_total", statesData.total_price_show);
+    data.append("sub_total_price", statesData.subTotal);
+    data.append("total_price", statesData.final_total_price);
 
-    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
-      data.append('distance', this.state.booking_data.distancetext)
+    if (statesData.booking_data.distancetext != '' && statesData.booking_data.distancetext != null && statesData.booking_data.distancetext != undefined) {
+      data.append('distance', statesData.booking_data.distancetext)
     } else {
       data.append('distance', '')
     }
@@ -1784,14 +1765,14 @@ export default class Booking extends Component {
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
-          localStorage.setItemString('cartTime', moment().format('x'))
-          // msgProvider.toast(msgText.sucess_message_login[config.language])
+          // localStorage.setItemString('cartTime', moment().format('x'))
+          // msgProvider.toast(msgText.sucess_message_login[statesData.languageIndex])
           setTimeout(() => {
-            this.props.navigation.navigate("Cart", { providerType: this.state.providerType })
+            navigation.navigate("Cart", { providerType: providerType })
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-          //   usernotfound.loginFirst(this.props, obj.msg[config.language])
+          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -1802,54 +1783,51 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setState({ loading: false });
       });
   };
 
-  submit_btn_hourly = async () => {
+  const submit_btn_hourly = async () => {
     Keyboard.dismiss();
-    if (this.state.hour_id.length <= 0) {
-      msgProvider.showError(msgText.EmptyTask[config.language]);
+    if (statesData.hour_id.length <= 0) {
+      msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
       return false;
     }
 
-    if (this.state.time_take_data_hour.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[config.language]);
+    if (statesData.time_take_data_hour.length <= 0) {
+      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
       return false;
     }
 
-    var taskBase = this.state.providerType === "lab" ? "package_base" : "hour_base";
-
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+    var taskBase = providerType === "lab" ? "package_base" : "hour_base";
 
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
 
-    if (this.state.providerType === "lab") {
-      data.append("hospital_id", this.state.booking_data.hospital_id);
+    if (providerType === "lab") {
+      data.append("hospital_id", statesData.booking_data.hospital_id);
     }
-    data.append("service_type", this.state.providerType);
-    data.append("login_user_id", user_id);
-    data.append("currency_symbol", this.state.currency_symbol);
-    data.append("family_member_id", this.state.family_member_id);
-    data.append("provider_id", this.state.providerId);
-    data.append("task_id", this.state.hour_id);
-    data.append("task_price", this.state.hour_price);
+    data.append("service_type", providerType);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("currency_symbol", statesData.currency_symbol);
+    data.append("family_member_id", family_member_id);
+    data.append("provider_id", providerId);
+    data.append("task_id", statesData.hour_id);
+    data.append("task_price", statesData.hour_price);
     data.append("task_type", taskBase);
-    data.append("from_date", this.state.set_date);
-    data.append("from_time", this.state.time_take_data_hour);
+    data.append("from_date", statesData.set_date);
+    data.append("from_time", statesData.time_take_data_hour);
     data.append("appointment_type", "online");
-    data.append("vat_percent_used", this.state.vat_price);
+    data.append("vat_percent_used", statesData.vat_price);
 
-    data.append("vat_price", this.state.vat_price_show_hourly);
-    data.append("distance_fare", this.state.distance_fare_pass);
-    data.append("task_price_total", this.state.hour_total_amount);
-    data.append("sub_total_price", this.state.subTotal);
-    data.append("total_price", this.state.hour_total_price);
+    data.append("vat_price", statesData.vat_price_show_hourly);
+    data.append("distance_fare", statesData.distance_fare_pass);
+    data.append("task_price_total", statesData.hour_total_amount);
+    data.append("sub_total_price", statesData.subTotal);
+    data.append("total_price", statesData.hour_total_price);
 
-    if (this.state.booking_data.distancetext != '' && this.state.booking_data.distancetext != null && this.state.booking_data.distancetext != undefined) {
-      data.append('distance', this.state.booking_data.distancetext)
+    if (statesData.booking_data.distancetext != '' && statesData.booking_data.distancetext != null && statesData.booking_data.distancetext != undefined) {
+      data.append('distance', statesData.booking_data.distancetext)
     } else {
       data.append('distance', '')
     }
@@ -1859,14 +1837,14 @@ export default class Booking extends Component {
       .postApi(url, data)
       .then((obj) => {
         if (obj.status == true) {
-          localStorage.setItemString('cartTime', moment().format('x'))
-          // msgProvider.toast(msgText.sucess_message_login[config.language])
+          // localStorage.setItemString('cartTime', moment().format('x'))
+          // msgProvider.toast(msgText.sucess_message_login[statesData.languageIndex])
           setTimeout(() => {
-            this.props.navigation.navigate("Cart", { providerType: this.state.providerType })
+            navigation.navigate("Cart", { providerType: providerType })
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-          //   usernotfound.loginFirst(this.props, obj.msg[config.language])
+          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -1876,15 +1854,15 @@ export default class Booking extends Component {
       })
       .catch((error) => {
         consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setState({ loading: false });
       });
   };
 
-  searchFilterFunction = (text) => {
-    this.setState({ name_new: text });
+  const searchFilterFunction = (text) => {
+    setState({ name_new: text });
 
-    //  let task_base_task1=this.state.task_base_task
-    let data1 = this.state.task_base_task1;
+    //  let task_base_task1=statesData.task_base_task
+    let data1 = statesData.task_base_task1;
     if (data1 != "") {
       const newData = data1.filter((item) => {
         //applying filter for the inserted text in search bar
@@ -1893,17 +1871,17 @@ export default class Booking extends Component {
         return item.name.toLowerCase().indexOf(textData) >= 0;
       });
       if (newData.length > 0) {
-        this.setState({ task_base_task: newData });
+        setState({ task_base_task: newData });
       } else if (newData.length <= 0) {
-        this.setState({ task_base_task: "" });
+        setState({ task_base_task: "" });
       }
     }
   };
 
 
 
-  hourbooking = (item, index) => {
-    let data = this.state.hour_base_task;
+  const hourbooking = (item, index) => {
+    let data = statesData.hour_base_task;
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -1920,43 +1898,36 @@ export default class Booking extends Component {
     let show_total_price;
     let hour_add = "";
     let subTotal = "";
-
-    console.log(this.state.only_vatprice_show);
-    console.log(this.state.vat_price_show);
     if (
-      this.state.only_vatprice_show == 0 ||
-      this.state.only_vatprice_show == "0.0"
+      statesData.only_vatprice_show == 0 ||
+      statesData.only_vatprice_show == "0.0"
     ) {
-      console.log('if');
-      show_total_price = 0 //this.state.vat_price_show;
+      show_total_price = 0 //statesData.vat_price_show;
       subTotal = parseFloat(
-        parseInt(this.state.distance_fare_pass) + parseInt(prize)
+        parseInt(statesData.distance_fare_pass) + parseInt(prize)
       ).toFixed(1);
       hour_add = parseFloat(
-        parseInt(this.state.distance_fare_pass) +
-        parseInt(prize) 
-        // parseFloat(this.state.vat_price_show)
+        parseInt(statesData.distance_fare_pass) +
+        parseInt(prize)
+        // parseFloat(statesData.vat_price_show)
       ).toFixed(1);
     } else {
-      console.log('else');
 
       let vat_sum_per = prize;
       subTotal = parseFloat(
-        parseInt(this.state.distance_fare_pass) + parseInt(vat_sum_per)
+        parseInt(statesData.distance_fare_pass) + parseInt(vat_sum_per)
       ).toFixed(1);
-      real_total_show = (subTotal / 100) * this.state.vat_price;
+      real_total_show = (subTotal / 100) * statesData.vat_price;
       real_total_final = real_total_show.toFixed(2);
       real_total = Number(real_total_final);
       show_total_price = real_total;
       hour_add = parseFloat(
-        parseInt(this.state.distance_fare_pass) +
+        parseInt(statesData.distance_fare_pass) +
         parseInt(prize) +
         parseFloat(show_total_price)
       ).toFixed(1);
     }
-
-    console.log({ hour_add });
-    this.setState({
+    setState({
       hour_base_task: data,
       hour_base_task_new: data,
       hour_total_amount: prize,
@@ -1966,8 +1937,8 @@ export default class Booking extends Component {
     });
   };
 
-  check_all = (index) => {
-    let data = this.state.task_base_task;
+  const check_all = (index) => {
+    let data = statesData.task_base_task;
     let totalSelected = 0;
     let comma_arr = [];
     let price_arr = [];
@@ -2005,23 +1976,23 @@ export default class Booking extends Component {
 
 
       let vat_sum_per =
-        parseFloat(sum) + parseFloat(this.state.distance_fare_pass); //sum
+        parseFloat(sum) + parseFloat(statesData.distance_fare_pass); //sum
       subTotal = vat_sum_per.toFixed(1);
 
       if (
-        this.state.only_vatprice_show == 0 ||
-        this.state.only_vatprice_show == "0.0"
+        statesData.only_vatprice_show == 0 ||
+        statesData.only_vatprice_show == "0.0"
       ) {
-        real_total = 0 //parseFloat(this.state.vat_price_show_display).toFixed(1);
+        real_total = 0 //parseFloat(statesData.vat_price_show_display).toFixed(1);
         show_total_price = parseFloat(
-          parseInt(this.state.distance_fare_pass) + sum
+          parseInt(statesData.distance_fare_pass) + sum
         ).toFixed(1);
       } else {
-        real_total_show = (vat_sum_per / 100) * this.state.vat_price;
+        real_total_show = (vat_sum_per / 100) * statesData.vat_price;
         real_total_final = real_total_show.toFixed(2);
         real_total = real_total_final;
         show_total_price = parseFloat(
-          parseInt(this.state.distance_fare_pass) + parseFloat(real_total) + sum
+          parseInt(statesData.distance_fare_pass) + parseFloat(real_total) + sum
         ).toFixed(2);
       }
 
@@ -2029,7 +2000,7 @@ export default class Booking extends Component {
       let set_price = price_arr.toString();
       let total_sum = parseInt(sum);
 
-      this.setState({
+      setState({
         subTotal: subTotal,
         task_base_task: data,
         select_task: comma_arr,
@@ -2044,18 +2015,18 @@ export default class Booking extends Component {
       })
       if (totalSelected != 0) {
         console.log('totalSelected', totalSelected);
-        this.setState({
+        setState({
           new_task_arr: data
         })
       } else {
-        this.setState({
+        setState({
           new_task_arr: ''
         })
       }
     }
   };
-  checkDate = (item, index) => {
-    let data = this.state.date_array;
+  const checkDate = (item, index) => {
+    let data = statesData.date_array;
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2064,11 +2035,11 @@ export default class Booking extends Component {
         data[i].tick = 0;
       }
     }
-    this.setState({ date_array: data });
+    setState({ date_array: data });
   };
 
-  time_tick = (item, index) => {
-    let data = this.state.time_Arr;
+  const time_tick = (item, index) => {
+    let data = statesData.time_Arr;
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2077,11 +2048,11 @@ export default class Booking extends Component {
         data[i].time_status = false;
       }
     }
-    this.setState({ time_Arr: data });
+    setState({ time_Arr: data });
   };
 
-  hour_time_tick = (item, index) => {
-    let data = this.state.hour_time;
+  const hour_time_tick = (item, index) => {
+    let data = statesData.hour_time;
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -2090,14 +2061,14 @@ export default class Booking extends Component {
         data[i].time_status = false;
       }
     }
-    this.setState({ hour_time: data });
+    setState({ hour_time: data });
   };
 
 
-  check_all_false = (index) => {
+  const check_all_false = (index) => {
     let totalSelected = 0;
     let price_arr = [];
-    let data = this.state.new_task_arr;
+    let data = statesData.new_task_arr;
 
     if (index != -1) {
       if (data[index].status == true) {
@@ -2124,24 +2095,24 @@ export default class Booking extends Component {
       for (let k = 0; k < result.length; k++) {
         sum -= result[k];
       }
-      this.setState({
+      setState({
         task_base_task: data,
         total_price_show: sum,
       });
       if (totalSelected != 0) {
-        this.setState({
+        setState({
           new_task_arr: data
         })
       } else {
-        this.setState({
+        setState({
           new_task_arr: ''
         })
       }
     }
   };
 
-  unCheck_all = (tab) => {
-    let data = tab === 0 ? this.state.new_task_arr : this.state.booking_data.hour_base_task;
+  const unCheck_all = (tab) => {
+    let data = tab === 0 ? statesData.new_task_arr : statesData.booking_data.hour_base_task;
 
     for (let i = 0; i < data.length; i++) {
       if (data[i].status == true) {
@@ -2149,317 +2120,950 @@ export default class Booking extends Component {
       }
     }
 
-    this.setState({
+    setState({
       // task_base_task: data,
       new_task_arr: data,
     });
 
   };
 
-  render() {
-    const { providerType } = this.state
-    if (this.state.booking_data != "" && this.state.booking_data != null) {
+  if (statesData.booking_data != "" && statesData.booking_data != null) {
 
-      var item = this.state.booking_data;
-      if (this.state.providerType === "doctor") {
-        this.state.set_task =
-          this.state.indexPosition === 0
-            ? item.online_base_text
-            : item.home_visit_text;
+    var item = statesData.booking_data;
+    if (providerType === "doctor") {
+      statesData.set_task =
+        indexPosition === 0
+          ? item.online_base_text
+          : item.home_visit_text;
 
-        this.state.final_data =
-          this.state.indexPosition === 0
-            ? item.online_base_task[0].id
-            : item.home_visit_task[0].id;
+      statesData.final_data =
+        indexPosition === 0
+          ? item.online_base_task[0].id
+          : item.home_visit_task[0].id;
 
-        this.state.set_price =
-          this.state.indexPosition === 0
-            ? item.online_base_task[0].task_price
-            : item.home_visit_task[0].task_price;
-      }
+      statesData.set_price =
+        indexPosition === 0
+          ? item.online_base_task[0].task_price
+          : item.home_visit_task[0].task_price;
+    }
 
 
-      return (
-        <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
-          <ScreenHeader
-            title={Lang_chg.Booking[config.language]}
-            navigation={this.props.navigation}
-            onBackPress={() => this.props.navigation.pop()}
-            leftIcon
-          />
+        <ScreenHeader
+          title={Lang_chg.Booking[statesData.languageIndex]}
+          navigation={navigation}
+          onBackPress={() => navigation.pop()}
+          leftIcon
+        />
 
-          <ScrollView
-            style={Styles.container2}
-            contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
-            keyboardDismissMode="interactive"
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}
-          >
-            {/* -------------User Info------------- */}
+        <ScrollView
+          style={Styles.container2}
+          contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* -------------User Info------------- */}
 
-            <View style={styles.infoContainer}>
+          <View style={styles.infoContainer}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: '100%',
+                paddingHorizontal: s(11),
+              }}>
+              {/* image and Name */}
+
+              <View style={{ width: "30%", }}>
+                {
+                  (item.image == "NA" || item.image == null || item.image == "") ?
+                    <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderColor: Colors.Border }} />
+                    :
+                    <Image
+                      source={{ uri: config.img_url3 + item.image }}
+                      style={{
+                        borderWidth: 2,
+                        borderColor: Colors.Border,
+                        width: s(75),
+                        height: s(75),
+                        borderRadius: s(75),
+                      }}
+                    />
+                }
+              </View>
               <View
                 style={{
-                  flexDirection: "row",
-                  width: '100%',
-                  paddingHorizontal: s(11),
-                }}>
-                {/* image and Name */}
-
-                <View style={{ width: "30%", }}>
-                  {
-                    (item.image == "NA" || item.image == null || item.image == "") ?
-                      <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderColor: Colors.Border }} />
-                      :
-                      <Image
-                        source={{ uri: config.img_url3 + item.image }}
-                        style={{
-                          borderWidth: 2,
-                          borderColor: Colors.Border,
-                          width: s(75),
-                          height: s(75),
-                          borderRadius: s(75),
-                        }}
-                      />
-                  }
-                </View>
-                <View
+                  width: "70%",
+                  alignSelf: "center",
+                  height: '100%',
+                  paddingTop: vs(3)
+                }} >
+                <Text
                   style={{
-                    width: "70%",
-                    alignSelf: "center",
-                    height: '100%',
-                    paddingTop: vs(3)
-                  }} >
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      fontSize: Font.xxlarge,
-                      textAlign: config.textRotate,
-                      color: Colors.detailTitles
-                    }}>
-                    {item.provider_name}
-                  </Text>
-                  {
-                    providerType != 'lab' &&
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.small,
-                        textAlign: config.textRotate,
-                        color: Colors.lightGrey,
-                        marginTop: vs(2)
-                      }}>
-                      {item.qualification}
-                    </Text>
-                  }
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      fontSize: Font.small,
-                      textAlign: config.textRotate,
-                      color: Colors.Blue,
-                      marginTop: vs(5)
-                    }}>
-                    {providerType === 'lab' ? item?.iso_text : item.speciality}
-                  </Text>
-                </View>
-              </View>
-
-              {/* -------------------Experience Container-------------------- */}
-              <View style={styles.experienceContainer}>
-                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xxlarge,
+                    color: Colors.detailTitles,
+                    alignSelf: 'flex-start'
+                  }}>
+                  {item.provider_name}
+                </Text>
+                {
+                  providerType != 'lab' &&
                   <Text
                     style={{
                       fontFamily: Font.Regular,
                       fontSize: Font.small,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       color: Colors.lightGrey,
                       marginTop: vs(2)
                     }}>
-                    {providerType === 'lab' ? Lang_chg.ESTABLISHED[config.language] : Lang_chg.Experience[config.language]}
+                    {item.qualification}
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      fontSize: Font.xlarge,
-                      textAlign: config.textRotate,
-                      color: Colors.detailTitles,
-                      marginTop: vs(5)
-                    }}>
-                    {item.experience ? item.experience : '-'}
-                  </Text>
-                </View>
-                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
-                  <Text
-                    style={{
-                      fontFamily: Font.Regular,
-                      fontSize: Font.small,
-                      textAlign: config.textRotate,
-                      color: Colors.lightGrey,
-                      marginTop: vs(2),
-                      paddingHorizontal: s(15)
-                    }}>
-                    {Lang_chg.Bookings[config.language]}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      fontSize: Font.xlarge,
-                      textAlign: config.textRotate,
-                      color: Colors.detailTitles,
-                      marginTop: vs(5),
-                      paddingHorizontal: s(15)
-                    }}>
-                    {item.booking_count ? item.booking_count : '-'}
-                  </Text>
-                </View>
-                <View style={{ flex: 1, }}>
-                  <Text
-                    style={{
-                      fontFamily: Font.Regular,
-                      fontSize: Font.small,
-                      textAlign: config.textRotate,
-                      color: Colors.lightGrey,
-                      marginTop: vs(2),
-                      paddingHorizontal: s(15)
-                    }}>
-                    {Lang_chg.Rating[config.language]}
-                  </Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
-                    <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
-                    <Text
-                      style={{
-                        fontFamily: Font.Medium,
-                        fontSize: Font.xlarge,
-                        textAlign: config.textRotate,
-                        color: Colors.detailTitles,
-                        marginLeft: s(5)
-                      }}>
-                      {item.avg_rating ? `${item.avg_rating}.0` : 'NA'}
-                    </Text>
-                  </View>
-
-                </View>
+                }
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.Blue,
+                    marginTop: vs(5)
+                  }}>
+                  {providerType === 'lab' ? item?.iso_text : item.speciality}
+                </Text>
               </View>
-
-              <View style={{ width: '93%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
-
-              {/* -------------------Desc Container-------------------- */}
-
-              {
-                item.description &&
-                <View style={styles.descContainer}>
-                  <Text
-                    style={{
-                      fontFamily: Font.Regular,
-                      fontSize: Font.xsmall,
-                      textAlign: config.textRotate,
-                      color: Colors.detailTitles,
-                    }}>
-                    {item.description}
-                  </Text>
-                </View>
-              }
-
             </View>
 
+            {/* -------------------Experience Container-------------------- */}
+            <View style={styles.experienceContainer}>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2)
+                  }}>
+                  {providerType === 'lab' ? Lang_chg.ESTABLISHED[statesData.languageIndex] : Lang_chg.Experience[statesData.languageIndex]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xlarge,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                    marginTop: vs(5)
+                  }}>
+                  {item.experience ? item.experience : '-'}
+                </Text>
+              </View>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {Lang_chg.Bookings[statesData.languageIndex]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xlarge,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                    marginTop: vs(5),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {item.booking_count ? item.booking_count : '-'}
+                </Text>
+              </View>
+              <View style={{ flex: 1, }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {Lang_chg.Rating[statesData.languageIndex]}
+                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
+                  <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xlarge,
+                      alignSelf: 'flex-start',
+                      color: Colors.detailTitles,
+                      marginLeft: s(5)
+                    }}>
+                    {item.avg_rating ? `${item.avg_rating}.0` : 'NA'}
+                  </Text>
+                </View>
+
+              </View>
+            </View>
+
+            <View style={{ width: '93%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
+            {/* -------------------Desc Container-------------------- */}
+
+            {
+              item.description &&
+              <View style={styles.descContainer}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.xsmall,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                  }}>
+                  {item.description}
+                </Text>
+              </View>
+            }
+
+          </View>
 
 
-            {this.state.providerType === "doctor" && (
-              <DoctorSymptomsAppointment
-                navigation={this.props.navigation}
-                indexPosition={this.props.route.params.indexPosition}
-                isFromHospital={this.props.route.params.isFromHospital}
-                sendData={this.getData.bind(this)}
-                resetState={() => {
-                  this.state.providerType === "lab" ?
-                    this.getLabServices()
-                    : this.state.providerType === "doctor" ?
-                      this.getDoctorServices()
-                      : this.getServices();
-                  this.getDay();
-                  this.getPerson()
-                  this.resetState()
-                }}
-              />
-            )}
 
-            {this.state.providerType === "lab" && (
-              <LabAppointment
-                navigation={this.props.navigation}
-                indexPosition={this.props.route.params.indexPosition}
-                data={item}
-                sendData={this.getData.bind(this)}
-                resetState={() => {
-                  this.state.providerType === "lab" ?
-                    this.getLabServices()
-                    : this.state.providerType === "doctor" ?
-                      this.getDoctorServices()
-                      : this.getServices();
-                  this.getDay();
-                  this.getPerson()
-                  this.resetState()
-                }}
-              />
-            )}
+          {providerType === "doctor" && (
+            <DoctorSymptomsAppointment
+              navigation={navigation}
+              indexPosition={indexPosition}
+              isFromHospital={isFromHospital}
+              sendData={(val) => {
+                getData(val)
+              }}
+              resetState={() => {
+                providerType === "lab" ?
+                  getLabServices()
+                  : providerType === "doctor" ?
+                    getDoctorServices()
+                    : getServices();
+                getDay();
+                getPerson()
+                resetState()
+              }}
+            />
+          )}
 
-            {this.state.providerType === "lab" ? (
-              <View>
-                {this.state.indexPosition === 0 && (
+          {providerType === "lab" && (
+            <LabAppointment
+              navigation={navigation}
+              indexPosition={indexPosition}
+              data={item}
+              sendData={(val) => {
+                getData(val)
+              }}
+              resetState={() => {
+                providerType === "lab" ?
+                  getLabServices()
+                  : providerType === "doctor" ?
+                    getDoctorServices()
+                    : getServices();
+                getDay();
+                getPerson()
+                resetState()
+              }}
+            />
+          )}
+
+          {providerType === "lab" ? (
+            <View>
+              {indexPosition === 0 && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    backgroundColor: Colors.White,
+                  }}>
+                  <View
+                    style={{
+                      width: "100%",
+                      backgroundColor: Colors.White,
+                      right: 0,
+                      alignSelf: "flex-end",
+                    }}>
+                    <FlatList
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={{ paddingHorizontal: s(13) }}
+                      data={statesData.new_task_arr}
+                      renderItem={({ item, index }) => {
+                        if (statesData.new_task_arr != "") {
+                          return (
+                            <View style={{ alignSelf: "center" }}>
+                              {item.status == true && (
+                                <View
+                                  style={{
+                                    backgroundColor: Colors.Theme,
+                                    paddingVertical: (windowWidth * 0.8) / 100,
+                                    flexDirection: "row",
+                                    paddingHorizontal:
+                                      (windowWidth * 1.5) / 100,
+                                    marginTop: (windowWidth * 2) / 100,
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    borderRadius: (windowWidth * 1) / 100,
+                                    marginRight: (windowWidth * 2) / 100,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      color: Colors.White,
+                                      fontSize: Font.textsize,
+                                      fontFamily: Font.Light,
+                                    }}
+                                  >
+                                    {item.name}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      check_all_false(item, index);
+                                    }}
+                                  >
+
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+                            </View>
+                          );
+                        }
+                      }}
+                    />
+                  </View>
+
                   <View
                     style={{
                       width: "100%",
                       alignSelf: "center",
-                      backgroundColor: Colors.White,
+                      backgroundColor: Colors.tab_background_color,
+                      alignItems: "center",
+                      marginTop: (windowWidth * 3) / 100,
                     }}>
                     <View
                       style={{
                         width: "100%",
-                        backgroundColor: Colors.White,
-                        right: 0,
-                        alignSelf: "flex-end",
+                        alignSelf: "center",
+                        flexDirection: "row",
+                        paddingHorizontal: s(11)
                       }}>
+                      <TextInput
+                        ref={(text) => {
+                          textdata = text;
+                        }}
+                        maxLength={50}
+                        onChangeText={(text) => {
+                          searchFilterFunction(text);
+                        }}
+                        returnKeyLabel="done"
+                        returnKeyType="done"
+                        onSubmitEditing={() => {
+                          Keyboard.dismiss();
+                        }}
+                        style={{
+                          fontSize: (windowWidth * 4) / 100,
+                          fontFamily: Font.ques_fontfamily,
+                          color: "#8F98A7",
+                          width: "90%",
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          textAlign: statesData.languageIndex == 0 ? 'left' : 'right',
+                        }}
+                        placeholderTextColor={"#8F98A7"}
+                        placeholder={Lang_chg.SearchTests[statesData.languageIndex]}
+                      />
+
+                      <View style={{ width: "10%", alignSelf: "center" }}>
+                        <Image
+                          style={{
+                            width: (windowWidth * 4) / 100,
+                            height: (windowWidth * 4) / 100,
+                            tintColor: "#8F98A7",
+                            alignSelf: "center",
+                          }}
+                          source={Icons.search2}
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                  {statesData.task_base_task != "" &&
+                    statesData.task_base_task != null && (
+                      <>
+
+                        <View
+                          style={[
+                            {
+                              width: "100%",
+                              alignSelf: "center",
+                              marginTop: (windowWidth * 2) / 100,
+                            },
+                            statesData.task_base_task.length >= 4
+                              ? { height: 200 }
+                              : null,
+                          ]}>
+                          <FlatList
+                            data={statesData.task_base_task}
+                            scrollEnabled={true}
+                            nestedScrollEnabled={true}
+                            renderItem={({ item, index }) => {
+                              if (statesData.task_base_task != "") {
+                                return (
+                                  <TouchableOpacity
+                                    activeOpacity={0.9}
+                                    onPress={() => {
+                                      check_all(index);
+                                    }}
+                                    style={{
+                                      width: '100%',
+                                      paddingVertical: vs(7),
+                                      flexDirection: 'row',
+                                      justifyContent: 'space-between',
+                                      paddingHorizontal: s(11)
+                                    }} >
+                                    <View style={{ flexDirection: 'row' }}>
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          check_all(index);
+                                        }}
+                                        style={{
+                                          height: 20,
+                                          width: 20,
+                                          borderRadius: 5,
+                                          backgroundColor: item.status == true ? Colors.Theme : Colors.White,
+                                          justifyContent: 'center',
+                                          alignItems: 'center',
+                                          borderWidth: item.status == true ? 0 : 1.3,
+                                          borderColor: Colors.Border
+                                        }}
+                                      >
+                                        {item.status == true ? (
+                                          <Image
+                                            style={{
+                                              height: 14,
+                                              width: 14,
+                                              tintColor: Colors.White
+                                            }}
+                                            source={Icons.Tick}
+                                          />
+
+                                        ) : null}
+                                      </TouchableOpacity>
+                                      <Text
+                                        style={{
+                                          alignSelf: 'flex-start',
+                                          alignSelf: "center",
+                                          fontSize: (windowWidth * 3.6) / 100,
+                                          fontFamily: Font.Regular,
+                                          color: "#000",
+                                          marginLeft: s(10)
+                                        }}>
+                                        {item.name}
+                                      </Text>
+                                    </View>
+                                    <Text
+                                      style={{
+                                        fontSize: (windowWidth * 3.6) / 100,
+                                        fontFamily: Font.Regular,
+                                        color: Colors.Black,
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                      {item.price}{" "}
+                                      {statesData.currency_symbol}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              }
+                            }}
+                          />
+                        </View>
+                      </>
+
+                    )}
+                </View>
+              )}
+              {indexPosition === 1 && (
+                <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: Colors.White,
+                    paddingHorizontal: s(11),
+                    paddingVertical: vs(9),
+                  }}>
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    data={item.package_base_task}
+                    ItemSeparatorComponent={() => {
+                      return (
+                        <View style={{ width: s(10) }}></View>
+                      )
+                    }}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            hourbooking(item, index),
+                              getLabTimeDate(),
+                              setState({
+                                hour_id: item.pid,
+                                hour_price: item.price,
+                                time_take_data_hour: "",
+                              });
+                          }}
+                          style={[
+                            {
+                              borderRadius: 10,
+                              width: (windowWidth * 40) / 100,
+                              backgroundColor: Colors.White,
+                            },
+                            item.status == true
+                              ? {
+                                borderColor: Colors.Theme,
+                                borderWidth: 1.5,
+                              }
+                              : { borderColor: Colors.Border, borderWidth: 1 },
+                          ]}
+                        >
+                          <Text
+                            style={{
+                              width: "100%",
+                              paddingVertical: (windowWidth * 1.5) / 100,
+                              paddingHorizontal: (windowWidth * 2) / 100,
+                              color: Colors.theme_color,
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 3.5) / 100,
+                              textAlign: "left",
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+
+                          <Text
+                            style={{
+                              paddingVertical: (windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 2) / 100,
+                              fontFamily: Font.Regular,
+                              textAlign: "left",
+                              color: Colors.tablightcolo,
+                              fontSize: Font.sregulartext_size,
+                            }}
+                          >
+                            {item.test_count}
+                          </Text>
+                          <View
+                            style={{
+                              width: "90%",
+                              alignSelf: "center",
+                              backgroundColor: Colors.backgroundcolor,
+                              height: 1.5,
+                              marginTop: (windowWidth * 1) / 100,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              paddingVertical: (windowWidth * 2) / 100,
+                              paddingHorizontal: (windowWidth * 2) / 100,
+                              alignSelf: 'flex-start',
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 4) / 100,
+                            }}
+                          >
+                            {item.price}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
+              )}
+
+              <View
+                style={{
+                  width: "100%",
+                  marginTop: vs(7),
+                  marginBottom: (windowWidth * 1.5) / 100,
+                  backgroundColor: "#fff",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "93%",
+                    alignSelf: "center",
+                    paddingTop: (windowWidth * 4) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.name,
+                      width: "65%",
+                      textAlign: 'left',
+                      fontSize: (windowWidth * 3.5) / 100,
+                    }}
+                  >
+                    {Lang_chg.Appointmentschedule[statesData.languageIndex]}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "35%",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <View style={{ width: "20%", alignSelf: "center" }}>
+                      <Image
+                        style={{
+                          width: (windowWidth * 5) / 100,
+                          height: (windowWidth * 5) / 100,
+                          alignSelf: "center",
+                        }}
+                        source={Icons.Calendar}
+                      />
+                    </View>
+
+                    <Text
+                      style={{
+                        color: Colors.theme_color,
+                        fontFamily: Font.Medium,
+                        fontSize: Font.name,
+                        marginLeft: (windowWidth * 1) / 100,
+
+                      }}
+                    >
+                      {statesData.set_date}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors.gainsboro,
+                    width: "100%",
+                    marginTop: (windowWidth * 1.5) / 100,
+                    marginBottom: (windowWidth * 1.5) / 100,
+                  }}
+                />
+
+                <View
+                  style={{
+                    width: "93%",
+                    alignSelf: "center",
+                    paddingBottom: (windowWidth * 3) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.subtext,
+                      alignSelf: 'flex-start',
+                      color: "#000",
+                    }}
+                  >
+                    {Lang_chg.SelectDate[statesData.languageIndex]}
+                  </Text>
+                  <View style={{ width: "100%" }}>
+                    <FlatList
+                      horizontal={true}
+                      data={statesData.date_array}
+                      showsHorizontalScrollIndicator={false}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setState({
+                                set_date: item.date1,
+                                set_task: "task_base",
+                                time_take_data: "",
+                              })
+                              getLabTimeDate(),
+                                checkDate(item, index)
+                            }}
+                            style={{ width: (windowWidth * 15) / 100 }}
+                          >
+                            <Text
+                              style={{
+                                marginRight: (windowWidth * 3) / 100,
+                                marginTop: (windowWidth * 3) / 100,
+                                backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                color: item.tick == 1 ? Colors.White : Colors.Black,
+                                textAlign: "center",
+                                paddingVertical: (windowWidth * 2) / 100,
+                                fontFamily: Font.ques_fontfamily,
+                                fontSize: Font.sregulartext_size,
+                                lineHeight: (windowWidth * 5) / 100,
+                              }}
+                            >
+                              {item.day}
+                              {"\n"}
+
+                              {item.datenew}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors.gainsboro,
+                    width: "100%",
+                    marginTop: (windowWidth * 1.5) / 100,
+                    marginBottom: (windowWidth * 1.5) / 100,
+                  }}
+                />
+
+                <View
+                  style={{
+                    width: "93%",
+                    alignSelf: "center",
+                    paddingBottom: (windowWidth * 3) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.subtext,
+                      color: "#000",
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    {Lang_chg.Select_start_time[statesData.languageIndex]}
+                  </Text>
+
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  >
+                    <View style={{ width: "100%", alignItems: "center" }}>
+                      <View style={{ width: "100%", alignItems: "center" }}>
+                        {statesData.time_Arr != "" ? (
+                          <View
+                            style={{
+                              width: "100%",
+                              alignItems: "center",
+                            }}
+                          >
+                            <View style={{ width: "100%" }}>
+                              <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={statesData.final_one}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        indexPosition === 0
+                                          ? setState({
+                                            time_take_data: item.time,
+                                          })
+                                          : setState({
+                                            time_take_data_hour:
+                                              item.time,
+                                          });
+                                      }}
+                                    >
+                                      <Text
+                                        style={[
+                                          {
+                                            marginRight:
+                                              (windowWidth * 3) / 100,
+                                            marginTop: (windowWidth * 3) / 100,
+                                            fontFamily:
+                                              Font.ques_fontfamily,
+                                            fontSize:
+                                              Font.sregulartext_size,
+                                            padding: (windowWidth * 2) / 100,
+                                            paddingHorizontal:
+                                              (windowWidth * 3.3) / 100,
+                                          },
+                                          item.time ==
+                                            (indexPosition === 0
+                                              ? statesData.time_take_data
+                                              : statesData.time_take_data_hour)
+                                            ? {
+                                              backgroundColor:
+                                                Colors.Blue,
+                                              color: Colors.White,
+                                            }
+                                            : {
+                                              backgroundColor:
+                                                '#E5E5E5',
+                                              color: Colors.Black,
+                                            },
+                                        ]}
+                                      >
+                                        {item.time}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  );
+                                }}
+                              />
+                            </View>
+
+                            {/* ----------Date Time--------- */}
+                            <View style={{ width: "100%" }}>
+                              <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={statesData.final_arr2}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        indexPosition === 0
+                                          ? setState({
+                                            time_take_data: item.time,
+                                          })
+                                          : setState({
+                                            time_take_data_hour:
+                                              item.time,
+                                          });
+                                      }}
+                                    >
+                                      <Text
+                                        style={[
+                                          {
+                                            marginRight:
+                                              (windowWidth * 3) / 100,
+                                            marginTop: (windowWidth * 3) / 100,
+                                            fontFamily:
+                                              Font.ques_fontfamily,
+                                            fontSize:
+                                              Font.sregulartext_size,
+                                            padding: (windowWidth * 2) / 100,
+                                            paddingHorizontal:
+                                              (windowWidth * 3.3) / 100,
+                                          },
+                                          item.time ==
+                                            (indexPosition === 0
+                                              ? statesData.time_take_data
+                                              : statesData.time_take_data_hour)
+                                            ? {
+                                              backgroundColor:
+                                                Colors.Blue,
+                                              color: Colors.White,
+                                            }
+                                            : {
+                                              backgroundColor:
+                                                '#E5E5E5',
+                                              color: Colors.Black,
+                                            },
+                                        ]}
+                                      >
+                                        {item.time}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  );
+                                }}
+                              />
+                            </View>
+                          </View>
+                        ) : (
+                          <Text
+                            style={{
+                              fontFamily: Font.MediumItalic,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                              textAlign: "center",
+                              marginLeft: (windowWidth * 32) / 100,
+                            }}
+                          >
+                            {Lang_chg.noTime[statesData.languageIndex]}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  </ScrollView>
+                </View>
+                {/* border */}
+              </View>
+
+              <View>
+                {/* border */}
+
+                {/* Payment section for labs*/}
+                <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: vs(9),
+                    marginTop: vs(7),
+                    backgroundColor: Colors.White,
+                  }}>
+                  <View
+                    style={{
+                      width: "90%",
+                      alignSelf: "center",
+                    }}>
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.theme_color,
+                          alignSelf: 'flex-start',
+                        }}
+                      >
+                        {Lang_chg.Payment[statesData.languageIndex]}
+                      </Text>
+                    </View>
+
+                    {statesData.new_task_arr != "" && (
                       <FlatList
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingHorizontal: s(13) }}
-                        data={this.state.new_task_arr}
+                        data={statesData.new_task_arr}
                         renderItem={({ item, index }) => {
-                          if (this.state.new_task_arr != "") {
+                          if (statesData.new_task_arr != "") {
                             return (
-                              <View style={{ alignSelf: "center" }}>
+                              <View>
                                 {item.status == true && (
                                   <View
                                     style={{
-                                      backgroundColor: Colors.Theme,
-                                      paddingVertical: (windowWidth * 0.8) / 100,
                                       flexDirection: "row",
-                                      paddingHorizontal:
-                                        (windowWidth * 1.5) / 100,
-                                      marginTop: (windowWidth * 2) / 100,
+                                      width: "100%",
                                       justifyContent: "space-between",
-                                      alignItems: "center",
-                                      borderRadius: (windowWidth * 1) / 100,
-                                      marginRight: (windowWidth * 2) / 100,
+                                      marginTop: (windowWidth * 1.5) / 100,
+                                      alignSelf: "center",
                                     }}
                                   >
                                     <Text
                                       style={{
-                                        color: Colors.White,
-                                        fontSize: Font.textsize,
-                                        fontFamily: Font.Light,
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "70%",
+                                        alignSelf: 'flex-start',
                                       }}
                                     >
                                       {item.name}
                                     </Text>
-                                    <TouchableOpacity
-                                      onPress={() => {
-                                        this.check_all_false(item, index);
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "30%",
+                                        textAlign: "right",
                                       }}
                                     >
-
-                                    </TouchableOpacity>
+                                      {item.price}{" "}
+                                      {statesData.currency_symbol}
+                                    </Text>
                                   </View>
                                 )}
                               </View>
@@ -2467,281 +3071,225 @@ export default class Booking extends Component {
                           }
                         }}
                       />
+                    )}
+                    {statesData.hour_base_task_new != "" && (
+                      <FlatList
+                        data={statesData.hour_base_task_new}
+                        renderItem={({ item, index }) => {
+                          if (statesData.hour_base_task_new != "") {
+                            return (
+                              <View>
+                                {item.status == true && (
+                                  <View
+                                    style={{
+                                      flexDirection: "row",
+                                      width: "100%",
+                                      paddingVertical: (windowWidth * 3) / 100,
+                                      justifyContent: "space-between",
+                                      alignSelf: "center",
+                                    }}
+                                  >
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        alignSelf: 'flex-start',
+                                      }}
+                                    >
+                                      {item.name}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "30%",
+                                        textAlign: "right",
+                                      }}
+                                    >
+                                      {item.price}{" "}
+                                      {statesData.currency_symbol}
+                                    </Text>
+                                  </View>
+                                )}
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    )}
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderColor: Colors.backgroundcolor,
+                        marginTop: (windowWidth * 2) / 100,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}
+                      >
+                        {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {(statesData.new_task_arr != "" || statesData.hour_base_task_new != '') ? `${item.distance_fare}.0  ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+
+                      </Text>
                     </View>
 
                     <View
                       style={{
-                        width: "100%",
-                        alignSelf: "center",
-                        backgroundColor: Colors.tab_background_color,
-                        alignItems: "center",
-                        marginTop: (windowWidth * 3) / 100,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderColor: Colors.backgroundcolor,
                       }}>
-                      <View
+                      <Text
                         style={{
-                          width: "100%",
-                          alignSelf: "center",
-                          flexDirection: "row",
-                          paddingHorizontal: s(11)
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
                         }}>
-                        <TextInput
-                          ref={(text) => {
-                            this.textdata = text;
-                          }}
-                          maxLength={50}
-                          onChangeText={(text) => {
-                            this.searchFilterFunction(text);
-                          }}
-                          returnKeyLabel="done"
-                          returnKeyType="done"
-                          onSubmitEditing={() => {
-                            Keyboard.dismiss();
-                          }}
-                          style={{
-                            fontSize: (windowWidth * 4) / 100,
-                            fontFamily: Font.ques_fontfamily,
-                            color: "#8F98A7",
-                            width: "90%",
-                            paddingVertical: (windowWidth * 3.5) / 100,
-                            textAlign: config.textalign,
-                          }}
-                          placeholderTextColor={"#8F98A7"}
-                          placeholder={Lang_chg.SearchTests[config.language]}
-                        />
-
-                        <View style={{ width: "10%", alignSelf: "center" }}>
-                          <Image
-                            style={{
-                              width: (windowWidth * 4) / 100,
-                              height: (windowWidth * 4) / 100,
-                              tintColor: "#8F98A7",
-                              alignSelf: "center",
-                            }}
-                            source={Icons.search2}
-                          />
-                        </View>
-                      </View>
+                        {Lang_chg.subTotal[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {(statesData.new_task_arr != "" || statesData.hour_base_task_new != '') ? `${statesData.subTotal}.0  ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
                     </View>
 
-                    {this.state.task_base_task != "" &&
-                      this.state.task_base_task != null && (
-                        <>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: (windowWidth * 1) / 100,
+                        borderColor: Colors.backgroundcolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {item.vat_text}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
 
-                          <View
-                            style={[
-                              {
-                                width: "100%",
-                                alignSelf: "center",
-                                marginTop: (windowWidth * 2) / 100,
-                              },
-                              this.state.task_base_task.length >= 4
-                                ? { height: 200 }
-                                : null,
-                            ]}>
-                            <FlatList
-                              data={this.state.task_base_task}
-                              scrollEnabled={true}
-                              nestedScrollEnabled={true}
-                              renderItem={({ item, index }) => {
-                                if (this.state.task_base_task != "") {
-                                  return (
-                                    <TouchableOpacity
-                                      activeOpacity={0.9}
-                                      onPress={() => {
-                                        this.check_all(index);
-                                      }}
-                                      style={{
-                                        width: '100%',
-                                        paddingVertical: vs(7),
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        paddingHorizontal: s(11)
-                                      }} >
-                                      <View style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity
-                                          onPress={() => {
-                                            this.check_all(index);
-                                          }}
-                                          style={{
-                                            height: 20,
-                                            width: 20,
-                                            borderRadius: 5,
-                                            backgroundColor: item.status == true ? Colors.Theme : Colors.White,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            borderWidth: item.status == true ? 0 : 1.3,
-                                            borderColor: Colors.Border
-                                          }}
-                                        >
-                                          {item.status == true ? (
-                                            <Image
-                                              style={{
-                                                height: 14,
-                                                width: 14,
-                                                tintColor: Colors.White
-                                              }}
-                                              source={Icons.Tick}
-                                            />
+                        {
+                          ((statesData.new_task_arr != "" || statesData.hour_base_task_new != '') && indexPosition === 0) ?
+                            `${statesData.vat_price_show_display} ${statesData.currency_symbol}`
+                            :
+                            ((statesData.new_task_arr != "" || statesData.hour_base_task_new != '') && indexPosition === 1) ?
+                              `${statesData.vat_price_show_hourly} ${statesData.currency_symbol}`
+                              :
+                              ` ${statesData.currency_symbol}`
+                        }
 
-                                          ) : null}
-                                        </TouchableOpacity>
-                                        <Text
-                                          style={{
-                                            textAlign: config.textRotate,
-                                            alignSelf: "center",
-                                            fontSize: (windowWidth * 3.6) / 100,
-                                            fontFamily: Font.Regular,
-                                            color: "#000",
-                                            marginLeft: s(10)
-                                          }}>
-                                          {item.name}
-                                        </Text>
-                                      </View>
-                                      <Text
-                                        style={{
-                                          fontSize: (windowWidth * 3.6) / 100,
-                                          fontFamily: Font.Regular,
-                                          color: Colors.Black,
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </TouchableOpacity>
-                                  );
-                                }
-                              }}
-                            />
-                          </View>
-                        </>
+                      </Text>
+                    </View>
 
-                      )}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderTopWidth: 1.5,
+                        borderColor: Colors.backgroundcolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {Lang_chg.Total[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {
+                          ((statesData.new_task_arr != "" || statesData.hour_base_task_new != '') && indexPosition === 0) ?
+                            `${statesData.final_total_price} ${statesData.currency_symbol}`
+                            :
+                            ((statesData.new_task_arr != "" || statesData.hour_base_task_new != '') && indexPosition === 1) ?
+                              `${statesData.hour_total_price} ${statesData.currency_symbol}`
+                              :
+                              ` ${statesData.currency_symbol}`
+                        }
+                      </Text>
+                    </View>
+
+
                   </View>
-                )}
-                {this.state.indexPosition === 1 && (
-                  <View
-                    style={{
-                      width: "100%",
-                      backgroundColor: Colors.White,
-                      paddingHorizontal: s(11),
-                      paddingVertical: vs(9),
-                    }}>
-                    <FlatList
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      data={item.package_base_task}
-                      ItemSeparatorComponent={() => {
-                        return (
-                          <View style={{ width: s(10) }}></View>
-                        )
-                      }}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.hourbooking(item, index),
-                                this.getLabTimeDate(),
-                                this.setState({
-                                  hour_id: item.pid,
-                                  hour_price: item.price,
-                                  time_take_data_hour: "",
-                                });
-                            }}
-                            style={[
-                              {
-                                borderRadius: 10,
-                                width: (windowWidth * 40) / 100,
-                                backgroundColor: Colors.White,
-                              },
-                              item.status == true
-                                ? {
-                                  borderColor: Colors.Theme,
-                                  borderWidth: 1.5,
-                                }
-                                : { borderColor: Colors.Border, borderWidth: 1 },
-                            ]}
-                          >
-                            <Text
-                              style={{
-                                width: "100%",
-                                paddingVertical: (windowWidth * 1.5) / 100,
-                                paddingHorizontal: (windowWidth * 2) / 100,
-                                color: Colors.theme_color,
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 3.5) / 100,
-                                textAlign: "left",
-                              }}
-                            >
-                              {item.name}
-                            </Text>
+                </View>
 
-                            <Text
-                              style={{
-                                paddingVertical: (windowWidth * 2) / 100,
-                                paddingHorizontal: (windowWidth * 2) / 100,
-                                fontFamily: Font.Regular,
-                                textAlign: "left",
-                                color: Colors.tablightcolo,
-                                fontSize: Font.sregulartext_size,
-                              }}
-                            >
-                              {item.test_count}
-                            </Text>
-                            <View
-                              style={{
-                                width: "90%",
-                                alignSelf: "center",
-                                backgroundColor: Colors.backgroundcolor,
-                                height: 1.5,
-                                marginTop: (windowWidth * 1) / 100,
-                              }}
-                            />
-                            <Text
-                              style={{
-                                paddingVertical: (windowWidth * 2) / 100,
-                                paddingHorizontal: (windowWidth * 2) / 100,
-                                textAlign: config.textalign,
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                              }}
-                            >
-                              {item.price}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      }}
-                    />
-                  </View>
-                )}
+              </View>
+            </View>
+          ) : providerType === "doctor" ? (
+            <>
+              <View
+                style={{
+                  width: "100%",
+                  marginTop: vs(7),
+                  paddingVertical: vs(9),
+                  backgroundColor: Colors.White
+                }} >
+                <View style={{
+                  borderBottomWidth: 1.5,
+                  borderBottomColor: Colors.backgroundcolor,
+                  paddingBottom: vs(5),
+                  marginBottom: vs(5)
+                }}>
 
-                <View
-                  style={{
-                    width: "100%",
-                    marginTop: vs(7),
-                    marginBottom: (windowWidth * 1.5) / 100,
-                    backgroundColor: "#fff",
-                  }}
-                >
+
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      width: "93%",
+                      width: "100%",
                       alignSelf: "center",
-                      paddingTop: (windowWidth * 4) / 100,
+                      paddingHorizontal: s(11)
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.name,
+                        fontSize: Font.medium,
                         width: "65%",
-                        textAlign: config.textRotate,
-                        fontSize: (windowWidth * 3.5) / 100,
+                        textAlign: 'left',
+                        color: Colors.detailTitles
                       }}
                     >
-                      {Lang_chg.Appointmentschedule[config.language]}
+                      {Lang_chg.Appointmentschedule[statesData.languageIndex]}
                     </Text>
                     <View
                       style={{
@@ -2764,61 +3312,56 @@ export default class Booking extends Component {
 
                       <Text
                         style={{
-                          color: Colors.theme_color,
+                          color: Colors.Theme,
                           fontFamily: Font.Medium,
-                          fontSize: Font.name,
+                          fontSize: Font.medium,
                           alignSelf: "center",
                           marginLeft: (windowWidth * 1) / 100,
                           textAlign: "right",
                         }}
                       >
-                        {this.state.set_date}
+                        {statesData.set_date}
                       </Text>
                     </View>
                   </View>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderColor: Colors.gainsboro,
-                      width: "100%",
-                      marginTop: (windowWidth * 1.5) / 100,
-                      marginBottom: (windowWidth * 1.5) / 100,
-                    }}
-                  />
+                </View>
 
-                  <View
+                <View
+                  style={{
+                    width: "93%",
+                    alignSelf: "center",
+                    paddingBottom: (windowWidth * 3) / 100,
+                    borderBottomWidth: 1.5,
+                    borderBottomColor: Colors.backgroundcolor
+                  }}
+                >
+                  <Text
                     style={{
-                      width: "93%",
-                      alignSelf: "center",
-                      paddingBottom: (windowWidth * 3) / 100,
+                      fontFamily: Font.Regular,
+                      fontSize: Font.large,
+                      alignSelf: 'flex-start',
+                      color: Colors.detailTitles,
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.subtext,
-                        textAlign: config.textRotate,
-                        color: "#000",
-                      }}
-                    >
-                      {Lang_chg.SelectDate[config.language]}
-                    </Text>
+                    {Lang_chg.SelectDate[statesData.languageIndex]}
+                  </Text>
+                  {indexPosition === 1 ? (
                     <View style={{ width: "100%" }}>
                       <FlatList
                         horizontal={true}
-                        data={this.state.date_array}
+                        data={statesData.date_array}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item, index }) => {
                           return (
                             <TouchableOpacity
                               onPress={() => {
-                                this.setState({
+                                setState({
                                   set_date: item.date1,
-                                  set_task: "task_base",
+                                  set_task: item.home_visit_text,
                                   time_take_data: "",
                                 }, () => {
-                                  this.getLabTimeDate(),
-                                    this.checkDate(item, index)
+                                  getDoctorTimeDate(),
+                                    checkDate(item, index)
                                 })
                               }}
                               style={{ width: (windowWidth * 15) / 100 }}
@@ -2831,8 +3374,9 @@ export default class Booking extends Component {
                                   color: item.tick == 1 ? Colors.White : Colors.Black,
                                   textAlign: "center",
                                   paddingVertical: (windowWidth * 2) / 100,
-                                  fontFamily: Font.ques_fontfamily,
-                                  fontSize: Font.sregulartext_size,
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.small,
+
                                   lineHeight: (windowWidth * 5) / 100,
                                 }}
                               >
@@ -2846,42 +3390,83 @@ export default class Booking extends Component {
                         }}
                       />
                     </View>
-                  </View>
-                  <View
-                    style={{
-                      borderWidth: 1,
-                      borderColor: Colors.gainsboro,
-                      width: "100%",
-                      marginTop: (windowWidth * 1.5) / 100,
-                      marginBottom: (windowWidth * 1.5) / 100,
-                    }}
-                  />
+                  ) : (
+                    <View style={{ width: "100%" }}>
+                      <FlatList
+                        horizontal={true}
+                        data={statesData.date_array}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setState({
+                                  set_date: item.date1,
+                                  set_task: item.online_base_text,
+                                  time_take_data_hour: "",
+                                }, () => {
+                                  getDoctorTimeDate(),
+                                    checkDate(item, index)
+                                })
+                              }}
+                              style={{ width: (windowWidth * 15) / 100, }}
+                            >
+                              <Text
+                                style={{
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                  color: item.tick == 1 ? Colors.White : Colors.Black,
+                                  textAlign: "center",
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.small,
+                                  lineHeight: (windowWidth * 5) / 100,
+                                }}
+                              >
+                                {item.day}
+                                {"\n"}
 
-                  <View
+                                {item.datenew}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                    </View>
+                  )}
+                </View>
+
+
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    paddingTop: vs(7),
+                    paddingHorizontal: s(11)
+                  }}
+                >
+                  <Text
                     style={{
-                      width: "93%",
-                      alignSelf: "center",
-                      paddingBottom: (windowWidth * 3) / 100,
+                      fontFamily: Font.Regular,
+                      fontSize: Font.subtext,
+                      color: "#000",
+                      alignSelf: 'flex-start',
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.subtext,
-                        color: "#000",
-                        textAlign: config.textRotate,
-                      }}
-                    >
-                      {Lang_chg.Select_start_time[config.language]}
-                    </Text>
+                    {Lang_chg.Select_start_time[statesData.languageIndex]}
+                  </Text>
 
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                    >
-                      <View style={{ width: "100%", alignItems: "center" }}>
-                        <View style={{ width: "100%", alignItems: "center" }}>
-                          {this.state.time_Arr != "" ? (
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  >
+                    <View style={{ width: "100%", alignItems: "center" }}>
+                      {indexPosition === 1 ? (
+                        <View
+                          style={{ width: "100%", alignItems: "center" }}
+                        >
+                          {statesData.time_Arr != "" ? (
                             <View
                               style={{
                                 width: "100%",
@@ -2892,19 +3477,14 @@ export default class Booking extends Component {
                                 <FlatList
                                   horizontal={true}
                                   showsHorizontalScrollIndicator={false}
-                                  data={this.state.final_one}
+                                  data={statesData.final_one}
                                   renderItem={({ item, index }) => {
                                     return (
                                       <TouchableOpacity
                                         onPress={() => {
-                                          this.state.indexPosition === 0
-                                            ? this.setState({
-                                              time_take_data: item.time,
-                                            })
-                                            : this.setState({
-                                              time_take_data_hour:
-                                                item.time,
-                                            });
+                                          setState({
+                                            time_take_data: item.time,
+                                          });
                                         }}
                                       >
                                         <Text
@@ -2912,7 +3492,9 @@ export default class Booking extends Component {
                                             {
                                               marginRight:
                                                 (windowWidth * 3) / 100,
-                                              marginTop: (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+
                                               fontFamily:
                                                 Font.ques_fontfamily,
                                               fontSize:
@@ -2922,10 +3504,7 @@ export default class Booking extends Component {
                                                 (windowWidth * 3.3) / 100,
                                             },
                                             item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
-                                                  .time_take_data_hour)
+                                              statesData.time_take_data
                                               ? {
                                                 backgroundColor:
                                                   Colors.Blue,
@@ -2945,25 +3524,18 @@ export default class Booking extends Component {
                                   }}
                                 />
                               </View>
-
-                              {/* ----------Date Time--------- */}
                               <View style={{ width: "100%" }}>
                                 <FlatList
                                   horizontal={true}
                                   showsHorizontalScrollIndicator={false}
-                                  data={this.state.final_arr2}
+                                  data={statesData.final_arr2}
                                   renderItem={({ item, index }) => {
                                     return (
                                       <TouchableOpacity
                                         onPress={() => {
-                                          this.state.indexPosition === 0
-                                            ? this.setState({
-                                              time_take_data: item.time,
-                                            })
-                                            : this.setState({
-                                              time_take_data_hour:
-                                                item.time,
-                                            });
+                                          setState({
+                                            time_take_data: item.time,
+                                          });
                                         }}
                                       >
                                         <Text
@@ -2971,7 +3543,9 @@ export default class Booking extends Component {
                                             {
                                               marginRight:
                                                 (windowWidth * 3) / 100,
-                                              marginTop: (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+
                                               fontFamily:
                                                 Font.ques_fontfamily,
                                               fontSize:
@@ -2981,10 +3555,7 @@ export default class Booking extends Component {
                                                 (windowWidth * 3.3) / 100,
                                             },
                                             item.time ==
-                                              (this.state.indexPosition === 0
-                                                ? this.state.time_take_data
-                                                : this.state
-                                                  .time_take_data_hour)
+                                              statesData.time_take_data
                                               ? {
                                                 backgroundColor:
                                                   Colors.Blue,
@@ -3009,194 +3580,260 @@ export default class Booking extends Component {
                             <Text
                               style={{
                                 fontFamily: Font.MediumItalic,
-                                fontSize: (windowWidth * 4) / 100,
+                                fontSize: Font.medium,
                                 alignSelf: "center",
                                 paddingVertical: (windowWidth * 3) / 100,
                                 textAlign: "center",
-                                marginLeft: (windowWidth * 32) / 100,
+                                marginLeft: (windowWidth * 25) / 100,
                               }}
                             >
-                              {Lang_chg.noTime[config.language]}
+                              {Lang_chg.noTime[statesData.languageIndex]}
                             </Text>
                           )}
                         </View>
-                      </View>
-                    </ScrollView>
-                  </View>
-                  {/* border */}
+                      ) : (
+                        <View
+                          style={{ width: "100%", alignItems: "center" }}
+                        >
+                          {statesData.hour_time != "" ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                alignItems: "center",
+                              }}
+                            >
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={statesData.final_hour_one}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          setState({
+                                            time_take_data: item.time,
+                                          });
+                                        }}
+                                      >
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+                                              fontFamily:
+                                                Font.ques_fontfamily,
+                                              fontSize:
+                                                Font.sregulartext_size,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              statesData.time_take_data
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={statesData.final_hour_two}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          setState({
+                                            time_take_data: item.time,
+                                          });
+                                        }}
+                                      >
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+                                              fontFamily:
+                                                Font.ques_fontfamily,
+                                              fontSize:
+                                                Font.sregulartext_size,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              statesData.time_take_data
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+                            </View>
+                          ) : (
+                            <Text
+                              style={{
+                                fontFamily: Font.MediumItalic,
+                                fontSize: Font.medium,
+                                alignSelf: "center",
+                                paddingVertical: (windowWidth * 3) / 100,
+                                textAlign: "center",
+                                marginLeft: (windowWidth * 25) / 100,
+                              }}
+                            >
+                              {Lang_chg.noTime[statesData.languageIndex]}
+                            </Text>
+                          )}
+                        </View>
+                      )}
+                    </View>
+                  </ScrollView>
                 </View>
+              </View>
 
-                <View>
-                  {/* border */}
+              <View>
 
-                  {/* Payment section for labs*/}
+
+                {/* Payment section for Docs */}
+                <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: vs(9),
+                    marginTop: vs(7),
+                    marginBottom: vs(50),
+                    backgroundColor: Colors.White,
+                    paddingHorizontal: s(11)
+                  }}>
                   <View
                     style={{
                       width: "100%",
-                      paddingVertical: vs(9),
-                      marginTop: vs(7),
-                      backgroundColor: Colors.White,
-                    }}>
-                    <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                      }}>
-                      <View>
+                      alignSelf: "center",
+                    }} >
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.Blue,
+                          alignSelf: 'flex-start',
+                        }}
+                      >
+                        {Lang_chg.Payment[statesData.languageIndex]}
+                      </Text>
+                    </View>
+
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          width: "100%",
+                          justifyContent: "space-between",
+                          marginTop: vs(10),
+                          alignSelf: "center",
+                        }} >
                         <Text
                           style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 4) / 100,
-                            color: Colors.theme_color,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Payment[config.language]}
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                            width: "70%",
+                            alignSelf: 'flex-start',
+                          }} >
+                          {indexPosition === 0
+                            ? item.online_base_task[0].duration
+                            : item.home_visit_task[0].duration}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                            width: "30%",
+                            textAlign: "right",
+                          }}>
+                          {indexPosition === 0
+                            ? item.online_base_task[0].task_price
+                            : item.home_visit_task[0].task_price}{" "}
+                          {statesData.currency_symbol}
                         </Text>
                       </View>
+                      {indexPosition === 1 && (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingVertical: vs(10),
+                            marginTop: (windowWidth * 2) / 100,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              color: Colors.detailTitles,
+                            }}>
+                            {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
 
-                      {this.state.new_task_arr != "" && (
-                        <FlatList
-                          data={this.state.new_task_arr}
-                          renderItem={({ item, index }) => {
-                            if (this.state.new_task_arr != "") {
-                              return (
-                                <View>
-                                  {item.status == true && (
-                                    <View
-                                      style={{
-                                        flexDirection: "row",
-                                        width: "100%",
-                                        justifyContent: "space-between",
-                                        marginTop: (windowWidth * 1.5) / 100,
-                                        alignSelf: "center",
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "70%",
-                                          textAlign: config.textRotate,
-                                        }}
-                                      >
-                                        {item.name}
-                                      </Text>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "30%",
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
-                              );
-                            }
-                          }}
-                        />
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: Font.ques_fontfamily,
+                              fontSize: Font.sregulartext_size,
+                              color: "#000",
+                            }}>
+                            {item.distance_fare}.0{" "}
+                            {statesData.currency_symbol}
+                          </Text>
+                        </View>
                       )}
-                      {this.state.hour_base_task_new != "" && (
-                        <FlatList
-                          data={this.state.hour_base_task_new}
-                          renderItem={({ item, index }) => {
-                            console.log("item dsdsds - >>>> ", item);
-                            if (this.state.hour_base_task_new != "") {
-                              return (
-                                <View>
-                                  {item.status == true && (
-                                    <View
-                                      style={{
-                                        flexDirection: "row",
-                                        width: "100%",
-                                        paddingVertical: (windowWidth * 3) / 100,
-                                        justifyContent: "space-between",
-                                        alignSelf: "center",
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          textAlign: config.textRotate,
-                                        }}
-                                      >
-                                        {item.name}
-                                      </Text>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "30%",
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                      )}
-
                       <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
                           paddingVertical: (windowWidth * 2) / 100,
                           borderTopWidth: 1.5,
-                          borderColor: Colors.backgroundcolor,
+                          borderTopColor: Colors.backgroundcolor,
                           marginTop: (windowWidth * 2) / 100,
                         }}>
                         <Text
                           style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}
-                        >
-                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
-
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {(this.state.new_task_arr != "" || this.state.hour_base_task_new != '') ? `${item.distance_fare}.0  ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderTopWidth: 1.5,
-                          borderColor: Colors.backgroundcolor,
-                        }}>
-                        <Text
-                          style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
                           }}>
-                          {Lang_chg.subTotal[config.language]}
+                          {Lang_chg.subTotal[statesData.languageIndex]}
                         </Text>
                         <Text
                           style={{
@@ -3204,24 +3841,28 @@ export default class Booking extends Component {
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
                           }}>
-                          {(this.state.new_task_arr != "" || this.state.hour_base_task_new != '') ? `${this.state.subTotal}.0  ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
+                          {indexPosition === 0
+                            ? statesData.onlineSubTotalPrice
+                            : statesData.homeVisitSubTotalPrice}{" "}
+                          {statesData.currency_symbol}
                         </Text>
                       </View>
-
                       <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
                           marginTop: (windowWidth * 1) / 100,
-                          borderColor: Colors.backgroundcolor,
+                          borderColor: Colors.bordercolor,
                           marginBottom: (windowWidth * 2) / 100,
-                        }}>
+                        }}
+                      >
                         <Text
                           style={{
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}>
+                          }}
+                        >
                           {item.vat_text}
                         </Text>
                         <Text
@@ -3229,64 +3870,507 @@ export default class Booking extends Component {
                             fontFamily: Font.ques_fontfamily,
                             fontSize: Font.sregulartext_size,
                             color: "#000",
-                          }}>
-
-                          {
-                            ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 0) ?
-                              `${this.state.vat_price_show_display} ${this.state.currency_symbol}`
-                              :
-                              ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 1) ?
-                                `${this.state.vat_price_show_hourly} ${this.state.currency_symbol}`
-                                :
-                                ` ${this.state.currency_symbol}`
-                          }
-
+                          }}
+                        >
+                          {indexPosition === 0
+                            ? statesData.onlineVisitVat
+                            : statesData.homeVisitVat}{" "}
+                          {statesData.currency_symbol}
                         </Text>
                       </View>
-
                       <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
                           alignItems: "center",
                           borderTopWidth: 1.5,
-                          borderColor: Colors.backgroundcolor,
+                          borderTopColor: Colors.backgroundcolor,
                           marginBottom: (windowWidth * 2) / 100,
-                          paddingVertical: (windowWidth * 2) / 100,
-                        }}>
+                          paddingTop: (windowWidth * 2) / 100,
+                        }}
+                      >
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}>
-                          {Lang_chg.Total[config.language]}
+                          }}
+                        >
+                          {Lang_chg.Total[statesData.languageIndex]}
                         </Text>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
-                          }}>
-                          {
-                            ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 0) ?
-                              `${this.state.final_total_price} ${this.state.currency_symbol}`
-                              :
-                              ((this.state.new_task_arr != "" || this.state.hour_base_task_new != '') && this.state.indexPosition === 1) ?
-                                `${this.state.hour_total_price} ${this.state.currency_symbol}`
-                                :
-                                ` ${this.state.currency_symbol}`
-                          }
+                          }}
+                        >
+                          {indexPosition === 0
+                            ? statesData.onlineTaskPrice
+                            : statesData.homeVisitTaskPrice}{" "}
+                          {statesData.currency_symbol}
                         </Text>
                       </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </>
+          ) : (
+            <View>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}>
+                {/* ------------Appoitment Tabs---------- */}
 
+                {item.task_base_enable == 0 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setState({
+                        display: "taskbooking",
+                        set_task: "task_base",
+                      });
+                      providerType === "lab" ?
+                        getLabServices()
+                        : providerType === "doctor" ?
+                          getDoctorServices()
+                          : getServices();
+                      getDay();
+                      getPerson()
+                      resetState()
+                    }}
+                    style={{ width: "50%", alignSelf: "center" }}
+                  >
+                    <View style={{ width: "100%" }}>
+                      <Text
+                        style={
+                          statesData.display == "taskbooking"
+                            ? {
+                              color: Colors.Blue,
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: 'flex-start',
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                            }
+                            : {
+                              color: Colors.tablightcolo,
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: 'flex-start',
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                            }
+                        }
+                      >
+                        {Lang_chg.TaskBooking[statesData.languageIndex]}
+                      </Text>
 
+                      <View
+                        style={
+                          statesData.display == "taskbooking"
+                            ? {
+                              width: (windowWidth * 42) / 100,
+                              alignSelf: "center",
+                              paddingVertical: 1,
+                              borderWidth: 1,
+                              borderColor: Colors.Blue,
+                              backgroundColor: Colors.Blue,
+                            }
+                            : {
+                              width: (windowWidth * 42) / 100,
+                              alignSelf: "center",
+                              borderWidth: 2,
+                              borderColor: Colors.tab_background_color,
+                              backgroundColor:
+                                Colors.appointmentdetaillightblue,
+                            }
+                        }
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+                {item.hour_base_enable == 0 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setState({
+                        display: "hourlybooking",
+                        set_task: "hour_base",
+                      });
+                      providerType === "lab" ?
+                        getLabServices()
+                        : providerType === "doctor" ?
+                          getDoctorServices()
+                          : getServices();
+                      getDay();
+                      getPerson()
+                      resetState()
+                    }}
+                    style={{ width: "50%", alignSelf: "center" }}
+                  >
+                    <View style={{ width: "100%" }}>
+                      <Text
+                        style={
+                          statesData.display == "hourlybooking"
+                            ? {
+                              color: Colors.Blue,
+
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: 'flex-start',
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                            }
+                            : {
+                              color: Colors.tablightcolo,
+                              fontFamily: Font.Medium,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: 'flex-start',
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                            }
+                        }
+                      >
+                        {Lang_chg.HourlyBooking[statesData.languageIndex]}
+                      </Text>
+
+                      <View
+                        style={
+                          statesData.display == "hourlybooking"
+                            ? {
+                              width: (windowWidth * 42) / 100,
+                              alignSelf: "center",
+                              paddingVertical: 1,
+                              borderWidth: 1,
+                              borderColor: Colors.Blue,
+                              backgroundColor: Colors.Blue,
+                            }
+                            : {
+                              width: (windowWidth * 42) / 100,
+                              alignSelf: "center",
+                              borderWidth: 2,
+                              borderColor: Colors.tab_background_color,
+                              backgroundColor:
+                                Colors.tab_background_color,
+                            }
+                        }
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
+                {/* -------------------------------------- */}
+
+              </View>
+
+              {/* ------------Appoitment Tabs Data---------- */}
+              {statesData.display == "taskbooking" && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    backgroundColor: "#fff",
+                  }} >
+                  <View
+                    style={{
+                      width: "95%",
+                      right: 0,
+                      alignSelf: "flex-end",
+                    }}>
+                    {/* ----------------Selected Tasks--------------- */}
+                    <FlatList
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      data={statesData.new_task_arr}
+                      renderItem={({ item, index }) => {
+                        if (statesData.new_task_arr != "") {
+                          return (
+                            <View style={{ alignSelf: "center" }}>
+                              {item.status == true && (
+                                <View
+                                  style={{
+                                    backgroundColor: Colors.Theme,
+                                    paddingVertical: (windowWidth * 0.8) / 100,
+                                    flexDirection: "row",
+                                    paddingHorizontal:
+                                      (windowWidth * 1.5) / 100,
+                                    marginTop: (windowWidth * 2) / 100,
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    borderRadius: (windowWidth * 1) / 100,
+                                    marginRight: (windowWidth * 2) / 100,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      color: Colors.White,
+                                      fontSize: Font.textsize,
+                                      fontFamily: Font.Light,
+                                    }}
+                                  >
+                                    {item.name}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      check_all_false(item, index);
+                                    }}
+                                  >
+                                    {/* <Image
+                                          source={localimag.cross2}
+                                          style={{
+                                            alignSelf: "center",
+                                            width: (windowWidth * 2) / 100,
+                                            height: (windowWidth * 2) / 100,
+                                            marginLeft: (windowWidth * 3.5) / 100,
+                                          }}
+                                        /> */}
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+                            </View>
+                          );
+                        }
+                      }}
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      backgroundColor: Colors.tab_background_color,
+                      alignItems: "center",
+                      marginTop: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "100%",
+                        alignSelf: "center",
+                        flexDirection: "row",
+                        paddingHorizontal: s(11)
+                      }}
+                    >
+                      <TextInput
+                        ref={(text) => {
+                          textdata = text;
+                        }}
+                        maxLength={50}
+                        onChangeText={(text) => {
+                          searchFilterFunction(text);
+                        }}
+                        returnKeyLabel="done"
+                        returnKeyType="done"
+                        onSubmitEditing={() => {
+                          Keyboard.dismiss();
+                        }}
+                        style={{
+                          fontSize: (windowWidth * 4) / 100,
+                          fontFamily: Font.ques_fontfamily,
+                          color: "#8F98A7",
+                          width: "90%",
+                          paddingVertical: (windowWidth * 3.5) / 100,
+                          textAlign: statesData.languageIndex == 0 ? 'left' : 'right',
+                        }}
+                        placeholderTextColor={"#8F98A7"}
+                        placeholder={Lang_chg.Searchtask[statesData.languageIndex]}
+                      />
+
+                      <View style={{ width: "10%", alignSelf: "center" }}>
+                        <Image
+                          style={{
+                            width: (windowWidth * 4) / 100,
+                            height: (windowWidth * 4) / 100,
+                            tintColor: "#8F98A7",
+                            alignSelf: "center",
+                          }}
+                          source={Icons.search2}
+                        />
+                      </View>
                     </View>
                   </View>
 
+                  {/* ----------------Tasks List------------ */}
+
+                  {statesData.task_base_task != "" &&
+                    statesData.task_base_task != null && (
+                      <View
+                        style={[
+                          {
+                            width: "100%",
+                            alignSelf: "center",
+                            marginTop: (windowWidth * 2) / 100,
+                          },
+                          statesData.task_base_task.length >= 4
+                            ? { height: 200 }
+                            : null,
+                        ]}
+                      >
+                        <FlatList
+                          data={statesData.task_base_task}
+                          scrollEnabled={true}
+                          nestedScrollEnabled={true}
+                          renderItem={({ item, index }) => {
+                            if (statesData.task_base_task != "") {
+                              return (
+                                <TouchableOpacity
+                                  activeOpacity={0.9}
+                                  onPress={() => {
+                                    check_all(index);
+                                  }}
+                                  style={{
+                                    width: '100%',
+                                    paddingVertical: vs(7),
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: s(11)
+                                  }} >
+                                  <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        check_all(index);
+                                      }}
+                                      style={{
+                                        height: 20,
+                                        width: 20,
+                                        borderRadius: 5,
+                                        backgroundColor: item.status == true ? Colors.Theme : Colors.White,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderWidth: item.status == true ? 0 : 1.3,
+                                        borderColor: Colors.Border
+                                      }}
+                                    >
+                                      {item.status == true ? (
+                                        <Image
+                                          style={{
+                                            height: 14,
+                                            width: 14,
+                                            tintColor: Colors.White
+                                          }}
+                                          source={Icons.Tick}
+                                        />
+
+                                      ) : null}
+                                    </TouchableOpacity>
+                                    <Text
+                                      style={{
+                                        alignSelf: 'flex-start',
+                                        alignSelf: "center",
+                                        fontSize: (windowWidth * 3.6) / 100,
+                                        fontFamily: Font.Regular,
+                                        color: "#000",
+                                        marginLeft: s(10)
+                                      }}>
+                                      {item.name}
+                                    </Text>
+                                  </View>
+                                  <Text
+                                    style={{
+                                      fontSize: (windowWidth * 3.6) / 100,
+                                      fontFamily: Font.Regular,
+                                      color: Colors.Black,
+                                      textAlign: "right",
+                                    }}
+                                  >
+                                    {item.price}{" "}
+                                    {statesData.currency_symbol}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            }
+                          }}
+                        />
+                      </View>
+                    )}
                 </View>
-              </View>
-            ) : this.state.providerType === "doctor" ? (
+              )}
+
+              {statesData.display == "hourlybooking" && (
+                <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#fff",
+                    paddingVertical: (windowWidth * 3) / 100,
+                    marginBottom: (windowWidth * 1) / 100,
+                  }}
+                >
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    data={item.hour_base_task}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            hourbooking(item, index),
+                              getTimeDate(),
+                              setState({
+                                hour_id: item.id,
+                                hour_price: item.price,
+                                time_take_data_hour: "",
+                              });
+                          }}
+                          style={[
+                            {
+                              borderRadius: (windowWidth * 2) / 100,
+                              marginLeft: (windowWidth * 2) / 100,
+                              width: (windowWidth * 35) / 100,
+                              backgroundColor: "#fff",
+                            },
+                            item.status == true
+                              ? {
+                                borderColor: Colors.Theme,
+                                borderWidth: 1.5,
+                              }
+                              : { borderColor: "#DFDFDF", borderWidth: 1 },
+                          ]}
+                        >
+                          <View
+                            style={{
+                              backgroundColor: "#0168B3",
+                              borderTopLeftRadius: (windowWidth * 1.1) / 100,
+                              borderTopRightRadius: (windowWidth * 1.1) / 100,
+                              width: "100%",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                paddingVertical: (windowWidth * 1.5) / 100,
+                                color: Colors.White,
+                                fontFamily: Font.Medium,
+                                fontSize: (windowWidth * 3) / 100,
+                                textTransform: "uppercase",
+                                textAlign: "center",
+                              }}
+                            >
+                              {item.duration}
+                            </Text>
+                          </View>
+
+                          <Text
+                            style={{
+                              paddingVertical: (windowWidth * 2) / 100,
+                              fontFamily: Font.Medium,
+                              textAlign: "center",
+                              fontSize: Font.sregulartext_size,
+                            }}
+                          >
+                            {item.price} {statesData.currency_symbol}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
+              )}
+
+
+
+              {/* ------------------Date Time--------------- */}
               <>
                 <View
                   style={{
@@ -3317,11 +4401,12 @@ export default class Booking extends Component {
                           fontFamily: Font.Medium,
                           fontSize: Font.medium,
                           width: "65%",
-                          textAlign: config.textRotate,
+                          // alignSelf: 'flex-start',
+                          textAlign: 'left',
                           color: Colors.detailTitles
                         }}
                       >
-                        {Lang_chg.Appointmentschedule[config.language]}
+                        {Lang_chg.Appointmentschedule[statesData.languageIndex]}
                       </Text>
                       <View
                         style={{
@@ -3352,7 +4437,7 @@ export default class Booking extends Component {
                             textAlign: "right",
                           }}
                         >
-                          {this.state.set_date}
+                          {statesData.set_date}
                         </Text>
                       </View>
                     </View>
@@ -3371,30 +4456,29 @@ export default class Booking extends Component {
                       style={{
                         fontFamily: Font.Regular,
                         fontSize: Font.large,
-                        textAlign: config.textRotate,
+                        alignSelf: 'flex-start',
                         color: Colors.detailTitles,
                       }}
                     >
-                      {Lang_chg.SelectDate[config.language]}
+                      {Lang_chg.SelectDate[statesData.languageIndex]}
                     </Text>
-                    {this.state.indexPosition === 1 ? (
+                    {statesData.display == "taskbooking" ? (
                       <View style={{ width: "100%" }}>
                         <FlatList
                           horizontal={true}
-                          data={this.state.date_array}
+                          data={statesData.date_array}
                           showsHorizontalScrollIndicator={false}
                           renderItem={({ item, index }) => {
                             return (
                               <TouchableOpacity
                                 onPress={() => {
-                                  this.setState({
+                                  setState({
                                     set_date: item.date1,
-                                    set_task: item.home_visit_text,
+                                    set_task: "task_base",
                                     time_take_data: "",
-                                  }, () => {
-                                    this.getDoctorTimeDate(),
-                                      this.checkDate(item, index)
                                   })
+                                  getTimeDate(),
+                                    checkDate(item, index)
                                 }}
                                 style={{ width: (windowWidth * 15) / 100 }}
                               >
@@ -3408,7 +4492,6 @@ export default class Booking extends Component {
                                     paddingVertical: (windowWidth * 2) / 100,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
-
                                     lineHeight: (windowWidth * 5) / 100,
                                   }}
                                 >
@@ -3426,20 +4509,19 @@ export default class Booking extends Component {
                       <View style={{ width: "100%" }}>
                         <FlatList
                           horizontal={true}
-                          data={this.state.date_array}
+                          data={statesData.date_array}
                           showsHorizontalScrollIndicator={false}
                           renderItem={({ item, index }) => {
                             return (
                               <TouchableOpacity
                                 onPress={() => {
-                                  this.setState({
+                                  setState({
                                     set_date: item.date1,
-                                    set_task: item.online_base_text,
+                                    set_task: "hour_base",
                                     time_take_data_hour: "",
-                                  }, () => {
-                                    this.getDoctorTimeDate(),
-                                      this.checkDate(item, index)
                                   })
+                                  getTimeDate(),
+                                    checkDate(item, index)
                                 }}
                                 style={{ width: (windowWidth * 15) / 100, }}
                               >
@@ -3483,10 +4565,10 @@ export default class Booking extends Component {
                         fontFamily: Font.Regular,
                         fontSize: Font.subtext,
                         color: "#000",
-                        textAlign: config.textRotate,
+                        alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Select_start_time[config.language]}
+                      {Lang_chg.Select_start_time[statesData.languageIndex]}
                     </Text>
 
                     <ScrollView
@@ -3494,11 +4576,9 @@ export default class Booking extends Component {
                       showsHorizontalScrollIndicator={false}
                     >
                       <View style={{ width: "100%", alignItems: "center" }}>
-                        {this.state.indexPosition === 1 ? (
-                          <View
-                            style={{ width: "100%", alignItems: "center" }}
-                          >
-                            {this.state.time_Arr != "" ? (
+                        {statesData.display == "taskbooking" ? (
+                          <View style={{ width: "100%", alignItems: "center" }}>
+                            {statesData.time_Arr != "" ? (
                               <View
                                 style={{
                                   width: "100%",
@@ -3509,16 +4589,15 @@ export default class Booking extends Component {
                                   <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_one}
+                                    data={statesData.final_one}
                                     renderItem={({ item, index }) => {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.setState({
+                                            setState({
                                               time_take_data: item.time,
                                             });
-                                          }}
-                                        >
+                                          }}>
                                           <Text
                                             style={[
                                               {
@@ -3536,7 +4615,7 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                this.state.time_take_data
+                                                statesData.time_take_data
                                                 ? {
                                                   backgroundColor:
                                                     Colors.Blue,
@@ -3560,12 +4639,12 @@ export default class Booking extends Component {
                                   <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_arr2}
+                                    data={statesData.final_arr2}
                                     renderItem={({ item, index }) => {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.setState({
+                                            setState({
                                               time_take_data: item.time,
                                             });
                                           }}
@@ -3587,7 +4666,7 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                this.state.time_take_data
+                                                statesData.time_take_data
                                                 ? {
                                                   backgroundColor:
                                                     Colors.Blue,
@@ -3619,7 +4698,7 @@ export default class Booking extends Component {
                                   marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.noTime[config.language]}
+                                {Lang_chg.noTime[statesData.languageIndex]}
                               </Text>
                             )}
                           </View>
@@ -3627,7 +4706,7 @@ export default class Booking extends Component {
                           <View
                             style={{ width: "100%", alignItems: "center" }}
                           >
-                            {this.state.hour_time != "" ? (
+                            {statesData.hour_time != "" ? (
                               <View
                                 style={{
                                   width: "100%",
@@ -3638,13 +4717,13 @@ export default class Booking extends Component {
                                   <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_hour_one}
+                                    data={statesData.final_hour_one}
                                     renderItem={({ item, index }) => {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.setState({
-                                              time_take_data: item.time,
+                                            setState({
+                                              time_take_data_hour: item.time,
                                             });
                                           }}
                                         >
@@ -3664,7 +4743,7 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                this.state.time_take_data
+                                                statesData.time_take_data_hour
                                                 ? {
                                                   backgroundColor:
                                                     Colors.Blue,
@@ -3688,13 +4767,13 @@ export default class Booking extends Component {
                                   <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_hour_two}
+                                    data={statesData.final_hour_two}
                                     renderItem={({ item, index }) => {
                                       return (
                                         <TouchableOpacity
                                           onPress={() => {
-                                            this.setState({
-                                              time_take_data: item.time,
+                                            setState({
+                                              time_take_data_hour: item.time,
                                             });
                                           }}
                                         >
@@ -3714,7 +4793,7 @@ export default class Booking extends Component {
                                                   (windowWidth * 3.3) / 100,
                                               },
                                               item.time ==
-                                                this.state.time_take_data
+                                                statesData.time_take_data_hour
                                                 ? {
                                                   backgroundColor:
                                                     Colors.Blue,
@@ -3746,7 +4825,7 @@ export default class Booking extends Component {
                                   marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.noTime[config.language]}
+                                {Lang_chg.noTime[statesData.languageIndex]}
                               </Text>
                             )}
                           </View>
@@ -3755,411 +4834,68 @@ export default class Booking extends Component {
                     </ScrollView>
                   </View>
                 </View>
+              </>
+              <View style={{}}>
 
-                <View>
-
-
-                  {/* Payment section for Docs */}
+                {/* Payment section for task and hour */}
+                {statesData.display == "taskbooking" && (
                   <View
                     style={{
                       width: "100%",
                       paddingVertical: vs(9),
                       marginTop: vs(7),
-                      marginBottom: vs(50),
                       backgroundColor: Colors.White,
                       paddingHorizontal: s(11)
-                    }}>
-                    <View
-                      style={{
-                        width: "100%",
-                        alignSelf: "center",
-                      }} >
-                      <View>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 4) / 100,
-                            color: Colors.Blue,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Payment[config.language]}
-                        </Text>
-                      </View>
-
-                      <View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            width: "100%",
-                            justifyContent: "space-between",
-                            marginTop: vs(10),
-                            alignSelf: "center",
-                          }} >
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: Font.small,
-                              color: Colors.detailTitles,
-                              width: "70%",
-                              textAlign: config.textRotate,
-                            }} >
-                            {this.state.indexPosition === 0
-                              ? item.online_base_task[0].duration
-                              : item.home_visit_task[0].duration}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: Font.small,
-                              color: Colors.detailTitles,
-                              width: "30%",
-                              textAlign: "right",
-                            }}>
-                            {this.state.indexPosition === 0
-                              ? item.online_base_task[0].task_price
-                              : item.home_visit_task[0].task_price}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                        {this.state.indexPosition === 1 && (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: vs(10),
-                              marginTop: (windowWidth * 2) / 100,
-                            }}>
-                            <Text
-                              style={{
-                                fontFamily: Font.Regular,
-                                fontSize: Font.small,
-                                color: Colors.detailTitles,
-                              }}>
-                              {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
-
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.ques_fontfamily,
-                                fontSize: Font.sregulartext_size,
-                                color: "#000",
-                              }}>
-                              {item.distance_fare}.0{" "}
-                              {this.state.currency_symbol}
-                            </Text>
-                          </View>
-                        )}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (windowWidth * 2) / 100,
-                            borderTopWidth: 1.5,
-                            borderTopColor: Colors.backgroundcolor,
-                            marginTop: (windowWidth * 2) / 100,
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.theme_color,
-                            }}>
-                            {Lang_chg.subTotal[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.theme_color,
-                            }}>
-                            {this.state.indexPosition === 0
-                              ? this.state.onlineSubTotalPrice
-                              : this.state.homeVisitSubTotalPrice}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginTop: (windowWidth * 1) / 100,
-                            borderColor: Colors.bordercolor,
-                            marginBottom: (windowWidth * 2) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.ques_fontfamily,
-                              fontSize: Font.sregulartext_size,
-                              color: "#000",
-                            }}
-                          >
-                            {item.vat_text}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.ques_fontfamily,
-                              fontSize: Font.sregulartext_size,
-                              color: "#000",
-                            }}
-                          >
-                            {this.state.indexPosition === 0
-                              ? this.state.onlineVisitVat
-                              : this.state.homeVisitVat}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            borderTopWidth: 1.5,
-                            borderTopColor: Colors.backgroundcolor,
-                            marginBottom: (windowWidth * 2) / 100,
-                            paddingTop: (windowWidth * 2) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.theme_color,
-                            }}
-                          >
-                            {Lang_chg.Total[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: (windowWidth * 3.7) / 100,
-                              color: Colors.theme_color,
-                            }}
-                          >
-                            {this.state.indexPosition === 0
-                              ? this.state.onlineTaskPrice
-                              : this.state.homeVisitTaskPrice}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </>
-            ) : (
-              <View>
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  {/* ------------Appoitment Tabs---------- */}
-
-                  {item.task_base_enable == 0 && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          display: "taskbooking",
-                          set_task: "task_base",
-                        });
-                        this.state.providerType === "lab" ?
-                          this.getLabServices()
-                          : this.state.providerType === "doctor" ?
-                            this.getDoctorServices()
-                            : this.getServices();
-                        this.getDay();
-                        this.getPerson()
-                        this.resetState()
-                      }}
-                      style={{ width: "50%", alignSelf: "center" }}
-                    >
-                      <View style={{ width: "100%" }}>
-                        <Text
-                          style={
-                            this.state.display == "taskbooking"
-                              ? {
-                                color: Colors.Blue,
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                textAlign: config.textalign,
-                                alignSelf: "center",
-                                paddingVertical: (windowWidth * 3) / 100,
-                              }
-                              : {
-                                color: Colors.tablightcolo,
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                textAlign: config.textalign,
-                                alignSelf: "center",
-                                paddingVertical: (windowWidth * 3) / 100,
-                              }
-                          }
-                        >
-                          {Lang_chg.TaskBooking[config.language]}
-                        </Text>
-
-                        <View
-                          style={
-                            this.state.display == "taskbooking"
-                              ? {
-                                width: (windowWidth * 42) / 100,
-                                alignSelf: "center",
-                                paddingVertical: 1,
-                                borderWidth: 1,
-                                borderColor: Colors.Blue,
-                                backgroundColor: Colors.Blue,
-                              }
-                              : {
-                                width: (windowWidth * 42) / 100,
-                                alignSelf: "center",
-                                borderWidth: 2,
-                                borderColor: Colors.tab_background_color,
-                                backgroundColor:
-                                  Colors.appointmentdetaillightblue,
-                              }
-                          }
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                  {item.hour_base_enable == 0 && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          display: "hourlybooking",
-                          set_task: "hour_base",
-                        });
-                        this.state.providerType === "lab" ?
-                          this.getLabServices()
-                          : this.state.providerType === "doctor" ?
-                            this.getDoctorServices()
-                            : this.getServices();
-                        this.getDay();
-                        this.getPerson()
-                        this.resetState()
-                      }}
-                      style={{ width: "50%", alignSelf: "center" }}
-                    >
-                      <View style={{ width: "100%" }}>
-                        <Text
-                          style={
-                            this.state.display == "hourlybooking"
-                              ? {
-                                color: Colors.Blue,
-
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                textAlign: config.textalign,
-                                alignSelf: "center",
-                                paddingVertical: (windowWidth * 3) / 100,
-                              }
-                              : {
-                                color: Colors.tablightcolo,
-                                fontFamily: Font.Medium,
-                                fontSize: (windowWidth * 4) / 100,
-                                textAlign: config.textalign,
-                                alignSelf: "center",
-                                paddingVertical: (windowWidth * 3) / 100,
-                              }
-                          }
-                        >
-                          {Lang_chg.HourlyBooking[config.language]}
-                        </Text>
-
-                        <View
-                          style={
-                            this.state.display == "hourlybooking"
-                              ? {
-                                width: (windowWidth * 42) / 100,
-                                alignSelf: "center",
-                                paddingVertical: 1,
-                                borderWidth: 1,
-                                borderColor: Colors.Blue,
-                                backgroundColor: Colors.Blue,
-                              }
-                              : {
-                                width: (windowWidth * 42) / 100,
-                                alignSelf: "center",
-                                borderWidth: 2,
-                                borderColor: Colors.tab_background_color,
-                                backgroundColor:
-                                  Colors.tab_background_color,
-                              }
-                          }
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-
-                  {/* -------------------------------------- */}
-
-                </View>
-
-                {/* ------------Appoitment Tabs Data---------- */}
-                {this.state.display == "taskbooking" && (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      backgroundColor: "#fff",
                     }} >
-                    <View
+                    <Text
                       style={{
-                        width: "95%",
-                        right: 0,
-                        alignSelf: "flex-end",
-                      }}>
-                      {/* ----------------Selected Tasks--------------- */}
+                        fontFamily: Font.Medium,
+                        fontSize: (windowWidth * 4) / 100,
+                        color: Colors.theme_color,
+                        alignSelf: 'flex-start',
+                      }} >
+                      {Lang_chg.Payment[statesData.languageIndex]}
+                    </Text>
+                    {statesData.new_task_arr != "" && (
                       <FlatList
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        data={this.state.new_task_arr}
+                        data={statesData.new_task_arr}
                         renderItem={({ item, index }) => {
-                          if (this.state.new_task_arr != "") {
+                          if (statesData.new_task_arr != "") {
                             return (
-                              <View style={{ alignSelf: "center" }}>
+                              <View>
                                 {item.status == true && (
                                   <View
                                     style={{
-                                      backgroundColor: Colors.Theme,
-                                      paddingVertical: (windowWidth * 0.8) / 100,
                                       flexDirection: "row",
-                                      paddingHorizontal:
-                                        (windowWidth * 1.5) / 100,
-                                      marginTop: (windowWidth * 2) / 100,
+                                      width: "100%",
                                       justifyContent: "space-between",
-                                      alignItems: "center",
-                                      borderRadius: (windowWidth * 1) / 100,
-                                      marginRight: (windowWidth * 2) / 100,
+                                      marginTop: (windowWidth * 1.5) / 100,
+                                      alignSelf: "center",
                                     }}
                                   >
                                     <Text
                                       style={{
-                                        color: Colors.White,
-                                        fontSize: Font.textsize,
-                                        fontFamily: Font.Light,
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "70%",
+                                        alignSelf: 'flex-start',
                                       }}
                                     >
                                       {item.name}
                                     </Text>
-                                    <TouchableOpacity
-                                      onPress={() => {
-                                        this.check_all_false(item, index);
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "30%",
+                                        textAlign: "right",
                                       }}
                                     >
-                                      {/* <Image
-                                          source={localimag.cross2}
-                                          style={{
-                                            alignSelf: "center",
-                                            width: (windowWidth * 2) / 100,
-                                            height: (windowWidth * 2) / 100,
-                                            marginLeft: (windowWidth * 3.5) / 100,
-                                          }}
-                                        /> */}
-                                    </TouchableOpacity>
+                                      {item.price}{" "}
+                                      {statesData.currency_symbol}
+                                    </Text>
                                   </View>
                                 )}
                               </View>
@@ -4167,1413 +4903,644 @@ export default class Booking extends Component {
                           }
                         }}
                       />
-                    </View>
-
+                    )}
                     <View
                       style={{
-                        width: "100%",
-                        alignSelf: "center",
-                        backgroundColor: Colors.tab_background_color,
-                        alignItems: "center",
-                        marginTop: (windowWidth * 3) / 100,
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "100%",
-                          alignSelf: "center",
-                          flexDirection: "row",
-                          paddingHorizontal: s(11)
-                        }}
-                      >
-                        <TextInput
-                          ref={(text) => {
-                            this.textdata = text;
-                          }}
-                          maxLength={50}
-                          onChangeText={(text) => {
-                            this.searchFilterFunction(text);
-                          }}
-                          returnKeyLabel="done"
-                          returnKeyType="done"
-                          onSubmitEditing={() => {
-                            Keyboard.dismiss();
-                          }}
-                          style={{
-                            fontSize: (windowWidth * 4) / 100,
-                            fontFamily: Font.ques_fontfamily,
-                            color: "#8F98A7",
-                            width: "90%",
-                            paddingVertical: (windowWidth * 3.5) / 100,
-                            textAlign: config.textalign,
-                          }}
-                          placeholderTextColor={"#8F98A7"}
-                          placeholder={Lang_chg.Searchtask[config.language]}
-                        />
-
-                        <View style={{ width: "10%", alignSelf: "center" }}>
-                          <Image
-                            style={{
-                              width: (windowWidth * 4) / 100,
-                              height: (windowWidth * 4) / 100,
-                              tintColor: "#8F98A7",
-                              alignSelf: "center",
-                            }}
-                            source={Icons.search2}
-                          />
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* ----------------Tasks List------------ */}
-
-                    {this.state.task_base_task != "" &&
-                      this.state.task_base_task != null && (
-                        <View
-                          style={[
-                            {
-                              width: "100%",
-                              alignSelf: "center",
-                              marginTop: (windowWidth * 2) / 100,
-                            },
-                            this.state.task_base_task.length >= 4
-                              ? { height: 200 }
-                              : null,
-                          ]}
-                        >
-                          <FlatList
-                            data={this.state.task_base_task}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (this.state.task_base_task != "") {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      this.check_all(index);
-                                    }}
-                                    style={{
-                                      width: '100%',
-                                      paddingVertical: vs(7),
-                                      flexDirection: 'row',
-                                      justifyContent: 'space-between',
-                                      paddingHorizontal: s(11)
-                                    }} >
-                                    <View style={{ flexDirection: 'row' }}>
-                                      <TouchableOpacity
-                                        onPress={() => {
-                                          this.check_all(index);
-                                        }}
-                                        style={{
-                                          height: 20,
-                                          width: 20,
-                                          borderRadius: 5,
-                                          backgroundColor: item.status == true ? Colors.Theme : Colors.White,
-                                          justifyContent: 'center',
-                                          alignItems: 'center',
-                                          borderWidth: item.status == true ? 0 : 1.3,
-                                          borderColor: Colors.Border
-                                        }}
-                                      >
-                                        {item.status == true ? (
-                                          <Image
-                                            style={{
-                                              height: 14,
-                                              width: 14,
-                                              tintColor: Colors.White
-                                            }}
-                                            source={Icons.Tick}
-                                          />
-
-                                        ) : null}
-                                      </TouchableOpacity>
-                                      <Text
-                                        style={{
-                                          textAlign: config.textRotate,
-                                          alignSelf: "center",
-                                          fontSize: (windowWidth * 3.6) / 100,
-                                          fontFamily: Font.Regular,
-                                          color: "#000",
-                                          marginLeft: s(10)
-                                        }}>
-                                        {item.name}
-                                      </Text>
-                                    </View>
-                                    <Text
-                                      style={{
-                                        fontSize: (windowWidth * 3.6) / 100,
-                                        fontFamily: Font.Regular,
-                                        color: Colors.Black,
-                                        textAlign: "right",
-                                      }}
-                                    >
-                                      {item.price}{" "}
-                                      {this.state.currency_symbol}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        </View>
-                      )}
-                  </View>
-                )}
-
-                {this.state.display == "hourlybooking" && (
-                  <View
-                    style={{
-                      width: "100%",
-                      backgroundColor: "#fff",
-                      paddingVertical: (windowWidth * 3) / 100,
-                      marginBottom: (windowWidth * 1) / 100,
-                    }}
-                  >
-                    <FlatList
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      data={item.hour_base_task}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.hourbooking(item, index),
-                                this.getTimeDate(),
-                                this.setState({
-                                  hour_id: item.id,
-                                  hour_price: item.price,
-                                  time_take_data_hour: "",
-                                });
-                            }}
-                            style={[
-                              {
-                                borderRadius: (windowWidth * 2) / 100,
-                                marginLeft: (windowWidth * 2) / 100,
-                                width: (windowWidth * 35) / 100,
-                                backgroundColor: "#fff",
-                              },
-                              item.status == true
-                                ? {
-                                  borderColor: Colors.Theme,
-                                  borderWidth: 1.5,
-                                }
-                                : { borderColor: "#DFDFDF", borderWidth: 1 },
-                            ]}
-                          >
-                            <View
-                              style={{
-                                backgroundColor: "#0168B3",
-                                borderTopLeftRadius: (windowWidth * 1.1) / 100,
-                                borderTopRightRadius: (windowWidth * 1.1) / 100,
-                                width: "100%",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  paddingVertical: (windowWidth * 1.5) / 100,
-                                  color: Colors.White,
-                                  fontFamily: Font.Medium,
-                                  fontSize: (windowWidth * 3) / 100,
-                                  textTransform: "uppercase",
-                                  textAlign: "center",
-                                }}
-                              >
-                                {item.duration}
-                              </Text>
-                            </View>
-
-                            <Text
-                              style={{
-                                paddingVertical: (windowWidth * 2) / 100,
-                                fontFamily: Font.Medium,
-                                textAlign: "center",
-                                fontSize: Font.sregulartext_size,
-                              }}
-                            >
-                              {item.price} {this.state.currency_symbol}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      }}
-                    />
-                  </View>
-                )}
-
-
-
-                {/* ------------------Date Time--------------- */}
-                <>
-                  <View
-                    style={{
-                      width: "100%",
-                      marginTop: vs(7),
-                      paddingVertical: vs(9),
-                      backgroundColor: Colors.White
-                    }} >
-                    <View style={{
-                      borderBottomWidth: 1.5,
-                      borderBottomColor: Colors.backgroundcolor,
-                      paddingBottom: vs(5),
-                      marginBottom: vs(5)
-                    }}>
-
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          width: "100%",
-                          alignSelf: "center",
-                          paddingHorizontal: s(11)
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.medium,
-                            width: "65%",
-                            textAlign: config.textRotate,
-                            color: Colors.detailTitles
-                          }}
-                        >
-                          {Lang_chg.Appointmentschedule[config.language]}
-                        </Text>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            width: "35%",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <View style={{ width: "20%", alignSelf: "center" }}>
-                            <Image
-                              style={{
-                                width: (windowWidth * 5) / 100,
-                                height: (windowWidth * 5) / 100,
-                                alignSelf: "center",
-                              }}
-                              source={Icons.Calendar}
-                            />
-                          </View>
-
-                          <Text
-                            style={{
-                              color: Colors.Theme,
-                              fontFamily: Font.Medium,
-                              fontSize: Font.medium,
-                              alignSelf: "center",
-                              marginLeft: (windowWidth * 1) / 100,
-                              textAlign: "right",
-                            }}
-                          >
-                            {this.state.set_date}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    <View
-                      style={{
-                        width: "93%",
-                        alignSelf: "center",
-                        paddingBottom: (windowWidth * 3) / 100,
-                        borderBottomWidth: 1.5,
-                        borderBottomColor: Colors.backgroundcolor
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     >
                       <Text
                         style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.large,
-                          textAlign: config.textRotate,
-                          color: Colors.detailTitles,
-                        }}
-                      >
-                        {Lang_chg.SelectDate[config.language]}
-                      </Text>
-                      {this.state.display == "taskbooking" ? (
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            data={this.state.date_array}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.setState({
-                                      set_date: item.date1,
-                                      set_task: "task_base",
-                                      time_take_data: "",
-                                    }, () => {
-                                      this.getTimeDate(),
-                                        this.checkDate(item, index)
-                                    })
-                                  }}
-                                  style={{ width: (windowWidth * 15) / 100 }}
-                                >
-                                  <Text
-                                    style={{
-                                      marginRight: (windowWidth * 3) / 100,
-                                      marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
-                                      color: item.tick == 1 ? Colors.White : Colors.Black,
-                                      textAlign: "center",
-                                      paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.Regular,
-                                      fontSize: Font.small,
-                                      lineHeight: (windowWidth * 5) / 100,
-                                    }}
-                                  >
-                                    {item.day}
-                                    {"\n"}
-
-                                    {item.datenew}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      ) : (
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            data={this.state.date_array}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.setState({
-                                      set_date: item.date1,
-                                      set_task: "hour_base",
-                                      time_take_data_hour: "",
-                                    }, () => {
-                                      this.getTimeDate(),
-                                        this.checkDate(item, index)
-                                    })
-                                  }}
-                                  style={{ width: (windowWidth * 15) / 100, }}
-                                >
-                                  <Text
-                                    style={{
-                                      marginRight: (windowWidth * 3) / 100,
-                                      marginTop: (windowWidth * 3) / 100,
-                                      backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
-                                      color: item.tick == 1 ? Colors.White : Colors.Black,
-                                      textAlign: "center",
-                                      paddingVertical: (windowWidth * 2) / 100,
-                                      fontFamily: Font.Regular,
-                                      fontSize: Font.small,
-                                      lineHeight: (windowWidth * 5) / 100,
-                                    }}
-                                  >
-                                    {item.day}
-                                    {"\n"}
-
-                                    {item.datenew}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      )}
-                    </View>
-
-
-                    <View
-                      style={{
-                        width: "100%",
-                        alignSelf: "center",
-                        paddingTop: vs(7),
-                        paddingHorizontal: s(11)
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.subtext,
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
                           color: "#000",
-                          textAlign: config.textRotate,
                         }}
                       >
-                        {Lang_chg.Select_start_time[config.language]}
+                        {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+
                       </Text>
-
-                      <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}
                       >
-                        <View style={{ width: "100%", alignItems: "center" }}>
-                          {this.state.display == "taskbooking" ? (
-                            <View style={{ width: "100%", alignItems: "center" }}>
-                              {this.state.time_Arr != "" ? (
-                                <View
-                                  style={{
-                                    width: "100%",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_one}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}>
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.Blue,
-                                                    color: Colors.White,
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      '#E5E5E5',
-                                                    color: Colors.Black,
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_arr2}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.Blue,
-                                                    color: Colors.White,
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      '#E5E5E5',
-                                                    color: Colors.Black,
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                </View>
-                              ) : (
-                                <Text
-                                  style={{
-                                    fontFamily: Font.MediumItalic,
-                                    fontSize: Font.medium,
-                                    alignSelf: "center",
-                                    paddingVertical: (windowWidth * 3) / 100,
-                                    textAlign: "center",
-                                    marginLeft: (windowWidth * 25) / 100,
-                                  }}
-                                >
-                                  {Lang_chg.noTime[config.language]}
-                                </Text>
-                              )}
-                            </View>
-                          ) : (
-                            <View
-                              style={{ width: "100%", alignItems: "center" }}
-                            >
-                              {this.state.hour_time != "" ? (
-                                <View
-                                  style={{
-                                    width: "100%",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_hour_one}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data_hour: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data_hour
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.Blue,
-                                                    color: Colors.White,
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      '#E5E5E5',
-                                                    color: Colors.Black,
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                  <View style={{ width: "100%" }}>
-                                    <FlatList
-                                      horizontal={true}
-                                      showsHorizontalScrollIndicator={false}
-                                      data={this.state.final_hour_two}
-                                      renderItem={({ item, index }) => {
-                                        return (
-                                          <TouchableOpacity
-                                            onPress={() => {
-                                              this.setState({
-                                                time_take_data_hour: item.time,
-                                              });
-                                            }}
-                                          >
-                                            <Text
-                                              style={[
-                                                {
-                                                  marginRight:
-                                                    (windowWidth * 3) / 100,
-                                                  marginTop:
-                                                    (windowWidth * 3) / 100,
-                                                  fontFamily:
-                                                    Font.ques_fontfamily,
-                                                  fontSize:
-                                                    Font.sregulartext_size,
-                                                  padding: (windowWidth * 2) / 100,
-                                                  paddingHorizontal:
-                                                    (windowWidth * 3.3) / 100,
-                                                },
-                                                item.time ==
-                                                  this.state.time_take_data_hour
-                                                  ? {
-                                                    backgroundColor:
-                                                      Colors.Blue,
-                                                    color: Colors.White,
-                                                  }
-                                                  : {
-                                                    backgroundColor:
-                                                      '#E5E5E5',
-                                                    color: Colors.Black,
-                                                  },
-                                              ]}
-                                            >
-                                              {item.time}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        );
-                                      }}
-                                    />
-                                  </View>
-                                </View>
-                              ) : (
-                                <Text
-                                  style={{
-                                    fontFamily: Font.MediumItalic,
-                                    fontSize: Font.medium,
-                                    alignSelf: "center",
-                                    paddingVertical: (windowWidth * 3) / 100,
-                                    textAlign: "center",
-                                    marginLeft: (windowWidth * 25) / 100,
-                                  }}
-                                >
-                                  {Lang_chg.noTime[config.language]}
-                                </Text>
-                              )}
-                            </View>
-                          )}
-                        </View>
-                      </ScrollView>
+                        {statesData.new_task_arr != '' ? `${item.distance_fare}.0 ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
                     </View>
-                  </View>
-                </>
-                <View style={{}}>
 
-                  {/* Payment section for task and hour */}
-                  {this.state.display == "taskbooking" && (
                     <View
                       style={{
-                        width: "100%",
-                        paddingVertical: vs(9),
-                        marginTop: vs(7),
-                        backgroundColor: Colors.White,
-                        paddingHorizontal: s(11)
-                      }} >
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                        // marginTop: windowWidth * 0.5 / 100,
+                      }}
+                    >
                       <Text
                         style={{
                           fontFamily: Font.Medium,
-                          fontSize: (windowWidth * 4) / 100,
+                          fontSize: (windowWidth * 3.7) / 100,
                           color: Colors.theme_color,
-                          textAlign: config.textRotate,
+                        }}
+                      >
+                        {Lang_chg.subTotal[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                          // marginTop: windowWidth * 1 / 100,
+                        }}>
+                        {statesData.new_task_arr != '' ? `${statesData.subTotal} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: (windowWidth * 1) / 100,
+                        borderColor: Colors.bordercolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}
+                      >
+                        {item.vat_text}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {statesData.new_task_arr != '' ? `${statesData.vat_price_show_display} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                        paddingVertical: vs(5),
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}
+                      >
+                        {Lang_chg.Total[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
                         }} >
-                        {Lang_chg.Payment[config.language]}
+                        {statesData.new_task_arr != '' ? `${statesData.final_total_price} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
                       </Text>
-                      {this.state.new_task_arr != "" && (
-                        <FlatList
-                          data={this.state.new_task_arr}
-                          renderItem={({ item, index }) => {
-                            if (this.state.new_task_arr != "") {
-                              return (
-                                <View>
-                                  {item.status == true && (
-                                    <View
-                                      style={{
-                                        flexDirection: "row",
-                                        width: "100%",
-                                        justifyContent: "space-between",
-                                        marginTop: (windowWidth * 1.5) / 100,
-                                        alignSelf: "center",
-                                      }}
-                                    >
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "70%",
-                                          textAlign: config.textRotate,
-                                        }}
-                                      >
-                                        {item.name}
-                                      </Text>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "30%",
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                      )}
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                          marginTop: (windowWidth * 2) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}
-                        >
-                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
+                    </View>
 
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}
-                        >
-                          {this.state.new_task_arr != '' ? `${item.distance_fare}.0 ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                          // marginTop: windowWidth * 0.5 / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}
-                        >
-                          {Lang_chg.subTotal[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                            // marginTop: windowWidth * 1 / 100,
-                          }}>
-                          {this.state.new_task_arr != '' ? `${this.state.subTotal} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          marginTop: (windowWidth * 1) / 100,
-                          borderColor: Colors.bordercolor,
-                          marginBottom: (windowWidth * 2) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}
-                        >
-                          {item.vat_text}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {this.state.new_task_arr != '' ? `${this.state.vat_price_show_display} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                          marginBottom: (windowWidth * 2) / 100,
-                          paddingVertical: vs(5),
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}
-                        >
-                          {Lang_chg.Total[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }} >
-                          {this.state.new_task_arr != '' ? `${this.state.final_total_price} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-
-                      {/* <Appbtn
+                    {/* <Appbtn
                             onPresshandler={() => {
-                              this.submit_btn();
+                              submit_btn();
                             }}
-                            title={Lang_chg.PROCEEDTOcheckout[config.language]}
+                            title={Lang_chg.PROCEEDTOcheckout[statesData.languageIndex]}
                           /> */}
-                    </View>
-                  )}
-                  {this.state.display == "hourlybooking" && (
-                    <View
-                      style={{
-                        width: "100%",
-                        paddingVertical: vs(9),
-                        marginTop: vs(7),
-                        backgroundColor: Colors.White,
-                        paddingHorizontal: s(11)
-                      }} >
-
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: (windowWidth * 4) / 100,
-                          color: Colors.theme_color,
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.Payment[config.language]}
-                      </Text>
-                      {this.state.hour_base_task_new != "" && (
-                        <FlatList
-                          data={this.state.hour_base_task_new}
-                          renderItem={({ item, index }) => {
-                            if (this.state.hour_base_task_new != "") {
-                              return (
-                                <View>
-                                  {item.status == true && (
-                                    <View
-                                      style={{
-                                        flexDirection: "row",
-                                        width: "100%",
-                                        paddingVertical:
-                                          (windowWidth * 3) / 100,
-                                        justifyContent: "space-between",
-                                        alignSelf: "center",
-                                      }}>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          textAlign: config.textRotate,
-                                        }}>
-                                        {item.duration}
-                                      </Text>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.ques_fontfamily,
-                                          fontSize: Font.sregulartext_size,
-                                          color: "#000",
-                                          width: "30%",
-                                          textAlign: "right",
-                                        }}>
-                                        {item.price}{" "}
-                                        {this.state.currency_symbol}
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                      )}
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                          marginTop: (windowWidth * 2) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {this.state.hour_base_task_new != '' ? `${item.distance_fare} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          paddingVertical: (windowWidth * 2) / 100,
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                        }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}>
-                          {Lang_chg.subTotal[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}>
-                          {this.state.hour_base_task_new != '' ? `${this.state.subTotal} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          borderColor: Colors.bordercolor,
-                          marginBottom: (windowWidth * 2) / 100,
-                        }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {item.vat_text}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.ques_fontfamily,
-                            fontSize: Font.sregulartext_size,
-                            color: "#000",
-                          }}>
-                          {this.state.hour_base_task_new != '' ? `${this.state.vat_price_show_hourly} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          borderTopWidth: 1.5,
-                          borderTopColor: Colors.backgroundcolor,
-                          marginBottom: (windowWidth * 2) / 100,
-                          paddingTop: vs(5)
-                        }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}>
-                          {Lang_chg.Total[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: (windowWidth * 3.7) / 100,
-                            color: Colors.theme_color,
-                          }}>
-                          {this.state.hour_base_task_new != '' ? `${this.state.hour_total_price} ${this.state.currency_symbol}` : `${this.state.currency_symbol}`}
-                        </Text>
-                      </View>
-
-                    </View>
-                  )}
-
-
-                </View>
-              </View>
-            )}
-          </ScrollView>
-
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalVisible3}
-            onRequestClose={() => {
-              this.setState({ modalVisible3: false });
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => {
-                this.setState({ modalVisible3: false });
-              }}
-              style={{
-                backgroundColor: "#00000080",
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingHorizontal: 20,
-                marginTop: -50,
-              }}
-            >
-              <StatusBar
-                backgroundColor={"#fff"}
-                barStyle="default"
-                hidden={false}
-                translucent={false}
-                networkActivityIndicatorVisible={true}
-              />
-              <View
-                style={{
-                  borderRadius: 20,
-                  width: (windowWidth * 90) / 100,
-                  position: "absolute",
-                  alignSelf: "center",
-                }}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    borderRadius: 2,
-                    width: "100%",
-                  }}
-                >
+                  </View>
+                )}
+                {statesData.display == "hourlybooking" && (
                   <View
                     style={{
-                      alignSelf: "flex-start",
-                      paddingVertical: (windowWidth * 3) / 100,
-                      marginTop: (windowWidth * 2) / 100,
-                      paddingLeft: (windowWidth * 4) / 100,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      style={{
-                        width: (windowWidth * 6) / 100,
-                        height: (windowWidth * 6) / 100,
-                      }}
-                      source={Icons.logoPlain}
-                    />
+                      width: "100%",
+                      paddingVertical: vs(9),
+                      marginTop: vs(7),
+                      backgroundColor: Colors.White,
+                      paddingHorizontal: s(11)
+                    }} >
+
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        color: "#000",
-                        fontSize: (windowWidth * 5) / 100,
-                        paddingLeft: (windowWidth * 4) / 100,
-                        width: "90%",
-                        textAlign: config.textRotate,
-                      }}
-                      numberOfLines={2}
-                    >
-                      {Lang_chg.DeleteMember[config.language]}{this.state.first_name} {this.state.last_name}
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      paddingLeft: (windowWidth * 4) / 100,
-                      width: "95%",
-                      alignSelf: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        color: "#000",
-                        fontSize: (windowWidth * 4.4) / 100,
-                        textAlign: config.textRotate,
+                        fontSize: (windowWidth * 4) / 100,
+                        color: Colors.theme_color,
+                        alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.delete_msg[config.language]}
+                      {Lang_chg.Payment[statesData.languageIndex]}
                     </Text>
-                  </View>
+                    {statesData.hour_base_task_new != "" && (
+                      <FlatList
+                        data={statesData.hour_base_task_new}
+                        renderItem={({ item, index }) => {
+                          if (statesData.hour_base_task_new != "") {
+                            return (
+                              <View>
+                                {item.status == true && (
+                                  <View
+                                    style={{
+                                      flexDirection: "row",
+                                      width: "100%",
+                                      paddingVertical:
+                                        (windowWidth * 3) / 100,
+                                      justifyContent: "space-between",
+                                      alignSelf: "center",
+                                    }}>
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        alignSelf: 'flex-start',
+                                      }}>
+                                      {item.duration}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.ques_fontfamily,
+                                        fontSize: Font.sregulartext_size,
+                                        color: "#000",
+                                        width: "30%",
+                                        textAlign: "right",
+                                      }}>
+                                      {item.price}{" "}
+                                      {statesData.currency_symbol}
+                                    </Text>
+                                  </View>
+                                )}
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    )}
 
-                  <View
-                    style={{
-                      paddingBottom: (windowWidth * 5) / 100,
-                      marginTop: (windowWidth * 9) / 100,
-                      alignSelf: "flex-end",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingHorizontal: (windowWidth * 3) / 100,
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({ modalVisible3: false });
-                      }}
+                    <View
                       style={{
-                        width: (windowWidth * 15) / 100,
                         flexDirection: "row",
-                        alignSelf: "center",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                        marginTop: (windowWidth * 2) / 100,
                       }}
                     >
                       <Text
                         style={{
-                          fontFamily: Font.Regular,
-                          fontSize: (windowWidth * 4) / 100,
-                          color: Colors.theme_color,
-                          alignSelf: "center",
-                          textAlign: config.textalign,
-                        }}
-                      >
-                        {Lang_chg.no_txt[config.language]}
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {`${item.distance_fare_text} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
                       </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        setTimeout(() => {
-                          this.setState({ modalVisible3: false }),
-                            this.delete_click();
-                        }, 200);
-                      }}
-                      style={{
-                        width: (windowWidth * 15) / 100,
-                        flexDirection: "row",
-                        alignSelf: "center",
-                      }}
-                    >
                       <Text
                         style={{
-                          fontFamily: Font.Regular,
-                          fontSize: (windowWidth * 4) / 100,
-                          color: Colors.theme_color,
-                          alignSelf: "center",
-                          textAlign: config.textalign,
-                        }}
-                      >
-                        {Lang_chg.Delete[config.language]}
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {statesData.hour_base_task_new != '' ? `${item.distance_fare} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
                       </Text>
-                    </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {Lang_chg.subTotal[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {statesData.hour_base_task_new != '' ? `${statesData.subTotal} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        borderColor: Colors.bordercolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {item.vat_text}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.ques_fontfamily,
+                          fontSize: Font.sregulartext_size,
+                          color: "#000",
+                        }}>
+                        {statesData.hour_base_task_new != '' ? `${statesData.vat_price_show_hourly} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderTopWidth: 1.5,
+                        borderTopColor: Colors.backgroundcolor,
+                        marginBottom: (windowWidth * 2) / 100,
+                        paddingTop: vs(5)
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {Lang_chg.Total[statesData.languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.7) / 100,
+                          color: Colors.theme_color,
+                        }}>
+                        {statesData.hour_base_task_new != '' ? `${statesData.hour_total_price} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+                      </Text>
+                    </View>
+
                   </View>
-                </View>
+                )}
+
+
               </View>
-            </TouchableOpacity>
-          </Modal>
+            </View>
+          )}
+        </ScrollView>
 
-          {/* ------------------Checkout------------- */}
-          <View
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={statesData.modalVisible3}
+          onRequestClose={() => {
+            setState({ modalVisible3: false });
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+              setState({ modalVisible3: false });
+            }}
             style={{
-              width: "100%",
-              alignSelf: "center",
-              backgroundColor: Colors.White,
-              paddingHorizontal: (windowWidth * 5) / 100,
-              paddingVertical: (windowWidth * 2) / 100,
-              height: 80,
-              justifyContent: "center",
+              backgroundColor: "#00000080",
+              flex: 1,
               alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+              marginTop: -50,
             }}
           >
-
-            <Button
-              text={Lang_chg.PROCEEDTOcheckout[config.language]}
-              onPress={() => {
-                this.state.providerType === "doctor"
-                  ? this.submitButtonForDoctor()
-                  : this.state.providerType === "lab"
-                    ? this.state.indexPosition === 0
-                      ? this.submit_btn()
-                      : this.submit_btn_hourly()
-                    : this.state.display == "hourlybooking"
-                      ? this.submit_btn_hourly()
-                      : this.submit_btn();
-              }}
+            <StatusBar
+              backgroundColor={"#fff"}
+              barStyle="default"
+              hidden={false}
+              translucent={false}
+              networkActivityIndicatorVisible={true}
             />
-
-          </View>
-        </View>
-
-
-      );
-    } else {
-      return (
-        <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
-          <ScreenHeader
-            title={Lang_chg.Booking[config.language]}
-            navigation={this.props.navigation}
-            onBackPress={() => this.props.navigation.pop()}
-            leftIcon
-          />
-          {/* ============================error================================= */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.Error_popup}
-            onRequestClose={() => {
-              this.setState({ Error_popup: false });
-            }}
-          >
             <View
               style={{
-                backgroundColor: "#00000080",
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingHorizontal: 20,
-                marginTop: -50,
+                borderRadius: 20,
+                width: (windowWidth * 90) / 100,
+                position: "absolute",
+                alignSelf: "center",
               }}
             >
               <View
                 style={{
-                  borderRadius: 20,
-                  width: (windowWidth * 90) / 100,
-                  position: "absolute",
-                  alignSelf: "center",
+                  backgroundColor: "#fff",
+                  borderRadius: 2,
+                  width: "100%",
                 }}
               >
                 <View
                   style={{
-                    backgroundColor: "#fff",
-                    borderRadius: 4,
-                    width: "100%",
-                    paddingVertical: (windowWidth * 6) / 100,
+                    alignSelf: "flex-start",
+                    paddingVertical: (windowWidth * 3) / 100,
+                    marginTop: (windowWidth * 2) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
                   <Image
                     style={{
-                      width: (windowWidth * 15) / 100,
-                      height: (windowWidth * 15) / 100,
-                      alignSelf: "center",
+                      width: (windowWidth * 6) / 100,
+                      height: (windowWidth * 6) / 100,
                     }}
                     source={Icons.logoPlain}
                   />
                   <Text
                     style={{
                       fontFamily: Font.Medium,
-                      fontSize: (windowWidth * 5) / 100,
-                      color: Colors.theme_color,
-                      alignSelf: "center",
-                      marginTop: (windowWidth * 6) / 100,
-                    }}
-                  >
-                    {Lang_chg.we_wii_back[config.language]}
-                  </Text>
-                  {config.language == 0 && (
-                    <Text
-                      style={{
-                        fontFamily: Font.Medium,
-                        fontSize: (windowWidth * 5) / 100,
-                        color: Colors.theme_color,
-                        alignSelf: "center",
-                      }}
-                    >
-                      {Lang_chg.promise[config.language]}
-                    </Text>
-                  )}
-
-                  <Text
-                    style={{
-                      fontFamily: Font.Light,
                       color: "#000",
-                      fontSize: (windowWidth * 3.8) / 100,
-                      textAlign: "center",
-                      marginTop: (windowWidth * 3) / 100,
+                      fontSize: (windowWidth * 5) / 100,
+                      paddingLeft: (windowWidth * 4) / 100,
                       width: "90%",
-                      alignSelf: "center",
+                      alignSelf: 'flex-start',
                     }}
+                    numberOfLines={2}
                   >
-                    {Lang_chg.our_sincere[config.language]}
+                    {Lang_chg.DeleteMember[statesData.languageIndex]}{statesData.first_name} {statesData.last_name}
                   </Text>
+                </View>
+
+                <View
+                  style={{
+                    paddingLeft: (windowWidth * 4) / 100,
+                    width: "95%",
+                    alignSelf: "center",
+                  }}
+                >
                   <Text
                     style={{
                       fontFamily: Font.Regular,
                       color: "#000",
-                      fontSize: (windowWidth * 5) / 100,
-                      textAlign: "center",
-                      marginTop: (windowWidth * 5) / 100,
-                    }}>
-                    {Lang_chg.Bad_gateway[config.language]}
-                  </Text>
-
-                  <TouchableOpacity
-                    style={{
-                      paddingHorizontal: (windowWidth * 2) / 100,
-                      paddingVertical: (windowWidth * 2) / 100,
-                      alignSelf: "center",
-                      borderWidth: 1,
-                      borderColor: "#000",
-                      borderRadius: 4,
-                      marginTop: (windowWidth * 6) / 100,
+                      fontSize: (windowWidth * 4.4) / 100,
+                      alignSelf: 'flex-start',
                     }}
+                  >
+                    {Lang_chg.delete_msg[statesData.languageIndex]}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    paddingBottom: (windowWidth * 5) / 100,
+                    marginTop: (windowWidth * 9) / 100,
+                    alignSelf: "flex-end",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: (windowWidth * 3) / 100,
+                  }}
+                >
+                  <TouchableOpacity
                     onPress={() => {
-                      this.setState({ Error_popup: false });
-                      setTimeout(() => {
-                        this.props.navigation.goBack();
-                      }, 200);
+                      setState({ modalVisible3: false });
+                    }}
+                    style={{
+                      width: (windowWidth * 15) / 100,
+                      flexDirection: "row",
+                      alignSelf: "center",
                     }}
                   >
                     <Text
                       style={{
                         fontFamily: Font.Regular,
                         fontSize: (windowWidth * 4) / 100,
+                        color: Colors.theme_color,
                         alignSelf: "center",
-                        color: "#000",
+                        alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Go_back[config.language]}
+                      {Lang_chg.no_txt[statesData.languageIndex]}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setTimeout(() => {
+                        setState({ modalVisible3: false }),
+                          delete_click();
+                      }, 200);
+                    }}
+                    style={{
+                      width: (windowWidth * 15) / 100,
+                      flexDirection: "row",
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: (windowWidth * 4) / 100,
+                        color: Colors.theme_color,
+                        alignSelf: "center",
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      {Lang_chg.Delete[statesData.languageIndex]}
                     </Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
-          </Modal>
+          </TouchableOpacity>
+        </Modal>
+
+        {/* ------------------Checkout------------- */}
+        <View
+          style={{
+            width: "100%",
+            alignSelf: "center",
+            backgroundColor: Colors.White,
+            paddingHorizontal: (windowWidth * 5) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
+            height: 80,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+
+          <Button
+            text={Lang_chg.PROCEEDTOcheckout[statesData.languageIndex]}
+            onPress={() => {
+              providerType === "doctor"
+                ? submitButtonForDoctor()
+                : providerType === "lab"
+                  ? indexPosition === 0
+                    ? submit_btn()
+                    : submit_btn_hourly()
+                  : statesData.display == "hourlybooking"
+                    ? submit_btn_hourly()
+                    : submit_btn();
+            }}
+          />
+
         </View>
-      );
-    }
+      </View>
+
+
+    );
+  } else {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+        <ScreenHeader
+          title={Lang_chg.Booking[statesData.languageIndex]}
+          navigation={navigation}
+          onBackPress={() => navigation.pop()}
+          leftIcon
+        />
+        {/* ============================error================================= */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={statesData.Error_popup}
+          onRequestClose={() => {
+            setState({ Error_popup: false });
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#00000080",
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+              marginTop: -50,
+            }}
+          >
+            <View
+              style={{
+                borderRadius: 20,
+                width: (windowWidth * 90) / 100,
+                position: "absolute",
+                alignSelf: "center",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: 4,
+                  width: "100%",
+                  paddingVertical: (windowWidth * 6) / 100,
+                }}
+              >
+                <Image
+                  style={{
+                    width: (windowWidth * 15) / 100,
+                    height: (windowWidth * 15) / 100,
+                    alignSelf: "center",
+                  }}
+                  source={Icons.logoPlain}
+                />
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: (windowWidth * 5) / 100,
+                    color: Colors.theme_color,
+                    alignSelf: "center",
+                    marginTop: (windowWidth * 6) / 100,
+                  }}
+                >
+                  {Lang_chg.we_wii_back[statesData.languageIndex]}
+                </Text>
+                {statesData.languageIndex == 0 && (
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: (windowWidth * 5) / 100,
+                      color: Colors.theme_color,
+                      alignSelf: "center",
+                    }}
+                  >
+                    {Lang_chg.promise[statesData.languageIndex]}
+                  </Text>
+                )}
+
+                <Text
+                  style={{
+                    fontFamily: Font.Light,
+                    color: "#000",
+                    fontSize: (windowWidth * 3.8) / 100,
+                    textAlign: "center",
+                    marginTop: (windowWidth * 3) / 100,
+                    width: "90%",
+                    alignSelf: "center",
+                  }}
+                >
+                  {Lang_chg.our_sincere[statesData.languageIndex]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    color: "#000",
+                    fontSize: (windowWidth * 5) / 100,
+                    textAlign: "center",
+                    marginTop: (windowWidth * 5) / 100,
+                  }}>
+                  {Lang_chg.Bad_gateway[statesData.languageIndex]}
+                </Text>
+
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: (windowWidth * 2) / 100,
+                    paddingVertical: (windowWidth * 2) / 100,
+                    alignSelf: "center",
+                    borderWidth: 1,
+                    borderColor: "#000",
+                    borderRadius: 4,
+                    marginTop: (windowWidth * 6) / 100,
+                  }}
+                  onPress={() => {
+                    setState({ Error_popup: false });
+                    setTimeout(() => {
+                      navigation.goBack();
+                    }, 200);
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: (windowWidth * 4) / 100,
+                      alignSelf: "center",
+                      color: "#000",
+                    }}
+                  >
+                    {Lang_chg.Go_back[statesData.languageIndex]}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
   }
+
 }
 
 const styles = StyleSheet.create({
@@ -5616,3 +5583,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: s(11),
   },
 });
+
+export default Booking;

@@ -280,7 +280,7 @@ const CovidPackageDetails = ({ navigation }) => {
                               flexDirection: "row",
                               justifyContent: "flex-start",
                               marginTop: (windowWidth * 3) / 100,
-                              
+
                             }} >
                             <View
                               style={{
@@ -373,7 +373,7 @@ const CovidPackageDetails = ({ navigation }) => {
                               </Text>
                             </View>
                           </View>
-                          
+
                           {item.pcontent != null && item.pcontent !== "" && (
                             <View
                               style={{

@@ -4,13 +4,14 @@ import Modal from "react-native-modal";
 import DeviceInfo from "react-native-device-info";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Button, msgProvider, consolepro, apifuntion, windowHeight, } from "../Provider/utilslib/Utils";
+import { windowWidth, Lang_chg, config, Button, msgProvider, consolepro, apifuntion, windowHeight, } from "../Provider/utilslib/Utils";
 import { Cross, } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import AuthInputBoxSec from "./AuthInputBoxSec";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import NonEditableInput from "./NonEditableInput";
+import { useSelector } from "react-redux";
 
 const EMAIL_REG = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 let deviceId = ''
@@ -23,12 +24,15 @@ const ContactUsBottomSheet = ({
     route
 }) => {
 
+    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+
     const [subject, setSubject] = useState('')
     const [phone, setPhone] = useState('')
     const [email, setEmail] = useState('')
     const [desc, setDesc] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [keyboardOffset, setKeyboardOffset] = useState(0);
+    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1);
     const subjectRef = useRef()
     const emailRef = useRef()
     const phoneRef = useRef()
@@ -88,7 +92,7 @@ const ContactUsBottomSheet = ({
         setIsLoading(true)
         let url = config.baseURL + "api-login-issue";
         var data = new FormData();
-        data.append("subject", route == 'Login' ? Lang_chg.LoginIssue[config.language] : subject);
+        data.append("subject", route == 'Login' ? Lang_chg.LoginIssue[languageIndex] : subject);
         data.append("phone", phone);
         data.append("email", email);
         data.append("message", desc);
@@ -126,9 +130,6 @@ const ContactUsBottomSheet = ({
             });
     };
     const submitIssue = async () => {
-        let user_details = await localStorage.getItemObject("user_arr");
-        let user_id = user_details["user_id"];
-        let user_type = user_details["user_type"];
         if (!desc) {
             msgProvider.showError('Please write your description');
             return false;
@@ -136,8 +137,8 @@ const ContactUsBottomSheet = ({
         setIsLoading(true)
         let url = config.baseURL + "api-app-insert-need-help";
         var data = new FormData();
-        data.append("user_id", user_id);
-        data.append("service_type", user_type);
+        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("service_type", loggedInUserDetails.user_type);
         data.append("subject", subject);
         data.append("order_id", Id);
         data.append("message", desc);
@@ -157,8 +158,8 @@ const ContactUsBottomSheet = ({
                 } else {
                     onRequestClose()
                     msgProvider.alert(
-                        msgTitle.information[config.language],
-                        obj.message[config.language],
+                        msgTitle.information[languageIndex],
+                        obj.message[languageIndex],
                         false
                     );
                     return false;
@@ -202,10 +203,10 @@ const ContactUsBottomSheet = ({
                     style={{
                         fontSize: Font.large,
                         fontFamily: Font.SemiBold,
-                        textAlign: config.textRotate,
+                        alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{route == 'Login' ? Lang_chg.Login_Issue[config.language] : Lang_chg.Appoitment_Issue[config.language]}</Text>
+                    }}>{route == 'Login' ? Lang_chg.Login_Issue[languageIndex] : Lang_chg.Appoitment_Issue[languageIndex]}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -224,8 +225,8 @@ const ContactUsBottomSheet = ({
 
 
                         <NonEditableInput
-                            title={route == 'Login' ? Lang_chg.Subject[config.language] : Lang_chg.OrderId[config.language]}
-                            data={route == 'Login' ? Lang_chg.LoginIssue[config.language] : data} />
+                            title={route == 'Login' ? Lang_chg.Subject[languageIndex] : Lang_chg.OrderId[languageIndex]}
+                            data={route == 'Login' ? Lang_chg.LoginIssue[languageIndex] : data} />
 
 
                         {
@@ -233,7 +234,7 @@ const ContactUsBottomSheet = ({
                             <AuthInputBoxSec
                                 mainContainer={{ width: '100%' }}
                                 inputFieldStyle={{ height: vs(35) }}
-                                lableText={Lang_chg.Subject[config.language]}
+                                lableText={Lang_chg.Subject[languageIndex]}
                                 inputRef={subjectRef}
                                 onChangeText={(val) => setSubject(val)}
                                 value={subject}
@@ -254,7 +255,7 @@ const ContactUsBottomSheet = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Email[config.language]}
+                                    lableText={Lang_chg.Email[languageIndex]}
                                     inputRef={emailRef}
                                     onChangeText={(val) => setEmail(val)}
                                     value={email}
@@ -271,7 +272,7 @@ const ContactUsBottomSheet = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.PhoneNumber[config.language]}
+                                    lableText={Lang_chg.PhoneNumber[languageIndex]}
                                     inputRef={phoneRef}
                                     onChangeText={(val) => setPhone(val)}
                                     value={phone}
@@ -291,7 +292,7 @@ const ContactUsBottomSheet = ({
                             onPress={() => descRef.current.focus()}
                             style={{
                                 width: "100%",
-                                alignSelf: "center",
+                                // alignSelf: "center",
                                 marginTop: vs(10),
                                 borderColor: Colors.Border,
                                 borderWidth: 1,
@@ -307,12 +308,12 @@ const ContactUsBottomSheet = ({
                                     width: "100%",
                                     color: Colors.Black,
                                     fontSize: Font.medium,
-                                    textAlign: config.textalign,
+                                    textAlign: languageIndex == 0 ? 'left' : 'right',
                                     fontFamily: Font.Regular,
                                 }}
                                 maxLength={250}
                                 multiline={true}
-                                placeholder={Lang_chg.Description[config.language]}
+                                placeholder={Lang_chg.Description[languageIndex]}
                                 placeholderTextColor={Colors.MediumGrey}
                                 onChangeText={(txt) => {
                                     setDesc(txt)
@@ -330,7 +331,7 @@ const ContactUsBottomSheet = ({
                         <View style={{ marginTop: vs(35) }}>
 
                             <Button
-                                text={Lang_chg.submitbtntext[config.language]}
+                                text={Lang_chg.submitbtntext[languageIndex]}
                                 onPress={() => {
                                     if (route == 'Login') {
                                         submitLoginIssue()
@@ -359,7 +360,7 @@ const ContactUsBottomSheet = ({
 const styles = StyleSheet.create({
     modalContainer: {
         width: windowWidth,
-        height: windowHeight/1.5,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,

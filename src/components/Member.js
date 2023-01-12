@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, } from "react-native";
+import { Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, Lang_chg, config } from "../Provider/utilslib/Utils";
 import { Cross, dummyUser, Edit, Menu, roundCheck } from "../Icons/Index";
+import { useSelector } from "react-redux";
 
 
 
@@ -22,6 +23,8 @@ const Member = ({
     editable = () => { },
     isLoading
 }) => {
+
+    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
 
     useEffect(() => {
         // console.log({ patientDetails });
@@ -110,14 +113,14 @@ const Member = ({
                 <View style={{ borderBottomWidth: type ? 1 : 0, borderBottomColor: Colors.Border, paddingTop: type ? 0 : vs(5) }}>
                     {
                         ((type || index === 0)) &&
-                        <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.lightGrey }}>{type ? 'You' : 'Other Members'}</Text>
+                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.lightGrey }}>{type ? 'You' : 'Other Members'}</Text>
                     }
                     {
                         ((type && selected === -1 && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) || (!type && selected === index && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails'))) &&
                         (
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '16%', position: 'absolute', right: 10, paddingVertical: (windowWidth * 2) / 100 }}>
                                 <SvgXml xml={roundCheck} />
-                                <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[config.language]}</Text>
+                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[appLanguage == 'en' ? 0 : 1]}</Text>
                             </View>
                         )
                     }
@@ -139,12 +142,15 @@ const Member = ({
                         <View style={{ width: '78%', borderBottomWidth: type ? 0 : 1, borderBottomColor: Colors.Border, paddingBottom: vs(20) }}>
 
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                <View style={{ width: '94%', }}>
+                                <View style={{ width: '70%', }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText }}>{patientDetails?.name}</Text>
-                                        <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
-                                        <Text style={{ textAlign: config.textRotate, fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(patientDetails?.gender === '0' ? "Male" : 'Female') + ', ' + patientDetails?.age + (type ? '' : ' Year')}</Text>
-
+                                        <View style={{ width: '20%'}}>
+                                            <Text numberOfLines={1} style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText, }}>{patientDetails?.name}</Text>
+                                        </View>
+                                        <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(patientDetails?.gender === '0' ? "Male" : 'Female') + ', ' + patientDetails?.age + (type ? '' : ' Year')}</Text>
+                                        </View>
                                     </View>
                                 </View>
                                 {
@@ -171,21 +177,21 @@ const Member = ({
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
                                 <View style={{ width: '94%', flexDirection: 'row' }}>
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                        <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
-                                        <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.appointment_count}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.appointment_count}</Text>
                                     </View>
 
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
-                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.dc_count}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.dc_count}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{ flex: 1, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
-                                            <Text style={{ textAlign: config.textRotate, fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.lab_count}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.lab_count}</Text>
                                         </View>
                                     </View>
 

@@ -4,31 +4,32 @@ import {
   View,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Colors,
   Font,
   config,
-  localStorage,
   apifuntion,
-  consolepro,
   Lang_chg,
 } from "../../Provider/utilslib/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import { useIsFocused } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 
 
 const Past = (props) => {
 
-  const [appointments, setAppointments] = useState(props?.route?.params?.isGuest === 'true' ? [] : [1, 2, 3, 4, 5, 6, 7])
-  const [isLoading, setIsLoading] = useState(props?.route?.params?.isGuest === 'true' ? false : true)
+  const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+
+  const [appointments, setAppointments] = useState(guest ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [isLoading, setIsLoading] = useState(guest ? false : true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const isFocused = useIsFocused()
-
+  const insets = useSafeAreaInsets()
   useEffect(() => {
-    if (props?.route?.params?.isGuest === 'false') {
+    if (!guest) {
       getAppointments()
     }
   }, [isRefreshing, isFocused])
@@ -36,13 +37,11 @@ const Past = (props) => {
 
 
   const getAppointments = async (page) => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
 
     let url = config.baseURL + "api-patient-past-appointment";
 
     var data = new FormData();
-    data.append("lgoin_user_id", user_id);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
     data.append("service_type", 'all');
     data.append("page_count", 1);
 
@@ -50,7 +49,7 @@ const Past = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getAppointments-response...", obj);
+        // console.log("getAppointments-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
             setIsRefreshing(false)
@@ -67,7 +66,7 @@ const Past = (props) => {
         setIsRefreshing(false)
         setIsLoading(false)
         setAppointments([])
-        consolepro.consolelog("getAppointments-error ------- " + error);
+        console.log("getAppointments-error ------- " + error);
       });
   };
 
@@ -79,7 +78,7 @@ const Past = (props) => {
 
       <FlatList
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: vs(100) }}
+        contentContainerStyle={{ paddingBottom: vs(90) }}
         data={appointments}
         ItemSeparatorComponent={() => {
           return (
@@ -105,14 +104,14 @@ const Past = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestAppoitmentTitle[config.language] : Lang_chg.noAppoitmentTitle[config.language]}</Text>
+              }}>{guest ? Lang_chg.guestAppoitmentTitle[appLanguage == 'en' ? 0 : 1] : Lang_chg.noAppoitmentTitle[appLanguage == 'en' ? 0 : 1]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{props?.route?.params?.isGuest === 'true' ? Lang_chg.guestAppoitmentDesc[config.language] : Lang_chg.noAppoitmentDesc[config.language]}</Text>
+              }}>{guest ? Lang_chg.guestAppoitmentDesc[appLanguage == 'en' ? 0 : 1] : Lang_chg.noAppoitmentDesc[appLanguage == 'en' ? 0 : 1]}</Text>
             </View>
           )
         }}

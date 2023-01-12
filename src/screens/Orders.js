@@ -9,20 +9,18 @@ import { vs, s } from "react-native-size-matters";
 import {
   Colors,
   Font,
-  config,
-  windowWidth,
   Lang_chg,
-  localStorage,
-  apifuntion,
-  consolepro,
 } from "../Provider/utilslib/Utils";
 import { ScreenHeader } from "../components/ScreenHeader";
+import { useSelector } from "react-redux";
 
 
 
 const Orders = ({ navigation }) => {
 
-  const [appointments, setAppointments] = useState([])
+  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+
+  const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
 
@@ -31,7 +29,7 @@ const Orders = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Orders[config.language]}
+        title={Lang_chg.Orders[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -40,7 +38,7 @@ const Orders = ({ navigation }) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: vs(100) }}
-        data={appointments}
+        data={orders}
         ItemSeparatorComponent={() => {
           return (
             <View style={{ height: vs(7) }}></View>
@@ -59,14 +57,14 @@ const Orders = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{'Buy Home Medical Supplies & Equipments online'}</Text>
+              }}>{Lang_chg.OrdersTitle[appLanguage == 'en' ? 0 : 1]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
-                marginTop:vs(10)
-              }}>{'We are coming soon at your location with ordering option'}</Text>
+                marginTop: vs(10)
+              }}>{Lang_chg.OrdersDesc[appLanguage == 'en' ? 0 : 1]}</Text>
             </View>
           )
         }}

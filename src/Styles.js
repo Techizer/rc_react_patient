@@ -56,10 +56,11 @@ export default Styles = StyleSheet.create({
     fontSize: (windowWidth * 3.7) / 100,
   },
   cardtitle: {
-    textAlign: config.textalign,
+    alignSelf: 'flex-start',
     fontFamily: Font.Medium,
     fontSize: Font.medium,
     color: Colors.Black,
+    textAlign: 'left',
     // flex:1,
     // flexWrap:'wrap'
   },

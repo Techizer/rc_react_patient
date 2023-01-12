@@ -35,26 +35,7 @@ class configProvider {
   mapkey = "AIzaSyDy01zIxPpweSuXDx9Bs4g0GZR9ygB46Zw";
 
   maplanguage = "en";
-  language = 0;
   countrycode = "966 ";
-  fcmtoken_me = "123456";
-  device_type = Platform.OS;
-  textalign = "left"; 
-  textRotate = "left";
-  login = 0;
-
-  headersapi = {
-    Authorization:
-      "Basic " +
-      base64.encode(base64.encode("mario") + ":" + base64.encode("carbonell")),
-    Accept: "application/json",
-    "Content-Type": "multipart/form-data",
-    "Cache-Control": "no-cache,no-store,must-revalidate",
-    Pragma: "no-cache",
-    Expires: 0,
-  };
-
-  
 
   
 }

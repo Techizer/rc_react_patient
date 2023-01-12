@@ -8,7 +8,8 @@ import {
   Keyboard,
   TouchableHighlight,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Colors,
   Icons,
@@ -28,45 +29,53 @@ import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { leftArrow, Logo, rightArrow } from "../Icons/Index";
+import { useSelector } from "react-redux";
 
-export default class ForgotPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      emailfocus: false,
-      email: "",
-    };
-  }
+const ForgotPage = ({ navigation }) => {
+
+  const { appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
+
+  const [forgotData, setForgotData] = useState({
+    languageIndex: appLanguage == 'ar' ? 1 : 0,
+    email: "",
+    isLoading: false
+  })
+  const emailRef = useRef()
+  const insets = useSafeAreaInsets()
+
   submit_click = async () => {
     Keyboard.dismiss();
-    var email = this.state.email.trim();
-    let regemail =
-      /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (email.length <= 0) {
-      msgProvider.showError(msgText.emptyEmail[config.language]);
+
+    let regemail = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (forgotData.email == '' || forgotData.email == null || forgotData.email == undefined) {
+      msgProvider.showError(msgText.emptyEmail[forgotData.languageIndex]);
       return false;
     }
 
-    if (regemail.test(email) !== true) {
-      msgProvider.showError(msgText.validEmail[config.language]);
+    if (regemail.test(forgotData.email) !== true) {
+      msgProvider.showError(msgText.validEmail[forgotData.languageIndex]);
       return false;
     }
-    let email_new = this.state.email;
+    setForgotData(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
     let url = config.baseURL + "api-forgot-password-email";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("emailId", this.state.email);
-    consolepro.consolelog("data", data);
-
+    data.append("emailId", forgotData.email);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        setForgotData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        consolepro.consolelog("submit_click", obj);
         if (obj.status == true) {
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
-            this.props.navigation.navigate("ForgotOTP", { email: email_new });
+            navigation.navigate("ForgotOTP", { email: forgotData.email });
           }, 300);
         } else {
           setTimeout(() => {
@@ -76,137 +85,121 @@ export default class ForgotPage extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setForgotData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        consolepro.consolelog("submit_click-error ------- " + error);
       });
   };
 
-  render() {
-    return (
-      <View
-        style={{ flex: 1, backgroundColor: Colors.White, paddingTop: StatusbarHeight }}>
-        <KeyboardAwareScrollView
-          // keyboardOpeningTime={200}
-          extraScrollHeight={50}
-          enableOnAndroid={true}
-          keyboardShouldPersistTaps='handled'
-          contentContainerStyle={{
+
+  return (
+    <View
+      pointerEvents={forgotData.isLoading ? 'none' : 'auto'}
+      style={{ flex: 1, backgroundColor: Colors.White,  paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      <KeyboardAwareScrollView
+        // keyboardOpeningTime={200}
+        extraScrollHeight={50}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{
+          justifyContent: 'center',
+          paddingBottom: vs(30),
+        }}
+        showsVerticalScrollIndicator={false}>
+
+
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            alignItems: 'center',
             justifyContent: 'center',
-            paddingBottom: vs(30),
-          }}
-          showsVerticalScrollIndicator={false}>
-
-
-          <View
-            style={{
-              width: "100%",
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: vs(40),
-            }}>
-            <View style={{ justifyContent: 'center' }}>
-              {/* <SvgXml xml={Logo} /> */}
-              <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
-
-            </View>
-
-            <TouchableHighlight
-              underlayColor={Colors.Highlight}
-              onPress={() => {
-                this.props.navigation.pop();
-              }}
-              style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
-            >
-              <SvgXml xml={
-                config.textalign == "right"
-                  ? rightArrow : leftArrow
-              } height={vs(17.11)} width={s(9.72)} />
-            </TouchableHighlight>
-          </View>
-
-          <View
-            style={{
-              width: "90%",
-              alignSelf: "center",
-              marginTop: vs(25)
-            }}>
-
-            <Text
-              style={{
-                fontSize: Font.xxxlarge,
-                fontFamily: Font.Medium,
-                textAlign: config.textRotate,
-                color: Colors.darkText
-              }}>
-              {Lang_chg.Forgot[config.language]}
-            </Text>
-
-            <Text
-              style={{
-                textAlign: config.textRotate,
-                fontSize: Font.medium,
-                fontFamily: Font.Regular,
-                color: Colors.inActiveText,
-                marginTop: vs(4)
-              }}
-            >
-              {Lang_chg.Forgottext[config.language]}
-            </Text>
-
-
-            <AuthInputBoxSec
-              mainContainer={{ marginTop: vs(18), width: '100%' }}
-              lableText={Lang_chg.textinputregistered[config.language]}
-              inputRef={(ref) => {
-                this.emailInput = ref;
-              }}
-              onChangeText={(text) => this.setState({ email: text })}
-              value={this.state.email}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              returnKeyLabel="done"
-              returnKeyType="done"
-              onSubmitEditing={() => {
-                this.submit_click();
-              }}
-              editable
-            />
-
-            {/* <View style={{ width: '95%', alignSelf: 'center', }}>
-                  <TextInput
-                    style={{ width: '100%', color: '#000', fontSize: Font.placeholdersize, textAlign: config.textalign, fontFamily: Font.Light, height: Font.placeholder_height }}
-                    maxLength={50}
-                    placeholder={this.state.emailfocus != true ? Lang_chg.textinputregistered[config.language] : null}
-                    DarkGrey={Colors.DarkGrey}
-                    onChangeText={(txt) => { this.setState({ email: txt }) }}
-                    value={this.state.email}
-                    onFocus={() => { this.setState({ emailfocus: true }) }}
-                    onBlur={() => { this.setState({ emailfocus: this.state.email.length > 0 ? true : false }) }}
-                    keyboardType='email-address'
-                    returnKeyLabel='done'
-                    returnKeyType='done'
-                  />
-                </View>
-                {this.state.emailfocus == true && <View style={{ position: 'absolute', backgroundColor: 'White', left: windowWidth * 4 / 100, top: -windowWidth * 2 / 100, paddingHorizontal: windowWidth * 1 / 100 }}>
-                  <Text style={{ color: '#0168B3', textAlign: config.textalign }}>{Lang_chg.textinputregistered[config.language]}</Text>
-                </View>} */}
-
-            <Button
-              text={Lang_chg.forgotbtn[config.language]}
-              onPress={() => this.submit_click()}
-              btnStyle={{ marginTop: vs(30) }}
-            />
-
-            {/* <TouchableOpacity onPress={() => this.submit_click()}
-                style={{ width: '90%', alignSelf: 'center', borderRadius: windowWidth * 2 / 100, backgroundColor: Colors.Theme, paddingVertical: windowWidth * 4 / 100, marginTop: windowWidth * 6 / 100 }}>
-                <Text style={{ color: Colors.White, fontFamily: Font.Medium, fontSize: Font.buttontextsize, textAlign: config.textalign, alignSelf: 'center' }}>{Lang_chg.forgotbtn[config.language]}</Text>
-              </TouchableOpacity> */}
+            marginTop: vs(40),
+          }}>
+          <View style={{ justifyContent: 'center' }}>
+            {/* <SvgXml xml={Logo} /> */}
+            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
 
           </View>
 
-        </KeyboardAwareScrollView>
-      </View>
-    );
-  }
+          <TouchableHighlight
+            underlayColor={Colors.Highlight}
+            onPress={() => {
+              navigation.pop();
+            }}
+            style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
+          >
+            <SvgXml xml={contentAlign == "right" ? rightArrow : leftArrow} height={vs(17.11)} width={s(9.72)} />
+
+          </TouchableHighlight>
+        </View>
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+            marginTop: vs(25)
+          }}>
+
+          <Text
+            style={{
+              fontSize: Font.xxxlarge,
+              fontFamily: Font.Medium,
+              alignSelf: 'center',
+              color: Colors.darkText
+            }}>
+            {Lang_chg.Forgot[forgotData.languageIndex]}
+          </Text>
+
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.inActiveText,
+              marginTop: vs(4)
+            }}
+          >
+            {Lang_chg.Forgottext[forgotData.languageIndex]}
+          </Text>
+
+
+          <AuthInputBoxSec
+            mainContainer={{ marginTop: vs(18), width: '100%' }}
+            lableText={Lang_chg.textinputregistered[forgotData.languageIndex]}
+            inputRef={emailRef}
+            onChangeText={(val) => {
+              setForgotData(prevState => ({
+                ...prevState,
+                email: val
+              }))
+            }}
+            value={forgotData.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            returnKeyLabel="done"
+            returnKeyType="done"
+            onSubmitEditing={() => {
+              submit_click();
+            }}
+            editable
+          />
+
+          <Button
+            text={Lang_chg.forgotbtn[forgotData.languageIndex]}
+            onPress={() => submit_click()}
+            btnStyle={{ marginTop: vs(30) }}
+            onLoading={forgotData.isLoading}
+          />
+
+        </View>
+
+      </KeyboardAwareScrollView>
+    </View>
+  );
+
 }
+
+export default ForgotPage;
