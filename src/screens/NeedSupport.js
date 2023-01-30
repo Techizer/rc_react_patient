@@ -15,18 +15,14 @@ import {
   Colors,
   Font,
   msgProvider,
-  msgText,
   config,
-  localStorage,
-  Lang_chg,
   apifuntion,
-  msgTitle,
-  consolepro,
+  LangProvider,
   Icons,
   windowWidth,
   ScreenHeader,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import DropDownboxSec from '../components/DropDownboxSec'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
@@ -39,7 +35,7 @@ const NeedSupport = ({ navigation }) => {
 
   const {
     appLanguage,
-    contentAlign,
+    languageIndex,
     loggedInUserDetails,
   } = useSelector(state => state.StorageReducer)
 
@@ -50,7 +46,6 @@ const NeedSupport = ({ navigation }) => {
     selectissuefocus: false,
     selectedIssue: "",
     successmodal: false,
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     isLoading: false
   })
 
@@ -68,7 +63,7 @@ const NeedSupport = ({ navigation }) => {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        console.log("obj", obj);
         if (obj.status == true) {
           console.log("result", obj.result);
           let result = obj.result;
@@ -78,8 +73,8 @@ const NeedSupport = ({ navigation }) => {
           }))
         } else {
           msgProvider.alert(
-            msgTitle.information[needSupportData.languageIndex],
-            obj.message[needSupportData.languageIndex],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -87,17 +82,17 @@ const NeedSupport = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
   const submit_click = async () => {
 
     if (needSupportData.selectedIssue == '' || needSupportData.selectedIssue == null) {
-      msgProvider.showError(msgText.emptySelecttopic[needSupportData.languageIndex]);
+      msgProvider.showError(LangProvider.emptySelecttopic[languageIndex]);
       return false;
     }
     if (needSupportData.message == '' || needSupportData.message == null) {
-      msgProvider.showError(msgText.emptyMessage[needSupportData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyMessage[languageIndex]);
       return false;
     }
 
@@ -126,8 +121,8 @@ const NeedSupport = ({ navigation }) => {
           }, 450);
         } else {
           msgProvider.alert(
-            msgTitle.information[needSupportData.languageIndex],
-            obj.message[needSupportData.languageIndex],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -139,7 +134,7 @@ const NeedSupport = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -153,7 +148,7 @@ const NeedSupport = ({ navigation }) => {
       }} >
 
       <ScreenHeader
-        title={Lang_chg.NeedSupport[needSupportData.languageIndex]}
+        title={LangProvider.NeedSupport[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -197,7 +192,7 @@ const NeedSupport = ({ navigation }) => {
                 color: Colors.darkText,
                 fontFamily: Font.Medium,
               }}>
-              {Lang_chg.needsupport[needSupportData.languageIndex]}{" "}
+              {LangProvider.needsupport[languageIndex]}{" "}
             </Text>
           </View>
 
@@ -212,7 +207,7 @@ const NeedSupport = ({ navigation }) => {
               color: Colors.DarkGrey,
               fontFamily: Font.Regular,
             }} >
-            {Lang_chg.need_text[needSupportData.languageIndex]}{" "}
+            {LangProvider.need_text[languageIndex]}{" "}
           </Text>
 
           <Text
@@ -223,14 +218,14 @@ const NeedSupport = ({ navigation }) => {
               fontFamily: Font.Medium,
               marginTop: vs(10)
             }} >
-            {Lang_chg.select_topic_text[needSupportData.languageIndex]}{" "}
+            {LangProvider.select_topic_text[languageIndex]}{" "}
           </Text>
 
 
           <DropDownboxSec
             lableText={
               needSupportData.selectedIssue.length <= 0
-                ? Lang_chg.select_issues_text[needSupportData.languageIndex]
+                ? LangProvider.select_issues_text[languageIndex]
                 : needSupportData.selectedIssue
             }
             boxPressAction={() => {
@@ -270,7 +265,7 @@ const NeedSupport = ({ navigation }) => {
               }}
               maxLength={250}
               multiline={true}
-              placeholder={Lang_chg.text_input_topic[needSupportData.languageIndex]}
+              placeholder={LangProvider.text_input_topic[languageIndex]}
               placeholderTextColor={Colors.MediumGrey}
               onChangeText={(txt) => {
                 setNeedSupportData(prevState => ({
@@ -297,7 +292,7 @@ const NeedSupport = ({ navigation }) => {
           </Pressable>
 
           <Button
-            text={Lang_chg.submitbtntext[needSupportData.languageIndex]}
+            text={LangProvider.submitbtntext[languageIndex]}
             onPress={() => submit_click()}
             btnStyle={{ marginTop: vs(25) }}
             onLoading={needSupportData.isLoading}
@@ -355,7 +350,7 @@ const NeedSupport = ({ navigation }) => {
                       color: Colors.White,
                     }}
                   >
-                    {Lang_chg.select_topic_text[needSupportData.languageIndex]}
+                    {LangProvider.select_topic_text[languageIndex]}
                   </Text>
                 </View>
               </View>
@@ -422,7 +417,7 @@ const NeedSupport = ({ navigation }) => {
 
         }}
         data={needSupportData.issuesList}
-        title={Lang_chg.select_topic_text[needSupportData.languageIndex]}
+        title={LangProvider.select_topic_text[languageIndex]}
         selectedIssue={(val) => {
           setNeedSupportData(prevState => ({
             ...prevState,
@@ -483,7 +478,7 @@ const NeedSupport = ({ navigation }) => {
                 fontFamily: Font.Medium,
                 alignSelf: 'flex-start',
               }}>
-              {Lang_chg.thank[needSupportData.languageIndex]}
+              {LangProvider.thank[languageIndex]}
             </Text>
             <Text
               style={{
@@ -493,7 +488,7 @@ const NeedSupport = ({ navigation }) => {
                 alignSelf: 'flex-start',
               }}
             >
-              {Lang_chg.success[needSupportData.languageIndex]}
+              {LangProvider.success[languageIndex]}
             </Text>
 
             <Text
@@ -505,7 +500,7 @@ const NeedSupport = ({ navigation }) => {
                 color: Colors.textgray,
               }}
             >
-              {Lang_chg.text_of_modal[needSupportData.languageIndex]}
+              {LangProvider.text_of_modal[languageIndex]}
             </Text>
 
             <TouchableOpacity
@@ -536,7 +531,7 @@ const NeedSupport = ({ navigation }) => {
                   color: Colors.terms_text_color_blue,
                 }}
               >
-                {Lang_chg.close_txt[needSupportData.languageIndex]}
+                {LangProvider.close_txt[languageIndex]}
               </Text>
             </TouchableOpacity>
           </View>

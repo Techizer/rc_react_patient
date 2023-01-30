@@ -35,6 +35,7 @@
 			</dict>
 		</dict>
 	</dict>
+	
 	<key>NSCameraUsageDescription</key>
 	<string>Rootscare would like to access your Camera for profile or patient photos. Your photos won't be shared without your permission. It is safe and secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -42,6 +43,8 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Rootscare App  would like to access your location for address or near by nurses or doctors, it is safe and secure.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Rootscare App  would like to access your location for address or near by nurses or doctors, it is safe and secure.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<string>Rootscare App  would like to access your location for address or near by nurses or doctors, it is safe and secure.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Rootscare would like to access your Photos for profile or patient photos. Your photos won't be shared without your permission. It is safe and secure. </string>

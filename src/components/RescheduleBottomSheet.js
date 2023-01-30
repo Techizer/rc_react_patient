@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Image, StyleSheet, ScrollView, TouchableW
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight, apifuntion, msgProvider, consolepro } from "../Provider/utilslib/Utils";
+import { windowWidth, LangProvider, config, Icons, windowHeight, apifuntion, msgProvider } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -51,7 +51,7 @@ const RescheduleBottomSheet = ({
                         ...prevState,
                         currentTime: timcurrent
                     }))
-                    consolepro.consolelog("get_time_date.response", obj.result);
+                    console.log("get_time_date.response", obj.result);
                     if (data?.bookingType == "TASK_BOOKING") {
                         if (obj.result.task_time != "") {
                             var names = obj.result.task_time;
@@ -195,7 +195,7 @@ const RescheduleBottomSheet = ({
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
             });
     };
 
@@ -218,7 +218,7 @@ const RescheduleBottomSheet = ({
 
     const bookTime = async () => {
         if (requestData.time_take_data.length <= 0) {
-            msgProvider.showError(msgText.EmptyTime[config.language]);
+            msgProvider.showError(LangProvider.EmptyTime[config.language]);
             return false;
         }
 
@@ -254,7 +254,7 @@ const RescheduleBottomSheet = ({
                 }
             })
             .catch((error) => {
-                consolepro.consolelog("-------- error ------- " + error);
+                console.log("-------- error ------- " + error);
             });
     };
     return (
@@ -290,7 +290,7 @@ const RescheduleBottomSheet = ({
                         textAlign: config.textRotate,
                         color: Colors.darkText
 
-                    }}>{Lang_chg.Reschedule[config.language]}</Text>
+                    }}>{LangProvider.Reschedule[config.language]}</Text>
 
                 {/* ----------------------Main------------------ */}
 
@@ -479,7 +479,7 @@ const RescheduleBottomSheet = ({
                                         textAlign: config.textRotate,
                                     }}
                                 >
-                                    {Lang_chg.Appointmentschedule[config.language]}
+                                    {LangProvider.Appointmentschedule[config.language]}
                                 </Text>
                                 <View
                                     style={{ flexDirection: "row", alignItems: "center" }}
@@ -532,7 +532,7 @@ const RescheduleBottomSheet = ({
                                         textAlign: config.textRotate,
                                     }}
                                 >
-                                    {Lang_chg.SelectDate[config.language]}
+                                    {LangProvider.SelectDate[config.language]}
                                 </Text>
 
                                 <View style={{ width: "100%" }}>
@@ -605,7 +605,7 @@ const RescheduleBottomSheet = ({
                                         textAlign: config.textRotate,
                                     }}
                                 >
-                                    {Lang_chg.Select_start_time[config.language]}
+                                    {LangProvider.Select_start_time[config.language]}
                                 </Text>
 
                                 {/* -----------------Time Arrays----------------- */}
@@ -720,7 +720,7 @@ const RescheduleBottomSheet = ({
                                                     marginLeft: (windowWidth * 32) / 100,
                                                 }}
                                             >
-                                                {Lang_chg.noTime[config.language]}
+                                                {LangProvider.noTime[config.language]}
                                             </Text>
                                         )}
                                     </View>
@@ -750,7 +750,7 @@ const RescheduleBottomSheet = ({
                                         alignSelf: "center",
                                     }}
                                 >
-                                    {Lang_chg.SAVECHANGERESCHEDULE[config.language]}
+                                    {LangProvider.SAVECHANGERESCHEDULE[config.language]}
                                 </Text>
                             </TouchableOpacity>
 

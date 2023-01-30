@@ -3,59 +3,55 @@ import { FlatList, Image, Text, TouchableOpacity, TouchableHighlight } from "rea
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
+import { useSelector } from "react-redux";
+import LoadingSkeleton from "../components/LoadingSkeleton";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
   Colors,
-  consolepro,
   Font,
-  Lang_chg,
+  LangProvider,
   Icons,
-  localStorage,
   windowWidth,
   msgProvider,
-} from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
+} from "../Provider/Utils/Utils";
 
 const LabPackageDetails = ({ navigation, route }) => {
+
+  const { loggedInUserDetails, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
 
   const { packageId, providerId } = route.params;
   const [labDetailsData, setLabDetailsData] = useState();
   const [showTaskDetails, isShowTaskDetails] = useState(false);
-  console.log("providerId ", packageId);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     getPackageDetails();
   }, []);
 
   const getPackageDetails = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+
     let url = config.baseURL + "api-get-package-details";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("lgoin_user_id", user_id);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
     data.append("provider_id", providerId);
     data.append("package_id", packageId);
-
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
-        consolepro.consolelog("getPackageDetails-response ---> ", JSON.stringify(obj));
-
+        setIsLoading(false)
+        console.log("getPackageDetails-response ---> ", JSON.stringify(obj));
         if (obj.status == true) {
           setLabDetailsData(obj.result);
         } else {
           msgProvider.showError(obj.message);
           return false;
         }
-      })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+      }).catch((error) => {
+        setIsLoading(false)
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -69,12 +65,14 @@ const LabPackageDetails = ({ navigation, route }) => {
         leftIcon
       />
 
-      {labDetailsData != null && labDetailsData != "" && (
+      {
+      (labDetailsData != null && labDetailsData != "" && !isLoading) ?  (
         <>
           <View
             style={{
               width: '100%',
-              paddingVertical: s(9),
+              paddingTop: s(9),
+              paddingBottom: labDetailsData.task_sub_content != null ? 0 :vs(9),
               backgroundColor: Colors.White,
               marginTop: vs(7)
             }}>
@@ -106,7 +104,7 @@ const LabPackageDetails = ({ navigation, route }) => {
               <Text
                 style={{
                   marginTop: vs(10),
-                  textAlign: config.textalign,
+                  alignSelf: 'flex-start',
                   fontFamily: Font.Regular,
                   fontSize: Font.medium,
                 }}
@@ -122,7 +120,7 @@ const LabPackageDetails = ({ navigation, route }) => {
                     style={{
                       fontFamily: Font.Regular,
                       fontSize: Font.medium,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start',
                       color: Colors.detailTitles,
                     }}>
                     {labDetailsData.task_heading}
@@ -151,14 +149,15 @@ const LabPackageDetails = ({ navigation, route }) => {
                   alignSelf: "flex-start",
                   backgroundColor: "#FFF2D9",
                   paddingHorizontal: s(13),
-                  paddingVertical: vs(9)
+                  paddingVertical: vs(9),
+                  marginTop: vs(7)
                 }}>
                 <Text
                   style={{
                     fontFamily: Font.Bold,
                     fontSize: Font.xsmall,
                     color: Colors.precautionText,
-                    textAlign: config.textRotate,
+                    alignSelf: 'flex-start'
                   }}>
                   {labDetailsData.task_sub_heading}
                 </Text>
@@ -177,113 +176,117 @@ const LabPackageDetails = ({ navigation, route }) => {
             )}
           </View>
 
-          <View
-            style={{
-              width: '100%',
-              alignSelf: "center",
-              alignItems: "flex-start",
-              marginTop: vs(7),
-              paddingHorizontal: s(13),
-              paddingVertical: vs(10),
-              backgroundColor: Colors.White
-            }}
-          >
-            <Text
+          {
+            labDetailsData.task_name.length > 0 &&
+            <View
               style={{
-                width: "100%",
-                color: Colors.detailTitles,
-                fontFamily: Font.Regular,
-                fontSize: Font.xlarge,
-                textAlign: "left",
-              }}
-            >
-              {Lang_chg.TestsIncluded[config.language]}
-            </Text>
-            <FlatList
-              data={labDetailsData.task_name}
-              contentContainerStyle={{
-                // marginBottom: (windowWidth * 10) / 100,
-              }}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item, index }) => {
-                if (
-                  labDetailsData.task_name != "" &&
-                  labDetailsData.task_name != null &&
-                  labDetailsData.task_name.length !== 0
-                ) {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (item.subtask !== "" && item.subtask !== null) {
-                          isShowTaskDetails(!showTaskDetails);
-                        }
-                      }}>
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                          justifyContent: 'space-between',
-                          marginTop: (windowWidth * 2) / 100,
+                width: '100%',
+                alignSelf: "center",
+                alignItems: "flex-start",
+                marginTop: vs(7),
+                paddingHorizontal: s(13),
+                paddingVertical: vs(10),
+                backgroundColor: Colors.White
+              }}>
+              <Text
+                style={{
+                  width: "100%",
+                  color: Colors.detailTitles,
+                  fontFamily: Font.Regular,
+                  fontSize: Font.xlarge,
+                  textAlign: "left",
+                }}>
+                {LangProvider.TestsIncluded[languageIndex]}
+              </Text>
+
+              <FlatList
+                data={labDetailsData.task_name}
+                contentContainerStyle={{
+                }}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                  if (
+                    labDetailsData.task_name != "" &&
+                    labDetailsData.task_name != null &&
+                    labDetailsData.task_name.length !== 0
+                  ) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (item.subtask !== "" && item.subtask !== null) {
+                            isShowTaskDetails(!showTaskDetails);
+                          }
                         }}>
-                        <Text
+                        <View
                           style={{
-                            width: "92%",
-                            fontSize: Font.small,
-                            color: Colors.Theme,
-                            fontFamily: Font.Regular,
-                            textAlign: "left",
-                          }} >
-                          {item.name}
-                        </Text>
-                        {item.subtask !== "" && item.subtask !== null && (
-                          <TouchableHighlight
-                            underlayColor={Colors.Highlight}
-                            onPress={() => {
-                              if (item.subtask !== "" && item.subtask !== null) {
-                                isShowTaskDetails(!showTaskDetails);
-                              }
-                            }}
-                            style={{
-                              width: "8%",
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              height: vs(15)
-                            }}>
-                            <Image
-                              style={{
-                                height: (windowWidth * 4) / 100,
-                                width: (windowWidth * 4) / 100,
-                              }}
-                              source={
-                                showTaskDetails
-                                  ? Icons.upArrow
-                                  : Icons.downarrow
-                              }
-                            />
-                          </TouchableHighlight>
-                        )}
-                      </View>
-                      {showTaskDetails && (
-                        <Text
-                          style={{
-                            paddingVertical: vs(2),
-                            paddingHorizontal: s(15),
-                            fontFamily: Font.Regular,
-                            textAlign: "left",
-                            color: Colors.dullGrey,
-                            fontSize: Font.xsmall,
+                            width: "100%",
+                            flexDirection: "row",
+                            justifyContent: 'space-between',
+                            marginTop: (windowWidth * 2) / 100,
                           }}>
-                          {item.subtask}
-                        </Text>
-                      )}
-                    </TouchableOpacity>
-                  );
-                }
-              }}
-            />
-          </View>
+                          <Text
+                            style={{
+                              width: "92%",
+                              fontSize: Font.small,
+                              color: Colors.Theme,
+                              fontFamily: Font.Regular,
+                              textAlign: "left",
+                            }} >
+                            {item.name}
+                          </Text>
+                          {item.subtask !== "" && item.subtask !== null && (
+                            <TouchableHighlight
+                              underlayColor={Colors.Highlight}
+                              onPress={() => {
+                                if (item.subtask !== "" && item.subtask !== null) {
+                                  isShowTaskDetails(!showTaskDetails);
+                                }
+                              }}
+                              style={{
+                                width: "8%",
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: vs(15)
+                              }}>
+                              <Image
+                                style={{
+                                  height: (windowWidth * 4) / 100,
+                                  width: (windowWidth * 4) / 100,
+                                }}
+                                source={
+                                  showTaskDetails
+                                    ? Icons.upArrow
+                                    : Icons.downarrow
+                                }
+                              />
+                            </TouchableHighlight>
+                          )}
+                        </View>
+                        {showTaskDetails && (
+                          <Text
+                            style={{
+                              paddingVertical: vs(2),
+                              paddingHorizontal: s(15),
+                              fontFamily: Font.Regular,
+                              textAlign: "left",
+                              color: Colors.dullGrey,
+                              fontSize: Font.xsmall,
+                            }}>
+                            {item.subtask}
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    );
+                  }
+                }}
+              />
+            </View>
+          }
         </>
-      )}
+      )
+      :
+      <LoadingSkeleton/>
+    }
     </View>
   );
 };

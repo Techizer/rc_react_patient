@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet, ActivityIndicator, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
 import Modal from "react-native-modal";
+import {
+    SkypeIndicator,
+} from 'react-native-indicators';
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
-    windowWidth, Lang_chg, config, Icons, consolepro, Button, apifuntion, msgProvider, windowHeight,
-} from "../Provider/utilslib/Utils";
+    windowWidth, LangProvider, config, Icons, Button, apifuntion, msgProvider, windowHeight,
+} from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -26,7 +29,7 @@ const AddEditAddress = ({
     length
 }) => {
 
-    const { address, loggedInUserDetails, guest, appLanguage, deviceToken, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+    const { address, loggedInUserDetails, guest, appLanguage, languageIndex, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const [title, setTitle] = useState('')
     const [googleAddress, setGoogleAddress] = useState('')
@@ -35,7 +38,6 @@ const AddEditAddress = ({
     const [defaultAddress, setDefaultAddress] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isDelete, setIsDelete] = useState(false)
-    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1)
 
     const scrollRef = useRef()
     const titleRef = useRef()
@@ -74,14 +76,14 @@ const AddEditAddress = ({
     }
     const confirmDelete = () => {
         Alert.alert(
-            Lang_chg.Delete_Address[languageIndex],
-            Lang_chg.Sure_Delete_Address[languageIndex],
+            LangProvider.Delete_Address[languageIndex],
+            LangProvider.Sure_Delete_Address[languageIndex],
             [
                 {
-                    text: Lang_chg.no_txt[languageIndex],
+                    text: LangProvider.no_txt[languageIndex],
                 },
                 {
-                    text: Lang_chg.yes_txt[languageIndex],
+                    text: LangProvider.yes_txt[languageIndex],
                     onPress: () => deleteAddress(),
                 },
             ],
@@ -119,13 +121,11 @@ const AddEditAddress = ({
         apifuntion
             .postApi(url, data, 1)
             .then((obj) => {
-                consolepro.consolelog("addAddress-res----", obj);
+                console.log("addAddress-res----", obj);
                 setIsLoading(false)
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message)
                     onRequestClose(obj.status)
-                    // user_details['current_address'] = obj.result.current_address
-                    // localStorage.setItemObject("user_arr", user_details);
                 } else {
                     return false;
                 }
@@ -161,14 +161,12 @@ const AddEditAddress = ({
         apifuntion
             .postApi(url, data, 1)
             .then((obj) => {
-                consolepro.consolelog("editAddress-res----", obj);
+                console.log("editAddress-res----", obj);
                 setIsLoading(false)
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message)
                     onRequestClose()
                     editedAddress(title)
-                    // user_details['current_address'] = obj.result.current_address
-                    // localStorage.setItemObject("user_arr", user_details);
                 } else {
                     return false;
                 }
@@ -193,14 +191,12 @@ const AddEditAddress = ({
             .postApi(url, data, 1)
             .then((obj) => {
                 setIsDelete(false)
-                consolepro.consolelog("deleteAddress-res----", obj);
+                console.log("deleteAddress-res----", obj);
                 setIsLoading(false)
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message)
                     onRequestClose()
                     deletedAddress(addressDetails?.id)
-                    // user_details['current_address'] = obj.result.current_address
-                    // localStorage.setItemObject("user_arr", user_details);
                 } else {
                     return false;
                 }
@@ -245,7 +241,7 @@ const AddEditAddress = ({
                         bottom: 0,
                         zIndex: 999,
                     }}>
-                        <ActivityIndicator size={'small'} color={Colors.Theme} />
+                        <SkypeIndicator color={Colors.Theme} size={20} />
                     </View>
                 }
                 <TouchableHighlight
@@ -266,7 +262,7 @@ const AddEditAddress = ({
                         alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{type === 'editAddress' ? Lang_chg.Edit_Address[languageIndex] : type === 'addAddress' ? Lang_chg.Add_Address[languageIndex] : ''}</Text>
+                    }}>{type === 'editAddress' ? LangProvider.Edit_Address[languageIndex] : type === 'addAddress' ? LangProvider.Add_Address[languageIndex] : ''}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -288,7 +284,7 @@ const AddEditAddress = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Address_Title[languageIndex]}
+                                    lableText={LangProvider.Address_Title[languageIndex]}
                                     inputRef={titleRef}
                                     onChangeText={(val) => setTitle(val)}
                                     value={title}
@@ -308,7 +304,7 @@ const AddEditAddress = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Google_Address[languageIndex]}
+                                    lableText={LangProvider.Google_Address[languageIndex]}
                                     inputRef={addressRef}
                                     onChangeText={(val) => setGoogleAddress(val)}
                                     value={googleAddress}
@@ -323,7 +319,7 @@ const AddEditAddress = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Nearest_Address[languageIndex]}
+                                    lableText={LangProvider.Nearest_Address[languageIndex]}
                                     inputRef={landmarkRef}
                                     onChangeText={(val) => setNearest(val)}
                                     value={nearest}
@@ -340,7 +336,7 @@ const AddEditAddress = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Building_Name[languageIndex]}
+                                    lableText={LangProvider.Building_Name[languageIndex]}
                                     inputRef={buildingRef}
                                     onChangeText={(val) => setBuilding(val)}
                                     value={building}
@@ -418,7 +414,7 @@ const AddEditAddress = ({
                                                 fontFamily: Font.Regular,
                                                 fontSize: Font.medium,
                                             }}>
-                                            {Lang_chg.Default_Address[languageIndex]}
+                                            {LangProvider.Default_Address[languageIndex]}
                                         </Text>
 
                                     </TouchableOpacity>
@@ -435,14 +431,14 @@ const AddEditAddress = ({
                                 fontFamily: Font.Regular,
                                 color: Colors.lightGrey,
                                 marginTop: (windowWidth * 4) / 100,
-                            }}>{Lang_chg.CantDelete[languageIndex]}</Text>
+                            }}>{LangProvider.CantDelete[languageIndex]}</Text>
                         }
 
 
                         <View style={{ marginTop: vs(25) }}>
 
                             <Button
-                                text={Lang_chg.Save_Address[languageIndex]}
+                                text={LangProvider.Save_Address[languageIndex]}
                                 onPress={() => {
                                     if (type == 'editAddress') {
                                         editAddress()
@@ -470,7 +466,7 @@ const AddEditAddress = ({
                                     color: Colors.Theme,
                                     marginTop: (windowWidth * 5) / 100,
                                     alignSelf: 'center'
-                                }}>{Lang_chg.Delete[languageIndex]}</Text>
+                                }}>{LangProvider.Delete[languageIndex]}</Text>
                             </TouchableOpacity>
 
 

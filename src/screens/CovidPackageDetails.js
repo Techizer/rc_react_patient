@@ -9,7 +9,7 @@ import {
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
-import { ScreenHeader } from "../Provider/utilslib/Utils";
+import { ScreenHeader } from "../Provider/Utils/Utils";
 import { leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
@@ -17,12 +17,11 @@ import {
   Colors,
   consolepro,
   Font,
-  Lang_chg,
+  LangProvider,
   Icons,
-  localStorage,
   windowWidth,
   msgProvider,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 const CovidPackageDetails = ({ navigation }) => {
 
@@ -42,8 +41,6 @@ const CovidPackageDetails = ({ navigation }) => {
   }, [showTaskDetails]);
 
   const getCovidPackageList = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
     let url = config.baseURL + "api-covid-test-details";
 
     var data = new FormData();
@@ -86,7 +83,7 @@ const CovidPackageDetails = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.PackageDetails[config.language]}
+        title={LangProvider.PackageDetails[config.language]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon={leftArrow}
@@ -497,7 +494,7 @@ const CovidPackageDetails = ({ navigation }) => {
                   alignSelf: "center",
                 }}
               >
-                {Lang_chg.BOOKNOW[config.language]}
+                {LangProvider.BOOKNOW[config.language]}
               </Text>
             </TouchableOpacity>
           </View>

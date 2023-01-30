@@ -1,5 +1,4 @@
 import { Alert, ToastAndroid, I18nManager, Platform } from "react-native";
-import { localStorage } from "./localStorageProvider";
 import { config } from "./configProvider";
 import RNRestart from "react-native-restart";
 
@@ -131,7 +130,7 @@ class Language_provider {
   Gender = ["Gender", "الجنس  "];
   textinputidentity = ["Identity Number", "رقم الهوية "];
   male = ["Male", "ذكر "];
-  female = ["Female", "أنثى  "];
+  female = ["Female", "أنثى"];
   select = ["Select", "حدد"];
   selectSpecialty = ["Select Specialty", "حدد التخصص"];
   allergies = ["Allergies", "الحساسية"];
@@ -191,7 +190,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 3.6.1", "الإصدار 3.6.1"];
+  version = ["Version 3.6.3", "الإصدار 3.6.1"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "];
@@ -280,11 +279,6 @@ class Language_provider {
   Experience = ["Experience", "الخبرة  "];
   ESTABLISHED = ["Established", "أنشئت"];
   AVAILABLE_TESTS = ["Available Tests", "الفحوصات المتاحة"];
-
-  OnlineConsultation = ["Online Consultation", "الاستشارة عبر الإنترنت"];
-  OnlineCons = ["Online Cons", "استشارات عبر الإنترنت"];
-  HomeVisit = ["Home Visit", "زيارة منزلية"];
-
   Tests = ["Tests", "الفحوصات"];
   Not_available_for_booking = ["Not Available for Booking", "غير متاح للحجز "];
 
@@ -303,6 +297,7 @@ class Language_provider {
     "حجز موعد بنظام الساعة  ",
   ];
   BOOKLABTESTAPPOINTMENT = ["BOOK LAB TESTS", "احجز الاختبارات المعملية"];
+  BookLabPackage = ["BOOK LAB PACKAGE", "باقة معمل الكتاب"];
   HealthPackages = ["Health Packages", "الباقات الصحية"];
   PackageDetails = ["Package Details", "تفاصيل الباقة"];
   TestsIncluded = ["Tests Included", "تشمل الفحوصات"];
@@ -350,7 +345,7 @@ class Language_provider {
     "Are you sure you want to delete this item from cart ?",
     "هل أنت متأكد من حذف هذا العنصر؟ ",
   ];
-  PROCEEDTOcheckout = ["PROCEED TO CHECKOUT", " انتقل إلى الدفع  "];
+  ProceedToPay = ["PROCEED TO PAY", "الانتقال إلى الدفع"];
   Time = ["Time", "الوقت  "];
   we_wii_back = ["We'll be right back.", "سوف نعود حالاً  "];
   promise = ["Promise", "وعد"];
@@ -402,7 +397,7 @@ class Language_provider {
     "Congratulations, the appointment has been booked successfully. Thank you for choosing Rootscare.",
     "مبروك ، لقد تم حجز الموعد بنجاح. شكرًا لاختيارك روتس كير.",
   ];
-  GoToAppointment = ["Go to Appointment", " الذهاب إلى الموعد  "];
+  GoToAppointment = ["Go to Appointment", " الانتقال إلى الموعد  "];
   GoToConslt = ["Go to Consultations", "اذهب  إلى الاستشارة"];
   GoToLabs = ["Go to Lab Tests", "اذهب إلى فحص المختبر"];
   Reschedule = ["RESCHEDULE", "إعادة جدولة "];
@@ -497,7 +492,9 @@ class Language_provider {
   Delete = ["DELETE", "حذف   "];
   Add_Member = ["ADD MEMBER", "إضافة عضو"];
   Add_New_Member = ["ADD NEW MEMBER", "إضافة عضو جديد"];
-  Edit_Member = ["Edit Member", "تحرير العضو"];
+  Members = ["MEMBERS", "عضو"];
+  You = ["You", "أنت"];
+  OtherMembers = ["Other Members", "أعضاء آخرون"];
   Upload_Photo = ["Upload a photo of the member", "قم بتحميل صورة العضو"];
   Photo_Size = ["Max. Upload Size 10 MB", "الأعلى. حجم الرفع 10 ميجا بايت"];
   Archive = ["ARCHIVE", "أرشيف"];
@@ -578,9 +575,140 @@ class Language_provider {
   Medical = ['Medical', 'طبي '];
   LifeStyle = ['LifeStyle', 'لايف ستايل'];
 
-  OrdersTitle=['Buy Home Medical Supplies & Equipments online','شراء المستلزمات والمعدات الطبية المنزلية عبر الإنترنت'];
-  OrdersDesc=['We are coming soon at your location with ordering option','سنصل قريبًا إلى موقعك مع خيار الطلب'];
+  OrdersTitle = ['Buy Home Medical Supplies & Equipments online', 'شراء المستلزمات والمعدات الطبية المنزلية عبر الإنترنت'];
+  OrdersDesc = ['We are coming soon at your location with ordering option', 'سنصل قريبًا إلى موقعك مع خيار الطلب'];
+
+  emptyPassword = ['Please enter password', 'الرجاء إدخال كلمة المرور']
+  emptyMessage = ['Please enter message', 'الرجاء إدخال الرسالة']
+  emptyOtpMsg = ['Please enter the OTP', 'الرجاء إدخال كلمة المرور لمرة واحدة']
+  emptyName = ['Please enter your name!', 'الرجاء إدخال  الاسم  ']
+  emptyEmail = ['Email can not be empty', 'لا يمكن أن يكون البريد الإلكتروني فارغًا  ']
+  validEmail = ['Please enter valid email id', 'الرجاء إدخال معرف بريد إلكتروني صالح  ']
+  emptymobileNumber = ['Please enter mobile number!', 'الرجاء إدخال رقم الهاتف المحمول  '];
+  validmobileNumber = ['Invalid mobile number!', '<string name="رقم الهاتف المحمول غير صالح'];
+  emptyid = ['Please provide ID Number!', 'الرجاء ادخال رقم الهوية '];
+  validataionnewpass = ['Please enter Password', ' الرجاء إدخال كلمة المرور '];
+  emptyPasswordValid = ['Must be at least 8 characters.', '  .يجب أن لا تقل عن 8 أحرف أو أرقام   '];
+  emptyIdValid = ['Must be between 10 to 15 characters or digits', 'رقم الهوية؟  - "يجب أن يكون بين 10 إلى 15 رقماً أو حرفًا '];
+  emptyconfirmPassword = ['Please enter confirm password!', ' الرجاء إدخال تأكيد كلمة المرور  '];
+  Password_notmatch = ['Both passwords must match', 'يجب أن تتطابق كلمتا المرور'];
+  emptyEmailmobile = ['Email/Password can not be empty.', 'لا يمكن ترك البريد الإلكتروني / كلمة المرور فارغين  ']
+  validIDnumber = ['ID Number must be start from 1 or 2 ', 'يجب أن يبدأ رقم الهوية من 1 أو 2  '];
+  emptyCountrycode = ['Please enter country code', 'الرجاء إدخال رمز الدولة']
+  smoking_msg = ['Please enter your smoking habits', 'الرجاء إدخال عادات التدخين الخاصة بك']
+  alcohal_msg = ['Please enter your alcohol habits', 'الرجاء إدخال عادات الكحول الخاصة بك']
+  bloodgrp_msg = ['Please enter your blood group', 'الرجاء إدخال فصيلة دمك']
+  activity_level = ['Please enter your activity level', 'الرجاء إدخال مستوى نشاطك']
+  food_preferance = ['Please enter your food preference', 'الرجاء إدخال طعامك المفضل']
+  occuation = ['Please enter your occupation', 'الرجاء إدخال مهنتك']
+  emptySelecttopic = ['Please select a topic', 'الرجاء تحديد موضوع ']
+  emptyPasswordblank = ['Password can not be blank', 'كلمة المرور لا يمكن أن تكون فارغة']
+  emptyPaitentName = ['Please enter patient first name', 'الرجاء إدخال الاسم الأول للمريض']
+  emptyPaitentLastName = ['Please enter patient last name', 'الرجاء إدخال الاسم الأخير للمريض']
+  emptyAge = ['Please enter patient age', 'الرجاء إدخال عمر المريض']
+  EmptyTask = ['Please select task', ' الرجاء تحديد المهمة']
+  EmptyPackage = ['Please select package', 'الرجاء تحديد الحزمة']
+  EmptyTime = ['Please select time', ' الرجاء تحديد الوقت   ']
+  emptyImage = ['Please Provide Image', 'يرجى إضافة الصورة']
+  NoInternet = ['Please check your network connection', 'يرجى التحقق من اتصالك بالشبكة ']
+  sucess_message_login = ['Login Successfully', 'تم تسجيل الدخول بنجاح']
+  emptyComingsoon = ['Coming Soon', 'Coming Soon']
+  PaymentIntention = ['Payment Initiation', ' بدء الدفع ']
+  validIDnumberUAE = ['Id number must start with 7', 'يجب أن يبدأ رقم الهوية بالرقم 7'];
+  allergyName = ['Please enter Allergy Name', 'الرجاء إدخال اسم الحساسية'];
+  currentMedicine = ['Please enter current medicine', 'الرجاء إدخال الدواء الحالي'];
+  pastMedicine = ['Please enter past medicine', 'الرجاء إدخال الدواء السابق'];
+  injuries = ['Please enter any injuries', 'الرجاء إدخال أي إصابات'];
+  surgeries = ['Please enter any injuries', 'الرجاء إدخال أي عمليات جراحية'];
+  chronicDisease = ['Please enter any chronic disease', 'الرجاء إدخال أي مرض مزمن'];
+  Year = ['Year', 'سنة']
+  ok = ['Ok', 'Okay', 'Está bem'];
+  cancel = ['Cancel', 'Cancelar', 'Cancelar'];
+  later = ['Later', 'Más tarde', 'Mais tarde'];
+  clearapp = ['Clear notification', 'مسح الاشعارات']
+  dltapp = ['Delete notification', 'حذف الاشعارات']
+  clear = ['Are your sure you want to clear all notifications?', 'هل أنت متأكد من مسح جميع الاشعارات؟'];
+  dltnot = ['Are your sure you want to delete notification?', 'هل أنت متأكد من حذف جميع الإخطارات؟'];
+  not_msg = ['Notifications cleared successfully', 'تم مسح الاشعارات بنجاح']
+  yes = ['Yes', 'نعم']
+  no = ['No', 'لا']
+  usererr = ["User id does not exist", "هوية المستخدم غير موجودة"]
+  psdsent = ['Reset link has been sent to your email', 'تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني']
+  information = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  alert = ['Alert', 'Alerta', 'Alerta'];
+  confirm = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  validation = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  success = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  error = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  response = ['Response', 'Respuesta', 'Resposta'];
+  server = ['Connection Error', 'Error de conexión', 'Erro de conexão'];
+  internet = ['Connection Error', 'Error de conexión', 'Erro de conexão']
+  deactivate_msg = ['Account deactivated', 'تم إلغاء تنشيط الحساب']
+  deactivate = [0,]
+  usernotexit = ["User id does not exist", 'هوية المستخدم غير موجودة']
+  account_deactivate_title = ['your account deactivated please try again', 'تم إلغاء تنشيط حسابك ، يرجى المحاولة مرة أخرى']
 
 
+  ok = ['Ok', 'Okay', 'Está bem'];
+  cancel = ['Cancel', 'Cancelar', 'Cancelar'];
+  later = ['Later', 'Más tarde', 'Mais tarde'];
+  no = ['No', 'لا'];
+  yes = ['Yes', 'نعم'];
+  and = ['and', 'و'];
+  information = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  alert = ['Alert', 'Alerta', 'Alerta'];
+  confirm = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  validation = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  success = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  error = ['Information Message', 'Mensaje informativo', 'Mensagem Informativa'];
+  response = ['Response', 'Respuesta', 'Resposta'];
+  server = ['Connection Error', 'Error de conexión', 'Erro de conexão'];
+  internet = ['Connection Error', 'Error de conexión', 'Erro de conexão']
+  deactivate_msg = ['Account deactivated', 'تم إلغاء تنشيط الحساب']
+  deactivate = [0,]
+  usernotexit = ["User id does not exist, 'هوية المستخدم غير موجودة"]
+  account_deactivate_title = ['your account deactivated please try again', 'حسابك معطل يرجى المحاولة مرة أخرى']
+  emlsent = ['Email sent successfully', 'تم ارسال البريد الالكتروني بنجاح']
+  psdsent = ['Password has been sent to your email address', 'تم إرسال كلمة المرور إلى بريدك الإلكتروني']
+
+  congrats = ['Congratulations!!', 'تهانينا']
+  changepassword = ['Password changed successfully.', 'تم تغيير كلمة المرور بنجاح']
+  contactus = ['Contact us request successfully submitted', 'تم تقديم الطلب بنجاح']
+  delete = ['Delete', 'حذف']
+  reportpopup_user = ['Are you sure? you want to report this user', 'هل أنت متأكد؟ تريد الإبلاغ عن هذا المستخدم'];
+  report_user = ['Report user', 'الإبلاغ عن المستخدم']
+
+  emptyEmail = ['Please enter email or phone', 'الرجاء إدخال البريد الإلكتروني أو الهاتف'];
+  validEmail = ['Please enter valid email', 'الرجاء إدخال بريد إلكتروني صحيح']
+  emptyPassword = ['Please enter password', 'الرجاء إدخال كلمة المرور'];
+  lengthPassword = ['Password length should be minimum 8 character', 'يجب ألا يقل طول كلمة المرور عن 8 أحرف'];
+  emptynewPassword = ['Please enter new password', 'الرجاء إدخال كلمة المرور الجديدة'];
+  emptyconfirmPassword = ['Please enter new password', 'الرجاء إدخال كلمة المرور الجديدة'];
+  emptyconfirm = ['please enter right password', 'الرجاء إدخال كلمة المرور الصحيحة'];
+  emptyFirstName = ['Please enter first name', 'الرجاء إدخال الاسم الأول'];
+  emptyLastName = ['Please enter last name', 'الرجاء إدخال الاسم الأخير'];
+  emptyPhone = ['Please enter phone number', 'الرجاء إدخال رقم الهاتف'];
+  lengthPhone = ['Password length should be minimum 10 digit', 'يجب أن تكون كلمة المرور عشرة أحرف أو أرقام على الأقل'];
+  loginFirst = ['Please login first', 'الرجاء تسجيل الدخول أولاً'];
+  emptyContactResion = ['Please select contact reason', ' الرجاء اختيار سبب الاتصال '];
+  emptyContactMessage = ['Please enter message', 'الرجاء إدخال الرسالة'];
+  networkconnection = ['Unable to connect. Please check that you are connected to the Internet and try again.', 'Unable to connect. Please check that you are connected to the Internet and try again.'];
+  servermessage = ['An Unexpected error occured , Please try again .If the problem continues , Please do contact us', 'An Unexpected error occured , Please try again .If the problem continues , Please do contact us'];
+
+  TaskBase = ['Task Based Appointment Booking', 'بالمُهمة حجز موعد'];
+  TaskBaseTitle = ['Task Based | Appointment Booking', 'بالمُهمة | حجز موعد'];
+  HourBase = ['Hourly Appointment Booking', 'بالساعة حجز موعد']
+  HourBaseTitle = ['Hourly | Appointment Booking', ' بالساعة | حجز موعد']
+  Lab_Test_Booking = ['Lab Test Booking', 'حجز فحص مختبر ']
+  Lab_Package_Booking = ['Lab Package Booking', 'حجز باقة المختبر']
+  OnlineConsultation = ["Online Consultation", "الاستشارة عبر الإنترنت"];
+  HomeVisitConsultation = ["Home Visit Consultation", "استشارة زيارة منزلية"];
+  Amount_Payable = ['Amount Payable', 'المبلغ المستحق']
+  SelectAppointmentType = ['Would you please select your booking preference?', 'هل يمكنك من فضلك تحديد تفضيل الحجز الخاص بك؟']
+  Payment_Option = ['Payment Options', 'خيارات الدفع'];
+  PaymentOneTitle = ['Credit Card by ', 'بطاقة الائتمان عن طريق ']
+  PaymentOneDesc = ['Pay full amount using your Credit Card', 'ادفع كامل المبلغ باستخدام بطاقتك الائتمانية']
+  PaymentTwoTitle = ['Buy Now Pay Later by ', 'اشتر الآن وادفع لاحقًا عن طريق ']
+  PaymentTwoDesc = ['Pay in 4 interest free payments', 'ادفع على 4 دفعات بدون فوائد']
 }
-export const Lang_chg = new Language_provider();
+export const LangProvider = new Language_provider();

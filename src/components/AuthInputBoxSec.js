@@ -4,9 +4,6 @@ import {
   View,
   Image,
   StyleSheet,
-  Dimensions,
-  Text,
-  ActivityIndicator,
 } from "react-native";
 import {
   TextInput,
@@ -19,7 +16,7 @@ import {
   windowHeight,
   config,
 
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 const AuthInputBoxSec = ({
   lableText,

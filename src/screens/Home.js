@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Platform, BackHandler
+  Platform, BackHandler, AppState
 } from "react-native";
 import {
   Colors,
@@ -18,14 +18,12 @@ import {
   windowWidth,
   localStorage,
   Icons,
-  consolepro,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-  windowHeight,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 import { s, vs } from "react-native-size-matters"
-import { ScreenHeader } from "../Provider/utilslib/Utils";
+import { ScreenHeader } from "../Provider/Utils/Utils";
 import Styles from "../Styles";
 import BannerCrousel from "../components/BannerCrousel";
 import moment from "moment";
@@ -33,6 +31,8 @@ import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { Notifications } from "../Redux/Actions";
+import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeHealthcareServiceAppointments = [
   {
@@ -114,79 +114,55 @@ const LabTest = [
 
 const Home = ({ navigation }) => {
 
-  const { address, loggedInUserDetails, guest, appLanguage, deviceToken, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { address, loggedInUserDetails, guest, appLanguage, languageIndex, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [homeData, setHomeData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     profileImg: "",
     address: '',
-    bannersList: []
+    bannersList: [],
+    isLoadingDetails: true
   })
   const isFocused = useIsFocused()
 
   useEffect(() => {
     // console.log(address.address);
     // console.log(loggedInUserDetails);
+
+
+    setTimeout(() => {
+      setHomeData(prevState => ({
+        ...prevState,
+        isLoadingDetails: false
+      }))
+    }, 1000);
     if (guest == false) {
       getNotificationCount();
       getTopBanners()
     }
-    // removeExpiredCart()
-  }, [isFocused])
+    RemoveCart()
+  }, [])
 
 
 
-  const removeExpiredCart = async () => {
-    let cartId = await localStorage.getItemString('cartId')
-    let cartTime = await localStorage.getItemString('cartTime')
-    console.log({ cartId });
-    if (cartId != null && cartId != '' && cartId != undefined) {
-      let currentTime = moment().format('x')
-      currentTime = JSON.parse(currentTime)
-      currentTime = moment(currentTime).format('HH:mm:ss')
-      cartTime = JSON.parse(cartTime)
-      cartTime = moment(cartTime).format('HH:mm:ss')
-      console.log('cart time...', cartTime);
-      let currentSplitTime = currentTime.split(':')
-      let cartSplitTime = cartTime.split(':')
-
-      let hourDiff = currentSplitTime[0] - cartSplitTime[0]
-      let minsDiff = currentSplitTime[1] - cartSplitTime[1]
-      let secDiff = currentSplitTime[2] - cartSplitTime[2]
-
-      console.log(hourDiff);
-      console.log(minsDiff);
-      console.log(secDiff);
-      // return false
-
-      if (hourDiff > 0 || (minsDiff > 0)) {
-        console.log('Time is greater than 1 min');
-        remove_cart(cartId).then(() => {
-          localStorage.removeItem('cartId')
-          localStorage.removeItem('cartTime')
-        })
-      }
-
-    }
-  }
-
-  const remove_cart = async (cartId) => {
+  const RemoveCart = async (type) => {
+    let Id = await AsyncStorage.getItem('cartId')
     let url = config.baseURL + "api-patient-remove-cart";
     var data = new FormData();
-    data.append("cart_id", cartId)
-
-    consolepro.consolelog("remove_cart-data", data);
+    data.append("cart_id", Id);
+    console.log('RemoveCart', data);
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("remove_cart-response...", obj);
+        console.log("RemoveCart-response...", obj);
         if (obj.status == true) {
+          AsyncStorage.removeItem('cartId')
         } else {
+          AsyncStorage.removeItem('cartId')
           return false;
         }
       })
       .catch((error) => {
-        consolepro.consolelog("remove_cart- error ------- " + error);
+        console.log("RemoveCart-error ------- " + error);
       });
   };
 
@@ -198,7 +174,7 @@ const Home = ({ navigation }) => {
 
     apifuntion.postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getTopBanners-response.............", obj.result?.bannerimage);
+        // console.log("getTopBanners-response.............", obj.result?.bannerimage);
         if (obj.status == true) {
           setHomeData(prevState => ({
             ...prevState,
@@ -221,7 +197,7 @@ const Home = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getNotificationCount-response", obj);
+        // console.log("getNotificationCount-response", obj);
         if (obj.status == true) {
           dispatch(Notifications(obj?.result))
         } else {
@@ -240,7 +216,7 @@ const Home = ({ navigation }) => {
 
         <ScreenHeader
           navigation={navigation}
-          // title={Lang_chg.Home[homeData.languageIndex]}
+          // title={LangProvider.Home[languageIndex]}
           leftIcon={loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : ''}
           rightIcon={!guest}
           defaultAddress={address.address}
@@ -271,7 +247,7 @@ const Home = ({ navigation }) => {
                 alignSelf: 'flex-start',
                 textAlign: 'left',
               }}>
-                {Lang_chg.HomeHealthcareServiceAppointments[homeData.languageIndex]}
+                {LangProvider.HomeHealthcareServiceAppointments[languageIndex]}
               </Text>
               <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -286,52 +262,55 @@ const Home = ({ navigation }) => {
                 }}
                 renderItem={({ item, index }) => {
                   return (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate(
-                          "AllServiceProviderListing",
-                          { pass_status: item.pass_status }
-                        )
-                      }
-                      style={[
-                        {
-                          borderRadius: 10,
-                          width: s(140),
-                          backgroundColor: Colors.White,
-                          borderColor: Colors.Border,
-                          borderWidth: 1,
-                          paddingBottom: vs(10)
-                        }]}>
-                      <View style={{ width: '100%', }}>
-                        <Image
-                          style={{
-                            borderTopLeftRadius: 9,
-                            borderTopRightRadius: 9,
-                            width: "100%",
-                            height: vs(110),
-                            alignSelf: "center",
-                          }}
-                          source={item.img}
-                        />
-                      </View>
+                    homeData.isLoadingDetails ?
+                      <HomeLoadingSkeleton />
+                      :
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate(
+                            "AllServiceProviderListing",
+                            { pass_status: item.pass_status }
+                          )
+                        }
+                        style={[
+                          {
+                            borderRadius: 10,
+                            width: s(140),
+                            backgroundColor: Colors.White,
+                            borderColor: Colors.Border,
+                            borderWidth: 1,
+                            paddingBottom: vs(10)
+                          }]}>
+                        <View style={{ width: '100%', }}>
+                          <Image
+                            style={{
+                              borderTopLeftRadius: 9,
+                              borderTopRightRadius: 9,
+                              width: "100%",
+                              height: vs(110),
+                              alignSelf: "center",
+                            }}
+                            source={item.img}
+                          />
+                        </View>
 
-                      <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
-                        <Text style={Styles.cardtitle}>
-                          {homeData.languageIndex == 0 ? item.title : item?.arabic_title}
+                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                          <Text style={Styles.cardtitle}>
+                            {languageIndex == 0 ? item.title : item?.arabic_title}
+                          </Text>
+                        </View>
+                        <Text style={{
+                          alignSelf: 'flex-start',
+                          textAlign: 'left',
+                          fontSize: Font.small,
+                          fontFamily: Font.Regular,
+                          color: Colors.Black,
+                          paddingHorizontal: s(6)
+                        }}>
+                          {languageIndex == 0 ? item.details : item?.arabic_details}
                         </Text>
-                      </View>
-                      <Text style={{
-                        alignSelf: 'flex-start',
-                        textAlign: 'left',
-                        fontSize: Font.small,
-                        fontFamily: Font.Regular,
-                        color: Colors.Black,
-                        paddingHorizontal: s(6)
-                      }}>
-                        {homeData.languageIndex == 0 ? item.details : item?.arabic_details}
-                      </Text>
 
-                    </TouchableOpacity>
+                      </TouchableOpacity>
                   );
                 }}
               />
@@ -347,7 +326,7 @@ const Home = ({ navigation }) => {
                 alignSelf: 'flex-start',
                 textAlign: 'left',
               }}>
-                {Lang_chg.DoctorConsultation[homeData.languageIndex]}
+                {LangProvider.DoctorConsultation[languageIndex]}
               </Text>
               <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -362,55 +341,58 @@ const Home = ({ navigation }) => {
                 }}
                 renderItem={({ item, index }) => {
                   return (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate(
-                          "AllServiceProviderListing",
+                    homeData.isLoadingDetails ?
+                      <HomeLoadingSkeleton />
+                      :
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate(
+                            "AllServiceProviderListing",
+                            {
+                              pass_status: item.pass_status,
+                              enableFor: item.enableFor
+                            }
+                          )
+                        }
+                        style={[
                           {
-                            pass_status: item.pass_status,
-                            enableFor: item.enableFor
-                          }
-                        )
-                      }
-                      style={[
-                        {
-                          borderRadius: 10,
-                          width: s(140),
-                          backgroundColor: Colors.White,
-                          borderColor: Colors.Border,
-                          borderWidth: 1,
-                          paddingBottom: vs(10)
-                        }]}>
-                      <View style={{ width: '100%', }}>
-                        <Image
-                          style={{
-                            borderTopLeftRadius: 9,
-                            borderTopRightRadius: 9,
-                            width: "100%",
-                            height: vs(110),
-                            alignSelf: "center",
-                          }}
-                          source={item.img}
-                        />
-                      </View>
+                            borderRadius: 10,
+                            width: s(140),
+                            backgroundColor: Colors.White,
+                            borderColor: Colors.Border,
+                            borderWidth: 1,
+                            paddingBottom: vs(10)
+                          }]}>
+                        <View style={{ width: '100%', }}>
+                          <Image
+                            style={{
+                              borderTopLeftRadius: 9,
+                              borderTopRightRadius: 9,
+                              width: "100%",
+                              height: vs(110),
+                              alignSelf: "center",
+                            }}
+                            source={item.img}
+                          />
+                        </View>
 
-                      <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
-                        <Text style={Styles.cardtitle}>
-                          {homeData.languageIndex == 0 ? item.title : item?.arabic_title}
+                        <View style={{ width: '100%', paddingVertical: vs(7), paddingHorizontal: s(6) }}>
+                          <Text style={Styles.cardtitle}>
+                            {languageIndex == 0 ? item.title : item?.arabic_title}
+                          </Text>
+                        </View>
+
+                        <Text style={{
+                          alignSelf: 'flex-start',
+                          textAlign: 'left',
+                          fontSize: Font.small,
+                          fontFamily: Font.Regular,
+                          color: Colors.Black,
+                          paddingHorizontal: s(6)
+                        }}>
+                          {languageIndex == 0 ? item.details : item?.arabic_details}
                         </Text>
-                      </View>
-
-                      <Text style={{
-                        alignSelf: 'flex-start',
-                        textAlign: 'left',
-                        fontSize: Font.small,
-                        fontFamily: Font.Regular,
-                        color: Colors.Black,
-                        paddingHorizontal: s(6)
-                      }}>
-                        {homeData.languageIndex == 0 ? item.details : item?.arabic_details}
-                      </Text>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
                   );
                 }}
               />
@@ -427,7 +409,7 @@ const Home = ({ navigation }) => {
                 alignSelf: 'flex-start',
                 textAlign: 'left',
               }}>
-                {Lang_chg.Lab_Test_Booking[homeData.languageIndex]}
+                {LangProvider.Lab_Test_Booking[languageIndex]}
               </Text>
               <FlatList
                 pagingEnabled
@@ -443,115 +425,115 @@ const Home = ({ navigation }) => {
                 }}
                 renderItem={({ item, index }) => {
                   return (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={() =>
-                        navigation.navigate(
-                          "AllServiceProviderListing",
-                          { pass_status: item.pass_status }
-                        )
-                      }
-                      style={{
-                        width: windowWidth,
-                        flexDirection: 'row'
-                      }}>
-
-                      <View style={{ width: '42%', justifyContent: 'center' }}>
-                        <Image
-                          style={{
-                            borderRadius: (windowWidth * 2) / 100,
-                            width: (windowWidth * 40) / 100,
-                            height: (windowWidth * 35) / 100,
-                          }}
-                          source={item.img}
-                        />
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate(
+                    homeData.isLoadingDetails ?
+                      <HomeLoadingSkeleton />
+                      :
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() =>
+                          navigation.navigate(
                             "AllServiceProviderListing",
                             { pass_status: item.pass_status }
-                          )}
-                          style={{
-                            borderRadius: (windowWidth * 2) / 100,
-                            width: (windowWidth * 40) / 100,
-                            height: (windowWidth * 9) / 100,
-                            marginTop: vs(8),
-                            marginHorizontal: s(1),
-                            marginBottom: vs(4),
-                            backgroundColor: Colors.White,
-                            borderWidth: 0.8,
-                            borderColor: Colors.ButtonBorder,
-                            shadowOpacity: 0.3,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 1, height: 1 },
-                            elevation: 2,
-                            shadowRadius: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Text
+                          )
+                        }
+                        style={{
+                          width: windowWidth,
+                          flexDirection: 'row'
+                        }}>
+
+                        <View style={{ width: '42%', justifyContent: 'center' }}>
+                          <Image
                             style={{
-                              fontSize: Font.small,
-                              fontFamily: Font.Medium,
-                              color: Colors.Blue,
+                              borderRadius: (windowWidth * 2) / 100,
+                              width: (windowWidth * 40) / 100,
+                              height: (windowWidth * 35) / 100,
                             }}
-                          >{Lang_chg.Find_Labs[homeData.languageIndex]}</Text>
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={{ width: '48%', }}>
-
-                        <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
-
-                          <Text style={Styles.cardtitle}>{homeData.languageIndex == 0 ? item.title : item.arabic_title}</Text>
-                          <Text style={{
-                            alignSelf: 'flex-start',
-                            textAlign: 'left',
-                            fontSize: Font.small,
-                            fontFamily: Font.Regular,
-                            color: Colors.Black,
-                            marginTop: vs(7),
-                          }}>
-                            {homeData.languageIndex == 0 ? item.details : item.arabic_details}
-                          </Text>
-
-                          <Text style={[{
-                            alignSelf: 'flex-start',
-                            textAlign: 'left',
-                            fontSize: Font.xsmall,
-                            fontFamily: Font.Regular,
-                            color: Colors.Blue,
-                            marginTop: vs(8)
-                          }]}>
-                            {homeData.languageIndex == 0 ? item.status : item.arabic_status}
-                          </Text>
-
-                          <Text style={[{
-                            alignSelf: 'flex-start',
-                            textAlign: 'left',
-                            fontSize: Font.xsmall,
-                            fontFamily: Font.Regular,
-                            color: Colors.Blue,
-                            marginTop: vs(8),
-                            color: Colors.Black,
-                            marginTop: vs(4),
-                          }]}>
-                            {homeData.languageIndex == 0 ? item.terms : item.arabic_terms}
-                          </Text>
+                            source={item.img}
+                          />
+                          <TouchableOpacity
+                            onPress={() => navigation.navigate(
+                              "AllServiceProviderListing",
+                              { pass_status: item.pass_status }
+                            )}
+                            style={{
+                              borderRadius: (windowWidth * 2) / 100,
+                              width: (windowWidth * 40) / 100,
+                              height: (windowWidth * 9) / 100,
+                              marginTop: vs(8),
+                              marginHorizontal: s(1),
+                              marginBottom: vs(4),
+                              backgroundColor: Colors.White,
+                              borderWidth: 0.8,
+                              borderColor: Colors.ButtonBorder,
+                              shadowOpacity: 0.3,
+                              shadowColor: '#000',
+                              shadowOffset: { width: 1, height: 1 },
+                              elevation: 2,
+                              shadowRadius: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: Font.small,
+                                fontFamily: Font.Medium,
+                                color: Colors.Blue,
+                              }}
+                            >{LangProvider.Find_Labs[languageIndex]}</Text>
+                          </TouchableOpacity>
                         </View>
-                      </View>
 
-                    </TouchableOpacity>
+                        <View style={{ width: '48%', }}>
+
+                          <View style={{ width: '100%', height: (windowWidth * 35) / 100, paddingVertical: vs(5), justifyContent: 'center' }}>
+
+                            <Text style={Styles.cardtitle}>{languageIndex == 0 ? item.title : item.arabic_title}</Text>
+                            <Text style={{
+                              alignSelf: 'flex-start',
+                              textAlign: 'left',
+                              fontSize: Font.small,
+                              fontFamily: Font.Regular,
+                              color: Colors.Black,
+                              marginTop: vs(7),
+                            }}>
+                              {languageIndex == 0 ? item.details : item.arabic_details}
+                            </Text>
+
+                            <Text style={[{
+                              alignSelf: 'flex-start',
+                              textAlign: 'left',
+                              fontSize: Font.xsmall,
+                              fontFamily: Font.Regular,
+                              color: Colors.Blue,
+                              marginTop: vs(8)
+                            }]}>
+                              {languageIndex == 0 ? item.status : item.arabic_status}
+                            </Text>
+
+                            <Text style={[{
+                              alignSelf: 'flex-start',
+                              textAlign: 'left',
+                              fontSize: Font.xsmall,
+                              fontFamily: Font.Regular,
+                              color: Colors.Blue,
+                              marginTop: vs(8),
+                              color: Colors.Black,
+                              marginTop: vs(4),
+                            }]}>
+                              {languageIndex == 0 ? item.terms : item.arabic_terms}
+                            </Text>
+                          </View>
+                        </View>
+
+                      </TouchableOpacity>
                   );
                 }}
               />
             </View>
 
           </View>
-
-
         </ScrollView>
       </View >
-
 
 
 

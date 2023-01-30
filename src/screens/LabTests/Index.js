@@ -10,12 +10,12 @@ import {
   Colors,
   Font,
   windowWidth,
-  Lang_chg,
+  LangProvider,
   deviceHeight,
   windowHeight,
   StatusbarHeight,
   ScreenHeader
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";
@@ -42,7 +42,7 @@ const LabTestIndex = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Lab_Test[appLanguage == 'en' ? 0 : 1]}
+        title={LangProvider.Lab_Test[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,
@@ -70,7 +70,7 @@ const LabTestIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={todayLabTests?.length > 0 ? Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1] : Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]}
+        initialRouteName={todayLabTests?.length > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
         screenOptions={{
           tabBarStyle: { height: (windowWidth * 10.5) / 100, width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
@@ -92,9 +92,9 @@ const LabTestIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming}  />
-        <Tabs.Screen name={Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing}  />
-        <Tabs.Screen name={Lang_chg.Past[appLanguage == 'en' ? 0 : 1]} component={Past}  />
+        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming}  />
+        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing}  />
+        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past}  />
 
       </Tabs.Navigator>
 

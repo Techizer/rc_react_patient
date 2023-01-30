@@ -18,13 +18,11 @@ import {
   Font,
   config,
   windowWidth,
-  Lang_chg,
   apifuntion,
   msgProvider,
-  msgText,
-  StatusbarHeight,
+  LangProvider,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -33,10 +31,9 @@ import { useSelector } from "react-redux";
 
 const Signup = ({ navigation }) => {
 
-  const { appLanguage, deviceToken, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
 
   const [registerData, setRegisterData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     securePassword: true,
     confirmSecurePassword: true,
     name: "",
@@ -77,35 +74,35 @@ const Signup = ({ navigation }) => {
     var realDigits = digits.map(Number);
 
     if (registerData.name.length <= 0 || registerData.name.trim().length <= 0) {
-      msgProvider.showError(msgText.emptyName[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyName[languageIndex]);
       return false;
     }
 
     let regemail =
       /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (email <= 0) {
-      msgProvider.showError(msgText.emptyEmail[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyEmail[languageIndex]);
       return false;
     }
 
     if (regemail.test(email) !== true) {
-      msgProvider.showError(msgText.validEmail[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.validEmail[languageIndex]);
       return false;
     }
     if (
       registerData.countryCode.length <= 0 ||
       registerData.countryCode.trim().length <= 0
     ) {
-      msgProvider.showError(msgText.emptyCountrycode[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyCountrycode[languageIndex]);
       return false;
     }
 
     if (registerData.number.length <= 0 || registerData.number.trim().length <= 0) {
-      msgProvider.showError(msgText.emptymobileNumber[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptymobileNumber[languageIndex]);
       return false;
     }
     if (registerData.id.length <= 0 || registerData.id.trim().length <= 0) {
-      msgProvider.showError(msgText.emptyid[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyid[languageIndex]);
       return false;
     }
     if (registerData.country_short_code == "UAE") {
@@ -120,7 +117,7 @@ const Signup = ({ navigation }) => {
         realDigits[0] == 8 ||
         realDigits[0] == 9
       ) {
-        msgProvider.showError(msgText.validIDnumberUAE[registerData.languageIndex]);
+        msgProvider.showError(LangProvider.validIDnumberUAE[languageIndex]);
         return false;
       }
     } else {
@@ -134,36 +131,36 @@ const Signup = ({ navigation }) => {
         realDigits[0] == 8 ||
         realDigits[0] == 9
       ) {
-        msgProvider.showError(msgText.validIDnumber[registerData.languageIndex]);
+        msgProvider.showError(LangProvider.validIDnumber[languageIndex]);
         return false;
       }
     }
 
     if (registerData.id.length <= 9) {
-      msgProvider.showError(msgText.emptyIdValid[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyIdValid[languageIndex]);
       return false;
     }
 
     if (registerData.password.length <= 0) {
-      msgProvider.showError(msgText.validataionnewpass[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.validataionnewpass[languageIndex]);
       return false;
     }
     if (registerData.password.length <= 7) {
-      msgProvider.showError(msgText.emptyPasswordValid[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyPasswordValid[languageIndex]);
       return false;
     }
 
     if (registerData.confirmPass.length <= 0) {
-      msgProvider.showError(msgText.emptyconfirmPassword[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyconfirmPassword[languageIndex]);
       return false;
     }
     if (registerData.confirmPass.length <= 7) {
-      msgProvider.showError(msgText.emptyPasswordValid[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyPasswordValid[languageIndex]);
       return false;
     }
 
     if (registerData.confirmPass != registerData.password) {
-      msgProvider.showError(msgText.Password_notmatch[registerData.languageIndex]);
+      msgProvider.showError(LangProvider.Password_notmatch[languageIndex]);
       return false;
     }
 
@@ -303,7 +300,7 @@ const Signup = ({ navigation }) => {
               alignSelf: 'flex-start',
               color: Colors.darkText
             }}>
-            {Lang_chg.Signup[registerData.languageIndex]}
+            {LangProvider.Signup[languageIndex]}
           </Text>
           <Text
             style={{
@@ -315,7 +312,7 @@ const Signup = ({ navigation }) => {
               marginTop: vs(4)
             }}
           >
-            {Lang_chg.Signuptext1[registerData.languageIndex]}
+            {LangProvider.Signuptext1[languageIndex]}
           </Text>
 
 
@@ -323,7 +320,7 @@ const Signup = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(18), width: '100%' }}
-            lableText={Lang_chg.textinputname[registerData.languageIndex]}
+            lableText={LangProvider.textinputname[languageIndex]}
             inputRef={nameRef}
             onChangeText={(val) => {
               setRegisterData(prevState => ({
@@ -347,7 +344,7 @@ const Signup = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: '100%' }}
-            lableText={Lang_chg.textinputemails[registerData.languageIndex]}
+            lableText={LangProvider.textinputemails[languageIndex]}
             inputRef={emailRef}
             onChangeText={(val) => {
               setRegisterData(prevState => ({
@@ -401,7 +398,7 @@ const Signup = ({ navigation }) => {
                   textAlign: contentAlign,
                 }}>
                 {registerData.country_name.length <= 0
-                  ? Lang_chg.select[registerData.languageIndex]
+                  ? LangProvider.select[languageIndex]
                   : registerData.country_name}
               </Text>
 
@@ -434,7 +431,7 @@ const Signup = ({ navigation }) => {
               }}>
               <AuthInputBoxSec
                 mainContainer={{ width: "100%", }}
-                lableText={Lang_chg.CC_code[registerData.languageIndex]}
+                lableText={LangProvider.CC_code[languageIndex]}
                 // inputRef={emailRef}
                 onChangeText={(val) => {
                   setRegisterData(prevState => ({
@@ -462,7 +459,7 @@ const Signup = ({ navigation }) => {
               }}>
               <AuthInputBoxSec
                 mainContainer={{ width: '100%' }}
-                lableText={Lang_chg.textinputnumber[registerData.languageIndex]}
+                lableText={LangProvider.textinputnumber[languageIndex]}
                 inputRef={numberRef}
                 onChangeText={(val) => {
                   setRegisterData(prevState => ({
@@ -490,7 +487,7 @@ const Signup = ({ navigation }) => {
                   color: Colors.lightGrey,
                   marginTop: vs(8)
                 }}>
-                {Lang_chg.mobletexttitle[registerData.languageIndex]}
+                {LangProvider.mobletexttitle[languageIndex]}
               </Text>
             </View>
           </View>
@@ -500,7 +497,7 @@ const Signup = ({ navigation }) => {
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: "100%", }}
             // icon={layer9_icon}
-            lableText={Lang_chg.textinputnationalid[registerData.languageIndex]}
+            lableText={LangProvider.textinputnationalid[languageIndex]}
             inputRef={idRef}
             onChangeText={(val) => {
               setRegisterData(prevState => ({
@@ -535,7 +532,7 @@ const Signup = ({ navigation }) => {
                 marginTop: vs(8)
               }}
             >
-              {Lang_chg.ProvideUAE[registerData.languageIndex]}
+              {LangProvider.ProvideUAE[languageIndex]}
             </Text>
           ) : (
             <Text
@@ -547,7 +544,7 @@ const Signup = ({ navigation }) => {
                 marginTop: vs(8)
               }}
             >
-              {Lang_chg.Signuptext2[registerData.languageIndex]}
+              {LangProvider.Signuptext2[languageIndex]}
             </Text>
           )}
           {/* ------------------------------------------------------password */}
@@ -555,7 +552,7 @@ const Signup = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(5), width: "100%", }}
-            lableText={Lang_chg.password[registerData.languageIndex]}
+            lableText={LangProvider.password[languageIndex]}
             inputRef={passRef}
             onChangeText={(val) => {
               setRegisterData(prevState => ({
@@ -574,7 +571,7 @@ const Signup = ({ navigation }) => {
             iconPressAction={() => {
               setRegisterData(prevState => ({
                 ...prevState,
-                securePassword: !securePassword
+                securePassword: !registerData.securePassword
               }))
             }}
             onSubmitEditing={() => {
@@ -595,7 +592,7 @@ const Signup = ({ navigation }) => {
               marginTop: vs(8)
             }}
           >
-            {Lang_chg.Signuptext3[registerData.languageIndex]}
+            {LangProvider.Signuptext3[languageIndex]}
           </Text>
 
           {/* ----------------------------------------------------------------------confirmpasword */}
@@ -603,7 +600,7 @@ const Signup = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: "100%", }}
-            lableText={Lang_chg.confirmpassword1[registerData.languageIndex]}
+            lableText={LangProvider.confirmpassword1[languageIndex]}
             inputRef={confirmPassRef}
             onChangeText={(val) => {
               setRegisterData(prevState => ({
@@ -622,7 +619,7 @@ const Signup = ({ navigation }) => {
             iconPressAction={() => {
               setRegisterData(prevState => ({
                 ...prevState,
-                confirmSecurePassword: !confirmSecurePassword
+                confirmSecurePassword: !registerData.confirmSecurePassword
               }))
             }}
             onSubmitEditing={() => {
@@ -644,11 +641,11 @@ const Signup = ({ navigation }) => {
               marginTop: vs(8)
             }}
           >
-            {Lang_chg.Signuptext4[registerData.languageIndex]}
+            {LangProvider.Signuptext4[languageIndex]}
           </Text>
 
           <Button
-            text={Lang_chg.btntext[registerData.languageIndex]}
+            text={LangProvider.btntext[languageIndex]}
             onPress={() => registerUser()}
             btnStyle={{ marginTop: vs(15) }}
             onLoading={registerData.isLoading}
@@ -673,7 +670,7 @@ const Signup = ({ navigation }) => {
                 textAlign: "center",
                 alignSelf: "center",
               }}>
-              {Lang_chg.termsandconditiontext1[registerData.languageIndex]}
+              {LangProvider.termsandconditiontext1[languageIndex]}
             </Text>
 
             <View style={{
@@ -697,7 +694,7 @@ const Signup = ({ navigation }) => {
                     color: Colors.Black,
                     textAlign: 'center'
                   }} >
-                  {Lang_chg.termsandconditiontext2[registerData.languageIndex]}
+                  {LangProvider.termsandconditiontext2[languageIndex]}
                 </Text>
               </TouchableHighlight>
               <Text
@@ -707,7 +704,7 @@ const Signup = ({ navigation }) => {
                   fontFamily: Font.Regular,
                   color: Colors.DarkGrey,
                 }}>
-                {Lang_chg.termsandconditiontext3[registerData.languageIndex]}
+                {LangProvider.termsandconditiontext3[languageIndex]}
               </Text>
               <TouchableHighlight
                 onPress={() => {
@@ -725,7 +722,7 @@ const Signup = ({ navigation }) => {
                     fontFamily: Font.Medium,
                     color: Colors.Black,
                   }}>
-                  {Lang_chg.termsandconditiontext4[registerData.languageIndex]}
+                  {LangProvider.termsandconditiontext4[languageIndex]}
                 </Text>
               </TouchableHighlight>
             </View>
@@ -752,7 +749,7 @@ const Signup = ({ navigation }) => {
                 color: Colors.DarkGrey,
               }}
             >
-              {Lang_chg.allreadyhaveaccounttext[registerData.languageIndex]}
+              {LangProvider.allreadyhaveaccounttext[languageIndex]}
             </Text>
 
             <TouchableOpacity
@@ -768,7 +765,7 @@ const Signup = ({ navigation }) => {
                   color: Colors.Blue,
                 }}
               >
-                {Lang_chg.loginheretext[registerData.languageIndex]}
+                {LangProvider.loginheretext[languageIndex]}
               </Text>
             </TouchableOpacity>
           </View>
@@ -826,7 +823,7 @@ const Signup = ({ navigation }) => {
                   color: Colors.White,
                 }}
               >
-                {Lang_chg.Country_code[registerData.languageIndex]}
+                {LangProvider.Country_code[languageIndex]}
               </Text>
             </View>
 
@@ -944,7 +941,7 @@ const Signup = ({ navigation }) => {
                     paddingLeft: (windowWidth * 4) / 100,
                   }}
                 >
-                  {Lang_chg.registration[registerData.languageIndex]}
+                  {LangProvider.registration[languageIndex]}
                 </Text>
               </View>
 
@@ -1015,7 +1012,7 @@ const Signup = ({ navigation }) => {
                       textAlign: contentAlign,
                     }}
                   >
-                    {Lang_chg.OK[registerData.languageIndex]}
+                    {LangProvider.OK[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>

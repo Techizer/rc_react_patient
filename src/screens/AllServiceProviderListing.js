@@ -14,10 +14,11 @@ import {
   Colors,
   Font,
   config,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-  ScreenHeader
-} from "../Provider/utilslib/Utils";
+  ScreenHeader,
+  windowWidth
+} from "../Provider/Utils/Utils";
 
 import { leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
@@ -25,11 +26,12 @@ import ServiceProviderContainer from "../components/ServiceProviderContainer";
 import SearchInput from "../components/SearchInput";
 import FilterBottomSheet from "../components/FilterBottomSheet";
 import { useSelector } from "react-redux";
+import BookingTypePopup from "../components/BookingTypePopup";
 
 const AllServiceProviderListing = ({ navigation, route }) => {
 
   const { pass_status, enableFor } = route.params || ''
-  const { address, loggedInUserDetails, guest, appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { address, loggedInUserDetails, guest, appLanguage, languageIndex, } = useSelector(state => state.StorageReducer)
 
   const [providersData, setProvidersData] = useState({
     message: "",
@@ -51,7 +53,6 @@ const AllServiceProviderListing = ({ navigation, route }) => {
   const getProvidersList = async (search = null) => {
     console.log(search);
     if (search != '' && search != null) {
-      console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
       setProvidersData(prevState => ({
         ...prevState,
         isLoading: true,
@@ -72,8 +73,8 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       data.append("service_type", pass_status);
       data.append("provider_name", "");
       data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'Ar');
-      data.append("latitude", address?.latitude);
-      data.append("longitudes", address?.longitude);
+      data.append("latitude", loggedInUserDetails.latitude);
+      data.append("longitudes", loggedInUserDetails.longitudes);
       data.append("page_count", 1);
     } else {
       data.append("login_user_id", loggedInUserDetails.user_id);
@@ -91,7 +92,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
     console.log(data);
     // return
     apifuntion.postApi(url, data, 1).then((res) => {
-      console.log("get_Services-response ", res)
+      // console.log("get_Services-response ", res)
       if (res.status == true) {
         setTimeout(() => {
           setProvidersData(prevState => ({
@@ -146,18 +147,18 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       <SearchInput
         placeholder={
           type == "nurse"
-            ? Lang_chg.SearchNurse[providersData.languageIndex]
+            ? LangProvider.SearchNurse[languageIndex]
             : type == "physiotherapy"
-              ? Lang_chg.Searchphysi[providersData.languageIndex]
+              ? LangProvider.Searchphysi[languageIndex]
               : type == "caregiver"
-                ? Lang_chg.Searchseassistent[providersData.languageIndex]
+                ? LangProvider.Searchseassistent[languageIndex]
                 : type == "babysitter"
-                  ? Lang_chg.SearchBabysitter[providersData.languageIndex]
+                  ? LangProvider.SearchBabysitter[languageIndex]
                   : type == "doctor"
-                    ? Lang_chg.SearchDoctor[providersData.languageIndex]
+                    ? LangProvider.SearchDoctor[languageIndex]
                     : type == "hospital"
-                      ? Lang_chg.SearchHospital[providersData.languageIndex]
-                      : Lang_chg.SearchLab[providersData.languageIndex]
+                      ? LangProvider.SearchHospital[languageIndex]
+                      : LangProvider.SearchLab[languageIndex]
         }
         onChangeText={(val) => {
           setProvidersData(prevState => ({
@@ -192,20 +193,20 @@ const AllServiceProviderListing = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ backgroundColor: Colors.backgroundcolor, flex: 1, paddingBottom: insets.bottom }}>
+    <View style={{ backgroundColor: Colors.backgroundcolor, flex: 1, }}>
       <ScreenHeader
         title={
           pass_status == "nurse"
-            ? Lang_chg.Nurse[providersData.languageIndex]
+            ? LangProvider.Nurse[languageIndex]
             : pass_status == "physiotherapy"
-              ? Lang_chg.Physiotherapist[providersData.languageIndex]
+              ? LangProvider.Physiotherapist[languageIndex]
               : pass_status == "caregiver"
-                ? Lang_chg.Nurse_assistant[providersData.languageIndex]
+                ? LangProvider.Nurse_assistant[languageIndex]
                 : pass_status == "babysitter"
-                  ? Lang_chg.Babysitter[providersData.languageIndex]
+                  ? LangProvider.Babysitter[languageIndex]
                   : pass_status == "doctor"
-                    ? Lang_chg.Doctor[providersData.languageIndex]
-                    : Lang_chg.Lab[providersData.languageIndex]
+                    ? LangProvider.Doctor[languageIndex]
+                    : LangProvider.Lab[languageIndex]
         }
         navigation={navigation}
         onBackPress={() => navigation.pop()}
@@ -215,7 +216,8 @@ const AllServiceProviderListing = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         data={providersData.providersList}
         keyExtractor={(item, index) => `Provider ${index}`}
-        ListHeaderComponent={listHeader(pass_status)}
+        ListHeaderComponent={providersData.providersList.length > 0 ? listHeader(pass_status) : null}
+        contentContainerStyle={{ paddingBottom: (windowWidth * 15) / 100 }}
         ListEmptyComponent={() => {
           return (
             <View style={{ marginTop: vs(140), alignSelf: 'center', paddingHorizontal: '10%' }}>
@@ -226,16 +228,16 @@ const AllServiceProviderListing = ({ navigation, route }) => {
                 textAlign: 'center'
               }}>{
                   pass_status == "nurse"
-                    ? Lang_chg.noNursesTitle[providersData.languageIndex]
+                    ? LangProvider.noNursesTitle[languageIndex]
                     : pass_status == "physiotherapy"
-                      ? Lang_chg.noPhysiotherapistsTitle[providersData.languageIndex]
+                      ? LangProvider.noPhysiotherapistsTitle[languageIndex]
                       : pass_status == "caregiver"
-                        ? Lang_chg.noNurseAssisTitle[providersData.languageIndex]
+                        ? LangProvider.noNurseAssisTitle[languageIndex]
                         : pass_status == "babysitter"
-                          ? Lang_chg.noBabySitterTitle[providersData.languageIndex]
+                          ? LangProvider.noBabySitterTitle[languageIndex]
                           : pass_status == "doctor"
-                            ? Lang_chg.noDocsTitle[providersData.languageIndex]
-                            : Lang_chg.noLabsTitle[providersData.languageIndex]
+                            ? LangProvider.noDocsTitle[languageIndex]
+                            : LangProvider.noLabsTitle[languageIndex]
                 }</Text>
               <Text style={{
                 fontSize: Font.medium,
@@ -245,16 +247,16 @@ const AllServiceProviderListing = ({ navigation, route }) => {
                 marginTop: vs(10)
               }}>{
                   pass_status == "nurse"
-                    ? Lang_chg.noNursesDesc[providersData.languageIndex]
+                    ? LangProvider.noNursesDesc[languageIndex]
                     : pass_status == "physiotherapy"
-                      ? Lang_chg.noPhysiotherapistsDesc[providersData.languageIndex]
+                      ? LangProvider.noPhysiotherapistsDesc[languageIndex]
                       : pass_status == "caregiver"
-                        ? Lang_chg.noNurseAssisDesc[providersData.languageIndex]
+                        ? LangProvider.noNurseAssisDesc[languageIndex]
                         : pass_status == "babysitter"
-                          ? Lang_chg.noBabySitterDesc[providersData.languageIndex]
+                          ? LangProvider.noBabySitterDesc[languageIndex]
                           : pass_status == "doctor"
-                            ? Lang_chg.noDocsDesc[providersData.languageIndex]
-                            : Lang_chg.noLabsDesc[providersData.languageIndex]
+                            ? LangProvider.noDocsDesc[languageIndex]
+                            : LangProvider.noLabsDesc[languageIndex]
                 }</Text>
             </View>
           )
@@ -319,7 +321,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
                     color: Colors.White,
                   }}
                 >
-                  {Lang_chg.selectSpecialty[config.language]}
+                  {LangProvider.selectSpecialty[config.language]}
                 </Text>
               </View>
 
@@ -394,6 +396,8 @@ const AllServiceProviderListing = ({ navigation, route }) => {
           }))
         }}
       /> */}
+
+
     </View >
   );
 

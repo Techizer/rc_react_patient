@@ -20,30 +20,26 @@ import {
   config,
   windowWidth,
   ScreenHeader,
-  consolepro,
-  Lang_chg,
+  LangProvider,
   apifuntion,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import AboutAppBottomSheet from '../components/AboutAppBottomSheet'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { SelectedProvider } from "../Redux/Actions";
 
 
 
 export default ServiceProviderDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, address, guest, appLanguage } = useSelector(state => state.StorageReducer)
-
+  const { loggedInUserDetails, address, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const { docType, providerType, providerId, isFromHospital, hospitalId } = route?.params
   const [statesData, setStatesData] = useState({
     isLoading: true,
-    languageIndex: appLanguage == 'en' ? 0 : 1,
-    providerType: route?.params?.providerType,
-    providerId: route?.params?.providerId,
-    isFromHospital: route?.params?.isFromHospital,
-    hospitaId: route?.params?.hospitalId,
     provider_details: "",
     message: "",
     modalVisible: false,
@@ -54,7 +50,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
   })
   const insets = useSafeAreaInsets()
   useEffect(() => {
-    get_Services()
+    getProviderDetails()
   }, [])
 
   const setState = payload => {
@@ -77,15 +73,14 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     var data = new FormData();
     data.append("id", userId);
     data.append("login_user_id", loggedInUserDetails.user_id);
-    data.append("service_type", statesData.providerType);
+    data.append("service_type", providerType);
     data.append("work_area", loggedInUserDetails.work_area);
 
-    // consolepro.consolelog("get_Services-query-data......", data);
     // return false
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("get_Service-details-response", JSON.stringify(obj));
+        console.log("get_Service-details-response", JSON.stringify(obj));
 
         if (obj.status == true) {
           let htmlData = '<!DOCTYPE html><html><body style="color:#0168b3">';
@@ -101,7 +96,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
           }, 450);
 
           let how_work = obj.result.how_work_value;
-          // consolepro.consolelog("how_work", how_work);
 
           let result_new = how_work.replace('<font color="#0888D1">', "");
           result_new = result_new.replace("<h4>", '<h4 color="#0168b3">');
@@ -129,32 +123,31 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
         setState({
           isLoading: false
         });
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
-  const get_Services = async () => {
+  const getProviderDetails = async () => {
     let url = config.baseURL + "api-patient-service-provider-details";
     var data = new FormData();
     if (guest == true) {
       console.log('if');
-      data.append("id", statesData.providerId);
+      data.append("id", providerId);
       data.append("login_user_id", 0);
-      data.append("service_type", statesData.providerType);
-      data.append("device_lang", statesData.languageIndex == 0 ? 'ENG' : 'AR');
+      data.append("service_type", providerType);
+      data.append("device_lang", languageIndex == 0 ? 'ENG' : 'AR');
       data.append("latitude", address?.latitude);
       data.append("longitudes", address?.longitude);
     } else {
-      data.append("id", statesData.providerId);
+      data.append("id", providerId);
       data.append("login_user_id", loggedInUserDetails.user_id);
-      data.append("service_type", statesData.providerType);
+      data.append("service_type", providerType);
       data.append("work_area", loggedInUserDetails.work_area);
     }
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        // consolepro.consolelog("get_Service-details-response", JSON.stringify(obj));
-
+        console.log('getProviderDetails:....', obj.result);
         if (obj.status == true) {
           let htmlData = '<!DOCTYPE html><html><body style="color:#0168b3">';
           let htmlDataClosed = "</body></html>";
@@ -168,7 +161,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
             });
           }, 350);
           let how_work = obj.result.how_work_value;
-          // consolepro.consolelog("how_work", how_work);
 
           let result_new = how_work.replace('<font color="#0888D1">', "");
           result_new = result_new.replace("<h4>", '<h4 color="#0168b3">');
@@ -176,7 +168,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
           let result_new_tag = result_new.replace(/<\/p><p>/g, "</p>");
           htmlData = htmlData + result_new_tag + htmlDataClosed;
 
-          // consolepro.consolelog("htmlData", htmlData);
           setState({ how_work_value: htmlData });
           let hour_task = obj.result.availability;
           if (
@@ -198,28 +189,28 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
         setState({
           isLoading: false
         });
-        consolepro.consolelog("get_Services-error ------- " + error);
+        console.log("getProviderDetails-error ------- " + error);
       });
   };
 
 
-  const { modalVisible, provider_details, available_days, providerType, providerId, isFromHospital, hospitaId } = statesData;
+  const { modalVisible, provider_details, available_days } = statesData;
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: insets.bottom }}>
+    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, }}>
 
       <ScreenHeader
         title={
-          statesData.providerType == "nurse"
-            ? Lang_chg.Nurse[statesData.languageIndex]
-            : statesData.providerType == "physiotherapy"
-              ? Lang_chg.Physiotherapist[statesData.languageIndex]
-              : statesData.providerType == "caregiver"
-                ? Lang_chg.Nurse_assistant[statesData.languageIndex]
-                : statesData.providerType == "babysitter"
-                  ? Lang_chg.Babysitter[statesData.languageIndex]
-                  : statesData.providerType == "doctor"
-                    ? Lang_chg.Doctor[statesData.languageIndex]
-                    : Lang_chg.Lab[statesData.languageIndex]
+          providerType == "nurse"
+            ? LangProvider.Nurse[languageIndex]
+            : providerType == "physiotherapy"
+              ? LangProvider.Physiotherapist[languageIndex]
+              : providerType == "caregiver"
+                ? LangProvider.Nurse_assistant[languageIndex]
+                : providerType == "babysitter"
+                  ? LangProvider.Babysitter[languageIndex]
+                  : providerType == "doctor"
+                    ? LangProvider.Doctor[languageIndex]
+                    : LangProvider.Lab[languageIndex]
         }
         navigation={navigation}
         onBackPress={() => navigation.pop()}
@@ -264,7 +255,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
               </View>
 
               <View style={styles.experienceContainer}>
-                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <View style={{ flex: 1, borderEndColor: Colors.backgroundcolor }}>
                   <SkeletonPlaceholder>
                     <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
                   </SkeletonPlaceholder>
@@ -273,7 +264,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                   </SkeletonPlaceholder>
                 </View>
 
-                <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <View style={{ flex: 1, borderEndColor: Colors.backgroundcolor }}>
                   <SkeletonPlaceholder>
                     <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
                   </SkeletonPlaceholder>
@@ -433,7 +424,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       color: Colors.lightGrey,
                       marginTop: vs(2)
                     }}>
-                    {providerType === 'lab' ? Lang_chg.ESTABLISHED[statesData.languageIndex] : Lang_chg.Experience[statesData.languageIndex]}
+                    {providerType === 'lab' ? LangProvider.ESTABLISHED[languageIndex] : LangProvider.Experience[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -456,7 +447,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       marginTop: vs(2),
                       paddingHorizontal: s(15)
                     }}>
-                    {Lang_chg.Bookings[statesData.languageIndex]}
+                    {LangProvider.Bookings[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -480,7 +471,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       marginTop: vs(2),
                       paddingHorizontal: s(15)
                     }}>
-                    {Lang_chg.Rating[statesData.languageIndex]}
+                    {LangProvider.Rating[languageIndex]}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
                     <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
@@ -551,184 +542,204 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
               <View style={styles.btnContainer}>
 
-
+                {/* -------------Doctor------------- */}
 
                 {
-                  (providerType === "doctor" && isFromHospital) ?
-                    <Button
-                      text={Lang_chg.BookOnlineAppointment[statesData.languageIndex]}
-                      btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                      onPress={() => {
-
-                        if (global.isLogin == false) {
-                          global.isPage = "providerDetails"
-                          navigation.navigate("AuthStack", {
-                            providerType: providerType,
-                            providerId: providerId,
-                            display: "taskbooking",
-                            isFromHospital: isFromHospital,
-                            hospitalId: hospitaId,
-                            indexPosition: 0,
-                            isPage: 'providerDetails'
-                          })
-                        } else {
-                          //HealthRecord
-                          navigation.navigate("HealthRecord", {
-                            providerType: providerType,
-                            providerId: providerId,
-                            display: "taskbooking",
-                            isFromHospital: isFromHospital,
-                            hospitalId: hospitaId,
-                            indexPosition: 0,
-                            isPage: 'providerDetails'
-                          })
-                        }
-                      }}
-                    />
-                    :
-                    (providerType === "doctor") ?
-                      <Button
-                        text={Lang_chg.BookOnlineAppointment[statesData.languageIndex]}
-                        btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                        onPress={() => {
-                          if (global.isLogin == false) {
-                            global.isPage = "providerDetails"
-                            // navigation.push("Login");
-                            navigation.navigate("AuthStack", {
-                              providerType: providerType,
-                              providerId: providerId,
-                              display: "taskbooking",
-                              isFromHospital: isFromHospital,
-                              hospitalId: hospitaId,
-                              indexPosition: 0
-                            })
-                          } else {
-                            navigation.navigate("HealthRecord", {
-                              providerType: providerType,
-                              providerId: providerId,
-                              display: "taskbooking",
-                              isFromHospital: isFromHospital,
-                              hospitalId: hospitaId,
-                              indexPosition: 0,
-                              isPage: 'providerDetails'
-                            })
-                          }
-                        }}
-                      />
-                      :
-                      (providerType === "lab") ?
-                        <Button
-                          text={Lang_chg.BOOKLABTESTAPPOINTMENT[statesData.languageIndex]}
-                          btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                          onPress={() => {
-                            if (global.isLogin == false) {
-                              global.isPage = "providerDetails"
-                              navigation.navigate("AuthStack", {
-                                providerType: providerType,
-                                providerId: providerId,
-                                display: "testBooking",
-                                indexPosition: 0
-                              })
-                            } else {
-                              navigation.navigate("HealthRecord", {
-                                providerType: providerType,
-                                providerId: providerId,
-                                display: "testBooking",
-                                indexPosition: 0,
-                                isPage: 'providerDetails'
-                              })
-                            }
-                          }}
-                        />
-                        :
-                        provider_details?.task_base_enable == 0 ? (
-                          <Button
-                            text={Lang_chg.BOOKTASKBASEDAPPOINTMENT[statesData.languageIndex]}
-                            btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
-                            onPress={() => {
-                              if (global.isLogin == false) {
-                                global.isPage = "providerDetails"
-                                navigation.navigate("AuthStack", {
-                                  providerType: providerType,
-                                  providerId: providerId,
-                                  display: "taskbooking",
-                                  indexPosition: 0
-                                })
-                              } else {
-                                navigation.navigate("HealthRecord", {
-                                  providerType: providerType,
-                                  providerId: providerId,
-                                  display: "taskbooking",
-                                  isPage: 'providerDetails'
-                                })
-                              }
-                            }}
-                          />
-                        )
-                          : null
-
-
+                  (provider_details?.provider_available == '0' && providerType == "doctor" && provider_details?.online_enable == '0') &&
+                  <Button
+                    text={LangProvider.BookOnlineAppointment[languageIndex]}
+                    btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: '',
+                          docType: 'ONLINE_CONSULT',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
                 }
+
                 {
-                  (providerType === "doctor" && !isFromHospital) ? (
-                    <Button
-                      text={Lang_chg.BookHomeVisitAppointment[statesData.languageIndex]}
-                      btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
-                      onPress={() => {
-                        if (global.isLogin == false) {
-                          global.isPage = "providerDetails"
-                          navigation.navigate("AuthStack", {
-                            providerType: statesData.providerType,
-                            providerId: providerId,
-                            display: "hourlybooking",
-                            isFromHospital: isFromHospital,
-                            hospitalId: hospitaId,
-                            indexPosition: 1
-                          })
-                        } else {
-                          navigation.navigate("HealthRecord", {
-                            providerType: providerType,
-                            providerId: providerId,
-                            display: "hourlybooking",
-                            indexPosition: 1,
-                            isPage: 'providerDetails'
-                          })
-                        }
-                      }}
-                    />
-                  )
-                    :
-                    (
-                      provider_details?.hour_base_enable == 0 && (
-                        <Button
-                          text={Lang_chg.BOOKHOURLYAPPOINTMENT[statesData.languageIndex]}
-                          btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
-                          onPress={() => {
-                            if (global.isLogin == false) {
-                              global.isPage = "providerDetails"
-                              navigation.navigate("AuthStack", {
-                                providerType: providerType,
-                                providerId: providerId,
-                                display: "hourlybooking",
-                                isFromHospital: isFromHospital,
-                                hospitalId: hospitaId,
-                                indexPosition: 0
-                              })
-                            } else {
-                              navigation.navigate("HealthRecord", {
-                                providerType: providerType,
-                                providerId: providerId,
-                                display: "hourlybooking",
-                                isFromHospital: isFromHospital,
-                                hospitalId: hospitaId,
-                                indexPosition: 0,
-                                isPage: 'providerDetails'
-                              })
-                            }
-                          }}
-                        />
-                      )
-                    )
+                  (provider_details?.provider_available == '0' && providerType == "doctor" && provider_details?.home_visit_enable == '0') &&
+                  <Button
+                    text={LangProvider.BookHomeVisitAppointment[languageIndex]}
+                    btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: '',
+                          docType: 'HOME_VISIT_CONSULT',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
+                }
+
+                {/* -------------Lab------------- */}
+
+                {
+                  (provider_details?.provider_available == '0' && providerType == 'lab' && provider_details?.taskbase_enable == '0') &&
+                  <Button
+                    text={LangProvider.BOOKLABTESTAPPOINTMENT[languageIndex]}
+                    btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: 'test',
+                          docType: '',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
+                }
+
+                {
+                  (provider_details?.provider_available == '0' && providerType == 'lab' && provider_details?.packagebase_enable == '0') &&
+                  <Button
+                    text={LangProvider.BookLabPackage[languageIndex]}
+                    btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: 'package',
+                          docType: '',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
+                }
+
+                {/* -------------Others------------- */}
+
+
+                {
+                  (provider_details?.provider_available == '0' && provider_details?.task_base_enable == '0') &&
+                  <Button
+                    text={LangProvider.BOOKTASKBASEDAPPOINTMENT[languageIndex]}
+                    btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: 'task',
+                          docType: '',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
+                }
+
+                {
+
+                  (provider_details?.provider_available == '0' && provider_details?.hour_base_enable == '0') &&
+                  <Button
+                    text={LangProvider.BOOKHOURLYAPPOINTMENT[languageIndex]}
+                    btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
+                    onPress={() => {
+                      if (guest) {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerList',
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("AuthStack")
+                        }, 250);
+                      } else {
+                        dispatch(SelectedProvider({
+                          currentScreen: 'providerDetails',
+                          providerType: providerType,
+                          providerId: providerId,
+                          isFromHospital: isFromHospital,
+                          hospitalId: hospitalId,
+                          bookingType: 'hour',
+                          docType: '',
+                          packageId: ''
+                        }))
+                        setTimeout(() => {
+                          navigation.navigate("HealthRecord")
+                        }, 250);
+                      }
+                    }}
+                  />
                 }
 
               </View>
@@ -749,17 +760,17 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                     paddingLeft: s(7),
                     paddingRight: s(14),
                   }}>
-                  {(statesData.providerType == "nurse"
-                    ? Lang_chg.Nurse[statesData.languageIndex]
-                    : statesData.providerType == "physiotherapy"
-                      ? Lang_chg.Physiotherapist[statesData.languageIndex]
-                      : statesData.providerType == "caregiver"
-                        ? Lang_chg.Nurse_assistant[statesData.languageIndex]
-                        : statesData.providerType == "babysitter"
-                          ? Lang_chg.Babysitter[statesData.languageIndex]
-                          : statesData.providerType == "doctor"
-                            ? Lang_chg.Doctor[statesData.languageIndex]
-                            : Lang_chg.Lab[statesData.languageIndex]) + ' ' + Lang_chg.Booking[statesData.languageIndex]
+                  {(providerType == "nurse"
+                    ? LangProvider.Nurse[languageIndex]
+                    : providerType == "physiotherapy"
+                      ? LangProvider.Physiotherapist[languageIndex]
+                      : providerType == "caregiver"
+                        ? LangProvider.Nurse_assistant[languageIndex]
+                        : providerType == "babysitter"
+                          ? LangProvider.Babysitter[languageIndex]
+                          : providerType == "doctor"
+                            ? LangProvider.Doctor[languageIndex]
+                            : LangProvider.Lab[languageIndex]) + ' ' + LangProvider.Booking[languageIndex]
                   }
                 </Text>
                 <View style={{ height: '40%', borderWidth: 0.8, borderColor: Colors.backgroundcolor }}></View>
@@ -770,7 +781,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                     color: Colors.White,
                     paddingLeft: s(12),
                   }}>
-                  {Lang_chg.RootsCare[statesData.languageIndex]}
+                  {LangProvider.RootsCare[languageIndex]}
                 </Text>
               </View>
 
@@ -787,7 +798,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       color: Colors.White,
                       alignSelf: 'flex-end'
                     }}>
-                    {Lang_chg.Howitworks[statesData.languageIndex]}
+                    {LangProvider.Howitworks[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -809,7 +820,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                     }}
                   >
 
-                    {Lang_chg.HealthPackages[statesData.languageIndex]}
+                    {LangProvider.HealthPackages[languageIndex]}
                   </Text>
                   <Text
                     onPress={() => {
@@ -824,7 +835,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       color: Colors.Blue,
                     }}
                   >
-                    {Lang_chg.See_all[statesData.languageIndex]}
+                    {LangProvider.See_all[languageIndex]}
                   </Text>
 
                 </View>
@@ -927,27 +938,27 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
                           <Text
                             onPress={() => {
-                              if (global.isLogin == false) {
-                                global.isPage = "providerDetails"
-                                // navigation.push("Login");
-                                navigation.navigate("AuthStack", {
+                              if (guest) {
+                                dispatch(SelectedProvider({
+                                  currentScreen: 'providerList',
+                                }))
+                                setTimeout(() => {
+                                  navigation.navigate("AuthStack")
+                                }, 250);
+                              } else {
+                                dispatch(SelectedProvider({
+                                  currentScreen: 'providerDetails',
                                   providerType: providerType,
                                   providerId: providerId,
-                                  display: "packageBooking",
-                                  // isFromHospital: true,
-                                  // hospitalId: Item?.hospital_id,
-                                  indexPosition: 0
-                                })
-                              } else {
-                                navigation.navigate(
-                                  "Booking",
-                                  {
-                                    providerType: providerType,
-                                    nurse_id: providerId,
-                                    display: "packageBooking",
-                                    indexPosition: 1,
-                                  }
-                                );
+                                  isFromHospital: isFromHospital,
+                                  hospitalId: hospitalId,
+                                  bookingType: 'package',
+                                  docType: '',
+                                  packageId: item.pid
+                                }))
+                                setTimeout(() => {
+                                  navigation.navigate("HealthRecord")
+                                }, 250);
                               }
                             }}
                             style={{
@@ -957,7 +968,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                               textTransform: "uppercase",
                             }}
                           >
-                            {Lang_chg.Book[statesData.languageIndex]}
+                            {LangProvider.Book[languageIndex]}
                           </Text>
                         </View>
 
@@ -982,7 +993,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       color: Colors.darkText
                     }}
                   >
-                    {`${providerType === 'nurse' ? Lang_chg.AvailableNurse[statesData.languageIndex] : providerType === 'physiotherapy' ? Lang_chg.Availablephysotharpst[statesData.languageIndex] : providerType === 'caregiver' ? Lang_chg.Availableassistent[statesData.languageIndex] : providerType === 'babysitter' ? Lang_chg.Availablebabysitter[statesData.languageIndex] : providerType === 'doctor' ? Lang_chg.AvailableDoctor[statesData.languageIndex] : Lang_chg.AvailableLab[statesData.languageIndex]}`}
+                    {`${providerType === 'nurse' ? LangProvider.AvailableNurse[languageIndex] : providerType === 'physiotherapy' ? LangProvider.Availablephysotharpst[languageIndex] : providerType === 'caregiver' ? LangProvider.Availableassistent[languageIndex] : providerType === 'babysitter' ? LangProvider.Availablebabysitter[languageIndex] : providerType === 'doctor' ? LangProvider.AvailableDoctor[languageIndex] : LangProvider.AvailableLab[languageIndex]}`}
                   </Text>
                   <TouchableOpacity onPress={() => navigation.pop()}>
                     <Text
@@ -992,7 +1003,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                         color: Colors.Blue,
                       }}
                     >
-                      {Lang_chg.See_all[statesData.languageIndex]}
+                      {LangProvider.See_all[languageIndex]}
                     </Text>
                   </TouchableOpacity>
 

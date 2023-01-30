@@ -16,11 +16,10 @@ import LabTestIndex from "../../screens/LabTests/Index";
 import Drawerscreen from "../../components/Drawerscreen";
 
 import { Colors } from "../Colorsfont";
-import { Lang_chg } from "../Language_provider";
+import { LangProvider } from '../Utils/Utils';
 import { config } from "../configProvider";
 import { vs } from "react-native-size-matters";
-import { apifuntion } from "../Apicallingprovider/apiProvider";
-import { consolepro } from "../Messageconsolevalidationprovider/Consoleprovider";
+import { apifuntion } from "../APIProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { TodaysAppointments, TodaysConsultations, TodaysLabTests } from "../../Redux/Actions";
 
@@ -87,7 +86,7 @@ const DashboardStack = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getAppointments-response...", obj);
+        // console.log("getAppointments-response...", obj);
         if (obj.status == true) {
           dispatch(TodaysAppointments(obj?.result))
         } else {
@@ -95,7 +94,7 @@ const DashboardStack = ({ navigation }) => {
           return false;
         }
       }).catch((error) => {
-        consolepro.consolelog("getAppointments-error ------- " + error);
+        console.log("getAppointments-error ------- " + error);
       });
   };
 
@@ -109,7 +108,7 @@ const DashboardStack = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getConsultations-response...", obj);
+        // console.log("getConsultations-response...", obj);
         if (obj.status == true) {
           dispatch(TodaysConsultations(obj?.result))
         } else {
@@ -117,7 +116,7 @@ const DashboardStack = ({ navigation }) => {
           return false;
         }
       }).catch((error) => {
-        consolepro.consolelog("getConsultations-error ------- " + error);
+        console.log("getConsultations-error ------- " + error);
       });
   };
 
@@ -131,7 +130,7 @@ const DashboardStack = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // consolepro.consolelog("getTests-response...", obj);
+        // console.log("getTests-response...", obj);
         if (obj.status == true) {
           dispatch(TodaysLabTests(obj?.result))
         } else {
@@ -139,7 +138,7 @@ const DashboardStack = ({ navigation }) => {
           return false;
         }
       }).catch((error) => {
-        consolepro.consolelog("getTests-error ------- " + error);
+        console.log("getTests-error ------- " + error);
       });
   };
 
@@ -212,7 +211,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Home'}
-              title={Lang_chg.Home[appLanguage == 'en' ? 0 : 1]} />
+              title={LangProvider.Home[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -220,7 +219,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Apointment'}
-              title={Lang_chg.Appointment[appLanguage == 'en' ? 0 : 1]} />
+              title={LangProvider.Appointment[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -228,7 +227,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Consultation'}
-              title={Lang_chg.Consultation[appLanguage == 'en' ? 0 : 1]} />
+              title={LangProvider.Consultation[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -236,7 +235,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'LabTest'}
-              title={Lang_chg.Lab_Test[appLanguage == 'en' ? 0 : 1]} />
+              title={LangProvider.Lab_Test[appLanguage == 'en' ? 0 : 1]} />
 
             <TabItem
               reset
@@ -244,7 +243,7 @@ const DashboardStack = ({ navigation }) => {
               activeIndex={state.index}
               navigation={navigation}
               path={'Profile'}
-              title={Lang_chg.Profile[appLanguage == 'en' ? 0 : 1]} />
+              title={LangProvider.Profile[appLanguage == 'en' ? 0 : 1]} />
 
 
           </View>

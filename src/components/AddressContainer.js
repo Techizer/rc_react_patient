@@ -5,7 +5,7 @@ import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, LangProvider } from "../Provider/Utils/Utils";
 import { Address, Cross, dummyUser, Edit, Menu, roundCheck } from "../Icons/Index";
 import { useSelector } from "react-redux";
 
@@ -92,7 +92,7 @@ const AddressContainer = ({
                                 (
                                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '33%' }}>
                                         <SvgXml xml={roundCheck} />
-                                        <Text style={{ fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[appLanguage == 'en' ? 0 : 1]}</Text>
+                                        <Text style={{ fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{LangProvider.Default[appLanguage == 'en' ? 0 : 1]}</Text>
                                     </View>
                                 )
                             }

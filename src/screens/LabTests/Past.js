@@ -10,9 +10,9 @@ import {
   Colors,
   Font,
   config,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import { useIsFocused } from "@react-navigation/native";
@@ -106,14 +106,14 @@ const OnGoing = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{guest ? Lang_chg.guestLabsTitle[appLanguage == 'en' ? 0 : 1] : Lang_chg.noLabsTitle[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestLabsTitle[appLanguage == 'en' ? 0 : 1] : LangProvider.noLabsTitle[appLanguage == 'en' ? 0 : 1]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{guest ? Lang_chg.guestLabsDesc[appLanguage == 'en' ? 0 : 1] : Lang_chg.noLabsDesc[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestLabsDesc[appLanguage == 'en' ? 0 : 1] : LangProvider.noLabsDesc[appLanguage == 'en' ? 0 : 1]}</Text>
             </View>
           )
         }}

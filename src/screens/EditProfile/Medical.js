@@ -9,6 +9,7 @@ import {
     FlatList,
     Keyboard,
     Platform,
+    Pressable,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,14 +20,11 @@ import {
     Colors,
     Font,
     config,
-    Lang_chg,
-    localStorage,
     apifuntion,
     msgProvider,
-    msgText,
-    msgTitle,
+    LangProvider,
     Button
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import AuthInputBoxSec from "../../components/AuthInputBoxSec";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
@@ -35,11 +33,10 @@ import { UserDetails } from "../../Redux/Actions";
 
 const Medical = () => {
 
-    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [medicalDetails, setMedicalDetails] = useState({
-        languageIndex: appLanguage == 'en' ? 0 : 1,
         Allergic: -1,
         allergyName: '',
         currentMed: -1,
@@ -138,8 +135,8 @@ const Medical = () => {
 
                 } else {
                     msgProvider.alert(
-                        msgTitle.information[medicalDetails.languageIndex],
-                        obj.message[medicalDetails.languageIndex],
+                        LangProvider.information[languageIndex],
+                        obj.message[languageIndex],
                         false
                     );
 
@@ -159,27 +156,27 @@ const Medical = () => {
             isLoading: true
         }))
         if (medicalDetails.Allergic === 0 & medicalDetails.allergyName === '') {
-            msgProvider.showError(msgText.allergyName[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.allergyName[languageIndex]);
             return false;
         }
         if (medicalDetails.currentMed === 0 & medicalDetails.currentMedName === '') {
-            msgProvider.showError(msgText.currentMedicine[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.currentMedicine[languageIndex]);
             return false;
         }
         if (medicalDetails.pastMed === 0 & medicalDetails.pastMedName === '') {
-            msgProvider.showError(msgText.pastMedicine[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.pastMedicine[languageIndex]);
             return false;
         }
         if (medicalDetails.Injuries === 0 & medicalDetails.injuryName === '') {
-            msgProvider.showError(msgText.injuries[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.injuries[languageIndex]);
             return false;
         }
         if (medicalDetails.Surgeries === 0 & medicalDetails.surgeryName === '') {
-            msgProvider.showError(msgText.surgeries[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.surgeries[languageIndex]);
             return false;
         }
         if (medicalDetails.chronicDisease === 0 & medicalDetails.chronicDiseaseName === '') {
-            msgProvider.showError(msgText.chronicDisease[medicalDetails.languageIndex]);
+            msgProvider.showError(LangProvider.chronicDisease[languageIndex]);
             return false;
         }
 
@@ -227,7 +224,7 @@ const Medical = () => {
     return (
         <View
             pointerEvents={medicalDetails.isLoading ? 'none' : 'auto'}
-            style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
+            style={{ flex: 1, backgroundColor: Colors.White }}>
             <KeyboardAwareScrollView
                 // keyboardOpeningTime={200}
                 extraScrollHeight={50}
@@ -259,7 +256,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.allergies[medicalDetails.languageIndex]}
+                            {LangProvider.allergies[languageIndex]}
                         </Text>
                     </View>
 
@@ -283,7 +280,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q1[medicalDetails.languageIndex]}
+                                {LangProvider.q1[languageIndex]}
                             </Text>
 
 
@@ -299,14 +296,14 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, Allergic: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
+                                                }}
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, Allergic: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -315,7 +312,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.Allergic ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -325,7 +322,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -337,7 +334,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputallergies[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.textinputallergies[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, allergyName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.allergyName}
@@ -378,7 +375,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.current[medicalDetails.languageIndex]}
+                            {LangProvider.current[languageIndex]}
                         </Text>
                     </View>
 
@@ -402,7 +399,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q2[medicalDetails.languageIndex]}
+                                {LangProvider.q2[languageIndex]}
                             </Text>
 
 
@@ -418,14 +415,14 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, currentMed: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, currentMedName: '' }))
+                                                }}
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, currentMed: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, currentMedName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -434,7 +431,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.currentMed ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -444,7 +441,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -456,7 +453,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputcurrent[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.textinputcurrent[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, currentMedName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.currentMedName}
@@ -497,7 +494,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.pastmedication[medicalDetails.languageIndex]}
+                            {LangProvider.pastmedication[languageIndex]}
                         </Text>
                     </View>
 
@@ -521,7 +518,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q3[medicalDetails.languageIndex]}
+                                {LangProvider.q3[languageIndex]}
                             </Text>
 
 
@@ -537,14 +534,14 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, pastMed: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, pastMedName: '' }))
+                                                }}
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, pastMed: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, pastMedName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -553,7 +550,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.pastMed ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -563,7 +560,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -575,7 +572,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.pastmedication[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.pastmedication[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, pastMedName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.pastMedName}
@@ -616,7 +613,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.injuries[medicalDetails.languageIndex]}
+                            {LangProvider.injuries[languageIndex]}
                         </Text>
                     </View>
 
@@ -640,7 +637,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q4[medicalDetails.languageIndex]}
+                                {LangProvider.q4[languageIndex]}
                             </Text>
 
 
@@ -656,14 +653,14 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, Injuries: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, injuryName: '' }))
+                                                }}
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, Injuries: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, injuryName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -672,7 +669,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.Injuries ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -682,7 +679,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -694,7 +691,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.injuries[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.injuries[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, injuryName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.injuryName}
@@ -735,7 +732,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.surgeries[medicalDetails.languageIndex]}
+                            {LangProvider.surgeries[languageIndex]}
                         </Text>
                     </View>
 
@@ -759,7 +756,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q5[medicalDetails.languageIndex]}
+                                {LangProvider.q5[languageIndex]}
                             </Text>
 
 
@@ -775,14 +772,13 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, Surgeries: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, surgeryName: '' }))
+                                                }} style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, Surgeries: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, surgeryName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -791,7 +787,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.Surgeries ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -801,7 +797,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -813,7 +809,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputsurgeries[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.textinputsurgeries[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, surgeryName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.surgeryName}
@@ -854,7 +850,7 @@ const Medical = () => {
                                 textAlign: config.textRotate,
                                 marginBottom: vs(9)
                             }} >
-                            {Lang_chg.chronic[medicalDetails.languageIndex]}
+                            {LangProvider.chronic[languageIndex]}
                         </Text>
                     </View>
 
@@ -878,7 +874,7 @@ const Medical = () => {
                                     fontSize: Font.medium,
                                     textAlign: config.textRotate,
                                 }}>
-                                {Lang_chg.q6[medicalDetails.languageIndex]}
+                                {LangProvider.q6[languageIndex]}
                             </Text>
 
 
@@ -894,14 +890,14 @@ const Medical = () => {
                                     }}
                                     renderItem={({ item, index }) => {
                                         return (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Pressable
+                                                onPress={() => {
+                                                    setMedicalDetails(prevState => ({ ...prevState, chronicDisease: index }))
+                                                    if (index === 1) setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: '' }))
+                                                }}
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                                <TouchableOpacity
-                                                    activeOpacity={0.8}
-                                                    onPress={() => {
-                                                        setMedicalDetails(prevState => ({ ...prevState, chronicDisease: index }))
-                                                        if (index === 1) setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: '' }))
-                                                    }}
+                                                <View
                                                     style={{
                                                         height: s(16),
                                                         width: s(16),
@@ -910,7 +906,7 @@ const Medical = () => {
                                                         borderColor: index === medicalDetails.chronicDisease ? Colors.Blue : Colors.lightGrey
                                                     }}>
 
-                                                </TouchableOpacity>
+                                                </View>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.small,
@@ -920,7 +916,7 @@ const Medical = () => {
                                                         marginLeft: s(8)
 
                                                     }}>{item}</Text>
-                                            </View>
+                                            </Pressable>
 
                                         );
                                     }}
@@ -932,7 +928,7 @@ const Medical = () => {
 
                                 <AuthInputBoxSec
                                     mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                    lableText={Lang_chg.textinputchronic[medicalDetails.languageIndex]}
+                                    lableText={LangProvider.textinputchronic[languageIndex]}
                                     onChangeText={(text) => setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: text }))}
                                     maxLength={50}
                                     value={medicalDetails.chronicDiseaseName}
@@ -956,7 +952,7 @@ const Medical = () => {
 
                 <View style={{ width: '93%', alignSelf: 'center' }}>
                     <Button
-                        text={Lang_chg.submitbtntext[medicalDetails.languageIndex]}
+                        text={LangProvider.submitbtntext[languageIndex]}
                         onPress={() => saveMedical()}
                         btnStyle={{ marginTop: vs(15) }}
                         onLoading={medicalDetails.isLoading}

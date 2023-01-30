@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, FlatList, } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { Colors, Font, msgProvider, config, windowWidth, Lang_chg, apifuntion, ScreenHeader } from '../Provider/utilslib/Utils';
+import { Colors, Font, msgProvider, config, windowWidth, LangProvider, apifuntion, ScreenHeader } from '../Provider/Utils/Utils';
 import { s, vs } from 'react-native-size-matters';
 import { SvgXml } from 'react-native-svg';
 import { Add } from '../Icons/Index';
@@ -72,7 +72,7 @@ const ManageAddress = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Manage_Address[appLanguage == 'en' ? 0 : 1]}
+        title={LangProvider.Manage_Address[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -80,7 +80,7 @@ const ManageAddress = ({ navigation }) => {
 
       {/* <SearchInput
           navigation={this.props.navigation}
-          placeholder={Lang_chg.SearchLocation[config.language]}
+          placeholder={LangProvider.SearchLocation[config.language]}
         /> */}
 
       <View style={{ backgroundColor: Colors.White, marginTop: vs(7), paddingHorizontal: s(13), paddingVertical: vs(15) }}>
@@ -101,7 +101,7 @@ const ManageAddress = ({ navigation }) => {
                       fontSize: Font.medium,
                       fontFamily: Font.SemiBold,
                       color: Colors.darkText,
-                    }}>{Lang_chg.Saved_Address[appLanguage == 'en' ? 0 : 1]}</Text>
+                    }}>{LangProvider.Saved_Address[appLanguage == 'en' ? 0 : 1]}</Text>
 
                   <TouchableOpacity
                     style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -117,7 +117,7 @@ const ManageAddress = ({ navigation }) => {
                         fontFamily: Font.Medium,
                         color: Colors.Blue,
                         marginLeft: s(5)
-                      }}>{Lang_chg.Add_New_Address[appLanguage == 'en' ? 0 : 1]}</Text>
+                      }}>{LangProvider.Add_New_Address[appLanguage == 'en' ? 0 : 1]}</Text>
                   </TouchableOpacity>
                 </View>
               </View>

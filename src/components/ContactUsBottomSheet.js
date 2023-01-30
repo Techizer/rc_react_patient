@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import DeviceInfo from "react-native-device-info";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, Lang_chg, config, Button, msgProvider, consolepro, apifuntion, windowHeight, } from "../Provider/utilslib/Utils";
+import { windowWidth, LangProvider, config, Button, msgProvider, apifuntion, windowHeight, } from "../Provider/Utils/Utils";
 import { Cross, } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -24,7 +24,7 @@ const ContactUsBottomSheet = ({
     route
 }) => {
 
-    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
 
     const [subject, setSubject] = useState('')
     const [phone, setPhone] = useState('')
@@ -32,7 +32,6 @@ const ContactUsBottomSheet = ({
     const [desc, setDesc] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [keyboardOffset, setKeyboardOffset] = useState(0);
-    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1);
     const subjectRef = useRef()
     const emailRef = useRef()
     const phoneRef = useRef()
@@ -92,19 +91,19 @@ const ContactUsBottomSheet = ({
         setIsLoading(true)
         let url = config.baseURL + "api-login-issue";
         var data = new FormData();
-        data.append("subject", route == 'Login' ? Lang_chg.LoginIssue[languageIndex] : subject);
+        data.append("subject", route == 'Login' ? LangProvider.LoginIssue[languageIndex] : subject);
         data.append("phone", phone);
         data.append("email", email);
         data.append("message", desc);
         data.append("deviceId", deviceId);
         data.append("deviceName", deviceName);
 
-        // consolepro.consolelog("data", data);
+        // console.log("data", data);
         // return
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
                 setIsLoading(false)
-                consolepro.consolelog("submitLoginIssue-response...", obj);
+                console.log("submitLoginIssue-response...", obj);
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message);
                     setTimeout(() => {
@@ -126,7 +125,7 @@ const ContactUsBottomSheet = ({
             })
             .catch((error) => {
                 setIsLoading(false)
-                consolepro.consolelog("submitLoginIssue-error ------- " + error);
+                console.log("submitLoginIssue-error ------- " + error);
             });
     };
     const submitIssue = async () => {
@@ -143,11 +142,11 @@ const ContactUsBottomSheet = ({
         data.append("order_id", Id);
         data.append("message", desc);
 
-        // consolepro.consolelog("data", data);
+        // console.log("data", data);
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
                 setIsLoading(false)
-                consolepro.consolelog("submitIssue-response...", obj);
+                console.log("submitIssue-response...", obj);
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message);
                     setTimeout(() => {
@@ -158,7 +157,7 @@ const ContactUsBottomSheet = ({
                 } else {
                     onRequestClose()
                     msgProvider.alert(
-                        msgTitle.information[languageIndex],
+                        LangProvider.information[languageIndex],
                         obj.message[languageIndex],
                         false
                     );
@@ -167,7 +166,7 @@ const ContactUsBottomSheet = ({
             })
             .catch((error) => {
                 setIsLoading(false)
-                consolepro.consolelog("submitIssue-error ------- " + error);
+                console.log("submitIssue-error ------- " + error);
             });
     };
 
@@ -206,7 +205,7 @@ const ContactUsBottomSheet = ({
                         alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{route == 'Login' ? Lang_chg.Login_Issue[languageIndex] : Lang_chg.Appoitment_Issue[languageIndex]}</Text>
+                    }}>{route == 'Login' ? LangProvider.Login_Issue[languageIndex] : LangProvider.Appoitment_Issue[languageIndex]}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -225,8 +224,8 @@ const ContactUsBottomSheet = ({
 
 
                         <NonEditableInput
-                            title={route == 'Login' ? Lang_chg.Subject[languageIndex] : Lang_chg.OrderId[languageIndex]}
-                            data={route == 'Login' ? Lang_chg.LoginIssue[languageIndex] : data} />
+                            title={route == 'Login' ? LangProvider.Subject[languageIndex] : LangProvider.OrderId[languageIndex]}
+                            data={route == 'Login' ? LangProvider.LoginIssue[languageIndex] : data} />
 
 
                         {
@@ -234,7 +233,7 @@ const ContactUsBottomSheet = ({
                             <AuthInputBoxSec
                                 mainContainer={{ width: '100%' }}
                                 inputFieldStyle={{ height: vs(35) }}
-                                lableText={Lang_chg.Subject[languageIndex]}
+                                lableText={LangProvider.Subject[languageIndex]}
                                 inputRef={subjectRef}
                                 onChangeText={(val) => setSubject(val)}
                                 value={subject}
@@ -255,7 +254,7 @@ const ContactUsBottomSheet = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.Email[languageIndex]}
+                                    lableText={LangProvider.Email[languageIndex]}
                                     inputRef={emailRef}
                                     onChangeText={(val) => setEmail(val)}
                                     value={email}
@@ -272,7 +271,7 @@ const ContactUsBottomSheet = ({
                                 <AuthInputBoxSec
                                     mainContainer={{ width: '100%' }}
                                     inputFieldStyle={{ height: vs(35) }}
-                                    lableText={Lang_chg.PhoneNumber[languageIndex]}
+                                    lableText={LangProvider.PhoneNumber[languageIndex]}
                                     inputRef={phoneRef}
                                     onChangeText={(val) => setPhone(val)}
                                     value={phone}
@@ -313,7 +312,7 @@ const ContactUsBottomSheet = ({
                                 }}
                                 maxLength={250}
                                 multiline={true}
-                                placeholder={Lang_chg.Description[languageIndex]}
+                                placeholder={LangProvider.Description[languageIndex]}
                                 placeholderTextColor={Colors.MediumGrey}
                                 onChangeText={(txt) => {
                                     setDesc(txt)
@@ -331,7 +330,7 @@ const ContactUsBottomSheet = ({
                         <View style={{ marginTop: vs(35) }}>
 
                             <Button
-                                text={Lang_chg.submitbtntext[languageIndex]}
+                                text={LangProvider.submitbtntext[languageIndex]}
                                 onPress={() => {
                                     if (route == 'Login') {
                                         submitLoginIssue()

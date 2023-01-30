@@ -17,7 +17,11 @@ import {
     NOTI_COUNT,
     TODAY_APPOINTMENT,
     TODAY_CONSULT,
-    TODAY_LAB
+    TODAY_LAB,
+    SELECTED_PROVIDER,
+    LANGUAGE_INDEX,
+    CART,
+    TABBY_PAYMENT
 } from './Types'
 
 const Guest = (payload) => ({
@@ -75,6 +79,11 @@ const AppLanguage = (payload) => ({
     payload
 })
 
+const LanguageIndex = (payload) => ({
+    type: LANGUAGE_INDEX,
+    payload
+})
+
 const ContentAlign = (payload) => ({
     type: CONTENT_ALIGNMENT,
     payload
@@ -115,6 +124,27 @@ const TodaysLabTests = (payload) => ({
     payload
 })
 
+const SelectedProvider = (payload) => ({
+    type: SELECTED_PROVIDER,
+    payload
+})
+
+const Cart = (payload) => {
+
+    console.log({ payload });
+    return ({
+        type: CART,
+        payload
+    })
+
+}
+
+
+
+const TabbyPaymentStatus = (payload) => ({
+    type: TABBY_PAYMENT,
+    payload
+})
 
 export {
     Guest,
@@ -126,6 +156,7 @@ export {
     DeviceType,
     AppVersion,
     AppLanguage,
+    LanguageIndex,
     Address,
     ContentAlign,
     InternetStatus,
@@ -135,5 +166,8 @@ export {
     Notifications,
     TodaysAppointments,
     TodaysConsultations,
-    TodaysLabTests
+    TodaysLabTests,
+    SelectedProvider,
+    Cart,
+    TabbyPaymentStatus
 }

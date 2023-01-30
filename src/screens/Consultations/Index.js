@@ -10,11 +10,11 @@ import {
   Colors,
   Font,
   windowWidth,
-  Lang_chg,
+  LangProvider,
   deviceHeight,
   windowHeight,
   StatusbarHeight,
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import { ScreenHeader } from "../../components/ScreenHeader";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
@@ -39,7 +39,7 @@ const ConsultIndex = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.Doctor_Consultations[appLanguage == 'en' ? 0 : 1]}
+        title={LangProvider.Doctor_Consultations[appLanguage == 'en' ? 0 : 1]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,
@@ -67,7 +67,7 @@ const ConsultIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={todayConsultations?.length > 0 ? Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1] : Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]}
+        initialRouteName={todayConsultations?.length > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
         screenOptions={{
           tabBarStyle: { height: (windowWidth * 10.5) / 100, width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
@@ -89,9 +89,9 @@ const ConsultIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={Lang_chg.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
-        <Tabs.Screen name={Lang_chg.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
-        <Tabs.Screen name={Lang_chg.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
+        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
+        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
+        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
 
       </Tabs.Navigator>
 

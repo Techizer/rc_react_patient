@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableW
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight, msgProvider } from "../Provider/utilslib/Utils";
+import { windowWidth,  windowHeight } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -53,7 +53,7 @@ const PrescriptionBottomSheet = ({
                         textAlign: config.textRotate,
                         color: Colors.darkText
 
-                    }}>{Lang_chg.Rate_Appointment[config.language]}</Text> */}
+                    }}>{LangProvider.Rate_Appointment[config.language]}</Text> */}
                 <Image
                     source={{
                         uri: data,

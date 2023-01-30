@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, Pressable, } from "react-native";
+import { Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, Keyboard, FlatList, TextInput, Pressable, } from "react-native";
 import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, Button, Icons, msgProvider, windowHeight } from "../Provider/utilslib/Utils";
-import { Cross, dummyUser, Edit } from "../Icons/Index";
+import { windowWidth, LangProvider, Button, Icons, msgProvider, windowHeight } from "../Provider/Utils/Utils";
+import { Cross, } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import StarRating from "react-native-star-rating";
+import { useSelector } from "react-redux";
 
 
 
@@ -22,8 +23,8 @@ const RatingBottomSheet = ({
     rateProvider
 }) => {
 
-    const [reviewText, setReviewText] = useState('')
-    const [textLength, setTextLength] = useState(0)
+    const {languageIndex } = useSelector(state => state.StorageReducer)
+
     const inputRef = useRef()
 
     return (
@@ -56,10 +57,10 @@ const RatingBottomSheet = ({
                     style={{
                         fontSize: Font.large,
                         fontFamily: Font.SemiBold,
-                        textAlign: config.textRotate,
+                        alignSelf:'flex-start',
                         color: Colors.darkText
 
-                    }}>{Lang_chg.Rate_Appointment[config.language]}</Text>
+                    }}>{LangProvider.Rate_Appointment[languageIndex]}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -108,13 +109,13 @@ const RatingBottomSheet = ({
                                     style={{
                                         color: Colors.Black,
                                         fontSize: Font.medium,
-                                        textAlign: config.textalign,
+                                        alignSelf:'flex-start',
                                         // height: '100%',
                                         fontFamily: Font.Regular,
                                     }}
                                     maxLength={200}
                                     multiline
-                                    placeholder={Lang_chg.Write_review[config.language]}
+                                    placeholder={LangProvider.Write_review[languageIndex]}
                                     placeholderTextColor={Colors.lightGrey}
                                     onChangeText={onChangeText}
                                     value={reviewValue}
@@ -124,26 +125,6 @@ const RatingBottomSheet = ({
                                     onSubmitEditing={() => Keyboard.dismiss()}
                                 />
 
-                                {/* {this.state.emailfocus == true && (
-                                        <View
-                                            style={{
-                                                position: "absolute",
-                                                backgroundColor: "White",
-                                                left: (windowWidth * 4) / 100,
-                                                top: (-windowWidth * 3) / 100,
-                                                paddingHorizontal: (windowWidth * 1) / 100,
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: "#0057A5",
-                                                    textAlign: config.textalign,
-                                                }}
-                                            >
-                                                {Lang_chg.Write_review[config.language]}
-                                            </Text>
-                                        </View>
-                                    )} */}
                             </Pressable>
 
                             <Text
@@ -157,7 +138,7 @@ const RatingBottomSheet = ({
                             </Text>
 
                             <Button
-                                text={Lang_chg.submitbtntext[config.language]}
+                                text={LangProvider.submitbtntext[languageIndex]}
                                 onPress={() => {
                                     if (value == '' || reviewValue == '') {
                                         msgProvider.showError('Please give rating and write a review');
@@ -218,7 +199,8 @@ const styles = StyleSheet.create({
         marginTop: (windowWidth * 7) / 100,
         paddingHorizontal: s(7),
         paddingVertical: s(0),
-        height: (windowWidth * 30) / 100
+        height: (windowWidth * 30) / 100,
+        // backgroundColor:'pink'
     },
 
 });

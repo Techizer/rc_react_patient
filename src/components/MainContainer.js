@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Platform, Text, View, Image, Alert,
-    ActivityIndicator, KeyboardAvoidingView,
-    TouchableOpacity, TextInput, SafeAreaView, FlatList, Keyboard, ScrollView
+    Platform, KeyboardAvoidingView, SafeAreaView, FlatList, Keyboard, ScrollView
 } from 'react-native';
 import styles, { ThemeColors } from '../styles/main.style';
 

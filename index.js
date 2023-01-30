@@ -10,7 +10,7 @@ import { Provider, useDispatch } from "react-redux";
 import { store, persistor } from './src/Redux/Index'
 import FlashMessage from "react-native-flash-message";
 import { Font } from './src/Provider/Colorsfont';
-import { StatusbarHeight, windowWidth } from './src/Provider/utilslib/Utils';
+import { StatusbarHeight, windowWidth } from './src/Provider/Utils/Utils';
 
 
 export default function Main() {

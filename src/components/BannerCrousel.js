@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, Image, TextInput, Dimensions, Animated, F
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 import { Colors } from '../Provider/Colorsfont';
-import { config, Icons, windowWidth } from '../Provider/utilslib/Utils';
+import { config, Icons, windowWidth } from '../Provider/Utils/Utils';
 
 const BannerWidth = Dimensions.get('window').width;
 const BannerHeight = (6 / 16) * BannerWidth;

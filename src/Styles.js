@@ -1,21 +1,10 @@
 import { StyleSheet } from "react-native";
-import { vs } from "react-native-size-matters";
 import {
   Colors,
   Font,
-  windowHeight,
-  Mapprovider,
-  msgProvider,
-  msgText,
-  config,
   windowWidth,
-  localStorage,
-  consolepro,
-  handleback,
-  Lang_chg,
-  apifuntion,
-  msgTitle,
-} from "./Provider/utilslib/Utils";
+  
+} from "./Provider/Utils/Utils";
 
 export default Styles = StyleSheet.create({
   container1: {
@@ -48,12 +37,6 @@ export default Styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: Font.Medium,
     fontSize: (windowWidth * 4) / 100,
-  },
-  headingtext: {
-    // color: Colors.whiteColor,
-    textAlign: config.textalign,
-    fontFamily: Font.Medium,
-    fontSize: (windowWidth * 3.7) / 100,
   },
   cardtitle: {
     alignSelf: 'flex-start',

@@ -11,8 +11,8 @@ import {
   Font,
   config,
   apifuntion,
-  Lang_chg,
-} from "../../Provider/utilslib/Utils";
+  LangProvider,
+} from "../../Provider/Utils/Utils";
 import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import { useIsFocused } from "@react-navigation/native";
@@ -46,7 +46,6 @@ const Past = (props) => {
     data.append("service_type", 'all');
     data.append("page_count", 1);
 
-    // consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
@@ -105,14 +104,14 @@ const Past = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{guest ? Lang_chg.guestAppoitmentTitle[appLanguage == 'en' ? 0 : 1] : Lang_chg.noAppoitmentTitle[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestAppoitmentTitle[appLanguage == 'en' ? 0 : 1] : LangProvider.noAppoitmentTitle[appLanguage == 'en' ? 0 : 1]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{guest ? Lang_chg.guestAppoitmentDesc[appLanguage == 'en' ? 0 : 1] : Lang_chg.noAppoitmentDesc[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestAppoitmentDesc[appLanguage == 'en' ? 0 : 1] : LangProvider.noAppoitmentDesc[appLanguage == 'en' ? 0 : 1]}</Text>
             </View>
           )
         }}

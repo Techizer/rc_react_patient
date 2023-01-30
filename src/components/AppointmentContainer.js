@@ -7,10 +7,12 @@ import {
     TouchableHighlight,
     Image,
     ScrollView,
-    ActivityIndicator
 } from "react-native";
+import {
+    SkypeIndicator,
+} from 'react-native-indicators';
 import React, { Component, useEffect, useState } from "react";
-import { Icons, msgProvider, windowHeight } from "../Provider/utilslib/Utils";
+import { Icons, msgProvider, windowHeight } from "../Provider/Utils/Utils";
 import moment from "moment-timezone";
 import Modal from "react-native-modal";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -21,11 +23,11 @@ import {
     Font,
     config,
     windowWidth,
-    Lang_chg,
+    LangProvider,
     apifuntion,
     deviceHeight,
     Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { Cross, VideoCall, whiteStar } from "../Icons/Index";
@@ -42,7 +44,7 @@ const AppointmentContainer = ({
     navigation,
     isLoading
 }) => {
-    const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, guest, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
 
     const [otp, setOtp] = useState([])
     const [rescheduleData, setRescheduleData] = useState({
@@ -345,8 +347,6 @@ const AppointmentContainer = ({
         }))
         // console.log("check date...", arr);
     };
-
-
 
     const getTimeDate = async (selectedDate, serviceType) => {
 
@@ -859,8 +859,8 @@ const AppointmentContainer = ({
                         msgProvider.showSuccess(obj.message);
                     }, 700);
                 } else {
-                    // if (obj.active_status == msgTitle.deactivate[appLanguage == 'en' ? 0 : 1] || obj.msg[appLanguage == 'en' ? 0 : 1] == msgTitle.usererr[appLanguage == 'en' ? 0 : 1]) {
-                    //   usernotfound.loginFirst(this.props, obj.msg[appLanguage == 'en' ? 0 : 1])
+                    // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+                    //   usernotfound.loginFirst(this.props, obj.msg[languageIndex])
                     // } else {
 
                     setTimeout(() => {
@@ -1064,7 +1064,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Patient[appLanguage == 'en' ? 0 : 1]}</Text>
+                            >{LangProvider.Patient[languageIndex]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
@@ -1084,7 +1084,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Booked[appLanguage == 'en' ? 0 : 1]}</Text>
+                            >{LangProvider.Booked[languageIndex]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
@@ -1116,7 +1116,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.AppointmentDate[appLanguage == 'en' ? 0 : 1]}</Text>
+                            >{LangProvider.AppointmentDate[languageIndex]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
@@ -1136,7 +1136,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Time[appLanguage == 'en' ? 0 : 1]}</Text>
+                            >{LangProvider.Time[languageIndex]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
@@ -1156,7 +1156,7 @@ const AppointmentContainer = ({
                                     color: Colors.detailTitles,
                                     alignSelf: 'flex-start',
                                 }}
-                            >{Lang_chg.Type[appLanguage == 'en' ? 0 : 1]}</Text>
+                            >{LangProvider.Type[languageIndex]}</Text>
                             <Text
                                 style={{
                                     fontSize: Font.medium,
@@ -1206,7 +1206,7 @@ const AppointmentContainer = ({
                                                 justifyContent: 'center',
                                                 alignItems: 'center'
                                             }}>
-                                                <ActivityIndicator size={'small'} color={Colors.Border} />
+                                                <SkypeIndicator color={Colors.Theme} size={20} />
                                             </View>
                                             :
 
@@ -1237,7 +1237,7 @@ const AppointmentContainer = ({
                                                         fontFamily: Font.Regular,
                                                         color: Colors.Green
                                                     }}
-                                                >{Lang_chg.Reschedule[appLanguage == 'en' ? 0 : 1]}</Text>
+                                                >{LangProvider.Reschedule[languageIndex]}</Text>
                                             </TouchableOpacity>
                                     )
                                     :
@@ -1255,7 +1255,7 @@ const AppointmentContainer = ({
                                                     marginRight: (windowWidth * 2) / 100,
                                                 }}
                                             >
-                                                {Lang_chg.rated[appLanguage == 'en' ? 0 : 1]}
+                                                {LangProvider.rated[languageIndex]}
                                             </Text>
                                             <StarRating
                                                 disabled={false}
@@ -1292,7 +1292,7 @@ const AppointmentContainer = ({
                                                     color: Colors.White,
                                                     marginLeft: s(7)
                                                 }}
-                                            >{Lang_chg.Rate_Appointment[appLanguage == 'en' ? 0 : 1]}</Text>
+                                            >{LangProvider.Rate_Appointment[languageIndex]}</Text>
                                         </TouchableOpacity>
 
 
@@ -1305,7 +1305,7 @@ const AppointmentContainer = ({
                                 flexDirection: "row",
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
-                                width: Item?.dispaly_provider_type === 'Doctor' ? '100%' : "80%",
+                                width: Item?.dispaly_provider_type === 'Doctor' ? '100%' : "83%",
                                 marginTop: vs(7),
                             }}>
                                 <View>
@@ -1333,7 +1333,7 @@ const AppointmentContainer = ({
                                                             fontFamily: Font.Medium,
                                                             fontSize: Font.xsmall,
                                                         }}>
-                                                        {Lang_chg.Refunded[appLanguage == 'en' ? 0 : 1]}
+                                                        {LangProvider.Refunded[languageIndex]}
                                                     </Text>
 
                                                 )
@@ -1345,7 +1345,7 @@ const AppointmentContainer = ({
 
                                 {
                                     (Item?.dispaly_provider_type != 'Doctor' && Item?.dispaly_provider_type != 'Lab') &&
-                                    <View style={{ width: '45%', }}>
+                                    <View style={{ }}>
                                         {Item?.acceptance_status === 'Accepted' ?
                                             <View
                                                 style={{
@@ -1426,7 +1426,7 @@ const AppointmentContainer = ({
                                                 color: Colors.White,
                                                 marginLeft: s(7)
                                             }}
-                                        >{Lang_chg.VIDEO_CALL[appLanguage == 'en' ? 0 : 1]}</Text>
+                                        >{LangProvider.VIDEO_CALL[languageIndex]}</Text>
                                     </TouchableOpacity>
                                 }
 
@@ -1503,7 +1503,7 @@ const AppointmentContainer = ({
                                 bottom: 0,
                                 zIndex: 999,
                             }}>
-                                <ActivityIndicator size={'small'} color={Colors.Theme} />
+                               <SkypeIndicator color={Colors.Theme} size={20} />
                             </View>
                         }
 
@@ -1535,7 +1535,7 @@ const AppointmentContainer = ({
                                     alignSelf: 'flex-start',
                                     color: Colors.darkText
 
-                                }}>{Lang_chg.Reschedule[appLanguage == 'en' ? 0 : 1]}</Text>
+                                }}>{LangProvider.Reschedule[languageIndex]}</Text>
 
                             {/* ----------------------Main------------------ */}
 
@@ -1711,7 +1711,7 @@ const AppointmentContainer = ({
                                                     alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.Appointmentschedule[appLanguage == 'en' ? 0 : 1]}
+                                                {LangProvider.Appointmentschedule[languageIndex]}
                                             </Text>
                                             <View
                                                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -1766,7 +1766,7 @@ const AppointmentContainer = ({
                                                     alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.SelectDate[appLanguage == 'en' ? 0 : 1]}
+                                                {LangProvider.SelectDate[languageIndex]}
                                             </Text>
 
                                             <View style={{ width: "100%" }}>
@@ -1838,7 +1838,7 @@ const AppointmentContainer = ({
                                                     alignSelf: 'flex-start',
                                                 }}
                                             >
-                                                {Lang_chg.Select_start_time[appLanguage == 'en' ? 0 : 1]}
+                                                {LangProvider.Select_start_time[languageIndex]}
                                             </Text>
 
                                             {/* -----------------Time Arrays----------------- */}
@@ -1952,7 +1952,7 @@ const AppointmentContainer = ({
                                                                 marginLeft: (windowWidth * 32) / 100,
                                                             }}
                                                         >
-                                                            {Lang_chg.noTime[appLanguage == 'en' ? 0 : 1]}
+                                                            {LangProvider.noTime[languageIndex]}
                                                         </Text>
                                                     )}
                                                 </View>
@@ -1960,7 +1960,7 @@ const AppointmentContainer = ({
                                         </View>
 
                                         <Button
-                                            text={Lang_chg.SAVECHANGERESCHEDULE[appLanguage == 'en' ? 0 : 1]}
+                                            text={LangProvider.SAVECHANGERESCHEDULE[languageIndex]}
                                             onPress={() => bookTime(Item?.id, Item?.provider_type)}
                                             btnStyle={{ marginTop: vs(25) }}
                                             onLoading={rescheduleData.isScheduleagain}

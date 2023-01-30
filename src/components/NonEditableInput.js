@@ -6,25 +6,15 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  ActivityIndicator,
 } from "react-native";
 import { s } from "react-native-size-matters";
 
 import {
   Colors,
-  Icons,
   Font,
-  windowHeight,
   config,
-  windowWidth,
-  Lang_chg,
-  apifuntion,
-  msgText,
-  msgTitle,
-  consolepro,
-  msgProvider,
-  localStorage,
-} from "../Provider/utilslib/Utils";
+ 
+} from "../Provider/Utils/Utils";
 
 const NonEditableInput = ({
   lableText,

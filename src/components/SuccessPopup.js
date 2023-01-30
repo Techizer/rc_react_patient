@@ -4,11 +4,11 @@ import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
-    windowWidth, Lang_chg, config, Icons,
-    
-} from "../Provider/utilslib/Utils";
+    windowWidth, LangProvider, Icons,
+} from "../Provider/Utils/Utils";
 import { s, vs } from "react-native-size-matters";
 import OutlinedButton from "./OutlinedButton";
+import { useSelector } from "react-redux";
 
 
 
@@ -20,6 +20,7 @@ const SuccessPopup = ({
     navigation
 }) => {
 
+    const { languageIndex } = useSelector(state => state.StorageReducer)
 
     useEffect(() => {
         // console.log('........................',type);
@@ -67,9 +68,9 @@ const SuccessPopup = ({
                         marginTop: (windowWidth * 5) / 100,
                         fontFamily: Font.Medium,
                         color: Colors.detailTitles,
-                        textAlign: config.textRotate,
+                        alignSelf: 'center'
                     }}>
-                    {Lang_chg.thank[config.language]}
+                    {LangProvider.thank[languageIndex]}
                 </Text>
 
                 <Text
@@ -77,15 +78,15 @@ const SuccessPopup = ({
                         fontSize: Font.small,
                         marginTop: (windowWidth * 3) / 100,
                         fontFamily: Font.Regular,
-                        textAlign: config.textalign,
+                        alignSelf: 'flex-start',
                         color: Colors.lightGrey,
                     }}>
-                    {Lang_chg.Appoinment_Success[config.language]}
+                    {LangProvider.Appoinment_Success[languageIndex]}
                 </Text>
 
 
                 <OutlinedButton
-                    text={type === 'doctor' ? Lang_chg.GoToConslt[config.language] : type === 'lab' ? Lang_chg.GoToLabs[config.language] : Lang_chg.GoToAppointment[config.language]}
+                    text={type === 'doctor' ? LangProvider.GoToConslt[languageIndex] : type === 'lab' ? LangProvider.GoToLabs[languageIndex] : LangProvider.GoToAppointment[languageIndex]}
                     btnStyle={{ marginTop: (windowWidth * 6) / 100, height: (windowWidth * 8) / 100, width: (windowWidth * 40) / 100 }}
                     onPress={() => {
                         onRequestClose()

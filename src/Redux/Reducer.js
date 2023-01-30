@@ -18,11 +18,16 @@ import {
     NOTI_COUNT,
     TODAY_APPOINTMENT,
     TODAY_CONSULT,
-    TODAY_LAB
+    TODAY_LAB,
+    SELECTED_PROVIDER,
+    LANGUAGE_INDEX,
+    CART,
+    TABBY_PAYMENT
 } from './Types';
 
 const initialState = {
     appLanguage: 'ar',
+    languageIndex: 1,
     authToken: null,
     deviceToken: null,
     deviceId: null,
@@ -40,6 +45,9 @@ const initialState = {
     todayAppointments: null,
     todayConsultations: null,
     todayLabTests: null,
+    selectedProvider: null,
+    cart: -1,
+    tabbyPayment:false
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -57,6 +65,7 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 address: action.payload.address,
                 credentials: action.payload.credentials,
                 rememberMe: action.payload.rememberMe,
+                languageIndex: action.payload.languageIndex
             }
 
         case HAS_SESSION:
@@ -64,10 +73,20 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 ...state,
                 authToken: action.payload,
             };
+        case CART:
+            return {
+                ...state,
+                cart: action.payload,
+            };
         case NOTI_COUNT:
             return {
                 ...state,
                 notiCount: action.payload,
+            };
+        case SELECTED_PROVIDER:
+            return {
+                ...state,
+                selectedProvider: action.payload,
             };
         case TODAY_APPOINTMENT:
             return {
@@ -144,6 +163,11 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 ...state,
                 appLanguage: action.payload,
             };
+        case LANGUAGE_INDEX:
+            return {
+                ...state,
+                languageIndex: action.payload,
+            };
         case APP_VERSION:
             return {
                 ...state,
@@ -153,6 +177,11 @@ export const ReducerCases = (state = initialState, action = {}) => {
             return {
                 ...state,
                 contentAlign: action.payload,
+            };
+        case TABBY_PAYMENT:
+            return {
+                ...state,
+                tabbyPayment: action.payload,
             };
         default:
             return state;

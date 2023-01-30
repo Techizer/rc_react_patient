@@ -18,14 +18,12 @@ import {
     Icons,
     Font,
     config,
-    Lang_chg,
     apifuntion,
     msgProvider,
-    msgText,
-    msgTitle,
+    LangProvider,
     Button,
     windowHeight
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import ListBottomSheet from "../../components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
@@ -200,11 +198,10 @@ const foodList = [
 
 const LifeStyle = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage ,languageIndex} = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [lifeStyleDetails, setLifeStyleDetails] = useState({
-        languageIndex: appLanguage == 'en' ? 0 : 1,
         smoking: '',
         smokingPopup: false,
         alcohol: '',
@@ -233,27 +230,27 @@ const LifeStyle = ({ navigation }) => {
         }))
 
         if (lifeStyleDetails.smoking === '') {
-            msgProvider.showError(msgText.smoking_msg[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.smoking_msg[languageIndex]);
             return false;
         }
         if (lifeStyleDetails.alcohol === '') {
-            msgProvider.showError(msgText.alcohal_msg[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.alcohal_msg[languageIndex]);
             return false;
         }
         if (lifeStyleDetails.bloodGroup === '') {
-            msgProvider.showError(msgText.bloodgrp_msg[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.bloodgrp_msg[languageIndex]);
             return false;
         }
         if (lifeStyleDetails.activity === '') {
-            msgProvider.showError(msgText.activity_level[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.activity_level[languageIndex]);
             return false;
         }
         if (lifeStyleDetails.food === '') {
-            msgProvider.showError(msgText.food_preferance[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.food_preferance[languageIndex]);
             return false;
         }
         if (lifeStyleDetails.occupation === '') {
-            msgProvider.showError(msgText.occuation[lifeStyleDetails.languageIndex]);
+            msgProvider.showError(LangProvider.occuation[languageIndex]);
             return false;
         }
 
@@ -328,8 +325,8 @@ const LifeStyle = ({ navigation }) => {
 
                 } else {
                     msgProvider.alert(
-                        msgTitle.information[lifeStyleDetails.languageIndex],
-                        obj.message[lifeStyleDetails.languageIndex],
+                        LangProvider.information[languageIndex],
+                        obj.message[languageIndex],
                         false
                     );
 
@@ -343,7 +340,7 @@ const LifeStyle = ({ navigation }) => {
     return (
         <View
             pointerEvents={lifeStyleDetails.isLoading ? 'none' : 'auto'}
-            style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
+            style={{ flex: 1, backgroundColor: Colors.White,}}>
 
             <KeyboardAwareScrollView
                 // keyboardOpeningTime={200}
@@ -371,7 +368,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.smoking[lifeStyleDetails.languageIndex]}
+                            {LangProvider.smoking[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -404,7 +401,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.smoking == '' ? Lang_chg.smoking[lifeStyleDetails.languageIndex] : lifeStyleDetails.smoking}
+                                        {lifeStyleDetails.smoking == '' ? LangProvider.smoking[languageIndex] : lifeStyleDetails.smoking}
                                     </Text>
                                 </View>
 
@@ -433,7 +430,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.Alcohol[lifeStyleDetails.languageIndex]}
+                            {LangProvider.Alcohol[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -466,7 +463,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.alcohol === '' ? Lang_chg.Alcohol[lifeStyleDetails.languageIndex] : lifeStyleDetails.alcohol}
+                                        {lifeStyleDetails.alcohol === '' ? LangProvider.Alcohol[languageIndex] : lifeStyleDetails.alcohol}
                                     </Text>
                                 </View>
 
@@ -495,7 +492,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.blood[lifeStyleDetails.languageIndex]}
+                            {LangProvider.blood[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -528,7 +525,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.bloodGroup === '' ? Lang_chg.blood[lifeStyleDetails.languageIndex] : lifeStyleDetails.bloodGroup}
+                                        {lifeStyleDetails.bloodGroup === '' ? LangProvider.blood[languageIndex] : lifeStyleDetails.bloodGroup}
                                     </Text>
                                 </View>
 
@@ -557,7 +554,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.activity[lifeStyleDetails.languageIndex]}
+                            {LangProvider.activity[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -590,7 +587,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.activity === '' ? Lang_chg.activity[lifeStyleDetails.languageIndex] : lifeStyleDetails.activity}
+                                        {lifeStyleDetails.activity === '' ? LangProvider.activity[languageIndex] : lifeStyleDetails.activity}
                                     </Text>
                                 </View>
 
@@ -619,7 +616,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.food[lifeStyleDetails.languageIndex]}
+                            {LangProvider.food[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -652,7 +649,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.food === '' ? Lang_chg.food[lifeStyleDetails.languageIndex] : lifeStyleDetails.food}
+                                        {lifeStyleDetails.food === '' ? LangProvider.food[languageIndex] : lifeStyleDetails.food}
                                     </Text>
                                 </View>
 
@@ -681,7 +678,7 @@ const LifeStyle = ({ navigation }) => {
                                 fontFamily: Font.Medium,
                                 includeFontPadding: false,
                             }}>
-                            {Lang_chg.occupation[lifeStyleDetails.languageIndex]}
+                            {LangProvider.occupation[languageIndex]}
                         </Text>
                         <View
                             style={{
@@ -714,7 +711,7 @@ const LifeStyle = ({ navigation }) => {
                                             fontFamily: Font.Regular,
                                             includeFontPadding: false,
                                         }}>
-                                        {lifeStyleDetails.occupation === '' ? Lang_chg.occupation[lifeStyleDetails.languageIndex] : lifeStyleDetails.occupation}
+                                        {lifeStyleDetails.occupation === '' ? LangProvider.occupation[languageIndex] : lifeStyleDetails.occupation}
                                     </Text>
                                 </View>
 
@@ -734,7 +731,7 @@ const LifeStyle = ({ navigation }) => {
                     </View>
 
                     <Button
-                        text={Lang_chg.submitbtntext[lifeStyleDetails.languageIndex]}
+                        text={LangProvider.submitbtntext[languageIndex]}
                         onPress={() => saveLifeStyle()}
                         btnStyle={{ marginTop: vs(15) }}
                         onLoading={lifeStyleDetails.isLoading}
@@ -770,17 +767,17 @@ const LifeStyle = ({ navigation }) => {
                 data={(lifeStyleDetails.type === 1 || lifeStyleDetails.type === 2) ? generalList : lifeStyleDetails.type === 3 ? bloodGroupList : lifeStyleDetails.type === 4 ? activityList : lifeStyleDetails.type === 5 ? foodList : lifeStyleDetails.type === 6 ? occupationList : null}
                 style={{ height: (lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup) ? windowHeight / 4 : windowHeight / 1.5 }}
                 title={lifeStyleDetails.type === 1 ?
-                    Lang_chg.smoking[lifeStyleDetails.languageIndex]
+                    LangProvider.smoking[languageIndex]
                     : lifeStyleDetails.type === 2 ?
-                        Lang_chg.Alcohol[lifeStyleDetails.languageIndex]
+                        LangProvider.Alcohol[languageIndex]
                         : lifeStyleDetails.type === 3 ?
-                            Lang_chg.blood[lifeStyleDetails.languageIndex]
+                            LangProvider.blood[languageIndex]
                             : lifeStyleDetails.type === 4 ?
-                                Lang_chg.activity[lifeStyleDetails.languageIndex]
+                                LangProvider.activity[languageIndex]
                                 : lifeStyleDetails.type === 5 ?
-                                    Lang_chg.food[lifeStyleDetails.languageIndex]
+                                    LangProvider.food[languageIndex]
                                     : lifeStyleDetails.type === 6 ?
-                                        Lang_chg.occupation[lifeStyleDetails.languageIndex]
+                                        LangProvider.occupation[languageIndex]
                                         : null}
                 selectedIssue={(val) => {
                     lifeStyleDetails.type === 1 ?

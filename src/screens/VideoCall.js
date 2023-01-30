@@ -11,10 +11,8 @@ import {
 
 import {
   config,
-  localStorage,
-  consolepro,
   apifuntion,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 import {
   TwilioVideoLocalView,
@@ -25,13 +23,15 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
-const screenHeight = Math.round(Dimensions.get("window").height);
-const screenWidth = Math.round(Dimensions.get("window").width);
+import { useSelector } from "react-redux";
 
 var countTimeInterval;
 var timerId;
 
-const VideoCall = (props, { navigation }) => {
+const VideoCall = (props) => {
+
+  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+
   var ctc = 0;
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
@@ -109,35 +109,29 @@ const VideoCall = (props, { navigation }) => {
         clearInterval(countTimeInterval);
       }
     }, 1000);
-    // consolepro.consolelog("countTimeInterval ", countTimeInterval);
   };
 
   const timerClear = () => {
-    // consolepro.consolelog("countTimeInterval ", countTimeInterval);
     // clearInterval(countTimeInterval);
     // props.navigation.pop();
     // get_call_token('patient_to_doctor_video_call_reject')
   };
 
   const get_call_token = async (callType) => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-    let user_type = user_details["user_type"];
 
     let apiname = "api-get-video-access-token-with-push-notification";
 
-    let apishow = apiname; //"api-provider-past-appointment-list" //"api-patient-all-appointment"
+    let apishow = apiname; 
 
     let url = config.baseURL + apishow;
 
     var data = new FormData();
-    // data.append('lgoin_user_id', user_id)
-    data.append("fromUserId", user_id);
+    data.append("fromUserId", loggedInUserDetails.user_id);
     data.append("fromUserName", props.route.params.item.patient_name);
     data.append("order_id", props.route.params.item.order_id);
     data.append(
       "room_name",
-      "rootvideo_room_" + props.route.params.item.provider_id + "_" + user_id
+      "rootvideo_room_" + props.route.params.item.provider_id + "_" + loggedInUserDetails.user_id
     );
     data.append("toUserId", props.route.params.item.provider_id);
     data.append("toUserName", props.route.params.item.provider_name);
@@ -147,7 +141,6 @@ const VideoCall = (props, { navigation }) => {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
         if (obj.status == true) {
           console.log("obj.result", obj.result);
           setToken(obj.result.token);
@@ -158,24 +151,19 @@ const VideoCall = (props, { navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
   const get_incoming_call_token = async (callType) => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-    let user_type = user_details["user_type"];
-    console.log("this.props.pageName:: ", this.props.pageName);
-
     let apiname = "api-get-video-access-token";
 
-    let apishow = apiname; //"api-provider-past-appointment-list" //"api-patient-all-appointment"
+    let apishow = apiname;
 
     let url = config.baseURL + apishow;
 
     var data = new FormData();
-    data.append("identity", user_id);
+    data.append("identity", loggedInUserDetails.user_id);
     data.append("fromUserId", props.route.params.item.fromUserId);
     data.append("fromUserName", props.route.params.item.fromUserName);
     data.append("order_id", props.route.params.item.order_id);
@@ -193,13 +181,11 @@ const VideoCall = (props, { navigation }) => {
     //   "type": "doctor_to_patient_video_call"
     // });
 
-    // consolepro.consolelog('myDatamyData', myData)
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         // apifuntion.postRawApi(url, myData).then((obj) => {
-        consolepro.consolelog("obj", obj);
         // this.setState({ appoinment_detetails: '' })
         if (obj.status == true) {
           console.log("obj.result", obj.result);
@@ -211,7 +197,7 @@ const VideoCall = (props, { navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+      console.log("-------- error ------- " + error);
       });
   };
 
@@ -233,12 +219,12 @@ const VideoCall = (props, { navigation }) => {
     twilioVideo.current.disconnect();
     setStatus("disconnected");
     setVideoTracks(null);
-    setTimeout(() => {
-      props.navigation.reset({
-        index: 0,
-        routes: [{ name: "DashboardStack" }],
-      });
-    }, 1500);
+    // setTimeout(() => {
+    //   props.navigation.reset({
+    //     index: 0,
+    //     routes: [{ name: "DashboardStack" }],
+    //   });
+    // }, 1000);
   };
 
   const _onMuteButtonPress = () => {
@@ -265,7 +251,7 @@ const VideoCall = (props, { navigation }) => {
         index: 0,
         routes: [{ name: "DashboardStack" }],
       });
-    }, 2000);
+    }, 1000);
   };
 
   const _onRoomDidFailToConnect = (error) => {
@@ -278,7 +264,7 @@ const VideoCall = (props, { navigation }) => {
         index: 0,
         routes: [{ name: "DashboardStack" }],
       });
-    }, 2000);
+    }, 1000);
   };
 
   const _onParticipantAddedVideoTrack = ({ participant, track }) => {
@@ -309,7 +295,7 @@ const VideoCall = (props, { navigation }) => {
         index: 0,
         routes: [{ name: "DashboardStack" }],
       });
-    }, 2000);
+    }, 1000);
 
     const newVideoTracks = new Map(videoTracks);
     newVideoTracks.delete(track.trackSid);

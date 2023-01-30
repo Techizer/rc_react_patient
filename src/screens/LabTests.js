@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  Image,
-  TouchableOpacity,
-  TextInput,
   FlatList,
   Keyboard,
   Modal,
@@ -12,16 +9,9 @@ import {
   TouchableHighlight,
 } from "react-native";
 import {
-  Colors,
-  Font,
   config,
-  windowWidth,
-  localStorage,
-  Icons,
-  consolepro,
-  Lang_chg,
-  apifuntion,
-} from "../Provider/utilslib/Utils";
+  LangProvider,
+} from "../Provider/Utils/Utils";
 
 import Styles from "../Styles";
 import { ScreenHeader } from "../components/ScreenHeader";
@@ -33,7 +23,7 @@ const LabTests = ({navigation}) => {
     <View style={Styles.container1}>
 
       <ScreenHeader
-        title={Lang_chg.Lab_Test[config.language]}
+        title={LangProvider.Lab_Test[config.language]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,

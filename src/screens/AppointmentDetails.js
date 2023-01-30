@@ -5,7 +5,6 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
   Image,
   TouchableOpacity,
   FlatList,
@@ -15,22 +14,20 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
   Font,
   windowHeight,
   msgProvider,
-  msgText,
   config,
   windowWidth,
   Icons,
-  consolepro,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-  deviceHeight,
   Button,
   ScreenHeader
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import StarRating from "react-native-star-rating";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import moment from "moment-timezone";
@@ -51,11 +48,10 @@ var Sound = require("react-native-sound");
 
 export default AppointmentDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
 
   const { appointment_id, send_id, booking_type, status } = route?.params
   const [classStateData, setClassStateData] = useState({
-    languageIndex: appLanguage == 'en' ? 0 : 1,
     modalVisible: false,
     modalPatientPrescription: false,
     viewPrescriptionImage: "",
@@ -215,11 +211,11 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
     data.append("service_type", status);
 
-    consolepro.consolelog("data", data);
+    console.log("data", data);
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        consolepro.consolelog("getAllDetails....", obj);
+        console.log("getAllDetails....", obj);
 
         if (obj.status == true) {
           recordingUrl = config.img_url3 + obj.result.symptom_recording;
@@ -250,7 +246,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoadingDetails: false });
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -273,12 +269,12 @@ export default AppointmentDetails = ({ navigation, route }) => {
       data.append("task_type", booking_type);
     }
 
-    // consolepro.consolelog("data", data);
+    // console.log("data", data);
     // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("rescdule_click:....", JSON.stringify(obj));
+        console.log("rescdule_click:....", JSON.stringify(obj));
 
         if (obj.status == true) {
           var current = new Date();
@@ -385,7 +381,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -397,13 +393,13 @@ export default AppointmentDetails = ({ navigation, route }) => {
     data.append("date", classStateData.set_date);
     data.append("service_type", status);
 
-    // consolepro.consolelog("data", data);
+    // console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
         setState({ isLoading: false })
         if (obj.status == true) {
-          consolepro.consolelog("obj.result", obj.result);
+          console.log("obj.result", obj.result);
           if (
             classStateData.rescdule_data.slot_booking_id === "HOMEVISIT_BOOKING"
           ) {
@@ -522,7 +518,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       time: nameArr_time[m],
                       time_status: false,
                     });
-                    consolepro.consolelog(
+                    console.log(
                       "-------- new_time_online if ------- " + new_time_online
                     );
                     // if ((m + 2) % 2 == 0) {
@@ -545,7 +541,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     time: nameArr_time[m],
                     time_status: false,
                   });
-                  // consolepro.consolelog("-------- new_time_online else  ------- " + new_time_online);
+                  // console.log("-------- new_time_online else  ------- " + new_time_online);
                   if (!ar1) {
                     ar1 = true;
                     ar2 = false;
@@ -583,7 +579,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -613,7 +609,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               : current.getHours();
           var timcurrent = hour + ":" + min;
           setState({ timcurrent_for_check: timcurrent });
-          consolepro.consolelog("obj.result", obj.result);
+          console.log("obj.result", obj.result);
           if (
             classStateData.slot_booking_id == "TESTS_BOOKING" ||
             classStateData.slot_booking_id == "PACKAGE_BOOKING"
@@ -692,7 +688,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -721,7 +717,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               : current.getHours();
           var timcurrent = hour + ":" + min;
           setState({ timcurrent_for_check: timcurrent });
-          consolepro.consolelog("obj.result", obj.result);
+          console.log("obj.result", obj.result);
           if (classStateData.slot_booking_id == "TASK_BOOKING") {
             if (obj.result.task_time != "") {
               var names = obj.result.task_time;
@@ -875,7 +871,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -958,7 +954,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
   const submit_btn = async () => {
 
     if (classStateData.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[classStateData.languageIndex]);
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
 
@@ -996,7 +992,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isScheduleagain: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -1025,8 +1021,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
             getAllDetails(1);
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[classStateData.languageIndex] || obj.msg[classStateData.languageIndex] == msgTitle.usererr[classStateData.languageIndex]) {
-          //   usernotfound.loginFirst(props, obj.msg[classStateData.languageIndex])
+          // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[languageIndex])
           // } else {
 
           setTimeout(() => {
@@ -1037,7 +1033,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -1145,9 +1141,9 @@ export default AppointmentDetails = ({ navigation, route }) => {
   if (classStateData.isLoadingDetails) {
 
     return (
-      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+      <View style={{ flex: 1, }}>
         <ScreenHeader
-          title={status === 'doctor' ? Lang_chg.Consultation_Details[classStateData.languageIndex] : status === 'lab' ? Lang_chg.Lab_Test_Details[classStateData.languageIndex] : Lang_chg.Appointment_Details[classStateData.languageIndex]}
+          title={status === 'doctor' ? LangProvider.Consultation_Details[languageIndex] : status === 'lab' ? LangProvider.Lab_Test_Details[languageIndex] : LangProvider.Appointment_Details[languageIndex]}
           navigation={navigation}
           onBackPress={() => {
             navigation.pop()
@@ -1188,21 +1184,21 @@ export default AppointmentDetails = ({ navigation, route }) => {
               </SkeletonPlaceholder>
             </View>
           </View>
-          <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(7),marginBottom:vs(7) }}></View>
+          <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(7), marginBottom: vs(7) }}></View>
 
           <View>
             <SkeletonPlaceholder>
               <SkeletonPlaceholder.Item width={(windowWidth * 12) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
             </SkeletonPlaceholder>
 
-            <View style={{ flexDirection: 'row', marginTop:vs(7) }}>
+            <View style={{ flexDirection: 'row', marginTop: vs(7) }}>
 
               <View style={{ flex: 1 }}>
                 <SkeletonPlaceholder>
                   <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
                 </SkeletonPlaceholder>
                 <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{marginTop:vs(5)}} />
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
                 </SkeletonPlaceholder>
               </View>
 
@@ -1211,7 +1207,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
                 </SkeletonPlaceholder>
                 <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{marginTop:vs(5)}} />
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
                 </SkeletonPlaceholder>
               </View>
 
@@ -1220,7 +1216,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
                 </SkeletonPlaceholder>
                 <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{marginTop:vs(5)}} />
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
                 </SkeletonPlaceholder>
               </View>
 
@@ -1271,10 +1267,10 @@ export default AppointmentDetails = ({ navigation, route }) => {
     }
 
     return (
-      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+      <View style={{ flex: 1 }}>
 
         <ScreenHeader
-          title={status === 'doctor' ? Lang_chg.Consultation_Details[classStateData.languageIndex] : status === 'lab' ? Lang_chg.Lab_Test_Details[classStateData.languageIndex] : Lang_chg.Appointment_Details[classStateData.languageIndex]}
+          title={status === 'doctor' ? LangProvider.Consultation_Details[languageIndex] : status === 'lab' ? LangProvider.Lab_Test_Details[languageIndex] : LangProvider.Appointment_Details[languageIndex]}
           navigation={navigation}
           onBackPress={() => {
             navigation.pop()
@@ -1389,7 +1385,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         paddingVertical: (windowWidth * 0.6) / 100,
                       }}
                     >
-                      {Lang_chg.Hospital[classStateData.languageIndex]}
+                      {LangProvider.Hospital[languageIndex]}
                     </Text>
                   )}
                 </View>
@@ -1433,7 +1429,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   paddingBottom: (windowWidth * 3) / 100,
                 }}
               >
-                {Lang_chg.appointment_schedule[classStateData.languageIndex]}
+                {LangProvider.appointment_schedule[languageIndex]}
               </Text>
 
               <View
@@ -1455,7 +1451,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.Date[classStateData.languageIndex]}
+                    {LangProvider.Date[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -1482,7 +1478,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.Time[classStateData.languageIndex]}
+                    {LangProvider.Time[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -1509,7 +1505,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.Type[classStateData.languageIndex]}
+                    {LangProvider.Type[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -1549,7 +1545,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       fontSize: Font.small,
                       color: Colors.DarkGrey,
                     }}>
-                    {Lang_chg.BookingOn[classStateData.languageIndex]}
+                    {LangProvider.BookingOn[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -1585,7 +1581,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       color: Colors.Theme,
                       alignSelf: 'flex-start',
                     }}>
-                    {Lang_chg.PATIENT_SYMPTOM[classStateData.languageIndex]}
+                    {LangProvider.PATIENT_SYMPTOM[languageIndex]}
                   </Text>
 
                   {item.symptom_recording != "" && (
@@ -1609,7 +1605,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           textAlign: 'left',
                         }}
                       >
-                        {Lang_chg.Voice_Recording[classStateData.languageIndex]}
+                        {LangProvider.Voice_Recording[languageIndex]}
                       </Text>
 
                       <View
@@ -1632,7 +1628,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                 : Icons.pause
                             }
                             style={{
-                              transform: [{ rotate: (Icons.pause && classStateData.languageIndex == 1) ? "180deg" : "0deg" }],
+                              transform: [{ rotate: (Icons.pause && languageIndex == 1) ? "180deg" : "0deg" }],
                               width: (windowWidth * 8) / 100,
                               height: (windowWidth * 8) / 100,
                             }}
@@ -1668,7 +1664,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     </View>
                   )}
 
-                  {item.symptom_text != "" && (
+                  {(item.symptom_text != "" && item.symptom_text != null && item.symptom_text != undefined) && (
                     <View style={{
                       borderBottomWidth: 1.5,
                       borderColor: Colors.gainsboro,
@@ -1683,7 +1679,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           marginBottom: (windowWidth * 3.5) / 100,
                         }}
                       >
-                        {Lang_chg.Description[classStateData.languageIndex]}
+                        {LangProvider.Description[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -1766,7 +1762,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             fontSize: Font.small,
                             color: Colors.Theme,
                           }} >
-                          {Lang_chg.VIEW[classStateData.languageIndex]}
+                          {LangProvider.VIEW[languageIndex]}
                         </Text>
                       </View>
                     </View>
@@ -1791,7 +1787,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                       paddingBottom: (windowWidth * 4) / 100,
                     }}>
-                    {Lang_chg.PRESCRIPTION[classStateData.languageIndex]}
+                    {LangProvider.PRESCRIPTION[languageIndex]}
                   </Text>
                   <View
                     style={{
@@ -1848,7 +1844,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                               fontSize: Font.xsmall,
                               color: Colors.Theme,
                             }}>
-                            {Lang_chg.DOWNLOAD[classStateData.languageIndex]}
+                            {LangProvider.DOWNLOAD[languageIndex]}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -1890,7 +1886,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       paddingBottom: (windowWidth * 4) / 100,
                     }}
                   >
-                    {Lang_chg.ReportAttachment[classStateData.languageIndex]}
+                    {LangProvider.ReportAttachment[languageIndex]}
                   </Text>
                   <FlatList
                     data={item.report}
@@ -1952,7 +1948,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                       fontSize: Font.xsmall,
                                       color: Colors.Theme,
                                     }}>
-                                    {Lang_chg.DOWNLOAD[classStateData.languageIndex]}
+                                    {LangProvider.DOWNLOAD[languageIndex]}
                                   </Text>
                                 </TouchableOpacity>
                               </View>
@@ -2005,7 +2001,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     alignSelf: 'flex-start',
                   }}
                 >
-                  {Lang_chg.patient_details[classStateData.languageIndex]}
+                  {LangProvider.patient_details[languageIndex]}
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -2096,7 +2092,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       alignItems: "center",
                       marginTop: (windowWidth * 1.5) / 100,
                     }}>
-                    {classStateData.languageIndex == 0 ? (
+                    {languageIndex == 0 ? (
                       <Image
                         source={Icons.arabic_call}
                         style={{
@@ -2156,8 +2152,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       fontFamily: Font.Regular,
                     }}>
                     {
-                      Lang_chg.appointment_accepted_otp_text[
-                      classStateData.languageIndex
+                      LangProvider.appointment_accepted_otp_text[
+                      languageIndex
                       ]
                     }
                   </Text>
@@ -2218,8 +2214,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     }}
                   >
                     {
-                      Lang_chg.appointment_closed_otp_text[
-                      classStateData.languageIndex
+                      LangProvider.appointment_closed_otp_text[
+                      languageIndex
                       ]
                     }
                   </Text>
@@ -2277,7 +2273,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     alignSelf: 'flex-start',
                     color: Colors.darkText,
                   }}>
-                  {Lang_chg.Payment[classStateData.languageIndex]}
+                  {LangProvider.Payment[languageIndex]}
                 </Text>
                 <View
                   style={{
@@ -2352,7 +2348,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           color: "#000",
                         }}>
                         { }
-                        {`${Lang_chg.distanceFare[classStateData.languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
+                        {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
                       </Text>
                       <Text
                         style={{
@@ -2382,7 +2378,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         fontSize: Font.small,
                         color: Colors.DarkGrey,
                       }}>
-                      {`${Lang_chg.distanceFare[classStateData.languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
+                      {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
 
                     </Text>
                     <Text
@@ -2408,7 +2404,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       fontSize: Font.small,
                       color: Colors.darkText,
                     }}>
-                    {Lang_chg.subTotal[classStateData.languageIndex]}
+                    {LangProvider.subTotal[languageIndex]}
                   </Text>
                   <Text
                     style={{
@@ -2479,7 +2475,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   flexDirection: "row",
                 }}
               >
-                {classStateData.languageIndex == 0 ? (
+                {languageIndex == 0 ? (
                   <Image
                     source={Icons.purse}
                     style={{
@@ -2521,7 +2517,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}>
-                    <ActivityIndicator size={'small'} color={Colors.Border} />
+                    <SkypeIndicator color={Colors.Theme} size={20} />
                   </View>
                   :
 
@@ -2549,7 +2545,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         fontFamily: Font.Regular,
                         color: Colors.Green
                       }}
-                    >{Lang_chg.Reschedule[classStateData.languageIndex]}</Text>
+                    >{LangProvider.Reschedule[languageIndex]}</Text>
                   </TouchableOpacity>
 
               )}
@@ -2586,7 +2582,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           fontSize: (windowWidth * 3) / 100,
                         }}
                       >
-                        {Lang_chg.VIDEO_CALL[classStateData.languageIndex]}
+                        {LangProvider.VIDEO_CALL[languageIndex]}
                       </Text>
                     </TouchableOpacity>
                   </>
@@ -2610,7 +2606,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             marginRight: (windowWidth * 2) / 100,
                           }}
                         >
-                          {Lang_chg.rated[classStateData.languageIndex]}
+                          {LangProvider.rated[languageIndex]}
                         </Text>
                         <StarRating
                           disabled={false}
@@ -2643,7 +2639,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             color: Colors.White,
                             marginLeft: s(7)
                           }}
-                        >{Lang_chg.Rate_Appointment[classStateData.languageIndex]}</Text>
+                        >{LangProvider.Rate_Appointment[languageIndex]}</Text>
                       </TouchableOpacity>
                     )}
                 </View>
@@ -2660,7 +2656,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       fontSize: Font.xsmall,
                       marginLeft: s(8)
                     }}>
-                    {Lang_chg.Refunded[classStateData.languageIndex]}
+                    {LangProvider.Refunded[languageIndex]}
                   </Text>
 
                 )}
@@ -2691,7 +2687,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   color: Colors.detailTitles
 
-                }}>{Lang_chg.Booking_Note[classStateData.languageIndex]}</Text>
+                }}>{LangProvider.Booking_Note[languageIndex]}</Text>
               <TouchableOpacity
                 activeOpacity={0.8}
                 underlayColor={Colors.Highlight}
@@ -2706,7 +2702,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     alignSelf: 'flex-start',
                     color: Colors.detailTitles
 
-                  }}>{Lang_chg.Booking_Desc[classStateData.languageIndex]}</Text>
+                  }}>{LangProvider.Booking_Desc[languageIndex]}</Text>
 
               </TouchableOpacity>
             </View>
@@ -2724,7 +2720,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   color: Colors.detailTitles
 
-                }}>{Lang_chg.Consultation_Help[classStateData.languageIndex]}</Text>
+                }}>{LangProvider.Consultation_Help[languageIndex]}</Text>
               <TouchableOpacity
                 activeOpacity={0.8}
                 underlayColor={Colors.Highlight}
@@ -2739,8 +2735,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     alignSelf: 'flex-start',
                     color: Colors.Theme
 
-                  }}>{Lang_chg.ContactUs[classStateData.languageIndex]}</Text>
-                <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (classStateData.languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
+                  }}>{LangProvider.ContactUs[languageIndex]}</Text>
+                <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
 
               </TouchableOpacity>
             </View>
@@ -2790,7 +2786,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 bottom: 0,
                 zIndex: 999,
               }}>
-                <ActivityIndicator size={'small'} color={Colors.Theme} />
+                <SkypeIndicator color={Colors.Theme} size={20} />
               </View>
             }
 
@@ -2820,7 +2816,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   alignSelf: 'flex-start',
                   color: Colors.darkText
 
-                }}>{Lang_chg.Reschedule[classStateData.languageIndex]}</Text>
+                }}>{LangProvider.Reschedule[languageIndex]}</Text>
 
               <View style={{ marginTop: vs(15) }}>
 
@@ -3090,7 +3086,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Appointmentschedule[classStateData.languageIndex]}
+                      {LangProvider.Appointmentschedule[languageIndex]}
                     </Text>
                     <View
                       style={{ flexDirection: "row", alignItems: "center" }}
@@ -3144,7 +3140,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         color: "#000",
                       }}
                     >
-                      {Lang_chg.SelectDate[classStateData.languageIndex]}
+                      {LangProvider.SelectDate[languageIndex]}
                     </Text>
 
                     <View style={{ width: "100%" }}>
@@ -3220,7 +3216,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Select_start_time[classStateData.languageIndex]}
+                      {LangProvider.Select_start_time[languageIndex]}
                     </Text>
                     <ScrollView
                       horizontal={true}
@@ -3341,7 +3337,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                               marginLeft: (windowWidth * 32) / 100,
                             }}
                           >
-                            {Lang_chg.noTime[classStateData.languageIndex]}
+                            {LangProvider.noTime[languageIndex]}
                           </Text>
                         )}
                       </View>
@@ -3349,7 +3345,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   </View>
 
                   <Button
-                    text={Lang_chg.SAVECHANGERESCHEDULE[classStateData.languageIndex]}
+                    text={LangProvider.SAVECHANGERESCHEDULE[languageIndex]}
                     onPress={() => submit_btn()}
                     btnStyle={{ marginTop: vs(25) }}
                     onLoading={classStateData.isScheduleagain}

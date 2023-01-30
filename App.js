@@ -1,20 +1,13 @@
 import React, { Component, useEffect } from "react";
 import { I18nManager, Platform, StatusBar } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { Tabby } from 'tabby-react-native-sdk'
 import MainStack from "./src/Provider/Stacks/MainStack";
-import {
-  Font,
-  localStorage,
-  StatusbarHeight,
-  windowWidth,
-} from "./src/Provider/utilslib/Utils";
-global.screens = "Splash";
-global.fcmtoken = "123456";
-global.isLogin = true;
-global.isPage = ""
+
 import RNRestart from "react-native-restart";
 import { useDispatch, useSelector } from "react-redux";
-import { AppLanguage, ContentAlign, Restart } from "./src/Redux/Actions";
+import { AppLanguage, ContentAlign, LanguageIndex, Restart } from "./src/Redux/Actions";
+
+Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
 console.reportErrorsAsExceptions = false;
 const App = () => {
 
@@ -47,12 +40,14 @@ const App = () => {
         I18nManager.allowRTL(false);
       }
       dispatch(AppLanguage('en'))
+      dispatch(LanguageIndex(0))
       dispatch(ContentAlign('left'))
 
 
 
     } else {
       dispatch(ContentAlign('right'))
+      dispatch(LanguageIndex(1))
     }
 
     // if (languagecathc == 0) {

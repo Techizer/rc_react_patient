@@ -6,10 +6,7 @@ import { useSelector } from "react-redux";
 
 import { Colors } from "../Provider/Colorsfont";
 import { Font } from "../Provider/Colorsfont";
-import { config } from "../Provider/configProvider";
-import { localStorage } from "../Provider/localStorageProvider";
 
-const deviceWidth = Dimensions.get('window').width
 
 
 const DrawerItemContainer = ({

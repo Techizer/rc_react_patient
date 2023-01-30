@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Platform,
   Text,
@@ -9,12 +9,11 @@ import {
   Modal,
   TouchableHighlight,
   FlatList,
-  ActivityIndicator,
   StyleSheet,
   AppState,
   BackHandler
 } from "react-native";
-
+import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
   Font,
@@ -22,16 +21,14 @@ import {
   msgProvider,
   config,
   windowWidth,
-  localStorage,
   Icons,
-  consolepro,
-  Lang_chg,
   apifuntion,
-  msgTitle,
+  LangProvider,
   ScreenHeader,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { WebView } from "react-native-webview";
+import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentWebView } from "tabby-react-native-sdk";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -39,9 +36,15 @@ import { Clock, clockBlue, Cross } from "../Icons/Index";
 import SuccessPopup from "../components/SuccessPopup";
 import moment from "moment";
 import SimpleToast from "react-native-simple-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Cart, SelectedProvider } from "../Redux/Actions";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import PaymentOptionBottomSheet from "../components/PaymentOptionBottomSheet";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-
+let startTime = new Date();
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
 
@@ -50,8 +53,8 @@ const appCredentials = {
     Platform.OS == "ios"
       ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
       : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+  // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+  // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -60,137 +63,178 @@ const appCredentials = {
   bundleID: Platform.OS == "ios" ? "com.patient.rootscare" : "com.rootscare",
 };
 
-export default class Cart extends Component {
-  _didFocusSubscription;
-  _willBlurSubscription;
+const CartDetails = ({ navigation }) => {
 
+  const { loggedInUserDetails, languageIndex, cart, selectedProvider, tabbyPayment } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const isFocused = useIsFocused()
   state = {
     appState: AppState.currentState
   };
 
-  constructor(props) {
-    super(props);
-    {
-      this.state = {
-        modalvisible: false,
-        cart_arr: "",
-        pay_condition: false,
-        modalVisible3: false,
-        payment_moodal: false,
-        provider_name: "",
-        trid: "#PH3434654E03",
-        provider_id: "",
-        payment_url: "",
-        total_price: "",
-        user_id: "",
-        message: "",
-        task_details: "",
-        notification_count: "",
-        transaction_id: "",
-        payment_status: "true",
-        currency_symbol: "",
-        payment_mode_country: "sar",
-        loadCart: true,
-        isLoading: false,
-        appState: '',
-        isPaymentInitiate: false,
-        isPaymentDone: false,
-        customerDetails: null,
-        taxes: [
+  var sdkModule = RNGoSell.goSellSDK;
+  var sdkModels = RNGoSell.goSellSDKModels;
+
+  const [statesData, setStatesData] = useState({
+    modalvisible: false,
+    cartDetails: "",
+    pay_condition: false,
+    modalVisible3: false,
+    payment_moodal: false,
+    provider_name: "",
+    provider_id: "",
+    payment_url: "",
+    total_price: "",
+    user_id: "",
+    message: "",
+    task_details: "",
+    notification_count: "",
+    payment_status: "true",
+    currency_symbol: loggedInUserDetails.currency_symbol,
+    tabbyPaymentId: '',
+    payment_mode_country: "sar",
+    loadCart: true,
+    isRemovingCart: false,
+    isGoingBack: false,
+    isLoading: false,
+    appState: '',
+    isPaymentInitiate: false,
+    isPaymentDone: false,
+    customerDetails: null,
+    totalAmount: '',
+    service_type: '',
+    cartId: '',
+    isPaymentOption: false
+  })
+
+  const customerPayment = {
+    payment: {
+      amount: statesData.cartDetails?.total_price,
+      currency: statesData.currency_symbol,
+      buyer: {
+        email: 'card.success@tabby.ai',
+        phone: '500000001',
+        name: 'Ahmed Zia',
+        dob: '2019-08-24',
+      },
+      buyer_history: {
+        registered_since: '2019-08-24T14:15:22Z',
+        loyalty_level: 0,
+        wishlist_count: 0,
+        is_social_networks_connected: true,
+        is_phone_number_verified: true,
+        is_email_verified: true,
+      },
+      order: {
+        tax_amount: '0.00',
+        shipping_amount: '0.00',
+        discount_amount: '0.00',
+        reference_id: '#x-abc123',
+        items: [
           {
-            name: "tax1",
-            description: "tax describtion",
-            amount: {
-              type: "F",
-              value: 10.0,
-              maximum_fee: 10.0,
-              minimum_fee: 1.0,
-            },
+            title: 'Nurse',
+            description: 'Jersey',
+            quantity: 1,
+            unit_price: '10.00',
+            reference_id: 'uuid',
+            product_url: 'http://example.com',
+            category: 'Nurse',
           },
         ],
+      },
+      order_history: [
+        {
+          purchased_at: '2019-08-24T14:15:22Z',
+          amount: '0.00',
+          payment_method: 'card',
+          status: 'new',
+          buyer: {
+            email: 'card.success@tabby.ai',
+            phone: '500000001',
+            name: 'Ahmed Zia',
+            dob: '2019-08-24',
+          },
+          shipping_address: {
+            city: 'string',
+            address: 'string',
+            zip: 'string',
+          },
+          items: [
+            {
+              title: 'string',
+              description: 'string',
+              quantity: 1,
+              unit_price: '0.00',
+              reference_id: 'string',
+              product_url: 'http://example.com',
+              category: 'string',
+            },
+          ],
+        },
+      ],
+    },
+  };
+  const myTestPayment = { merchant_code: loggedInUserDetails.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare', lang: 'en', ...customerPayment }
 
-        //-----payment end---------//
-      };
+  useEffect(() => {
 
-    }
-
-    this.changeState = this.changeState.bind(this);
-    this.startSDK = this.startSDK.bind(this);
-    this.handleResult = this.handleResult.bind(this);
-    this.handleSDKResult = this.handleSDKResult.bind(this);
-    this.printSDKResult = this.printSDKResult.bind(this);
-
-    if (!this.sdkModule && RNGoSell && RNGoSell.goSellSDK) {
-      this.sdkModule = RNGoSell.goSellSDK;
-    }
-    if (!this.sdkModule && RNGoSell && RNGoSell.goSellSDKModels) {
-      this.sdkModels = RNGoSell.goSellSDKModels;
-    }
-
-    // this._didFocusSubscription = props.navigation.addListener(
-    //   "focus",
-    //   (_payload) =>
-    //     BackHandler.addEventListener("hardwareBackPress", () => {
-    //      return
-    //     })
-    // );
-  }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", () => {
-      this.get_cart();
-      this.get_paysttus();
-      this.appStateSubscription = AppState.addEventListener(
-        "change",
-        nextAppState => {
-          console.log("nextAppState", nextAppState);
-          if (nextAppState == 'inactive' || nextAppState == 'background') {
-            if (this.state.isPaymentInitiate == true) {
-              localStorage.setItemString('cartTime', '')
-            }
+    getCartInfo()
+    getPayStatus();
+    appStateSubscription = AppState.addEventListener(
+      "change",
+      nextAppState => {
+        console.log("nextAppState", nextAppState);
+        setState({ appState: nextAppState });
+        if (nextAppState == 'inactive' || nextAppState == 'background') {
+          if (statesData.isPaymentInitiate == true) {
+            startTime = '';
           }
-          if (this.state.appState.match(/inactive|background/) && nextAppState === "active") {
-            setTimeout(() => {
-              this.removeExpiredCart()
-            }, 450);
-          }
-          this.setState({ appState: nextAppState });
         }
-      );
+        if (nextAppState === "active") {
+          var endTime = new Date();
+          var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
+          var resultInMinutes = Math.round(difference / 60000);
+          console.log({ resultInMinutes });
+          if (resultInMinutes >= 1) {
+            remove_cart('auto')
+          }
+        }
 
-    });
-    BackHandler.addEventListener("hardwareBackPress", this.handleBackButton)
-    // this._willBlurSubscription = this.props.navigation.addListener(
-    //   "blur",
-    //   (_payload) =>
-    //     BackHandler.removeEventListener(
-    //       "hardwareBackPress",
-    //       () => {
-    //         if (this.state.cart_arr != "" && this.state.cart_arr != null) {
-    //           this.remove_cart(true, 'auto')
-    //         }
-    //       }
-    //     )
-    // );
+      }
+    );
+    return () => appStateSubscription.remove()
+
+  }, [])
+
+  useEffect(() => {
+    if (tabbyPayment == true) {
+      resetState()
+      setState({ modalvisible: true });
+      setTimeout(() => {
+        setState({ modalvisible: false })
+        navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
+      }, 1500);
+    }
+  }, [isFocused])
+
+  const getCartId = async () => {
+    let Id = await AsyncStorage.getItem('cartId')
+    console.log(Id);
   }
-
-  componentWillUnmount() {
-    this.appStateSubscription.remove();
+  const setState = payload => {
+    setStatesData(prev => ({
+      ...prev,
+      ...payload
+    }))
   }
-
-  handleBackButton = () => {
-    return true;
-
-  }
-
-  resetState = () => {
-    this.setState({
+  const resetState = () => {
+    setState({
       modalvisible: false,
-      cart_arr: "",
+      cartDetails: "",
       pay_condition: false,
       modalVisible3: false,
       payment_moodal: false,
       provider_name: "",
-      trid: "#PH3434654E03",
       provider_id: "",
       payment_url: "",
       total_price: "",
@@ -198,65 +242,61 @@ export default class Cart extends Component {
       message: "",
       task_details: "",
       notification_count: "",
-      transaction_id: "",
       payment_status: "true",
       currency_symbol: "",
+      tabbyPaymentId: '',
       payment_mode_country: "sar",
       loadCart: false,
       isLoading: false,
       appState: '',
       customerDetails: null,
+      isRemovingCart: false,
+      isGoingBack: false,
+      isPaymentOption: false
     })
   }
 
-  saveCartInfoLocally = (Id) => {
-    localStorage.setItemString('cartId', Id)
-  }
-
-  removeExpiredCart = async () => {
-    let cartId = await localStorage.getItemString('cartId')
-    let cartTime = await localStorage.getItemString('cartTime')
-    let currentTime = moment().format('x')
-    currentTime = JSON.parse(currentTime)
-    currentTime = moment(currentTime).format('HH:mm:ss')
-    cartTime = JSON.parse(cartTime)
-    cartTime = moment(cartTime).format('HH:mm:ss')
-    console.log('cart time...', cartTime);
-    let currentSplitTime = currentTime.split(':')
-    let cartSplitTime = cartTime.split(':')
-
-    let hourDiff = currentSplitTime[0] - cartSplitTime[0]
-    let minsDiff = currentSplitTime[1] - cartSplitTime[1]
-    let secDiff = currentSplitTime[2] - cartSplitTime[2]
-
-    // console.log(hourDiff);
-    // console.log(minsDiff);
-    // console.log(secDiff);
-    // return false
-    if (cartId != null && cartId != '' && cartId != undefined) {
-      if (hourDiff > 0 || (minsDiff > 0)) {
-        console.log('Time is greater than 1 min');
-        this.remove_cart(false, 'auto').then(() => {
-          localStorage.removeItem('cartId')
-          localStorage.removeItem('cartTime')
-        })
-      }
-
+  const StartTabbySdk = async () => {
+    console.log({ myTestPayment });
+    try {
+      const { sessionId, paymentId, availableProducts } = await Tabby.createSession(myTestPayment);
+      console.log({
+        sessionId,
+      });
+      console.log({
+        paymentId,
+      });
+      console.log({
+        availableProducts
+      });
+      setState({ tabbyPaymentId: paymentId, })
+      // return
+      setTimeout(() => {
+        navigation.navigate('TabbyPayment',
+          {
+            url: availableProducts[0].webUrl,
+            serviceType: statesData.service_type,
+            cartId: statesData.cartId,
+            transactionId: paymentId
+          })
+      }, 750);
+    } catch (error) {
+      msgProvider.showError('Error creating session!')
+      console.log('tabby error...', error);
     }
   }
 
-
-  startSDK() {
+  const startSDK = () => {
     console.log('starting payment sdk....');
-    this.setState({ isLoading: true, isPaymentInitiate: true })
+    setState({ isLoading: true, isPaymentInitiate: true })
     var appCredentialsLocal = {
       appCredentials: appCredentials,
       sessionParameters: {
         paymentStatementDescriptor: "paymentStatementDescriptor",
-        transactionCurrency: this.state.payment_mode_country,
+        transactionCurrency: statesData.payment_mode_country,
         isUserAllowedToSaveCard: true,
         paymentType: PaymentTypes.ALL,
-        amount: global.amount_total,
+        amount: statesData.totalAmount,
         shipping: [],
         allowedCadTypes: AllowedCadTypes.ALL,
         paymentitems: [],
@@ -274,7 +314,7 @@ export default class Cart extends Component {
         taxes: [],
         merchantID: "",
         SDKMode: SDKMode.Production, //SDKMode.Production, //SDKMode.Production, SDKMode.Sandbox,
-        customer: this.state.customerDetails,
+        customer: statesData.customerDetails,
         isRequires3DSecure: true,
         receiptSettings: { id: null, email: false, sms: true },
         allowsToSaveSameCardMoreThanOnce: false,
@@ -284,60 +324,54 @@ export default class Cart extends Component {
 
     try {
       var res =
-        this.sdkModule &&
-        this.sdkModule.startPayment(appCredentialsLocal, 0, this.handleResult);
+        sdkModule &&
+        sdkModule.startPayment(appCredentialsLocal, 0, handleResult);
     } catch (e) {
       console.log(e);
     }
   }
 
-  handleResult(error, status) {
+  const handleResult = (error, status) => {
     // console.log("status is..... " + status);
     var resultStr = String(status.sdk_result);
     switch (resultStr) {
       case "SUCCESS":
-        this.setState({ modalvisible: true, isLoading: false });
-        this.handleSDKResult(status);
+        setState({ modalvisible: true, isLoading: false });
+        handleSDKResult(status);
         break;
       case "CANCELLED":
         msgProvider.showError('Payment is cancelled')
-        this.setState({ isLoading: false, isPaymentInitiate: false })
-        setTimeout(() => {
-          localStorage.setItemString('cartTime', moment().format('x'))
-        }, 500);
+        setState({ isLoading: false, isPaymentInitiate: false })
+        startTime = new Date();
         break;
       case "FAILED":
         msgProvider.showError('Something went wrong, please contact admin')
-        this.setState({ isLoading: false, isPaymentInitiate: false })
-        setTimeout(() => {
-          localStorage.setItemString('cartTime', moment().format('x'))
-        }, 500);
+        setState({ isLoading: false, isPaymentInitiate: false })
+        startTime = new Date();
         break;
       case "SDK_ERROR":
         msgProvider.showError('Something went wrong, please contact admin')
-        this.setState({ isLoading: false, isPaymentInitiate: false })
-        setTimeout(() => {
-          localStorage.setItemString('cartTime', moment().format('x'))
-        }, 500);
+        setState({ isLoading: false, isPaymentInitiate: false })
+        // dispatch(Cart(statesData.cartId))
+        startTime = new Date();
         console.log("sdk error............", status);
         break;
       case "NOT_IMPLEMENTED":
         break;
     }
-    // this.changeState(resultStr, myString, () => {
+    // changeState(resultStr, myString, () => {
     // });
   }
 
-  handleSDKResult(result) {
+  const handleSDKResult = (result) => {
     console.log("Payment sdk::::", result);
 
     switch (result["trx_mode"]) {
       case "CHARGE":
         if (result.status == "CAPTURED") {
-          this.setState({ transaction_id: result.charge_id });
-          this.submit_btn();
+          TapPayment(result.charge_id);
         } else {
-          // console.log('payment error', msgText.Payment_fail[config.language]);
+          // console.log('payment error', LangProvider.Payment_fail[languageIndex]);
           setTimeout(function () {
             msgProvider.showError(result.message);
             return false;
@@ -346,11 +380,11 @@ export default class Cart extends Component {
         break;
 
       case "AUTHORIZE":
-        this.printSDKResult(result);
+        printSDKResult(result);
         break;
 
       case "SAVE_CARD":
-        this.printSDKResult(result);
+        printSDKResult(result);
         break;
 
       case "TOKENIZE":
@@ -358,24 +392,14 @@ export default class Cart extends Component {
     }
   }
 
-  submit_btn = async (payment_id) => {
-    let transaction_id = payment_id;
-    if (this.state.payment_status == "false") {
-      transaction_id = "#123PE874333";
-    } else {
-      transaction_id = this.state.transaction_id;
-    }
-
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
+  const TapPayment = async (paymentId) => {
     let url = config.baseURL + "api-patient-insert-appointment";
     var data = new FormData();
 
-    data.append("service_type", this.state.service_type);
-    data.append("login_user_id", user_id);
-    data.append("cart_id", this.state.cart_id);
-    data.append("trid", transaction_id);
+    data.append("service_type", statesData.service_type);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("cart_id", statesData.cartId);
+    data.append("trid", paymentId);
 
     apifuntion
       .postApi(url, data, 1)
@@ -388,20 +412,15 @@ export default class Cart extends Component {
           } else {
             message_new = obj.result;
           }
-          this.setState({ payment_moodal: false });
-
-          this.resetState()
-
+          resetState()
+          // dispatch(SelectedProvider(null))
           setTimeout(() => {
-            this.setState({ modalvisible: false }, () => {
-              this.props.navigation.navigate(this.props?.route?.params?.providerType === 'doctor' ? 'Consultation' : this.props?.route?.params?.providerType === 'lab' ? 'LabTest' : 'Apointment')
-            })
-          }, 2500);
+            setState({ modalvisible: false })
+            navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
+          }, 1500);
 
-          global.username = "NA";
-          global.amount_total = 1;
         } else {
-          this.setState({ message: obj.message });
+          setState({ message: obj.message });
           setTimeout(() => {
             msgProvider.showError(obj.message);
           }, 700);
@@ -410,37 +429,26 @@ export default class Cart extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        console.log("TapPayment-error ------- " + error);
+        setState({ loading: false });
       });
   };
 
-  printSDKResult(result) {
+  const printSDKResult = (result) => {
     if (!result) return;
     Object.keys(result).map((key) => {
       console.log(`${result["trx_mode"]}\t${key}:\t\t\t${result[key]}`);
     });
   }
 
-  changeState(newName, resultValue, callback) {
-    this.setState(
-      {
-        statusNow: newName,
-        result: resultValue,
-      },
-      callback
-    );
-  }
-
-  get_paysttus = async () => {
+  const getPayStatus = async () => {
 
     let url = "https://rootscare.net/application/payment/pages/rootscare_onoff.php";
     apifuntion
       .getApi(url, 1)
       .then((obj) => {
-        // consolepro.consolelog("obj", obj.success);
         if (obj.success == "true") {
-          this.setState({ payment_status: obj.payment_status });
+          setState({ payment_status: obj.payment_status });
         } else {
           return false;
         }
@@ -451,83 +459,84 @@ export default class Cart extends Component {
   };
 
 
-  get_cart = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-    this.setState({ currency_symbol: user_details["currency_symbol"] });
-    if (user_details["currency_symbol"] == "AED") {
-      this.setState({ payment_mode_country: "aed" });
+  const getCartInfo = async () => {
+    if (statesData.currency_symbol == "AED") {
+      setState({ payment_mode_country: "aed" });
     } else {
-      this.setState({ payment_mode_country: "sar" });
+      setState({ payment_mode_country: "sar" });
     }
 
     let customer = {
-      isdNumber: user_details["user_id"],
+      isdNumber: loggedInUserDetails.user_id,
       number: "00000000",
       customerId: "",
-      first_name: user_details["first_name"],
+      first_name: loggedInUserDetails.first_name,
       middle_name: "",
-      last_name: user_details["last_name"],
-      email: user_details["email"],
+      last_name: loggedInUserDetails.last_name,
+      email: loggedInUserDetails.email,
     };
 
-    this.setState({
-      user_id: user_id,
+    setState({
+      user_id: loggedInUserDetails.user_id,
       customerDetails: customer,
     });
     let url = config.baseURL + "api-patient-cart-details";
 
     var data = new FormData();
-    data.append("login_user_id", user_id);
+    data.append("login_user_id", loggedInUserDetails.user_id);
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("get_cart-response...", obj);
+        console.log("get_cart-response...", obj.result[0].id);
         if (obj.status == true) {
-          this.saveCartInfoLocally(obj.result[0].id)
-          this.setState({
+          // dispatch(Cart(obj.result[0].id))
+          AsyncStorage.setItem('cartId', obj.result[0].id)
+          setState({
             family_member_id: obj.result[0].family_member_id,
-            cart_arr: obj.result[0],
+            cartDetails: obj.result[0],
             service_type: obj.result[0].service_type,
-            cart_id: obj.result[0].id,
+            cartId: obj.result[0].id,
             provider_name: obj.result[0].provider_details.provider_name,
             task_details: obj.result[0].task_details,
+            totalAmount: obj.result[0].total_price
           });
-          global.amount_total = obj.result[0].total_price;
-          global.username = obj.result[0].provider_details.provider_name;
         } else {
-          this.setState({ cart_arr: obj.result });
+          setState({ cartDetails: obj.result });
           return false;
         }
+      }).catch((error) => {
+        console.log("-------- error ------- " + error);
+      }).finally(() => {
+        setState({ loadCart: false })
       })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-      });
   };
 
-  remove_cart = async (goBack, type) => {
-    let user_details = await localStorage.getItemObject("user_arr");
+  const remove_cart = async (type) => {
+    let Id = await AsyncStorage.getItem('cartId')
     let url = config.baseURL + "api-patient-remove-cart";
-
     var data = new FormData();
-    data.append("cart_id", this.state.cart_id);
+    data.append("cart_id", statesData.cartId == '' ? Id : statesData.cartId);
+
+    console.log(data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("remove_cart-response...", obj);
+        setState({ modalVisible3: false, isRemovingCart: false })
+        console.log("remove_cart-response...", obj);
         if (obj.status == true) {
-          localStorage.removeItem('cartId')
-          localStorage.removeItem('cartTime')
+          AsyncStorage.removeItem('cartId')
+          dispatch(Cart(null))
           if (type == 'auto') {
             msgProvider.showSuccess('You cart is removed automatically by the system.');
             setTimeout(() => {
-              this.props.navigation.pop()
+              navigation.pop()
             }, 300);
           } else {
+            AsyncStorage.removeItem('cartId')
             msgProvider.showSuccess(obj.message);
           }
-          this.resetState()
+          resetState()
 
         } else {
           msgProvider.showError(obj.message);
@@ -536,11 +545,13 @@ export default class Cart extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        AsyncStorage.removeItem('cartId')
+        setState({ modalVisible3: false, isRemovingCart: false })
+        console.log("-------- error ------- " + error);
       });
   };
 
-  _onNavigationStateChange(webViewState) {
+  const _onNavigationStateChange = (webViewState) => {
     webViewState.canGoBack = false;
     if (webViewState.loading == false) {
       console.log("webViewState", webViewState);
@@ -562,31 +573,31 @@ export default class Cart extends Component {
             }
           }
           console.log("payment_id", payment_id);
-          if (this.state.pay_condition == false) {
-            this.setState({ pay_condition: true });
+          if (statesData.pay_condition == false) {
+            setState({ pay_condition: true });
             setTimeout(() => {
-              this.submit_btn(payment_id);
+              TapPayment(payment_id);
             }, 500);
           }
         } else if (t == "payment_cancel.php") {
-          this.props.navigation.navigate("Home");
+          navigation.navigate("Home");
 
           msgProvider.showError("Payment unsuccessful");
           return false;
         } else if (t == "payment_failed.php") {
           msgProvider.alert(
-            msgTitle.information[config.language],
+            LangProvider.information[languageIndex],
             "Payment unsuccessful",
             false
           );
-          this.props.navigation.goBack();
+          navigation.goBack();
         }
       }
     }
   }
 
 
-  ActivityIndicatorElement = () => {
+  const ActivityIndicatorElement = () => {
     //making a view to show to while loading the webpage
     return (
       <ActivityIndicator
@@ -604,558 +615,589 @@ export default class Cart extends Component {
     );
   };
 
-  render() {
-    var show_data = this.state.cart_arr;
-    return (
-      <View pointerEvents={this.state.isLoading ? 'none' : 'auto'} style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
-        <ScreenHeader
-          title={Lang_chg.CartItem[config.language]}
-          navigation={this.props.navigation}
-          onBackPress={() => {
-            if (this.state.cart_arr != "" && this.state.cart_arr != null) {
-              this.remove_cart(true, 'auto')
-            } else {
-              this.props.navigation.pop()
-            }
-          }}
-          leftIcon
-        />
-        <>
-          {
-            (this.state.cart_arr != "" && this.state.cart_arr != null) ?
-              <View style={{ backgroundColor: Colors.White, paddingTop: vs(9), marginTop: vs(7) }}>
+  var show_data = statesData.cartDetails;
+  return (
+    <View
+      pointerEvents={(statesData.isLoading || statesData.isRemovingCart) ? 'none' : 'auto'}
+      style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+      <ScreenHeader
+        title={LangProvider.CartItem[languageIndex]}
+        navigation={navigation}
+        onBackPress={() => {
+          if (statesData.cartDetails != "" && statesData.cartDetails != null) {
+            setState({ isGoingBack: true })
+            remove_cart('auto')
+          } else {
+            navigation.pop()
+          }
+        }}
+        leftIcon
+        isLoading={statesData.isGoingBack}
+      />
+      <>
+        {
+          (statesData.cartDetails != "" && statesData.cartDetails != null) ?
+            <View style={{ backgroundColor: Colors.White, paddingTop: vs(9), marginTop: vs(7) }}>
 
-                <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false}>
 
-                  {/* -----------Name------------- */}
-                  <View style={{ borderBottomWidth: 1.5, borderBottomColor: Colors.backgroundcolor, }}>
-                    <View style={{ flexDirection: 'row', paddingHorizontal: s(13), alignItems: 'center' }}>
+                {/* -----------Name------------- */}
+                <View style={{ borderBottomWidth: 1.5, borderBottomColor: Colors.backgroundcolor, }}>
+                  <View style={{ flexDirection: 'row', paddingHorizontal: s(13), alignItems: 'center' }}>
 
-                      <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center' }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.large,
-                            color: Colors.detailTitles,
-                          }}>
-                          {this.state.provider_name}
-                        </Text>
+                    <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center' }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.large,
+                          color: Colors.detailTitles,
+                        }}>
+                        {statesData.provider_name}
+                      </Text>
 
-                        <View style={{ height: vs(11), width: 1, backgroundColor: Colors.Border, marginLeft: vs(6) }}></View>
-                        <Text
-                          style={{
-                            fontFamily: Font.Regular,
-                            fontSize: Font.medium,
-                            color: Colors.detailTitles,
-                            marginLeft: vs(12)
-                          }}>
-                          {show_data?.service_display_type}
-                        </Text>
-                      </View>
+                      <View style={{ height: vs(11), width: 1, backgroundColor: Colors.Border, marginLeft: vs(6) }}></View>
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.medium,
+                          color: Colors.detailTitles,
+                          marginLeft: vs(12)
+                        }}>
+                        {show_data?.service_display_type}
+                      </Text>
+                    </View>
 
-                      <View style={{ width: '10%', justifyContent: 'center', alignItems: 'center' }}>
-                        <TouchableHighlight
-                          onPress={() => {
-                            this.setState({ modalVisible3: true });
-                          }}
-                          underlayColor={Colors.Highlight}
-                          style={styles.closeContainer}>
-                          <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                        </TouchableHighlight>
-                      </View>
+                    <View style={{ width: '10%', justifyContent: 'center', alignItems: 'center' }}>
+                      <TouchableHighlight
+                        onPress={() => {
+                          setState({ modalVisible3: true });
+                        }}
+                        underlayColor={Colors.Highlight}
+                        style={styles.closeContainer}>
+                        <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+                      </TouchableHighlight>
                     </View>
                   </View>
+                </View>
 
-                  {/* --------------------------------------- */}
+                {/* --------------------------------------- */}
 
 
-                  <View style={{ marginTop: vs(13), paddingHorizontal: s(13) }}>
-                    <Text
-                      style={{
-                        fontFamily: Font.Medium,
-                        fontSize: Font.large,
-                        color: Colors.detailTitles,
-                      }}>
-                      {Lang_chg.Appointment_footer[config.language]}
-                    </Text>
+                <View style={{ marginTop: vs(13), paddingHorizontal: s(13) }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.large,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start'
+                    }}>
+                    {LangProvider.Appointment_footer[languageIndex]}
+                  </Text>
 
-                    <View style={{ flexDirection: 'row', marginTop: vs(15) }}>
-                      <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', marginTop: vs(15) }}>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start'
+                        }}>
+                        {LangProvider.Date[languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start',
+                          marginTop: vs(2)
+                        }}>
+                        {show_data?.display_app_date}
+                      </Text>
+                      <View style={{ width: '60%', marginTop: vs(5), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
                         <Text
                           style={{
                             fontFamily: Font.Medium,
                             fontSize: Font.small,
-                            color: Colors.DarkGrey,
+                            color: Colors.Theme,
+                            textAlign: 'left'
                           }}>
-                          {Lang_chg.Date[config.language]}
+                          {show_data?.display_task_type}
                         </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            color: Colors.DarkGrey,
-                            marginTop: vs(2)
-                          }}>
-                          {show_data?.display_app_date}
-                        </Text>
-                        <View style={{ width: '60%', marginTop: vs(5), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: Font.small,
-                              color: Colors.Theme,
-                            }}>
-                            {show_data?.display_task_type}
-                          </Text>
-                        </View>
                       </View>
-
-                      <View style={{ flex: 1 }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            color: Colors.DarkGrey,
-                          }}>
-                          {Lang_chg.Time[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            color: Colors.DarkGrey,
-                            marginTop: vs(2)
-                          }}>
-                          {show_data?.from_time} - {show_data?.to_time}
-                        </Text>
-                        <View style={{ marginTop: vs(5), alignItems: 'center', flexDirection: 'row' }}>
-                          <SvgXml xml={clockBlue} height={vs(16)} width={s(16)} />
-                          <Text
-                            style={{
-                              fontFamily: Font.Medium,
-                              fontSize: Font.small,
-                              color: Colors.Theme,
-                              marginLeft: s(6)
-                            }}>
-                            {show_data?.display_task_time}
-                          </Text>
-                        </View>
-
-                      </View>
-
-                      {/* --------------------------------- */}
                     </View>
+
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start'
+                        }}>
+                        {LangProvider.Time[languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start',
+                          marginTop: vs(2)
+                        }}>
+                        {show_data?.from_time} - {show_data?.to_time}
+                      </Text>
+                      <View style={{ marginTop: vs(5), alignItems: 'center', flexDirection: 'row' }}>
+                        <SvgXml xml={clockBlue} height={vs(16)} width={s(16)} />
+                        <Text
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.Theme,
+                            marginLeft: s(6)
+                          }}>
+                          {show_data?.display_task_time}
+                        </Text>
+                      </View>
+
+                    </View>
+
+                    {/* --------------------------------- */}
                   </View>
+                </View>
 
-                  {/* ---------------------------------------- */}
-                  <View style={{ marginTop: vs(13), paddingHorizontal: s(13), backgroundColor: '#FBFBFB', paddingVertical: vs(10) }}>
-                    <Text
-                      style={{
-                        fontFamily: Font.Medium,
-                        fontSize: Font.large,
-                        color: Colors.detailTitles,
-                      }}>
-                      {Lang_chg.Payment[config.language]}
-                    </Text>
+                {/* ---------------------------------------- */}
+                <View style={{ marginTop: vs(13), paddingHorizontal: s(13), backgroundColor: '#FBFBFB', paddingVertical: vs(10) }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.large,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start'
+                    }}>
+                    {LangProvider.Payment[languageIndex]}
+                  </Text>
 
-                    <FlatList
-                      data={show_data?.task_details}
-                      renderItem={({ item, index }) => {
-                        if (item.task_details != "") {
-                          return (
-                            <View
+                  <FlatList
+                    data={show_data?.task_details}
+                    renderItem={({ item, index }) => {
+                      if (item.task_details != "") {
+                        return (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              paddingVertical: vs(5),
+                            }}>
+                            <Text
                               style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                paddingVertical: vs(5),
-                              }}>
-                              <Text
-                                style={{
-                                  fontFamily: Font.Regular,
-                                  fontSize: Font.small,
-                                  textAlign: config.textRotate,
-                                  color: Colors.detailTitles,
-                                }}
-                                numberOfLines={1}
-                              >
-                                {item.name}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.Regular,
-                                  fontSize: Font.small,
-                                  textAlign: config.textRotate,
-                                  color: Colors.detailTitles,
-                                }} >
-                                {item.price}
-                              </Text>
-                            </View>
-                          );
-                        }
-                      }}
-                    />
-                    {/* ----------------------------------- */}
-                    <View
-                      style={{
-                        paddingVertical: vs(10),
-                        borderTopWidth: 1,
-                        borderBottomWidth: 1,
-                        borderColor: '#00000029',
-                      }}>
-                      {show_data?.display_task_type !== "Online consultation" && (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: Font.small,
-                              textAlign: config.textRotate,
-                              color: Colors.detailTitles,
-                            }}>
-                            {/* {show_data?.distance_fare_text} */}
-                            {`${show_data.distance_fare_text} ${show_data?.distancetext == '' ? '' : `(${show_data.distancetext})`}`}
-
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.Regular,
-                              fontSize: Font.small,
-                              textAlign: config.textRotate,
-                              color: Colors.detailTitles,
-                            }}>
-                            {show_data?.distance_fare}
-                          </Text>
-                        </View>
-                      )}
-
+                                fontFamily: Font.Regular,
+                                fontSize: Font.small,
+                                alignSelf: 'flex-start',
+                                color: Colors.detailTitles,
+                              }}
+                              numberOfLines={1}
+                            >
+                              {item.name}
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: Font.Regular,
+                                fontSize: Font.small,
+                                alignSelf: 'flex-start',
+                                color: Colors.detailTitles,
+                              }} >
+                              {item.price}
+                            </Text>
+                          </View>
+                        );
+                      }
+                    }}
+                  />
+                  {/* ----------------------------------- */}
+                  <View
+                    style={{
+                      paddingVertical: vs(10),
+                      borderTopWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: '#00000029',
+                    }}>
+                    {show_data?.display_task_type !== "Online consultation" && (
                       <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
-                          marginTop: (windowWidth * 2) / 100,
-                        }} >
+                        }}>
                         <Text
                           style={{
                             fontFamily: Font.Regular,
                             fontSize: Font.small,
-                            textAlign: config.textRotate,
+                            alignSelf: 'flex-start',
                             color: Colors.detailTitles,
                           }}>
-                          {show_data?.vat_text}
+                          {/* {show_data?.distance_fare_text} */}
+                          {`${show_data.distance_fare_text} ${show_data?.distancetext == '' ? '' : `(${show_data.distancetext})`}`}
+
                         </Text>
                         <Text
                           style={{
                             fontFamily: Font.Regular,
                             fontSize: Font.small,
-                            textAlign: config.textRotate,
+                            alignSelf: 'flex-start',
                             color: Colors.detailTitles,
-                          }}
-                        >
-                          {show_data?.vat_price}
+                          }}>
+                          {show_data?.distance_fare}
                         </Text>
                       </View>
+                    )}
 
-                    </View>
-
-                    {/* ----------------------------------- */}
                     <View
                       style={{
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        marginTop: vs(10),
-                      }}>
+                        marginTop: (windowWidth * 2) / 100,
+                      }} >
                       <Text
                         style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.medium,
-                          color: Colors.Theme,
+                          fontFamily: Font.Regular,
+                          fontSize: Font.small,
+                          alignSelf: 'flex-start',
+                          color: Colors.detailTitles,
                         }}>
-                        {Lang_chg.Total[config.language]}
+                        {show_data?.vat_text}
                       </Text>
                       <Text
                         style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.medium,
-                          color: Colors.Theme,
-                        }}>
-                        {show_data?.total_price + ' ' + this.state.currency_symbol}
+                          fontFamily: Font.Regular,
+                          fontSize: Font.small,
+                          alignSelf: 'flex-start',
+                          color: Colors.detailTitles,
+                        }}
+                      >
+                        {show_data?.vat_price}
                       </Text>
                     </View>
 
                   </View>
-                </ScrollView>
+
+                  {/* ----------------------------------- */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: vs(10),
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        color: Colors.Theme,
+                      }}>
+                      {LangProvider.Total[languageIndex]}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        color: Colors.Theme,
+                      }}>
+                      {show_data?.total_price + ' ' + statesData.currency_symbol}
+                    </Text>
+                  </View>
+
+                </View>
+              </ScrollView>
+
+            </View>
+            :
+
+            ((statesData.cartDetails == "" || statesData.cartDetails == null) && statesData.loadCart == false) ?
+
+              <View
+                style={{
+                  width: "100%",
+                  alignSelf: "center",
+                  marginTop: (windowWidth * 5) / 100,
+                  paddingHorizontal: s(13)
+                }} >
+                <Image
+                  style={{
+                    width: (windowWidth * 35) / 100,
+                    height: (windowWidth * 50) / 100,
+                    alignSelf: "center",
+                    resizeMode: "contain",
+                  }}
+                  source={Icons.Emptycart}
+                />
+
+                <Text
+                  style={{
+                    color: Colors.Theme,
+                    fontFamily: Font.Regular,
+                    fontSize: (windowWidth * 4) / 100,
+                    textAlign: "center",
+                  }}
+                >
+                  Cart Details not found.
+                </Text>
+
+                <Button
+                  text={LangProvider.BOOKNOW[languageIndex]}
+                  btnStyle={{ marginTop: vs(20) }}
+                  onPress={() => {
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "DashboardStack" }],
+                    });
+                  }}
+                />
 
               </View>
               :
-
-              ((this.state.cart_arr == "" || this.state.cart_arr == null) && this.state.loadCart == false) ?
-
-                <View
-                  style={{
-                    width: "100%",
-                    alignSelf: "center",
-                    marginTop: (windowWidth * 5) / 100,
-                    paddingHorizontal: s(13)
-                  }} >
-                  <Image
-                    style={{
-                      width: (windowWidth * 35) / 100,
-                      height: (windowWidth * 50) / 100,
-                      alignSelf: "center",
-                      resizeMode: "contain",
-                    }}
-                    source={Icons.Emptycart}
-                  />
-
-                  <Text
-                    style={{
-                      color: Colors.Theme,
-                      fontFamily: Font.Regular,
-                      fontSize: (windowWidth * 4) / 100,
-                      textAlign: "center",
-                    }}
-                  >
-                    Cart Details not found.
-                  </Text>
-
-                  <Button
-                    text={Lang_chg.BOOKNOW[config.language]}
-                    btnStyle={{ marginTop: vs(20) }}
-                    onPress={() => {
-                      this.props.navigation.reset({
-                        index: 0,
-                        routes: [{ name: "DashboardStack" }],
-                      });
-                    }}
-                  />
-
-                </View>
+              ((statesData.cartDetails == "" || statesData.cartDetails == null) && statesData.loadCart == true) ?
+                <LoadingSkeleton />
                 :
                 null
 
-          }
-        </>
+        }
+      </>
 
 
 
-        {
-          ((this.state.cart_arr != "" && this.state.cart_arr != null)) &&
+      {
+        ((statesData.cartDetails != "" && statesData.cartDetails != null)) &&
 
-          <View
-            style={{
-              width: "100%",
-              alignSelf: "center",
-              backgroundColor: Colors.White,
-              paddingHorizontal: (windowWidth * 5) / 100,
-              paddingVertical: (windowWidth * 2) / 100,
-              height: 80,
-              justifyContent: "center",
-              alignItems: "center",
-              position: 'absolute',
-              bottom: 0
-            }}>
-            <Button
-              text={Lang_chg.PROCEEDTOPAYMENT[config.language]}
-              onPress={() => {
-                if (this.state.payment_status == "true") {
-                  this.startSDK();
-                  // this.get_payment(), this.setState({ total_price: show_data.total_price })
-                } else {
-                  this.submit_btn(),
-                    this.setState({ total_price: show_data.total_price });
-                }
-              }}
-              onLoading={this.state.isLoading}
-            />
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            backgroundColor: Colors.White,
+            paddingHorizontal: (windowWidth * 5) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
+            height: 80,
+            alignItems: "center",
+            paddingHorizontal: '10%',
+            borderTopWidth: 1,
+            borderTopColor: Colors.Border,
+            position: 'absolute',
+            bottom: 0
+          }}>
+
+          <View style={{ alignItems: 'flex-start' }}>
+            <Text
+              style={{
+                fontFamily: Font.Medium,
+                fontSize: Font.xxlarge,
+                color: Colors.Theme,
+              }}>
+              {show_data?.total_price + ' ' + statesData.currency_symbol}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Font.Regular,
+                fontSize: Font.small,
+                color: Colors.detailTitles,
+              }}>
+              {LangProvider.Amount_Payable[languageIndex]}
+            </Text>
           </View>
 
-        }
-
-
-        {/* ------------------------------Delete Modal-------------------------------------- */}
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible3}
-          onRequestClose={() => {
-            this.setState({ modalVisible3: false });
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={0.9}
+          <Button
+            onLoading={statesData.isLoading}
+            btnStyle={{ width: windowWidth / 2.5 }}
+            text={LangProvider.ProceedToPay[languageIndex]}
             onPress={() => {
-              this.setState({ modalVisible3: false });
+              startSDK();
+              // StartTabbySdk()
+              // setState({ isPaymentOption: true })
             }}
+          />
+
+        </View>
+
+
+      }
+
+
+      {/* ------------------------------Delete Modal-------------------------------------- */}
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={statesData.modalVisible3}
+        onRequestClose={() => {
+          setState({ modalVisible3: false });
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#00000080",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            marginTop: -50,
+          }}>
+          <View
             style={{
-              backgroundColor: "#00000080",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 20,
-              marginTop: -50,
-            }}>
+              borderRadius: 20,
+              width: (windowWidth * 90) / 100,
+              position: "absolute",
+              alignSelf: "center",
+            }}
+          >
             <View
               style={{
-                borderRadius: 20,
-                width: (windowWidth * 90) / 100,
-                position: "absolute",
-                alignSelf: "center",
+                backgroundColor: "#fff",
+                borderRadius: 2,
+                width: "100%",
               }}
             >
               <View
                 style={{
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
-                  width: "100%",
+                  alignSelf: "flex-start",
+                  width: (windowWidth * 50) / 100,
+                  paddingVertical: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
                 }}
               >
-                <View
+                <Image
                   style={{
-                    alignSelf: "flex-start",
-                    width: (windowWidth * 50) / 100,
-                    paddingVertical: (windowWidth * 3) / 100,
-                    marginTop: (windowWidth * 2) / 100,
+                    width: (windowWidth * 6) / 100,
+                    height: (windowWidth * 6) / 100,
+                  }}
+                  source={Icons.logoPlain}
+                />
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    color: "#000",
+                    fontSize: (windowWidth * 5) / 100,
                     paddingLeft: (windowWidth * 4) / 100,
-                    flexDirection: "row",
                   }}
                 >
-                  <Image
-                    style={{
-                      width: (windowWidth * 6) / 100,
-                      height: (windowWidth * 6) / 100,
-                    }}
-                    source={Icons.logoPlain}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      color: "#000",
-                      fontSize: (windowWidth * 5) / 100,
-                      paddingLeft: (windowWidth * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.confimation[config.language]}
-                  </Text>
-                </View>
-                <View
+                  {LangProvider.confimation[languageIndex]}
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignSelf: "flex-start",
+                  paddingVertical: (windowWidth * 1) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text
                   style={{
-                    alignSelf: "flex-start",
-                    paddingVertical: (windowWidth * 1) / 100,
-                    paddingLeft: (windowWidth * 4) / 100,
+                    fontFamily: Font.Regular,
+                    color: "#000",
+                    fontSize: (windowWidth * 4) / 100,
+                  }}
+                >
+                  {LangProvider.remove_msg[languageIndex]}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  width: "40%",
+                  paddingBottom: (windowWidth * 5) / 100,
+                  marginTop: (windowWidth * 9) / 100,
+                  alignSelf: "flex-end",
+                  right: 10,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setState({ modalVisible3: false });
+                  }}
+                  style={{
+                    width: (windowWidth * 15) / 100,
                     flexDirection: "row",
-                    alignItems: "center",
+                    alignSelf: "center",
                   }}
                 >
                   <Text
                     style={{
                       fontFamily: Font.Regular,
-                      color: "#000",
                       fontSize: (windowWidth * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.remove_msg[config.language]}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    width: "40%",
-                    paddingBottom: (windowWidth * 5) / 100,
-                    marginTop: (windowWidth * 9) / 100,
-                    alignSelf: "flex-end",
-                    right: 10,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ modalVisible3: false });
-                    }}
-                    style={{
-                      width: (windowWidth * 15) / 100,
-                      flexDirection: "row",
+                      color: Colors.Blue,
                       alignSelf: "center",
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: (windowWidth * 4) / 100,
-                        color: Colors.Blue,
-                        alignSelf: "center",
-                      }}
-                    >
-                      {Lang_chg.no_txt[config.language]}
-                    </Text>
-                  </TouchableOpacity>
+                    {LangProvider.no_txt[languageIndex]}
+                  </Text>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ modalVisible3: false }),
-                        this.remove_cart(false, 'manual');
-                    }}
-                    activeOpacity={0.8}
-                    style={{
-                      width: (windowWidth * 40) / 100,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: (windowWidth * 4) / 100,
-                        color: Colors.Blue,
-                        alignSelf: "center",
-                      }}
-                    >
-                      {Lang_chg.Delete[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    setState({ isRemovingCart: true }),
+                      remove_cart('manual');
+                  }}
+                  activeOpacity={0.8}
+                  style={{
+                    width: (windowWidth * 40) / 100,
+                    justifyContent: "center",
+                  }}>
+                  {
+                    statesData.isRemovingCart ?
+                      <SkypeIndicator color={Colors.Theme} size={20} />
+                      :
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.Blue,
+                          alignSelf: "center",
+                        }}>
+                        {LangProvider.Delete[languageIndex]}
+                      </Text>
+                  }
+
+                </TouchableOpacity>
               </View>
             </View>
-          </TouchableOpacity>
-        </Modal>
-
-        {/* -------------------------------payment model-------------------------------- */}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.payment_moodal}
-          onRequestClose={() => {
-            this.setState({ payment_moodal: false });
-          }}
-        >
-          <WebView
-            source={{ uri: this.state.payment_url }}
-            onNavigationStateChange={this._onNavigationStateChange.bind(this)}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            renderLoading={() => this.ActivityIndicatorElement()}
-            startInLoadingState={false}
-          />
-        </Modal>
-        {/* ----------------------------------------------sucess model -------------------------- */}
-
-        <SuccessPopup
-          visible={this.state.modalvisible}
-          onRequestClose={() => {
-            this.setState({ modalvisible: false })
-          }}
-          type={this.props?.route?.params?.providerType}
-          navigation={this.props.navigation}
-        />
+          </View>
+        </View>
+      </Modal>
 
 
+      {/* ----------------------------------------------sucess model -------------------------- */}
 
-      </View>
-    );
-  }
+      <SuccessPopup
+        visible={statesData.modalvisible}
+        onRequestClose={() => {
+          setState({ modalvisible: false })
+        }}
+        type={selectedProvider?.providerType}
+        navigation={navigation}
+      />
+
+      <PaymentOptionBottomSheet
+        visible={statesData.isPaymentOption}
+        onRequestClose={() => {
+          setState({ isPaymentOption: false })
+        }}
+        data={show_data?.total_price + ' ' + statesData.currency_symbol}
+        selectedPaymentMethod={(val) => {
+          if (val == 1) {
+            startSDK()
+          } else {
+            StartTabbySdk()
+          }
+        }}
+      />
+
+    </View>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -1170,3 +1212,4 @@ const styles = StyleSheet.create({
   },
 
 });
+export default CartDetails;

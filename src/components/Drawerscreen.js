@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -17,19 +17,19 @@ import {
   config,
   windowWidth,
   Icons,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { dummyUser, leftArrow, rightArrow, Appointment, Consultations, AccountSetting, ManageAddress, HealthRecord, LabTest, LikeUs, SignOut, Orders, Support, Login } from "../Icons/Index";
 // ----------------------------------------
 import { DrawerActions } from "@react-navigation/native";
+import { SkypeIndicator } from "react-native-indicators";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, s, vs } from "react-native-size-matters";
 import { SvgXml, SvgUri } from 'react-native-svg';
 import DrawerItemContainer from "./DrawerItem";
 import { useDispatch, useSelector } from "react-redux";
-import { onLogout } from "../Redux/Actions";
-let isGuest = false;
+import { onLogout, SelectedProvider } from "../Redux/Actions";
 
 const Drawerscreen = ({ navigation }) => {
 
@@ -46,29 +46,35 @@ const Drawerscreen = ({ navigation }) => {
     address,
     credentials,
     rememberMe,
+    languageIndex,
+    selectedProvider
   } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
 
 
   const [drawerData, setDrawerData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     modalVisible: false,
     profileImg: loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : '',
-    name: loggedInUserDetails ? loggedInUserDetails?.first_name : ''
+    name: loggedInUserDetails ? loggedInUserDetails?.first_name : '',
+    isLogout: false
   })
 
-
+  useEffect(() => {
+    console.log({ loggedInUserDetails });
+    dispatch(SelectedProvider(null))
+  }, [])
 
   const confirm_click = async () => {
+    setDrawerData(prevState => ({
+      ...prevState,
+      isLogout: true
+    }))
     logoutApi();
   };
 
   const logoutApi = async () => {
-    setDrawerData(prevState => ({
-      ...prevState,
-      modalVisible: false
-    }))
+
     let url = config.baseURL + "api-logout";
     var data = new FormData();
     data.append("user_id", loggedInUserDetails?.user_id);
@@ -76,7 +82,7 @@ const Drawerscreen = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        console.log("logout response", obj);
+        // console.log("logout response", obj);
 
         if (obj.status == true) {
           dispatch(onLogout({
@@ -90,15 +96,34 @@ const Drawerscreen = ({ navigation }) => {
             address,
             credentials,
             rememberMe,
+            languageIndex
           }))
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'AuthStack' }],
-          })
+          setDrawerData(prevState => ({
+            ...prevState,
+            isLogout: false,
+            modalVisible: false
+          }))
+          setTimeout(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'AuthStack' }],
+            })
+          }, 350);
         } else {
+          setDrawerData(prevState => ({
+            ...prevState,
+            isLogout: false,
+            modalVisible: false
+          }))
+          setTimeout(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'AuthStack' }],
+            })
+          }, 350);
           setTimeout(() => {
             // msgProvider.alert('', obj.message, false);
-            msgProvider.showError(obj.message);
+            // msgProvider.showError(obj.message);
           }, 700);
           return false;
         }
@@ -113,7 +138,7 @@ const Drawerscreen = ({ navigation }) => {
     <View style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: insets.bottom + Platform.OS === 'ios' ? vs(150) : vs(65), }}
+        style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(150) : vs(65), }}
       >
         <View
           style={{
@@ -163,7 +188,7 @@ const Drawerscreen = ({ navigation }) => {
 
                 <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
                   <SvgXml xml={
-                    drawerData.languageIndex == 1
+                    languageIndex == 1
                       ? leftArrow : rightArrow
                   } height={vs(11.98)} width={s(6.42)} />
                 </View>
@@ -188,11 +213,11 @@ const Drawerscreen = ({ navigation }) => {
                       marginTop: vs(5)
 
                     }}>
-                    {drawerData.languageIndex == 0 ? 'View & edit profile' : 'عرض وتحرير الملف الشخصي'}
+                    {languageIndex == 0 ? 'View & edit profile' : 'عرض وتحرير الملف الشخصي'}
                   </Text>
                 </TouchableOpacity>
 
-                {
+                {/* {
                   !guest &&
                   <Text
                     style={{
@@ -202,9 +227,9 @@ const Drawerscreen = ({ navigation }) => {
                       alignSelf: 'flex-start',
                       marginTop: vs(4)
                     }}>
-                    {drawerData.languageIndex == 0 ? '25% Completed' : '25٪ اكتمل'}
+                    {languageIndex == 0 ? '25% Completed' : '25٪ اكتمل'}
                   </Text>
-                }
+                } */}
               </View>
             </View>
           </TouchableOpacity>
@@ -221,15 +246,15 @@ const Drawerscreen = ({ navigation }) => {
                   fontSize: Font.medium,
                   alignSelf: 'flex-start',
                 }}>
-                {Lang_chg.All_Consultations[drawerData.languageIndex]}
+                {LangProvider.All_Consultations[languageIndex]}
               </Text>
             </View>
 
             <DrawerItemContainer
-              title={Lang_chg.Appointment_Bookings[drawerData.languageIndex]}
-              subtitle={Lang_chg.Appointment_Booking_Details[drawerData.languageIndex]}
+              title={LangProvider.Appointment_Bookings[languageIndex]}
+              subtitle={LangProvider.Appointment_Booking_Details[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={Appointment}
@@ -237,7 +262,7 @@ const Drawerscreen = ({ navigation }) => {
                 navigation.navigate(
                   "Apointment",
                   {
-                    title: Lang_chg.upcoming_heading[drawerData.languageIndex],
+                    title: LangProvider.upcoming_heading[languageIndex],
                     api_status: 0,
                   }
                 )
@@ -246,10 +271,10 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Doctor_Consultations[drawerData.languageIndex]}
-              subtitle={Lang_chg.Doctor_Consultation_Details[drawerData.languageIndex]}
+              title={LangProvider.Doctor_Consultations[languageIndex]}
+              subtitle={LangProvider.Doctor_Consultation_Details[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={Consultations}
@@ -257,7 +282,7 @@ const Drawerscreen = ({ navigation }) => {
                 navigation.navigate(
                   "Consultation",
                   {
-                    title: Lang_chg.upcoming_heading[drawerData.languageIndex],
+                    title: LangProvider.upcoming_heading[languageIndex],
                     api_status: 0,
                   }
                 )
@@ -266,10 +291,10 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Lab_Test_Booking[drawerData.languageIndex]}
-              subtitle={Lang_chg.Lab_Test_Booking_Details[drawerData.languageIndex]}
+              title={LangProvider.Lab_Test_Booking[languageIndex]}
+              subtitle={LangProvider.Lab_Test_Booking_Details[languageIndex]}
               rightIcon={
-                drawerData.languageIndex
+                languageIndex
                   ? leftArrow : rightArrow
               }
               leftIcon={LabTest}
@@ -277,7 +302,7 @@ const Drawerscreen = ({ navigation }) => {
                 navigation.navigate(
                   "LabTest",
                   {
-                    title: Lang_chg.upcoming_heading[drawerData.languageIndex],
+                    title: LangProvider.upcoming_heading[languageIndex],
                     api_status: 0,
                   }
                 )
@@ -286,10 +311,10 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Orders[drawerData.languageIndex]}
-              subtitle={Lang_chg.Order_Details[drawerData.languageIndex]}
+              title={LangProvider.Orders[languageIndex]}
+              subtitle={LangProvider.Order_Details[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={Orders}
@@ -309,14 +334,14 @@ const Drawerscreen = ({ navigation }) => {
                   fontSize: Font.medium,
                   alignSelf: 'flex-start'
                 }}>
-                {Lang_chg.Acccount_and_More[drawerData.languageIndex]}
+                {LangProvider.Acccount_and_More[languageIndex]}
               </Text>
             </View>
 
             <DrawerItemContainer
-              title={Lang_chg.Acccount_Setting[drawerData.languageIndex]}
+              title={LangProvider.Acccount_Setting[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={AccountSetting}
@@ -327,9 +352,9 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Manage_Address[drawerData.languageIndex]}
+              title={LangProvider.Manage_Address[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={ManageAddress}
@@ -340,24 +365,28 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Health_Record[drawerData.languageIndex]}
+              title={LangProvider.Health_Record[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={HealthRecord}
               disable={guest ? true : false}
               onPress={() => {
-                navigation.navigate('HealthRecord', {
-                  isPage: "drawer"
-                })
+                if (selectedProvider == null) {
+                  navigation.navigate('HealthRecord')
+                }
+                dispatch(SelectedProvider(null))
+                setTimeout(() => {
+                  navigation.navigate('HealthRecord')
+                }, 250);
               }}
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Support_and_More[drawerData.languageIndex]}
+              title={LangProvider.Support_and_More[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={Support}
@@ -365,7 +394,7 @@ const Drawerscreen = ({ navigation }) => {
                 navigation.navigate(
                   "SupportandMore",
                   {
-                    title: Lang_chg.upcoming_heading[drawerData.languageIndex],
+                    title: LangProvider.upcoming_heading[languageIndex],
                     api_status: 0,
                   }
                 )
@@ -374,9 +403,9 @@ const Drawerscreen = ({ navigation }) => {
             />
 
             <DrawerItemContainer
-              title={Lang_chg.Like_Us[drawerData.languageIndex]}
+              title={LangProvider.Like_Us[languageIndex]}
               rightIcon={
-                drawerData.languageIndex == 1
+                languageIndex == 1
                   ? leftArrow : rightArrow
               }
               leftIcon={LikeUs}
@@ -395,9 +424,9 @@ const Drawerscreen = ({ navigation }) => {
             {
               guest ?
                 <DrawerItemContainer
-                  title={Lang_chg.loginheretext[drawerData.languageIndex]}
+                  title={LangProvider.loginheretext[languageIndex]}
                   rightIcon={
-                    drawerData.languageIndex == 1
+                    languageIndex == 1
                       ? leftArrow : rightArrow
                   }
                   leftIcon={Login}
@@ -411,8 +440,8 @@ const Drawerscreen = ({ navigation }) => {
                 />
                 :
                 <DrawerItemContainer
-                  title={Lang_chg.SignOut[drawerData.languageIndex]}
-                  rightIcon={drawerData.languageIndex == 1
+                  title={LangProvider.SignOut[languageIndex]}
+                  rightIcon={languageIndex == 1
                     ? leftArrow : rightArrow
                   }
                   leftIcon={SignOut}
@@ -435,7 +464,7 @@ const Drawerscreen = ({ navigation }) => {
                 fontSize: Font.medium,
                 alignSelf: 'flex-start'
               }}>
-              {Lang_chg.About_App[drawerData.languageIndex]}
+              {LangProvider.About_App[languageIndex]}
             </Text>
 
             <Text
@@ -446,7 +475,7 @@ const Drawerscreen = ({ navigation }) => {
                 alignSelf: 'flex-start',
                 marginTop: vs(5)
               }}>
-              {Lang_chg.About_App_Details[drawerData.languageIndex]}
+              {LangProvider.About_App_Details[languageIndex]}
             </Text>
           </View>
 
@@ -460,7 +489,7 @@ const Drawerscreen = ({ navigation }) => {
                 color: Colors.drawertextblue,
                 marginTop: (windowWidth * 7) / 100,
               }}>
-              {Lang_chg.drawerversion[config.language]}
+              {LangProvider.drawerversion[config.language]}
             </Text> */}
 
 
@@ -529,7 +558,7 @@ const Drawerscreen = ({ navigation }) => {
                         paddingLeft: (windowWidth * 4) / 100,
                       }}
                     >
-                      {Lang_chg.Logout[drawerData.languageIndex]}
+                      {LangProvider.Logout[languageIndex]}
                     </Text>
                   </View>
                   <View
@@ -548,7 +577,7 @@ const Drawerscreen = ({ navigation }) => {
                         fontSize: (windowWidth * 4) / 100,
                       }}
                     >
-                      {Lang_chg.logut_msg[drawerData.languageIndex]}
+                      {LangProvider.logut_msg[languageIndex]}
                     </Text>
                   </View>
 
@@ -585,11 +614,12 @@ const Drawerscreen = ({ navigation }) => {
                           alignSelf: "center",
                         }}
                       >
-                        {Lang_chg.no_txt[drawerData.languageIndex]}
+                        {LangProvider.no_txt[languageIndex]}
                       </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
+                      disabled={drawerData.isLogout}
                       onPress={() => {
                         confirm_click();
                       }}
@@ -600,16 +630,21 @@ const Drawerscreen = ({ navigation }) => {
                         justifyContent: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: (windowWidth * 4) / 100,
-                          color: Colors.Blue,
-                          alignSelf: "center",
-                        }}
-                      >
-                        {Lang_chg.Logout[drawerData.languageIndex]}
-                      </Text>
+                      {
+                        drawerData.isLogout ?
+                          <SkypeIndicator color={Colors.Theme} size={20} />
+                          :
+                          <Text
+                            style={{
+                              fontFamily: Font.Regular,
+                              fontSize: (windowWidth * 4) / 100,
+                              color: Colors.Blue,
+                              alignSelf: "center",
+                            }}>
+                            {LangProvider.Logout[languageIndex]}
+                          </Text>
+                      }
+
                     </TouchableOpacity>
 
                   </View>

@@ -5,7 +5,7 @@ import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 // import { color } from "react-native-reanimated";
 // import { Color, Fonts } from "../utils";
 // import { RF } from "../utils/responsive";
-import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { Colors, Icons, Font, windowHeight, config, windowWidth, } from '../Provider/Utils/Utils';
 const OutlinedButton = ({
   text,
   customStyles,

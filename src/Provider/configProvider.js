@@ -1,6 +1,5 @@
 import { Platform } from "react-native";
 import base64 from "react-native-base64";
-import { msgProvider, localStorage } from "./utilslib/Utils";
 
 
 class configProvider {

@@ -16,14 +16,11 @@ import {
   Font,
   config,
   windowWidth,
-  consolepro,
-  Lang_chg,
   msgProvider,
-  msgText,
+  LangProvider,
   apifuntion,
-  StatusbarHeight,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
@@ -33,10 +30,9 @@ import { useSelector } from "react-redux";
 
 const ForgotPage = ({ navigation }) => {
 
-  const { appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { appLanguage, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
 
   const [forgotData, setForgotData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     email: "",
     isLoading: false
   })
@@ -48,12 +44,12 @@ const ForgotPage = ({ navigation }) => {
 
     let regemail = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (forgotData.email == '' || forgotData.email == null || forgotData.email == undefined) {
-      msgProvider.showError(msgText.emptyEmail[forgotData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyEmail[languageIndex]);
       return false;
     }
 
     if (regemail.test(forgotData.email) !== true) {
-      msgProvider.showError(msgText.validEmail[forgotData.languageIndex]);
+      msgProvider.showError(LangProvider.validEmail[languageIndex]);
       return false;
     }
     setForgotData(prevState => ({
@@ -71,7 +67,7 @@ const ForgotPage = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        consolepro.consolelog("submit_click", obj);
+        console.log("submit_click", obj);
         if (obj.status == true) {
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
@@ -89,7 +85,7 @@ const ForgotPage = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        consolepro.consolelog("submit_click-error ------- " + error);
+        console.log("submit_click-error ------- " + error);
       });
   };
 
@@ -150,7 +146,7 @@ const ForgotPage = ({ navigation }) => {
               alignSelf: 'center',
               color: Colors.darkText
             }}>
-            {Lang_chg.Forgot[forgotData.languageIndex]}
+            {LangProvider.Forgot[languageIndex]}
           </Text>
 
           <Text
@@ -162,13 +158,13 @@ const ForgotPage = ({ navigation }) => {
               marginTop: vs(4)
             }}
           >
-            {Lang_chg.Forgottext[forgotData.languageIndex]}
+            {LangProvider.Forgottext[languageIndex]}
           </Text>
 
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(18), width: '100%' }}
-            lableText={Lang_chg.textinputregistered[forgotData.languageIndex]}
+            lableText={LangProvider.textinputregistered[languageIndex]}
             inputRef={emailRef}
             onChangeText={(val) => {
               setForgotData(prevState => ({
@@ -188,7 +184,7 @@ const ForgotPage = ({ navigation }) => {
           />
 
           <Button
-            text={Lang_chg.forgotbtn[forgotData.languageIndex]}
+            text={LangProvider.forgotbtn[languageIndex]}
             onPress={() => submit_click()}
             btnStyle={{ marginTop: vs(30) }}
             onLoading={forgotData.isLoading}

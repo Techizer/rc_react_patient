@@ -4,9 +4,9 @@ import Modal from "react-native-modal";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
-    windowWidth, Lang_chg, config, Button, msgText,
+    windowWidth, LangProvider, config, Button,
     Cameragallery, apifuntion, msgProvider, mediaprovider, windowHeight,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -29,7 +29,7 @@ const AddandEditMembers = ({
     editMemberDetails = () => { }
 }) => {
 
-    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
     const [name, setName] = useState('')
     const [dob, setDOB] = useState('')
     const [gender, setGender] = useState('')
@@ -37,7 +37,6 @@ const AddandEditMembers = ({
     const nameRef = useRef()
     const dobRef = useRef()
     const [mediamodal, setMediamodal] = useState(false)
-    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1)
     const [isLoading, setIsLoading] = useState({
         load: false,
         type: ''
@@ -93,14 +92,14 @@ const AddandEditMembers = ({
 
     const confirmDelete = (title, message, callbackOk, callbackCancel) => {
         Alert.alert(
-            Lang_chg.Delete_Member[languageIndex],
-            Lang_chg.Sure_Delete[languageIndex],
+            LangProvider.Delete_Member[languageIndex],
+            LangProvider.Sure_Delete[languageIndex],
             [
                 {
-                    text: Lang_chg.no_txt[languageIndex],
+                    text: LangProvider.no_txt[languageIndex],
                 },
                 {
-                    text: Lang_chg.yes_txt[languageIndex],
+                    text: LangProvider.yes_txt[languageIndex],
                     onPress: () => deleteMember(),
                 },
             ],
@@ -161,12 +160,12 @@ const AddandEditMembers = ({
             name.length <= 0 ||
             name.trim().length <= 0
         ) {
-            msgProvider.showError(msgText.emptyPaitentName[languageIndex]);
+            msgProvider.showError(LangProvider.emptyPaitentName[languageIndex]);
             return false;
         }
 
         if (dob.length <= 0 || dob.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyAge[languageIndex]);
+            msgProvider.showError(LangProvider.emptyAge[languageIndex]);
             return false;
         }
         if (gender == -1) {
@@ -325,7 +324,7 @@ const AddandEditMembers = ({
                         alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{type === 'addMember' ? Lang_chg.Add_New_Member[languageIndex] : type === 'editMember' ? Lang_chg.Edit_Member[languageIndex] : ''}</Text>
+                    }}>{type === 'addMember' ? LangProvider.Add_New_Member[languageIndex] : type === 'editMember' ? LangProvider.Edit_Member[languageIndex] : ''}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}
@@ -360,7 +359,7 @@ const AddandEditMembers = ({
                                                         :
                                                         <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
                                                 }
-                                                <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 0, right: s(4), borderWidth: 1.2, borderColor: Colors.Blue }}>
+                                                <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
                                                     <SvgXml xml={Edit} />
                                                 </View>
                                             </View>
@@ -373,7 +372,7 @@ const AddandEditMembers = ({
                                                         alignSelf: 'flex-start',
                                                         color: Colors.darkText
 
-                                                    }}>{Lang_chg.Upload_Photo[languageIndex]}</Text>
+                                                    }}>{LangProvider.Upload_Photo[languageIndex]}</Text>
                                                 <Text
                                                     style={{
                                                         fontSize: Font.xsmall,
@@ -382,7 +381,7 @@ const AddandEditMembers = ({
                                                         color: Colors.lightGrey,
                                                         marginTop: vs(2)
 
-                                                    }}>{Lang_chg.Photo_Size[languageIndex]}</Text>
+                                                    }}>{LangProvider.Photo_Size[languageIndex]}</Text>
                                             </View>
                                         </View>
                                     </TouchableHighlight>
@@ -390,7 +389,7 @@ const AddandEditMembers = ({
                                         <AuthInputBoxSec
                                             mainContainer={{ width: '100%', }}
                                             inputFieldStyle={{ height: vs(35) }}
-                                            lableText={Lang_chg.textinputname[languageIndex]}
+                                            lableText={LangProvider.textinputname[languageIndex]}
                                             inputRef={nameRef}
                                             onChangeText={(val) => setName(val)}
                                             value={name}
@@ -407,7 +406,7 @@ const AddandEditMembers = ({
                                         <AuthInputBoxSec
                                             mainContainer={{ marginTop: vs(5), width: '100%' }}
                                             inputFieldStyle={{ height: vs(35) }}
-                                            lableText={Lang_chg.PatientAge[languageIndex]}
+                                            lableText={LangProvider.PatientAge[languageIndex]}
                                             inputRef={dobRef}
                                             onChangeText={(val) => setDOB(val)}
                                             value={dob}
@@ -428,11 +427,10 @@ const AddandEditMembers = ({
                                                 style={{
                                                     fontSize: Font.small,
                                                     fontFamily: Font.Regular,
-                                                    alignSelf: 'flex-start',
                                                     color: Colors.lightGrey,
                                                     paddingRight: s(20)
 
-                                                }}>{Lang_chg.Gender[languageIndex]}</Text>
+                                                }}>{LangProvider.Gender[languageIndex]}</Text>
 
                                             <FlatList
                                                 showsHorizontalScrollIndicator={false}
@@ -500,7 +498,7 @@ const AddandEditMembers = ({
                                                     <TouchableOpacity
                                                         activeOpacity={0.8}
                                                         onPress={() => setMediamodal(true)}
-                                                        style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 0, right: s(4), borderWidth: 1.2, borderColor: Colors.Blue }}>
+                                                        style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
                                                         <SvgXml xml={Edit} />
                                                     </TouchableOpacity>
 
@@ -557,7 +555,7 @@ const AddandEditMembers = ({
                                                 <AuthInputBoxSec
                                                     mainContainer={{ width: '100%', }}
                                                     inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={Lang_chg.textinputname[languageIndex]}
+                                                    lableText={LangProvider.textinputname[languageIndex]}
                                                     inputRef={nameRef}
                                                     onChangeText={(val) => setName(val)}
                                                     value={name}
@@ -574,7 +572,7 @@ const AddandEditMembers = ({
                                                 <AuthInputBoxSec
                                                     mainContainer={{ marginTop: vs(5), width: '100%' }}
                                                     inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={Lang_chg.PatientAge[languageIndex]}
+                                                    lableText={LangProvider.PatientAge[languageIndex]}
                                                     inputRef={dobRef}
                                                     onChangeText={(val) => setDOB(val)}
                                                     value={dob}
@@ -599,7 +597,7 @@ const AddandEditMembers = ({
                                                             color: Colors.lightGrey,
                                                             paddingRight: s(20)
 
-                                                        }}>{Lang_chg.Gender[languageIndex]}</Text>
+                                                        }}>{LangProvider.Gender[languageIndex]}</Text>
 
                                                     <FlatList
                                                         showsHorizontalScrollIndicator={false}
@@ -658,12 +656,12 @@ const AddandEditMembers = ({
                             {
                                 (!isEditable && type === 'editMember') &&
                                 <OutlinedButton
-                                    text={Lang_chg.Edit[languageIndex]}
+                                    text={LangProvider.Edit[languageIndex]}
                                     onPress={() => { changeType('editMember') }}
                                 />
                             }
                             <Button
-                                text={type === 'addMember' ? Lang_chg.Add_Member[languageIndex] : Lang_chg.Save[languageIndex]}
+                                text={type === 'addMember' ? LangProvider.Add_Member[languageIndex] : LangProvider.Save[languageIndex]}
                                 onPress={() => {
                                     if (type === 'editMember') {
                                         editMember()
@@ -691,7 +689,7 @@ const AddandEditMembers = ({
                                     color: Colors.Theme,
                                     marginTop: (windowWidth * 5) / 100,
                                     alignSelf: 'center'
-                                }}>{Lang_chg.Delete[languageIndex]}</Text>
+                                }}>{LangProvider.Delete[languageIndex]}</Text>
                             </TouchableOpacity>
 
 
@@ -703,6 +701,9 @@ const AddandEditMembers = ({
                 </KeyboardAwareScrollView>
                 <Cameragallery
                     mediamodal={mediamodal}
+                    onRequestClose={()=>{
+                        setMediamodal(false)
+                    }}
                     Camerapopen={() => {
                         Camerapopen()
                     }}

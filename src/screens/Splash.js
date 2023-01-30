@@ -15,9 +15,9 @@ import {
   Font,
   config,
   windowWidth,
-  Lang_chg,
+  LangProvider,
   apifuntion,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import HTMLView from "react-native-htmlview";
 import messaging from "@react-native-firebase/messaging";
 import DeviceInfo from "react-native-device-info";
@@ -30,14 +30,13 @@ import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToke
 
 const Splash = ({ navigation }) => {
 
-  const { appLanguage, deviceToken, deviceType, contentAlign, appVersion, loggedInUserDetails } = useSelector(state => state.StorageReducer)
+  const { appLanguage, deviceToken,languageIndex, deviceType, contentAlign, appVersion, loggedInUserDetails } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
-  const [loginData, setLoginData] = useState({
+  const [splashData, setSplashData] = useState({
     email: '',
     password: '',
     language: 'AR',
     fcmToken: deviceToken,
-    languageIndex: appLanguage == 'ar' ? 1 : 0
   })
   const [updateData, setUpdateData] = useState({
     appVer: '',
@@ -227,7 +226,7 @@ const Splash = ({ navigation }) => {
             textAlign: "center",
           }}
         >
-          {Lang_chg.Splashtext1[loginData.languageIndex]}
+          {LangProvider.Splashtext1[languageIndex]}
         </Text>
       </View>
 
@@ -249,7 +248,7 @@ const Splash = ({ navigation }) => {
             textAlign: "center",
           }}
         >
-          {Lang_chg.Splashtext2[loginData.languageIndex]}
+          {LangProvider.Splashtext2[languageIndex]}
         </Text>
       </View>
 
@@ -403,7 +402,7 @@ const Splash = ({ navigation }) => {
                       alignSelf: "center",
                     }}
                   >
-                    {Lang_chg.Update[loginData.languageIndex]}
+                    {LangProvider.Update[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -425,7 +424,7 @@ const Splash = ({ navigation }) => {
                       fontSize: (windowWidth * 3.5) / 100,
                       color: Colors.placeholder_border,
                     }}>
-                    {Lang_chg.Help[loginData.languageIndex]}
+                    {LangProvider.Help[languageIndex]}
                   </Text>
                   <Text
                     style={{

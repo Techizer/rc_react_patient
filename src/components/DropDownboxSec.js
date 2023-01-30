@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  ActivityIndicator,
   TouchableOpacity, Platform
 } from "react-native";
 import {
@@ -17,7 +16,7 @@ import {
   MD3Colors,
   List,
 } from 'react-native-paper';
-import { Colors, Icons, Font, windowHeight, config, windowWidth, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { Colors, Icons, Font, windowHeight, config, windowWidth } from '../Provider/Utils/Utils';
 
 const DropDownboxSec = ({
   lableText,

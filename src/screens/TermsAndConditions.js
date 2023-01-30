@@ -15,10 +15,10 @@ import { leftArrow } from "../Icons/Index";
 import {
   Colors,
   config,
-  Lang_chg,
+  LangProvider,
   windowHeight,
   windowWidth,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 
 const TermsAndConditions = ({ navigation, route }) => {
@@ -26,14 +26,14 @@ const TermsAndConditions = ({ navigation, route }) => {
   const { pagename, content_ar, content } = route?.params
   const {
     appLanguage,
+    languageIndex
   } = useSelector(state => state.StorageReducer)
-  const [languageIndex, setLanguageIndex] = useState(appLanguage == 'ar' ? 1 : 0)
   const insets = useSafeAreaInsets()
   return (
     <View style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
 
       <ScreenHeader
-        title={pagename === 0 ? Lang_chg.AboutRootscare[languageIndex] : pagename === 1 ? Lang_chg.PrivacyPolicy[languageIndex] : Lang_chg.TermsandConditions[languageIndex]}
+        title={pagename === 0 ? LangProvider.AboutRootscare[languageIndex] : pagename === 1 ? LangProvider.PrivacyPolicy[languageIndex] : LangProvider.TermsandConditions[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon

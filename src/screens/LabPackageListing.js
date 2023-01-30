@@ -3,22 +3,24 @@ import { FlatList, Image, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native-animatable";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
 import { dummyUser, leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
   Colors,
-  consolepro,
   Font,
-  Lang_chg,
+  LangProvider,
   Icons,
-  localStorage,
   windowWidth,
   msgProvider,
   ScreenHeader
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 const LabPackageListing = ({ navigation, route }) => {
+
+  const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
+
   const { providerId } = route?.params || '';
   const [labData, setLabData] = useState(null);
 
@@ -27,18 +29,16 @@ const LabPackageListing = ({ navigation, route }) => {
   }, []);
 
   const getPackageList = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
     let url = config.baseURL + "api-lab-package-list";
 
     var data = new FormData();
-    data.append("lgoin_user_id", user_id);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
     data.append("provider_id", providerId);
 
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
-        consolepro.consolelog("getPackageList-response ---> ", JSON.stringify(obj));
+        console.log("getPackageList-response ---> ", JSON.stringify(obj));
 
         if (obj.status == true) {
           setLabData(obj.result);
@@ -48,7 +48,7 @@ const LabPackageListing = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("getPackageList-error ------- " + error);
+        console.log("getPackageList-error ------- " + error);
       });
   };
 
@@ -56,7 +56,7 @@ const LabPackageListing = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={Lang_chg.HealthPackages[config.language]}
+        title={LangProvider.HealthPackages[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -67,6 +67,7 @@ const LabPackageListing = ({ navigation, route }) => {
           backgroundColor: Colors.White,
           paddingBottom: vs(15),
           paddingHorizontal: s(11),
+          marginTop:vs(7)
         }}
       >
         <View
@@ -79,17 +80,17 @@ const LabPackageListing = ({ navigation, route }) => {
 
           <View style={{ width: "28%" }}>
             {
-              (labData.image == "NA" || labData.image == null || labData.image == "") ?
+              (labData?.image == "NA" || labData?.image == null || labData?.image == "") ?
                 <SvgXml xml={dummyUser} height={vs(65)} width={s(65)} />
                 :
                 <Image
-                  source={{ uri: config.img_url3 + labData.image }}
+                  source={{ uri: config.img_url3 + labData?.image }}
                   style={{
                     width: s(65),
-                    height: vs(65),
+                    height: s(65),
                     borderWidth: 1,
                     borderColor: Colors.Border,
-                    borderRadius: s(65),
+                    borderRadius: s(100),
                   }}
                 />
             }
@@ -106,10 +107,10 @@ const LabPackageListing = ({ navigation, route }) => {
               style={{
                 fontFamily: Font.Medium,
                 fontSize: Font.name,
-                textAlign: config.textRotate,
+                alignSelf: 'flex-start',
               }}
             >
-              {labData.provider_name}
+              {labData?.provider_name}
             </Text>
             <Text
               style={{
@@ -117,32 +118,32 @@ const LabPackageListing = ({ navigation, route }) => {
                 fontFamily: Font.Regular,
                 fontSize: Font.subtext,
                 color: Colors.Theme,
-                textAlign: config.textRotate,
+                alignSelf: 'flex-start',
               }}
             >
-              {labData.iso_text}
+              {labData?.iso_text}
             </Text>
           </View>
         </View>
       </View>
 
       <FlatList
-        data={labData.package_base_task}
+        data={labData?.package_base_task}
         contentContainerStyle={{
           paddingBottom: (windowWidth * 25) / 100,
-          marginTop:vs(7)
+          marginTop: vs(7)
         }}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={()=>{
-          return(
-            <View style={{height:vs(7)}}></View>
+        ItemSeparatorComponent={() => {
+          return (
+            <View style={{ height: vs(7) }}></View>
           )
         }}
         renderItem={({ item, index }) => {
           if (
-            labData.package_base_task != "" &&
-            labData.package_base_task != null &&
-            labData.package_base_task.length !== 0
+            labData?.package_base_task != "" &&
+            labData?.package_base_task != null &&
+            labData?.package_base_task.length !== 0
           ) {
             return (
               <View
@@ -151,7 +152,7 @@ const LabPackageListing = ({ navigation, route }) => {
                   backgroundColor: "#fff",
                   alignSelf: "center",
                   alignItems: "flex-start",
-                  paddingHorizontal:s(11)
+                  paddingHorizontal: s(11)
                 }}
               >
                 <TouchableOpacity
@@ -192,7 +193,7 @@ const LabPackageListing = ({ navigation, route }) => {
                       fontFamily: Font.Regular,
                       fontSize: Font.sregulartext_size,
                       color: Colors.Theme,
-                      textAlign: config.textRotate,
+                      alignSelf: 'flex-start'
                     }}
                   >
                     {item.task_details}
@@ -220,7 +221,7 @@ const LabPackageListing = ({ navigation, route }) => {
                   >
                     <Text
                       style={{
-                        textAlign: config.textalign,
+                        alignSelf: 'flex-start',
                         fontFamily: Font.Medium,
                         fontSize: (windowWidth * 4) / 100,
                       }}
@@ -231,7 +232,7 @@ const LabPackageListing = ({ navigation, route }) => {
                     <View
                       style={{
                         paddingVertical: vs(3),
-                        paddingHorizontal:s(3),
+                        paddingHorizontal: s(3),
                         marginHorizontal: s(15),
                         borderColor: Colors.Green,
                         color: Colors.Green,

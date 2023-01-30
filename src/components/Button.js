@@ -1,22 +1,34 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, Image, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Colors, Icons, Font, windowHeight, config, windowWidth} from '../Provider/utilslib/Utils';
-
+import { Colors, Icons, Font, windowHeight, config, windowWidth } from '../Provider/Utils/Utils';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 export const Button = ({
   text,
   customStyles,
   onPress,
   image,
   onLoading,
-  btnStyle
+  btnStyle,
+  disable
 }) => {
   return (
     <TouchableOpacity
+      disabled={disable ? disable : false}
       onPress={onPress}
-      style={[styles.mainContainer, btnStyle]}>
+      style={[styles.mainContainer, { backgroundColor: disable ? Colors.Border : Colors.Theme, }, btnStyle]}>
       {
         onLoading ?
-          <ActivityIndicator size={'small'} color={Colors.White} />
+          <SkypeIndicator color={Colors.White} size={16} count={3} />
           :
           <Text style={[styles.buttonText, customStyles.buttonText]}>{text}</Text>
       }
@@ -32,7 +44,6 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: 'center',
     borderRadius: (windowWidth * 2) / 100,
-    backgroundColor: Colors.Theme,
     justifyContent: 'center',
     alignItems: 'center',
   },

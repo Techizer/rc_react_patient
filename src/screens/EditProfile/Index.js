@@ -9,9 +9,9 @@ import {
   Colors,
   Font,
   windowWidth,
-  Lang_chg,
+  LangProvider,
   ScreenHeader
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import Personal from "./Personal";
 import Medical from "./Medical";
 import LifeStyle from "./LifeStyle";
@@ -29,7 +29,7 @@ const Index = ({ navigation }) => {
 
       <View style={{ flex: 1, }}>
         <ScreenHeader
-          title={Lang_chg.Editprofile[appLanguage == 'en' ? 0 : 1]}
+          title={LangProvider.Editprofile[appLanguage == 'en' ? 0 : 1]}
           navigation={navigation}
           onBackPress={() => navigation.pop()}
           leftIcon
@@ -55,9 +55,9 @@ const Index = ({ navigation }) => {
               fontFamily: Font.Medium
             }
           }}>
-          <Tabs.Screen name={Lang_chg.Personal[appLanguage == 'en' ? 0 : 1]} component={Personal} />
-          <Tabs.Screen name={Lang_chg.Medical[appLanguage == 'en' ? 0 : 1]} component={Medical} />
-          <Tabs.Screen name={Lang_chg.LifeStyle[appLanguage == 'en' ? 0 : 1]} component={LifeStyle} />
+          <Tabs.Screen name={LangProvider.Personal[appLanguage == 'en' ? 0 : 1]} component={Personal} />
+          <Tabs.Screen name={LangProvider.Medical[appLanguage == 'en' ? 0 : 1]} component={Medical} />
+          <Tabs.Screen name={LangProvider.LifeStyle[appLanguage == 'en' ? 0 : 1]} component={LifeStyle} />
 
         </Tabs.Navigator>
 

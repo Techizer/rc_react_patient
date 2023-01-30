@@ -17,22 +17,20 @@ import {
   config,
   windowWidth,
   Icons,
-  consolepro,
-  Lang_chg,
+  LangProvider,
   apifuntion,
   ScreenHeader
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { leftArrow } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { useSelector } from "react-redux";
 
 const Notifications = ({ navigation }) => {
 
-  const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
 
   const [statesData, setStatesData] = useState({
     isLoading: true,
-    languageIndex: appLanguage == 'en' ? 0 : 1,
     notificat_id: "",
     notificationdata: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     modalVisible: false,
@@ -72,7 +70,7 @@ const Notifications = ({ navigation }) => {
       })
       .catch((error) => {
         setState({ notificationdata: [], isLoading: false });
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -100,7 +98,7 @@ const Notifications = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -113,7 +111,7 @@ const Notifications = ({ navigation }) => {
       }}>
 
       <ScreenHeader
-        title={Lang_chg.NotificationsList[statesData.languageIndex]}
+        title={LangProvider.NotificationsList[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -367,7 +365,7 @@ const Notifications = ({ navigation }) => {
                     paddingLeft: (windowWidth * 4) / 100,
                   }}
                 >
-                  {Lang_chg.Notification[statesData.languageIndex]}
+                  {LangProvider.Notification[languageIndex]}
                 </Text>
               </View>
               <View
@@ -411,7 +409,7 @@ const Notifications = ({ navigation }) => {
                     alignSelf: "center",
                   }}
                 >
-                  {Lang_chg.OK[statesData.languageIndex]}
+                  {LangProvider.OK[languageIndex]}
                 </Text>
               </TouchableOpacity>
             </View>

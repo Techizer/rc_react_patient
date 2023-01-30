@@ -5,7 +5,7 @@ import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, LangProvider, config } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit, Menu, roundCheck } from "../Icons/Index";
 import { useSelector } from "react-redux";
 
@@ -16,7 +16,6 @@ const Member = ({
     index,
     patientDetails,
     navigation,
-    propsData,
     showModal = () => { },
     selected,
     selectedMember = () => { },
@@ -24,10 +23,10 @@ const Member = ({
     isLoading
 }) => {
 
-    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, languageIndex, selectedProvider } = useSelector(state => state.StorageReducer)
 
     useEffect(() => {
-        // console.log({ patientDetails });
+        // console.log({ selectedProvider });
     }, [])
     return (
         isLoading ?
@@ -104,7 +103,7 @@ const Member = ({
             :
 
             <TouchableOpacity
-                style={{ backgroundColor: (type && selected === -1 && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) ? Colors.appointmentdetaillightblue : (!type && selected === index && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) ? Colors.appointmentdetaillightblue : Colors.White }}
+                style={{ backgroundColor: (type && selected === -1 && (selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider?.currentScreen == 'providerDetails'))) ? Colors.appointmentdetaillightblue : (!type && selected === index && (selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider?.currentScreen == 'providerDetails'))) ? Colors.appointmentdetaillightblue : Colors.White }}
                 onPress={() => {
                     selectedMember(type ? -1 : index)
                 }}>
@@ -113,14 +112,14 @@ const Member = ({
                 <View style={{ borderBottomWidth: type ? 1 : 0, borderBottomColor: Colors.Border, paddingTop: type ? 0 : vs(5) }}>
                     {
                         ((type || index === 0)) &&
-                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.lightGrey }}>{type ? 'You' : 'Other Members'}</Text>
+                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.lightGrey }}>{type ? LangProvider.You[languageIndex] : LangProvider.OtherMembers[languageIndex]}</Text>
                     }
                     {
-                        ((type && selected === -1 && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) || (!type && selected === index && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails'))) &&
+                        ((type && selected === -1 && (selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider?.currentScreen == 'providerDetails'))) || (!type && selected === index && (selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider?.currentScreen == 'providerDetails')))) &&
                         (
-                            <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '16%', position: 'absolute', right: 10, paddingVertical: (windowWidth * 2) / 100 }}>
+                            <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '16%', position: 'absolute', right: 10, paddingVertical: (windowWidth * 1.5) / 100 }}>
                                 <SvgXml xml={roundCheck} />
-                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{Lang_chg.Default[appLanguage == 'en' ? 0 : 1]}</Text>
+                                <Text style={{ fontSize: Font.xsmall, fontFamily: Font.Medium, color: Colors.Theme }}>{LangProvider.Default[languageIndex]}</Text>
                             </View>
                         )
                     }
@@ -142,19 +141,23 @@ const Member = ({
                         <View style={{ width: '78%', borderBottomWidth: type ? 0 : 1, borderBottomColor: Colors.Border, paddingBottom: vs(20) }}>
 
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                <View style={{ width: '70%', }}>
+                                <View style={{ width: '70%' }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <View style={{ width: '20%'}}>
+                                        <View style={{}}>
                                             <Text numberOfLines={1} style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText, }}>{patientDetails?.name}</Text>
                                         </View>
                                         <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
-                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(patientDetails?.gender === '0' ? "Male" : 'Female') + ', ' + patientDetails?.age + (type ? '' : ' Year')}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>
+                                                {(patientDetails?.gender === '0' ? `${LangProvider.male[languageIndex]}` : `${LangProvider.female[languageIndex]}`)}
+                                                {`${patientDetails?.age}, `}
+                                                {type ? '' : `${LangProvider.Year[languageIndex]}`}
+                                            </Text>
                                         </View>
                                     </View>
                                 </View>
                                 {
-                                    (propsData?.isPage != "providerList" && propsData?.isPage != 'providerDetails') &&
+                                    (selectedProvider == null) &&
                                     <TouchableHighlight
                                         onPress={() => {
                                             if (!type) {
@@ -177,20 +180,20 @@ const Member = ({
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
                                 <View style={{ width: '94%', flexDirection: 'row' }}>
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.Appointment_Bookings[languageIndex]}</Text>
                                         <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.appointment_count}</Text>
                                     </View>
 
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.DoctorConsultation[languageIndex]}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.dc_count}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{ flex: 1, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.Lab_Test[languageIndex]}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.lab_count}</Text>
                                         </View>
                                     </View>

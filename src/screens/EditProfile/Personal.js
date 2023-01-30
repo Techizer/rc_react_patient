@@ -8,6 +8,7 @@ import {
     Modal,
     FlatList,
     Keyboard,
+    Pressable,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,16 +19,14 @@ import {
     Icons,
     Font,
     config,
-    Lang_chg,
+    LangProvider,
     apifuntion,
     msgProvider,
-    msgText,
-    msgTitle,
     Cameragallery,
     mediaprovider,
     AuthInputBoxSec,
     Button
-} from "../../Provider/utilslib/Utils";
+} from "../../Provider/Utils/Utils";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { SvgXml } from "react-native-svg";
 import { dummyUser, Edit } from "../../Icons/Index";
@@ -39,11 +38,10 @@ import { UserDetails } from "../../Redux/Actions";
 
 const Personal = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, languageIndex } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [userDetails, setUserDetails] = useState({
-        languageIndex: appLanguage == 'en' ? 0 : 1,
         name: '',
         email: '',
         user_id: '',
@@ -183,8 +181,8 @@ const Personal = ({ navigation }) => {
 
                 } else {
                     msgProvider.alert(
-                        msgTitle.information[userDetails.languageIndex],
-                        obj.message[userDetails.languageIndex],
+                        LangProvider.information[languageIndex],
+                        obj.message[languageIndex],
                         false
                     );
 
@@ -203,39 +201,39 @@ const Personal = ({ navigation }) => {
             isLoading: true
         }))
         if (userDetails.name.length <= 0 || userDetails.name.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyName[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.emptyName[languageIndex]);
             return false;
         }
 
         let regemail =
             /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
         if (userDetails.email.length <= 0 || userDetails.email.trim().length <= 0) {
-            msgProvider.showError(msgText.emptyEmail[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.emptyEmail[languageIndex]);
             return false;
         }
 
         if (regemail.test(userDetails.email) !== true) {
-            msgProvider.showError(msgText.validEmail[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.validEmail[languageIndex]);
             return false;
         }
 
         if (userDetails.mobile.length <= 0 || userDetails.mobile.trim().length <= 0) {
-            msgProvider.showError(msgText.emptymobileNumber[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.emptymobileNumber[languageIndex]);
             return false;
         }
         if (userDetails.mobile.length < 9) {
-            msgProvider.showError(msgText.validmobileNumber[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.validmobileNumber[languageIndex]);
             return false;
         }
         if (userDetails.mobile.length > 9) {
-            msgProvider.showError(msgText.validmobileNumber[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.validmobileNumber[languageIndex]);
             return false;
         }
         if (
             userDetails.identity.length <= 0 ||
             userDetails.identity.trim().length <= 0
         ) {
-            msgProvider.showError(msgText.emptyid[userDetails.languageIndex]);
+            msgProvider.showError(LangProvider.emptyid[languageIndex]);
             return false;
         }
 
@@ -288,7 +286,7 @@ const Personal = ({ navigation }) => {
     return (
         <View
             pointerEvents={userDetails.isLoading ? 'none' : 'auto'}
-            style={{ flex: 1, backgroundColor: Colors.White, paddingBottom: insets.bottom }}>
+            style={{ flex: 1, backgroundColor: Colors.White }}>
 
             <KeyboardAwareScrollView
                 // keyboardOpeningTime={200}
@@ -356,7 +354,7 @@ const Personal = ({ navigation }) => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(18), width: '100%' }}
-                        lableText={Lang_chg.textinputname[userDetails.languageIndex]}
+                        lableText={LangProvider.textinputname[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -378,7 +376,7 @@ const Personal = ({ navigation }) => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        // lableText={Lang_chg.work_area[userDetails.languageIndex]}
+                        // lableText={LangProvider.work_area[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -412,7 +410,7 @@ const Personal = ({ navigation }) => {
                             }}>
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                lableText={Lang_chg.CC_code[userDetails.languageIndex]}
+                                lableText={LangProvider.CC_code[languageIndex]}
                                 inputRef={(ref) => {
                                     this.nameInput = ref;
                                 }}
@@ -438,7 +436,7 @@ const Personal = ({ navigation }) => {
                             }}>
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
-                                lableText={Lang_chg.textinputnumber[userDetails.languageIndex]}
+                                lableText={LangProvider.textinputnumber[languageIndex]}
                                 inputRef={(ref) => {
                                     this.nameInput = ref;
                                 }}
@@ -463,7 +461,7 @@ const Personal = ({ navigation }) => {
                                     color: Colors.lightGrey,
                                     marginTop: vs(8)
                                 }}>
-                                {Lang_chg.mobletexttitle[userDetails.languageIndex]}
+                                {LangProvider.mobletexttitle[languageIndex]}
                             </Text>
                         </View>
 
@@ -473,7 +471,7 @@ const Personal = ({ navigation }) => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputemails[userDetails.languageIndex]}
+                        lableText={LangProvider.textinputemails[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -525,7 +523,7 @@ const Personal = ({ navigation }) => {
                                         includeFontPadding: false,
                                         lineHeight: 48,
                                     }}>
-                                    {userDetails.dob.length <= 0 ? Lang_chg.dob[userDetails.languageIndex] : userDetails.dob}
+                                    {userDetails.dob.length <= 0 ? LangProvider.dob[languageIndex] : userDetails.dob}
                                 </Text>
                             </View>
 
@@ -556,7 +554,7 @@ const Personal = ({ navigation }) => {
                                 color: Colors.darkText,
                                 paddingRight: s(20)
 
-                            }}>{Lang_chg.Gender[userDetails.languageIndex]}</Text>
+                            }}>{LangProvider.Gender[languageIndex]}</Text>
 
                         <FlatList
                             showsHorizontalScrollIndicator={false}
@@ -569,13 +567,13 @@ const Personal = ({ navigation }) => {
                             }}
                             renderItem={({ item, index }) => {
                                 return (
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Pressable
+                                        onPress={() => {
+                                            setUserDetails(prevState => ({ ...prevState, gender: index }))
+                                        }}
+                                        style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-                                        <TouchableOpacity
-                                            activeOpacity={0.8}
-                                            onPress={() => {
-                                                setUserDetails(prevState => ({ ...prevState, gender: index }))
-                                            }}
+                                        <View
                                             style={{
                                                 height: s(16),
                                                 width: s(16),
@@ -584,7 +582,7 @@ const Personal = ({ navigation }) => {
                                                 borderColor: index === userDetails.gender ? Colors.Blue : Colors.lightGrey
                                             }}>
 
-                                        </TouchableOpacity>
+                                        </View>
                                         <Text
                                             style={{
                                                 fontSize: Font.small,
@@ -594,7 +592,7 @@ const Personal = ({ navigation }) => {
                                                 marginLeft: s(8)
 
                                             }}>{item}</Text>
-                                    </View>
+                                    </Pressable>
 
                                 );
                             }}
@@ -636,7 +634,7 @@ const Personal = ({ navigation }) => {
                                         includeFontPadding: false,
                                         lineHeight: 48,
                                     }}>
-                                    {userDetails.nationality == '' ? Lang_chg.nationality[userDetails.languageIndex] : userDetails.nationality}
+                                    {userDetails.nationality == '' ? LangProvider.nationality[languageIndex] : userDetails.nationality}
                                 </Text>
                             </View>
 
@@ -658,7 +656,7 @@ const Personal = ({ navigation }) => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputaddress[userDetails.languageIndex]}
+                        lableText={LangProvider.textinputaddress[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -680,7 +678,7 @@ const Personal = ({ navigation }) => {
 
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
-                        lableText={Lang_chg.textinputidentity[userDetails.languageIndex]}
+                        lableText={LangProvider.textinputidentity[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;
                         }}
@@ -699,7 +697,7 @@ const Personal = ({ navigation }) => {
                     />
 
                     <Button
-                        text={Lang_chg.submitbtntext[userDetails.languageIndex]}
+                        text={LangProvider.submitbtntext[languageIndex]}
                         onPress={() => saveInfo()}
                         btnStyle={{ marginTop: vs(15) }}
                         onLoading={userDetails.isLoading}
@@ -743,7 +741,7 @@ const Personal = ({ navigation }) => {
                     setIsNationality(false)
                 }}
                 data={nationalityList}
-                title={Lang_chg.Select_Nationality[userDetails.languageIndex]}
+                title={LangProvider.Select_Nationality[languageIndex]}
                 selectedIssue={(val) => {
                     setUserDetails(prevState => ({ ...prevState, nationality: val }))
                 }}

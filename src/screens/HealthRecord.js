@@ -1,18 +1,19 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { Text, View, TouchableHighlight, FlatList, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
-import { Colors, Font, config, windowWidth, Lang_chg, apifuntion, ScreenHeader, Button } from '../Provider/utilslib/Utils';
+import { Colors, Font, config, windowWidth, LangProvider, apifuntion, ScreenHeader, Button } from '../Provider/Utils/Utils';
 import { s, vs } from 'react-native-size-matters';
 import AddEditMembers from '../components/Add_Edit_Members'
 import { Add } from '../Icons/Index';
 import Member from '../components/Member';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { SelectedProvider } from '../Redux/Actions';
 
 const HealthRecord = (props) => {
 
-  const { loggedInUserDetails, appLanguage } = useSelector(state => state.StorageReducer)
-
+  const { loggedInUserDetails, languageIndex, selectedProvider } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
   const [isBottomSheet, setIsBottomSheet] = useState(false)
   const [type, setType] = useState('addMember')
   const [memberCount, setMemberCount] = useState(0)
@@ -22,10 +23,9 @@ const HealthRecord = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isEditable, setIsEditable] = useState(false)
   const insets = useSafeAreaInsets()
-  const propsData = props.route.params
 
   useEffect(() => {
-    // console.log("props:: ", propsData.indexPosition)
+    console.log("selectedProvider:: ", selectedProvider)
     getMember()
   }, []);
 
@@ -60,27 +60,28 @@ const HealthRecord = (props) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: insets.bottom }}>
 
       <ScreenHeader
-        title={(propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') ? Lang_chg.Select_Member[appLanguage == 'en' ? 0 : 1] : Lang_chg.Manage_Members[appLanguage == 'en' ? 0 : 1]}
+        title={(selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider.currentScreen == 'providerDetails')) ? LangProvider.Select_Member[languageIndex] : LangProvider.Manage_Members[languageIndex]}
         navigation={props.navigation}
         onBackPress={() => props.navigation.pop()}
         leftIcon
       />
 
-      <View style={{ backgroundColor: Colors.White, marginTop: vs(7), paddingHorizontal: s(11), paddingVertical: vs(15), }}>
+      <View style={{ backgroundColor: Colors.White, marginTop: vs(7), paddingHorizontal: s(11), paddingVertical: vs(9), }}>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(10), marginBottom: vs(10) }}>
+        <View style={{ flexDirection: 'row', alignItems:'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(10), marginBottom: vs(10) }}>
           <Text
             style={{
-              
+
               fontSize: Font.xsmall,
               fontFamily: Font.Medium,
               color: Colors.Blue,
-            }}>{'MEMBERS (' + memberCount + ')'}</Text>
+            }}>{`${LangProvider.Members[languageIndex]} (${memberCount})`}</Text>
 
           {
-            (propsData.isPage != "providerList" && propsData.isPage != 'providerDetails') &&
+            selectedProvider == null &&
             <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              underlayColor={Colors.Highlight}
+              style={{ flexDirection: 'row', alignItems: 'center', height:(windowWidth*7)/100,}}
               onPress={() => {
                 setIsBottomSheet(true)
                 setType('addMember')
@@ -88,12 +89,11 @@ const HealthRecord = (props) => {
               <SvgXml xml={Add} />
               <Text
                 style={{
-                 
                   fontSize: Font.xsmall,
                   fontFamily: Font.Medium,
                   color: Colors.Blue,
                   marginLeft: s(5)
-                }}>{Lang_chg.Add_New_Member[appLanguage == 'en' ? 0 : 1]}</Text>
+                }}>{LangProvider.Add_New_Member[languageIndex]}</Text>
             </TouchableOpacity>
           }
 
@@ -109,7 +109,6 @@ const HealthRecord = (props) => {
                   type={'mine'}
                   patientDetails={patientDetails[0]}
                   navigation={props.navigation}
-                  propsData={propsData}
                   selected={selectedMember}
                   selectedMember={(val) => {
                     setSelectedMember(val)
@@ -123,7 +122,6 @@ const HealthRecord = (props) => {
                 <Member
                   index={index}
                   patientDetails={item}
-                  propsData={propsData}
                   showModal={(val) => {
                     setIsBottomSheet(val)
                   }}
@@ -150,7 +148,7 @@ const HealthRecord = (props) => {
       </View>
 
       {
-        ((propsData.isPage == "providerList" || propsData.isPage == 'providerDetails') && !isLoading) &&
+        (selectedProvider != null && (selectedProvider?.currentScreen == "providerList" || selectedProvider?.currentScreen == 'providerDetails') && !isLoading) &&
         <View
           style={{
             width: "100%",
@@ -165,24 +163,15 @@ const HealthRecord = (props) => {
             bottom: 0
           }}>
           <Button
-            text={Lang_chg.Continue_Booking[appLanguage == 'en' ? 0 : 1]}
+            text={LangProvider.Continue_Booking[languageIndex]}
             onPress={() => {
-              if (propsData && (propsData.isPage == "providerList" || propsData.isPage == 'providerDetails')) {
-                props.navigation.navigate("Booking", {
-                  providerType: propsData?.providerType,
-                  providerId: propsData?.providerId,
-                  family_member_id: selectedMember === -1 ? 0 : memberdetails[selectedMember]?.id,
-                  isFromHospital: propsData?.isFromHospital,
-                  hospitalId: propsData?.hospitalId,
-                  display: propsData?.display,
-                  indexPosition: propsData.indexPosition
-                })
-              }
-
-              // console.log('....................' + propsData?.providerType);
-              // console.log('....................' + propsData?.providerId);
-              // console.log('....................', selectedMember === -1 ? memberdetails[0]?.patient_id : memberdetails[0]?.id);
-
+              dispatch(SelectedProvider({
+                ...selectedProvider,
+                family_member_id: selectedMember === -1 ? 0 : memberdetails[selectedMember]?.id,
+              }))
+              setTimeout(() => {
+                props.navigation.navigate("BookingIndex")
+              }, 450);
             }} />
         </View>
       }

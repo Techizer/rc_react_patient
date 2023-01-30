@@ -77,7 +77,7 @@ const TabItemSimple = ({ navigation, icon, path, index, activeIndex, reset = fal
                 color: (index === activeIndex) ? Colors.Theme : Colors.inActiveTab,
                 fontFamily: Font.Regular,
                 position: 'absolute',
-                bottom: Platform.OS === 'ios' ? vs(30) : vs(20)
+                bottom: Platform.OS === 'ios' ? vs(28) : vs(20)
             }} >{title}</Text>
 
         </TouchableOpacity>

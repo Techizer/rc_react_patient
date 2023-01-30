@@ -14,10 +14,7 @@ import {
 import {
     Colors,
     Font,
-    config,
-    windowWidth,
-    Lang_chg,
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 
 import { Cross, Filter, Search } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
@@ -37,8 +34,7 @@ const SearchInput = ({
     onFilterPress,
     navigation
 }) => {
-    const {appLanguage, } = useSelector(state => state.StorageReducer)
-    const [languageIndex, setLanguageIndex] = useState(appLanguage == 'en' ? 0 : 1);
+    const {appLanguage, languageIndex} = useSelector(state => state.StorageReducer)
     const inputRef = useRef()
     return (
         navigation ?

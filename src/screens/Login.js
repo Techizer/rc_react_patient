@@ -28,14 +28,11 @@ import {
   Font,
   config,
   windowWidth,
-  Lang_chg,
   apifuntion,
-  msgText,
+  LangProvider,
   msgProvider,
-  localStorage,
-  StatusbarHeight,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { SvgXml } from 'react-native-svg';
 import { s, vs } from "react-native-size-matters";
 
@@ -47,7 +44,17 @@ import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCre
 
 const Login = ({ navigation }) => {
 
-  const { appLanguage, deviceToken, deviceType, credentials, appVersion, contentAlign, address, rememberMe } = useSelector(state => state.StorageReducer)
+  const {
+    appLanguage,
+    deviceToken,
+    deviceType,
+    credentials,
+    languageIndex,
+    contentAlign,
+    address,
+    rememberMe,
+    selectedProvider
+  } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [loginData, setLoginData] = useState({
     isSecurePassword: true,
@@ -57,7 +64,6 @@ const Login = ({ navigation }) => {
     lng: '',
     address: '',
     isContactUs: false,
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     isLoading: false
   })
   const insets = useSafeAreaInsets();
@@ -73,34 +79,18 @@ const Login = ({ navigation }) => {
     //   { rememberMe },
     //   { appVersion },
     //   { credentials },
-    //   loginData.languageIndex
+    //   languageIndex
     // );
-
-    // navigation.addListener(
-    //   "focus",
-    //   (payload) =>
-    //     BackHandler.removeEventListener(
-    //       "hardwareBackPress",
-    //       handleBackPress()
-    //     )
-    // );
-
-    if (Platform.OS == 'android') {
-      navigation.addListener(
-        "blur",
-        (payload) =>
-          BackHandler.removeEventListener(
-            "hardwareBackPress",
-            handleBackPress()
-          )
-      );
-    }
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
     checkLocationPermission();
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
   }, [])
 
 
   const checkLocationPermission = () => {
-    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
       .then((result) => {
         switch (result) {
           case RESULTS.UNAVAILABLE:
@@ -119,7 +109,6 @@ const Login = ({ navigation }) => {
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
-            localStorage.setItemString('permission', 'denied')
             break;
         }
       })
@@ -129,7 +118,7 @@ const Login = ({ navigation }) => {
   }
 
   const locationPermission = () => {
-    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
       .then((result) => {
         switch (result) {
           case RESULTS.UNAVAILABLE:
@@ -223,19 +212,18 @@ const Login = ({ navigation }) => {
       });
   };
 
-
   const handleBackPress = () => {
     Alert.alert(
-      Lang_chg.titleexitapp[loginData.languageIndex],
-      Lang_chg.exitappmessage[loginData.languageIndex],
+      LangProvider.titleexitapp[languageIndex],
+      LangProvider.exitappmessage[languageIndex],
       [
         {
-          text: Lang_chg.no_txt[loginData.languageIndex],
+          text: LangProvider.no_txt[languageIndex],
           onPress: () => console.log("Cancel Pressed"),
-          style: Lang_chg.no_txt[loginData.languageIndex],
+          style: LangProvider.no_txt[languageIndex],
         },
         {
-          text: Lang_chg.yes_txt[loginData.languageIndex],
+          text: LangProvider.yes_txt[languageIndex],
           onPress: () => BackHandler.exitApp(),
         },
       ],
@@ -262,7 +250,7 @@ const Login = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // console.log("updateAddress-res----", obj);
+        console.log("updateAddress-res----", obj);
         let newAddressDetails = null
         if (obj.status == true) {
           newAddressDetails = {
@@ -294,7 +282,7 @@ const Login = ({ navigation }) => {
 
     var email = loginData.email.trim();
     if (email.length <= 0 || email.length <= 0) {
-      msgProvider.showError(msgText.emptyEmailmobile[loginData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyEmailmobile[languageIndex]);
       return false;
     }
 
@@ -302,7 +290,7 @@ const Login = ({ navigation }) => {
       loginData.password.length <= 0 ||
       loginData.password.trim().length <= 0
     ) {
-      msgProvider.showError(msgText.emptyPassword[loginData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyPassword[languageIndex]);
       return false;
     }
     setLoginData(prevState => ({
@@ -352,17 +340,14 @@ const Login = ({ navigation }) => {
           }
           dispatch(UserDetails(obj?.result))
           setTimeout(() => {
-            global.isLogin = true
-            if (global.isPage == "") {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "DashboardStack" }],
-              });
-            } else if (global.isPage == "providerList") {
-              navigation.goBack()
-            } else if (global.isPage == "providerDetails") {
-              navigation.goBack()
-            }
+            // if (selectedProvider!=null && (selectedProvider.currentScreen == 'providerList' || selectedProvider.currentScreen == 'providerDetails')) {
+            //   navigation.goBack()
+            // } else {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "DashboardStack" }],
+            });
+            // }
           }, 700);
         } else {
           setTimeout(() => {
@@ -370,8 +355,7 @@ const Login = ({ navigation }) => {
           }, 700);
           return false;
         }
-      })
-      .catch((error) => {
+      }).catch((error) => {
         setLoginData(prevState => ({
           ...prevState,
           isLoading: false
@@ -380,7 +364,7 @@ const Login = ({ navigation }) => {
       });
   };
 
-  
+
   const ChangeLanguage = (lan) => {
     if (lan == 'en') {
       console.log('English...');
@@ -439,7 +423,7 @@ const Login = ({ navigation }) => {
 
             }}
           >
-            {Lang_chg.Login[loginData.languageIndex]}
+            {LangProvider.Login[languageIndex]}
           </Text>
 
           <Text
@@ -452,7 +436,7 @@ const Login = ({ navigation }) => {
               marginTop: vs(4)
             }}
           >
-            {Lang_chg.Logintext[loginData.languageIndex]}
+            {LangProvider.Logintext[languageIndex]}
           </Text>
 
           {/* ----------------------------------------email------------------------------------ */}
@@ -460,7 +444,7 @@ const Login = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(18), width: '100%' }}
-            lableText={Lang_chg.Mobileno[loginData.languageIndex]}
+            lableText={LangProvider.Mobileno[languageIndex]}
             inputRef={emailRef}
             onChangeText={(val) => {
               setLoginData(prevState => ({
@@ -484,7 +468,7 @@ const Login = ({ navigation }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: '100%' }}
-            lableText={Lang_chg.password[loginData.languageIndex]}
+            lableText={LangProvider.password[languageIndex]}
             inputRef={passRef}
             onChangeText={(val) => {
               setLoginData(prevState => ({
@@ -503,7 +487,7 @@ const Login = ({ navigation }) => {
             iconPressAction={() => {
               setLoginData(prevState => ({
                 ...prevState,
-                isSecurePassword: !isSecurePassword
+                isSecurePassword: !loginData.isSecurePassword
               }))
             }}
             onSubmitEditing={() => {
@@ -580,7 +564,7 @@ const Login = ({ navigation }) => {
                   fontSize: Font.medium,
                   marginLeft: s(10)
                 }}>
-                {Lang_chg.Remember[loginData.languageIndex]}
+                {LangProvider.Remember[languageIndex]}
               </Text>
 
             </TouchableOpacity>
@@ -598,13 +582,13 @@ const Login = ({ navigation }) => {
                   alignSelf: 'flex-end'
                 }}
               >
-                {Lang_chg.Forgotpassword[loginData.languageIndex]}
+                {LangProvider.Forgotpassword[languageIndex]}
               </Text>
             </View>
           </View>
 
           <Button
-            text={Lang_chg.Contiunebtn[loginData.languageIndex]}
+            text={LangProvider.Contiunebtn[languageIndex]}
             onPress={() => LoginUser()}
             btnStyle={{ marginTop: vs(15) }}
             onLoading={loginData.isLoading}
@@ -630,7 +614,7 @@ const Login = ({ navigation }) => {
 
               }}
             >
-              {Lang_chg.Trouble_SignIn[loginData.languageIndex]}
+              {LangProvider.Trouble_SignIn[languageIndex]}
             </Text>
           </TouchableHighlight>
 
@@ -680,7 +664,7 @@ const Login = ({ navigation }) => {
                 }
               ]}
             >
-              {Lang_chg.Skip[loginData.languageIndex]}
+              {LangProvider.Skip[languageIndex]}
             </Text>
 
             <SvgXml xml={contentAlign == "right" ? leftWhiteArrow : rightWhiteArrow}
@@ -706,7 +690,7 @@ const Login = ({ navigation }) => {
               fontSize: Font.headinggray,
               color: Colors.DarkGrey,
             }}>
-            {Lang_chg.donot[loginData.languageIndex]}
+            {LangProvider.donot[languageIndex]}
           </Text>
 
           <TouchableOpacity
@@ -721,7 +705,7 @@ const Login = ({ navigation }) => {
                 color: Colors.Blue,
                 marginTop: (windowWidth * 2) / 100,
               }}>
-              {Lang_chg.createnewaccountbtn[loginData.languageIndex]}
+              {LangProvider.createnewaccountbtn[languageIndex]}
             </Text>
           </TouchableOpacity>
         </View>
@@ -745,7 +729,7 @@ const Login = ({ navigation }) => {
               }
             ]}
           >
-            {Lang_chg.languagetxt[loginData.languageIndex]}{" "}
+            {LangProvider.languagetxt[languageIndex]}{" "}
           </Text>
 
           <View
@@ -778,7 +762,7 @@ const Login = ({ navigation }) => {
                   alignSelf: "center",
                 }}
               >
-                {Lang_chg.ENG[loginData.languageIndex]}
+                {LangProvider.ENG[languageIndex]}
               </Text>
 
             </TouchableOpacity>
@@ -805,7 +789,7 @@ const Login = ({ navigation }) => {
                   alignSelf: "center",
                 }}
               >
-                {Lang_chg.AR[loginData.languageIndex]}
+                {LangProvider.AR[languageIndex]}
               </Text>
             </TouchableOpacity>
 

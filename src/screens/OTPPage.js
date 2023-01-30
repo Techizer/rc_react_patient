@@ -21,13 +21,11 @@ import {
   Font,
   config,
   windowWidth,
-  Lang_chg,
+  LangProvider,
   apifuntion,
   msgProvider,
-  msgText,
-  StatusbarHeight,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { leftArrow, rightArrow } from "../Icons/Index";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
@@ -48,10 +46,9 @@ const OTPPage = ({ navigation, route }) => {
     country_name
   } = route?.params
 
-  const { appLanguage, deviceToken, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [otpData, setOtpData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     otpSuccessModal: false,
     message: "",
     otp: '',
@@ -61,16 +58,12 @@ const OTPPage = ({ navigation, route }) => {
   const otpRef = useRef()
   const insets = useSafeAreaInsets()
   useEffect(() => {
-    if (Platform.OS == 'android') {
-      navigation.addListener(
-        "blur",
-        (payload) =>
-          BackHandler.removeEventListener(
-            "hardwareBackPress",
-            handleBackPress()
-          )
-      );
-    }
+   
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    checkLocationPermission();
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
   }, [])
 
   const handleBackPress = () => {
@@ -98,7 +91,7 @@ const OTPPage = ({ navigation, route }) => {
   const otpVerify = async () => {
     Keyboard.dismiss()
     if (otpData.otp.length <= 0 || otpData.otp.trim().length <= 0) {
-      msgProvider.showError(msgText.emptyOtpMsg[otpData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyOtpMsg[languageIndex]);
       return false;
     }
     setOtpData(prevState => ({
@@ -241,7 +234,7 @@ const OTPPage = ({ navigation, route }) => {
               textAlign: contentAlign,
               color: Colors.darkText
             }}>
-            {Lang_chg.otp[otpData.languageIndex]}
+            {LangProvider.otp[languageIndex]}
           </Text>
 
           <Text
@@ -252,7 +245,7 @@ const OTPPage = ({ navigation, route }) => {
               color: Colors.inActiveText,
               marginTop: vs(4)
             }}>
-            {Lang_chg.otptext[otpData.languageIndex]}
+            {LangProvider.otptext[languageIndex]}
           </Text>
 
 
@@ -287,7 +280,7 @@ const OTPPage = ({ navigation, route }) => {
           </View>
 
           <Button
-            text={Lang_chg.submitbtntext[otpData.languageIndex]}
+            text={LangProvider.submitbtntext[languageIndex]}
             onPress={() => otpVerify()}
             btnStyle={{ marginTop: vs(30) }}
             onLoading={otpData.isLoading}
@@ -300,7 +293,7 @@ const OTPPage = ({ navigation, route }) => {
               color: Colors.DarkGrey,
               paddingVertical: vs(20)
             }}>
-            {Lang_chg.OtpTime[otpData.languageIndex]}
+            {LangProvider.OtpTime[languageIndex]}
           </Text>
         </View>
 
@@ -323,7 +316,7 @@ const OTPPage = ({ navigation, route }) => {
               fontFamily: Font.Regular,
               color: Colors.DarkGrey,
             }} >
-            {Lang_chg.notrectext[otpData.languageIndex]}
+            {LangProvider.notrectext[languageIndex]}
           </Text>
           <Text
             onPress={() => {
@@ -335,7 +328,7 @@ const OTPPage = ({ navigation, route }) => {
               fontFamily: Font.Medium,
               color: Colors.Blue,
             }}>
-            {Lang_chg.sendagaintext[otpData.languageIndex]}
+            {LangProvider.sendagaintext[languageIndex]}
           </Text>
         </View>
 
@@ -402,7 +395,7 @@ const OTPPage = ({ navigation, route }) => {
                     paddingLeft: (windowWidth * 4) / 100,
                   }}
                 >
-                  {Lang_chg.registration[otpData.languageIndex]}
+                  {LangProvider.registration[languageIndex]}
                 </Text>
               </View>
 
@@ -452,7 +445,7 @@ const OTPPage = ({ navigation, route }) => {
                       textAlign: contentAlign,
                     }}
                   >
-                    {Lang_chg.OK[otpData.languageIndex]}
+                    {LangProvider.OK[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>

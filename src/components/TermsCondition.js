@@ -5,29 +5,12 @@ import {
     Text,
     View,
     Modal,
-    TextInput,
-    FlatList,
-    Image,
     TouchableOpacity,
-    ActivityIndicator,
     ScrollView,
     Alert,
     Dimensions
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import styles, { ThemeColors } from '../styles/main.style';
-
-import FlushMsg from '../utils/FlushMsg';
-import { Apis } from '../utils/Apis';
-import Loader from '../utils/Loader';
-//import { Constants, Location, Permissions } from 'expo';
-import { Images, Dimen, Fonts, Color } from '../utils'
-import Styles from '../utils/CommonStyles';
-import OrderService from '../services/OrderService';
-import homestyle from '../styles/home.style';
-import StateCityService from '../services/StateCityService';
-import FooterListPagination from './FooterListPagination';
-let ScreenHeight = Dimensions.get('window').height;
 
 class TermsConditionScreen extends Component {
     constructor(props) {

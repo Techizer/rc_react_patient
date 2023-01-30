@@ -17,13 +17,10 @@ import {
   msgProvider,
   config,
   windowWidth,
-  localStorage,
-  Lang_chg,
   apifuntion,
-  msgTitle,
-  consolepro,
+  LangProvider,
   ScreenHeader
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { leftArrow, Logo, Notification, rightArrow, Splash_Logo } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
@@ -35,12 +32,11 @@ import { AppLanguage } from "../Redux/Actions";
 
 const SupportandMore = ({ navigation }) => {
 
-  const { appLanguage, loggedInUserDetails, contentAlign, guest } = useSelector(state => state.StorageReducer)
+  const { appLanguage, loggedInUserDetails, languageIndex, guest } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
   const [supportData, setSupportData] = useState({
     language: appLanguage == 'en' ? 'ENG' : 'AR',
-    languageIndex: appLanguage == 'en' ? 0 : 1,
     languageModal: false
   })
 
@@ -78,13 +74,13 @@ const SupportandMore = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("submit_click", obj);
+        console.log("submit_click", obj);
         if (obj.status == true) {
           let result = obj.result;
         } else {
           msgProvider.alert(
-            msgTitle.information[supportData.languageIndex],
-            obj.message[supportData.languageIndex],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -92,18 +88,18 @@ const SupportandMore = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
   const confirmDelete = (title, message, callbackOk, callbackCancel) => {
     Alert.alert(
-      Lang_chg.Delete_account[supportData.languageIndex],
-      Lang_chg.Are_you_sure[supportData.languageIndex],
+      LangProvider.Delete_account[languageIndex],
+      LangProvider.Are_you_sure[languageIndex],
       // "Do you want to logout ?",
       [
         {
-          text: Lang_chg.no_txt[supportData.languageIndex],
+          text: LangProvider.no_txt[languageIndex],
           onPress: () => {
             setSupportData(prevState => ({
               ...prevState,
@@ -112,7 +108,7 @@ const SupportandMore = ({ navigation }) => {
           }
         },
         {
-          text: Lang_chg.yes_txt[supportData.languageIndex],
+          text: LangProvider.yes_txt[languageIndex],
           onPress: () => delete_click(),
         },
       ],
@@ -129,7 +125,6 @@ const SupportandMore = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
         if (obj.status == true) {
 
           navigation.reset({
@@ -138,8 +133,8 @@ const SupportandMore = ({ navigation }) => {
           });
         } else {
           msgProvider.alert(
-            msgTitle.information[supportData.languageIndex],
-            obj.message[supportData.languageIndex],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -147,7 +142,7 @@ const SupportandMore = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -162,7 +157,7 @@ const SupportandMore = ({ navigation }) => {
       }}>
 
       <ScreenHeader
-        title={Lang_chg.supporttext[supportData.languageIndex]}
+        title={LangProvider.supporttext[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.pop()}
         leftIcon
@@ -188,7 +183,7 @@ const SupportandMore = ({ navigation }) => {
               alignSelf: "center",
               textAlign: "center",
             }} >
-            {Lang_chg.Splashtext1[supportData.languageIndex]}{" "}
+            {LangProvider.Splashtext1[languageIndex]}{" "}
           </Text>
         </View>
 
@@ -202,8 +197,8 @@ const SupportandMore = ({ navigation }) => {
             fontFamily: Font.Regular,
             alignSelf: "center",
             textAlign: "center",
-          }} >
-          {Lang_chg.version[supportData.languageIndex]}{" "}
+          }} > 
+          {LangProvider.version[languageIndex]}{" "}
         </Text>
       </View>
 
@@ -223,7 +218,7 @@ const SupportandMore = ({ navigation }) => {
             fontFamily: Font.ques_fontfamily,
           }}
         >
-          {Lang_chg.languagetxt[supportData.languageIndex]}{" "}
+          {LangProvider.languagetxt[languageIndex]}{" "}
         </Text>
 
         <View
@@ -344,11 +339,11 @@ const SupportandMore = ({ navigation }) => {
             fontFamily: Font.ques_fontfamily,
           }}
         >
-          {Lang_chg.termtxt[supportData.languageIndex]}{" "}
+          {LangProvider.termtxt[languageIndex]}{" "}
         </Text>
 
         <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={supportData.languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
         </View>
       </TouchableOpacity>
 
@@ -385,11 +380,11 @@ const SupportandMore = ({ navigation }) => {
             fontFamily: Font.ques_fontfamily,
           }}
         >
-          {Lang_chg.aboutrootcare[supportData.languageIndex]}{" "}
+          {LangProvider.aboutrootcare[languageIndex]}{" "}
         </Text>
 
         <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={supportData.languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
         </View>
       </TouchableOpacity>
 
@@ -426,11 +421,11 @@ const SupportandMore = ({ navigation }) => {
             fontFamily: Font.ques_fontfamily,
           }}
         >
-          {Lang_chg.privacy[supportData.languageIndex]}{" "}
+          {LangProvider.privacy[languageIndex]}{" "}
         </Text>
 
         <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={supportData.languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
         </View>
       </TouchableOpacity>
 
@@ -466,10 +461,10 @@ const SupportandMore = ({ navigation }) => {
                 fontFamily: Font.ques_fontfamily,
               }}
             >
-              {Lang_chg.Delete_account[supportData.languageIndex]}{" "}
+              {LangProvider.Delete_account[languageIndex]}{" "}
             </Text>
             <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <SvgXml xml={supportData.languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
             </View>
           </TouchableOpacity>
 
@@ -514,11 +509,11 @@ const SupportandMore = ({ navigation }) => {
                   color: Colors.Black,
                   fontFamily: Font.Medium,
                 }}>
-                {Lang_chg.needsupport[supportData.languageIndex]}{" "}
+                {LangProvider.needsupport[languageIndex]}{" "}
               </Text>
             </View>
             <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <SvgXml xml={supportData.languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
             </View>
           </TouchableOpacity>
 
@@ -604,7 +599,7 @@ const SupportandMore = ({ navigation }) => {
                     paddingLeft: (windowWidth * 3) / 100,
                   }}
                 >
-                  {Lang_chg.Lang_change[supportData.languageIndex]}
+                  {LangProvider.Lang_change[languageIndex]}
                 </Text>
               </View>
 
@@ -626,7 +621,7 @@ const SupportandMore = ({ navigation }) => {
                     alignSelf: 'flex-start'
                   }}
                 >
-                  {Lang_chg.Lang_change_msg[supportData.languageIndex]}
+                  {LangProvider.Lang_change_msg[languageIndex]}
                 </Text>
               </View>
 
@@ -662,7 +657,7 @@ const SupportandMore = ({ navigation }) => {
                       alignSelf: "center",
                     }}
                   >
-                    {Lang_chg.no_txt[supportData.languageIndex]}
+                    {LangProvider.no_txt[languageIndex]}
                   </Text>
                 </TouchableOpacity>
 
@@ -688,7 +683,7 @@ const SupportandMore = ({ navigation }) => {
                       alignSelf: "center",
                     }}
                   >
-                    {Lang_chg.Restart[supportData.languageIndex]}
+                    {LangProvider.Restart[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>

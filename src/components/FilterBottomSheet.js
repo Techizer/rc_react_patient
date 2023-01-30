@@ -6,8 +6,9 @@ import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth, deviceHeight, Lang_chg, config, localStorage, Icons, windowHeight } from "../Provider/utilslib/Utils";
+import { windowWidth, deviceHeight, LangProvider, config } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
+import { useSelector } from "react-redux";
 
 
 
@@ -16,6 +17,7 @@ const FilterBottomSheet = ({
     onRequestClose,
     data
 }) => {
+    const { address, loggedInUserDetails, guest, appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
 
     const [docType, setDocType] = useState(-1)
     const [consultType, setConsultType] = useState(-1)
@@ -53,7 +55,7 @@ const FilterBottomSheet = ({
                         textAlign: config.textRotate,
                         color: Colors.darkText
 
-                    }}>{Lang_chg.Advance_Filter[config.language]}</Text>
+                    }}>{LangProvider.Advance_Filter[config.language]}</Text>
 
                 <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(20), marginBottom: vs(20) }}>
 
@@ -65,7 +67,7 @@ const FilterBottomSheet = ({
                             color: Colors.lightGrey,
                             paddingRight: s(20)
 
-                        }}>{Lang_chg.Gender[config.language]}</Text> */}
+                        }}>{LangProvider.Gender[config.language]}</Text> */}
 
                     <FlatList
                         showsHorizontalScrollIndicator={false}
@@ -120,7 +122,7 @@ const FilterBottomSheet = ({
                         color: Colors.darkText,
                         marginBottom: vs(12)
 
-                    }}>{Lang_chg.Consult_Type[config.language]}</Text>
+                    }}>{LangProvider.Consult_Type[config.language]}</Text>
                 <View style={styles.dropdownContainer}>
 
                     <Text
@@ -144,7 +146,7 @@ const FilterBottomSheet = ({
                             color: Colors.darkText,
                             marginBottom: vs(12)
 
-                        }}>{Lang_chg.Consult_Type[config.language]}</Text>
+                        }}>{LangProvider.Consult_Type[config.language]}</Text>
 
                     <FlatList
                         showsHorizontalScrollIndicator={false}
@@ -201,7 +203,7 @@ const FilterBottomSheet = ({
                             color: Colors.darkText,
                             marginBottom: vs(12)
 
-                        }}>{Lang_chg.Doc_Exp[config.language]}</Text>
+                        }}>{LangProvider.Doc_Exp[config.language]}</Text>
 
                     <FlatList
                         showsHorizontalScrollIndicator={false}

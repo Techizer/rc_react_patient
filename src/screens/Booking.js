@@ -17,20 +17,18 @@ import {
   Colors,
   Font,
   msgProvider,
-  msgText,
   windowWidth,
   config,
   consolepro,
-  Lang_chg,
+  LangProvider,
   apifuntion,
   Icons,
   Button,
   ScreenHeader
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import Styles from "../Styles";
 
-import DoctorSymptomsAppointment from "../components/DoctorSymptomsAppointment";
-import LabAppointment from "../components/LabAppointment";
+import DoctorSymptomsAppointment from '../screens/Booking/Doctors/HomeVisit';
 import { dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
@@ -76,10 +74,9 @@ const timedata = [
 const Booking = ({ navigation, route }) => {
 
   const { providerType, providerId, isFromHospital, indexPosition, family_member_id } = route.params
-  const { address, loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+  const { address, loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
 
   const [statesData, setStatesData] = useState({
-    languageIndex: appLanguage == 'en' ? 0 : 1,
     display: "taskbooking",
     task_base_task: "",
     task_base_task1: "",
@@ -1621,7 +1618,7 @@ const Booking = ({ navigation, route }) => {
 
 
     if (statesData.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
 
@@ -1686,8 +1683,8 @@ const Booking = ({ navigation, route }) => {
             navigation.navigate("Cart", { providerType: providerType });
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
-          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
+          // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -1707,24 +1704,24 @@ const Booking = ({ navigation, route }) => {
     if (providerType === "lab") {
       if (indexPosition === 0) {
         if (statesData.select_task.length <= 0) {
-          msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
+          msgProvider.showError(LangProvider.EmptyTask[languageIndex]);
           return false;
         }
       } else {
         if (statesData.hour_id.length <= 0) {
-          msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
+          msgProvider.showError(LangProvider.EmptyTask[languageIndex]);
           return false;
         }
       }
     } else {
       if (statesData.select_task.length <= 0) {
-        msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
+        msgProvider.showError(LangProvider.EmptyTask[languageIndex]);
         return false;
       }
     }
 
     if (statesData.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
 
@@ -1766,13 +1763,13 @@ const Booking = ({ navigation, route }) => {
       .then((obj) => {
         if (obj.status == true) {
           // localStorage.setItemString('cartTime', moment().format('x'))
-          // msgProvider.toast(msgText.sucess_message_login[statesData.languageIndex])
+          // msgProvider.toast(LangProvider.sucess_message_login[languageIndex])
           setTimeout(() => {
             navigation.navigate("Cart", { providerType: providerType })
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
-          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
+          // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -1790,12 +1787,12 @@ const Booking = ({ navigation, route }) => {
   const submit_btn_hourly = async () => {
     Keyboard.dismiss();
     if (statesData.hour_id.length <= 0) {
-      msgProvider.showError(msgText.EmptyTask[statesData.languageIndex]);
+      msgProvider.showError(LangProvider.EmptyTask[languageIndex]);
       return false;
     }
 
     if (statesData.time_take_data_hour.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[statesData.languageIndex]);
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
 
@@ -1838,13 +1835,13 @@ const Booking = ({ navigation, route }) => {
       .then((obj) => {
         if (obj.status == true) {
           // localStorage.setItemString('cartTime', moment().format('x'))
-          // msgProvider.toast(msgText.sucess_message_login[statesData.languageIndex])
+          // msgProvider.toast(LangProvider.sucess_message_login[languageIndex])
           setTimeout(() => {
             navigation.navigate("Cart", { providerType: providerType })
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[statesData.languageIndex] || obj.msg[statesData.languageIndex] == msgTitle.usererr[statesData.languageIndex]) {
-          //   usernotfound.loginFirst(props, obj.msg[statesData.languageIndex])
+          // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[languageIndex])
           // } else {
           setTimeout(() => {
             msgProvider.alert("", obj.message, false);
@@ -2152,7 +2149,7 @@ const Booking = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
         <ScreenHeader
-          title={Lang_chg.Booking[statesData.languageIndex]}
+          title={LangProvider.Booking[languageIndex]}
           navigation={navigation}
           onBackPress={() => navigation.pop()}
           leftIcon
@@ -2246,7 +2243,7 @@ const Booking = ({ navigation, route }) => {
                     color: Colors.lightGrey,
                     marginTop: vs(2)
                   }}>
-                  {providerType === 'lab' ? Lang_chg.ESTABLISHED[statesData.languageIndex] : Lang_chg.Experience[statesData.languageIndex]}
+                  {providerType === 'lab' ? LangProvider.ESTABLISHED[languageIndex] : LangProvider.Experience[languageIndex]}
                 </Text>
                 <Text
                   style={{
@@ -2269,7 +2266,7 @@ const Booking = ({ navigation, route }) => {
                     marginTop: vs(2),
                     paddingHorizontal: s(15)
                   }}>
-                  {Lang_chg.Bookings[statesData.languageIndex]}
+                  {LangProvider.Bookings[languageIndex]}
                 </Text>
                 <Text
                   style={{
@@ -2293,7 +2290,7 @@ const Booking = ({ navigation, route }) => {
                     marginTop: vs(2),
                     paddingHorizontal: s(15)
                   }}>
-                  {Lang_chg.Rating[statesData.languageIndex]}
+                  {LangProvider.Rating[languageIndex]}
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
                   <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
@@ -2476,10 +2473,10 @@ const Booking = ({ navigation, route }) => {
                           color: "#8F98A7",
                           width: "90%",
                           paddingVertical: (windowWidth * 3.5) / 100,
-                          textAlign: statesData.languageIndex == 0 ? 'left' : 'right',
+                          textAlign: languageIndex == 0 ? 'left' : 'right',
                         }}
                         placeholderTextColor={"#8F98A7"}
-                        placeholder={Lang_chg.SearchTests[statesData.languageIndex]}
+                        placeholder={LangProvider.SearchTests[languageIndex]}
                       />
 
                       <View style={{ width: "10%", alignSelf: "center" }}>
@@ -2714,7 +2711,7 @@ const Booking = ({ navigation, route }) => {
                       fontSize: (windowWidth * 3.5) / 100,
                     }}
                   >
-                    {Lang_chg.Appointmentschedule[statesData.languageIndex]}
+                    {LangProvider.Appointmentschedule[languageIndex]}
                   </Text>
                   <View
                     style={{
@@ -2773,7 +2770,7 @@ const Booking = ({ navigation, route }) => {
                       color: "#000",
                     }}
                   >
-                    {Lang_chg.SelectDate[statesData.languageIndex]}
+                    {LangProvider.SelectDate[languageIndex]}
                   </Text>
                   <View style={{ width: "100%" }}>
                     <FlatList
@@ -2843,7 +2840,7 @@ const Booking = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.Select_start_time[statesData.languageIndex]}
+                    {LangProvider.Select_start_time[languageIndex]}
                   </Text>
 
                   <ScrollView
@@ -2985,7 +2982,7 @@ const Booking = ({ navigation, route }) => {
                               marginLeft: (windowWidth * 32) / 100,
                             }}
                           >
-                            {Lang_chg.noTime[statesData.languageIndex]}
+                            {LangProvider.noTime[languageIndex]}
                           </Text>
                         )}
                       </View>
@@ -3020,7 +3017,7 @@ const Booking = ({ navigation, route }) => {
                           alignSelf: 'flex-start',
                         }}
                       >
-                        {Lang_chg.Payment[statesData.languageIndex]}
+                        {LangProvider.Payment[languageIndex]}
                       </Text>
                     </View>
 
@@ -3164,7 +3161,7 @@ const Booking = ({ navigation, route }) => {
                           fontSize: (windowWidth * 3.7) / 100,
                           color: Colors.theme_color,
                         }}>
-                        {Lang_chg.subTotal[statesData.languageIndex]}
+                        {LangProvider.subTotal[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -3228,7 +3225,7 @@ const Booking = ({ navigation, route }) => {
                           fontSize: (windowWidth * 3.7) / 100,
                           color: Colors.theme_color,
                         }}>
-                        {Lang_chg.Total[statesData.languageIndex]}
+                        {LangProvider.Total[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -3289,7 +3286,7 @@ const Booking = ({ navigation, route }) => {
                         color: Colors.detailTitles
                       }}
                     >
-                      {Lang_chg.Appointmentschedule[statesData.languageIndex]}
+                      {LangProvider.Appointmentschedule[languageIndex]}
                     </Text>
                     <View
                       style={{
@@ -3343,7 +3340,7 @@ const Booking = ({ navigation, route }) => {
                       color: Colors.detailTitles,
                     }}
                   >
-                    {Lang_chg.SelectDate[statesData.languageIndex]}
+                    {LangProvider.SelectDate[languageIndex]}
                   </Text>
                   {indexPosition === 1 ? (
                     <View style={{ width: "100%" }}>
@@ -3454,7 +3451,7 @@ const Booking = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.Select_start_time[statesData.languageIndex]}
+                    {LangProvider.Select_start_time[languageIndex]}
                   </Text>
 
                   <ScrollView
@@ -3587,7 +3584,7 @@ const Booking = ({ navigation, route }) => {
                                 marginLeft: (windowWidth * 25) / 100,
                               }}
                             >
-                              {Lang_chg.noTime[statesData.languageIndex]}
+                              {LangProvider.noTime[languageIndex]}
                             </Text>
                           )}
                         </View>
@@ -3714,7 +3711,7 @@ const Booking = ({ navigation, route }) => {
                                 marginLeft: (windowWidth * 25) / 100,
                               }}
                             >
-                              {Lang_chg.noTime[statesData.languageIndex]}
+                              {LangProvider.noTime[languageIndex]}
                             </Text>
                           )}
                         </View>
@@ -3751,7 +3748,7 @@ const Booking = ({ navigation, route }) => {
                           alignSelf: 'flex-start',
                         }}
                       >
-                        {Lang_chg.Payment[statesData.languageIndex]}
+                        {LangProvider.Payment[languageIndex]}
                       </Text>
                     </View>
 
@@ -3833,7 +3830,7 @@ const Booking = ({ navigation, route }) => {
                             fontSize: (windowWidth * 3.7) / 100,
                             color: Colors.theme_color,
                           }}>
-                          {Lang_chg.subTotal[statesData.languageIndex]}
+                          {LangProvider.subTotal[languageIndex]}
                         </Text>
                         <Text
                           style={{
@@ -3896,7 +3893,7 @@ const Booking = ({ navigation, route }) => {
                             color: Colors.theme_color,
                           }}
                         >
-                          {Lang_chg.Total[statesData.languageIndex]}
+                          {LangProvider.Total[languageIndex]}
                         </Text>
                         <Text
                           style={{
@@ -3966,7 +3963,7 @@ const Booking = ({ navigation, route }) => {
                             }
                         }
                       >
-                        {Lang_chg.TaskBooking[statesData.languageIndex]}
+                        {LangProvider.TaskBooking[languageIndex]}
                       </Text>
 
                       <View
@@ -4034,7 +4031,7 @@ const Booking = ({ navigation, route }) => {
                             }
                         }
                       >
-                        {Lang_chg.HourlyBooking[statesData.languageIndex]}
+                        {LangProvider.HourlyBooking[languageIndex]}
                       </Text>
 
                       <View
@@ -4173,10 +4170,10 @@ const Booking = ({ navigation, route }) => {
                           color: "#8F98A7",
                           width: "90%",
                           paddingVertical: (windowWidth * 3.5) / 100,
-                          textAlign: statesData.languageIndex == 0 ? 'left' : 'right',
+                          textAlign: languageIndex == 0 ? 'left' : 'right',
                         }}
                         placeholderTextColor={"#8F98A7"}
-                        placeholder={Lang_chg.Searchtask[statesData.languageIndex]}
+                        placeholder={LangProvider.Searchtask[languageIndex]}
                       />
 
                       <View style={{ width: "10%", alignSelf: "center" }}>
@@ -4406,7 +4403,7 @@ const Booking = ({ navigation, route }) => {
                           color: Colors.detailTitles
                         }}
                       >
-                        {Lang_chg.Appointmentschedule[statesData.languageIndex]}
+                        {LangProvider.Appointmentschedule[languageIndex]}
                       </Text>
                       <View
                         style={{
@@ -4460,7 +4457,7 @@ const Booking = ({ navigation, route }) => {
                         color: Colors.detailTitles,
                       }}
                     >
-                      {Lang_chg.SelectDate[statesData.languageIndex]}
+                      {LangProvider.SelectDate[languageIndex]}
                     </Text>
                     {statesData.display == "taskbooking" ? (
                       <View style={{ width: "100%" }}>
@@ -4568,7 +4565,7 @@ const Booking = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Select_start_time[statesData.languageIndex]}
+                      {LangProvider.Select_start_time[languageIndex]}
                     </Text>
 
                     <ScrollView
@@ -4698,7 +4695,7 @@ const Booking = ({ navigation, route }) => {
                                   marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.noTime[statesData.languageIndex]}
+                                {LangProvider.noTime[languageIndex]}
                               </Text>
                             )}
                           </View>
@@ -4825,7 +4822,7 @@ const Booking = ({ navigation, route }) => {
                                   marginLeft: (windowWidth * 25) / 100,
                                 }}
                               >
-                                {Lang_chg.noTime[statesData.languageIndex]}
+                                {LangProvider.noTime[languageIndex]}
                               </Text>
                             )}
                           </View>
@@ -4854,7 +4851,7 @@ const Booking = ({ navigation, route }) => {
                         color: Colors.theme_color,
                         alignSelf: 'flex-start',
                       }} >
-                      {Lang_chg.Payment[statesData.languageIndex]}
+                      {LangProvider.Payment[languageIndex]}
                     </Text>
                     {statesData.new_task_arr != "" && (
                       <FlatList
@@ -4952,7 +4949,7 @@ const Booking = ({ navigation, route }) => {
                           color: Colors.theme_color,
                         }}
                       >
-                        {Lang_chg.subTotal[statesData.languageIndex]}
+                        {LangProvider.subTotal[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -5012,7 +5009,7 @@ const Booking = ({ navigation, route }) => {
                           color: Colors.theme_color,
                         }}
                       >
-                        {Lang_chg.Total[statesData.languageIndex]}
+                        {LangProvider.Total[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -5028,7 +5025,7 @@ const Booking = ({ navigation, route }) => {
                             onPresshandler={() => {
                               submit_btn();
                             }}
-                            title={Lang_chg.PROCEEDTOcheckout[statesData.languageIndex]}
+                            title={LangProvider.ProceedToPay[languageIndex]}
                           /> */}
                   </View>
                 )}
@@ -5050,7 +5047,7 @@ const Booking = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Payment[statesData.languageIndex]}
+                      {LangProvider.Payment[languageIndex]}
                     </Text>
                     {statesData.hour_base_task_new != "" && (
                       <FlatList
@@ -5139,7 +5136,7 @@ const Booking = ({ navigation, route }) => {
                           fontSize: (windowWidth * 3.7) / 100,
                           color: Colors.theme_color,
                         }}>
-                        {Lang_chg.subTotal[statesData.languageIndex]}
+                        {LangProvider.subTotal[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -5191,7 +5188,7 @@ const Booking = ({ navigation, route }) => {
                           fontSize: (windowWidth * 3.7) / 100,
                           color: Colors.theme_color,
                         }}>
-                        {Lang_chg.Total[statesData.languageIndex]}
+                        {LangProvider.Total[languageIndex]}
                       </Text>
                       <Text
                         style={{
@@ -5284,7 +5281,7 @@ const Booking = ({ navigation, route }) => {
                     }}
                     numberOfLines={2}
                   >
-                    {Lang_chg.DeleteMember[statesData.languageIndex]}{statesData.first_name} {statesData.last_name}
+                    {LangProvider.DeleteMember[languageIndex]}{statesData.first_name} {statesData.last_name}
                   </Text>
                 </View>
 
@@ -5303,7 +5300,7 @@ const Booking = ({ navigation, route }) => {
                       alignSelf: 'flex-start',
                     }}
                   >
-                    {Lang_chg.delete_msg[statesData.languageIndex]}
+                    {LangProvider.delete_msg[languageIndex]}
                   </Text>
                 </View>
 
@@ -5336,7 +5333,7 @@ const Booking = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.no_txt[statesData.languageIndex]}
+                      {LangProvider.no_txt[languageIndex]}
                     </Text>
                   </TouchableOpacity>
 
@@ -5362,7 +5359,7 @@ const Booking = ({ navigation, route }) => {
                         alignSelf: 'flex-start',
                       }}
                     >
-                      {Lang_chg.Delete[statesData.languageIndex]}
+                      {LangProvider.Delete[languageIndex]}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -5386,7 +5383,7 @@ const Booking = ({ navigation, route }) => {
         >
 
           <Button
-            text={Lang_chg.PROCEEDTOcheckout[statesData.languageIndex]}
+            text={LangProvider.ProceedToPay[languageIndex]}
             onPress={() => {
               providerType === "doctor"
                 ? submitButtonForDoctor()
@@ -5409,7 +5406,7 @@ const Booking = ({ navigation, route }) => {
     return (
       <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
         <ScreenHeader
-          title={Lang_chg.Booking[statesData.languageIndex]}
+          title={LangProvider.Booking[languageIndex]}
           navigation={navigation}
           onBackPress={() => navigation.pop()}
           leftIcon
@@ -5466,9 +5463,9 @@ const Booking = ({ navigation, route }) => {
                     marginTop: (windowWidth * 6) / 100,
                   }}
                 >
-                  {Lang_chg.we_wii_back[statesData.languageIndex]}
+                  {LangProvider.we_wii_back[languageIndex]}
                 </Text>
-                {statesData.languageIndex == 0 && (
+                {languageIndex == 0 && (
                   <Text
                     style={{
                       fontFamily: Font.Medium,
@@ -5477,7 +5474,7 @@ const Booking = ({ navigation, route }) => {
                       alignSelf: "center",
                     }}
                   >
-                    {Lang_chg.promise[statesData.languageIndex]}
+                    {LangProvider.promise[languageIndex]}
                   </Text>
                 )}
 
@@ -5492,7 +5489,7 @@ const Booking = ({ navigation, route }) => {
                     alignSelf: "center",
                   }}
                 >
-                  {Lang_chg.our_sincere[statesData.languageIndex]}
+                  {LangProvider.our_sincere[languageIndex]}
                 </Text>
                 <Text
                   style={{
@@ -5502,7 +5499,7 @@ const Booking = ({ navigation, route }) => {
                     textAlign: "center",
                     marginTop: (windowWidth * 5) / 100,
                   }}>
-                  {Lang_chg.Bad_gateway[statesData.languageIndex]}
+                  {LangProvider.Bad_gateway[languageIndex]}
                 </Text>
 
                 <TouchableOpacity
@@ -5530,7 +5527,7 @@ const Booking = ({ navigation, route }) => {
                       color: "#000",
                     }}
                   >
-                    {Lang_chg.Go_back[statesData.languageIndex]}
+                    {LangProvider.Go_back[languageIndex]}
                   </Text>
                 </TouchableOpacity>
               </View>

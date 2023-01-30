@@ -2,7 +2,7 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
 import { Platform, Text, View, Image, TouchableOpacity, ImageBackground, FlatList, Modal, ToastAndroid } from 'react-native'
 import Geolocation from "react-native-geolocation-service";
-import { msgProvider, Icons, config, Lang_chg, Font, Colors, ScreenHeader } from '../Provider/utilslib/Utils'
+import { msgProvider, Icons, config, LangProvider, Font, Colors, ScreenHeader } from '../Provider/Utils/Utils'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { s, vs } from 'react-native-size-matters';
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 
 const FindAddress = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
 
     let googlePlacesRef = useRef()
 
@@ -25,7 +25,6 @@ const FindAddress = ({ navigation }) => {
         type: '',
         addressBottomSheet: false,
         country: '',
-        languageIndex: appLanguage == 'en' ? 0 : 1
     })
     const [isLoading, setIsLoading] = useState(false)
 
@@ -149,7 +148,7 @@ const FindAddress = ({ navigation }) => {
                 let data2 = { 'latitude': details.geometry.location.lat, 'longitude': details.geometry.location.lng, 'address': details.formatted_address, 'city': city, 'administrative_area_level_1': administrative_area_level_1 }
                 add_location = data2
                 post_location = data2
-                // consolepro.consolelog('getadddressfromlatlong', add_location)
+                // console.log('getadddressfromlatlong', add_location)
                 googlePlacesRef && googlePlacesRef.setAddressText(details.formatted_address)
                 setAddressData(prevState => ({
                     ...prevState,
@@ -176,7 +175,7 @@ const FindAddress = ({ navigation }) => {
         <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, }}>
 
             <ScreenHeader
-                title={Lang_chg.Find_Location[addressData.languageIndex]}
+                title={LangProvider.Find_Location[languageIndex]}
                 navigation={navigation}
                 onBackPress={() => navigation.pop()}
                 leftIcon
@@ -199,8 +198,8 @@ const FindAddress = ({ navigation }) => {
                                 }}></Image>
                         </View>
                         <View style={{ width: '91%', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(12) }}>
-                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.SemiBold, color: Colors.darkText }}>{Lang_chg.Currentlocation[addressData.languageIndex]}</Text>
-                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{Lang_chg.Using_gpsofyoudevice[addressData.languageIndex]}</Text>
+                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.SemiBold, color: Colors.darkText }}>{LangProvider.Currentlocation[languageIndex]}</Text>
+                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Regular, color: Colors.dullGrey, marginTop: vs(4) }}>{LangProvider.Using_gpsofyoudevice[languageIndex]}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

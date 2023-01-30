@@ -1,0 +1,1359 @@
+import React, { Component, useEffect, useRef, useState } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Keyboard,
+  FlatList,
+  Modal,
+} from "react-native";
+import { SkypeIndicator } from "react-native-indicators";
+import {
+  Colors,
+  Font,
+  msgProvider,
+  windowWidth,
+  config,
+  LangProvider,
+  apifuntion,
+  Icons,
+  Button,
+} from '../../../Provider/Utils/Utils';
+import { dummyUser, GoldStar, leftArrow, Notification } from '../../../Icons/Index';
+import { SvgXml } from "react-native-svg";
+import { s, vs } from "react-native-size-matters";
+import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import LoadingSkeleton from "../../../components/LoadingSkeleton";
+import { TabbyPaymentStatus } from "../../../Redux/Actions";
+
+
+
+const PackageBase = ({ navigation, route }) => {
+
+
+  const { selectedProvider, loggedInUserDetails, languageIndex } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const [statesData, setStatesData] = useState({
+    bookingDetails: null,
+    packagesList: [],
+    selectedPackage: null,
+    time_Arr: [],
+    tasksTotalPrice: '',
+    keyword: '',
+    set_date: "",
+    Error_popup: false,
+    task_price_total: "",
+    selectedTime: "",
+    vatPrice: "",
+    totalPrice: "",
+    currency_symbol: loggedInUserDetails.currency_symbol,
+    subTotal: '',
+    isLoadingDetails: true,
+    isAddingToCart: false,
+    isLoadingDates: false
+  })
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (isFocused) {
+      resetState()
+      getServices();
+      getDay();
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    PreSelectedPackage()
+  }, [statesData.packagesList])
+
+  useEffect(() => {
+    if (statesData.bookingDetails && statesData.packagesList) {
+      setState({ isLoadingDetails: false })
+    }
+  }, [statesData.bookingDetails])
+
+  const resetState = () => {
+    setState({
+      bookingDetails: null,
+      packagesList: [],
+      selectedPackage: null,
+      time_Arr: [],
+      tasksTotalPrice: '',
+      keyword: '',
+      set_date: "",
+      Error_popup: false,
+      task_price_total: "",
+      selectedTime: "",
+      vatPrice: "",
+      totalPrice: "",
+      currency_symbol: loggedInUserDetails.currency_symbol,
+      subTotal: '',
+      isLoadingDetails: true,
+      isAddingToCart: false,
+      isLoadingDates: false
+    })
+  }
+
+  const setState = payload => {
+    setStatesData(prev => ({
+      ...prev,
+      ...payload
+    }))
+  }
+
+  const PreSelectedPackage = () => {
+    if (selectedProvider != null && selectedProvider.packageId != '' && statesData.bookingDetails != null) {
+      let data = statesData.packagesList;
+      const Details = statesData.bookingDetails
+      let selectedPackage = null;
+      let subTotal = 0;
+      let total = 0;
+      let vatPrice = 0
+
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].pid == selectedProvider.packageId) {
+          data[i].status = true;
+        } else {
+          data[i].status = false;
+        }
+      }
+      for (const iterator of data) {
+        if (iterator.status == true) {
+          selectedPackage = iterator
+          setState({ selectedPackage: iterator, tasksTotalPrice: iterator.price })
+        }
+      }
+      subTotal = subTotal + parseInt(selectedPackage?.price) + parseFloat(Details?.distance_fare)
+      if (Details.vat_price != 0) {
+        // console.log('vat exists');
+        vatPrice = parseFloat((parseInt(subTotal) - parseInt(Details?.distance_fare)) * Details?.vat_price) / 100
+      }
+
+      total = (subTotal + vatPrice)
+      setState({
+        packagesList: data,
+        selectedPackage: selectedPackage,
+        subTotal: subTotal,
+        vatPrice: vatPrice,
+        totalPrice: total,
+      })
+    }
+  }
+
+  const getDay = () => {
+    var today = new Date();
+    var nextweek = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + 28
+    );
+    let datenew_show = today.getDate();
+    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let month_show = today.getMonth() + 1;
+    let year_show = today.getFullYear();
+    let show_month1 = "";
+    let show_get_date = "";
+    if (month_show <= 9) {
+      show_month1 = "0" + month_show;
+    } else {
+      show_month1 = month_show;
+    }
+    if (datenew_show <= 9) {
+      show_get_date = "0" + datenew_show;
+    } else {
+      show_get_date = datenew_show;
+    }
+    let date1_show = year_show + "-" + show_month1 + "-" + show_get_date;
+    setState({ set_date: date1_show, check_currentdate: date1_show });
+
+    for (
+      var arr = [], dt = new Date(today);
+      dt <= new Date(nextweek);
+      dt.setDate(dt.getDate() + 1)
+    ) {
+      let date_final = new Date(dt);
+      let month = date_final.getMonth() + 1;
+      let year = date_final.getFullYear();
+      var dayName = days[date_final.getDay()];
+      let final_date = date_final.getDate();
+      let datenew = "";
+      let show_month = "";
+      if (final_date <= 9) {
+        datenew = "0" + final_date;
+      } else {
+        datenew = final_date;
+      }
+      if (month <= 9) {
+        show_month = "0" + month;
+      } else {
+        show_month = month;
+      }
+      let date1 = year + "-" + show_month + "-" + datenew;
+      let tick = 0;
+      if (date1 == date1_show) {
+        tick = 1;
+      }
+
+      arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
+    }
+    setState({ date_array: arr });
+  };
+
+  const getServices = async () => {
+
+    var current = new Date();
+    let min =
+      current.getMinutes() < 10
+        ? "0" + current.getMinutes()
+        : current.getMinutes();
+    let hour =
+      current.getHours() < 10 ? "0" + current.getHours() : current.getHours();
+    var timcurrent = hour + ":" + min;
+    setState({ currentTime: timcurrent });
+    if (loggedInUserDetails.image != null) {
+      setState({
+        profile_img: loggedInUserDetails.image
+      });
+    }
+    let url = config.baseURL + "api-patient-lab-booking-init-details";
+
+    var data = new FormData();
+    data.append("provider_id", selectedProvider.providerId);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", selectedProvider.providerType);
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        console.log('getServices-res**********', obj.result);
+        if (obj.status == true) {
+          var names = obj.result.task_time;
+          var nameArr = names.split(",");
+          const newTimeSlot = [];
+          const Arr2 = [];
+          const Arr1 = [];
+          var arr1 = false;
+          var arr2 = true;
+          let packagesArray = []
+          packagesArray = obj.result.package_base_task
+          for (let i = 0; i < obj.result.package_base_task.length; i++) {
+            packagesArray[i].status = false;
+          }
+          setState({
+            bookingDetails: obj.result,
+            message: obj.message,
+            packagesList: packagesArray,
+          });
+          if (obj.result.task_time != "") {
+
+            for (let l = 0; l < nameArr.length; l++) {
+              const timeStr = nameArr[l];
+
+              const convertTime = (timeStr) => {
+                const [time, modifier] = timeStr.split(" ");
+                let [hours, minutes] = time.split(":");
+                if (hours === "12") {
+                  hours = "00";
+                }
+                if (modifier === "PM") {
+                  hours = parseInt(hours, 10) + 12;
+                }
+                return `${hours}:${minutes}`;
+              };
+              var finaltime = convertTime(timeStr);
+              if (finaltime >= timcurrent) {
+                newTimeSlot.push({ time: nameArr[l], time_status: false });
+
+                if (!arr1) {
+                  arr1 = true;
+                  arr2 = false;
+                  Arr1.push({ time: nameArr[l], time_status: false });
+                } else {
+                  arr1 = false;
+                  arr2 = true;
+                  Arr2.push({ time: nameArr[l], time_status: false });
+                }
+              }
+            }
+
+            setState({
+              time_Arr: newTimeSlot,
+              final_one: Arr1,
+              final_arr2: Arr2,
+            });
+
+          } else {
+            // msgProvider.showError(obj.message);
+            return false;
+          }
+        }
+      }).catch((error) => {
+        setTimeout(() => {
+          setState({ Error_popup: true, isLoadingDetails: false });
+        }, 700);
+
+        console.log("getServices-error ------- " + error);
+      });
+  };
+
+  const getTimeDate = async (selectedDate, currentData = '') => {
+
+    setState({
+      isLoadingDates: true,
+      time_Arr: [],
+      final_one: [],
+      final_arr2: [],
+    })
+    let url = config.baseURL + "api-patient-lab-next-date-time";
+
+    var data = new FormData();
+    data.append("provider_id", selectedProvider.providerId);
+    data.append("date", selectedDate);
+    data.append("task_type", 'task_base');
+    data.append("service_type", selectedProvider.providerType);
+
+    console.log('getTimeDate request.....', data);
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        console.log("getTimeDate ", obj);
+
+        if (obj.status == true) {
+          if (obj.result.task_time != "") {
+            var names = obj.result.task_time;
+            var nameArr = names.split(",");
+
+            const newTimeSlot = [];
+            const Arr1 = [];
+            const Arr2 = [];
+            var arr1 = false;
+            var arr2 = true;
+            if (obj.result.task_time != "") {
+              for (let l = 0; l < nameArr.length; l++) {
+                if (currentData == selectedDate) {
+                  const timeStr = nameArr[l];
+
+                  const convertTime = (timeStr) => {
+                    const [time, modifier] = timeStr.split(" ");
+                    let [hours, minutes] = time.split(":");
+                    if (hours === "12") {
+                      hours = "00";
+                    }
+                    if (modifier === "PM") {
+                      hours = parseInt(hours, 10) + 12;
+                    }
+                    return `${hours}:${minutes}`;
+                  };
+                  var finaltime = convertTime(timeStr);
+
+                  if (finaltime >= statesData.currentTime) {
+                    newTimeSlot.push({
+                      time: nameArr[l],
+                      time_status: false,
+                    });
+                    if (!arr1) {
+                      arr1 = true;
+                      arr2 = false;
+                      Arr1.push({ time: nameArr[l], time_status: false });
+                    } else {
+                      arr1 = false;
+                      arr2 = true;
+                      Arr2.push({ time: nameArr[l], time_status: false });
+                    }
+                  }
+                } else {
+                  newTimeSlot.push({ time: nameArr[l], time_status: false });
+                  if (!arr1) {
+                    arr1 = true;
+                    arr2 = false;
+                    Arr1.push({ time: nameArr[l], time_status: false });
+                  } else {
+                    arr1 = false;
+                    arr2 = true;
+                    Arr2.push({ time: nameArr[l], time_status: false });
+                  }
+                }
+              }
+            }
+
+            setState({
+              time_Arr: newTimeSlot,
+              final_one: Arr1,
+              final_arr2: Arr2,
+            });
+            setTimeout(() => {
+              setState({ isLoadingDates: false })
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              setState({ isLoadingDates: false })
+            }, 1000);
+            setState({ time_Arr: obj.result.task_time });
+          }
+        } else {
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log("-------- error ------- " + error);
+      });
+  };
+
+  const checkDate = (item, index) => {
+    let data = statesData.date_array;
+
+    for (let i = 0; i < data.length; i++) {
+      if (i == index) {
+        data[i].tick = 1;
+      } else {
+        data[i].tick = 0;
+      }
+    }
+    setState({ date_array: data });
+  }
+
+  const BookPackage = (item, index) => {
+    const Details = statesData.bookingDetails
+    let data = statesData.packagesList;
+    let selectedPackage = null;
+    let subTotal = 0;
+    let total = 0;
+    let vatPrice = 0
+
+    for (let i = 0; i < data.length; i++) {
+      if (i == index) {
+        data[i].status = true;
+      } else {
+        data[i].status = false;
+      }
+    }
+
+
+    for (const iterator of data) {
+      if (iterator.status == true) {
+        selectedPackage = iterator
+        setState({ selectedPackage: iterator, tasksTotalPrice: iterator.price })
+      }
+    }
+
+    subTotal = subTotal + parseInt(selectedPackage.price) + parseFloat(Details?.distance_fare)
+    if (Details.vat_price != 0) {
+      console.log('vat exists');
+      vatPrice = parseFloat((parseInt(subTotal) - parseInt(Details?.distance_fare)) * Details?.vat_price) / 100
+    }
+
+    total = (subTotal + vatPrice)
+    console.log({ total });
+    setState({
+      packagesList: data,
+      selectedPackage: selectedPackage,
+      subTotal: subTotal,
+      vatPrice: vatPrice,
+      totalPrice: total,
+    })
+
+  };
+
+  const AddToCart = async () => {
+    Keyboard.dismiss();
+    dispatch(TabbyPaymentStatus(false))
+    if (statesData.selectedPackage == null) {
+      msgProvider.showError(LangProvider.EmptyPackage[languageIndex]);
+      return false;
+    }
+
+    if (statesData.selectedTime.length <= 0) {
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
+      return false;
+    }
+    setState({ isAddingToCart: true })
+    let url = config.baseURL + "api-patient-insert-cart";
+    var data = new FormData();
+
+    data.append("hospital_id", selectedProvider.hospitalId);
+    data.append("service_type", selectedProvider.providerType);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("currency_symbol", statesData.currency_symbol);
+    data.append("family_member_id", selectedProvider.family_member_id);
+    data.append("provider_id", selectedProvider.providerId);
+    data.append("task_id", statesData.selectedPackage.pid);
+    data.append("task_price", statesData.selectedPackage.price);
+    data.append("task_type", "package_base");
+    data.append("from_date", statesData.set_date);
+    data.append("from_time", statesData.selectedTime);
+    data.append("appointment_type", "online");
+    data.append("vat_percent_used", statesData.bookingDetails.vat_price);
+    data.append("vat_price", statesData.vatPrice);
+    data.append("distance_fare", statesData.bookingDetails.distance_fare);
+    data.append("task_price_total", statesData.tasksTotalPrice);
+    data.append("sub_total_price", statesData.subTotal);
+    data.append("total_price", statesData.totalPrice);
+
+    if (statesData.bookingDetails.distancetext != '' && statesData.bookingDetails.distancetext != null && statesData.bookingDetails.distancetext != undefined) {
+      data.append('distance', statesData.bookingDetails.distancetext)
+    } else {
+      data.append('distance', '')
+    }
+
+    // console.log(data);
+    // return
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        setState({ isAddingToCart: false })
+        if (obj.status == true) {
+          // msgProvider.toast(LangProvider.sucess_message_login[languageIndex])
+          setTimeout(() => {
+            navigation.navigate("CartDetails")
+          }, 700);
+        } else {
+          setTimeout(() => {
+            msgProvider.alert("", obj.message, false);
+          }, 700);
+          // }
+          return false;
+        }
+      })
+      .catch((error) => {
+        setState({ isAddingToCart: false })
+        console.log("-------- error ------- " + error);
+        setState({ loading: false });
+      });
+  };
+
+  var Details = statesData.bookingDetails;
+
+  if (statesData.isLoadingDetails) {
+    return (
+      <LoadingSkeleton />
+    );
+  } else {
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor, }}>
+
+        <ScrollView
+          // style={{ flex: 1 }}
+          contentContainerStyle={{ paddingBottom: (windowWidth * 30) / 100 }}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}>
+
+          <View style={styles.infoContainer}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: '100%',
+                paddingHorizontal: s(11),
+              }}>
+              {/* image and Name */}
+
+              <View style={{ width: "30%", }}>
+                {
+                  (Details?.image == "NA" || Details?.image == null || Details?.image == "") ?
+                    <SvgXml xml={dummyUser} height={s(75)} width={s(75)} style={{ borderColor: Colors.Border }} />
+                    :
+                    <Image
+                      source={{ uri: config.img_url3 + Details?.image }}
+                      style={{
+                        borderWidth: 2,
+                        borderColor: Colors.Border,
+                        width: s(75),
+                        height: s(75),
+                        borderRadius: s(75),
+                      }}
+                    />
+                }
+              </View>
+              <View
+                style={{
+                  width: "70%",
+                  // justifyContent:'center',
+                  alignSelf: "center",
+                  height: '100%',
+                  paddingTop: vs(3)
+                }} >
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xxlarge,
+                    color: Colors.detailTitles,
+                    alignSelf: 'flex-start'
+                  }}>
+                  {Details?.provider_name}
+                </Text>
+
+                {
+                  Details?.qualification ?
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        alignSelf: 'flex-start',
+                        color: Colors.lightGrey,
+                        marginTop: vs(2)
+                      }}>
+                      {Details?.qualification}
+                    </Text>
+                    :
+                    null
+                }
+                {
+                  Details?.speciality ?
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.small,
+                        alignSelf: 'flex-start',
+                        color: Colors.Blue,
+                        marginTop: vs(5)
+                      }}>
+                      {Details?.speciality}
+                    </Text>
+                    :
+                    null
+                }
+              </View>
+            </View>
+
+            {/* -------------------Experience Container-------------------- */}
+            <View style={styles.experienceContainer}>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2)
+                  }}>
+                  {selectedProvider.providerType === 'lab' ? LangProvider.ESTABLISHED[languageIndex] : LangProvider.Experience[languageIndex]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xlarge,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                    marginTop: vs(5)
+                  }}>
+                  {Details?.experience ? Details?.experience : '-'}
+                </Text>
+              </View>
+              <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.backgroundcolor }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {LangProvider.Bookings[languageIndex]}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.xlarge,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                    marginTop: vs(5),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {Details?.booking_count ? Details?.booking_count : '-'}
+                </Text>
+              </View>
+              <View style={{ flex: 1, }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.lightGrey,
+                    marginTop: vs(2),
+                    paddingHorizontal: s(15)
+                  }}>
+                  {LangProvider.Rating[languageIndex]}
+                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(15), marginTop: vs(5), }}>
+                  <SvgXml xml={GoldStar} height={s(14)} width={s(14)} style={{}} />
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xlarge,
+                      alignSelf: 'flex-start',
+                      color: Colors.detailTitles,
+                      marginLeft: s(5)
+                    }}>
+                    {Details?.avg_rating ? `${Details?.avg_rating}.0` : 'NA'}
+                  </Text>
+                </View>
+
+              </View>
+            </View>
+
+
+
+            {/* -------------------Desc Container-------------------- */}
+
+            {
+              Details?.description &&
+              <View style={styles.descContainer}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles,
+                  }}>
+                  {Details?.description}
+                </Text>
+              </View>
+            }
+          </View>
+
+
+          {
+            statesData.packagesList.length > 0 &&
+
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: Colors.White,
+                paddingHorizontal: s(11),
+                paddingVertical: vs(9),
+                marginTop: vs(7)
+              }}>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={statesData.packagesList}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ width: s(10) }}></View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        BookPackage(item, index)
+                      }}
+                      style={[
+                        {
+                          borderRadius: 10,
+                          width: (windowWidth * 40) / 100,
+                          backgroundColor: Colors.White,
+                        },
+                        item.status == true
+                          ? {
+                            borderColor: Colors.Theme,
+                            borderWidth: 1.5,
+                          }
+                          : { borderColor: Colors.Border, borderWidth: 1 },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          width: "100%",
+                          paddingVertical: (windowWidth * 1.5) / 100,
+                          paddingHorizontal: (windowWidth * 2) / 100,
+                          color: Colors.theme_color,
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 3.5) / 100,
+                          textAlign: "left",
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+
+                      <Text
+                        style={{
+                          paddingVertical: (windowWidth * 2) / 100,
+                          paddingHorizontal: (windowWidth * 2) / 100,
+                          fontFamily: Font.Regular,
+                          textAlign: "left",
+                          color: Colors.tablightcolo,
+                          fontSize: Font.sregulartext_size,
+                        }}
+                      >
+                        {item.test_count}
+                      </Text>
+                      <View
+                        style={{
+                          width: "90%",
+                          alignSelf: "center",
+                          backgroundColor: Colors.backgroundcolor,
+                          height: 1.5,
+                          marginTop: (windowWidth * 1) / 100,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          paddingVertical: (windowWidth * 2) / 100,
+                          paddingHorizontal: (windowWidth * 2) / 100,
+                          alignSelf: 'flex-start',
+                          fontFamily: Font.Medium,
+                          fontSize: (windowWidth * 4) / 100,
+                        }}
+                      >
+                        {item.price}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+
+
+          }
+
+
+          {/* ------------------Date Time--------------- */}
+          <View
+            style={{
+              width: "100%",
+              marginTop: vs(7),
+              paddingVertical: vs(9),
+              backgroundColor: Colors.White
+            }} >
+            <View style={{
+              borderBottomWidth: 1.5,
+              borderBottomColor: Colors.backgroundcolor,
+              paddingBottom: vs(5),
+              marginBottom: vs(5)
+            }}>
+
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "100%",
+                  alignSelf: "center",
+                  paddingHorizontal: s(11)
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.medium,
+                    width: "65%",
+                    // alignSelf: 'flex-start',
+                    textAlign: 'left',
+                    color: Colors.detailTitles
+                  }}
+                >
+                  {LangProvider.Appointmentschedule[languageIndex]}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "35%",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <View style={{ width: "20%", alignSelf: "center" }}>
+                    <Image
+                      style={{
+                        width: (windowWidth * 5) / 100,
+                        height: (windowWidth * 5) / 100,
+                        alignSelf: "center",
+                      }}
+                      source={Icons.Calendar}
+                    />
+                  </View>
+
+                  <Text
+                    style={{
+                      color: Colors.Theme,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.medium,
+                      alignSelf: "center",
+                      marginLeft: (windowWidth * 1) / 100,
+                      textAlign: "right",
+                    }}
+                  >
+                    {statesData.set_date}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View
+              style={{
+                width: "93%",
+                alignSelf: "center",
+                paddingBottom: (windowWidth * 3) / 100,
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
+                  alignSelf: 'flex-start',
+                  color: Colors.detailTitles,
+                }}
+              >
+                {LangProvider.SelectDate[languageIndex]}
+              </Text>
+
+              <View style={{ width: "100%" }}>
+                <FlatList
+                  horizontal={true}
+                  data={statesData.date_array}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setState({
+                            set_date: item.date1,
+                          })
+                          getTimeDate(item.date1, statesData.check_currentdate),
+                            checkDate(item, index)
+                        }}
+                        style={{ width: (windowWidth * 15) / 100, }}
+                      >
+                        <Text
+                          style={{
+                            marginRight: (windowWidth * 3) / 100,
+                            marginTop: (windowWidth * 3) / 100,
+                            backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                            color: item.tick == 1 ? Colors.White : Colors.Black,
+                            textAlign: "center",
+                            paddingVertical: (windowWidth * 2) / 100,
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            lineHeight: (windowWidth * 5) / 100,
+                          }}
+                        >
+                          {item.day}
+                          {"\n"}
+
+                          {item.datenew}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+
+            </View>
+
+            <View
+              style={{
+                width: "100%",
+                alignSelf: "center",
+                paddingTop: vs(7),
+                paddingHorizontal: s(11)
+              }}>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
+                  color: Colors.detailTitles,
+                  alignSelf: 'flex-start',
+                }}
+              >
+                {LangProvider.Select_start_time[languageIndex]}
+              </Text>
+
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                <View style={{ width: "100%", alignItems: "center" }}>
+
+                  <View style={{ width: "100%", alignItems: "center" }}>
+                    {statesData.time_Arr.length > 0 ? (
+                      <View
+                        style={{
+                          width: "100%",
+                          alignItems: "center",
+                        }}
+                      >
+                        <View style={{ width: "100%" }}>
+                          <FlatList
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            data={statesData.final_one}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setState({
+                                      selectedTime: item.time,
+                                    });
+                                  }}>
+                                  <Text
+                                    style={[
+                                      {
+                                        marginRight:
+                                          (windowWidth * 3) / 100,
+                                        marginTop:
+                                          (windowWidth * 3) / 100,
+
+                                        fontFamily:
+                                          Font.Regular,
+                                        fontSize: Font.small,
+                                        padding: (windowWidth * 2) / 100,
+                                        paddingHorizontal:
+                                          (windowWidth * 3.3) / 100,
+                                      },
+                                      item.time ==
+                                        statesData.selectedTime
+                                        ? {
+                                          backgroundColor:
+                                            Colors.Blue,
+                                          color: Colors.White,
+                                        }
+                                        : {
+                                          backgroundColor:
+                                            '#E5E5E5',
+                                          color: Colors.Black,
+                                        },
+                                    ]}
+                                  >
+                                    {item.time}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            }}
+                          />
+                        </View>
+                        <View style={{ width: "100%" }}>
+                          <FlatList
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            data={statesData.final_arr2}
+                            renderItem={({ item, index }) => {
+                              return (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setState({
+                                      selectedTime: item.time,
+                                    });
+                                  }}
+                                >
+                                  <Text
+                                    style={[
+                                      {
+                                        marginRight:
+                                          (windowWidth * 3) / 100,
+                                        marginTop:
+                                          (windowWidth * 3) / 100,
+
+                                        fontFamily:
+                                          Font.Regular,
+                                        fontSize:
+                                          Font.small,
+                                        padding: (windowWidth * 2) / 100,
+                                        paddingHorizontal:
+                                          (windowWidth * 3.3) / 100,
+                                      },
+                                      item.time ==
+                                        statesData.selectedTime
+                                        ? {
+                                          backgroundColor:
+                                            Colors.Blue,
+                                          color: Colors.White,
+                                        }
+                                        : {
+                                          backgroundColor:
+                                            '#E5E5E5',
+                                          color: Colors.Black,
+                                        },
+                                    ]}
+                                  >
+                                    {item.time}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            }}
+                          />
+                        </View>
+                      </View>
+                    ) :
+                      statesData.isLoadingDates ?
+                        (
+                          <View style={{ width: windowWidth, paddingVertical: (windowWidth * 3) / 100 }}>
+                            <SkypeIndicator color={Colors.Theme} size={20} />
+                          </View>
+                        ) : (
+                          <Text
+                            style={{
+                              fontFamily: Font.MediumItalic,
+                              fontSize: Font.medium,
+                              alignSelf: "center",
+                              paddingVertical: (windowWidth * 3) / 100,
+                              textAlign: "center",
+                              marginLeft: (windowWidth * 25) / 100,
+                            }}
+                          >
+                            {LangProvider.noTime[languageIndex]}
+                          </Text>
+                        )}
+                  </View>
+
+
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+
+          {/* Payment section */}
+          <View
+            style={{
+              width: "100%",
+              paddingVertical: vs(9),
+              marginTop: vs(7),
+              backgroundColor: Colors.White,
+              paddingHorizontal: s(11)
+            }} >
+
+            <Text
+              style={{
+                fontFamily: Font.Medium,
+                fontSize: Font.large,
+                color: Colors.Theme,
+                alignSelf: 'flex-start',
+              }}>
+              {LangProvider.Payment[languageIndex]}
+            </Text>
+            {statesData.selectedPackage != null && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  paddingTop: (windowWidth * 1.3) / 100,
+                  justifyContent: "space-between",
+                  alignSelf: "center",
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                    alignSelf: 'flex-start',
+                    width: '80%'
+                  }}>
+                  {statesData.selectedPackage.name}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                    width: "20%",
+                    textAlign: "right",
+                  }}>
+                  {statesData.selectedPackage.price}{" "}
+                  {statesData.currency_symbol}
+                </Text>
+              </View>
+
+            )}
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingVertical: (windowWidth * 2) / 100,
+                borderTopWidth: 1.5,
+                borderTopColor: Colors.backgroundcolor,
+                marginTop: (windowWidth * 2) / 100,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.small,
+                  color: Colors.detailTitles,
+                }}>
+                {`${Details?.distance_fare_text} ${Details?.distancetext == '' ? '' : `(${Details?.distancetext})`}`}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.small,
+                  color: Colors.detailTitles,
+                }}>
+                {`${(statesData.selectedPackage != null && statesData.selectedPackage != '') ? Details?.distance_fare : ''} ${statesData.currency_symbol}`}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingVertical: (windowWidth * 2) / 100,
+                borderTopWidth: 1.5,
+                borderTopColor: Colors.backgroundcolor,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Font.Medium,
+                  fontSize: Font.medium,
+                  color: Colors.Theme,
+                }}>
+                {LangProvider.subTotal[languageIndex]}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Medium,
+                  fontSize: Font.medium,
+                  color: Colors.Theme,
+                }}>
+                {`${(statesData.selectedPackage != null && statesData.selectedPackage != '') ? statesData.subTotal : ''} ${statesData.currency_symbol}`}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                borderColor: Colors.bordercolor,
+                marginBottom: (windowWidth * 2) / 100,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.small,
+                  color: Colors.detailTitles,
+                }}>
+                {Details?.vat_text}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.small,
+                  color: Colors.detailTitles,
+                }}>
+                {`${(statesData.selectedPackage != null && statesData.selectedPackage != '') ? statesData.vatPrice : ''} ${statesData.currency_symbol}`}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderTopWidth: 1.5,
+                borderTopColor: Colors.backgroundcolor,
+                marginBottom: (windowWidth * 2) / 100,
+                paddingTop: vs(5)
+              }}>
+              <Text
+                style={{
+                  fontFamily: Font.Medium,
+                  fontSize: Font.medium,
+                  color: Colors.Theme,
+                }}>
+                {LangProvider.Total[languageIndex]}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Medium,
+                  fontSize: Font.medium,
+                  color: Colors.Theme,
+                }}>
+                {(statesData.selectedPackage != null && statesData.selectedPackage != '') ? `${statesData.totalPrice} ${statesData.currency_symbol}` : `${statesData.currency_symbol}`}
+              </Text>
+            </View>
+
+          </View>
+
+        </ScrollView>
+
+        {/* ------------------Checkout------------- */}
+
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            backgroundColor: Colors.White,
+            paddingHorizontal: (windowWidth * 5) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
+            height: 80,
+            alignItems: "center",
+            paddingHorizontal: '10%',
+            borderTopWidth: 1,
+            borderTopColor: Colors.Border,
+          }}>
+
+          <View style={{ alignItems: 'flex-start' }}>
+            <Text
+              style={{
+                fontFamily: Font.Medium,
+                fontSize: Font.xxlarge,
+                color: Colors.Theme,
+              }}>
+              {(statesData.selectedPackage != null && statesData.selectedPackage != '') ? `${statesData.totalPrice} ${statesData.currency_symbol}` : `0 ${statesData.currency_symbol}`}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Font.Regular,
+                fontSize: Font.small,
+                color: Colors.detailTitles,
+              }}>
+              {LangProvider.Amount_Payable[languageIndex]}
+            </Text>
+          </View>
+
+          <Button
+            onLoading={statesData.isAddingToCart}
+            btnStyle={{ width: windowWidth / 2.5 }}
+            text={LangProvider.ProceedToPay[languageIndex]}
+            onPress={() => {
+              AddToCart()
+            }}
+          />
+
+        </View>
+      </View>
+
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+
+  infoContainer: {
+    paddingVertical: vs(11),
+    backgroundColor: Colors.White,
+    marginTop: vs(7),
+    zIndex: 999
+  },
+  experienceContainer: {
+    width: '100%',
+    paddingTop: vs(18),
+    flexDirection: 'row',
+    paddingHorizontal: s(11),
+    marginBottom: vs(7)
+  },
+  descContainer: {
+    borderTopWidth: 1.5,
+    borderTopColor: Colors.backgroundcolor,
+    paddingHorizontal: s(11),
+    paddingTop: vs(7)
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    marginTop: vs(11),
+    paddingHorizontal: s(11),
+  },
+});
+
+export default PackageBase;

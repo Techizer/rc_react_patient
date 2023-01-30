@@ -3,11 +3,7 @@ import {
   View,
   BackHandler,
   Alert,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
   Image,
-  TextInput,
   TouchableHighlight,
   Platform,
   Keyboard,
@@ -21,14 +17,11 @@ import {
   Font,
   config,
   windowWidth,
-  Lang_chg,
   apifuntion,
   msgProvider,
-  msgText,
-  consolepro,
-  StatusbarHeight,
+  LangProvider,
   Button
-} from "../Provider/utilslib/Utils";
+} from "../Provider/Utils/Utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
@@ -38,10 +31,9 @@ import { useSelector } from "react-redux";
 
 const ForgotOTP = ({ navigation, route }) => {
 
-  const { appLanguage, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { appLanguage, contentAlign,languageIndex } = useSelector(state => state.StorageReducer)
 
   const [forgotOtpData, setForgotOtpData] = useState({
-    languageIndex: appLanguage == 'ar' ? 1 : 0,
     email: route?.params?.email || '',
     password: "",
     otp: "",
@@ -53,16 +45,12 @@ const ForgotOTP = ({ navigation, route }) => {
   const insets = useSafeAreaInsets()
   
   useEffect(() => {
-    if (Platform.OS == 'android') {
-      navigation.addListener(
-        "blur",
-        (payload) =>
-          BackHandler.removeEventListener(
-            "hardwareBackPress",
-            handleBackPress()
-          )
-      );
-    }
+   
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    checkLocationPermission();
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
   }, [])
 
   const handleBackPress = () => {
@@ -94,12 +82,12 @@ const ForgotOTP = ({ navigation, route }) => {
     let regemail =
       /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (forgotOtpData.email == '' || forgotOtpData.email == null || forgotOtpData.email == undefined) {
-      msgProvider.showError(msgText.emptyEmail[forgotOtpData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyEmail[languageIndex]);
       return false;
     }
 
     if (regemail.test(forgotOtpData.email) !== true) {
-      msgProvider.showError(msgText.validEmail[forgotOtpData.languageIndex]);
+      msgProvider.showError(LangProvider.validEmail[languageIndex]);
       return false;
     }
     let url = config.baseURL + "api-forgot-password-email";
@@ -123,7 +111,7 @@ const ForgotOTP = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -131,11 +119,11 @@ const ForgotOTP = ({ navigation, route }) => {
     Keyboard.dismiss()
 
     if (forgotOtpData.password == '' || forgotOtpData.password == null || forgotOtpData.password == undefined) {
-      msgProvider.showError(msgText.emptyPasswordblank[forgotOtpData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyPasswordblank[languageIndex]);
       return false;
     }
     if (forgotOtpData.password.length < 8) {
-      msgProvider.showError(msgText.emptyPasswordValid[forgotOtpData.languageIndex]);
+      msgProvider.showError(LangProvider.emptyPasswordValid[languageIndex]);
       return false;
     }
 
@@ -151,11 +139,11 @@ const ForgotOTP = ({ navigation, route }) => {
     data.append("code", forgotOtpData.otp);
     data.append("password", forgotOtpData.password);
 
-    consolepro.consolelog("data", data);
+    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        // consolepro.consolelog("obj", obj);
+        // console.log("obj", obj);
         setForgotOtpData(prevState => ({
           ...prevState,
           isLoading: false
@@ -180,7 +168,7 @@ const ForgotOTP = ({ navigation, route }) => {
           ...prevState,
           isLoading: false
         }))
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -240,7 +228,7 @@ const ForgotOTP = ({ navigation, route }) => {
               alignSelf: 'flex-start',
               color: Colors.darkText
             }}>
-            {Lang_chg.otp[forgotOtpData.languageIndex]}
+            {LangProvider.otp[languageIndex]}
           </Text>
 
           <Text
@@ -251,7 +239,7 @@ const ForgotOTP = ({ navigation, route }) => {
               color: Colors.inActiveText,
               marginTop: vs(4)
             }}>
-            {Lang_chg.otptext[forgotOtpData.languageIndex]}
+            {LangProvider.otptext[languageIndex]}
           </Text>
 
           <View style={{ marginTop: vs(25) }}>
@@ -286,7 +274,7 @@ const ForgotOTP = ({ navigation, route }) => {
 
           <AuthInputBoxSec
             mainContainer={{ marginTop: vs(8), width: "100%", }}
-            lableText={Lang_chg.create_new_pass[forgotOtpData.languageIndex]}
+            lableText={LangProvider.create_new_pass[languageIndex]}
             inputRef={passRef}
             onChangeText={(val) => {
               setForgotOtpData(prevState => ({
@@ -323,11 +311,11 @@ const ForgotOTP = ({ navigation, route }) => {
               marginTop: vs(8)
             }}
           >
-            {Lang_chg.Signuptext3[forgotOtpData.languageIndex]}
+            {LangProvider.Signuptext3[languageIndex]}
           </Text>
 
           <Button
-            text={Lang_chg.submitbtntext[forgotOtpData.languageIndex]}
+            text={LangProvider.submitbtntext[languageIndex]}
             onPress={() => otpVerify()}
             btnStyle={{ marginTop: vs(30) }}
             onLoading={forgotOtpData.isLoading}
@@ -340,7 +328,7 @@ const ForgotOTP = ({ navigation, route }) => {
               color: Colors.DarkGrey,
               paddingVertical: vs(20)
             }}>
-            {Lang_chg.OtpTime[forgotOtpData.languageIndex]}
+            {LangProvider.OtpTime[languageIndex]}
           </Text>
         </View>
 
@@ -362,7 +350,7 @@ const ForgotOTP = ({ navigation, route }) => {
               fontFamily: Font.Regular,
               color: Colors.DarkGrey,
             }} >
-            {Lang_chg.notrectext[forgotOtpData.languageIndex]}
+            {LangProvider.notrectext[languageIndex]}
           </Text>
           <Text
             onPress={() => {
@@ -374,7 +362,7 @@ const ForgotOTP = ({ navigation, route }) => {
               fontFamily: Font.Medium,
               color: Colors.Blue,
             }}>
-            {Lang_chg.sendagaintext[forgotOtpData.languageIndex]}
+            {LangProvider.sendagaintext[languageIndex]}
           </Text>
         </View>
 

@@ -7,6 +7,7 @@ import {
     TouchableHighlight,
     Platform,
 } from "react-native";
+import { SkypeIndicator } from "react-native-indicators";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
     Colors,
@@ -15,10 +16,8 @@ import {
     windowHeight,
     windowWidth,
     deviceHeight,
-    StatusbarHeight,
-    Lang_chg,
-    localStorage,
-} from "../Provider/utilslib/Utils";
+    LangProvider,
+} from "../Provider/Utils/Utils";
 
 import { leftArrow, rightArrow, Notification, dummyUser, Icons, redNoti } from "../Icons/Index";
 import { SvgXml } from "react-native-svg";
@@ -41,16 +40,17 @@ export const ScreenHeader = ({
     rightIcon,
     leftIcon,
     defaultAddress,
+    isLoading
 }) => {
 
     const insets = useSafeAreaInsets()
 
 
-    const { appLanguage, notiCount, contentAlign, } = useSelector(state => state.StorageReducer)
+    const { appLanguage, notiCount, guest, } = useSelector(state => state.StorageReducer)
 
 
     return (
-        title != Lang_chg.Home[config.language] ?
+        title != LangProvider.Home[config.language] ?
             (
                 <View
                     style={{
@@ -74,11 +74,8 @@ export const ScreenHeader = ({
                             alignItems: "center",
                         }}>
                         {
-                            leftIcon ?
-                                <TouchableHighlight
-                                    underlayColor={Colors.Highlight}
-                                    activeOpacity={0.7}
-                                    onPress={onBackPress}
+                            (leftIcon && isLoading) ?
+                                <View
                                     style={{
                                         width: "14%",
                                         height: '100%',
@@ -86,14 +83,29 @@ export const ScreenHeader = ({
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     }} >
-                                    <SvgXml xml={
-                                        appLanguage == 'en' ?
-                                            leftArrow : rightArrow
-                                    } height={vs(17.11)} width={s(9.72)} fill={'red'} fillOpacity={1} />
-
-                                </TouchableHighlight>
+                                   <SkypeIndicator color={Colors.Theme} size={20} />
+                                </View>
                                 :
-                                <View style={{ width: '14%' }}></View>
+                                leftIcon ?
+                                    <TouchableHighlight
+                                        underlayColor={Colors.Highlight}
+                                        activeOpacity={0.7}
+                                        onPress={onBackPress}
+                                        style={{
+                                            width: "14%",
+                                            height: '100%',
+                                            alignSelf: "center",
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }} >
+                                        <SvgXml xml={
+                                            appLanguage == 'en' ?
+                                                leftArrow : rightArrow
+                                        } height={vs(17.11)} width={s(9.72)} fill={'red'} fillOpacity={1} />
+
+                                    </TouchableHighlight>
+                                    :
+                                    <View style={{ width: '14%' }}></View>
                         }
 
                         <View
@@ -188,7 +200,7 @@ export const ScreenHeader = ({
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                if (global.isLogin == true) {
+                                if (!guest) {
                                     navigation.navigate("ManageAddress");
                                 }
                             }}
@@ -202,7 +214,7 @@ export const ScreenHeader = ({
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
                                 }}>
-                                {Lang_chg.MyDashboard[appLanguage == 'ar' ? 1 : 0]}
+                                {LangProvider.MyDashboard[appLanguage == 'ar' ? 1 : 0]}
                             </Text>
                             <Image
                                 source={Icons.downarrow}
@@ -217,7 +229,7 @@ export const ScreenHeader = ({
                         {(defaultAddress != null && defaultAddress != "") ? (
                             <Text
                                 onPress={() => {
-                                    if (global.isLogin == true) {
+                                    if (!guest) {
                                         navigation.navigate("ManageAddress");
                                     }
                                 }}
