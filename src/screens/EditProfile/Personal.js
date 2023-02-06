@@ -456,7 +456,7 @@ const Personal = ({ navigation }) => {
                             <Text
                                 style={{
                                     alignSelf: 'flex-start',
-                                    fontSize: Font.textsize,
+                                    fontSize: Font.xsmall,
                                     fontFamily: Font.Regular,
                                     color: Colors.lightGrey,
                                     marginTop: vs(8)
@@ -544,7 +544,7 @@ const Personal = ({ navigation }) => {
                     {/* ------------------------- */}
 
 
-                    <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(12), }}>
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(12), }}>
 
                         <Text
                             style={{
@@ -559,7 +559,7 @@ const Personal = ({ navigation }) => {
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal
-                            data={['Male', 'Female']}
+                            data={languageIndex==0?['Male', 'Female']:['ذكر','أنثى']}
                             ItemSeparatorComponent={() => {
                                 return (
                                     <View style={{ width: s(25) }} />
@@ -677,7 +677,7 @@ const Personal = ({ navigation }) => {
                     {/* ------------------------- */}
 
                     <AuthInputBoxSec
-                        mainContainer={{ marginTop: vs(8), width: '100%' }}
+                        mainContainer={{ marginTop: vs(10), width: '100%' }}
                         lableText={LangProvider.textinputidentity[languageIndex]}
                         inputRef={(ref) => {
                             this.nameInput = ref;

@@ -305,7 +305,7 @@ const ForgotOTP = ({ navigation, route }) => {
           <Text
             style={{
               alignSelf: 'flex-start',
-              fontSize: Font.textsize,
+              fontSize: Font.xsmall,
               fontFamily: Font.Regular,
               color: Colors.lightGrey,
               marginTop: vs(8)

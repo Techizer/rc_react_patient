@@ -17,6 +17,7 @@ import {
     windowWidth,
     deviceHeight,
     LangProvider,
+    StatusbarHeight,
 } from "../Provider/Utils/Utils";
 
 import { leftArrow, rightArrow, Notification, dummyUser, Icons, redNoti } from "../Icons/Index";
@@ -46,7 +47,7 @@ export const ScreenHeader = ({
     const insets = useSafeAreaInsets()
 
 
-    const { appLanguage, notiCount, guest, } = useSelector(state => state.StorageReducer)
+    const { languageIndex, notiCount, guest, } = useSelector(state => state.StorageReducer)
 
 
     return (
@@ -55,16 +56,14 @@ export const ScreenHeader = ({
                 <View
                     style={{
                         width: windowWidth,
-                        // height: headerHeight + StatusbarHeight,
-                        // paddingTop: StatusbarHeight + 10,
-                        height: (windowWidth * 23) / 100,
+                        height: (windowWidth * 25) / 100,
                         // height: headerHeight + insets,
                         paddingTop: insets.top,
+                        paddingBottom: (windowWidth * 0.5) / 100,
                         backgroundColor: Colors.White,
                         borderBottomWidth: 0.9,
                         borderBottomColor: Colors.Border
-                    }}
-                >
+                    }}>
                     <View
                         style={{
                             flexDirection: "row",
@@ -83,7 +82,7 @@ export const ScreenHeader = ({
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     }} >
-                                   <SkypeIndicator color={Colors.Theme} size={20} />
+                                    <SkypeIndicator color={Colors.Theme} size={20} />
                                 </View>
                                 :
                                 leftIcon ?
@@ -99,7 +98,7 @@ export const ScreenHeader = ({
                                             alignItems: 'center',
                                         }} >
                                         <SvgXml xml={
-                                            appLanguage == 'en' ?
+                                            languageIndex == 0 ?
                                                 leftArrow : rightArrow
                                         } height={vs(17.11)} width={s(9.72)} fill={'red'} fillOpacity={1} />
 
@@ -149,8 +148,10 @@ export const ScreenHeader = ({
                 width: windowWidth,
                 // height: headerHeight + StatusbarHeight,
                 // paddingTop: StatusbarHeight + 10,
-                height: (windowWidth * 23) / 100,
-                paddingTop: (windowWidth * 10) / 100,
+                height: (windowWidth * 25) / 100,
+                paddingTop: insets.top,
+                paddingBottom: (windowWidth * 0.5) / 100,
+                // paddingTop: (windowWidth * 10) / 100,
                 backgroundColor: Colors.White,
                 borderBottomWidth: 0.9,
                 borderBottomColor: Colors.Border
@@ -214,7 +215,7 @@ export const ScreenHeader = ({
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
                                 }}>
-                                {LangProvider.MyDashboard[appLanguage == 'ar' ? 1 : 0]}
+                                {LangProvider.MyDashboard[languageIndex]}
                             </Text>
                             <Image
                                 source={Icons.downarrow}

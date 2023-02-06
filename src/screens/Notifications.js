@@ -262,7 +262,7 @@ const Notifications = ({ navigation }) => {
                           <Text
                             style={{
                               fontFamily: Font.Regular,
-                              fontSize: Font.sregulartext_size,
+                              fontSize: Font.small,
                               lineHeight: (windowWidth * 4.2) / 100,
                               alignSelf: 'flex-start',
                               textAlign: 'left',
@@ -284,7 +284,7 @@ const Notifications = ({ navigation }) => {
                             <Text
                               style={{
                                 fontFamily: Font.Regular,
-                                fontSize: Font.sregulartext_size,
+                                fontSize: Font.small,
                                 color: Colors.lightGrey,
                               }}
                             >

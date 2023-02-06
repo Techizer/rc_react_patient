@@ -9,17 +9,17 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Platform, BackHandler, AppState
+  Platforms
 } from "react-native";
 import {
   Colors,
   Font,
   config,
   windowWidth,
-  localStorage,
   Icons,
   LangProvider,
   apifuntion,
+  msgProvider,
 } from "../Provider/Utils/Utils";
 
 import { s, vs } from "react-native-size-matters"
@@ -30,7 +30,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { Notifications } from "../Redux/Actions";
+import { IsLanguageUpdated, Notifications } from "../Redux/Actions";
 import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -49,8 +49,8 @@ const HomeHealthcareServiceAppointments = [
     img: Icons.Physiotherapist,
     title: "Book a Physiotherapist ",
     arabic_title: "حجز علاج طبيعي اخصائي علاج طبيعي",
-    details: "For 30 mins",
-    arabic_details: "لمدة 30 دقيقة",
+    details: "For 60 mins",
+    arabic_details: "لمدة 60 دقيقة",
     pass_status: "physiotherapy",
   },
   {
@@ -64,9 +64,9 @@ const HomeHealthcareServiceAppointments = [
   },
   {
     id: 4,
-    img: Icons.Babysitter,
-    title: "Book a Babysitter",
-    arabic_title: "حجز جليسة أطفال",
+    img: Icons.BabyCare,
+    title: "Book a Baby Care",
+    arabic_title: "عناية الطفل",
     pass_status: "babysitter",
     details: "Available 2,4,6,8 hrs",
     arabic_details: "متاح 8،6،4،2 ساعة  ",
@@ -114,7 +114,13 @@ const LabTest = [
 
 const Home = ({ navigation }) => {
 
-  const { address, loggedInUserDetails, guest, appLanguage, languageIndex, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+  const {
+    address,
+    loggedInUserDetails,
+    guest,
+    appLanguage,
+    languageIndex,
+    isLanguageUpdated, } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [homeData, setHomeData] = useState({
     profileImg: "",
@@ -127,8 +133,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     // console.log(address.address);
     // console.log(loggedInUserDetails);
-
-
+    // console.log(isLanguageUpdated);
     setTimeout(() => {
       setHomeData(prevState => ({
         ...prevState,
@@ -138,14 +143,21 @@ const Home = ({ navigation }) => {
     if (guest == false) {
       getNotificationCount();
       getTopBanners()
+      CartId()
     }
-    RemoveCart()
+    if (isLanguageUpdated) {
+      UpdateLanguage()
+    }
   }, [])
 
-
-
-  const RemoveCart = async (type) => {
+  const CartId = async () => {
     let Id = await AsyncStorage.getItem('cartId')
+    if (Id != null) {
+      RemoveCart(Id)
+    }
+  };
+
+  const RemoveCart = async (Id) => {
     let url = config.baseURL + "api-patient-remove-cart";
     var data = new FormData();
     data.append("cart_id", Id);
@@ -209,6 +221,28 @@ const Home = ({ navigation }) => {
       });
   };
 
+  const UpdateLanguage = async (language) => {
+    let url = config.baseURL + "api-language-update";
+    var data = new FormData();
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
+    console.log(data);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        console.log("UpdateLanguage", obj);
+        if (obj.status == true) {
+          dispatch(IsLanguageUpdated(false))
+        } else {
+          msgProvider.showError(obj.message)
+          return false;
+        }
+      }).catch((error) => {
+        msgProvider.showError(error)
+        console.log("UpdateLanguage-error ------- " + error);
+      });
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={Styles.container3}>
@@ -219,7 +253,7 @@ const Home = ({ navigation }) => {
           // title={LangProvider.Home[languageIndex]}
           leftIcon={loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : ''}
           rightIcon={!guest}
-          defaultAddress={address.address}
+          defaultAddress={address?.address}
         />
 
         <ScrollView
@@ -542,199 +576,6 @@ const Home = ({ navigation }) => {
   );
 
 }
-const styles_new = StyleSheet.create({
-
-  icons: {
-    width: (windowWidth * 13) / 100,
-    height: (windowWidth * 13) / 100,
-    borderRadius: (windowWidth * 5) / 50,
-  },
-  notebox: {
-    backgroundColor: "#fff",
-    padding: (windowWidth * 4) / 100,
-    marginTop: (windowWidth * 2) / 100,
-    borderRadius: (windowWidth * 2) / 100,
-  },
-  noteboxtxt: {
-    fontFamily: Font.Regular,
-    lineHeight: (windowWidth * 5) / 100,
-  },
-  notecard: {
-    paddingTop: (windowWidth * 3) / 100,
-  },
-  checkboxcontainer: {
-    paddingTop: (windowWidth * 3) / 100,
-  },
-  allcheckbox: {
-    width: "93%",
-    alignSelf: "flex-end",
-  },
-
-  checkboxview: {
-    // paddingVertical: (windowWidth * 1.5) / 100,
-
-    alignItems: "center",
-    alignSelf: "center",
-    // backgroundColor: 'red',
-    paddingVertical: (windowWidth * 1.3) / 100,
-    flexDirection: "row",
-    // alignItems: 'center',
-    justifyContent: "space-between",
-  },
-  checkboximg: {
-    width: (windowWidth * 7) / 100,
-    height: (windowWidth * 7) / 100,
-    borderRadius: (windowWidth * 0.4) / 100,
-    marginRight: (windowWidth * 2) / 100,
-    resizeMode: "contain",
-    alignSelf: "flex-start",
-    flex: 0.1,
-  },
-  uncheckboximg: {
-    resizeMode: "contain",
-    width: (windowWidth * 6) / 100,
-    height: (windowWidth * 6) / 100,
-    borderRadius: (windowWidth * 0.4) / 100,
-    marginRight: (windowWidth * 2.9) / 100,
-    marginLeft: (windowWidth * 0.6) / 100,
-    flex: 0.1,
-  },
-  checkboxtext: {
-    color: "#666666",
-    fontSize: Font.smalltextsize,
-    fontFamily: Font.Bold,
-    // fontSize: Font.smalltextsize,
-    fontFamily: Font.Bold,
-    flex: 0.88,
-  },
-  buttonstyle: {
-    width: "70%",
-    alignSelf: "center",
-    marginVertical: (windowWidth * 9) / 100,
-  },
-  buttontext: {
-    paddingVertical: (windowWidth * 3) / 100,
-    paddingHorizontal: (windowWidth * 3) / 100,
-    borderRadius: (windowWidth * 2) / 100,
-    textAlign: "center",
-    backgroundColor: "#4C94DB",
-    textAlign: "center",
-    color: Colors.whiteColor,
-    fontFamily: Font.ExtraBold,
-    fontSize: (windowWidth * 4.2) / 100,
-  },
-
-  profilecontainer: {
-    marginVertical: (windowWidth * 1.2) / 100,
-  },
-  profileinfo: {
-    backgroundColor: "#fff",
-    marginVertical: (windowWidth * 1.2) / 100,
-    padding: (windowWidth * 3) / 100,
-    borderRadius: (windowWidth * 1) / 100,
-  },
-  profileinfowithimg: {
-    alignItems: "center",
-    flexDirection: "row",
-    alignSelf: "center",
-    backgroundColor: "#fff",
-    marginVertical: (windowWidth * 1.2) / 100,
-    padding: (windowWidth * 3) / 100,
-    paddingVertical: (windowWidth * 2) / 100,
-    borderRadius: (windowWidth * 1) / 100,
-    // backgroundColor: 'red',
-  },
-  infoimgicon: {
-    resizeMode: "contain",
-    width: (windowWidth * 8) / 100,
-    height: (windowWidth * 8) / 100,
-    borderRadius: (windowWidth * 10) / 100,
-    marginRight: (windowWidth * 2) / 100,
-    alignSelf: "center",
-  },
-  infosmalltext: {
-    // width: '90%',
-    // alignSelf: 'flex-end',
-    alignSelf: "center",
-    fontSize: Font.ssregulartext_size,
-    fontFamily: Font.Light,
-    // backgroundColor: 'red',
-    // color: Colors.gray3,
-    // color: 'red',
-    flex: 0.86,
-  },
-
-  notes: {},
-
-  icons: {
-    width: (windowWidth * 13) / 100,
-    height: (windowWidth * 13) / 100,
-    borderRadius: (windowWidth * 5) / 50,
-  },
-  notebox: {
-    backgroundColor: "#fff",
-    padding: (windowWidth * 6) / 100,
-    marginTop: (windowWidth * 2) / 100,
-    borderRadius: (windowWidth * 2) / 100,
-  },
-  noteboxtxt: {
-    fontFamily: Font.Bold,
-    fontSize: (windowWidth * 3.8) / 100,
-    lineHeight: (windowWidth * 5) / 100,
-  },
-  notecard: {
-    paddingTop: (windowWidth * 3) / 100,
-  },
-  checkboxcontainer: {
-    paddingTop: (windowWidth * 3) / 100,
-  },
-
-  notecardheading: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  addoptioncontainer: { marginTop: (windowWidth * 9) / 100 },
-
-  imgboxcontainer: {
-    borderRadius: (windowWidth * 1) / 100,
-  },
-  imgbox: {
-    height: (windowWidth * 30) / 100,
-    width: (windowWidth * 39) / 100,
-    padding: (windowWidth * 2) / 100,
-    borderWidth: (windowWidth * 0.6) / 100,
-    borderRadius: (windowWidth * 3) / 100,
-    borderColor: Colors.gainsboro,
-    overflow: "hidden",
-    marginRight: (windowWidth * 4) / 100,
-    marginBottom: (windowWidth * 4) / 100,
-  },
-  imgboxstyle: { borderRadius: (windowWidth * 3) / 100 },
-  insideview: {
-    marginTop: (windowWidth * 2) / 100,
-  },
-  insideviewtext: {
-    alignSelf: "flex-end",
-    fontFamily: Font.ExtraBold,
-    fontSize: Font.bigheadingfont,
-    color: "#4B4B4B",
-    marginRight: (windowWidth * 0.2) / 100,
-  },
-  insideviewimg: {
-    alignSelf: "center",
-    height: (windowWidth * 8.5) / 100,
-    width: (windowWidth * 8.2) / 100,
-    alignSelf: "center",
-    marginBottom: (windowWidth * 2.5) / 100,
-    resizeMode: "center",
-  },
-  insideviewname: {
-    alignSelf: "center",
-    fontFamily: Font.ExtraBold,
-    fontSize: Font.mini,
-    color: "#4B4B4B",
-  },
-});
 
 
 export default Home;

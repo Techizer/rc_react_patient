@@ -482,10 +482,11 @@ const Signup = ({ navigation }) => {
               <Text
                 style={{
                   textAlign: contentAlign,
-                  fontSize: Font.textsize,
-                  fontFamily: Font.headingfontfamily,
+                  fontSize: Font.xsmall,
+                  fontFamily: Font.Regular,
                   color: Colors.lightGrey,
-                  marginTop: vs(8)
+                  marginTop: vs(8),
+                  alignSelf:'flex-start'
                 }}>
                 {LangProvider.mobletexttitle[languageIndex]}
               </Text>
@@ -526,10 +527,11 @@ const Signup = ({ navigation }) => {
             <Text
               style={{
                 textAlign: contentAlign,
-                fontSize: Font.textsize,
-                fontFamily: Font.headingfontfamily,
+                fontSize: Font.xsmall,
+                fontFamily: Font.Regular,
                 color: Colors.lightGrey,
-                marginTop: vs(8)
+                marginTop: vs(8),
+                alignSelf:'flex-start'
               }}
             >
               {LangProvider.ProvideUAE[languageIndex]}
@@ -538,10 +540,11 @@ const Signup = ({ navigation }) => {
             <Text
               style={{
                 textAlign: contentAlign,
-                fontSize: Font.textsize,
-                fontFamily: Font.headingfontfamily,
+                fontSize: Font.xsmall,
+                fontFamily: Font.Regular,
                 color: Colors.lightGrey,
-                marginTop: vs(8)
+                marginTop: vs(8),
+                alignSelf:'flex-start'
               }}
             >
               {LangProvider.Signuptext2[languageIndex]}
@@ -586,10 +589,11 @@ const Signup = ({ navigation }) => {
           <Text
             style={{
               textAlign: contentAlign,
-              fontSize: Font.textsize,
-              fontFamily: Font.headingfontfamily,
+              fontSize: Font.xsmall,
+              fontFamily: Font.Regular,
               color: Colors.lightGrey,
-              marginTop: vs(8)
+              marginTop: vs(8),
+              alignSelf:'flex-start'
             }}
           >
             {LangProvider.Signuptext3[languageIndex]}
@@ -635,10 +639,11 @@ const Signup = ({ navigation }) => {
           <Text
             style={{
               textAlign: contentAlign,
-              fontSize: Font.textsize,
-              fontFamily: Font.headingfontfamily,
+              fontSize: Font.xsmall,
+              fontFamily: Font.Regular,
               color: Colors.lightGrey,
-              marginTop: vs(8)
+              marginTop: vs(8),
+              alignSelf:'flex-start'
             }}
           >
             {LangProvider.Signuptext4[languageIndex]}

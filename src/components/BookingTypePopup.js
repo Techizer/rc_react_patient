@@ -19,18 +19,37 @@ const BookingTypePopup = ({
     onselect = () => { },
     data
 }) => {
+    // console.log('./././././',data);
     const { languageIndex } = useSelector(state => state.StorageReducer)
-    let isBtnOne = false;
-    let isBtnTwo = false;
+    const [isBtnOneDisable, setIsBtnOneDisable] = useState(false)
+    const [isBtnTwoDisable, setIsBtnTwoDisable] = useState(false)
     useEffect(() => {
         if (providerType == 'nurse') {
-            isBtnOne = data?.task_base_enable == '0' ? false : true
-            isBtnTwo = data?.hour_base_enable == '0' ? false : true
+            if (data?.task_base_enable == '0') {
+                setIsBtnOneDisable(false)
+            } else {
+                setIsBtnOneDisable(true)
+            }
+            if (data?.hour_base_enable == '0') {
+                setIsBtnTwoDisable(false)
+            } else {
+                setIsBtnTwoDisable(true)
+            }
         } else {
-            isBtnOne = data?.taskbase_enable == '0' ? false : true
-            isBtnTwo = data?.packagebase_enable == '0' ? false : true
+            if (data?.taskbase_enable == '0') {
+                setIsBtnOneDisable(false)
+            } else {
+                setIsBtnOneDisable(true)
+            }
+            if (data?.packagebase_enable == '0') {
+                setIsBtnTwoDisable(false)
+            } else {
+                setIsBtnTwoDisable(true)
+            }
         }
-    }, [])
+    }, [providerType])
+
+
     return (
         <Modal
             isVisible={visible}
@@ -73,7 +92,7 @@ const BookingTypePopup = ({
                         providerType == 'nurse' ? onselect('task') : onselect('test')
                     }}
                     btnStyle={{ marginTop: vs(15) }}
-                    disable={isBtnOne}
+                    disable={isBtnOneDisable}
                 />
 
                 <Button
@@ -82,7 +101,7 @@ const BookingTypePopup = ({
                         providerType == 'nurse' ? onselect('hour') : onselect('package')
                     }}
                     btnStyle={{ marginTop: vs(15) }}
-                    disable={isBtnTwo}
+                    disable={isBtnTwoDisable}
                 />
 
             </View>

@@ -253,8 +253,8 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
-                                marginBottom: vs(9)
+                                marginBottom: vs(9),
+                                alignSelf:'flex-start'
                             }} >
                             {LangProvider.allergies[languageIndex]}
                         </Text>
@@ -278,17 +278,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q1[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%',flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -301,7 +301,7 @@ const Medical = () => {
                                                     setMedicalDetails(prevState => ({ ...prevState, Allergic: index }))
                                                     if (index === 1) setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
                                                 }}
-                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                style={{ flexDirection: 'row', alignItems: 'center'}}>
 
                                                 <View
                                                     style={{
@@ -317,7 +317,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 
@@ -372,7 +371,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
+                                alignSelf:'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.current[languageIndex]}
@@ -397,17 +396,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q2[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -436,7 +435,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 
@@ -491,7 +489,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
+                                alignSelf:'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.pastmedication[languageIndex]}
@@ -516,17 +514,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q3[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -555,7 +553,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 
@@ -610,7 +607,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
+                                alignSelf:'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.injuries[languageIndex]}
@@ -635,17 +632,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q4[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -674,7 +671,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 
@@ -729,7 +725,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
+                                alignSelf:'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.surgeries[languageIndex]}
@@ -754,17 +750,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q5[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -792,7 +788,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 
@@ -847,7 +842,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                textAlign: config.textRotate,
+                                alignSelf:'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.chronic[languageIndex]}
@@ -872,17 +867,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    textAlign: config.textRotate,
+                                    alignSelf:'flex-start'
                                 }}>
                                 {LangProvider.q6[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={['Yes', 'No']}
+                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -911,7 +906,6 @@ const Medical = () => {
                                                     style={{
                                                         fontSize: Font.small,
                                                         fontFamily: Font.Regular,
-                                                        textAlign: config.textRotate,
                                                         color: Colors.darkText,
                                                         marginLeft: s(8)
 

@@ -3,13 +3,7 @@ import base64 from "react-native-base64";
 
 
 class configProvider {
-  // aws production url
-  // baseURL = "https://production.rootscare.net/";
-  // img_url = "https://production.rootscare.net/images/200X200/";
-  // img_url1 = "https://production.rootscare.net/images/400X400/";
-  // img_url2 = "https://production.rootscare.net/images/700X700/";
-  // img_url3 = "https://production.rootscare.net/uploads/images/";
-
+ 
   // Testing url
   baseURL = "https://teq-dev-var19.co.in/rootscare/";
   img_url = "http://teq-dev-var19.co.in/rootscare/images/200X200/";

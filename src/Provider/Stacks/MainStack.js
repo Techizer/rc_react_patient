@@ -17,7 +17,6 @@ import AllServiceProviderListing from '../../screens/AllServiceProviderListing';
 import SupportandMore from '../../screens/SupportandMore';
 import EditProfile from '../../screens/EditProfile/Index';
 import FindAddress from '../../screens/FindAddress';
-import Booking from '../../screens/Booking';
 import ServiceProviderDetails from '../../screens/ServiceProviderDetails';
 import LabPackageListing from '../../screens/LabPackageListing';
 import LabPackageDetails from '../../screens/LabPackageDetails';
@@ -34,7 +33,6 @@ import { onLogout } from '../../Redux/Actions';
 import TabbyPayment from '../../screens/TabbyPayment';
 
 
-let isGuest = '';
 const Stack = createStackNavigator()
 
 const MainStack = () => {
@@ -308,11 +306,6 @@ const MainStack = () => {
                 <Stack.Screen
                     name="FindAddress"
                     component={FindAddress}
-                />
-
-                <Stack.Screen
-                    name="Booking"
-                    component={Booking}
                 />
 
                 <Stack.Screen

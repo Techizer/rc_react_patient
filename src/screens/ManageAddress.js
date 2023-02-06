@@ -91,10 +91,9 @@ const ManageAddress = ({ navigation }) => {
           ListHeaderComponent={() => {
             return (
               <View
-                style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', paddingBottom: vs(20) }}>
+                style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', paddingBottom: addressList.length > 0 ? vs(20) : 0 }}>
 
-                <View style={{ width: '9%' }} />
-                <View style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text
                     style={{
                       alignSelf: 'flex-start',

@@ -22,7 +22,8 @@ import {
     SELECTED_PROVIDER,
     LANGUAGE_INDEX,
     CART,
-    TABBY_PAYMENT
+    TABBY_PAYMENT,
+    LANGUAGE_UPDATED
 } from './Types';
 
 const initialState = {
@@ -47,7 +48,8 @@ const initialState = {
     todayLabTests: null,
     selectedProvider: null,
     cart: -1,
-    tabbyPayment:false
+    tabbyPayment: false,
+    isLanguageUpdated:false
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -65,7 +67,8 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 address: action.payload.address,
                 credentials: action.payload.credentials,
                 rememberMe: action.payload.rememberMe,
-                languageIndex: action.payload.languageIndex
+                languageIndex: action.payload.languageIndex,
+                isLanguageUpdated:action.payload.isLanguageUpdated
             }
 
         case HAS_SESSION:
@@ -162,6 +165,11 @@ export const ReducerCases = (state = initialState, action = {}) => {
             return {
                 ...state,
                 appLanguage: action.payload,
+            };
+        case LANGUAGE_UPDATED:
+            return {
+                ...state,
+                isLanguageUpdated: action.payload,
             };
         case LANGUAGE_INDEX:
             return {

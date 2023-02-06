@@ -1880,7 +1880,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   <Text
                     style={{
                       fontFamily: Font.Medium,
-                      fontSize: Font.regulartext_size,
+                      fontSize: Font.medium,
                       color: Colors.Theme,
                       alignSelf: 'flex-start',
                       paddingBottom: (windowWidth * 4) / 100,
@@ -3055,7 +3055,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                   paddingVertical: (windowWidth * 2) / 100,
                                   fontFamily: Font.Medium,
                                   textAlign: "center",
-                                  fontSize: Font.sregulartext_size,
+                                  fontSize: Font.small,
                                 }}
                               >
                                 {item.price}
@@ -3082,7 +3082,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.name,
+                        fontSize: Font.medium,
                         alignSelf: 'flex-start',
                       }}
                     >
@@ -3106,7 +3106,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         style={{
                           color: Colors.Theme,
                           fontFamily: Font.Medium,
-                          fontSize: Font.name,
+                          fontSize: Font.medium,
                           marginLeft: (windowWidth * 1) / 100,
                         }}
                       >
@@ -3135,7 +3135,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: Font.Regular,
-                        fontSize: Font.subtext,
+                        fontSize: Font.medium,
                         alignSelf: 'flex-start',
                         color: "#000",
                       }}
@@ -3174,8 +3174,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                   color: item.tick == 1 ? Colors.White : Colors.Black,
                                   textAlign: "center",
                                   paddingVertical: (windowWidth * 2) / 100,
-                                  fontFamily: Font.ques_fontfamily,
-                                  fontSize: Font.sregulartext_size,
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.small,
 
                                   lineHeight: (windowWidth * 5) / 100,
                                 }}
@@ -3212,7 +3212,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     <Text
                       style={{
                         fontFamily: Font.Regular,
-                        fontSize: Font.subtext,
+                        fontSize: Font.medium,
                         alignSelf: 'flex-start',
                       }}
                     >
@@ -3247,9 +3247,9 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                             marginTop: (windowWidth * 3) / 100,
 
                                             fontFamily:
-                                              Font.ques_fontfamily,
+                                              Font.Regular,
                                             fontSize:
-                                              Font.sregulartext_size,
+                                              Font.small,
                                             padding: (windowWidth * 2) / 100,
                                             paddingHorizontal:
                                               (windowWidth * 3.3) / 100,
@@ -3297,9 +3297,9 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                             marginTop: (windowWidth * 3) / 100,
 
                                             fontFamily:
-                                              Font.ques_fontfamily,
+                                              Font.Regular,
                                             fontSize:
-                                              Font.sregulartext_size,
+                                              Font.small,
                                             padding: (windowWidth * 2) / 100,
                                             paddingHorizontal:
                                               (windowWidth * 3.3) / 100,

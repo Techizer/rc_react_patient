@@ -781,7 +781,7 @@ const PackageBase = ({ navigation, route }) => {
                           fontFamily: Font.Regular,
                           textAlign: "left",
                           color: Colors.tablightcolo,
-                          fontSize: Font.sregulartext_size,
+                          fontSize: Font.small,
                         }}
                       >
                         {item.test_count}

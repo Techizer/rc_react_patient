@@ -28,25 +28,6 @@ const FindAddress = ({ navigation }) => {
     })
     const [isLoading, setIsLoading] = useState(false)
 
-    const getUserCountry = async () => {
-
-
-        if (loggedInUserDetails?.work_area === 'UAE') {
-            setAddressData(prevState => ({
-                ...prevState,
-                country: 'AE'
-            }))
-        } else if (loggedInUserDetails.work_area === 'Saudi Arabia') {
-            setAddressData(prevState => ({
-                ...prevState,
-                country: 'SA'
-            }))
-        }
-
-    }
-    useEffect(() => {
-        getUserCountry()
-    }, [])
 
     const checkLocationPermission = () => {
         check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_WHEN_IN_USE || PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
@@ -255,7 +236,7 @@ const FindAddress = ({ navigation }) => {
 
                         key: config.mapkey,
                         language: config.maplanguage,
-                        components: `country:${addressData?.country}`
+                        components: `country:${loggedInUserDetails?.work_area === 'UAE' ? 'AE':'SA'}`
 
                     }}
                     styles={{

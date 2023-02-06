@@ -446,7 +446,7 @@ const RescheduleBottomSheet = ({
                                                             paddingVertical: (windowWidth * 2) / 100,
                                                             fontFamily: Font.Medium,
                                                             textAlign: "center",
-                                                            fontSize: Font.sregulartext_size,
+                                                            fontSize: Font.small,
                                                         }}
                                                     >
                                                         {item.price}
@@ -475,7 +475,7 @@ const RescheduleBottomSheet = ({
                                 <Text
                                     style={{
                                         fontFamily: Font.Medium,
-                                        fontSize: Font.name,
+                                        fontSize: Font.medium,
                                         textAlign: config.textRotate,
                                     }}
                                 >
@@ -499,7 +499,7 @@ const RescheduleBottomSheet = ({
                                         style={{
                                             color: Colors.Theme,
                                             fontFamily: Font.Medium,
-                                            fontSize: Font.name,
+                                            fontSize: Font.medium,
                                             marginLeft: (windowWidth * 1) / 100,
                                         }}
                                     >
@@ -527,7 +527,7 @@ const RescheduleBottomSheet = ({
                                 <Text
                                     style={{
                                         fontFamily: Font.Regular,
-                                        fontSize: Font.subtext,
+                                        fontSize: Font.medium,
                                         color: "#000",
                                         textAlign: config.textRotate,
                                     }}
@@ -563,8 +563,8 @@ const RescheduleBottomSheet = ({
                                                             color: item.tick == 1 ? "White" : "black",
                                                             textAlign: "center",
                                                             paddingVertical: (windowWidth * 2) / 100,
-                                                            fontFamily: Font.ques_fontfamily,
-                                                            fontSize: Font.sregulartext_size,
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.small,
 
                                                             lineHeight: (windowWidth * 5) / 100,
                                                         }}
@@ -601,7 +601,7 @@ const RescheduleBottomSheet = ({
                                 <Text
                                     style={{
                                         fontFamily: Font.Regular,
-                                        fontSize: Font.subtext,
+                                        fontSize: Font.medium,
                                         textAlign: config.textRotate,
                                     }}
                                 >
@@ -636,8 +636,8 @@ const RescheduleBottomSheet = ({
                                                                                 marginRight: (windowWidth * 3) / 100,
                                                                                 marginTop: (windowWidth * 3) / 100,
 
-                                                                                fontFamily: Font.ques_fontfamily,
-                                                                                fontSize: Font.sregulartext_size,
+                                                                                fontFamily: Font.Regular,
+                                                                                fontSize: Font.small,
                                                                                 padding: (windowWidth * 2) / 100,
                                                                                 paddingHorizontal:
                                                                                     (windowWidth * 3.3) / 100,
@@ -682,8 +682,8 @@ const RescheduleBottomSheet = ({
                                                                                 marginRight: (windowWidth * 3) / 100,
                                                                                 marginTop: (windowWidth * 3) / 100,
 
-                                                                                fontFamily: Font.ques_fontfamily,
-                                                                                fontSize: Font.sregulartext_size,
+                                                                                fontFamily: Font.Regular,
+                                                                                fontSize: Font.small,
                                                                                 padding: (windowWidth * 2) / 100,
                                                                                 paddingHorizontal:
                                                                                     (windowWidth * 3.3) / 100,
@@ -744,7 +744,7 @@ const RescheduleBottomSheet = ({
                                     style={{
                                         color: Colors.White,
                                         fontFamily: Font.Medium,
-                                        fontSize: Font.subtext,
+                                        fontSize: Font.medium,
                                         alignSelf: "flex-end",
                                         textAlign: config.textalign,
                                         alignSelf: "center",

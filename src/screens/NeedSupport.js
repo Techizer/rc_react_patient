@@ -34,9 +34,9 @@ import { useSelector } from "react-redux";
 const NeedSupport = ({ navigation }) => {
 
   const {
-    appLanguage,
     languageIndex,
     loggedInUserDetails,
+    contentAlign
   } = useSelector(state => state.StorageReducer)
 
   const [needSupportData, setNeedSupportData] = useState({
@@ -63,10 +63,8 @@ const NeedSupport = ({ navigation }) => {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log("obj", obj);
         if (obj.status == true) {
-          console.log("result", obj.result);
-          let result = obj.result;
+          // console.log("result", obj.result);
           setNeedSupportData(prevState => ({
             ...prevState,
             issuesList: obj.result
@@ -206,6 +204,7 @@ const NeedSupport = ({ navigation }) => {
               fontSize: Font.medium,
               color: Colors.DarkGrey,
               fontFamily: Font.Regular,
+              textAlign:'left'
             }} >
             {LangProvider.need_text[languageIndex]}{" "}
           </Text>
@@ -251,7 +250,7 @@ const NeedSupport = ({ navigation }) => {
               borderRadius: 6,
               height: vs(125),
               paddingHorizontal: s(8),
-              paddingVertical: s(4),
+              paddingVertical: s(6),
             }}>
 
             <TextInput
@@ -262,6 +261,10 @@ const NeedSupport = ({ navigation }) => {
                 fontSize: Font.medium,
                 alignSelf: 'flex-start',
                 fontFamily: Font.Regular,
+                textAlign: contentAlign,
+                height: '100%',
+                paddingTop: 10
+
               }}
               maxLength={250}
               multiline={true}

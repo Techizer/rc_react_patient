@@ -27,6 +27,8 @@ import {
 import ListBottomSheet from "../../components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
+import { SvgXml } from "react-native-svg";
+import { rightArrow } from "../../Icons/Index";
 
 
 
@@ -198,7 +200,7 @@ const foodList = [
 
 const LifeStyle = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage ,languageIndex} = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [lifeStyleDetails, setLifeStyleDetails] = useState({
@@ -340,7 +342,7 @@ const LifeStyle = ({ navigation }) => {
     return (
         <View
             pointerEvents={lifeStyleDetails.isLoading ? 'none' : 'auto'}
-            style={{ flex: 1, backgroundColor: Colors.White,}}>
+            style={{ flex: 1, backgroundColor: Colors.White, }}>
 
             <KeyboardAwareScrollView
                 // keyboardOpeningTime={200}
@@ -409,12 +411,15 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -471,12 +476,15 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -533,12 +541,15 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -594,13 +605,16 @@ const LifeStyle = ({ navigation }) => {
                                 <View
                                     style={{
                                         width: "15%",
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        alignItems:'flex-end',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -657,12 +671,15 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -719,12 +736,15 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         alignItems: 'flex-end',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        paddingHorizontal:5
                                     }}>
-                                    <Image
-                                        source={Icons.downarrow}
-                                        style={{ height: 18, width: 18 }}
-                                    ></Image>
+                                    <SvgXml
+                                        xml={rightArrow}
+                                        height={vs(17.11)}
+                                        width={s(8)}
+                                        fillOpacity={1}
+                                        style={{ transform: [{ rotate: "90deg" }] }} />
                                 </View>
                             </TouchableOpacity>
                         </View>

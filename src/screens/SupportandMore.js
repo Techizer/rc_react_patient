@@ -5,7 +5,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  I18nManager
+  I18nManager,
+  ScrollView
 } from "react-native";
 import React, { Component, useState } from "react";
 import RNRestart from 'react-native-restart'
@@ -25,7 +26,7 @@ import { leftArrow, Logo, Notification, rightArrow, Splash_Logo } from "../Icons
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import { AppLanguage } from "../Redux/Actions";
+import { AppLanguage, IsLanguageUpdated } from "../Redux/Actions";
 
 
 
@@ -36,47 +37,41 @@ const SupportandMore = ({ navigation }) => {
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
   const [supportData, setSupportData] = useState({
-    language: appLanguage == 'en' ? 'ENG' : 'AR',
+    language: appLanguage,
     languageModal: false
   })
 
   const ChangeLanguage = () => {
     if (supportData.language == 'en') {
       console.log('English...');
+      dispatch(IsLanguageUpdated(true))
       dispatch(AppLanguage('en'))
-      submit_click();
-      // setTimeout(() => {
-      //   RNRestart.Restart();
-      // }, 350);
-      // dispatch(Restart(true))
     } else {
       console.log('Arabic...');
-      I18nManager.forceRTL(true);
-      I18nManager.allowRTL(true);
+      dispatch(IsLanguageUpdated(true))
       dispatch(AppLanguage('ar'))
-      submit_click()
-      setTimeout(() => {
-        RNRestart.Restart();
-      }, 350);
+
     }
 
   }
 
-
-
-  const submit_click = async () => {
-
+  const Update = async (language) => {
     let url = config.baseURL + "api-language-update";
     var data = new FormData();
     data.append("login_user_id", loggedInUserDetails.user_id);
-    data.append("device_lang", supportData.language);
-
+    data.append("device_lang", supportData.language == 'en' ? 'ENG' : 'AR');
+    console.log(data);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        console.log("submit_click", obj);
+        console.log("UpdateLanguage", obj);
         if (obj.status == true) {
-          let result = obj.result;
+          dispatch(AppLanguage(language))
+          // if (language == 'ar') {
+          //   setTimeout(() => {
+          //     RNRestart.Restart();
+          //   }, 350);
+          // }
         } else {
           msgProvider.alert(
             LangProvider.information[languageIndex],
@@ -88,7 +83,7 @@ const SupportandMore = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("UpdateLanguage-error ------- " + error);
       });
   };
 
@@ -96,7 +91,6 @@ const SupportandMore = ({ navigation }) => {
     Alert.alert(
       LangProvider.Delete_account[languageIndex],
       LangProvider.Are_you_sure[languageIndex],
-      // "Do you want to logout ?",
       [
         {
           text: LangProvider.no_txt[languageIndex],
@@ -153,7 +147,6 @@ const SupportandMore = ({ navigation }) => {
         alignSelf: "center",
         flex: 1,
         backgroundColor: Colors.White,
-        paddingBottom: insets.bottom
       }}>
 
       <ScreenHeader
@@ -164,369 +157,328 @@ const SupportandMore = ({ navigation }) => {
       />
 
 
-      <View style={{ paddingVertical: vs(30), alignItems: 'center' }}>
-        <SvgXml xml={Logo} />
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: (windowWidth * 20) / 100 }}>
+        <View style={{ paddingVertical: vs(30), alignItems: 'center' }}>
+          <SvgXml xml={Logo} />
 
-        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
+          <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
 
-        <View
-          style={{
-            width: "50%",
-            alignSelf: "center",
-          }}>
+          <View
+            style={{
+              width: "50%",
+              alignSelf: "center",
+            }}>
+            <Text
+              style={{
+                paddingVertical: vs(14),
+                fontSize: Font.xlarge,
+                color: Colors.lightGrey,
+                fontFamily: Font.Regular,
+                alignSelf: "center",
+                textAlign: "center",
+              }} >
+              {LangProvider.Splashtext1[languageIndex]}{" "}
+            </Text>
+          </View>
+
+          <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
           <Text
             style={{
-              paddingVertical: vs(14),
-              fontSize: Font.xlarge,
-              color: Colors.lightGrey,
+              marginTop: vs(11),
+              fontSize: Font.medium,
+              color: Colors.Border,
               fontFamily: Font.Regular,
               alignSelf: "center",
               textAlign: "center",
             }} >
-            {LangProvider.Splashtext1[languageIndex]}{" "}
+            {LangProvider.version[languageIndex]}{" "}
           </Text>
         </View>
 
-        <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
-
-        <Text
-          style={{
-            marginTop: vs(11),
-            fontSize: Font.medium,
-            color: Colors.Border,
-            fontFamily: Font.Regular,
-            alignSelf: "center",
-            textAlign: "center",
-          }} > 
-          {LangProvider.version[languageIndex]}{" "}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          width: "90%",
-          alignSelf: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: (windowWidth * 3.8) / 100,
-            color: Colors.DarkGrey,
-            fontFamily: Font.ques_fontfamily,
-          }}
-        >
-          {LangProvider.languagetxt[languageIndex]}{" "}
-        </Text>
-
         <View
           style={{
-            width: "40%",
-            alignSelf: "flex-end",
+            width: "90%",
+            alignSelf: "center",
             flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              if (appLanguage == 'en') {
-                null
-              } else {
-                setSupportData(prevState => ({
-                  ...prevState,
-                  languageModal: true,
-                  language: 'en'
-                }))
-              }
-            }}
+          <Text
             style={{
-              width: "50%",
-              alignSelf: "center",
-              backgroundColor: (appLanguage || supportData.language) == 'en' ? Colors.lightBlue : Colors.White,
-              borderColor: "black",
-              borderBottomWidth: 1,
-              borderTopWidth: 1,
-              borderLeftWidth: 1,
-              paddingVertical: (windowWidth * 1.5) / 100,
-              borderBottomLeftRadius: (windowWidth * 1) / 100,
-              borderTopLeftRadius: (windowWidth * 1) / 100,
+              fontSize: (windowWidth * 3.8) / 100,
+              color: Colors.DarkGrey,
+              fontFamily: Font.Regular,
             }}
           >
-            <Text
-              style={{
-                fontSize: (windowWidth * 3.5) / 100,
-                color: Colors.DarkGrey,
-                fontFamily: Font.ques_fontfamily,
-                alignSelf: "center",
-              }}
-            >
-              ENG
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              if (appLanguage == 'ar') {
-                null
-              } else {
-                setSupportData(prevState => ({
-                  ...prevState,
-                  languageModal: true,
-                  language: 'ar'
-                }))
-              }
-            }}
-            style={{
-              width: "50%",
-              alignSelf: "center",
-              backgroundColor: (appLanguage || supportData.language) == 'ar' ? Colors.lightBlue : Colors.White,
-              borderColor: "#fff",
-              borderColor: "black",
-              borderWidth: 1,
-              paddingVertical: (windowWidth * 1.5) / 100,
-              borderTopRightRadius: (windowWidth * 1) / 100,
-              borderBottomRightRadius: (windowWidth * 1) / 100,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: (windowWidth * 3.5) / 100,
-                color: Colors.DarkGrey,
-                fontFamily: Font.ques_fontfamily,
-                alignSelf: "center",
-              }}
-            >
-              AR
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View
-        style={{
-          width: "95%",
-          alignSelf: "flex-end",
-          borderBottomWidth: 1.5,
-          borderBottomColor: Colors.backgroundcolor,
-          marginTop: vs(12),
-        }} />
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Tremsandcondition", {
-            contantpage: 2,
-            content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
-            content_ar: config.term_url_ar,
-          });
-        }}
-        style={{
-          width: "90%",
-          height: vs(15),
-          justifyContent: "space-between",
-          alignSelf: "center",
-          marginTop: vs(10),
-          flexDirection: "row",
-        }}
-      >
-        <Text
-          style={{
-            textAlign: config.textalign,
-            fontSize: (windowWidth * 3.8) / 100,
-            color: Colors.DarkGrey,
-            fontFamily: Font.ques_fontfamily,
-          }}
-        >
-          {LangProvider.termtxt[languageIndex]}{" "}
-        </Text>
-
-        <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-        </View>
-      </TouchableOpacity>
-
-      <View
-        style={{
-          width: "95%",
-          alignSelf: "flex-end",
-          borderBottomWidth: 1.5,
-          borderBottomColor: Colors.backgroundcolor,
-          marginTop: vs(12),
-        }} />
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Tremsandcondition", {
-            contantpage: 0,
-            content: config.about_url_eng,
-            content_ar: config.about_url_ar,
-          });
-        }}
-        style={{
-          height: vs(15),
-          width: "90%",
-          alignSelf: "center",
-          marginTop: vs(10),
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: (windowWidth * 3.8) / 100,
-            color: Colors.DarkGrey,
-            fontFamily: Font.ques_fontfamily,
-          }}
-        >
-          {LangProvider.aboutrootcare[languageIndex]}{" "}
-        </Text>
-
-        <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-        </View>
-      </TouchableOpacity>
-
-      <View
-        style={{
-          width: "95%",
-          alignSelf: "flex-end",
-          borderBottomWidth: 1.5,
-          borderBottomColor: Colors.backgroundcolor,
-          marginTop: vs(12),
-        }} />
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Tremsandcondition", {
-            contantpage: 1,
-            content: config.privacy_url_eng,
-            content_ar: config.privacy_url_ar,
-          });
-        }}
-        style={{
-          width: "90%",
-          height: vs(15),
-          alignSelf: "center",
-          marginTop: vs(10),
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: (windowWidth * 3.8) / 100,
-            color: Colors.DarkGrey,
-            fontFamily: Font.ques_fontfamily,
-          }}
-        >
-          {LangProvider.privacy[languageIndex]}{" "}
-        </Text>
-
-        <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-        </View>
-      </TouchableOpacity>
-
-      <View
-        style={{
-          width: "95%",
-          alignSelf: "flex-end",
-          borderBottomWidth: 1.5,
-          borderBottomColor: Colors.backgroundcolor,
-          marginTop: vs(12),
-        }} />
-
-      {
-        !guest &&
-        <>
-          <TouchableOpacity
-            onPress={() => {
-              confirmDelete();
-            }}
-            style={{
-              width: "90%",
-              height: vs(15),
-              alignSelf: "center",
-              marginTop: vs(10),
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: (windowWidth * 3.8) / 100,
-                color: Colors.DarkGrey,
-                fontFamily: Font.ques_fontfamily,
-              }}
-            >
-              {LangProvider.Delete_account[languageIndex]}{" "}
-            </Text>
-            <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-            </View>
-          </TouchableOpacity>
+            {LangProvider.languagetxt[languageIndex]}{" "}
+          </Text>
 
           <View
             style={{
-              width: "95%",
+              width: "40%",
               alignSelf: "flex-end",
-              borderBottomWidth: 1.5,
-              borderBottomColor: Colors.backgroundcolor,
-              marginTop: vs(12),
-            }} />
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("NeedSupport");
-            }}
-            style={{
-              justifyContent: "space-between",
-              width: "90%",
-              height: vs(15),
-              alignSelf: "center",
-              marginTop: vs(10),
               flexDirection: "row",
-              alignItems: "center",
-            }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View
-                style={{
-                  width: "8%",
-                  alignSelf: "center",
-                  marginRight: (windowWidth * 3) / 100,
-                }}>
-                <Image
-                  style={{ width: 20, height: 20, resizeMode: "contain" }}
-                  source={Icons.needsupportimg}
-                ></Image>
-              </View>
-
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                if (appLanguage == 'en') {
+                  null
+                } else {
+                  setSupportData(prevState => ({
+                    ...prevState,
+                    languageModal: true,
+                    language: 'en'
+                  }))
+                }
+              }}
+              style={{
+                width: "50%",
+                alignSelf: "center",
+                backgroundColor: (appLanguage || supportData.language) == 'en' ? Colors.lightBlue : Colors.White,
+                borderColor: "black",
+                borderBottomWidth: 1,
+                borderTopWidth: 1,
+                borderLeftWidth: 1,
+                paddingVertical: (windowWidth * 1.5) / 100,
+                borderBottomLeftRadius: (windowWidth * 1) / 100,
+                borderTopLeftRadius: (windowWidth * 1) / 100,
+              }}
+            >
               <Text
                 style={{
-                  fontSize: (windowWidth * 4) / 100,
-                  color: Colors.Black,
-                  fontFamily: Font.Medium,
-                }}>
-                {LangProvider.needsupport[languageIndex]}{" "}
+                  fontSize: (windowWidth * 3.5) / 100,
+                  color: Colors.DarkGrey,
+                  fontFamily: Font.Regular,
+                  alignSelf: "center",
+                }}
+              >
+                ENG
               </Text>
-            </View>
-            <View style={{ width: "5%", height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
 
-          <View
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                if (appLanguage == 'ar') {
+                  null
+                } else {
+                  setSupportData(prevState => ({
+                    ...prevState,
+                    languageModal: true,
+                    language: 'ar'
+                  }))
+                }
+              }}
+              style={{
+                width: "50%",
+                alignSelf: "center",
+                backgroundColor: (appLanguage || supportData.language) == 'ar' ? Colors.lightBlue : Colors.White,
+                borderColor: "#fff",
+                borderColor: "black",
+                borderWidth: 1,
+                paddingVertical: (windowWidth * 1.5) / 100,
+                borderTopRightRadius: (windowWidth * 1) / 100,
+                borderBottomRightRadius: (windowWidth * 1) / 100,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: (windowWidth * 3.5) / 100,
+                  color: Colors.DarkGrey,
+                  fontFamily: Font.Regular,
+                  alignSelf: "center",
+                }}
+              >
+                AR
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Tremsandcondition", {
+              contantpage: 2,
+              content: config.term_url_eng, //'https://teq-dev-var19.co.in/rootscare/terms-and-conditions/eng',
+              content_ar: config.term_url_ar,
+            });
+          }}
+          style={{
+            width: "95%",
+            justifyContent: "space-between",
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            marginTop: vs(10),
+            flexDirection: "row",
+            borderBottomWidth: 1.5,
+            borderBottomColor: Colors.backgroundcolor,
+            paddingBottom: vs(10),
+            paddingRight: s(18)
+          }}>
+          <Text
             style={{
-              width: "95%",
-              alignSelf: "flex-end",
-              borderBottomWidth: 1.5,
-              borderBottomColor: Colors.backgroundcolor,
-              marginTop: vs(12),
-            }} />
-        </>
-      }
+              textAlign: config.textalign,
+              fontSize: (windowWidth * 3.8) / 100,
+              color: Colors.DarkGrey,
+              fontFamily: Font.Regular,
+            }}>
+            {LangProvider.termtxt[languageIndex]}{" "}
+          </Text>
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Tremsandcondition", {
+              contantpage: 0,
+              content: config.about_url_eng,
+              content_ar: config.about_url_ar,
+            });
+          }}
+          style={{
+            width: "95%",
+            justifyContent: "space-between",
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            marginTop: vs(10),
+            flexDirection: "row",
+            borderBottomWidth: 1.5,
+            borderBottomColor: Colors.backgroundcolor,
+            paddingBottom: vs(10),
+            paddingRight: s(18)
+
+          }}
+        >
+          <Text
+            style={{
+              fontSize: Font.medium,
+              color: Colors.DarkGrey,
+              fontFamily: Font.Regular,
+            }}
+          >
+            {LangProvider.aboutrootcare[languageIndex]}{" "}
+          </Text>
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Tremsandcondition", {
+              contantpage: 1,
+              content: config.privacy_url_eng,
+              content_ar: config.privacy_url_ar,
+            });
+          }}
+          style={{
+            width: "95%",
+            justifyContent: "space-between",
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+            marginTop: vs(10),
+            flexDirection: "row",
+            borderBottomWidth: 1.5,
+            borderBottomColor: Colors.backgroundcolor,
+            paddingBottom: vs(10),
+            paddingRight: s(18)
+          }}
+        >
+          <Text
+            style={{
+              fontSize: (windowWidth * 3.8) / 100,
+              color: Colors.DarkGrey,
+              fontFamily: Font.Regular,
+            }}
+          >
+            {LangProvider.privacy[languageIndex]}{" "}
+          </Text>
+
+          <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+        </TouchableOpacity>
+
+
+        {
+          !guest &&
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                confirmDelete();
+              }}
+              style={{
+                width: "95%",
+                justifyContent: "space-between",
+                alignItems: 'center',
+                alignSelf: 'flex-end',
+                marginTop: vs(10),
+                flexDirection: "row",
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor,
+                paddingBottom: vs(10),
+                paddingRight: s(18)
+              }}>
+              <Text
+                style={{
+                  fontSize: (windowWidth * 3.8) / 100,
+                  color: Colors.DarkGrey,
+                  fontFamily: Font.Regular,
+                }}
+              >
+                {LangProvider.Delete_account[languageIndex]}{" "}
+              </Text>
+              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("NeedSupport");
+              }}
+              style={{
+                width: "95%",
+                justifyContent: "space-between",
+                alignItems: 'center',
+                alignSelf: 'flex-end',
+                marginTop: vs(10),
+                flexDirection: "row",
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor,
+                paddingBottom: vs(10),
+                paddingRight: s(18)
+              }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    alignSelf: "center",
+                    marginRight: (windowWidth * 3) / 100,
+                  }}>
+                  <Image
+                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                    source={Icons.needsupportimg}
+                  ></Image>
+                </View>
+
+                <Text
+                  style={{
+                    fontSize: (windowWidth * 4) / 100,
+                    color: Colors.Black,
+                    fontFamily: Font.Medium,
+                  }}>
+                  {LangProvider.needsupport[languageIndex]}{" "}
+                </Text>
+              </View>
+              <SvgXml xml={languageIndex == 1 ? leftArrow : rightArrow} height={vs(11)} width={s(7)} />
+            </TouchableOpacity>
+
+
+          </>
+        }
+      </ScrollView>
 
 
 
@@ -541,13 +493,7 @@ const SupportandMore = ({ navigation }) => {
           }))
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            setSupportData(prevState => ({
-              ...prevState,
-              languageModal: false
-            }))
-          }}
+        <View
           style={{
             backgroundColor: "#00000080",
             flex: 1,
@@ -555,16 +501,14 @@ const SupportandMore = ({ navigation }) => {
             justifyContent: "center",
             paddingHorizontal: 20,
             marginTop: -50,
-          }}
-        >
+          }}>
           <View
             style={{
               borderRadius: 20,
               width: (windowWidth * 90) / 100,
               position: "absolute",
               alignSelf: "center",
-            }}
-          >
+            }}>
             <View
               style={{
                 backgroundColor: "#fff",
@@ -689,8 +633,9 @@ const SupportandMore = ({ navigation }) => {
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
+
     </View>
   );
 

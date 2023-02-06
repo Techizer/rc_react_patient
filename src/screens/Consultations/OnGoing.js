@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 const OnGoing = (props) => {
 
-  const { loggedInUserDetails, guest, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, guest, languageIndex } = useSelector(state => state.StorageReducer)
 
   const [appointments, setAppointments] = useState(guest ? [] : [1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(guest ? false : true)
@@ -145,14 +145,14 @@ const OnGoing = (props) => {
                 fontFamily: Font.Regular,
                 color: Colors.darkText,
                 textAlign: 'center'
-              }}>{guest ? LangProvider.guestConsultTitle[appLanguage == 'en' ? 0 : 1] : LangProvider.noConsultTitle[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestConsultTitle[languageIndex] : LangProvider.noConsultTitle[languageIndex]}</Text>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 textAlign: 'center',
                 marginTop: vs(10)
-              }}>{guest ? LangProvider.guestConsultDesc[appLanguage == 'en' ? 0 : 1] : LangProvider.noConsultDesc[appLanguage == 'en' ? 0 : 1]}</Text>
+              }}>{guest ? LangProvider.guestConsultDesc[languageIndex] : LangProvider.noConsultDesc[languageIndex]}</Text>
             </View>
           )
         }}

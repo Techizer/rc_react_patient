@@ -127,42 +127,42 @@ class Language_provider {
   tabnamemedical = ["Medical", " طبي    "];
   tabnamelifestyle = ["Life Style", " أسلوب الحياة  "];
   dob = ["Date of Birth", "تاريخ الميلاد "];
-  Gender = ["Gender", "الجنس  "];
-  textinputidentity = ["Identity Number", "رقم الهوية "];
-  male = ["Male", "ذكر "];
+  Gender = ["Gender", "الجنس"];
+  textinputidentity = ["Identity Number", "رقم الهوية"];
+  male = ["Male", "ذكر"];
   female = ["Female", "أنثى"];
   select = ["Select", "حدد"];
   selectSpecialty = ["Select Specialty", "حدد التخصص"];
   allergies = ["Allergies", "الحساسية"];
-  q1 = ["Are you allergic to anything?", "هل لديك حساسية من أي شيء؟ "];
-  textinputallergies = ["Enter Allergies", "أدخل الحساسية "];
-  current = ["Current Medication", "الأدوية الحالية "];
+  q1 = ["Are you allergic to anything?", "هل لديك حساسية من أي شيء؟"];
+  textinputallergies = ["Enter Allergies", "أدخل الحساسية"];
+  current = ["Current Medication", "الأدوية الحالية"];
   q2 = [
-    "Are you taking any medicines at the moment? ",
-    "هل تتناول أي أدوية في الوقت الحالي؟  ",
+    "Are you taking any medicines at the moment?",
+    "هل تتناول أي أدوية في الوقت الحالي؟",
   ];
-  textinputcurrent = ["Enter Current Medication", "أدخل الأدوية الحالية "];
-  pastmedication = ["Past Medication", "الأدوية السابقة  "];
+  textinputcurrent = ["Enter Current Medication", "أدخل الأدوية الحالية"];
+  pastmedication = ["Past Medication", "الأدوية السابقة"];
   q3 = [
     "Have you been on medications in the past?",
-    "هل كنت تتناول أدوية في الماضي؟  ",
+    "هل كنت تتناول أدوية في الماضي؟",
   ];
   textinputpastmedication = [
     "Enter Past Medication",
-    " أدخل الأدوية السابقة  ",
+    " أدخل الأدوية السابقة",
   ];
-  injuries = ["Injuries", " الاصابات  "];
+  injuries = ["Injuries", " الاصابات"];
   q4 = [
     "Have you hade any injuires in the past?",
     " هل تعرضت لأي إصابات في الماضي؟  ",
   ];
-  textinputinjuries = ["Enter Injuries", "أدخل الاصابات  "];
-  surgeries = ["Surgeries", " العمليات الجراحية "];
+  textinputinjuries = ["Enter Injuries", "أدخل الاصابات"];
+  surgeries = ["Surgeries", "العمليات الجراحية"];
   q5 = [
     "Have you had any surgeries in the past?",
-    "هل أجريت أي عمليات جراحية في الماضي؟  ",
+    "هل أجريت أي عمليات جراحية في الماضي؟",
   ];
-  textinputsurgeries = ["Enter surgeries", " أدخل العمليات الجراحية  "];
+  textinputsurgeries = ["Enter surgeries", "أدخل العمليات الجراحية"];
   chronic = ["Chronic Diseases", "الأمراض المزمنة "];
   q6 = [
     "Have you had chronic diseases in the past?",
@@ -171,7 +171,7 @@ class Language_provider {
   textinputchronic = ["Enter chronic diseases", " أدخل الأمراض المزمنة  "];
   savebtntext = ["SAVE", "حفظ  "];
   yes_txt = ["Yes", "نعم "];
-  no_txt = ["NO", "لا "];
+  no_txt = ["NO", "لا"];
   yes_txt_new = ["Yes", "نعم"];
   no_txt_new = ["No", "لا"];
   smoking = ["Smoking Habits", "عادات التدخين  "];
@@ -204,7 +204,7 @@ class Language_provider {
   ];
   text_input_topic = [
     "Write your issue in details here.",
-    " اكتب مشكلتك بالتفصيل هنا  ",
+    "اكتب مشكلتك بالتفصيل هنا",
   ];
   select_topic_text = ["Select a Topic", "اختر موضوع "];
   select_issues_text = ["Select issue", "حدد المشكلة  "];
@@ -273,7 +273,7 @@ class Language_provider {
   Location = ["Location", "موقع"];
   Physiotherapist = ["Physiotherapist", "اخصائي العلاج الطبيعي  "];
   Nurse_assistant = ["Nurse Assistant", "مساعد ممرض    "];
-  Babysitter = ["Babysitter", "جليسة أطفال    "];
+  BabyCare = ["Baby Care", "رعاية أطفال"];
   Rating = ["Rating", "التقييم "];
   Booking = ["Booking", "حجز "];
   Experience = ["Experience", "الخبرة  "];
@@ -366,8 +366,8 @@ class Language_provider {
     "Search Nurse Assistant near your address",
     "ابحث عن مساعدة ممرضة بالقرب من عنوانك",
   ];
-  SearchBabysitter = [
-    "Search Babysitter near your address",
+  SearchBabyCare = [
+    "Search Baby Care near your address",
     "ابحث عن جليسة الأطفال بالقرب من عنوانك",
   ];
   SearchDoctor = [
@@ -384,7 +384,7 @@ class Language_provider {
     "Available Physiotherapist's",
     " أخصائي علاج طبيعي متاح ",
   ];
-  Availablebabysitter = ["Available Babysitter's", " جليسة أطفال متاح "];
+  Availablebabycare = ["Available Baby Care's", "رعاية أطفال متاح"];
   Availableassistent = ["Available Nurse Assistant's", "مساعدة ممرضة متاح"];
   AvailableDoctor = ["Available Doctor's", "طبيب متاح"];
   AvailableLab = ["Available Lab's", "الفحوصات المتاحة"];
@@ -456,7 +456,7 @@ class Language_provider {
   Profile = ["Profile", "الملف الشخصي"];
   All_Consultations = ["All Consultations, Orders, & Bookings", "جميع الاستشارات والطلبات والحجوزات"];
   Appointment_Bookings = ['Appointment Bookings', 'مواعيد الحجوزات'];
-  Appointment_Booking_Details = ['Nurse, Nurse Ass, Babysitter, Physiotherapy, Appointments', 'ممرضة ، مساعدة ممرضة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
+  Appointment_Booking_Details = ['Nurse, Nurse Ass, Baby Care, Physiotherapy, Appointments', 'ممرضة ، مساعدة ممرضة ، جليسة أطفال ، علاج طبيعي ، مواعيد'];
   Doctor_Consultations = ['Doctor Consultations', 'استشارات الطبيب'];
   Doctor_Consultation_Details = ['Doctor Consul, Ongoing, Past, etc.', 'استشارة طبيب ، مستمر ، سابق ، إلخ.'];
   Lab_Test_Bookings = ['Lab Test Bookings', 'حجوزات فحص المختبر'];
@@ -534,6 +534,7 @@ class Language_provider {
   OrderId = ["Order ID", "رقم التعريف الخاص بالطلب"];
   Booking_Note = ['Booking Notes', 'ملاحظات الحجز'];
   Booking_Desc = ['Solutions and drugs to be injected are not included', 'لا تشمل المحاليل والأدوية المراد حقنها']
+
   noAppoitmentTitle = ['Sorry, no appointments found', 'نعتذر ، لم يتم العثور على مواعيد'];
   noAppoitmentDesc = ['You can start a new appointment with our qualified home healthcare service providers', 'يمكنك بدء موعد جديد مع مقدمي خدمات الرعاية الصحية المنزلية المؤهلين لدينا'];
   guestAppoitmentTitle = ['Oops! No Appointment Found', 'عفوًا! لم يتم العثور على موعد'];
@@ -545,7 +546,7 @@ class Language_provider {
   guestConsultDesc = ['No Consultations record found, user type is Guest', 'لم يتم العثور على أي سجل للاستشارات،ونوع المستخدم ضيف'];
 
   noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
-  noLabsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
+  noLabsTestsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
   guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
   guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
 
@@ -561,8 +562,8 @@ class Language_provider {
   noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين ممرضات'];
   noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين للممرضات في موقعك ، بمجرد تواجدنا سنبلغك '];
 
-  noBabySitterTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
-  noBabySitterDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+  noBabyCareTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
+  noBabyCareDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
 
   noLabsTitle = ['Sorry, no Labs found.', 'عذرا ، لم يتم العثور على مختبرات'];
   noLabsDesc = ['We have not found any Labs at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مختبرات في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];

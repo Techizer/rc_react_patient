@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View, ScrollView, StyleSheet, TouchableHighlight, Keyboard, FlatList, } from "react-native";
-import Modal from "react-native-modal";
+import RBSheet from "react-native-raw-bottom-sheet";
 import HTMLView from "react-native-htmlview";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, windowHeight } from "../Provider/Utils/Utils";
-import { Cross, dummyUser, Edit } from "../Icons/Index";
+import { Cross} from "../Icons/Index";
 
 
 
@@ -18,54 +18,50 @@ const AboutAppBottomSheet = ({
 }) => {
 
     return (
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            deviceWidth={windowWidth}
-            animationInTiming={350}
-            animationOutTimixng={350}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0 }} >
 
+        <RBSheet
+            // animationType='slide'
+            closeOnPressBack={false}
+            ref={visible}
+            height={windowHeight / 1.5}
+            openDuration={250}
+            closeDuration={350}
+            customStyles={{
+                wrapper: {
+                    // backgroundColor: "rgba(255,255,255,1)"
+                },
+                container: {
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 25,
+                    paddingTop: vs(55),
+                    paddingBottom: vs(20),
+                    paddingHorizontal: s(13),
+                }
+            }}>
+            <TouchableHighlight
+                onPress={onRequestClose}
+                underlayColor={Colors.Highlight}
+                style={styles.closeContainer}
+            >
+                <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+            </TouchableHighlight>
 
-            <View style={styles.modalContainer}>
-                <TouchableHighlight
-                    onPress={onRequestClose}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}
-                >
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
-
-
-
-
-                <ScrollView 
+            <ScrollView
                 showsVerticalScrollIndicator={true}>
-                    <View
-                        style={{
-                            paddingBottom: (windowWidth * 15) / 100,
-                            paddingTop: (windowWidth * 2) / 100,
-                        }}
-                    >
-                        <HTMLView
-                            value={data}
-                            stylesheet={HTMLstyles}
-                        />
-                    </View>
-                </ScrollView>
-
-            </View>
-
-        </Modal>
-
-
+                <View
+                    style={{
+                        paddingBottom: (windowWidth * 15) / 100,
+                        paddingTop: (windowWidth * 2) / 100,
+                    }}
+                >
+                    <HTMLView
+                        value={data}
+                        stylesheet={HTMLstyles}
+                    />
+                </View>
+            </ScrollView>
+        </RBSheet>
 
     )
 }
@@ -73,7 +69,7 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         width: windowWidth,
-        height: windowHeight/1.5,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderRadius: 25,
         paddingTop: vs(55),
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: vs(30),
+        top: vs(15),
         right: s(11),
         zIndex: 999
     }

@@ -8,15 +8,10 @@ import {
   Text,
   TouchableOpacity, Platform
 } from "react-native";
-import {
-  TextInput,
-  HelperText,
-  useTheme,
-  MD2Colors,
-  MD3Colors,
-  List,
-} from 'react-native-paper';
-import { Colors, Icons, Font, windowHeight, config, windowWidth } from '../Provider/Utils/Utils';
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { rightArrow } from "../Icons/Index";
+import { Colors, Icons, Font, windowHeight, windowWidth } from '../Provider/Utils/Utils';
 
 const DropDownboxSec = ({
   lableText,
@@ -46,27 +41,24 @@ const DropDownboxSec = ({
         <TouchableOpacity
           onPress={boxPressAction}
           disabled={isDisabled}
-        >
-          <View style={{
-            width: '95%', alignSelf: 'center', justifyContent: 'center',
-            justifyContent: 'center',
-            textAlignVertical: 'center',
-            height: 42, //(windowWidth * 12) / 100,
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            height: 42,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-            {
-              (isDisabled) ? null :
-                <Image
-                  style={{
-                    height: (windowWidth * 4) / 100,
-                    width: (windowWidth * 4) / 100,
-                    position: "absolute",
-                    top: 15,
-                    right: 5,
-                  }}
-                  source={Icons.downarrow} />
-            }
-            <Text style={styles.textBoxStyle}>{lableText}</Text>
-          </View>
+          <Text style={styles.textBoxStyle}>{lableText}</Text>
+          {
+            (isDisabled) ? null :
+              <SvgXml
+                xml={rightArrow}
+                height={vs(17.11)}
+                width={s(8)}
+                fillOpacity={1}
+                style={{ transform: [{ rotate: "90deg" }],marginRight:5 }} />
+          }
         </TouchableOpacity>
       </View>
     </>
@@ -105,19 +97,10 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-between',
   },
   textBoxStyle: {
-    width: '100%',
-    color: Colors.DarkGrey_color,
-    fontSize: Font.placeholdersize,
-    textAlign: config.textalign,
+    color: Colors.detailTitles,
+    fontSize: Font.medium,
     justifyContent: 'center',
-    // alignItems: 'center',
-    textAlignVertical: 'center',
-    // height: 48, //(windowWidth * 12) / 100,
-    fontFamily: Font.headingfontfamily,
-    borderRadius: (windowWidth * 1) / 100,
-    // paddingTop: ((windowWidth * 12) / 100) / 2.5,
-    paddingLeft: 4,
-    // backgroundColor: 'red'
+    fontFamily: Font.Regular,
   },
   errorLayout: {
     backgroundColor: "red",

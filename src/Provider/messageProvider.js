@@ -14,11 +14,11 @@ class messageFunctionsProviders {
 			duration: 4000,
 			titleStyle: {
 				fontFamily: Font.Regular,
-				fontSize: Font.cart2heading 
+				fontSize: Font.xlarge 
 			},
 			textStyle: {
 				fontFamily: Font.Regular,
-				fontSize: Font.allergies_txt_size_edit
+				fontSize: Font.xlarge
 			}
 		});
 	}
@@ -33,7 +33,7 @@ class messageFunctionsProviders {
 			duration: duration,
 			titleStyle: {
 				fontFamily: Font.Regular,
-				fontSize: Font.buttontext_size
+				fontSize: Font.medium
 			}
 		});
 	}

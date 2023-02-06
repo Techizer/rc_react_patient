@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -48,7 +48,9 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     available_days: "",
     availability_arr: []
   })
+  const sheetRef=useRef()
   const insets = useSafeAreaInsets()
+
   useEffect(() => {
     getProviderDetails()
   }, [])
@@ -59,10 +61,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
       ...payload
     }))
   }
-
-  const setModalVisible = (visible) => {
-    setState({ modalVisible: visible });
-  };
 
   const getAvailableProviderDetails = async (userId) => {
     setState({
@@ -207,7 +205,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
               : providerType == "caregiver"
                 ? LangProvider.Nurse_assistant[languageIndex]
                 : providerType == "babysitter"
-                  ? LangProvider.Babysitter[languageIndex]
+                  ? LangProvider.BabyCare[languageIndex]
                   : providerType == "doctor"
                     ? LangProvider.Doctor[languageIndex]
                     : LangProvider.Lab[languageIndex]
@@ -767,7 +765,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       : providerType == "caregiver"
                         ? LangProvider.Nurse_assistant[languageIndex]
                         : providerType == "babysitter"
-                          ? LangProvider.Babysitter[languageIndex]
+                          ? LangProvider.BabyCare[languageIndex]
                           : providerType == "doctor"
                             ? LangProvider.Doctor[languageIndex]
                             : LangProvider.Lab[languageIndex]) + ' ' + LangProvider.Booking[languageIndex]
@@ -788,7 +786,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
               <View style={{ width: '30%', height: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => setModalVisible(true)}
+                  onPress={() => sheetRef.current.open()}
                 >
                   <Text
                     style={{
@@ -993,7 +991,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       color: Colors.darkText
                     }}
                   >
-                    {`${providerType === 'nurse' ? LangProvider.AvailableNurse[languageIndex] : providerType === 'physiotherapy' ? LangProvider.Availablephysotharpst[languageIndex] : providerType === 'caregiver' ? LangProvider.Availableassistent[languageIndex] : providerType === 'babysitter' ? LangProvider.Availablebabysitter[languageIndex] : providerType === 'doctor' ? LangProvider.AvailableDoctor[languageIndex] : LangProvider.AvailableLab[languageIndex]}`}
+                    {`${providerType === 'nurse' ? LangProvider.AvailableNurse[languageIndex] : providerType === 'physiotherapy' ? LangProvider.Availablephysotharpst[languageIndex] : providerType === 'caregiver' ? LangProvider.Availableassistent[languageIndex] : providerType === 'babysitter' ? LangProvider.Availablebabycare[languageIndex] : providerType === 'doctor' ? LangProvider.AvailableDoctor[languageIndex] : LangProvider.AvailableLab[languageIndex]}`}
                   </Text>
                   <TouchableOpacity onPress={() => navigation.pop()}>
                     <Text
@@ -1125,9 +1123,9 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
 
       <AboutAppBottomSheet
-        visible={modalVisible}
+        visible={sheetRef}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          sheetRef.current.close();
         }}
         data={statesData.how_work_value}
       />

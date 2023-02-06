@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.rootscare">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
     <!-- Request legacy Bluetooth permissions on older devices. -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
@@ -39,7 +42,31 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <!-- If utilizing $deeplink_path please explicitly declare your hosts, or utilize a wildcard(*) -->
+                <data android:scheme="rootscare://" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links - Live App -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="rootscare.app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="rootscare-alternate.app.link" />
+            </intent-filter>
+
         </activity>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_gj9QxU2L4grOhDb89xQdwfkkBul8VJtL" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
         <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_foreground"
             android:value="false" />
@@ -47,6 +74,10 @@
         <!-- <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_color"
             android:resource="@colors/white" /> -->
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider386042973026214"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
 
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
@@ -68,4 +99,12 @@
             </intent-filter>
         </service>
     </application>
+
+    
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 </manifest>

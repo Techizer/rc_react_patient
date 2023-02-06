@@ -21,7 +21,8 @@ import {
     SELECTED_PROVIDER,
     LANGUAGE_INDEX,
     CART,
-    TABBY_PAYMENT
+    TABBY_PAYMENT,
+    LANGUAGE_UPDATED
 } from './Types'
 
 const Guest = (payload) => ({
@@ -76,6 +77,11 @@ const AppVersion = (payload) => ({
 
 const AppLanguage = (payload) => ({
     type: APP_LANGUAGE,
+    payload
+})
+
+const IsLanguageUpdated = (payload) => ({
+    type: LANGUAGE_UPDATED,
     payload
 })
 
@@ -156,6 +162,7 @@ export {
     DeviceType,
     AppVersion,
     AppLanguage,
+    IsLanguageUpdated,
     LanguageIndex,
     Address,
     ContentAlign,

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Patient</string>
+    <string name="facebook_app_id">386042973026214</string>
+    <string name="facebook_client_token">1419e9115b4486caf5b2b14a0a38712f</string>
 </resources>

@@ -1009,9 +1009,9 @@ const CartDetails = ({ navigation }) => {
             btnStyle={{ width: windowWidth / 2.5 }}
             text={LangProvider.ProceedToPay[languageIndex]}
             onPress={() => {
-              startSDK();
+              // startSDK();
               // StartTabbySdk()
-              // setState({ isPaymentOption: true })
+              setState({ isPaymentOption: true })
             }}
           />
 

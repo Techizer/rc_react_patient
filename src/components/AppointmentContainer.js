@@ -1680,7 +1680,7 @@ const AppointmentContainer = ({
                                                                         paddingVertical: (windowWidth * 2) / 100,
                                                                         fontFamily: Font.Medium,
                                                                         textAlign: "center",
-                                                                        fontSize: Font.sregulartext_size,
+                                                                        fontSize: Font.small,
                                                                     }}
                                                                 >
                                                                     {item.price}
@@ -1707,7 +1707,7 @@ const AppointmentContainer = ({
                                             <Text
                                                 style={{
                                                     fontFamily: Font.Medium,
-                                                    fontSize: Font.name,
+                                                    fontSize: Font.medium,
                                                     alignSelf: 'flex-start',
                                                 }}
                                             >
@@ -1731,7 +1731,7 @@ const AppointmentContainer = ({
                                                     style={{
                                                         color: Colors.Theme,
                                                         fontFamily: Font.Medium,
-                                                        fontSize: Font.name,
+                                                        fontSize: Font.medium,
                                                         marginLeft: (windowWidth * 1) / 100,
                                                     }}
                                                 >
@@ -1761,7 +1761,7 @@ const AppointmentContainer = ({
                                             <Text
                                                 style={{
                                                     fontFamily: Font.Regular,
-                                                    fontSize: Font.subtext,
+                                                    fontSize: Font.medium,
                                                     color: "#000",
                                                     alignSelf: 'flex-start',
                                                 }}
@@ -1797,8 +1797,8 @@ const AppointmentContainer = ({
                                                                         color: item.tick == 1 ? Colors.White : Colors.Black,
                                                                         textAlign: "center",
                                                                         paddingVertical: (windowWidth * 2) / 100,
-                                                                        fontFamily: Font.ques_fontfamily,
-                                                                        fontSize: Font.sregulartext_size,
+                                                                        fontFamily: Font.Regular,
+                                                                        fontSize: Font.small,
                                                                         lineHeight: (windowWidth * 5) / 100,
                                                                     }}
                                                                 >
@@ -1834,7 +1834,7 @@ const AppointmentContainer = ({
                                             <Text
                                                 style={{
                                                     fontFamily: Font.Regular,
-                                                    fontSize: Font.subtext,
+                                                    fontSize: Font.medium,
                                                     alignSelf: 'flex-start',
                                                 }}
                                             >
@@ -1869,7 +1869,7 @@ const AppointmentContainer = ({
                                                                                             marginRight: (windowWidth * 3) / 100,
                                                                                             marginTop: (windowWidth * 3) / 100,
                                                                                             fontFamily: Font.Regular,
-                                                                                            fontSize: Font.sregulartext_size,
+                                                                                            fontSize: Font.small,
                                                                                             padding: (windowWidth * 2) / 100,
                                                                                             paddingHorizontal:
                                                                                                 (windowWidth * 3.3) / 100,
@@ -1914,7 +1914,7 @@ const AppointmentContainer = ({
                                                                                             marginRight: (windowWidth * 3) / 100,
                                                                                             marginTop: (windowWidth * 3) / 100,
                                                                                             fontFamily: Font.Regular,
-                                                                                            fontSize: Font.sregulartext_size,
+                                                                                            fontSize: Font.small,
                                                                                             padding: (windowWidth * 2) / 100,
                                                                                             paddingHorizontal:
                                                                                                 (windowWidth * 3.3) / 100,

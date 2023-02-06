@@ -14,6 +14,7 @@ import {
   StatusBar,
   I18nManager,
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RNRestart from "react-native-restart";
 import React, { Component, useEffect, useRef, useState } from "react";
@@ -82,12 +83,43 @@ const Login = ({ navigation }) => {
     //   languageIndex
     // );
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-    checkLocationPermission();
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
   }, [])
 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkLocationPermission()
+
+      return () => {
+        checkLocationPermission
+      };
+    }, [])
+  )
+
+  const handleBackPress = () => {
+    Alert.alert(
+      LangProvider.titleexitapp[languageIndex],
+      LangProvider.exitappmessage[languageIndex],
+      [
+        {
+          text: LangProvider.no_txt[languageIndex],
+          onPress: () => console.log("Cancel Pressed"),
+          style: LangProvider.no_txt[languageIndex],
+        },
+        {
+          text: LangProvider.yes_txt[languageIndex],
+          onPress: () => BackHandler.exitApp(),
+        },
+      ],
+      {
+        cancelable: false,
+      }
+    ); // works best when the goBack is async
+    return true;
+  };
 
   const checkLocationPermission = () => {
     check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.LOCATION_ALWAYS) : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
@@ -212,27 +244,6 @@ const Login = ({ navigation }) => {
       });
   };
 
-  const handleBackPress = () => {
-    Alert.alert(
-      LangProvider.titleexitapp[languageIndex],
-      LangProvider.exitappmessage[languageIndex],
-      [
-        {
-          text: LangProvider.no_txt[languageIndex],
-          onPress: () => console.log("Cancel Pressed"),
-          style: LangProvider.no_txt[languageIndex],
-        },
-        {
-          text: LangProvider.yes_txt[languageIndex],
-          onPress: () => BackHandler.exitApp(),
-        },
-      ],
-      {
-        cancelable: false,
-      }
-    ); // works best when the goBack is async
-    return true;
-  };
 
   updateAddress = async (userId) => {
 
@@ -306,7 +317,7 @@ const Login = ({ navigation }) => {
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
 
-    console.log('login body...', data);
+    // console.log('login body...', data);
 
     // return
 
@@ -319,9 +330,12 @@ const Login = ({ navigation }) => {
         }))
         console.log('login response.....', obj);
         if (obj.status == true) {
-          if ((address.isAddressAdded == false) && (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined)) {
-            updateAddress(obj?.result?.user_id)
-          }
+          msgProvider.showSuccess(obj.message);
+          // if (address != null) {
+            if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
+              updateAddress(obj?.result?.user_id)
+            }
+          // }
           const credentials = {
             email: loginData.email,
             password: loginData.password,
@@ -578,7 +592,7 @@ const Login = ({ navigation }) => {
                 style={{
                   color: Colors.Blue,
                   fontFamily: Font.Regular,
-                  fontSize: Font.Forgot,
+                  fontSize: Font.medium,
                   alignSelf: 'flex-end'
                 }}
               >
@@ -687,7 +701,7 @@ const Login = ({ navigation }) => {
             style={{
               alignSelf: 'flex-start',
               fontFamily: Font.Regular,
-              fontSize: Font.headinggray,
+              fontSize: Font.medium,
               color: Colors.DarkGrey,
             }}>
             {LangProvider.donot[languageIndex]}
@@ -722,7 +736,7 @@ const Login = ({ navigation }) => {
           <Text
             style={[
               {
-                fontSize: (windowWidth * 3.8) / 100,
+                fontSize: Font.medium,
                 color: Colors.Black,
                 fontFamily: Font.Regular,
                 alignSelf: 'flex-start',
@@ -745,18 +759,17 @@ const Login = ({ navigation }) => {
                 ChangeLanguage('en')
               }}
               style={{
-                width: "47%",
+                width: "45%",
                 backgroundColor: appLanguage == 'en' ? Colors.lightBlue : Colors.White,
                 borderColor: Colors.lightGrey,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
-                paddingVertical: (windowWidth * 2) / 100,
+                paddingVertical: (windowWidth * 1.5) / 100,
               }}>
 
               <Text
                 style={{
-                  textAlign: contentAlign,
-                  fontSize: (windowWidth * 3.5) / 100,
+                  fontSize: Font.medium,
                   color: Colors.Black,
                   fontFamily: Font.Regular,
                   alignSelf: "center",
@@ -772,18 +785,17 @@ const Login = ({ navigation }) => {
                 ChangeLanguage('ar')
               }}
               style={{
-                width: "47%",
+                width: "45%",
                 alignSelf: "center",
                 backgroundColor: appLanguage == 'ar' ? Colors.lightBlue : Colors.White,
                 borderColor: Colors.lightGrey,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
-                paddingVertical: (windowWidth * 2) / 100,
+                paddingVertical: (windowWidth * 1.5) / 100,
               }}>
               <Text
                 style={{
-                  textAlign: contentAlign,
-                  fontSize: (windowWidth * 3.5) / 100,
+                  fontSize: Font.medium,
                   color: Colors.Black,
                   fontFamily: Font.Regular,
                   alignSelf: "center",

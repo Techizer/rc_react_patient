@@ -1280,7 +1280,7 @@ const HomeVisit = ({ navigation }) => {
                         paddingVertical: (windowWidth * 2) / 100,
                         fontFamily: Font.Medium,
                         textAlign: "center",
-                        fontSize: Font.sregulartext_size,
+                        fontSize: Font.small,
                       }}
                     >
                       {item.price} {statesData.currency_symbol}

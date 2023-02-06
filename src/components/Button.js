@@ -23,7 +23,7 @@ export const Button = ({
 }) => {
   return (
     <TouchableOpacity
-      disabled={disable ? disable : false}
+      disabled={disable}
       onPress={onPress}
       style={[styles.mainContainer, { backgroundColor: disable ? Colors.Border : Colors.Theme, }, btnStyle]}>
       {
@@ -60,14 +60,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.White,
     fontFamily: Font.Medium,
-    fontSize: Font.buttontextsize,
+    fontSize: Font.medium,
     textAlign: config.textalign,
     alignSelf: 'center',
   },
   buttonText1: {
     color: Colors.Blue,
     fontFamily: Font.Medium,
-    fontSize: Font.buttontextsize,
+    fontSize: Font.medium,
     textAlign: config.textalign,
     alignSelf: 'center',
   }

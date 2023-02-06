@@ -422,7 +422,7 @@ export const Icons = {
   nurse: require("./nurse.png"),
   Physiotherapist: require("./physiotherapist.png"),
   NurseAssistant: require("./assistant.png"),
-  Babysitter: require("./babySitter.png"),
+  BabyCare: require("./babySitter.png"),
   InstantVideoConsultation: require("./onlineDoc.png"),
   HomeVisitConsultation: require("./homeDoc.png"),
   BookaLabTest: require("./labTest.png"),

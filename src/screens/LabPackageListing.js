@@ -106,7 +106,7 @@ const LabPackageListing = ({ navigation, route }) => {
             <Text
               style={{
                 fontFamily: Font.Medium,
-                fontSize: Font.name,
+                fontSize: Font.medium,
                 alignSelf: 'flex-start',
               }}
             >
@@ -116,7 +116,7 @@ const LabPackageListing = ({ navigation, route }) => {
               style={{
                 paddingVertical: (windowWidth * 1.5) / 100,
                 fontFamily: Font.Regular,
-                fontSize: Font.subtext,
+                fontSize: Font.medium,
                 color: Colors.Theme,
                 alignSelf: 'flex-start',
               }}
@@ -182,7 +182,7 @@ const LabPackageListing = ({ navigation, route }) => {
                       fontFamily: Font.Regular,
                       textAlign: "left",
                       color: Colors.lightGrey,
-                      fontSize: Font.sregulartext_size,
+                      fontSize: Font.small,
                     }}
                   >
                     {item.test_count}
@@ -191,7 +191,7 @@ const LabPackageListing = ({ navigation, route }) => {
                     style={{
                       paddingVertical: (windowWidth * 1.5) / 100,
                       fontFamily: Font.Regular,
-                      fontSize: Font.sregulartext_size,
+                      fontSize: Font.small,
                       color: Colors.Theme,
                       alignSelf: 'flex-start'
                     }}
@@ -202,7 +202,7 @@ const LabPackageListing = ({ navigation, route }) => {
                     style={{
                       fontFamily: Font.Regular,
                       textAlign: "left",
-                      fontSize: Font.sregulartext_size,
+                      fontSize: Font.small,
                       marginTop: (windowWidth * 3) / 100,
                       color: Colors.lightGrey,
                       textDecorationLine: "line-through",
@@ -246,7 +246,7 @@ const LabPackageListing = ({ navigation, route }) => {
                           fontFamily: Font.Regular,
                           textAlign: "left",
                           color: Colors.textGreenColor,
-                          fontSize: Font.sregulartext_size,
+                          fontSize: Font.small,
                         }}
                       >
                         {item.dis_off}

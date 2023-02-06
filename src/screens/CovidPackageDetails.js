@@ -171,7 +171,7 @@ const CovidPackageDetails = ({ navigation }) => {
                     <Text
                       style={{
                         fontFamily: Font.Medium,
-                        fontSize: Font.name,
+                        fontSize: Font.medium,
                         color: Colors.detailTitles,
                         textAlign: config.textRotate,
                       }}
@@ -333,7 +333,7 @@ const CovidPackageDetails = ({ navigation }) => {
                                         fontFamily: Font.Regular,
                                         textAlign: "left",
                                         color: Colors.textGreenColor,
-                                        fontSize: Font.sregulartext_size,
+                                        fontSize: Font.small,
                                       }}
                                     >
                                       {item.dis_off}
@@ -351,7 +351,7 @@ const CovidPackageDetails = ({ navigation }) => {
                                 style={{
                                   fontFamily: Font.Regular,
                                   textAlign: "left",
-                                  fontSize: Font.sregulartext_size,
+                                  fontSize: Font.small,
                                   marginTop: (windowWidth * 3) / 100,
                                   color: Colors.lightGrey,
                                 }}>
@@ -388,7 +388,7 @@ const CovidPackageDetails = ({ navigation }) => {
                                 <Text
                                   style={{
                                     fontFamily: Font.Regular,
-                                    fontSize: Font.headingfont_booking,
+                                    fontSize: Font.xlarge,
                                     color: Colors.precautionText,
                                     // marginTop: (windowWidth * 2) / 100,
                                     paddingHorizontal: (windowWidth * 2) / 100,
@@ -408,7 +408,7 @@ const CovidPackageDetails = ({ navigation }) => {
                                       value={item.pcontent}
                                       stylesheet={{
                                         p: {
-                                          fontSize: Font.subtext,
+                                          fontSize: Font.medium,
                                           color: Colors.lightGrey,
                                           fontFamily: Font.Regular,
                                         },
@@ -488,7 +488,7 @@ const CovidPackageDetails = ({ navigation }) => {
                 style={{
                   color: Colors.White,
                   fontFamily: Font.Medium,
-                  fontSize: Font.buttontextsize,
+                  fontSize: Font.medium,
                   alignSelf: "flex-end",
                   textAlign: config.textalign,
                   alignSelf: "center",

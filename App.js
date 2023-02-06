@@ -1,5 +1,7 @@
 import React, { Component, useEffect } from "react";
 import { I18nManager, Platform, StatusBar } from "react-native";
+import { Settings } from 'react-native-fbsdk-next';
+import * as Sentry from "@sentry/react-native";
 import { Tabby } from 'tabby-react-native-sdk'
 import MainStack from "./src/Provider/Stacks/MainStack";
 
@@ -9,20 +11,28 @@ import { AppLanguage, ContentAlign, LanguageIndex, Restart } from "./src/Redux/A
 
 Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
 console.reportErrorsAsExceptions = false;
+
+// Sentry.init({
+//   dsn: "https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776",
+//   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+//   // We recommend adjusting this value in production.
+//   tracesSampleRate: 1.0,
+// });
+
+Settings.setAppID('386042973026214');
 const App = () => {
+
 
   const { appLanguage, restart } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(Restart(false))
-    setTimeout(() => {
-      language_set()
-    }, 250);
+    language_set()
   }, [appLanguage])
 
   const language_set = async () => {
     console.log('setting layout direction.......');
-    console.log({ restart });
+    // console.log({ restart });
     if (appLanguage == 'en') {
       if (I18nManager.isRTL) {
         console.log("Left To Right");
@@ -39,13 +49,17 @@ const App = () => {
         I18nManager.forceRTL(false);
         I18nManager.allowRTL(false);
       }
-      dispatch(AppLanguage('en'))
       dispatch(LanguageIndex(0))
       dispatch(ContentAlign('left'))
-
-
-
     } else {
+      if (restart == false) {
+        I18nManager.forceRTL(true);
+        I18nManager.allowRTL(true);
+        dispatch(Restart(true))
+        setTimeout(() => {
+          RNRestart.Restart();
+        }, 450);
+      }
       dispatch(ContentAlign('right'))
       dispatch(LanguageIndex(1))
     }
@@ -82,5 +96,6 @@ const App = () => {
   );
 }
 
-
+// throw new Error("My first Sentry error!");
 export default App;
+// export default Sentry.wrap(App);

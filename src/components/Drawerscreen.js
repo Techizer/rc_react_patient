@@ -47,7 +47,8 @@ const Drawerscreen = ({ navigation }) => {
     credentials,
     rememberMe,
     languageIndex,
-    selectedProvider
+    selectedProvider,
+    isLanguageUpdated
   } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
@@ -61,7 +62,7 @@ const Drawerscreen = ({ navigation }) => {
   })
 
   useEffect(() => {
-    console.log({ loggedInUserDetails });
+    // console.log({ loggedInUserDetails });
     dispatch(SelectedProvider(null))
   }, [])
 
@@ -96,7 +97,8 @@ const Drawerscreen = ({ navigation }) => {
             address,
             credentials,
             rememberMe,
-            languageIndex
+            languageIndex,
+            isLanguageUpdated
           }))
           setDrawerData(prevState => ({
             ...prevState,

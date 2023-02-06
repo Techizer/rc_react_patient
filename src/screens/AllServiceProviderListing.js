@@ -36,7 +36,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
   const [providersData, setProvidersData] = useState({
     message: "",
     searchProvider: "",
-    isHospitalDoctorList: false,
+    isHospitalDoctorList: false, 
     specialtyData: "",
     specialtyArr: [],
     specialtyModal: false,
@@ -73,8 +73,8 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       data.append("service_type", pass_status);
       data.append("provider_name", "");
       data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'Ar');
-      data.append("latitude", loggedInUserDetails.latitude);
-      data.append("longitudes", loggedInUserDetails.longitudes);
+      data.append("latitude", address.latitude);
+      data.append("longitudes", address.longitude);
       data.append("page_count", 1);
     } else {
       data.append("login_user_id", loggedInUserDetails.user_id);
@@ -89,7 +89,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
         data.append("provider_name", '');
       }
     }
-    console.log(data);
+    // console.log(data);
     // return
     apifuntion.postApi(url, data, 1).then((res) => {
       // console.log("get_Services-response ", res)
@@ -153,7 +153,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
               : type == "caregiver"
                 ? LangProvider.Searchseassistent[languageIndex]
                 : type == "babysitter"
-                  ? LangProvider.SearchBabysitter[languageIndex]
+                  ? LangProvider.SearchBabyCare[languageIndex]
                   : type == "doctor"
                     ? LangProvider.SearchDoctor[languageIndex]
                     : type == "hospital"
@@ -203,7 +203,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
               : pass_status == "caregiver"
                 ? LangProvider.Nurse_assistant[languageIndex]
                 : pass_status == "babysitter"
-                  ? LangProvider.Babysitter[languageIndex]
+                  ? LangProvider.BabyCare[languageIndex]
                   : pass_status == "doctor"
                     ? LangProvider.Doctor[languageIndex]
                     : LangProvider.Lab[languageIndex]
@@ -234,7 +234,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
                       : pass_status == "caregiver"
                         ? LangProvider.noNurseAssisTitle[languageIndex]
                         : pass_status == "babysitter"
-                          ? LangProvider.noBabySitterTitle[languageIndex]
+                          ? LangProvider.noBabyCareTitle[languageIndex]
                           : pass_status == "doctor"
                             ? LangProvider.noDocsTitle[languageIndex]
                             : LangProvider.noLabsTitle[languageIndex]
@@ -253,7 +253,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
                       : pass_status == "caregiver"
                         ? LangProvider.noNurseAssisDesc[languageIndex]
                         : pass_status == "babysitter"
-                          ? LangProvider.noBabySitterDesc[languageIndex]
+                          ? LangProvider.noBabyCareDesc[languageIndex]
                           : pass_status == "doctor"
                             ? LangProvider.noDocsDesc[languageIndex]
                             : LangProvider.noLabsDesc[languageIndex]
