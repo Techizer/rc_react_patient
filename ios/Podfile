@@ -13,6 +13,7 @@ target 'rootscare' do
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
+  pod 'Branch'
   config = use_native_modules!
 
   use_react_native!(

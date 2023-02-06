@@ -1,6 +1,6 @@
 import React, { Component, useEffect } from "react";
 import { I18nManager, Platform, StatusBar } from "react-native";
-import { Settings } from 'react-native-fbsdk-next';
+// import { Settings } from 'react-native-fbsdk-next';
 import * as Sentry from "@sentry/react-native";
 import { Tabby } from 'tabby-react-native-sdk'
 import MainStack from "./src/Provider/Stacks/MainStack";
@@ -19,7 +19,7 @@ console.reportErrorsAsExceptions = false;
 //   tracesSampleRate: 1.0,
 // });
 
-Settings.setAppID('386042973026214');
+// Settings.setAppID('386042973026214');
 const App = () => {
 
 

@@ -18,6 +18,17 @@
 		38F6BFE1E9F9482080429252 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C18A20DACC643DB98B015E5 /* Rubik-SemiBoldItalic.ttf */; };
 		4DDEC5914C5F4A028F07AA51 /* Rubik-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C206296DDBD4395B157670D /* Rubik-ExtraBold.ttf */; };
 		6306A0816C774E21999C5D9D /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 72E67428E9F643FF8E39D724 /* Rubik-MediumItalic.ttf */; };
+		78DB061D29912CDB003DE548 /* rootscare.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 8F1301FC2829423400D07137 /* rootscare.entitlements */; };
+		78DB0620299133DA003DE548 /* Branch in Frameworks */ = {isa = PBXBuildFile; productRef = 78DB061F299133DA003DE548 /* Branch */; };
+		78DB062329913471003DE548 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB06212991345A003DE548 /* CoreServices.framework */; };
+		78DB062529913487003DE548 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB062429913487003DE548 /* SystemConfiguration.framework */; };
+		78DB06272991348E003DE548 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB06262991348E003DE548 /* CoreTelephony.framework */; };
+		78DB062929913493003DE548 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB062829913493003DE548 /* WebKit.framework */; };
+		78DB062B299134A4003DE548 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB062A299134A4003DE548 /* CoreSpotlight.framework */; };
+		78DB062D299134AE003DE548 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB062C299134AE003DE548 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		78DB062F299134BB003DE548 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB062E299134BB003DE548 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		78DB0631299134C7003DE548 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB0630299134C7003DE548 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		78DB0633299134D5003DE548 /* LinkPresentation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78DB0632299134D5003DE548 /* LinkPresentation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9DBBCF59B6EC42BCA2EE9C75 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68E475F1CAE241F6942E8233 /* Rubik-Italic.ttf */; };
 		9F785BE47E4A448EBFC6AF88 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D8E3ECC305C49B29556BF37 /* Rubik-Bold.ttf */; };
@@ -63,6 +74,15 @@
 		68E475F1CAE241F6942E8233 /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
 		71B6EDBBE89C4A5C9E0236BD /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		72E67428E9F643FF8E39D724 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		78DB06212991345A003DE548 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		78DB062429913487003DE548 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		78DB06262991348E003DE548 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		78DB062829913493003DE548 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		78DB062A299134A4003DE548 /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
+		78DB062C299134AE003DE548 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+		78DB062E299134BB003DE548 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		78DB0630299134C7003DE548 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		78DB0632299134D5003DE548 /* LinkPresentation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinkPresentation.framework; path = System/Library/Frameworks/LinkPresentation.framework; sourceTree = SDKROOT; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rootscare/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		890CE48EA7FA40EEA211D2FE /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		8BC0D6980317F206CAB271B5 /* Pods-rootscare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rootscare.debug.xcconfig"; path = "Target Support Files/Pods-rootscare/Pods-rootscare.debug.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +113,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78DB0633299134D5003DE548 /* LinkPresentation.framework in Frameworks */,
+				78DB0631299134C7003DE548 /* StoreKit.framework in Frameworks */,
+				78DB062F299134BB003DE548 /* AdSupport.framework in Frameworks */,
+				78DB062D299134AE003DE548 /* AdServices.framework in Frameworks */,
+				78DB062B299134A4003DE548 /* CoreSpotlight.framework in Frameworks */,
+				78DB062929913493003DE548 /* WebKit.framework in Frameworks */,
+				78DB06272991348E003DE548 /* CoreTelephony.framework in Frameworks */,
+				78DB062529913487003DE548 /* SystemConfiguration.framework in Frameworks */,
+				78DB062329913471003DE548 /* CoreServices.framework in Frameworks */,
+				78DB0620299133DA003DE548 /* Branch in Frameworks */,
 				C09724E31C3FFBAF0AF26A77 /* libPods-rootscare.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -158,6 +188,15 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				78DB0632299134D5003DE548 /* LinkPresentation.framework */,
+				78DB0630299134C7003DE548 /* StoreKit.framework */,
+				78DB062E299134BB003DE548 /* AdSupport.framework */,
+				78DB062C299134AE003DE548 /* AdServices.framework */,
+				78DB062A299134A4003DE548 /* CoreSpotlight.framework */,
+				78DB062829913493003DE548 /* WebKit.framework */,
+				78DB06262991348E003DE548 /* CoreTelephony.framework */,
+				78DB062429913487003DE548 /* SystemConfiguration.framework */,
+				78DB06212991345A003DE548 /* CoreServices.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				A0428908FBDF60EB3DAE60E2 /* libPods-rootscare.a */,
 				3CDDD0B0E9996BF59973BB06 /* libPods-rootscare-rootscareTests.a */,
@@ -251,6 +290,9 @@
 			dependencies = (
 			);
 			name = rootscare;
+			packageProductDependencies = (
+				78DB061F299133DA003DE548 /* Branch */,
+			);
 			productName = rootscare;
 			productReference = 13B07F961A680F5B00A75B9A /* rootscare.app */;
 			productType = "com.apple.product-type.application";
@@ -281,6 +323,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				78DB061E299133DA003DE548 /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -303,6 +348,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78DB061D29912CDB003DE548 /* rootscare.entitlements in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				C8ED45C0520A4C3797CC0BFB /* Rubik-Black.ttf in Resources */,
@@ -806,6 +852,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		78DB061E299133DA003DE548 /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BranchMetrics/ios-branch-sdk-spm";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		78DB061F299133DA003DE548 /* Branch */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78DB061E299133DA003DE548 /* XCRemoteSwiftPackageReference "ios-branch-sdk-spm" */;
+			productName = Branch;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }
