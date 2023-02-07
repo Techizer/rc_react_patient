@@ -26,7 +26,6 @@ import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/Utils/Utils";
 import Styles from "../Styles";
 import BannerCrousel from "../components/BannerCrousel";
-import moment from "moment";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -143,7 +142,7 @@ const Home = ({ navigation }) => {
     if (guest == false) {
       getNotificationCount();
       getTopBanners()
-      CartId()
+      // CartId()
     }
     if (isLanguageUpdated) {
       UpdateLanguage()
@@ -255,7 +254,6 @@ const Home = ({ navigation }) => {
           rightIcon={!guest}
           defaultAddress={address?.address}
         />
-
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}
