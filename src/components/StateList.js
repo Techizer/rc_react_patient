@@ -199,7 +199,7 @@ class StateListScreen extends Component {
                         );
                     }}
                     placeholder={'search by County name'}
-                    placeholderTextColor="#000"
+                    DarkGrey="#000"
                     style={{
                         //backgroundColor: 'red',
                         width: '100%',
@@ -292,7 +292,7 @@ class StateListScreen extends Component {
                                     );
                                 }}
                                 placeholder="Search by County Name"
-                                placeholderTextColor="#000"
+                                DarkGrey="#000"
                                 style={{
                                     color: '#000',
                                     width: '100%',

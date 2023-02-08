@@ -6,24 +6,12 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  ActivityIndicator,
   TouchableOpacity, Platform
 } from "react-native";
-import {
-  TextInput,
-  HelperText,
-  useTheme,
-  MD2Colors,
-  MD3Colors,
-  List,
-} from 'react-native-paper';
-import Icon from "react-native-vector-icons/MaterialIcons";
-// import { hp, wp } from "../utils/responsive";
-// import { RF } from "../utils/responsive";
-// import Fonts, { fonts, fontSizes } from "../utils/Fonts";
-// import { Color } from "../utils";
-// const { height, width } = Dimensions.get("window");
-import { Colors, localimag, Font, mobileH, config, mobileW, Lang_chg, apifuntion, msgText, msgTitle, consolepro, msgProvider, localStorage } from '../Provider/utilslib/Utils';
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { rightArrow } from "../Icons/Index";
+import { Colors, Icons, Font, windowHeight, windowWidth } from '../Provider/Utils/Utils';
 
 const DropDownboxSec = ({
   lableText,
@@ -53,27 +41,24 @@ const DropDownboxSec = ({
         <TouchableOpacity
           onPress={boxPressAction}
           disabled={isDisabled}
-        >
-          <View style={{
-            width: '95%', alignSelf: 'center', justifyContent: 'center',
-            justifyContent: 'center',
-            textAlignVertical: 'center',
-            height: 48, //(mobileW * 12) / 100,
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            height: 42,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
-            {
-              (isDisabled) ? null :
-                <Image
-                  style={{
-                    height: (mobileW * 4) / 100,
-                    width: (mobileW * 4) / 100,
-                    position: "absolute",
-                    top: 15,
-                    right: 5,
-                  }}
-                  source={localimag.downarrow} />
-            }
-            <Text style={styles.textBoxStyle}>{lableText}</Text>
-          </View>
+          <Text style={styles.textBoxStyle}>{lableText}</Text>
+          {
+            (isDisabled) ? null :
+              <SvgXml
+                xml={rightArrow}
+                height={vs(17.11)}
+                width={s(8)}
+                fillOpacity={1}
+                style={{ transform: [{ rotate: "90deg" }],marginRight:5 }} />
+          }
         </TouchableOpacity>
       </View>
     </>
@@ -90,13 +75,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainContainer: {
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
-    marginTop: (mobileW * 2) / 100,
+    marginTop: (windowWidth * 2) / 100,
     backgroundColor: Colors.tab_background_color, //Colors.optboxcolor,
-    borderColor: Colors.field_border_color, //Colors.veriontextcolor,
-    borderWidth: mobileW * 0.3 / 100,
-    borderRadius: (mobileW * 1) / 100
+    borderColor: Colors.Border,
+    borderWidth: windowWidth * 0.3 / 100,
+    borderRadius: (windowWidth * 1) / 100
   },
   imgView: {
     width: "15%",
@@ -112,19 +97,10 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-between',
   },
   textBoxStyle: {
-    width: '100%',
-    color: Colors.placeholder_text_color,
-    fontSize: Font.placeholdersize,
-    textAlign: config.textalign,
+    color: Colors.detailTitles,
+    fontSize: Font.medium,
     justifyContent: 'center',
-    // alignItems: 'center',
-    textAlignVertical: 'center',
-    // height: 48, //(mobileW * 12) / 100,
-    fontFamily: Font.headingfontfamily,
-    borderRadius: (mobileW * 1) / 100,
-    // paddingTop: ((mobileW * 12) / 100) / 2.5,
-    paddingLeft: 4,
-    // backgroundColor: 'red'
+    fontFamily: Font.Regular,
   },
   errorLayout: {
     backgroundColor: "red",
@@ -133,7 +109,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   errorTxt: {
-    color: "white",
+    color: "White",
     fontWeight: "bold",
     fontSize: 12,
   },

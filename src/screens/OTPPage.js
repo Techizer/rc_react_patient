@@ -2,66 +2,70 @@ import {
   Text,
   View,
   Modal,
-  StatusBar,
   BackHandler,
   Alert,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
+  TouchableHighlight,
+  Platform,
+  Keyboard,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import OTPTextInput from "react-native-otp-textinput";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
-  Lang_chg,
+  windowWidth,
+  LangProvider,
   apifuntion,
-  localStorage,
   msgProvider,
-  msgText,
-  consolepro,
-} from "../Provider/utilslib/Utils";
+  Button
+} from "../Provider/Utils/Utils";
+import { leftArrow, rightArrow } from "../Icons/Index";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { useDispatch, useSelector } from "react-redux";
+import { UserDetails } from "../Redux/Actions";
 
-export default class OTPPage extends Component {
-  _didFocusSubscription;
-  _willBlurSubscription;
+const OTPPage = ({ navigation, route }) => {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      email: "",
-      mobile: "",
-      password: "",
-      device_lang: "AR",
-      mobile: "",
-      country_name: this.props.route.params.country_name,
-      fcm_token: 123456,
-      otp: "",
-      modalVisible3: false,
-      error_msg: "",
+  const {
+    id_number,
+    password,
+    confirm_password,
+    phone_number,
+    name,
+    email,
+    work_area,
+    country_name
+  } = route?.params
+
+  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const [otpData, setOtpData] = useState({
+    otpSuccessModal: false,
+    message: "",
+    otp: '',
+    status: false,
+    isLoading: false
+  })
+  const otpRef = useRef()
+  const insets = useSafeAreaInsets()
+  useEffect(() => {
+   
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
-    this._didFocusSubscription = props.navigation.addListener(
-      "focus",
-      (_payload) =>
-        BackHandler.addEventListener("hardwareBackPress", this.handleBackPress)
-    );
-  }
-  componentDidMount() {
-    this._willBlurSubscription = this.props.navigation.addListener(
-      "blur",
-      (_payload) =>
-        BackHandler.removeEventListener(
-          "hardwareBackPress",
-          this.handleBackPress
-        )
-    );
-  }
-  handleBackPress = () => {
+  }, [])
+
+  const handleBackPress = () => {
     Alert.alert(
       "Exit App",
       "Do you want to exit app",
@@ -83,387 +87,376 @@ export default class OTPPage extends Component {
     return true;
   };
 
-  otpVerify = async () => {
-    if (this.state.otp.length <= 0 || this.state.otp.trim().length <= 0) {
-      msgProvider.showError(msgText.emptyOtpMsg[config.language]);
+  const otpVerify = async () => {
+    Keyboard.dismiss()
+    if (otpData.otp.length <= 0 || otpData.otp.trim().length <= 0) {
+      msgProvider.showError(LangProvider.emptyOtpMsg[languageIndex]);
       return false;
     }
-    let user_details = await localStorage.getItemObject("user_login");
-
-    let item = user_details;
+    setOtpData(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
     let url = config.baseURL + "api-patient-registration-otp-check";
-    console.log("url", url);
     var data = new FormData();
-    data.append("first_name", item.name);
-    data.append("email", item.email);
-    data.append("phone_number", item.phone_number);
-    data.append("id_number", item.id_number);
-    data.append("work_area", this.state.country_name);
-    data.append("code", this.state.otp);
-    data.append("password", item.password);
+    data.append("first_name", name);
+    data.append("email", email);
+    data.append("phone_number", phone_number);
+    data.append("id_number", id_number);
+    data.append("work_area", country_name);
+    data.append("code", otpData.otp);
+    data.append("password", password);
     data.append("last_name", "");
-    data.append("confirm_password", item.confirm_password);
-    data.append("device_type", config.device_type);
-    data.append("device_lang", this.state.device_lang);
-    data.append("fcm_token", this.state.fcm_token);
-    consolepro.consolelog("data", data);
+    data.append("confirm_password", confirm_password);
+    data.append("device_type", deviceType);
+    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
+    data.append("fcm_token", deviceToken);
+    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        setOtpData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log("obj", obj);
         if (obj.status == true) {
-          this.setState({ error_msg: obj.message });
-
+          dispatch(UserDetails(obj?.result))
           setTimeout(() => {
-            this.setState({ modalVisible3: true });
+            setOtpData(prevState => ({
+              ...prevState,
+              otpSuccessModal: true,
+              message: obj?.message
+            }))
           }, 500);
         } else {
           setTimeout(() => {
-            msgProvider.showError(obj.message);
+            msgProvider.showError(obj?.message);
           }, 500);
           return false;
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setOtpData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log("otpVerify-error ------- ", error);
       });
   };
-  sendagain = async () => {
-    let user_details = await localStorage.getItemObject("user_login");
-    let item = user_details;
+
+  const loginUser = () => {
+    dispatch(Guest(false))
+    setOtpData(prevState => ({
+      ...prevState,
+      otpSuccessModal: false,
+    }))
+    setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "DashboardStack" }],
+      });
+    }, 700);
+  }
+  const sendagain = async () => {
+
     let url = config.baseURL + "api-resend-otp";
-
     var data = new FormData();
-    data.append("phone_no", item.phone_number);
-    consolepro.consolelog("data", data);
-
+    data.append("phone_no", phone_number);
+    console.log(data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        console.log("sendagain: ", obj);
         if (obj.status == true) {
-          setTimeout(() => {
-            msgProvider.showSuccess(obj.message);
-            // this.props.navigation.navigate("ForgotOTP", { email: email_new });
-          }, 300);
+          msgProvider.showSuccess(obj.message);
         } else {
-          setTimeout(() => {
-            msgProvider.showError(obj.message);
-          }, 300);
+          msgProvider.showError(obj.message);
           return false;
         }
-      })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+      }).catch((error) => {
+        console.log("sendagain-error ------- ", error);
       });
   };
-  render() {
-    return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
-          <SafeAreaView
-            style={{ backgroundColor: Colors.statusbar_color, flex: 0 }}
-          />
 
-          <StatusBar
-            barStyle="dark-content"
-            backgroundColor={Colors.statusbarcolor}
-            hidden={false}
-            translucent={false}
-            networkActivityIndicatorVisible={true}
-          />
+  return (
+    <View
+      pointerEvents={otpData.isLoading ? 'none' : 'auto'}
+      style={{ flex: 1, backgroundColor: Colors.White, paddingTop: insets.top, paddingBottom: insets.bottom }}>
 
-          <View style={{ paddingBottom: (mobileW * 8) / 100 }}>
-            <View
-              style={{
-                width: "50%",
-                alignSelf: "center",
-                marginTop: (mobileW * 8) / 100,
-                marginBottom: (mobileW * 10) / 100,
-              }}
-            >
-              <Image
-                style={{
-                  width: (mobileW * 50) / 100,
-                  height: (mobileW * 40) / 100,
-                  alignSelf: "center",
-                  resizeMode: "contain",
-                  alignItems: "center",
-                }}
-                source={localimag.Forgotlogo}
-              ></Image>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: (mobileW * 5.3) / 100,
-                  fontFamily: Font.blackheadingfontfamily,
-                  textAlign: config.textRotate,
-                }}
-              >
-                {Lang_chg.opt[config.language]}
-              </Text>
-            </View>
+      <KeyboardAwareScrollView
+        // keyboardOpeningTime={200}
+        extraScrollHeight={50}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{
+          justifyContent: 'center',
+          paddingBottom: vs(50),
+        }}
+        showsVerticalScrollIndicator={false}>
 
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-              }}
-            >
-              <View style={{ width: "90%" }}>
-                <Text
-                  style={{
-                    fontSize: Font.headinggray,
-                    fontFamily: Font.headingfontfamily,
-                    color: Colors.placeholder_text,
-                    textAlign: config.textRotate,
-                  }}
-                >
-                  {Lang_chg.opttext[config.language]}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                // backgroundColor: 'red',
-                //  paddingHorizontal:mobileW*1/100,
-                paddingVertical: (mobileW * 1) / 100,
-                marginTop: (mobileW * 8) / 100,
-                marginLeft: (mobileW * 5) / 100,
-              }}
-            >
-              <OTPTextInput
-                style={{
-                  height: (mobileW * 14) / 100,
-                  width: (mobileW * 20) / 100,
-                  color: "#000",
-                  alignSelf: "center",
-                  fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 5) / 100,
-                  borderWidth: 2,
-                  borderColor: "#DFDFDF",
-                  borderRadius: (mobileW * 2) / 100,
-                  textAlign: "center",
-                }}
-                ref={(e) => (this.otpInput = e)}
-                numberOfInputs={4}
-                cellTextLength={1}
-                handleTextChange={(text) => this.setState({ otp: text })}
-                tintColor="#f5f5ff"
-                offTintColor="#f5f5ff"
-                keyboardType={"number-pad"}
-              />
-            </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: vs(40),
+          }}>
+          <View style={{ justifyContent: 'center' }}>
+            {/* <SvgXml xml={Logo} /> */}
+            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
 
-            <TouchableOpacity
-              onPress={() => {
-                this.otpVerify();
-              }}
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 6) / 100,
-                shadowColor: "#000",
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 3,
-              }}
-            >
-              <Text
-                style={{
-                  color: Colors.textwhite,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.signupbtntext[config.language]}
-              </Text>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.notrectext[config.language]}
-              </Text>
-              <Text
-                onPress={() => {
-                  this.sendagain();
-                }}
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.fontsemibold,
-                  color: Colors.theme_color,
-                }}
-              >
-                {Lang_chg.sendagaintext[config.language]}
-              </Text>
-            </View>
           </View>
+
+          <TouchableHighlight
+            underlayColor={Colors.Highlight}
+            onPress={() => {
+              navigation.pop();
+            }}
+            style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
+          >
+            <SvgXml xml={contentAlign == "right" ? rightArrow : leftArrow} height={vs(17.11)} width={s(9.72)} />
+          </TouchableHighlight>
         </View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible3}
-          onRequestClose={() => {
-            this.setState({ modalVisible3: false });
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+            marginTop: vs(25)
+          }}>
+          <Text
+            style={{
+              fontSize: Font.xxxlarge,
+              fontFamily: Font.Medium,
+              textAlign: contentAlign,
+              color: Colors.darkText
+            }}>
+            {LangProvider.otp[languageIndex]}
+          </Text>
+
+          <Text
+            style={{
+              textAlign: contentAlign,
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.inActiveText,
+              marginTop: vs(4)
+            }}>
+            {LangProvider.otptext[languageIndex]}
+          </Text>
+
+
+          <View style={{ marginTop: vs(25) }}>
+            <OTPTextInput
+              style={{
+                height: (windowWidth * 14) / 100,
+                width: (windowWidth * 20) / 100,
+                color: "#000",
+                alignSelf: "center",
+                fontFamily: Font.Regular,
+                fontSize: (windowWidth * 5) / 100,
+                borderWidth: 2,
+                borderColor: Colors.Border,
+                borderRadius: (windowWidth * 2) / 100,
+                textAlign: "center",
+              }}
+              ref={otpRef}
+              numberOfInputs={4}
+              cellTextLength={1}
+              handleTextChange={(val) => {
+                setOtpData(prevState => ({
+                  ...prevState,
+                  otp: val
+                }))
+              }}
+              tintColor={Colors.Blue}
+              offTintColor="#f5f5ff"
+              keyboardType={"number-pad"}
+              backgroundColor={Colors.backgroundcolor}
+            />
+          </View>
+
+          <Button
+            text={LangProvider.submitbtntext[languageIndex]}
+            onPress={() => otpVerify()}
+            btnStyle={{ marginTop: vs(30) }}
+            onLoading={otpData.isLoading}
+          />
+          <Text
+            style={{
+              textAlign: contentAlign,
+              fontSize: Font.small,
+              fontFamily: Font.Regular,
+              color: Colors.DarkGrey,
+              paddingVertical: vs(20)
+            }}>
+            {LangProvider.OtpTime[languageIndex]}
+          </Text>
+        </View>
+
+        <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+            marginTop: vs(18),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              textAlign: contentAlign,
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.DarkGrey,
+            }} >
+            {LangProvider.notrectext[languageIndex]}
+          </Text>
+          <Text
+            onPress={() => {
+              sendagain();
+            }}
+            style={{
+              textAlign: contentAlign,
+              fontSize: Font.medium,
+              fontFamily: Font.Medium,
+              color: Colors.Blue,
+            }}>
+            {LangProvider.sendagaintext[languageIndex]}
+          </Text>
+        </View>
+
+      </KeyboardAwareScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={otpData.otpSuccessModal}
+        onRequestClose={() => {
+          setOtpData(prevState => ({
+            ...prevState,
+            otpSuccessModal: false
+          }))
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#00000080",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            marginTop: -50,
           }}
         >
           <View
             style={{
-              backgroundColor: "#00000080",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 20,
-              marginTop: -50,
+              borderRadius: 20,
+              width: (windowWidth * 90) / 100,
+              position: "absolute",
+              alignSelf: "center",
             }}
           >
-            <StatusBar
-              backgroundColor={"#fff"}
-              barStyle="default"
-              hidden={false}
-              translucent={false}
-              networkActivityIndicatorVisible={true}
-            />
             <View
               style={{
-                borderRadius: 20,
-                width: (mobileW * 90) / 100,
-                position: "absolute",
-                alignSelf: "center",
+                backgroundColor: "#fff",
+                borderRadius: 2,
+                width: "100%",
               }}
             >
               <View
                 style={{
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
-                  width: "100%",
+                  alignSelf: "flex-start",
+                  paddingVertical: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                <View
+                <Image
                   style={{
-                    alignSelf: "flex-start",
-                    paddingVertical: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 2) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
-                    flexDirection: "row",
-                    alignItems: "center",
+                    width: (windowWidth * 6) / 100,
+                    height: (windowWidth * 6) / 100,
+                  }}
+                  source={Icons.logoPlain}
+                />
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    color: "#000",
+                    fontSize: (windowWidth * 5) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
                   }}
                 >
-                  <Image
-                    style={{
-                      width: (mobileW * 6) / 100,
-                      height: (mobileW * 6) / 100,
-                    }}
-                    source={require("../icons/logo.png")}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: Font.fontmedium,
-                      color: "#000",
-                      fontSize: (mobileW * 5) / 100,
-                      paddingLeft: (mobileW * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.registration[config.language]}
-                  </Text>
-                </View>
+                  {LangProvider.registration[languageIndex]}
+                </Text>
+              </View>
 
-                <View
+              <View
+                style={{
+                  paddingLeft: (windowWidth * 4) / 100,
+                  width: "95%",
+                  alignSelf: "center",
+                }}
+              >
+                <Text
                   style={{
-                    paddingLeft: (mobileW * 4) / 100,
-                    width: "95%",
+                    fontFamily: Font.Light,
+                    color: "#000",
+                    fontSize: (windowWidth * 4) / 100,
+                  }}
+                >
+                  {otpData.message}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  paddingBottom: (windowWidth * 5) / 100,
+                  marginTop: (windowWidth * 9) / 100,
+                  alignSelf: "flex-end",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setTimeout(() => {
+                      loginUser()
+                    }, 200);
+                  }}
+                  style={{
+                    width: (windowWidth * 15) / 100,
+                    flexDirection: "row",
                     alignSelf: "center",
                   }}
                 >
                   <Text
                     style={{
-                      fontFamily: Font.fontlight,
-                      color: "#000",
-                      fontSize: (mobileW * 4) / 100,
-                    }}
-                  >
-                    {this.state.error_msg}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    paddingBottom: (mobileW * 5) / 100,
-                    marginTop: (mobileW * 9) / 100,
-                    alignSelf: "flex-end",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      setTimeout(() => {
-                        this.setState({ modalVisible3: false }),
-                          this.props.navigation.navigate("Login");
-                      }, 200);
-                    }}
-                    style={{
-                      width: (mobileW * 15) / 100,
-                      flexDirection: "row",
+                      fontFamily: Font.Regular,
+                      fontSize: (windowWidth * 4) / 100,
+                      color: Colors.Theme,
                       alignSelf: "center",
+                      textAlign: contentAlign,
                     }}
                   >
-                    <Text
-                      style={{
-                        fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
-                        color: Colors.theme_color,
-                        alignSelf: "center",
-                        textAlign: config.textalign,
-                      }}
-                    >
-                      {Lang_chg.OK[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    {LangProvider.OK[languageIndex]}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
-        </Modal>
-      </ScrollView>
-    );
-  }
+        </View>
+      </Modal>
+
+    </View>
+
+  );
+
 }
+
+export default OTPPage;

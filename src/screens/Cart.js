@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Platform,
   Text,
@@ -7,31 +7,44 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  TouchableHighlight,
   FlatList,
-  StatusBar,
-  ActivityIndicator,
+  StyleSheet,
+  AppState,
+  BackHandler
 } from "react-native";
-
+import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   msgProvider,
   config,
-  mobileW,
-  localStorage,
-  localimag,
-  consolepro,
-  Lang_chg,
+  windowWidth,
+  Icons,
   apifuntion,
-  msgTitle,
-} from "../Provider/utilslib/Utils";
+  LangProvider,
+  ScreenHeader,
+  Button
+} from "../Provider/Utils/Utils";
 import { WebView } from "react-native-webview";
-import Styles from "../Styles";
-import Footer from "../Footer";
+import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentWebView } from "tabby-react-native-sdk";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { Clock, clockBlue, Cross } from "../Icons/Index";
+import SuccessPopup from "../components/SuccessPopup";
+import moment from "moment";
+import SimpleToast from "react-native-simple-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Cart, SelectedProvider } from "../Redux/Actions";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import PaymentOptionBottomSheet from "../components/PaymentOptionBottomSheet";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+let startTime = new Date();
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
 
@@ -40,106 +53,250 @@ const appCredentials = {
     Platform.OS == "ios"
       ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
       : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+  // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+  // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
       ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
       : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
-  bundleID:
-    Platform.OS == "ios" ? "com.patient.rootscare" : "com.rootscare",
+  bundleID: Platform.OS == "ios" ? "com.patient.rootscare" : "com.rootscare",
 };
 
-export default class Cart extends Component {
-  constructor(props) {
-    super(props);
-    {
-      this.state = {
-        modalvisible: false,
-        cart_arr: "",
-        pay_condition: false,
-        modalVisible3: false,
-        payment_moodal: false,
-        provider_name: "",
-        trid: "#PH3434654E03",
-        provider_id: "",
-        payment_url: "",
-        total_price: "",
-        customer: [],
-        user_id: "",
-        message: "",
-        task_details: "",
-        notification_count: "",
-        transaction_id: "",
-        payment_status: "true",
-        currency_symbol: "",
-        payment_mode_country: "sar",
+const CartDetails = ({ navigation }) => {
 
-        //-----payment start ------//
+  const { loggedInUserDetails, languageIndex, cart, selectedProvider, tabbyPayment } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  const isFocused = useIsFocused()
+  state = {
+    appState: AppState.currentState
+  };
 
-        appCredentials: {
-          production_secrete_key:
-            Platform.OS == "ios"
-              ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-              : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-          language: Languages.EN,
-          sandbox_secrete_key:
-            Platform.OS == "ios"
-              ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-              : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
-          bundleID:
-            Platform.OS == "ios"
-              ? "com.patient.rootscare"
-              : "com.rootscare",
-        },
+  var sdkModule = RNGoSell.goSellSDK;
+  var sdkModels = RNGoSell.goSellSDKModels;
 
-        taxes: [
+  const [statesData, setStatesData] = useState({
+    modalvisible: false,
+    cartDetails: "",
+    pay_condition: false,
+    modalVisible3: false,
+    payment_moodal: false,
+    provider_name: "",
+    provider_id: "",
+    payment_url: "",
+    total_price: "",
+    user_id: "",
+    message: "",
+    task_details: "",
+    notification_count: "",
+    payment_status: "true",
+    currency_symbol: loggedInUserDetails.currency_symbol,
+    tabbyPaymentId: '',
+    payment_mode_country: "sar",
+    loadCart: true,
+    isRemovingCart: false,
+    isGoingBack: false,
+    isLoading: false,
+    appState: '',
+    isPaymentInitiate: false,
+    isPaymentDone: false,
+    customerDetails: null,
+    totalAmount: '',
+    service_type: '',
+    cartId: '',
+    isPaymentOption: false
+  })
+
+  const customerPayment = {
+    payment: {
+      amount: statesData.cartDetails?.total_price,
+      currency: statesData.currency_symbol,
+      buyer: {
+        email: 'card.success@tabby.ai',
+        phone: '500000001',
+        name: 'Ahmed Zia',
+        dob: '2019-08-24',
+      },
+      buyer_history: {
+        registered_since: '2019-08-24T14:15:22Z',
+        loyalty_level: 0,
+        wishlist_count: 0,
+        is_social_networks_connected: true,
+        is_phone_number_verified: true,
+        is_email_verified: true,
+      },
+      order: {
+        tax_amount: '0.00',
+        shipping_amount: '0.00',
+        discount_amount: '0.00',
+        reference_id: '#x-abc123',
+        items: [
           {
-            name: "tax1",
-            description: "tax describtion",
-            amount: {
-              type: "F",
-              value: 10.0,
-              maximum_fee: 10.0,
-              minimum_fee: 1.0,
-            },
+            title: 'Nurse',
+            description: 'Jersey',
+            quantity: 1,
+            unit_price: '10.00',
+            reference_id: 'uuid',
+            product_url: 'http://example.com',
+            category: 'Nurse',
           },
         ],
+      },
+      order_history: [
+        {
+          purchased_at: '2019-08-24T14:15:22Z',
+          amount: '0.00',
+          payment_method: 'card',
+          status: 'new',
+          buyer: {
+            email: 'card.success@tabby.ai',
+            phone: '500000001',
+            name: 'Ahmed Zia',
+            dob: '2019-08-24',
+          },
+          shipping_address: {
+            city: 'string',
+            address: 'string',
+            zip: 'string',
+          },
+          items: [
+            {
+              title: 'string',
+              description: 'string',
+              quantity: 1,
+              unit_price: '0.00',
+              reference_id: 'string',
+              product_url: 'http://example.com',
+              category: 'string',
+            },
+          ],
+        },
+      ],
+    },
+  };
+  const myTestPayment = { merchant_code: loggedInUserDetails.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare', lang: 'en', ...customerPayment }
 
-        //-----payment end---------//
-      };
-      screens = "Cart";
-    }
-    cart_customer = [];
-    this.changeState = this.changeState.bind(this);
-    this.startSDK = this.startSDK.bind(this);
-    this.handleResult = this.handleResult.bind(this);
-    this.handleSDKResult = this.handleSDKResult.bind(this);
-    this.printSDKResult = this.printSDKResult.bind(this);
+  useEffect(() => {
 
-    if (!this.sdkModule && RNGoSell && RNGoSell.goSellSDK) {
-      this.sdkModule = RNGoSell.goSellSDK;
+    getCartInfo()
+    getPayStatus();
+    appStateSubscription = AppState.addEventListener(
+      "change",
+      nextAppState => {
+        console.log("nextAppState", nextAppState);
+        setState({ appState: nextAppState });
+        if (nextAppState == 'inactive' || nextAppState == 'background') {
+          if (statesData.isPaymentInitiate == true) {
+            startTime = '';
+          }
+        }
+        if (nextAppState === "active") {
+          var endTime = new Date();
+          var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
+          var resultInMinutes = Math.round(difference / 60000);
+          console.log({ resultInMinutes });
+          if (resultInMinutes >= 1) {
+            remove_cart('auto')
+          }
+        }
+
+      }
+    );
+    return () => appStateSubscription.remove()
+
+  }, [])
+
+  useEffect(() => {
+    if (tabbyPayment == true) {
+      resetState()
+      setState({ modalvisible: true });
+      setTimeout(() => {
+        setState({ modalvisible: false })
+        navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
+      }, 1500);
     }
-    if (!this.sdkModule && RNGoSell && RNGoSell.goSellSDKModels) {
-      this.sdkModels = RNGoSell.goSellSDKModels;
+  }, [isFocused])
+
+  const getCartId = async () => {
+    let Id = await AsyncStorage.getItem('cartId')
+    console.log(Id);
+  }
+  const setState = payload => {
+    setStatesData(prev => ({
+      ...prev,
+      ...payload
+    }))
+  }
+  const resetState = () => {
+    setState({
+      modalvisible: false,
+      cartDetails: "",
+      pay_condition: false,
+      modalVisible3: false,
+      payment_moodal: false,
+      provider_name: "",
+      provider_id: "",
+      payment_url: "",
+      total_price: "",
+      user_id: "",
+      message: "",
+      task_details: "",
+      notification_count: "",
+      payment_status: "true",
+      currency_symbol: "",
+      tabbyPaymentId: '',
+      payment_mode_country: "sar",
+      loadCart: false,
+      isLoading: false,
+      appState: '',
+      customerDetails: null,
+      isRemovingCart: false,
+      isGoingBack: false,
+      isPaymentOption: false
+    })
+  }
+
+  const StartTabbySdk = async () => {
+    console.log({ myTestPayment });
+    try {
+      const { sessionId, paymentId, availableProducts } = await Tabby.createSession(myTestPayment);
+      console.log({
+        sessionId,
+      });
+      console.log({
+        paymentId,
+      });
+      console.log({
+        availableProducts
+      });
+      setState({ tabbyPaymentId: paymentId, })
+      // return
+      setTimeout(() => {
+        navigation.navigate('TabbyPayment',
+          {
+            url: availableProducts[0].webUrl,
+            serviceType: statesData.service_type,
+            cartId: statesData.cartId,
+            transactionId: paymentId
+          })
+      }, 750);
+    } catch (error) {
+      msgProvider.showError('Error creating session!')
+      console.log('tabby error...', error);
     }
   }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", () => {
-      this.get_cart();
-      this.get_all_notification();
-      this.get_paysttus();
-    });
-  }
 
-  startSDK() {
+  const startSDK = () => {
+    console.log('starting payment sdk....');
+    setState({ isLoading: true, isPaymentInitiate: true })
     var appCredentialsLocal = {
       appCredentials: appCredentials,
       sessionParameters: {
         paymentStatementDescriptor: "paymentStatementDescriptor",
-        transactionCurrency: this.state.payment_mode_country,
+        transactionCurrency: statesData.payment_mode_country,
         isUserAllowedToSaveCard: true,
         paymentType: PaymentTypes.ALL,
-        amount: global.amount_total,
+        amount: statesData.totalAmount,
         shipping: [],
         allowedCadTypes: AllowedCadTypes.ALL,
         paymentitems: [],
@@ -157,149 +314,141 @@ export default class Cart extends Component {
         taxes: [],
         merchantID: "",
         SDKMode: SDKMode.Production, //SDKMode.Production, //SDKMode.Production, SDKMode.Sandbox,
-        customer: cart_customer,
+        customer: statesData.customerDetails,
         isRequires3DSecure: true,
         receiptSettings: { id: null, email: false, sms: true },
         allowsToSaveSameCardMoreThanOnce: false,
         paymentReference: "null",
-        // uiDisplayMode: UiDisplayModes.DARK
       },
     };
 
-    //console.log('start SDK');
-    //try {
-    // console.log('iM')
-    // if (require('expo-constants').default.appOwnership === 'expo') {
-    // 	alert('PLEASE EJECT EXPO TO RUN native_modules');
-    // 	return;
-    // }
-    //}// catch (error) {
-    // console.log('i am here')
-    //  console.log(error);
-
-    // }
-    //console.log(this.sdkModule);
-
-    // startPayment(sdkConfigurations, terminationTimeoutInMilliseconds, this.handleResult)
-    // Set terminationTimeoutInMilliseconds to 0 to prevent termination the session automatically
-
-    //consolepro.consolelog('res',res)
-
     try {
       var res =
-        this.sdkModule &&
-        this.sdkModule.startPayment(appCredentialsLocal, 0, this.handleResult);
+        sdkModule &&
+        sdkModule.startPayment(appCredentialsLocal, 0, handleResult);
     } catch (e) {
-      console.log("skkk");
       console.log(e);
     }
   }
 
-  handleResult(error, status) {
-    console.log("sumit");
-    var myString = JSON.stringify(status);
-    console.log("status is " + status.sdk_result);
-    console.log(myString);
+  const handleResult = (error, status) => {
+    // console.log("status is..... " + status);
     var resultStr = String(status.sdk_result);
     switch (resultStr) {
       case "SUCCESS":
-        this.handleSDKResult(status);
-        this.submit_btn();
+        setState({ modalvisible: true, isLoading: false });
+        handleSDKResult(status);
+        break;
+      case "CANCELLED":
+        msgProvider.showError('Payment is cancelled')
+        setState({ isLoading: false, isPaymentInitiate: false })
+        startTime = new Date();
         break;
       case "FAILED":
-        this.handleSDKResult(status);
+        msgProvider.showError('Something went wrong, please contact admin')
+        setState({ isLoading: false, isPaymentInitiate: false })
+        startTime = new Date();
         break;
       case "SDK_ERROR":
-        console.log("sdk error............");
-        console.log(status["sdk_error_code"]);
-        console.log(status["sdk_error_message"]);
-        console.log(status["sdk_error_description"]);
-        console.log("sdk error............");
+        msgProvider.showError('Something went wrong, please contact admin')
+        setState({ isLoading: false, isPaymentInitiate: false })
+        // dispatch(Cart(statesData.cartId))
+        startTime = new Date();
+        console.log("sdk error............", status);
         break;
       case "NOT_IMPLEMENTED":
         break;
     }
-    this.changeState(resultStr, myString, () => {
-      console.log("done");
-    });
+    // changeState(resultStr, myString, () => {
+    // });
   }
 
-  handleSDKResult(result) {
-    console.log("trx_mode::::", result);
-    console.log(result["trx_mode"]);
+  const handleSDKResult = (result) => {
+    console.log("Payment sdk::::", result);
+
     switch (result["trx_mode"]) {
       case "CHARGE":
-        console.log("Charge");
-        console.log(result);
-        console.log(result.status);
-
         if (result.status == "CAPTURED") {
-          this.setState({ transaction_id: result.charge_id });
+          TapPayment(result.charge_id);
         } else {
-          // console.log('payment error', msgText.Payment_fail[config.language]);
+          // console.log('payment error', LangProvider.Payment_fail[languageIndex]);
           setTimeout(function () {
             msgProvider.showError(result.message);
             return false;
           }, 1000);
         }
-
-        // this.printSDKResult(result);
         break;
 
       case "AUTHORIZE":
-        this.printSDKResult(result);
+        printSDKResult(result);
         break;
 
       case "SAVE_CARD":
-        this.printSDKResult(result);
+        printSDKResult(result);
         break;
 
       case "TOKENIZE":
-        // Object.keys(result).map((key) => {
-        //   if( key=='token')
-        //   {
-        //     console.log(`muskasn\t${key}:\t\t\t${result[key]}`);
-        //     this.setState({transaction_id:result[key]})
-        //   }
-
-        // });
-
         break;
     }
   }
 
-  printSDKResult(result) {
+  const TapPayment = async (paymentId) => {
+    let url = config.baseURL + "api-patient-insert-appointment";
+    var data = new FormData();
+
+    data.append("service_type", statesData.service_type);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("cart_id", statesData.cartId);
+    data.append("trid", paymentId);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        if (obj.status == true) {
+          // console.log("obj", obj);
+          var message_new;
+          if (obj.result == null) {
+            message_new = obj.message;
+          } else {
+            message_new = obj.result;
+          }
+          resetState()
+          // dispatch(SelectedProvider(null))
+          setTimeout(() => {
+            setState({ modalvisible: false })
+            navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
+          }, 1500);
+
+        } else {
+          setState({ message: obj.message });
+          setTimeout(() => {
+            msgProvider.showError(obj.message);
+          }, 700);
+          // }
+          return false;
+        }
+      })
+      .catch((error) => {
+        console.log("TapPayment-error ------- " + error);
+        setState({ loading: false });
+      });
+  };
+
+  const printSDKResult = (result) => {
     if (!result) return;
     Object.keys(result).map((key) => {
       console.log(`${result["trx_mode"]}\t${key}:\t\t\t${result[key]}`);
     });
   }
 
-  changeState(newName, resultValue, callback) {
-    console.log("the new value is" + newName);
-    this.setState(
-      {
-        statusNow: newName,
-        result: resultValue,
-      },
-      callback
-    );
-  }
+  const getPayStatus = async () => {
 
-  get_paysttus = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-
-    let url =
-      "https://rootscare.net/application/payment/pages/rootscare_onoff.php";
-    console.log("url", url);
-
+    let url = "https://rootscare.net/application/payment/pages/rootscare_onoff.php";
     apifuntion
       .getApi(url, 1)
       .then((obj) => {
-        consolepro.consolelog("obj", obj.success);
         if (obj.success == "true") {
-          this.setState({ payment_status: obj.payment_status });
-          console.log("paystatus", obj.payment_status);
+          setState({ payment_status: obj.payment_status });
         } else {
           return false;
         }
@@ -308,110 +457,87 @@ export default class Cart extends Component {
         console.log("-------- error ------- " + error);
       });
   };
-  get_all_notification = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
-    let user_id = user_details["user_id"];
 
-    let url = config.baseURL + "api-notification-count";
-    console.log("url", url);
-    var data = new FormData();
-    data.append("login_user_id", user_id);
 
-    consolepro.consolelog("data", data);
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        consolepro.consolelog("obj", obj);
-        if (obj.status == true) {
-          this.setState({ notification_count: obj.result });
-          console.log("obj nationaltity", obj);
-        } else {
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  };
-  get_cart = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-    this.setState({ currency_symbol: user_details["currency_symbol"] });
-    if (user_details["currency_symbol"] == "AED") {
-      this.setState({ payment_mode_country: "aed" });
+  const getCartInfo = async () => {
+    if (statesData.currency_symbol == "AED") {
+      setState({ payment_mode_country: "aed" });
     } else {
-      this.setState({ payment_mode_country: "sar" });
+      setState({ payment_mode_country: "sar" });
     }
 
     let customer = {
-      isdNumber: user_details["user_id"],
+      isdNumber: loggedInUserDetails.user_id,
       number: "00000000",
       customerId: "",
-      first_name: user_details["first_name"],
+      first_name: loggedInUserDetails.first_name,
       middle_name: "",
-      last_name: user_details["last_name"],
-      email: user_details["email"],
+      last_name: loggedInUserDetails.last_name,
+      email: loggedInUserDetails.email,
     };
 
-    console.log("customer", customer);
-    cart_customer = customer;
-    this.setState({ user_id: user_id, customer: customer });
+    setState({
+      user_id: loggedInUserDetails.user_id,
+      customerDetails: customer,
+    });
     let url = config.baseURL + "api-patient-cart-details";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("login_user_id", user_id);
+    data.append("login_user_id", loggedInUserDetails.user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
-
+        console.log("get_cart-response...", obj.result[0].id);
         if (obj.status == true) {
-          console.log("muskan test cart", obj.result[0]);
-          this.setState({
+          // dispatch(Cart(obj.result[0].id))
+          AsyncStorage.setItem('cartId', obj.result[0].id)
+          setState({
             family_member_id: obj.result[0].family_member_id,
-            cart_arr: obj.result[0],
+            cartDetails: obj.result[0],
             service_type: obj.result[0].service_type,
-            cart_id: obj.result[0].id,
+            cartId: obj.result[0].id,
             provider_name: obj.result[0].provider_details.provider_name,
             task_details: obj.result[0].task_details,
+            totalAmount: obj.result[0].total_price
           });
-          global.amount_total = obj.result[0].total_price;
-          global.username = obj.result[0].provider_details.provider_name;
-          localStorage.setItemObject("cart_sendarr", obj.result[0]);
         } else {
-          this.setState({ cart_arr: obj.result });
+          setState({ cartDetails: obj.result });
           return false;
         }
+      }).catch((error) => {
+        console.log("-------- error ------- " + error);
+      }).finally(() => {
+        setState({ loadCart: false })
       })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-      });
   };
 
-  remove_cart = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const remove_cart = async (type) => {
+    let Id = await AsyncStorage.getItem('cartId')
     let url = config.baseURL + "api-patient-remove-cart";
-    console.log("url", url);
-
     var data = new FormData();
-    data.append("cart_id", this.state.cart_id);
+    data.append("cart_id", statesData.cartId == '' ? Id : statesData.cartId);
 
-    consolepro.consolelog("data", data);
+    console.log(data);
     apifuntion
-      .postApi(url, data, 1)
+      .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
-
+        setState({ modalVisible3: false, isRemovingCart: false })
+        console.log("remove_cart-response...", obj);
         if (obj.status == true) {
-          console.log("hello hello", obj.result);
-          this.get_cart();
+          AsyncStorage.removeItem('cartId')
+          dispatch(Cart(null))
+          if (type == 'auto') {
+            msgProvider.showSuccess('You cart is removed automatically by the system.');
+            setTimeout(() => {
+              navigation.pop()
+            }, 300);
+          } else {
+            AsyncStorage.removeItem('cartId')
+            msgProvider.showSuccess(obj.message);
+          }
+          resetState()
 
-          msgProvider.showSuccess(obj.message);
         } else {
           msgProvider.showError(obj.message);
 
@@ -419,11 +545,13 @@ export default class Cart extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        AsyncStorage.removeItem('cartId')
+        setState({ modalVisible3: false, isRemovingCart: false })
+        console.log("-------- error ------- " + error);
       });
   };
 
-  _onNavigationStateChange(webViewState) {
+  const _onNavigationStateChange = (webViewState) => {
     webViewState.canGoBack = false;
     if (webViewState.loading == false) {
       console.log("webViewState", webViewState);
@@ -431,7 +559,6 @@ export default class Cart extends Component {
       var t = webViewState.url.split("/").pop().split("?")[0];
       if (typeof t != null) {
         var p = webViewState.url.split("?").pop().split("&");
-        console.log("file name muska", t);
         if (t == "payment_success_final.php") {
           var payment_id = 0;
           console.log("p.length", p.length);
@@ -446,109 +573,39 @@ export default class Cart extends Component {
             }
           }
           console.log("payment_id", payment_id);
-          if (this.state.pay_condition == false) {
-            this.setState({ pay_condition: true });
+          if (statesData.pay_condition == false) {
+            setState({ pay_condition: true });
             setTimeout(() => {
-              this.submit_btn(payment_id);
+              TapPayment(payment_id);
             }, 500);
           }
         } else if (t == "payment_cancel.php") {
-          this.props.navigation.navigate("Home");
+          navigation.navigate("Home");
 
           msgProvider.showError("Payment unsuccessful");
           return false;
         } else if (t == "payment_failed.php") {
           msgProvider.alert(
-            msgTitle.information[config.language],
+            LangProvider.information[languageIndex],
             "Payment unsuccessful",
             false
           );
-          this.props.navigation.goBack();
+          navigation.goBack();
         }
       }
     }
   }
 
-  submit_btn = async (payment_id) => {
-    let transaction_id = payment_id;
-    if (this.state.payment_status == "false") {
-      transaction_id = "#123PE874333";
-    } else {
-      transaction_id = this.state.transaction_id;
-    }
 
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
-    let url = config.baseURL + "api-patient-insert-appointment";
-    console.log("url", url);
-    var data = new FormData();
-    console.log("data", data);
-
-    data.append("service_type", this.state.service_type);
-    data.append("login_user_id", user_id);
-    data.append("cart_id", this.state.cart_id);
-    data.append("trid", transaction_id);
-    // data.append('family_member_id',this.state.family_member_id)
-    // data.append('provider_id',this.state.provider_id)
-
-    apifuntion
-      .postApi(url, data, 0)
-      .then((obj) => {
-        if (obj.status == true) {
-          console.log("obj", obj);
-          var message_new;
-          if (obj.result == null) {
-            message_new = obj.message;
-          } else {
-            message_new = obj.result;
-          }
-
-          this.setState({ payment_moodal: false });
-
-          // PushNotification.localNotification({
-          //   channelId:'rootscares1', //his must be same with channelid in createchannel
-          //   title:'Appoinment Booking',
-          //   message:message_new,
-          //   priority: "high",
-          // })
-          setTimeout(() => {
-            this.get_cart();
-            this.setState({ modalvisible: true });
-          }, 300);
-
-          setTimeout(() => {
-            this.setState({ modalvisible: false }, () => {
-              this.props.navigation.navigate("Appointment");
-            });
-
-          }, 5000);
-
-          global.username = "NA";
-          global.amount_total = 1;
-        } else {
-          this.setState({ message: obj.message });
-          setTimeout(() => {
-            msgProvider.alert("", obj.message, false);
-          }, 700);
-          // }
-          return false;
-        }
-      })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
-      });
-  };
-  ActivityIndicatorElement = () => {
+  const ActivityIndicatorElement = () => {
     //making a view to show to while loading the webpage
     return (
       <ActivityIndicator
-        color={Colors.theme_color}
+        color={Colors.Theme}
         size="large"
         style={{
           position: "absolute",
-          top: (mobileH * 40) / 100,
+          top: (windowHeight * 40) / 100,
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
@@ -558,1051 +615,601 @@ export default class Cart extends Component {
     );
   };
 
-  render() {
-    var show_data = this.state.cart_arr;
-    //  var item = this.state.cart_arr
-    consolepro.consolelog("show_data", show_data);
-    //  consolepro.consolelog('muskan',item)
-    return (
-      <View style={Styles.container1}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "#fff",
-            paddingBottom: (mobileW * 10) / 100,
-          }}
-        >
-          {/* <Text>Home</Text> */}
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              alignSelf: "center",
-              paddingVertical: (mobileW * 3) / 100,
-              backgroundColor: Colors.white_color,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
+  var show_data = statesData.cartDetails;
+  return (
+    <View
+      pointerEvents={(statesData.isLoading || statesData.isRemovingCart) ? 'none' : 'auto'}
+      style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+      <ScreenHeader
+        title={LangProvider.CartItem[languageIndex]}
+        navigation={navigation}
+        onBackPress={() => {
+          if (statesData.cartDetails != "" && statesData.cartDetails != null) {
+            setState({ isGoingBack: true })
+            remove_cart('auto')
+          } else {
+            navigation.pop()
+          }
+        }}
+        leftIcon
+        isLoading={statesData.isGoingBack}
+      />
+      <>
+        {
+          (statesData.cartDetails != "" && statesData.cartDetails != null) ?
+            <View style={{ backgroundColor: Colors.White, paddingTop: vs(9), marginTop: vs(7) }}>
 
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                padding: (mobileW * 2.5) / 100,
-                flexDirection: "row",
-                width: "100%",
+              <ScrollView showsVerticalScrollIndicator={false}>
 
-                alignSelf: "center",
-                paddingTop: (mobileW * 3) / 100,
-                backgroundColor: Colors.white_color,
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  width: "10%",
-                  // backgroundColor: 'pink',
-                  alignSelf: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Home");
-                  }}
-                >
-                  <Image
-                    source={
-                      config.textalign == "right"
-                        ? localimag.arabic_back
-                        : localimag.backarrow
-                    }
-                    style={{
-                      resizeMode: "contain",
-                      width: (mobileW * 9) / 100,
-                      alignSelf: "center",
-                      height: (mobileW * 9) / 100,
-                    }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  // backgroundColor: 'yellow',
-                  width: "80%",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 4) / 100,
-                  }}
-                >
-                  {Lang_chg.CartItem[config.language]}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: "10%",
-                  alignSelf: "center",
-                  // backgroundColor: 'red',
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Notifications");
-                  }}
-                >
-                  <Image
-                    // tintColor="#fff"
-                    source={
-                      this.state.notification_count > 0
-                        ? localimag.notifications
-                        : localimag.notifications_sec
-                    }
-                    style={{
-                      alignSelf: "center",
-                      resizeMode: "contain",
-                      width: (mobileW * 6) / 100,
-                      height: (mobileW * 6) / 100,
-                    }}
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          {this.state.cart_arr != "" && this.state.cart_arr != null && (
-            <ScrollView
-              style={{
-                flex: 1,
-                backgroundColor: "#fff",
-              }}
-              contentContainerStyle={{ paddingBottom: (mobileW * 2) / 100 }}
-              showsVerticalScrollIndicator={false}
-            >
-              <View
-                style={[
-                  { backgroundColor: "#fff" },
-                  this.state.task_details.length <= 3
-                    ? { height: (mobileH * 77) / 100 }
-                    : { height: (mobileH * 95) / 100 },
-                ]}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    marginBottom: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 2) / 100,
-                    shadowOpacity: 0.3,
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 1 },
-                    elevation: 3,
-                    shadowRadius: 2,
-                  }}
-                >
-                  <View>
-                    {/* <View style={{width: '100%', alignSelf: 'center'}}> */}
-                    <View
-                      style={{
-                        alignItems: "center",
-                        flexDirection: "row",
-                        paddingVertical: (mobileW * 3) / 100,
-                        width: "90%",
-                        alignSelf: "center",
-                        justifyContent: "space-between",
-                        // marginTop:mobileW*2/100
-                      }}
-                    >
-                      <View
+                {/* -----------Name------------- */}
+                <View style={{ borderBottomWidth: 1.5, borderBottomColor: Colors.backgroundcolor, }}>
+                  <View style={{ flexDirection: 'row', paddingHorizontal: s(13), alignItems: 'center' }}>
+
+                    <View style={{ flexDirection: 'row', width: '90%', alignItems: 'center' }}>
+                      <Text
                         style={{
-                          flexDirection: "row",
-                          width: "83%",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.9) / 100,
-                            color: Colors.gray4,
-                          }}
-                        >
-                          {this.state.provider_name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.cart2subtext,
-                            color: Colors.theme_color,
-                            marginLeft: (mobileW * 4) / 100,
-                          }}
-                        >
-                          {show_data.service_display_type}
-                        </Text>
-                      </View>
+                          fontFamily: Font.Medium,
+                          fontSize: Font.large,
+                          color: Colors.detailTitles,
+                        }}>
+                        {statesData.provider_name}
+                      </Text>
 
-                      <View style={{}}>
-                        <View
+                      <View style={{ height: vs(11), width: 1, backgroundColor: Colors.Border, marginLeft: vs(6) }}></View>
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.medium,
+                          color: Colors.detailTitles,
+                          marginLeft: vs(12)
+                        }}>
+                        {show_data?.service_display_type}
+                      </Text>
+                    </View>
+
+                    <View style={{ width: '10%', justifyContent: 'center', alignItems: 'center' }}>
+                      <TouchableHighlight
+                        onPress={() => {
+                          setState({ modalVisible3: true });
+                        }}
+                        underlayColor={Colors.Highlight}
+                        style={styles.closeContainer}>
+                        <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+                      </TouchableHighlight>
+                    </View>
+                  </View>
+                </View>
+
+                {/* --------------------------------------- */}
+
+
+                <View style={{ marginTop: vs(13), paddingHorizontal: s(13) }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.large,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start'
+                    }}>
+                    {LangProvider.Appointment_footer[languageIndex]}
+                  </Text>
+
+                  <View style={{ flexDirection: 'row', marginTop: vs(15) }}>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start'
+                        }}>
+                        {LangProvider.Date[languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start',
+                          marginTop: vs(2)
+                        }}>
+                        {show_data?.display_app_date}
+                      </Text>
+                      <View style={{ width: '60%', marginTop: vs(5), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
+                        <Text
                           style={{
-                            alignSelf: "center",
-                            alignSelf: "flex-end",
-                          }}
-                        >
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.setState({ modalVisible3: true });
-                            }}
-                          >
-                            <Image
-                              source={localimag.cross}
-                              style={{
-                                resizeMode: "contain",
-                                backgroundColor: Colors.white_color,
-                                width: (mobileW * 5.5) / 100,
-                                height: (mobileW * 5.5) / 100,
-                                alignSelf: "center",
-                              }}
-                            />
-                          </TouchableOpacity>
-                        </View>
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.Theme,
+                            textAlign: 'left'
+                          }}>
+                          {show_data?.display_task_type}
+                        </Text>
                       </View>
                     </View>
 
-                    {/* border */}
-                    <View
-                      style={{
-                        borderTopWidth: 0.5,
-                        borderColor: Colors.gainsboro,
-
-                        marginTop: (mobileW * 1) / 100,
-                        // marginVertical: (mobileW * 3) / 100,
-                      }}
-                    />
-                    <View style={{ width: "90%", alignSelf: "center" }}>
-                      <View>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start'
+                        }}>
+                        {LangProvider.Time[languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.DarkGrey,
+                          alignSelf: 'flex-start',
+                          marginTop: vs(2)
+                        }}>
+                        {show_data?.from_time} - {show_data?.to_time}
+                      </Text>
+                      <View style={{ marginTop: vs(5), alignItems: 'center', flexDirection: 'row' }}>
+                        <SvgXml xml={clockBlue} height={vs(16)} width={s(16)} />
                         <Text
                           style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.cart2heading,
-                            color: Colors.theme_color,
-                            paddingBottom: (mobileW * 3.5) / 100,
-                            paddingTop: (mobileW * 2) / 100,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Appointment_footer[config.language]}
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.Theme,
+                            marginLeft: s(6)
+                          }}>
+                          {show_data?.display_task_time}
                         </Text>
                       </View>
 
-                      <View
-                        style={{
-                          backgroundColor: "#fff",
-                          marginBottom: (mobileW * 3.5) / 100,
-                        }}
-                      >
-                        <View style={{}}>
+                    </View>
+
+                    {/* --------------------------------- */}
+                  </View>
+                </View>
+
+                {/* ---------------------------------------- */}
+                <View style={{ marginTop: vs(13), paddingHorizontal: s(13), backgroundColor: '#FBFBFB', paddingVertical: vs(10) }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.large,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start'
+                    }}>
+                    {LangProvider.Payment[languageIndex]}
+                  </Text>
+
+                  <FlatList
+                    data={show_data?.task_details}
+                    renderItem={({ item, index }) => {
+                      if (item.task_details != "") {
+                        return (
                           <View
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
-                            }}
-                          >
-                            {/* image and store name */}
-
-                            <View
+                              paddingVertical: vs(5),
+                            }}>
+                            <Text
                               style={{
-                                width: "50%",
+                                fontFamily: Font.Regular,
+                                fontSize: Font.small,
+                                alignSelf: 'flex-start',
+                                color: Colors.detailTitles,
                               }}
+                              numberOfLines={1}
                             >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  color: Colors.theme_color,
-                                  fontSize: (mobileW * 3.5) / 100,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {Lang_chg.Date[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.cart2subtext,
-                                  textTransform: "uppercase",
-                                  color: Colors.darkgraytextheading,
-                                  textAlign: config.textRotate,
-
-                                  paddingTop: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {show_data.display_app_date}
-                              </Text>
-
-                              <View
-                                style={{
-                                  borderWidth: 1,
-                                  borderColor: Colors.theme_color,
-                                  marginTop: (mobileW * 2) / 100,
-                                  paddingVertical: (mobileW * 1) / 100,
-                                  width: "75%",
-                                  justifyContent: "center",
-                                  borderRadius: (mobileW * 1) / 100,
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 3) / 100,
-                                    color: Colors.theme_color,
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  {show_data.display_task_type}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View
+                              {item.name}
+                            </Text>
+                            <Text
                               style={{
-                                width: "50%",
-                                marginRight: (mobileW * 3) / 100,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  color: Colors.theme_color,
-                                  fontSize: (mobileW * 3.5) / 100,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {Lang_chg.Time[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.cart2subtext,
-                                  color: Colors.darkgraytextheading,
-                                  textAlign: config.textRotate,
-                                  paddingTop: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {show_data.from_time} - {show_data.to_time}
-                              </Text>
-
-                              <View
-                                style={{
-                                  width: "100%",
-                                  flexDirection: "row",
-                                  paddingVertical: (mobileW * 2) / 100,
-                                  borderRadius: (mobileW * 1) / 100,
-                                  alignItems: "center",
-                                  marginTop: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {config.language == 0 ? (
-                                  <Image
-                                    source={localimag.clock}
-                                    style={{
-                                      tintColor: Colors.theme_color,
-                                      resizeMode: "contain",
-                                      width: (mobileW * 4) / 100,
-                                      height: (mobileW * 4) / 100,
-                                    }}
-                                  ></Image>
-                                ) : (
-                                  <Image
-                                    source={localimag.clock_arabic}
-                                    style={{
-                                      tintColor: Colors.theme_color,
-                                      resizeMode: "contain",
-                                      width: (mobileW * 4) / 100,
-                                      height: (mobileW * 4) / 100,
-                                    }}
-                                  ></Image>
-                                )}
-
-                                <Text
-                                  style={{
-                                    color: Colors.theme_color,
-                                    fontFamily: Font.fontregular,
-                                    fontSize: (mobileW * 3.3) / 100,
-                                    marginLeft: (mobileW * 1.5) / 100,
-                                    textAlign: config.textRotate,
-                                  }}
-                                >
-                                  {show_data.display_task_time}
-                                </Text>
-                              </View>
-                            </View>
+                                fontFamily: Font.Regular,
+                                fontSize: Font.small,
+                                alignSelf: 'flex-start',
+                                color: Colors.detailTitles,
+                              }} >
+                              {item.price}
+                            </Text>
                           </View>
-                        </View>
+                        );
+                      }
+                    }}
+                  />
+                  {/* ----------------------------------- */}
+                  <View
+                    style={{
+                      paddingVertical: vs(10),
+                      borderTopWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: '#00000029',
+                    }}>
+                    {show_data?.display_task_type !== "Online consultation" && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            alignSelf: 'flex-start',
+                            color: Colors.detailTitles,
+                          }}>
+                          {/* {show_data?.distance_fare_text} */}
+                          {`${show_data.distance_fare_text} ${show_data?.distancetext == '' ? '' : `(${show_data.distancetext})`}`}
+
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            alignSelf: 'flex-start',
+                            color: Colors.detailTitles,
+                          }}>
+                          {show_data?.distance_fare}
+                        </Text>
                       </View>
-                    </View>
+                    )}
 
                     <View
                       style={{
-                        backgroundColor: "#F1F2F4",
-
-                        paddingVertical: (mobileW * 3) / 100,
-                      }}
-                    >
-                      <View style={{ width: "90%", alignSelf: "center" }}>
-                        <View>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.cart2heading,
-                              color: Colors.theme_color,
-                              textAlign: config.textRotate,
-                              paddingTop: (mobileW * 1) / 100,
-                            }}
-                          >
-                            {Lang_chg.Payment[config.language]}
-                          </Text>
-                        </View>
-                        <FlatList
-                          data={show_data.task_details}
-                          renderItem={({ item, index }) => {
-                            consolepro.consolelog("helooo", item);
-                            if (item.task_details != "") {
-                              return (
-                                <View
-                                  style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    paddingVertical: (mobileW * 1.5) / 100,
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: Font.fontregular,
-                                      fontSize: (mobileW * 3.3) / 100,
-                                      textAlign: config.textRotate,
-                                      color: "#000",
-                                      width: "70%",
-                                    }}
-                                    numberOfLines={1}
-                                  >
-                                    {item.name}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      fontFamily: Font.fontregular,
-                                      fontSize: (mobileW * 3.3) / 100,
-                                      width: "30%",
-                                      textAlign: "right",
-                                      color: "#000",
-                                    }}
-                                  >
-                                    {item.price}
-                                  </Text>
-                                </View>
-                              );
-                            }
-                          }}
-                        />
-                        {show_data.display_task_type !==
-                          "Online consultation" && (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                paddingVertical: (mobileW * 2) / 100,
-                                borderTopWidth: (mobileW * 0.3) / 100,
-                                borderColor: Colors.bordercolor,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: (mobileW * 3.3) / 100,
-                                  color: "#000",
-                                }}
-                              >
-                                {show_data.distance_fare_text}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: (mobileW * 3.3) / 100,
-                                  color: "#000",
-                                }}
-                              >
-                                {show_data.distance_fare}
-                              </Text>
-                            </View>
-                          )}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            borderTopWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                            // marginTop: mobileW * 0.5 / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
-                            }}
-                          >
-                            {Lang_chg.subTotal[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
-                            }}
-                          >
-                            {show_data.sub_total_price}{" "}
-                            {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            // borderBottomWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontregular,
-                              fontSize: (mobileW * 3.3) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {show_data.vat_text}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontregular,
-                              fontSize: (mobileW * 3.3) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {show_data.vat_price}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            width: "100%",
-
-                            borderWidth: 0.5,
-                            borderColor: Colors.bordercolor,
-                          }}
-                        />
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginTop: (mobileW * 2) / 100,
-                            // paddingVertical: (mobileW * 3) / 100,
-                            // borderTopWidth: (mobileW * 0.3) / 100,
-                            // borderColor: Colors.bordercolor,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.theme_color,
-                              textAlign: config.textRotate,
-                            }}
-                          >
-                            {Lang_chg.Total[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.theme_color,
-                            }}
-                          >
-                            {show_data.total_price} {this.state.currency_symbol}
-                          </Text>
-                        </View>
-                      </View>
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: (windowWidth * 2) / 100,
+                      }} >
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.small,
+                          alignSelf: 'flex-start',
+                          color: Colors.detailTitles,
+                        }}>
+                        {show_data?.vat_text}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.small,
+                          alignSelf: 'flex-start',
+                          color: Colors.detailTitles,
+                        }}
+                      >
+                        {show_data?.vat_price}
+                      </Text>
                     </View>
+
                   </View>
-                </View>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    if (this.state.payment_status == "true") {
-                      this.startSDK();
-                      //     this.get_payment(),this.setState({total_price:show_data.total_price})
-                    } else {
-                      this.submit_btn(),
-                        this.setState({ total_price: show_data.total_price });
-                    }
-                  }}
-                  style={{
-                    width: "90%",
-                    alignSelf: "center",
-                    borderRadius: (mobileW * 2) / 100,
-                    backgroundColor: Colors.buttoncolorblue,
-                    paddingVertical: (mobileW * 4) / 100,
-                    position: "absolute",
-                    bottom: 20,
-                    marginBottom: (mobileW * 5) / 100,
-                  }}
-                >
-                  <Text
+
+                  {/* ----------------------------------- */}
+                  <View
                     style={{
-                      color: Colors.textwhite,
-                      fontFamily: Font.fontmedium,
-                      fontSize: Font.buttontextsize,
-                      alignSelf: "flex-end",
-                      textAlign: config.textalign,
-                      alignSelf: "center",
-                    }}
-                  >
-                    {Lang_chg.PROCEEDTOPAYMENT[config.language]}
-                  </Text>
-                </TouchableOpacity> */}
-              </View>
-            </ScrollView>
-          )}
-          {this.state.cart_arr == "" ||
-            (this.state.cart_arr == null && (
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: vs(10),
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        color: Colors.Theme,
+                      }}>
+                      {LangProvider.Total[languageIndex]}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        color: Colors.Theme,
+                      }}>
+                      {show_data?.total_price + ' ' + statesData.currency_symbol}
+                    </Text>
+                  </View>
+
+                </View>
+              </ScrollView>
+
+            </View>
+            :
+
+            ((statesData.cartDetails == "" || statesData.cartDetails == null) && statesData.loadCart == false) ?
+
               <View
                 style={{
-                  width: "90%",
+                  width: "100%",
                   alignSelf: "center",
-                  marginTop: (mobileW * 5) / 100,
-                }}
-              >
+                  marginTop: (windowWidth * 5) / 100,
+                  paddingHorizontal: s(13)
+                }} >
                 <Image
                   style={{
-                    width: (mobileW * 35) / 100,
-                    height: (mobileW * 50) / 100,
+                    width: (windowWidth * 35) / 100,
+                    height: (windowWidth * 50) / 100,
                     alignSelf: "center",
                     resizeMode: "contain",
                   }}
-                  source={localimag.Emptycart}
+                  source={Icons.Emptycart}
                 />
 
                 <Text
                   style={{
-                    color: Colors.theme_color,
-                    fontFamily: Font.fontregular,
-                    fontSize: (mobileW * 4) / 100,
+                    color: Colors.Theme,
+                    fontFamily: Font.Regular,
+                    fontSize: (windowWidth * 4) / 100,
                     textAlign: "center",
                   }}
                 >
                   Cart Details not found.
                 </Text>
-                <TouchableOpacity
+
+                <Button
+                  text={LangProvider.BOOKNOW[languageIndex]}
+                  btnStyle={{ marginTop: vs(20) }}
                   onPress={() => {
-                    // this.props.navigation.goBack();
-                    this.props.navigation.reset({
+                    navigation.reset({
                       index: 0,
-                      routes: [{ name: "Home" }],
+                      routes: [{ name: "DashboardStack" }],
                     });
                   }}
-                  style={{
-                    width: "90%",
-                    alignSelf: "center",
-                    borderRadius: (mobileW * 2) / 100,
-                    backgroundColor: Colors.buttoncolorblue,
-                    paddingVertical: (mobileW * 4) / 100,
-                    marginTop: (mobileW * 8) / 100,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: Colors.textwhite,
-                      fontFamily: Font.fontmedium,
-                      fontSize: Font.buttontextsize,
-                      alignSelf: "flex-end",
-                      textAlign: config.textalign,
-                      alignSelf: "center",
-                    }}
-                  >
-                    {Lang_chg.BOOKNOW[config.language]}
-                  </Text>
-                </TouchableOpacity>
+                />
+
               </View>
-            ))}
-        </View>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible3}
-          onRequestClose={() => {
-            this.setState({ modalVisible3: false });
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={0.9}
+              :
+              ((statesData.cartDetails == "" || statesData.cartDetails == null) && statesData.loadCart == true) ?
+                <LoadingSkeleton />
+                :
+                null
+
+        }
+      </>
+
+
+
+      {
+        ((statesData.cartDetails != "" && statesData.cartDetails != null)) &&
+
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            backgroundColor: Colors.White,
+            paddingHorizontal: (windowWidth * 5) / 100,
+            paddingVertical: (windowWidth * 2) / 100,
+            height: 80,
+            alignItems: "center",
+            paddingHorizontal: '10%',
+            borderTopWidth: 1,
+            borderTopColor: Colors.Border,
+            position: 'absolute',
+            bottom: 0
+          }}>
+
+          <View style={{ alignItems: 'flex-start' }}>
+            <Text
+              style={{
+                fontFamily: Font.Medium,
+                fontSize: Font.xxlarge,
+                color: Colors.Theme,
+              }}>
+              {show_data?.total_price + ' ' + statesData.currency_symbol}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Font.Regular,
+                fontSize: Font.small,
+                color: Colors.detailTitles,
+              }}>
+              {LangProvider.Amount_Payable[languageIndex]}
+            </Text>
+          </View>
+
+          <Button
+            onLoading={statesData.isLoading}
+            btnStyle={{ width: windowWidth / 2.5 }}
+            text={LangProvider.ProceedToPay[languageIndex]}
             onPress={() => {
-              this.setState({ modalVisible3: false });
+              // startSDK();
+              // StartTabbySdk()
+              setState({ isPaymentOption: true })
             }}
+          />
+
+        </View>
+
+
+      }
+
+
+      {/* ------------------------------Delete Modal-------------------------------------- */}
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={statesData.modalVisible3}
+        onRequestClose={() => {
+          setState({ modalVisible3: false });
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#00000080",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+            marginTop: -50,
+          }}>
+          <View
             style={{
-              backgroundColor: "#00000080",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 20,
-              marginTop: -50,
+              borderRadius: 20,
+              width: (windowWidth * 90) / 100,
+              position: "absolute",
+              alignSelf: "center",
             }}
           >
-            <StatusBar
-              backgroundColor={"#fff"}
-              barStyle="default"
-              hidden={false}
-              translucent={false}
-              networkActivityIndicatorVisible={true}
-            />
             <View
               style={{
-                borderRadius: 20,
-                width: (mobileW * 90) / 100,
-                position: "absolute",
-                alignSelf: "center",
+                backgroundColor: "#fff",
+                borderRadius: 2,
+                width: "100%",
               }}
             >
               <View
                 style={{
-                  backgroundColor: "#fff",
-                  borderRadius: 2,
-                  width: "100%",
+                  alignSelf: "flex-start",
+                  width: (windowWidth * 50) / 100,
+                  paddingVertical: (windowWidth * 3) / 100,
+                  marginTop: (windowWidth * 2) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
                 }}
               >
-                <View
+                <Image
                   style={{
-                    alignSelf: "flex-start",
-                    width: (mobileW * 50) / 100,
-                    paddingVertical: (mobileW * 3) / 100,
-                    marginTop: (mobileW * 2) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
-                    flexDirection: "row",
+                    width: (windowWidth * 6) / 100,
+                    height: (windowWidth * 6) / 100,
+                  }}
+                  source={Icons.logoPlain}
+                />
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    color: "#000",
+                    fontSize: (windowWidth * 5) / 100,
+                    paddingLeft: (windowWidth * 4) / 100,
                   }}
                 >
-                  <Image
-                    style={{
-                      width: (mobileW * 6) / 100,
-                      height: (mobileW * 6) / 100,
-                    }}
-                    source={require("../icons/logo.png")}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: Font.fontmedium,
-                      color: "#000",
-                      fontSize: (mobileW * 5) / 100,
-                      paddingLeft: (mobileW * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.confimation[config.language]}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    alignSelf: "flex-start",
-                    paddingVertical: (mobileW * 1) / 100,
-                    paddingLeft: (mobileW * 4) / 100,
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: Font.fontregular,
-                      color: "#000",
-                      fontSize: (mobileW * 4) / 100,
-                    }}
-                  >
-                    {Lang_chg.remove_msg[config.language]}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    width: "40%",
-                    paddingBottom: (mobileW * 5) / 100,
-                    marginTop: (mobileW * 9) / 100,
-                    alignSelf: "flex-end",
-                    right: 10,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ modalVisible3: false });
-                    }}
-                    style={{
-                      width: (mobileW * 15) / 100,
-                      flexDirection: "row",
-                      alignSelf: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
-                        color: Colors.bordercolorblue,
-                        alignSelf: "center",
-                      }}
-                    >
-                      {Lang_chg.no_txt[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ modalVisible3: false }),
-                        this.remove_cart();
-                    }}
-                    activeOpacity={0.8}
-                    style={{
-                      width: (mobileW * 40) / 100,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.fontregular,
-                        fontSize: (mobileW * 4) / 100,
-                        color: Colors.bordercolorblue,
-                        alignSelf: "center",
-                      }}
-                    >
-                      {Lang_chg.Delete[config.language]}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                  {LangProvider.confimation[languageIndex]}
+                </Text>
               </View>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-
-        {/* -------------------------------payment model-------------------------------- */}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.payment_moodal}
-          onRequestClose={() => {
-            this.setState({ payment_moodal: false });
-          }}
-        >
-          <WebView
-            source={{ uri: this.state.payment_url }}
-            onNavigationStateChange={this._onNavigationStateChange.bind(this)}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            renderLoading={() => this.ActivityIndicatorElement()}
-            startInLoadingState={false}
-          />
-        </Modal>
-        {/* ----------------------------------------------sucess model -------------------------- */}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalvisible}
-          onRequestClose={() => { }}
-        >
-          <View
-            style={{
-              flex: 1,
-              alignSelf: "center",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              width: "100%",
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                borderRadius: (mobileW * 4) / 100,
-                position: "absolute",
-                bottom: 0,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: (mobileW * 5) / 100,
-                alignSelf: "center",
-              }}
-            >
-              <Image
+              <View
                 style={{
-                  width: (mobileW * 15) / 100,
-                  height: (mobileW * 15) / 100,
-                  alignSelf: "center",
-                  marginTop: (mobileW * -5) / 100,
-                }}
-                source={localimag.greentick}
-              />
-              <Text
-                style={{
-                  fontSize: (mobileW * 8) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.thank[config.language]}
-              </Text>
-              <Text
-                style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.success[config.language]}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 1) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.appoinment_aucess[config.language]}
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ modalvisible: false });
-                  this.props.navigation.navigate("Appointment");
-                }}
-                style={{
-                  // width: '15%',
-                  alignSelf: "center",
-                  borderColor: Colors.bordercolorblue,
-                  borderWidth: 1,
-                  padding: (mobileW * 2) / 100,
-                  paddingHorizontal: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  borderRadius: (mobileW * 2) / 100,
+                  alignSelf: "flex-start",
+                  paddingVertical: (windowWidth * 1) / 100,
+                  paddingLeft: (windowWidth * 4) / 100,
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
                 <Text
                   style={{
-                    fontSize: (mobileW * 3) / 100,
-                    alignSelf: "center",
-                    fontFamily: Font.fontsemibold,
-                    textAlign: config.textalign,
-                    alignSelf: "center",
-                    color: Colors.terms_text_color_blue,
+                    fontFamily: Font.Regular,
+                    color: "#000",
+                    fontSize: (windowWidth * 4) / 100,
                   }}
                 >
-                  {Lang_chg.Gotoappointment[config.language]}
+                  {LangProvider.remove_msg[languageIndex]}
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-        <HideWithKeyboard>
-          {/* <Footer
-            activepage="Cart"
-            usertype={1}
-            footerpage={[
-              {
-                name: "Home",
-                fname: Lang_chg.home_footer[config.language],
-                countshow: false,
-                image: localimag.Home,
-                activeimage: localimag.Home,
-              },
-              {
-                name: "Appointment",
-                fname: Lang_chg.Appointment_footer[config.language],
-                countshow: false,
-                image: localimag.Appointment,
-                activeimage: localimag.Appointment,
-              },
-              {
-                name: "Cart",
-                fname: Lang_chg.Cart_footer[config.language],
-                countshow: false,
-                image: localimag.Cart,
-                activeimage: localimag.Cart,
-              },
-              {
-                name: "More",
-                fname: Lang_chg.More_footer[config.language],
-                countshow: false,
-                image: localimag.More,
-                activeimage: localimag.More,
-              },
-            ]}
-            navigation={this.props.navigation}
-            imagestyle1={{
-              width: 25,
-              height: 25,
-              paddingBottom: (mobileW * 5.4) / 100,
-              backgroundColor: "white",
-              countcolor: "red",
-              countbackground: "red",
-            }}
-          /> */}
-        </HideWithKeyboard>
-        {this.state.cart_arr != "" && this.state.cart_arr != null && (
-          <View
-            style={{
-              width: "100%",
-              alignSelf: "center",
-              backgroundColor: Colors.white_color,
-              paddingHorizontal: (mobileW * 5) / 100,
-              paddingVertical: (mobileW * 2) / 100,
-              height: 80,
-              justifyContent: "center", //Centered horizontally
-              alignItems: "center", //Centered vertically
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                if (this.state.payment_status == "true") {
-                  this.startSDK();
-                  //     this.get_payment(),this.setState({total_price:show_data.total_price})
-                } else {
-                  this.submit_btn(),
-                    this.setState({ total_price: show_data.total_price });
-                }
-              }}
-              style={{
-                width: "100%",
-                alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                position: "absolute",
-                bottom: 20,
-                marginBottom: (mobileW * 5) / 100,
-              }}
-            >
-              <Text
+              </View>
+
+              <View
                 style={{
-                  color: Colors.textwhite,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  width: "40%",
+                  paddingBottom: (windowWidth * 5) / 100,
+                  marginTop: (windowWidth * 9) / 100,
                   alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
+                  right: 10,
                 }}
               >
-                {Lang_chg.PROCEEDTOPAYMENT[config.language]}
-              </Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setState({ modalVisible3: false });
+                  }}
+                  style={{
+                    width: (windowWidth * 15) / 100,
+                    flexDirection: "row",
+                    alignSelf: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: (windowWidth * 4) / 100,
+                      color: Colors.Blue,
+                      alignSelf: "center",
+                    }}
+                  >
+                    {LangProvider.no_txt[languageIndex]}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    setState({ isRemovingCart: true }),
+                      remove_cart('manual');
+                  }}
+                  activeOpacity={0.8}
+                  style={{
+                    width: (windowWidth * 40) / 100,
+                    justifyContent: "center",
+                  }}>
+                  {
+                    statesData.isRemovingCart ?
+                      <SkypeIndicator color={Colors.Theme} size={20} />
+                      :
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: (windowWidth * 4) / 100,
+                          color: Colors.Blue,
+                          alignSelf: "center",
+                        }}>
+                        {LangProvider.Delete[languageIndex]}
+                      </Text>
+                  }
+
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-        )}
-      </View>
-    );
-  }
+        </View>
+      </Modal>
+
+
+      {/* ----------------------------------------------sucess model -------------------------- */}
+
+      <SuccessPopup
+        visible={statesData.modalvisible}
+        onRequestClose={() => {
+          setState({ modalvisible: false })
+        }}
+        type={selectedProvider?.providerType}
+        navigation={navigation}
+      />
+
+      <PaymentOptionBottomSheet
+        visible={statesData.isPaymentOption}
+        onRequestClose={() => {
+          setState({ isPaymentOption: false })
+        }}
+        data={show_data?.total_price + ' ' + statesData.currency_symbol}
+        selectedPaymentMethod={(val) => {
+          if (val == 1) {
+            startSDK()
+          } else {
+            StartTabbySdk()
+          }
+        }}
+      />
+
+    </View>
+  );
+
 }
+
+const styles = StyleSheet.create({
+
+  closeContainer: {
+    height: s(30),
+    width: s(30),
+    borderRadius: s(50),
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999
+  },
+
+});
+export default CartDetails;

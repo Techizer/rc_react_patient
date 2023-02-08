@@ -8,109 +8,71 @@ import {
   FlatList,
   ScrollView,
   TextInput,
+  Pressable,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import {
   Colors,
-  localimag,
   Font,
   msgProvider,
-  msgText,
   config,
-  mobileW,
-  localStorage,
-  Lang_chg,
   apifuntion,
-  msgTitle,
-  consolepro,
-} from "../Provider/utilslib/Utils";
-import { AuthInputBoxSec, DropDownboxSec } from "../components";
-// import { Nodata_foundimage } from './Provider/Nodata_foundimage';
+  LangProvider,
+  Icons,
+  windowWidth,
+  ScreenHeader,
+  Button
+} from "../Provider/Utils/Utils";
+import DropDownboxSec from '../components/DropDownboxSec'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { s, vs } from "react-native-size-matters";
+import IssuesBottomSheet from "../components/ListBottomSheet";
+import { useSelector } from "react-redux";
 
-const Select_arr = [
-  {
-    id: 1,
-    select: "Account Issue",
-  },
-  {
-    id: 2,
-    select: "Transaction Issue",
-  },
-  {
-    id: 3,
-    select: "Withdrawal",
-  },
-  {
-    id: 4,
-    select: "Booking Issue",
-  },
-  {
-    id: 5,
-    select: "Account Issue",
-  },
-  {
-    id: 6,
-    select: "Login Issue",
-  },
-  {
-    id: 7,
-    select: "Signup Issue",
-  },
-  {
-    id: 8,
-    select: "Mobile OTP Issue",
-  },
-  {
-    id: 9,
-    select: "Other",
-  },
-];
 
-export default class NeedSupport extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      Select_arr: "NA",
-      selectmodal: false,
 
-      message: "",
-      selectissuefocus: false,
-      select: "",
-      selectissue: "",
+const NeedSupport = ({ navigation }) => {
 
-      successmodal: false,
-    };
-  }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", () => {
-      this.get_all_topic();
-    });
-  }
+  const {
+    languageIndex,
+    loggedInUserDetails,
+    contentAlign
+  } = useSelector(state => state.StorageReducer)
 
-  get_all_topic = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
-    let user_id = user_details["user_id"];
+  const [needSupportData, setNeedSupportData] = useState({
+    issuesList: [],
+    issuesModal: false,
+    message: "",
+    selectissuefocus: false,
+    selectedIssue: "",
+    successmodal: false,
+    isLoading: false
+  })
+
+  const inputRef = useRef()
+  useEffect(() => {
+    getAllTopics()
+  }, [])
+
+  const getAllTopics = async () => {
 
     let url = config.baseURL + "api-patient-need-help-topic";
-    console.log("url", url);
     var data = new FormData();
-    data.append("login_user_id", user_id);
+    data.append("login_user_id", loggedInUserDetails.user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
         if (obj.status == true) {
-          console.log("result", obj.result);
-          let result = obj.result;
-          this.setState({ Select_arr: obj.result });
+          // console.log("result", obj.result);
+          setNeedSupportData(prevState => ({
+            ...prevState,
+            issuesList: obj.result
+          }))
         } else {
           msgProvider.alert(
-            msgTitle.information[config.language],
-            obj.message[config.language],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -118,41 +80,47 @@ export default class NeedSupport extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        console.log("-------- error ------- " + error);
       });
   };
-  submit_click = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    console.log("user_details user_details", user_details);
-    let user_id = user_details["user_id"];
-    let user_type = user_details["user_type"];
-    if (this.state.select.length <= 0) {
-      msgProvider.showError(msgText.emptySelecttopic[config.language]);
+  const submit_click = async () => {
+
+    if (needSupportData.selectedIssue == '' || needSupportData.selectedIssue == null) {
+      msgProvider.showError(LangProvider.emptySelecttopic[languageIndex]);
       return false;
     }
+    if (needSupportData.message == '' || needSupportData.message == null) {
+      msgProvider.showError(LangProvider.emptyMessage[languageIndex]);
+      return false;
+    }
+
+    setNeedSupportData(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
     let url = config.baseURL + "api-insert-need-help";
-    console.log("url", url);
     var data = new FormData();
-    data.append("user_id", user_id);
-    data.append("issue_topic", this.state.select);
-    data.append("message", this.state.message);
-    data.append("service_type", user_type);
-    consolepro.consolelog("data", data);
+    data.append("user_id", loggedInUserDetails.user_id);
+    data.append("issue_topic", needSupportData.selectedIssue);
+    data.append("message", needSupportData.message);
+    data.append("service_type", loggedInUserDetails.user_type);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        setNeedSupportData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
         if (obj.status == true) {
-          console.log("result", obj.result);
           let result = obj.result;
+          msgProvider.showSuccess(obj?.message)
           setTimeout(() => {
-            this.setState({ successmodal: true });
-          }, 700);
+            navigation.pop()
+          }, 450);
         } else {
           msgProvider.alert(
-            msgTitle.information[config.language],
-            obj.message[config.language],
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
             false
           );
 
@@ -160,38 +128,193 @@ export default class NeedSupport extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setNeedSupportData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log("-------- error ------- " + error);
       });
   };
-  render() {
-    return (
-      <View
-        style={{
-          width: "100%",
-          alignSelf: "center",
-          flex: 1,
-          backgroundColor: Colors.white_color,
-        }}
-      >
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor={Colors.statusbarcolor}
-          hidden={false}
-          translucent={false}
-          networkActivityIndicatorVisible={true}
-        />
 
-        <Modal
+  return (
+    <View
+      pointerEvents={needSupportData.isLoading ? 'none' : 'auto'}
+      style={{
+        alignSelf: "center",
+        flex: 1,
+        backgroundColor: Colors.backgroundcolor,
+      }} >
+
+      <ScreenHeader
+        title={LangProvider.NeedSupport[languageIndex]}
+        navigation={navigation}
+        onBackPress={() => navigation.pop()}
+        leftIcon
+      />
+
+
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{
+          justifyContent: 'center',
+          paddingBottom: vs(20),
+          backgroundColor: Colors.White,
+          marginTop: vs(7),
+          paddingVertical: vs(9)
+        }}
+        showsVerticalScrollIndicator={false}>
+
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+          }}>
+          <View
+            style={{
+              alignItems: "center",
+              width: "100%",
+              alignSelf: "center",
+              flexDirection: "row",
+            }}>
+            <View style={{ width: "8%", alignSelf: "center" }}>
+              <Image
+                style={{ width: 20, height: 20, resizeMode: "contain" }}
+                source={Icons.needsupportimg} />
+            </View>
+
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                fontSize: Font.large,
+                color: Colors.darkText,
+                fontFamily: Font.Medium,
+              }}>
+              {LangProvider.needsupport[languageIndex]}{" "}
+            </Text>
+          </View>
+
+          <View style={{ width: '100%', alignSelf: 'center', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+
+
+
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.medium,
+              color: Colors.DarkGrey,
+              fontFamily: Font.Regular,
+              textAlign:'left'
+            }} >
+            {LangProvider.need_text[languageIndex]}{" "}
+          </Text>
+
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.medium,
+              color: Colors.darkText,
+              fontFamily: Font.Medium,
+              marginTop: vs(10)
+            }} >
+            {LangProvider.select_topic_text[languageIndex]}{" "}
+          </Text>
+
+
+          <DropDownboxSec
+            lableText={
+              needSupportData.selectedIssue.length <= 0
+                ? LangProvider.select_issues_text[languageIndex]
+                : needSupportData.selectedIssue
+            }
+            boxPressAction={() => {
+              setNeedSupportData(prevState => ({
+                ...prevState,
+                issuesModal: true,
+                selectissuefocus: false
+              }))
+            }}
+            mainContainer={{ marginTop: vs(10) }}
+          />
+
+          <Pressable
+            onPress={() => {
+              inputRef.current.focus()
+            }}
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              marginTop: vs(15),
+              borderColor: needSupportData.selectissuefocus ? Colors.Theme : Colors.Border,
+              borderWidth: 1,
+              borderRadius: 6,
+              height: vs(125),
+              paddingHorizontal: s(8),
+              paddingVertical: s(6),
+            }}>
+
+            <TextInput
+              ref={inputRef}
+              style={{
+                width: "100%",
+                color: Colors.Black,
+                fontSize: Font.medium,
+                alignSelf: 'flex-start',
+                fontFamily: Font.Regular,
+                textAlign: contentAlign,
+                height: '100%',
+                paddingTop: 10
+
+              }}
+              maxLength={250}
+              multiline={true}
+              placeholder={LangProvider.text_input_topic[languageIndex]}
+              placeholderTextColor={Colors.MediumGrey}
+              onChangeText={(txt) => {
+                setNeedSupportData(prevState => ({
+                  ...prevState,
+                  message: txt
+                }))
+              }}
+              onFocus={() => {
+                setNeedSupportData(prevState => ({
+                  ...prevState,
+                  selectissuefocus: true
+                }))
+              }}
+              onBlur={() => {
+                setNeedSupportData(prevState => ({
+                  ...prevState,
+                  selectissuefocus: needSupportData.message.length > 0 ? true : false,
+                }))
+              }}
+              keyboardType="default"
+              returnKeyLabel="done"
+            />
+
+          </Pressable>
+
+          <Button
+            text={LangProvider.submitbtntext[languageIndex]}
+            onPress={() => submit_click()}
+            btnStyle={{ marginTop: vs(25) }}
+            onLoading={needSupportData.isLoading}
+          />
+
+        </View>
+
+      </KeyboardAwareScrollView>
+
+      {/* <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.selectmodal}
-          onRequestClose={() => {}}
+          visible={this.state.issuesModal}
+          onRequestClose={() => { }}
         >
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
-              this.setState({ selectmodal: false });
+              this.setState({ issuesModal: false });
             }}
             style={{
               flex: 1,
@@ -199,14 +322,14 @@ export default class NeedSupport extends Component {
               justifyContent: "center",
               backgroundColor: "#00000080",
               width: "100%",
-              marginTop: (mobileW * 3) / 100,
-              paddingBottom: (mobileW * 8) / 100,
+              marginTop: (windowWidth * 3) / 100,
+              paddingBottom: (windowWidth * 8) / 100,
             }}
           >
             <View
               style={{
                 width: "70%",
-                backgroundColor: "white",
+                backgroundColor: "White",
                 alignItems: "center",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -219,32 +342,32 @@ export default class NeedSupport extends Component {
                 }}
               >
                 <View
-                  style={{ width: "45%", paddingVertical: (mobileW * 3) / 100 }}
+                  style={{ width: "45%", paddingVertical: (windowWidth * 3) / 100 }}
                 >
                   <Text
                     style={{
                       textAlign: config.textalign,
-                      fontFamily: Font.fontregular,
-                      fontSize: (mobileW * 4) / 100,
+                      fontFamily: Font.Regular,
+                      fontSize: (windowWidth * 4) / 100,
                       alignSelf: "center",
-                      color: Colors.textwhite,
+                      color: Colors.White,
                     }}
                   >
-                    {Lang_chg.select_topic_text[config.language]}
+                    {LangProvider.select_topic_text[languageIndex]}
                   </Text>
                 </View>
               </View>
               <View style={{ width: "100%" }}>
                 <FlatList
-                  data={this.state.Select_arr}
+                  data={this.state.issuesList}
                   renderItem={({ item, index }) => {
                     return (
                       <View>
                         <TouchableOpacity
                           onPress={() => {
                             this.setState({
-                              selectmodal: false,
-                              select: item.name,
+                              issuesModal: false,
+                              selectedIssue: item.name,
                             });
                           }}
                         >
@@ -261,16 +384,16 @@ export default class NeedSupport extends Component {
                                 width: "95%",
                                 borderBottomColor: "#0000001F",
                                 borderBottomWidth: 1,
-                                paddingVertical: (mobileW * 2.5) / 100,
-                                marginLeft: (mobileW * 5) / 100,
+                                paddingVertical: (windowWidth * 2.5) / 100,
+                                marginLeft: (windowWidth * 5) / 100,
                               }}
                             >
                               <Text
                                 style={{
-                                  color: Colors.textblack,
+                                  color: Colors.Black,
                                   textAlign: config.textRotate,
-                                  fontSize: (mobileW * 4) / 100,
-                                  paddingLeft: (mobileW * 2) / 100,
+                                  fontSize: (windowWidth * 4) / 100,
+                                  paddingLeft: (windowWidth * 2) / 100,
                                 }}
                               >
                                 {item.name}
@@ -285,468 +408,143 @@ export default class NeedSupport extends Component {
               </View>
             </View>
           </TouchableOpacity>
-        </Modal>
+        </Modal> */}
 
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.successmodal}
-          onRequestClose={() => {}}
-        >
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {
-              this.setState({ successmodel: false });
-            }}
-            style={{
-              flex: 1,
-              alignSelf: "center",
-              justifyContent: "center",
-              backgroundColor: "#00000080",
-              width: "100%",
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                borderRadius: (mobileW * 4) / 100,
-                position: "absolute",
-                bottom: 0,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingBottom: (mobileW * 5) / 100,
-                alignSelf: "center",
-              }}
-            >
-              {config.language == 0 ? (
-                <Image
-                  style={{
-                    width: (mobileW * 17) / 100,
-                    height: (mobileW * 17) / 100,
-                    alignSelf: "center",
-                    marginTop: (mobileW * -7) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../icons/greentick.png")}
-                />
-              ) : (
-                <Image
-                  style={{
-                    width: (mobileW * 17) / 100,
-                    height: (mobileW * 17) / 100,
-                    alignSelf: "center",
-                    marginTop: (mobileW * -7) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../icons/ryt_opp.png")}
-                />
-              )}
-              <Text
-                style={{
-                  fontSize: (mobileW * 8) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.thank[config.language]}
-              </Text>
-              <Text
-                style={{
-                  fontSize: (mobileW * 3.5) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                }}
-              >
-                {Lang_chg.success[config.language]}
-              </Text>
+      <IssuesBottomSheet
+        visible={needSupportData.issuesModal}
+        onRequestClose={() => {
+          setNeedSupportData(prevState => ({
+            ...prevState,
+            issuesModal: false,
+          }))
 
-              <Text
-                style={{
-                  fontSize: (mobileW * 3) / 100,
-                  marginTop: (mobileW * 2) / 100,
-                  fontFamily: Font.fontmedium,
-                  textAlign: config.textalign,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.text_of_modal[config.language]}
-              </Text>
+        }}
+        data={needSupportData.issuesList}
+        title={LangProvider.select_topic_text[languageIndex]}
+        selectedIssue={(val) => {
+          setNeedSupportData(prevState => ({
+            ...prevState,
+            selectedIssue: val
+          }))
+        }}
+      />
 
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ successmodal: false }),
-                    this.props.navigation.goBack();
-                }}
-                style={{
-                  width: "15%",
-                  alignSelf: "center",
-                  borderColor: Colors.bordercolorblue,
-                  borderWidth: 1,
-                  paddingVertical: (mobileW * 2) / 100,
-                  marginTop: (mobileW * 5) / 100,
-                  borderRadius: (mobileW * 3) / 100,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: (mobileW * 3) / 100,
-                    alignSelf: "center",
-                    fontFamily: Font.fontmedium,
-                    textAlign: config.textalign,
-                    alignSelf: "center",
-                    color: Colors.terms_text_color_blue,
-                  }}
-                >
-                  {Lang_chg.close_txt[config.language]}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-
-        <View
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            paddingVertical: (mobileW * 3) / 100,
-            shadowOpacity: 0.3,
-            marginBottom: 0.9,
-            shadowColor: "#000",
-            shadowOffset: { width: 1, height: 1 },
-            elevation: 5,
-            backgroundColor: "white",
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={needSupportData.successmodal}
+        onRequestClose={() => { }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {
+            setNeedSupportData(prevState => ({
+              ...prevState,
+              successmodel: false
+            }))
           }}
-        >
+          style={{
+            flex: 1,
+            alignSelf: "center",
+            justifyContent: "center",
+            backgroundColor: "#00000080",
+            width: "100%",
+          }} >
           <View
             style={{
+              width: "100%",
+              backgroundColor: "White",
+              borderRadius: (windowWidth * 4) / 100,
+              position: "absolute",
+              bottom: 0,
               alignItems: "center",
-              width: "90%",
+              justifyContent: "center",
+              paddingBottom: (windowWidth * 5) / 100,
               alignSelf: "center",
-              flexDirection: "row",
             }}
           >
-            <View style={{ width: "5%" }}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={{ width: "100%" }}
-              >
-                <Image
-                  style={{
-                    width: (mobileW * 8) / 100,
-                    height: (mobileW * 8) / 100,
-                    alignSelf: "center",
-                  }}
-                  source={
-                    config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
-                  }
-                ></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={{ width: "95%", alignSelf: "center" }}>
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4.5) / 100,
-                  color: Colors.textblack,
-                  fontFamily: Font.buttonfontfamily,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.supporttext[config.language]}{" "}
-              </Text>
-            </View>
-          </View>
-        </View>
 
-        <ScrollView
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            flex: 1,
-            backgroundColor: Colors.white_color,
-          }}
-        >
-          <KeyboardAwareScrollView>
-            <View
+            <Image
               style={{
-                width: "100%",
-                backgroundColor: Colors.tab_background_color,
-                paddingVertical: (mobileW * 2) / 100,
-              }}
-            ></View>
-
-            <View
-              style={{
-                alignItems: "center",
-                width: "90%",
+                width: (windowWidth * 17) / 100,
+                height: (windowWidth * 17) / 100,
                 alignSelf: "center",
-                flexDirection: "row",
-                marginTop: (mobileW * 3) / 100,
+                marginTop: (windowWidth * -7) / 100,
+                resizeMode: "contain",
               }}
-            >
-              <View style={{ width: "8%", alignSelf: "center" }}>
-                <Image
-                  style={{
-                    width: (mobileW * 5) / 100,
-                    height: (mobileW * 5) / 100,
-                    resizeMode: "contain",
-                  }}
-                  source={localimag.needsupportimg}
-                ></Image>
-              </View>
-
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.textblack,
-                  fontFamily: Font.buttonfontfamily,
-                }}
-              >
-                {Lang_chg.needsupport[config.language]}{" "}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                borderColor: Colors.bordercolor,
-                borderBottomWidth: (mobileW * 0.3) / 100,
-                marginTop: (mobileW * 3) / 100,
-              }}
+              source={Icons.greenTick}
             />
 
-            <View
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 2) / 100,
+                fontSize: (windowWidth * 8) / 100,
+                marginTop: (windowWidth * 5) / 100,
+                fontFamily: Font.Medium,
+                alignSelf: 'flex-start',
+              }}>
+              {LangProvider.thank[languageIndex]}
+            </Text>
+            <Text
+              style={{
+                fontSize: (windowWidth * 3.5) / 100,
+                marginTop: (windowWidth * 5) / 100,
+                fontFamily: Font.Medium,
+                alignSelf: 'flex-start',
               }}
             >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: (mobileW * 3.5) / 100,
-                  color: "#707070",
-                  fontFamily: Font.fontregular,
-                }}
-              >
-                {Lang_chg.need_text[config.language]}{" "}
-              </Text>
-            </View>
+              {LangProvider.success[languageIndex]}
+            </Text>
 
-            <View
+            <Text
               style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 4) / 100,
+                fontSize: (windowWidth * 3) / 100,
+                marginTop: (windowWidth * 2) / 100,
+                fontFamily: Font.Medium,
+                alignSelf: 'flex-start',
+                color: Colors.textgray,
               }}
             >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: (mobileW * 3.7) / 100,
-                  color: Colors.textblack,
-                  fontFamily: Font.buttonfontfamily,
-                }}
-              >
-                {Lang_chg.select_topic_text[config.language]}{" "}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "100%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-                //flexDirection: 'row',
-                // borderColor: Colors.bordercolor,
-                // borderWidth: 1,
-                // borderRadius: mobileW * 1 / 100
-              }}
-            >
-              <DropDownboxSec
-                lableText={
-                  this.state.select.length <= 0
-                    ? Lang_chg.select_issues_text[config.language]
-                    : this.state.select
-                }
-                boxPressAction={() => {
-                  this.setState({ selectmodal: true });
-                }}
-                // isDisabled={true}
-              />
-              {/* <TouchableOpacity onPress={() => {
-                this.setState({ selectmodal: true });
-              }}
-                style={{ width: '100%', backgroundColor: Colors.backgroundcolor, borderRadius: mobileW * 1 / 100 }}>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', alignSelf: 'center' }}>
-                  <Text
-                    style={{ alignSelf: 'center', color: Colors.textblack, fontSize: Font.placeholdersize, textAlign: config.textRotate, paddingVertical: mobileW * 4 / 100, fontFamily: Font.placeholderfontfamily }}
-
-                  >{this.state.select.length <= 0 ? Lang_chg.select_issues_text[config.language] : this.state.select}</Text>
-                  <View style={{ width: '10%', alignSelf: 'center' }}>
-                    <Image
-                      source={localimag.downarrow}
-                      style={{ height: mobileW * 4 / 100, width: mobileW * 4 / 100, alignSelf: 'flex-end' }}>
-                    </Image>
-                  </View>
-                </View>
-              </TouchableOpacity> */}
-            </View>
-
-            {/* <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 3) / 100,
-                // borderColor: this.state.selectissuefocus == true ? '#0057A5' : Colors.bordercolor, borderWidth: mobileW * 0.3 / 100, borderRadius: mobileW * 2 / 100, height: mobileW * 40 / 100
-              }}
-            >
-            <AuthInputBoxSec
-                mainContainer={{
-                  width: "100%",
-                }}
-                inputFieldStyle={{
-                  // marginTop: mobileW * 1 / 100,
-                  // backgroundColor: "red",
-                  width: "100%",
-                  // height: (mobileW * 40) / 100,
-                  color: Colors.textblack,
-                  fontSize: Font.placeholdersize,
-                  textAlign: config.textalign,
-                  fontFamily: Font.placeholderfontfamily,
-                  justifyContent: "flex-start",
-                  textAlignVertical: "top",
-                  // paddingVertical: mobileW * 3 / 100,
-                }}
-                // icon={layer9_icon}
-                lableText={
-                  this.state.selectissuefocus != true
-                    ? Lang_chg.text_input_topic[config.language]
-                    : null
-                }
-                inputRef={(ref) => {
-                  this.messageInput = ref;
-                }}
-                onChangeText={(text) => this.setState({ message: text })}
-                value={this.state.message}
-                maxLength={250}
-                multiline={true}
-                keyboardType="default"
-                autoCapitalize="none"
-                returnKeyType="next"
-                // onSubmitEditing={() => {
-                //   this.emailInput.focus();
-                // }}
-              /> */}
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 6) / 100,
-                borderColor:
-                  this.state.selectissuefocus == true
-                    ? "#0057A5"
-                    : Colors.bordercolor,
-                borderWidth: (mobileW * 0.3) / 100,
-                borderRadius: (mobileW * 2) / 100,
-                height: (mobileW * 40) / 100,
-              }}
-            >
-              <View style={{ width: "95%", alignSelf: "center" }}>
-                <TextInput
-                  style={{
-                    marginTop: (mobileW * 2) / 100,
-                    backgroundColor: "#fff",
-                    width: "100%",
-                    color: Colors.textblack,
-                    fontSize: Font.placeholdersize,
-                    textAlign: config.textalign,
-                    fontFamily: Font.placeholderfontfamily,
-                    paddingVertical: (mobileW * 3) / 100,
-                  }}
-                  maxLength={250}
-                  multiline={true}
-                  placeholder={
-                    this.state.selectissuefocus != true
-                      ? Lang_chg.text_input_topic[config.language]
-                      : null
-                  }
-                  placeholderTextColor={Colors.placeholder_text}
-                  onChangeText={(txt) => {
-                    this.setState({ message: txt });
-                  }}
-                  onFocus={() => {
-                    this.setState({ selectissuefocus: true });
-                  }}
-                  onBlur={() => {
-                    this.setState({
-                      selectissuefocus:
-                        this.state.message.length > 0 ? true : false,
-                    });
-                  }}
-                  keyboardType="default"
-                  returnKeyLabel="done"
-                />
-              </View>
-              {this.state.selectissuefocus == true && (
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "white",
-                    left: (mobileW * 4) / 100,
-                    top: (-mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 1) / 100,
-                  }}
-                >
-                  <Text
-                    style={{ color: "#0057A5", textAlign: config.textalign }}
-                  >
-                    {Lang_chg.text_input_topic[config.language]}
-                  </Text>
-                </View>
-              )}
-            </View>
+              {LangProvider.text_of_modal[languageIndex]}
+            </Text>
 
             <TouchableOpacity
               onPress={() => {
-                this.submit_click();
+                setNeedSupportData(prevState => ({
+                  ...prevState,
+                  successmodal: false
+                }))
+                navigation.pop();
               }}
               style={{
-                width: "90%",
+                width: "15%",
                 alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 45) / 100,
+                borderColor: Colors.Blue,
+                borderWidth: 1,
+                paddingVertical: (windowWidth * 2) / 100,
+                marginTop: (windowWidth * 5) / 100,
+                borderRadius: (windowWidth * 3) / 100,
               }}
             >
               <Text
                 style={{
-                  color: Colors.textwhite,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
+                  fontSize: (windowWidth * 3) / 100,
                   alignSelf: "center",
+                  fontFamily: Font.Medium,
+                  alignSelf: 'flex-start',
+                  alignSelf: "center",
+                  color: Colors.terms_text_color_blue,
                 }}
               >
-                {Lang_chg.submitbtntext[config.language]}
+                {LangProvider.close_txt[languageIndex]}
               </Text>
             </TouchableOpacity>
-          </KeyboardAwareScrollView>
-        </ScrollView>
-      </View>
-    );
-  }
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+
+    </View>
+  );
+
 }
+
+export default NeedSupport;

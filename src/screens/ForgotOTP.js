@@ -1,63 +1,59 @@
 import {
   Text,
   View,
-  StatusBar,
   BackHandler,
   Alert,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
   Image,
-  TextInput,
+  TouchableHighlight,
+  Platform,
+  Keyboard,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import OTPTextInput from "react-native-otp-textinput";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
   config,
-  mobileW,
-  Lang_chg,
+  windowWidth,
   apifuntion,
   msgProvider,
-  msgText,
-  consolepro,
-} from "../Provider/utilslib/Utils";
+  LangProvider,
+  Button
+} from "../Provider/Utils/Utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { s, vs } from "react-native-size-matters";
+import { SvgXml } from "react-native-svg";
+import { leftArrow, rightArrow } from "../Icons/Index";
+import AuthInputBoxSec from "../components/AuthInputBoxSec";
+import { useSelector } from "react-redux";
 
-export default class ForgotOTP extends Component {
-  _didFocusSubscription;
-  _willBlurSubscription;
+const ForgotOTP = ({ navigation, route }) => {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      email: this.props.route.params.email,
-      mobile: "",
-      password: "",
-      device_lang: "AR",
-      mobile: "",
-      fcm_token: 123456,
-      otp: "",
+  const { appLanguage, contentAlign,languageIndex } = useSelector(state => state.StorageReducer)
+
+  const [forgotOtpData, setForgotOtpData] = useState({
+    email: route?.params?.email || '',
+    password: "",
+    otp: "",
+    isSecurePassword: true,
+    isLoading: false
+  })
+  const passRef = useRef()
+  const otpRef = useRef()
+  const insets = useSafeAreaInsets()
+  
+  useEffect(() => {
+   
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    checkLocationPermission();
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
-    this._didFocusSubscription = props.navigation.addListener(
-      "focus",
-      (payload) =>
-        BackHandler.addEventListener("hardwareBackPress", this.handleBackPress)
-    );
-  }
-  componentDidMount() {
-    this._willBlurSubscription = this.props.navigation.addListener(
-      "blur",
-      (payload) =>
-        BackHandler.removeEventListener(
-          "hardwareBackPress",
-          this.handleBackPress
-        )
-    );
-  }
-  handleBackPress = () => {
+  }, [])
+
+  const handleBackPress = () => {
     Alert.alert(
       "Exit App",
       "Do you want to goback",
@@ -69,7 +65,10 @@ export default class ForgotOTP extends Component {
         },
         {
           text: "Yes",
-          onPress: () => this.props.navigation.navigate("Login"),
+          onPress: () => navigation.reset({
+            index: 0,
+            routes: [{ name: "AuthStack" }],
+          })
         },
       ],
       {
@@ -79,29 +78,26 @@ export default class ForgotOTP extends Component {
     return true;
   };
 
-  sendagain = async () => {
+  const sendagain = async () => {
     let regemail =
       /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (this.state.email.length <= 0 || this.state.email.trim().length <= 0) {
-      msgProvider.showError(msgText.emptyEmail[config.language]);
+    if (forgotOtpData.email == '' || forgotOtpData.email == null || forgotOtpData.email == undefined) {
+      msgProvider.showError(LangProvider.emptyEmail[languageIndex]);
       return false;
     }
 
-    if (regemail.test(this.state.email) !== true) {
-      msgProvider.showError(msgText.validEmail[config.language]);
+    if (regemail.test(forgotOtpData.email) !== true) {
+      msgProvider.showError(LangProvider.validEmail[languageIndex]);
       return false;
     }
-    let email_new = this.state.email;
     let url = config.baseURL + "api-forgot-password-email";
 
     var data = new FormData();
-    data.append("emailId", this.state.email);
-    consolepro.consolelog("data", data);
+    data.append("emailId", forgotOtpData.email);
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
         if (obj.status == true) {
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
@@ -115,42 +111,50 @@ export default class ForgotOTP extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        console.log("-------- error ------- " + error);
       });
   };
 
-  otpVerify = async () => {
-    if (
-      this.state.password.length <= 0 ||
-      this.state.password.trim().length <= 0
-    ) {
-      msgProvider.showError(msgText.emptyPasswordblank[config.language]);
+  const otpVerify = async () => {
+    Keyboard.dismiss()
+
+    if (forgotOtpData.password == '' || forgotOtpData.password == null || forgotOtpData.password == undefined) {
+      msgProvider.showError(LangProvider.emptyPasswordblank[languageIndex]);
       return false;
     }
-    if (this.state.password.length < 8) {
-      msgProvider.showError(msgText.emptyPasswordValid[config.language]);
+    if (forgotOtpData.password.length < 8) {
+      msgProvider.showError(LangProvider.emptyPasswordValid[languageIndex]);
       return false;
     }
 
+    setForgotOtpData(prevState => ({
+      ...prevState,
+      isLoading: true
+    }))
     let url = config.baseURL + "api-forgot-change-password";
 
     var data = new FormData();
 
-    data.append("emailId", this.state.email);
+    data.append("emailId", forgotOtpData.email);
+    data.append("code", forgotOtpData.otp);
+    data.append("password", forgotOtpData.password);
 
-    data.append("code", this.state.otp);
-    data.append("password", this.state.password);
-
-    consolepro.consolelog("data", data);
+    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        // console.log("obj", obj);
+        setForgotOtpData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
         if (obj.status == true) {
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
-            this.props.navigation.navigate("Login");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "AuthStack" }],
+            })
           }, 500);
         } else {
           setTimeout(() => {
@@ -160,345 +164,217 @@ export default class ForgotOTP extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setForgotOtpData(prevState => ({
+          ...prevState,
+          isLoading: false
+        }))
+        console.log("-------- error ------- " + error);
       });
   };
-  render() {
-    return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
-          <SafeAreaView
-            style={{ backgroundColor: Colors.statusbar_color, flex: 0 }}
-          />
 
-          <StatusBar
-            barStyle="dark-content"
-            backgroundColor={Colors.statusbarcolor}
-            hidden={false}
-            translucent={false}
-            networkActivityIndicatorVisible={true}
-          />
+  return (
 
-          <View style={{ paddingBottom: (mobileW * 8) / 100 }}>
-            <View
-              style={{
-                width: "95%",
-                alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
-                flexDirection: "row",
-              }}
-            >
-              <View
-                style={{
-                  width: "10%",
-                  alignSelf: "center",
-                  marginTop: (mobileW * 25) / 100,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("Login");
-                  }}
-                  style={{ width: "100%" }}
-                >
-                  <Image
-                    style={{
-                      width: (mobileW * 10) / 100,
-                      height: (mobileW * 10) / 100,
-                      resizeMode: "contain",
-                    }}
-                    source={
-                      config.textalign == "right"
-                        ? localimag.arabic_back
-                        : localimag.backarrow
-                    }
-                  ></Image>
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: "80%", alignSelf: "center" }}>
-                <Image
-                  style={{
-                    width: (mobileW * 50) / 100,
-                    height: (mobileW * 40) / 100,
-                    alignSelf: "center",
-                    resizeMode: "contain",
-                  }}
-                  source={localimag.Forgotlogo}
-                ></Image>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 10) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: Font.headingblack,
-                  fontFamily: Font.fontsemibold,
-                  textAlign: config.textRotate,
-                }}
-              >
-                {Lang_chg.opt[config.language]}
-              </Text>
-            </View>
+    <View
+      pointerEvents={forgotOtpData.isLoading ? 'none' : 'auto'}
+      style={{ flex: 1, backgroundColor: Colors.White,  paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      <KeyboardAwareScrollView
+        // keyboardOpeningTime={200}
+        extraScrollHeight={50}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{
+          justifyContent: 'center',
+          paddingBottom: vs(30),
+        }}
+        showsVerticalScrollIndicator={false}>
 
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 1) / 100,
-              }}
-            >
-              <View style={{ width: "90%" }}>
-                <Text
-                  style={{
-                    fontSize: Font.headinggray,
-                    fontFamily: Font.headingfontfamily,
-                    color: Colors.placeholder_text,
-                    textAlign: config.textRotate,
-                  }}
-                >
-                  {Lang_chg.opttext_forget[config.language]}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "70%",
+        <View
+          style={{
+            width: "100%",
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: vs(40),
+          }}>
+          <View style={{ justifyContent: 'center' }}>
+            {/* <SvgXml xml={Logo} /> */}
+            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
 
-                //  paddingHorizontal:mobileW*1/100,
-                paddingVertical: (mobileW * 1) / 100,
-                marginTop: (mobileW * 10) / 100,
-                marginLeft: (mobileW * 5) / 100,
-              }}
-            >
-              <OTPTextInput
-                style={{
-                  height: (mobileW * 14) / 100,
-                  width: (mobileW * 14) / 100,
-                  color: "#000",
-                  alignSelf: "center",
-                  fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 5) / 100,
-                  borderWidth: 2,
-                  borderColor: "#DFDFDF",
-                  borderRadius: (mobileW * 2) / 100,
-                  textAlign: "center",
-                }}
-                ref={(e) => (this.otpInput = e)}
-                numberOfInputs={4}
-                cellTextLength={1}
-                handleTextChange={(text) => this.setState({ otp: text })}
-                keyboardType={"number-pad"}
-              />
-            </View>
-            <View
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                marginTop: (mobileW * 4) / 100,
-                flexDirection: "row",
-                borderColor:
-                  this.state.passwordfocus == true
-                    ? Colors.placholderactive
-                    : Colors.placeholder_border,
-                borderWidth: (mobileW * 0.3) / 100,
-                borderRadius: (mobileW * 1) / 100,
-              }}
-            >
-              <View style={{ width: "90%", alignSelf: "center" }}>
-                <TextInput
-                  style={{
-                    width: "95%",
-                    alignSelf: "center",
-                    color: Colors.textblack,
-                    fontSize: Font.placeholdersize,
-                    textAlign: config.textalign,
-                    height: (mobileW * 12) / 100,
-                    fontFamily: Font.placeholderfontfamily,
-                  }}
-                  maxLength={50}
-                  placeholder={
-                    this.state.passwordfocus != true
-                      ? Lang_chg.create_new_pass[config.language]
-                      : null
-                  }
-                  placeholderTextColor={Colors.placeholder_text}
-                  onChangeText={(txt) => {
-                    this.setState({ password: txt });
-                  }}
-                  value={this.state.password}
-                  onFocus={() => {
-                    this.setState({ passwordfocus: true });
-                  }}
-                  onBlur={() => {
-                    this.setState({
-                      passwordfocus: this.state.email.length > 0 ? true : false,
-                    });
-                  }}
-                  returnKeyLabel="done"
-                  returnKeyType="done"
-                  secureTextEntry={this.state.isSecurePassword}
-                />
-              </View>
-              {this.state.passwordfocus == true && (
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "white",
-                    left: (mobileW * 4) / 100,
-                    top: (-mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 1) / 100,
-                  }}
-                >
-                  <Text
-                    style={{ color: "#0057A5", textAlign: config.textalign }}
-                  >
-                    {Lang_chg.create_new_pass[config.language]}
-                  </Text>
-                </View>
-              )}
-
-              <TouchableOpacity
-                style={{ width: "10%", alignSelf: "center" }}
-                onPress={() => {
-                  this.setState({
-                    isSecurePassword: !this.state.isSecurePassword,
-                  });
-                }}
-              >
-                {this.state.isSecurePassword == false ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <Image
-                      style={{
-                        height: (mobileW * 6) / 100,
-                        width: (mobileW * 6) / 100,
-                      }}
-                      source={require("../icons/eye-icon.png")}
-                    ></Image>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <Image
-                      style={{
-                        height: (mobileW * 6) / 100,
-                        width: (mobileW * 6) / 100,
-                      }}
-                      source={require("../icons/eye-icon02.png")}
-                    />
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (mobileW * 0.5) / 100,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textRotate,
-                  fontSize: Font.textsize,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.Signuptext3[config.language]}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                this.otpVerify();
-              }}
-              style={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: (mobileW * 2) / 100,
-                backgroundColor: Colors.buttoncolorblue,
-                paddingVertical: (mobileW * 4) / 100,
-                marginTop: (mobileW * 6) / 100,
-                shadowColor: "#000",
-                shadowOffset: { width: 1, height: 1 },
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 3,
-              }}
-            >
-              <Text
-                style={{
-                  color: Colors.textwhite,
-                  fontFamily: Font.fontmedium,
-                  fontSize: Font.buttontextsize,
-                  alignSelf: "flex-end",
-                  textAlign: config.textalign,
-                  alignSelf: "center",
-                }}
-              >
-                {Lang_chg.submitbtntext[config.language]}
-              </Text>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                width: "89%",
-                alignSelf: "center",
-                marginTop: (mobileW * 5) / 100,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.headingfontfamily,
-                  color: Colors.textgray,
-                }}
-              >
-                {Lang_chg.notrectext[config.language]}
-              </Text>
-              <Text
-                onPress={() => {
-                  this.sendagain();
-                }}
-                style={{
-                  textAlign: config.textalign,
-                  fontSize: (mobileW * 4) / 100,
-                  fontFamily: Font.fontsemibold,
-                  color: Colors.theme_color,
-                }}
-              >
-                {Lang_chg.sendagaintext[config.language]}
-              </Text>
-            </View>
           </View>
+
+          <TouchableHighlight
+            underlayColor={Colors.Highlight}
+            onPress={() => {
+              navigation.pop();
+            }}
+            style={{ position: 'absolute', left: 0, height: vs(40), width: s(40), justifyContent: 'center', alignItems: 'center' }}
+          >
+            <SvgXml xml={contentAlign == "right" ? rightArrow : leftArrow} height={vs(17.11)} width={s(9.72)} />
+
+          </TouchableHighlight>
         </View>
-      </ScrollView>
-    );
-  }
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+            marginTop: vs(25)
+          }}>
+
+          <Text
+            style={{
+              fontSize: Font.xxxlarge,
+              fontFamily: Font.Medium,
+              alignSelf: 'flex-start',
+              color: Colors.darkText
+            }}>
+            {LangProvider.otp[languageIndex]}
+          </Text>
+
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.inActiveText,
+              marginTop: vs(4)
+            }}>
+            {LangProvider.otptext[languageIndex]}
+          </Text>
+
+          <View style={{ marginTop: vs(25) }}>
+            <OTPTextInput
+              style={{
+                height: (windowWidth * 14) / 100,
+                width: (windowWidth * 20) / 100,
+                color: "#000",
+                alignSelf: "center",
+                fontFamily: Font.Regular,
+                fontSize: (windowWidth * 5) / 100,
+                borderWidth: 2,
+                borderColor: Colors.Border,
+                borderRadius: (windowWidth * 2) / 100,
+                textAlign: "center",
+              }}
+              ref={otpRef}
+              numberOfInputs={4}
+              cellTextLength={1}
+              handleTextChange={(val) => {
+                setForgotOtpData(prevState => ({
+                  ...prevState,
+                  otp: val
+                }))
+              }}
+              tintColor={Colors.Blue}
+              offTintColor="#f5f5ff"
+              keyboardType={"number-pad"}
+              backgroundColor={Colors.backgroundcolor}
+            />
+          </View>
+
+          <AuthInputBoxSec
+            mainContainer={{ marginTop: vs(8), width: "100%", }}
+            lableText={LangProvider.create_new_pass[languageIndex]}
+            inputRef={passRef}
+            onChangeText={(val) => {
+              setForgotOtpData(prevState => ({
+                ...prevState,
+                password: val
+              }))
+            }}
+            value={forgotOtpData.password}
+            keyboardType="default"
+            autoCapitalize="none"
+            returnKeyLabel="next"
+            returnKeyType="done"
+            secureTextEntry={forgotOtpData.isSecurePassword}
+            disableImg={true}
+            iconName={forgotOtpData.isSecurePassword ? "eye-off" : "eye"}
+            iconPressAction={() => {
+              setForgotOtpData(prevState => ({
+                ...prevState,
+                isSecurePassword: !isSecurePassword
+              }))
+            }}
+            onSubmitEditing={() => {
+              // this.signup_click()
+            }}
+            editable
+          />
+
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.xsmall,
+              fontFamily: Font.Regular,
+              color: Colors.lightGrey,
+              marginTop: vs(8)
+            }}
+          >
+            {LangProvider.Signuptext3[languageIndex]}
+          </Text>
+
+          <Button
+            text={LangProvider.submitbtntext[languageIndex]}
+            onPress={() => otpVerify()}
+            btnStyle={{ marginTop: vs(30) }}
+            onLoading={forgotOtpData.isLoading}
+          />
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: Font.small,
+              fontFamily: Font.Regular,
+              color: Colors.DarkGrey,
+              paddingVertical: vs(20)
+            }}>
+            {LangProvider.OtpTime[languageIndex]}
+          </Text>
+        </View>
+
+        <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor }}></View>
+
+        <View
+          style={{
+            width: "90%",
+            alignSelf: "center",
+            marginTop: vs(18),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }} >
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.DarkGrey,
+            }} >
+            {LangProvider.notrectext[languageIndex]}
+          </Text>
+          <Text
+            onPress={() => {
+              sendagain();
+            }}
+            style={{
+              alignSelf: 'flex-start',
+              fontSize: Font.medium,
+              fontFamily: Font.Medium,
+              color: Colors.Blue,
+            }}>
+            {LangProvider.sendagaintext[languageIndex]}
+          </Text>
+        </View>
+
+
+
+
+
+      </KeyboardAwareScrollView>
+    </View>
+
+  );
+
 }
+
+export default ForgotOTP;

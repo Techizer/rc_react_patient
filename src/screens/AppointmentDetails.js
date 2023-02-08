@@ -1,82 +1,103 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import HTMLView from "react-native-htmlview";
 import {
   Text,
   View,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   Image,
   TouchableOpacity,
-  Modal,
   FlatList,
   Platform,
   PermissionsAndroid,
+  TouchableHighlight,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
   Font,
-  mobileH,
+  windowHeight,
   msgProvider,
-  msgText,
   config,
-  mobileW,
-  localStorage,
-  localimag,
-  consolepro,
-  Lang_chg,
+  windowWidth,
+  Icons,
+  LangProvider,
   apifuntion,
-} from "../Provider/utilslib/Utils";
-import { CarAppHeader2 } from "../Allcomponents";
+  Button,
+  ScreenHeader
+} from "../Provider/Utils/Utils";
 import StarRating from "react-native-star-rating";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AuthInputBoxSec } from "../components";
 import moment from "moment-timezone";
 import Slider from "@react-native-community/slider";
 import SoundPlayer from "react-native-sound-player";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import RNFetchBlob from "rn-fetch-blob";
-import { TextInput } from "react-native";
+import { s, vs } from "react-native-size-matters";
+import Modal from "react-native-modal";
+import { SvgXml } from "react-native-svg";
+import { contactUs, Cross, Info, rightBlue, whiteStar } from "../Icons/Index";
+import RatingBottomSheet from "../components/RatingBottomSheet";
+import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
+import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
+import { useSelector } from "react-redux";
+
 var Sound = require("react-native-sound");
 
-export default class AppointmentDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      send_id: this.props.route.params.send_id,
-      status_pass: this.props.route.params.status,
-      appointment_id: this.props.route.params.appoinment_id,
-      booking_type: this.props.route.params.booking_type,
-      modalVisible: false,
-      modalPatientPrescription: false,
-      viewPrescriptionImage: "",
-      appoinment_detetails: "",
-      slot_booking_id: "",
-      task_details: "",
-      time_take_data: "",
-      rating: 0,
-      emailfocus: false,
-      textLength: 0,
-      email: 0,
-      modalVisiblerating: false,
-      new_task_type: "",
-      playState: "paused", //playing, paused
-      playSeconds: 0,
-      duration: 0,
-      showPatientDetails: false,
-    };
-    this.sliderEditing = false;
-    Sound.setCategory("Playback", true); // true = mixWithOthers
-    this.sound = null;
-  }
-  
+export default AppointmentDetails = ({ navigation, route }) => {
 
-  componentDidMount() {
-    FontAwesome.getImageSource("circle", 20, Colors.theme_color).then(
-      (source) => this.setState({ sliderIcon: source })
+  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+
+  const { appointment_id, send_id, booking_type, status } = route?.params
+  const [classStateData, setClassStateData] = useState({
+    modalVisible: false,
+    modalPatientPrescription: false,
+    viewPrescriptionImage: "",
+    appointmentDetails: "",
+    slot_booking_id: "",
+    task_details: "",
+    time_take_data: "",
+    rating: 0,
+    emailfocus: false,
+    textLength: 0,
+    reviewText: '',
+    modalVisiblerating: false,
+    new_task_type: "",
+    playState: "paused", //playing, paused
+    playSeconds: 0,
+    duration: 0,
+    showPatientDetails: false,
+    isContactUsModal: false,
+    isLoading: false,
+    isScheduleagain: false,
+    isPlay: false,
+    isLoadingDetails: true,
+  })
+
+  let recordingUrl = '';
+  const insets = useSafeAreaInsets()
+  const [sound, setSound] = useState(null)
+  const setState = payload => {
+    setClassStateData(prev => ({
+      ...prev,
+      ...payload
+    }))
+  }
+
+  let sliderEditing = false;
+  Sound.setCategory("Playback", true); // true = mixWithOthers
+
+  useEffect(() => {
+    get_day();
+
+  }, [classStateData.modalVisible])
+  useEffect(() => {
+    FontAwesome.getImageSource("circle", 20, Colors.Theme).then(
+      (source) => setState({ sliderIcon: source })
     );
-    this.getAllDetails(0);
-    this.get_day();
+    getAllDetails(0);
 
     _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
       "FinishedPlaying",
@@ -103,83 +124,69 @@ export default class AppointmentDetails extends Component {
         console.log("finished loading url", success, url);
       }
     );
-  }
+  }, [])
 
-  onSliderEditStart = () => {
-    this.sliderEditing = true;
+
+  const onSliderEditStart = () => {
+    sliderEditing = true;
   };
 
-  onSliderEditEnd = () => {
-    this.sliderEditing = false;
+  const onSliderEditEnd = () => {
+    sliderEditing = false;
   };
 
-  onSliderEditing = (value) => {
-    console.log('value value:: ', value, this.sliderEditing);
-    if (this.sound && this.state.playState == "pause" && !this.sliderEditing) {
-      this.sound.setCurrentTime(value);
-      this.setState({ playSeconds: value });
+  const onSliderEditing = (value) => {
+    console.log('value value:: ', value, sliderEditing);
+    if (sound && classStateData.playState == "pause" && !sliderEditing) {
+      sound.setCurrentTime(value);
+      setState({ playSeconds: value });
     }
   };
 
-  onStartPlay = async (isPlay = false) => {
-    if (this.sound != null) {
-      this.playMusic();
-      this.sound.play(this.playComplete);
-      this.setState({ playState: "playing" });
+  const onStartPlay = async (isPlay = false) => {
+    setState({ isPlay: isPlay })
+    console.log({ sound });
+    if (sound != null) {
+      playMusic();
+      sound.play(playComplete);
+      setState({ playState: "playing", duration: sound.getDuration() });
     } else {
-      let recordingUrl =
-        config.img_url3 + this.state.appoinment_detetails.symptom_recording;
-      console.log("onStartPlay", recordingUrl);
+      setState(
+        {
+          playState: isPlay ? "playing" : "paused",
+          duration: sound.getDuration(),
+        }
+      );
+      if (isPlay) {
+        // Play the sound with an onEnd callback
+        playMusic();
+        sound.play(playComplete);
+      }
 
-      this.sound = new Sound(recordingUrl, "", (error) => {
-        if (error) {
-          console.log("failed to load the sound", error);
-          return;
-        }
-        // loaded successfully
-        console.log(
-          "duration in seconds: " +
-            this.sound.getDuration() +
-            "number of channels: " +
-            this.sound.getNumberOfChannels()
-        );
-        this.setState(
-          {
-            playState: isPlay ? "playing" : "paused",
-            duration: this.sound.getDuration(),
-          },
-          () => {}
-        );
-        if (isPlay) {
-          // Play the sound with an onEnd callback
-          this.playMusic();
-          this.sound.play(this.playComplete);
-        }
-      });
     }
+
   };
 
-  playComplete = (success) => {
+  const playComplete = (success) => {
     if (success) {
       console.log('successfully finished playing');
     } else {
       console.log('playback failed due to audio decoding errors');
-      Alert.alert('Notice', 'audio file error. (Error code : 2)');
+      // Alert.alert('Notice', 'audio file error. (Error code : 2)');
     }
-    if (this.timeout) {
-      clearInterval(this.timeout);
+    if (timeout) {
+      clearInterval(timeout);
     }
-    this.setState({ playState: 'paused', playSeconds: 0 });
-    this.sound.setCurrentTime(0);
+    setState({ playState: 'paused', playSeconds: 0 });
+    sound.setCurrentTime(0);
   };
 
-  playMusic = () => {
-    console.log(this.sound, this.sound.isLoaded());
-    this.timeout = setInterval(() => {
+  const playMusic = () => {
+    timeout = setInterval(() => {
 
-      if (this.sound != null && this.sound.isLoaded() && !this.sliderEditing) {
-        this.sound.getCurrentTime((seconds, isPlaying) => {
-          this.setState({
+      if (sound != null && sound.isLoaded() && !sliderEditing) {
+        sound.getCurrentTime((seconds, isPlaying) => {
+          setState({
             playSeconds: seconds
           });
         })
@@ -187,114 +194,102 @@ export default class AppointmentDetails extends Component {
     }, 100);
   }
 
-  pause = () => {
-    if (this.sound != null) {
-      this.sound.pause();
+  const pause = () => {
+    if (sound != null) {
+      sound.pause();
     }
 
-    this.setState({ playState: "paused" });
+    setState({ playState: "paused" });
   };
 
-  jumpPrev15Seconds = () => {
-    this.jumpSeconds(-15);
-  };
 
-  jumpNext15Seconds = () => {
-    this.jumpSeconds(15);
-  };
-
-  jumpSeconds = (secsDelta) => {
-    if (sound) {
-      sound.getCurrentTime((secs, isPlaying) => {
-        let nextSecs = secs + secsDelta;
-        if (nextSecs < 0) nextSecs = 0;
-        else if (nextSecs > this.state.duration) nextSecs = this.state.duration;
-        sound.setCurrentTime(nextSecs);
-        this.setState({ playSeconds: nextSecs });
-      });
-    }
-  };
-
-  getAllDetails = async (page) => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
-    // this.setState({ name: user_details['first_name'], currency_symbol: user_details['currency_symbol'] })
-
+  const getAllDetails = async (page) => {
     let url = config.baseURL + "api-patient-appointment-details";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("id", this.state.appointment_id);
+    data.append("id", appointment_id);
 
-    data.append("service_type", this.state.status_pass);
+    data.append("service_type", status);
 
-    consolepro.consolelog("data", data);
+    console.log("data", data);
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        consolepro.consolelog("obj", obj);
+        console.log("getAllDetails....", obj);
 
         if (obj.status == true) {
-          this.setState(
-            {
-              appoinment_detetails: obj.result,
-              message: obj.message,
-            },
-            () => {
-              if (this.state.appoinment_detetails.symptom_recording != "")
-                this.onStartPlay(false);
+          recordingUrl = config.img_url3 + obj.result.symptom_recording;
+          const tempSound = new Sound(recordingUrl, "", (error) => {
+            if (error) {
+              console.log("failed to load the sound", error);
+              return;
             }
-          );
-          console.log("obj.result", obj.result);
+          })
+          setSound(tempSound)
+          setState(
+            {
+              appointmentDetails: obj.result,
+              message: obj.message,
+            });
+          if (classStateData.appointmentDetails.symptom_recording != "") onStartPlay(false);
+          // console.log("obj.result", obj.result);
+          setTimeout(() => {
+            setState(
+              {
+                isLoadingDetails: false
+              });
+          }, 750);
         } else {
-          this.setState({ nurse_data: obj.result, message: obj.message });
+          setState({ nurse_data: obj.result, message: obj.message, isLoadingDetails: false });
           return false;
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        setState({ isLoadingDetails: false });
+        console.log("-------- error ------- " + error);
       });
   };
-  rescdule_click = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+
+  const rescdule_click = async () => {
+
+    setState({ isScheduleagain: true })
     let url =
       config.baseURL +
-      (this.state.status_pass === "lab"
+      (status === "lab"
         ? "api-patient-lab-reschedule-appointment"
-        : this.state.status_pass === "doctor"
-        ? "api-patient-doctor-reschedule-appointment"
-        : "api-patient-reschedule-appointment");
-    console.log("url", url);
+        : status === "doctor"
+          ? "api-patient-doctor-reschedule-appointment"
+          : "api-patient-reschedule-appointment");
 
     var data = new FormData();
-    data.append("login_user_id", user_id);
-    data.append("order_id", this.state.order_id);
-    data.append("service_type", this.state.status_pass);
-    if (this.state.status_pass === "lab") {
-      data.append("task_type", this.state.booking_type);
+    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("order_id", appointment_id);
+    data.append("service_type", status);
+    if (status === "lab") {
+      data.append("task_type", booking_type);
     }
 
-    consolepro.consolelog("data", data);
+    // console.log("data", data);
+    // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        consolepro.consolelog("obj", JSON.stringify(obj));
+        console.log("rescdule_click:....", JSON.stringify(obj));
 
         if (obj.status == true) {
-          var cureent = new Date();
+          var current = new Date();
           let min =
-            cureent.getMinutes() < 10
-              ? "0" + cureent.getMinutes()
-              : cureent.getMinutes();
+            current.getMinutes() < 10
+              ? "0" + current.getMinutes()
+              : current.getMinutes();
           let hour =
-            cureent.getHours() < 10
-              ? "0" + cureent.getHours()
-              : cureent.getHours();
+            current.getHours() < 10
+              ? "0" + current.getHours()
+              : current.getHours();
           var timcurrent = hour + ":" + min;
-          this.setState({ timcurrent_for_check: timcurrent });
+          setState({ timcurrent_for_check: timcurrent });
           let time_slot = obj.result.task_time;
+
           if (obj.result.task_time != "") {
             var names = obj.result.task_time;
             var nameArr = names.split(",");
@@ -304,9 +299,10 @@ export default class AppointmentDetails extends Component {
             const Arr2 = [];
             var ar1 = false;
             var ar2 = true;
+
             if (obj.result.task_time != "") {
               for (let l = 0; l < nameArr.length; l++) {
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (classStateData.check_currentdate == classStateData.set_date) {
                   const timeStr = nameArr[l];
 
                   const convertTime = (timeStr) => {
@@ -321,7 +317,9 @@ export default class AppointmentDetails extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime = convertTime(timeStr);
-                  if (finaltime >= this.state.timcurrent_for_check) {
+                  console.log({ finaltime });
+                  console.log('classStateData.timcurrent_for_check', classStateData.timcurrent_for_check);
+                  if (finaltime >= timcurrent) {
                     new_time_dlot.push({
                       time: nameArr[l],
                       time_status: false,
@@ -350,21 +348,22 @@ export default class AppointmentDetails extends Component {
                 }
               }
             }
-
-            this.setState({
+            console.log({ Arr1 });
+            setState({
               time_Arr: new_time_dlot,
               final_one: Arr1,
               final_arr_two: Arr2,
             });
+
           } else {
-            this.setState({
+            setState({
               time_Arr: [],
               final_one: [],
               final_arr_two: [],
             });
           }
 
-          this.setState({
+          setState({
             set_date: obj.result.app_date,
             rescdule_data: obj.result,
             slot_booking_id: obj.result.slot_booking_id,
@@ -372,44 +371,37 @@ export default class AppointmentDetails extends Component {
             task_details: obj.result.task_details,
             new_task_type: obj.result.task_type,
           });
-
           setTimeout(() => {
-            this.setState({ modalVisible: true });
+            setState({ isScheduleagain: false, modalVisible: true })
           }, 700);
 
-          console.log("obj.result", obj.result);
         } else {
-          this.setState({ rescdule_data: obj.result, message: obj.message });
+          setState({ rescdule_data: obj.result, message: obj.message });
           return false;
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
-  getDoctorTimeDate = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
+  const getDoctorTimeDate = async () => {
+    setState({ isLoading: true })
     let url = config.baseURL + "api-patient-doctor-next-date-time";
-    console.log("url", url);
-
     var data = new FormData();
-    data.append("provider_id", this.state.send_id);
-    data.append("date", this.state.set_date);
-    data.append("service_type", this.state.status_pass);
+    data.append("provider_id", send_id);
+    data.append("date", classStateData.set_date);
+    data.append("service_type", status);
 
-    consolepro.consolelog("data", data);
+    // console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log("misdhfbs ", obj);
-
+        setState({ isLoading: false })
         if (obj.status == true) {
-          consolepro.consolelog("obj.result", obj.result);
+          console.log("obj.result", obj.result);
           if (
-            this.state.rescdule_data.slot_booking_id === "HOMEVISIT_BOOKING"
+            classStateData.rescdule_data.slot_booking_id === "HOMEVISIT_BOOKING"
           ) {
             if (obj.result.home_visit_time != "") {
               var names = obj.result.home_visit_time;
@@ -424,7 +416,7 @@ export default class AppointmentDetails extends Component {
               var home_visit_ar2 = true;
               if (names != "") {
                 for (let l = 0; l < nameArr.length; l++) {
-                  if (this.state.check_currentdate == this.state.set_date) {
+                  if (classStateData.check_currentdate == classStateData.set_date) {
                     const timeStr = nameArr[l];
 
                     const convertTime = (timeStr) => {
@@ -442,16 +434,16 @@ export default class AppointmentDetails extends Component {
                     console.log(
                       "finaltime: ",
                       finaltime,
-                      " this.state.timcurrent_for_check",
-                      this.state.timcurrent_for_check
+                      " classStateData.timcurrent_for_check",
+                      classStateData.timcurrent_for_check
                     );
                     console.log(
                       "check: ",
-                      finaltime >= this.state.timcurrent_for_check,
+                      finaltime >= classStateData.timcurrent_for_check,
                       l,
                       nameArr[l]
                     );
-                    if (finaltime >= this.state.timcurrent_for_check) {
+                    if (finaltime >= classStateData.timcurrent_for_check) {
                       new_time_home.push({
                         time: nameArr[l],
                         time_status: false,
@@ -486,13 +478,13 @@ export default class AppointmentDetails extends Component {
                 }
               }
 
-              this.setState({
+              setState({
                 time_Arr: new_time_home,
                 final_one: Arr1,
                 final_arr_two: Arr2,
               });
             } else {
-              this.setState({ time_Arr: obj.result.home_visit_time });
+              setState({ time_Arr: obj.result.home_visit_time });
             }
           } else {
             if (obj.result.online_task_time != "") {
@@ -508,7 +500,7 @@ export default class AppointmentDetails extends Component {
             if (obj.result.online_task_time != "") {
               for (let m = 0; m < nameArr_time.length; m++) {
                 const timeStr_hour = nameArr_time[m];
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (classStateData.check_currentdate == classStateData.set_date) {
                   const convertTime_hour = (timeStr_hour) => {
                     const [time, modifier] = timeStr_hour.split(" ");
                     let [hours, minutes] = time.split(":");
@@ -521,12 +513,12 @@ export default class AppointmentDetails extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime_hour = convertTime_hour(timeStr_hour);
-                  if (finaltime_hour >= this.state.timcurrent_for_check) {
+                  if (finaltime_hour >= classStateData.timcurrent_for_check) {
                     new_time_online.push({
                       time: nameArr_time[m],
                       time_status: false,
                     });
-                    consolepro.consolelog(
+                    console.log(
                       "-------- new_time_online if ------- " + new_time_online
                     );
                     // if ((m + 2) % 2 == 0) {
@@ -549,7 +541,7 @@ export default class AppointmentDetails extends Component {
                     time: nameArr_time[m],
                     time_status: false,
                   });
-                  // consolepro.consolelog("-------- new_time_online else  ------- " + new_time_online);
+                  // console.log("-------- new_time_online else  ------- " + new_time_online);
                   if (!ar1) {
                     ar1 = true;
                     ar2 = false;
@@ -566,7 +558,7 @@ export default class AppointmentDetails extends Component {
                   // }
                 }
               }
-              this.setState({
+              setState({
                 time_Arr: new_time_online,
                 // final_hour_one: online_Arr1,
                 // final_hour_two: online_Arr2,
@@ -574,7 +566,7 @@ export default class AppointmentDetails extends Component {
                 final_arr_two: online_Arr2,
               });
             } else {
-              this.setState({
+              setState({
                 time_Arr: obj.result.online_task_time,
                 final_one: online_Arr1,
                 final_arr_two: online_Arr2,
@@ -586,39 +578,41 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        setState({ isLoading: false })
+        console.log("-------- error ------- " + error);
       });
   };
 
-  getLabTimeDate = async () => {
+  const getLabTimeDate = async () => {
+    setState({ isLoading: true })
+
     let url = config.baseURL + "api-patient-lab-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("provider_id", this.state.send_id);
-    data.append("date", this.state.set_date);
-    data.append("service_type", this.state.status_pass);
+    data.append("provider_id", send_id);
+    data.append("date", classStateData.set_date);
+    data.append("service_type", status);
 
-    console.log("data", data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
+        setState({ isLoading: false })
         if (obj.status == true) {
-          var cureent = new Date();
+          var current = new Date();
           let min =
-            cureent.getMinutes() < 10
-              ? "0" + cureent.getMinutes()
-              : cureent.getMinutes();
+            current.getMinutes() < 10
+              ? "0" + current.getMinutes()
+              : current.getMinutes();
           let hour =
-            cureent.getHours() < 10
-              ? "0" + cureent.getHours()
-              : cureent.getHours();
+            current.getHours() < 10
+              ? "0" + current.getHours()
+              : current.getHours();
           var timcurrent = hour + ":" + min;
-          this.setState({ timcurrent_for_check: timcurrent });
-          consolepro.consolelog("obj.result", obj.result);
+          setState({ timcurrent_for_check: timcurrent });
+          console.log("obj.result", obj.result);
           if (
-            this.state.slot_booking_id == "TESTS_BOOKING" ||
-            this.state.slot_booking_id == "PACKAGE_BOOKING"
+            classStateData.slot_booking_id == "TESTS_BOOKING" ||
+            classStateData.slot_booking_id == "PACKAGE_BOOKING"
           ) {
             if (obj.result.task_time != "") {
               var names = obj.result.task_time;
@@ -631,7 +625,7 @@ export default class AppointmentDetails extends Component {
               var task_ar2 = true;
               if (obj.result.task_time != "") {
                 for (let l = 0; l < nameArr.length; l++) {
-                  if (this.state.check_currentdate == this.state.set_date) {
+                  if (classStateData.check_currentdate == classStateData.set_date) {
                     const timeStr = nameArr[l];
 
                     const convertTime = (timeStr) => {
@@ -646,7 +640,7 @@ export default class AppointmentDetails extends Component {
                       return `${hours}:${minutes}`;
                     };
                     var finaltime = convertTime(timeStr);
-                    if (finaltime >= this.state.timcurrent_for_check) {
+                    if (finaltime >= classStateData.timcurrent_for_check) {
                       new_time_dlot.push({
                         time: nameArr[l],
                         time_status: false,
@@ -679,13 +673,13 @@ export default class AppointmentDetails extends Component {
                 }
               }
 
-              this.setState({
+              setState({
                 time_Arr: new_time_dlot,
                 final_one: Arr1,
                 final_arr_two: Arr2,
               });
             } else {
-              this.setState({ time_Arr: obj.result.task_time });
+              setState({ time_Arr: obj.result.task_time });
             }
           }
         } else {
@@ -693,40 +687,38 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        setState({ isLoading: false })
+        console.log("-------- error ------- " + error);
       });
   };
 
-  getTimeDate = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
+  const getTimeDate = async () => {
+    setState({ isLoading: true })
     let url = config.baseURL + "api-patient-next-date-time";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("provider_id", this.state.send_id);
-    data.append("date", this.state.set_date);
-    data.append("task_type", this.state.set_task);
-    data.append("service_type", this.state.status_pass);
-    console.log("data", data);
+    data.append("provider_id", send_id);
+    data.append("date", classStateData.set_date);
+    data.append("task_type", classStateData.set_task);
+    data.append("service_type", status);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
+        setState({ isLoading: false })
         if (obj.status == true) {
-          var cureent = new Date();
+          var current = new Date();
           let min =
-            cureent.getMinutes() < 10
-              ? "0" + cureent.getMinutes()
-              : cureent.getMinutes();
+            current.getMinutes() < 10
+              ? "0" + current.getMinutes()
+              : current.getMinutes();
           let hour =
-            cureent.getHours() < 10
-              ? "0" + cureent.getHours()
-              : cureent.getHours();
+            current.getHours() < 10
+              ? "0" + current.getHours()
+              : current.getHours();
           var timcurrent = hour + ":" + min;
-          this.setState({ timcurrent_for_check: timcurrent });
-          consolepro.consolelog("obj.result", obj.result);
-          if (this.state.slot_booking_id == "TASK_BOOKING") {
+          setState({ timcurrent_for_check: timcurrent });
+          console.log("obj.result", obj.result);
+          if (classStateData.slot_booking_id == "TASK_BOOKING") {
             if (obj.result.task_time != "") {
               var names = obj.result.task_time;
               var nameArr = names.split(",");
@@ -738,7 +730,7 @@ export default class AppointmentDetails extends Component {
               var task_ar2 = true;
               if (obj.result.task_time != "") {
                 for (let l = 0; l < nameArr.length; l++) {
-                  if (this.state.check_currentdate == this.state.set_date) {
+                  if (classStateData.check_currentdate == classStateData.set_date) {
                     const timeStr = nameArr[l];
 
                     const convertTime = (timeStr) => {
@@ -753,7 +745,7 @@ export default class AppointmentDetails extends Component {
                       return `${hours}:${minutes}`;
                     };
                     var finaltime = convertTime(timeStr);
-                    if (finaltime >= this.state.timcurrent_for_check) {
+                    if (finaltime >= classStateData.timcurrent_for_check) {
                       new_time_dlot.push({
                         time: nameArr[l],
                         time_status: false,
@@ -786,13 +778,13 @@ export default class AppointmentDetails extends Component {
                 }
               }
 
-              this.setState({
+              setState({
                 time_Arr: new_time_dlot,
                 final_one: Arr1,
                 final_arr_two: Arr2,
               });
             } else {
-              this.setState({ time_Arr: obj.result.task_time });
+              setState({ time_Arr: obj.result.task_time });
             }
           } else {
             if (obj.result.hourly_time != "") {
@@ -808,7 +800,7 @@ export default class AppointmentDetails extends Component {
             if (obj.result.hourly_time != "") {
               for (let m = 0; m < nameArr_time.length; m++) {
                 const timeStr_hour = nameArr_time[m];
-                if (this.state.check_currentdate == this.state.set_date) {
+                if (classStateData.check_currentdate == classStateData.set_date) {
                   const convertTime_hour = (timeStr_hour) => {
                     const [time, modifier] = timeStr_hour.split(" ");
                     let [hours, minutes] = time.split(":");
@@ -821,7 +813,7 @@ export default class AppointmentDetails extends Component {
                     return `${hours}:${minutes}`;
                   };
                   var finaltime_hour = convertTime_hour(timeStr_hour);
-                  if (finaltime_hour >= this.state.timcurrent_for_check) {
+                  if (finaltime_hour >= classStateData.timcurrent_for_check) {
                     new_time_hourl.push({
                       time: nameArr_time[m],
                       time_status: false,
@@ -864,13 +856,13 @@ export default class AppointmentDetails extends Component {
                   }
                 }
               }
-              this.setState({
+              setState({
                 time_Arr: new_time_hourl,
                 final_one: Arr_hour,
                 final_arr_two: Arr2_hour,
               });
             } else {
-              this.setState({ time_Arr: obj.result.hourly_time });
+              setState({ time_Arr: obj.result.hourly_time });
             }
           }
         } else {
@@ -878,12 +870,13 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        setState({ isLoading: false })
+        console.log("-------- error ------- " + error);
       });
   };
 
-  check_date = (item, index) => {
-    let data = this.state.date_array;
+  const check_date = (item, index) => {
+    let data = classStateData.date_array;
     console.log("new data", data);
 
     for (let i = 0; i < data.length; i++) {
@@ -894,10 +887,10 @@ export default class AppointmentDetails extends Component {
       }
     }
 
-    this.setState({ date_array: data });
+    setState({ date_array: data });
   };
 
-  get_day = () => {
+  const get_day = () => {
     var today = new Date();
     var nextweek = new Date(
       today.getFullYear(),
@@ -921,7 +914,7 @@ export default class AppointmentDetails extends Component {
       show_get_date = datenew_show;
     }
     let date1_show = year_show + "-" + show_month1 + "-" + show_get_date;
-    this.setState({ set_date: date1_show, check_currentdate: date1_show });
+    setState({ set_date: date1_show, check_currentdate: date1_show });
 
     for (
       var arr = [], dt = new Date(today);
@@ -953,63 +946,42 @@ export default class AppointmentDetails extends Component {
 
       arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
     }
-    this.setState({ date_array: arr });
-    console.log("check date muskan", arr);
+    console.log(',,,,,,,,,,,,,,,,', arr);
+    setState({ date_array: arr });
   };
 
-  time_tick = (item, index) => {
-    let data = this.state.time_Arr;
-    console.log("new data", data);
-    // if(data[index].time_status==true)
-    // {
-    //     data[index].time_status=false
-    // }
-    // else
-    // {
-    for (let i = 0; i < data.length; i++) {
-      if (i == index) {
-        data[i].time_status = true;
-      } else {
-        data[i].time_status = false;
-      }
-      // }
-    }
-    this.setState({ time_Arr: data });
-  };
 
-  submit_btn = async () => {
-    if (this.state.time_take_data.length <= 0) {
-      msgProvider.showError(msgText.EmptyTime[config.language]);
+  const submit_btn = async () => {
+
+    if (classStateData.time_take_data.length <= 0) {
+      msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
 
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
-
+    setState({ isScheduleagain: true })
     let url =
       config.baseURL +
-      (this.state.status_pass === "lab"
+      (status === "lab"
         ? "api-patient-update-lab-reschedule-appointment"
-        : this.state.status_pass === "doctor"
-        ? "api-patient-update-doctor-reschedule-appointment"
-        : "api-patient-update-reschedule-appointment");
-    console.log("url", url);
+        : status === "doctor"
+          ? "api-patient-update-doctor-reschedule-appointment"
+          : "api-patient-update-reschedule-appointment");
     var data = new FormData();
-    console.log("data", data);
 
-    data.append("service_type", this.state.status_pass);
-    data.append("order_id", this.state.order_id);
-    data.append("from_date", this.state.set_date);
-    data.append("from_time", this.state.time_take_data);
+    data.append("service_type", status);
+    data.append("order_id", appointment_id);
+    data.append("from_date", classStateData.set_date);
+    data.append("from_time", classStateData.time_take_data);
 
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
+        setState({ isScheduleagain: false })
         if (obj.status == true) {
-          this.setState({ modalVisible: false });
+          setState({ modalVisible: false });
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
-            this.getAllDetails(1);
+            getAllDetails(1);
           }, 700);
         } else {
           setTimeout(() => {
@@ -1019,38 +991,38 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        setState({ isScheduleagain: false })
+        console.log("-------- error ------- " + error);
+        setState({ loading: false });
       });
   };
 
-  rating_btn = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details.user_id;
+  const rateProvider = async () => {
 
     let url = config.baseURL + "api-patient-insert-review";
-    console.log("url", url);
     var data = new FormData();
     console.log("data", data);
-    data.append("lgoin_user_id", user_id);
-    data.append("service_type", this.state.status_pass);
-    data.append("order_id", this.state.set_order);
-    data.append("rating", this.state.rating);
-    data.append("review", this.state.email);
-    data.append("provider_id", this.state.send_id);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", status);
+    data.append("order_id", classStateData.set_order);
+    data.append("rating", classStateData.rating);
+    data.append("review", classStateData.reviewText);
+    data.append("provider_id", send_id);
+
+    // console.log(data);
 
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
         if (obj.status == true) {
-          this.setState({ modalVisiblerating: false });
+          setState({ modalVisiblerating: false });
           setTimeout(() => {
             msgProvider.showSuccess(obj.message);
-            this.getAllDetails(1);
+            getAllDetails(1);
           }, 700);
         } else {
-          // if (obj.active_status == msgTitle.deactivate[config.language] || obj.msg[config.language] == msgTitle.usererr[config.language]) {
-          //   usernotfound.loginFirst(this.props, obj.msg[config.language])
+          // if (obj.active_status == LangProvider.deactivate[languageIndex] || obj.msg[languageIndex] == LangProvider.usererr[languageIndex]) {
+          //   usernotfound.loginFirst(props, obj.msg[languageIndex])
           // } else {
 
           setTimeout(() => {
@@ -1061,18 +1033,18 @@ export default class AppointmentDetails extends Component {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
-        this.setState({ loading: false });
+        console.log("-------- error ------- " + error);
+        setState({ loading: false });
       });
   };
 
-  downloadPrescription = (imgUrl, filename) => {
-    this.permissionFunc(imgUrl, filename);
+  const downloadPrescription = (imgUrl, filename) => {
+    permissionFunc(imgUrl, filename);
   };
 
-  permissionFunc = async (imgUrl, filename) => {
+  const permissionFunc = async (imgUrl, filename) => {
     if (Platform.OS == "ios") {
-      this.actualDownload(imgUrl, filename);
+      actualDownload(imgUrl, filename);
     } else {
       // if (downloaded) {
       try {
@@ -1080,9 +1052,9 @@ export default class AppointmentDetails extends Component {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          this.actualDownload(imgUrl, filename);
+          actualDownload(imgUrl, filename);
         } else {
-          // global.props.hideLoader();
+          // global.hideLoader();
           msgProvider.showError(
             "You need to give storage permission to download the file"
           );
@@ -1099,7 +1071,7 @@ export default class AppointmentDetails extends Component {
     }
   };
 
-  actualDownload = (imgUrl, filename) => {
+  const actualDownload = (imgUrl, filename) => {
     const { dirs } = RNFetchBlob.fs;
     const dirToSave =
       Platform.OS == "ios" ? dirs.DocumentDir : dirs.DownloadDir;
@@ -1145,39 +1117,9 @@ export default class AppointmentDetails extends Component {
       });
   };
 
-  // downloadPrescription = (imgUrl) => {
-  //   if (Platform.OS == "android") {
-  //     RNFetchBlob.config({
-  //       fileCache: true,
-  //       appendExt: "png",
-  //       indicator: true,
-  //       IOSBackgroundTask: true,
-  //       path: path,
-  //       addAndroidDownloads: {
-  //         useDownloadManager: true,
-  //         notification: true,
-  //         path: path,
-  //         description: "Image",
-  //       },
-  //     })
-  //       .fetch("GET", imgUrl)
-  //       .then((res) => {
-  //         console.log(res, "end downloaded");
-  //       });
-  //   } else {
-  //     CameraRoll.save(imgUrl)
-  //       .then(() => {
-  //         msgProvider.showSuccess("Prescription downloaded successfully");
-  //       })
-  //       .catch((err) => {
-  //         console.log("err:", err);
-  //         msgProvider.showError(err);
-  //       });
-  //   }
-  // };
 
-  getAudioTimeString(seconds) {
-    console.log("seconds:: ", seconds);
+  const getAudioTimeString = (seconds) => {
+    // console.log("seconds:: ", seconds);
     const h = parseInt(seconds / (60 * 60));
     const m = parseInt((seconds % (60 * 60)) / 60);
     const s = parseInt(seconds % 60);
@@ -1191,2582 +1133,2313 @@ export default class AppointmentDetails extends Component {
     );
   }
 
-  render() {
-    var item = this.state.appoinment_detetails;
-    const currentTimeString = this.getAudioTimeString(this.state.playSeconds);
-    const durationString = this.getAudioTimeString(this.state.duration);
-    console.log("durationString:: ", durationString);
-    if (
-      this.state.appoinment_detetails != "" &&
-      this.state.appoinment_detetails != null
-    ) {
-      /* check video call button enable or not */
-      var videoCallButton = false;
-      var currentDate = moment().unix();
-      var appointmentDate = moment(item.app_date).format("YYYY-MM-DD");
-      var appointmentTime = item.from_time;
-      var isSameDay = moment().isSame(appointmentDate, "day");
-      console.log("isSameDay => ", isSameDay);
-      var myDate = moment(
-        appointmentDate + " " + appointmentTime,
-        "YYYY-MM-DD hh:mm A"
-      ).unix();
-      if (isSameDay) {
-        if (currentDate < myDate) {
-          let diff = (myDate - currentDate) / 60; //mins
-          console.log("CurrentDate < MyDate:: ", diff);
-          if (diff <= 10) {
-            videoCallButton = true;
-          }
-        } else {
+
+  var item = classStateData.appointmentDetails;
+  const currentTimeString = getAudioTimeString(classStateData.playSeconds);
+  const durationString = getAudioTimeString(classStateData.duration);
+
+  if (classStateData.isLoadingDetails) {
+
+    return (
+      <View style={{ flex: 1, }}>
+        <ScreenHeader
+          title={status === 'doctor' ? LangProvider.Consultation_Details[languageIndex] : status === 'lab' ? LangProvider.Lab_Test_Details[languageIndex] : LangProvider.Appointment_Details[languageIndex]}
+          navigation={navigation}
+          onBackPress={() => {
+            navigation.pop()
+            pause()
+          }}
+          leftIcon
+          rightIcon
+        />
+        <View style={{
+          width: windowWidth,
+          backgroundColor: Colors.White,
+          paddingHorizontal: s(11),
+          paddingVertical: vs(9),
+          marginTop: vs(7)
+        }}>
+
+          <View
+            style={{
+              flexDirection: "row",
+              width: '100%',
+              paddingHorizontal: s(11),
+            }}>
+            <View style={{ width: "30%", }}>
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={s(75)} height={s(75)} borderRadius={s(100)} />
+              </SkeletonPlaceholder>
+            </View>
+
+            <View style={{ justifyContent: 'center' }}>
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={(windowWidth * 30) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(7) }} />
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(7) }} />
+              </SkeletonPlaceholder>
+            </View>
+          </View>
+          <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(7), marginBottom: vs(7) }}></View>
+
+          <View>
+            <SkeletonPlaceholder>
+              <SkeletonPlaceholder.Item width={(windowWidth * 12) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+            </SkeletonPlaceholder>
+
+            <View style={{ flexDirection: 'row', marginTop: vs(7) }}>
+
+              <View style={{ flex: 1 }}>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
+                </SkeletonPlaceholder>
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
+                </SkeletonPlaceholder>
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 10) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <SkeletonPlaceholder.Item width={(windowWidth * 20) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginTop: vs(5) }} />
+                </SkeletonPlaceholder>
+              </View>
+
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+
+  } else {
+    /* check video call button enable or not */
+    var videoCallButton = false;
+    var currentDate = moment().unix();
+    var appointmentDate = moment(item.app_date).format("YYYY-MM-DD");
+    var appointmentTime = item.from_time;
+    var isSameDay = moment().isSame(appointmentDate, "day");
+    // console.log("isSameDay => ", isSameDay);
+    var myDate = moment(
+      appointmentDate + " " + appointmentTime,
+      "YYYY-MM-DD hh:mm A"
+    ).unix();
+    if (isSameDay) {
+      if (currentDate < myDate) {
+        let diff = (myDate - currentDate) / 60; //mins
+        // console.log("CurrentDate < MyDate:: ", diff);
+        if (diff <= 10) {
           videoCallButton = true;
         }
       } else {
-        videoCallButton = false;
+        videoCallButton = true;
       }
-      console.log("videoCallButton:: ", videoCallButton);
+    } else {
+      videoCallButton = false;
+    }
+    // console.log("videoCallButton:: ", videoCallButton);
 
-      /* check video call button enable or not */
+    /* check video call button enable or not */
 
-      return (
-        <View style={{ flex: 1 }}>
-          <SafeAreaView style={{ flex: 1 }} />
+    let tempArr = []
+    var otpList = [];
+    if ((item?.OTP != null && item?.OTP != '')) {
+      let OTP = item?.OTP?.split('')
+      for (let index = 0; index < item?.OTP.length; index++) {
+        tempArr.push(OTP[index])
+      }
+      otpList = tempArr
+      // console.log(tempArr);
+    }
 
-          <CarAppHeader2
-            navigation={this.props.navigation}
-            title={Lang_chg.AppointmentDetails[config.language]}
-          />
-          <Modal
-            backdropOpacity={3}
-            //  style={{backgroundColor: Colors.dim_grey}}
-            animationType="slide"
-            transparent={true}
-            visible={this.state.modalVisible}
-            presentationStyle="overFullScreen"
-            onRequestClose={() => {
-              this.setState({ modalVisible: false });
+    return (
+      <View style={{ flex: 1 }}>
+
+        <ScreenHeader
+          title={status === 'doctor' ? LangProvider.Consultation_Details[languageIndex] : status === 'lab' ? LangProvider.Lab_Test_Details[languageIndex] : LangProvider.Appointment_Details[languageIndex]}
+          navigation={navigation}
+          onBackPress={() => {
+            navigation.pop()
+            pause()
+          }}
+          leftIcon
+          rightIcon
+        />
+
+        <KeyboardAwareScrollView
+          // keyboardOpeningTime={200}
+          extraScrollHeight={50}
+          enableOnAndroid={true}
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{
+            justifyContent: 'center',
+            paddingBottom: vs(30),
+          }}
+          showsVerticalScrollIndicator={false}>
+
+          <View
+            style={{
+              paddingVertical: vs(9),
+              backgroundColor: Colors.White,
+              marginTop: vs(7),
             }}
           >
+
+            {/* booking heading */}
+
             <View
               style={{
-                flex: 1,
-                backgroundColor: "#00000090",
+                flexDirection: "row",
+                justifyContent: 'space-between',
+                width: "100%",
+                alignSelf: "center",
+                borderBottomWidth: 1.5,
+                borderBottomColor: Colors.backgroundcolor,
+                paddingBottom: vs(5),
+                paddingHorizontal: s(13),
+              }}>
+              <Text
+                style={{
+                  fontSize: Font.small,
+                  fontFamily: Font.Medium,
+                  color: Colors.Theme
+                }}
+              >
+                {item.order_id}
+              </Text>
+              <Text
+                style={{
+                  fontSize: Font.small,
+                  fontFamily: Font.Medium,
+                  color: item?.acceptance_status === 'Pending' ? Colors.Yellow : (item?.acceptance_status === 'Completed' || item?.acceptance_status === 'Accepted') ? Colors.Green : Colors.Red,
+                }}
+              >
+                {item.acceptance_status}
+              </Text>
+            </View>
+
+            {/* --------------User Info------------ */}
+            <View
+              style={{
+                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 0,
-              }}
-            >
+                paddingVertical: vs(11),
+                paddingHorizontal: s(13),
+              }}>
+              <View style={{ width: "28%", alignSelf: "center" }}>
+                {
+                  (item.provider_image == "NA" || item.provider_image == null || item.provider_image == "") ?
+                    <SvgXml xml={dummyUser} style={{
+                      alignSelf: "center",
+                      marginTop: vs(5)
+                    }} />
+                    :
+                    <Image
+                      source={{ uri: config.img_url3 + item.provider_image }}
+                      style={{ height: s(75), width: s(75), borderRadius: s(85), borderWidth: 0.5, bordercolor: Colors.Highlight }}
+                    />
+                }
+              </View>
+
               <View
                 style={{
-                  width: "100%",
-                  backgroundColor: Colors.white_color,
-                  // marginTop: (mobileW * 50) / 100,
-                  position: "absolute",
-                  bottom: 0,
-                  borderTopLeftRadius: (mobileW * 10) / 100,
-                  borderTopRightRadius: (mobileW * 10) / 100,
-                  borderWidth: (mobileW * 0.3) / 100,
-                  borderColor: Colors.gainsboro,
-                  elevation: 5,
-                  height: (mobileH * 80) / 100,
-                }}
-              >
-                {/* task booking section */}
-                <ScrollView
+                  width: "60%",
+                }}>
+                <View
                   style={{
-                    marginTop: (mobileW * 2) / 100,
-                    borderTopRightRadius: (mobileW * 5) / 100,
-                    borderTopLeftRadius: (mobileW * 5) / 100,
+                    flexDirection: "row",
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      color: Colors.Theme,
+                      fontSize: Font.small,
+                      alignSelf: 'flex-start',
+                    }}>
+                    {item.service_type}
+                  </Text>
+                  {item.hospital_id != "" && (
+                    <Text
+                      style={{
+                        color: "#FCFFFE",
+                        backgroundColor: "#FFA800",
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        padding: (windowWidth * 2) / 100,
+                        marginTop: -3,
+                        marginLeft: 10,
+                        paddingVertical: (windowWidth * 0.6) / 100,
+                      }}
+                    >
+                      {LangProvider.Hospital[languageIndex]}
+                    </Text>
+                  )}
+                </View>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.medium,
+                    paddingVertical: (windowWidth * 1.1) / 100,
+                    color: Colors.DarkGrey,
+                    alignSelf: 'flex-start',
                   }}
-                  showsVerticalScrollIndicator={false}
                 >
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        width: (mobileW * 90) / 100,
-                        // backgroundColor:'red',
-                        alignSelf: "center",
-                        paddingTop: (mobileW * 4) / 100,
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: Font.fontmedium,
-                          // fontSize: (mobileW * 4) / 100,
-                          fontSize: Font.name,
-                        }}
-                      >
-                        {Lang_chg.Reschedule[config.language]}
-                      </Text>
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        <Text
-                          style={{
-                            color: Colors.theme_color,
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.name,
-                            paddingRight: (mobileW * 4) / 100,
-                          }}
-                        >
-                          {item.order_id}
-                        </Text>
-
-                        <TouchableOpacity
-                          onPress={() => this.setState({ modalVisible: false })}
-                        >
-                          <Image
-                            source={localimag.cross}
-                            style={{
-                              resizeMode: "contain",
-                              // backgroundColor: Colors.white_color,
-                              width: 20,
-                              height: 20,
-                              alignSelf: "center",
-                            }}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    {/* border */}
-                    <View
-                      style={{
-                        borderTopWidth: 1,
-                        borderColor: Colors.gainsboro,
-                        width: "90%",
-                        alignSelf: "center",
-                        marginVertical: (mobileW * 1) / 100,
-                      }}
-                    />
-                    <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        paddingVertical: (mobileW * 4) / 100,
-                      }}
-                    >
-                      <View>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.9) / 100,
-                            color: Colors.theme_color,
-                            textAlign: config.textRotate,
-                            paddingBottom: (mobileW * 1.5) / 100,
-                          }}
-                        >
-                          {this.state.status_pass === "doctor"
-                            ? this.state.new_task_type === "Online"
-                              ? Lang_chg.OnlineCons[config.language]
-                              : Lang_chg.HomeVisit[config.language]
-                            : this.state.status_pass === "lab"
-                            ? this.state.slot_booking_id === "PACKAGE_BOOKING"
-                              ? Lang_chg.HealthPackages[config.language]
-                              : Lang_chg.Tests[config.language]
-                            : this.state.new_task_type}
-                        </Text>
-                      </View>
-                      <View
-                        style={[
-                          {
-                            paddingVertical: (mobileW * 3) / 100,
-                            borderTopWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                          },
-                          this.state.task_details.length >= 3
-                            ? { height: (mobileW * 40) / 100 }
-                            : { paddingVertical: (mobileW * 1.5) / 100 },
-                        ]}
-                      >
-                        {this.state.status_pass === "doctor" ? (
-                          <FlatList
-                            data={this.state.task_details}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (
-                                this.state.task_details != "" &&
-                                this.state.task_details != null
-                              ) {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      // this.check_all(item, index);
-                                    }}
-                                    style={{
-                                      alignItems: "center",
-                                      width: "100%",
-                                      alignSelf: "center",
-                                      paddingVertical: (mobileW * 1.7) / 100,
-                                      flexDirection: "row",
-                                      marginTop: (mobileW * 0.3) / 100,
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        width: "70%",
-                                        textAlign: config.textRotate,
-                                        alignSelf: "center",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        width: "30%",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                        textAlign: "right",
-                                      }}
-                                    >
-                                      {item.price}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        ) : this.state.slot_booking_id == "TASK_BOOKING" ? (
-                          <FlatList
-                            data={this.state.task_details}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (
-                                this.state.task_details != "" &&
-                                this.state.task_details != null
-                              ) {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      // this.check_all(item, index);
-                                    }}
-                                    style={{
-                                      alignItems: "center",
-                                      width: "100%",
-                                      alignSelf: "center",
-                                      paddingVertical: (mobileW * 1.7) / 100,
-                                      flexDirection: "row",
-                                      marginTop: (mobileW * 0.3) / 100,
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        width: "70%",
-                                        textAlign: config.textRotate,
-                                        alignSelf: "center",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        width: "30%",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                        textAlign: "right",
-                                      }}
-                                    >
-                                      {item.price}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        ) : this.state.slot_booking_id == "TESTS_BOOKING" ||
-                          this.state.slot_booking_id == "PACKAGE_BOOKING" ? (
-                          <FlatList
-                            data={this.state.task_details}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (
-                                this.state.task_details != "" &&
-                                this.state.task_details != null
-                              ) {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      // this.check_all(item, index);
-                                    }}
-                                    style={{
-                                      alignItems: "center",
-                                      width: "100%",
-                                      alignSelf: "center",
-                                      paddingVertical: (mobileW * 1.7) / 100,
-                                      flexDirection: "row",
-                                      marginTop: (mobileW * 0.3) / 100,
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        width: "70%",
-                                        textAlign: config.textRotate,
-                                        alignSelf: "center",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        width: "30%",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                        textAlign: "right",
-                                      }}
-                                    >
-                                      {item.price}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        ) : (
-                          <FlatList
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            data={item.task_details}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <View
-                                  style={{
-                                    borderRadius: (mobileW * 2) / 100,
-                                    marginRight: (mobileW * 2) / 100,
-                                    marginTop: (mobileW * 2) / 100,
-                                    borderColor: "#0168B3",
-                                    borderWidth: 2,
-
-                                    width: (mobileW * 30) / 100,
-                                    backgroundColor: "#fff",
-                                  }}
-                                >
-                                  <View
-                                    style={{
-                                      backgroundColor: "#0168B3",
-                                      borderTopLeftRadius:
-                                        (mobileW * 1.2) / 100,
-                                      borderTopRightRadius:
-                                        (mobileW * 1.2) / 100,
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        // backgroundColor:'red',
-                                        // paddingHorizontal: (mobileW * 5) / 100,
-                                        paddingVertical: (mobileW * 1.5) / 100,
-                                        color: Colors.white_color,
-                                        fontFamily: Font.fontmedium,
-                                        fontSize: (mobileW * 3) / 100,
-                                        textAlign: "center",
-                                        textTransform: "uppercase",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                  </View>
-                                  <Text
-                                    style={{
-                                      paddingVertical: (mobileW * 2) / 100,
-                                      fontFamily: Font.fontmedium,
-                                      textAlign: "center",
-                                      fontSize: Font.sregulartext_size,
-                                    }}
-                                  >
-                                    {item.price}
-                                  </Text>
-                                </View>
-                              );
-                            }}
-                          />
-                        )}
-                      </View>
-
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignSelf: "center",
-                          paddingTop: (mobileW * 4) / 100,
-                          borderColor: Colors.gainsboro,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.name,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Appointmentschedule[config.language]}
-                        </Text>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Image
-                            source={localimag.calendarimg}
-                            style={{
-                              resizeMode: "contain",
-                              // backgroundColor: Colors.white_color,
-                              width: 20,
-                              height: 20,
-                              alignSelf: "center",
-                            }}
-                          />
-
-                          <Text
-                            style={{
-                              color: Colors.theme_color,
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.name,
-                              marginLeft: (mobileW * 1) / 100,
-                            }}
-                          >
-                            {this.state.set_date}
-                          </Text>
-                        </View>
-                      </View>
-
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: Colors.gainsboro,
-                          width: "100%",
-                          marginTop: (mobileW * 2) / 100,
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: "100%",
-                          alignSelf: "center",
-                          paddingTop: (mobileW * 3) / 100,
-                          paddingBottom: (mobileW * 3) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontregular,
-                            fontSize: Font.subtext,
-                            textAlign: config.textRotate,
-                            color: "#000",
-                          }}
-                        >
-                          {Lang_chg.SelectDate[config.language]}
-                        </Text>
-
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            data={this.state.date_array}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.setState(
-                                      {
-                                        set_date: item.date1,
-                                        set_task: "task_base",
-                                        time_take_data: "",
-                                      },
-                                      () => {
-                                        this.state.status_pass === "lab"
-                                          ? this.getLabTimeDate()
-                                          : this.state.status_pass === "doctor"
-                                          ? this.getDoctorTimeDate()
-                                          : this.getTimeDate(),
-                                          this.check_date(item, index);
-                                      }
-                                    );
-                                  }}
-                                  style={{ width: (mobileW * 15) / 100 }}
-                                >
-                                  <Text
-                                    style={{
-                                      marginRight: (mobileW * 3) / 100,
-                                      marginTop: (mobileW * 3) / 100,
-                                      backgroundColor:
-                                        item.tick == 1
-                                          ? "#0787D2"
-                                          : Colors.gray6,
-                                      color: item.tick == 1 ? "white" : "black",
-                                      textAlign: "center",
-                                      paddingVertical: (mobileW * 2) / 100,
-                                      fontFamily: Font.ques_fontfamily,
-                                      fontSize: Font.sregulartext_size,
-
-                                      lineHeight: (mobileW * 5) / 100,
-                                    }}
-                                  >
-                                    {item.day}
-                                    {"\n"}
-
-                                    {item.datenew}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      </View>
-
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: Colors.gainsboro,
-                          width: "100%",
-                          marginTop: (mobileW * 1.5) / 100,
-                          marginBottom: (mobileW * 1.5) / 100,
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: "100%",
-                          alignSelf: "center",
-                          paddingVertical: (mobileW * 3) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontregular,
-                            fontSize: Font.subtext,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {Lang_chg.Select_start_time[config.language]}
-                        </Text>
-                        <ScrollView
-                          horizontal={true}
-                          showsHorizontalScrollIndicator={false}
-                        >
-                          <View style={{ width: "100%" }}>
-                            {this.state.time_Arr != "" ? (
-                              <View style={{ width: "100%" }}>
-                                <View style={{ width: "100%" }}>
-                                  <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_one}
-                                    renderItem={({ item, index }) => {
-                                      return (
-                                        <TouchableOpacity
-                                          onPress={() => {
-                                            this.setState({
-                                              time_take_data: item.time,
-                                            });
-                                          }}
-                                        >
-                                          <Text
-                                            style={[
-                                              {
-                                                marginRight:
-                                                  (mobileW * 3) / 100,
-                                                marginTop: (mobileW * 3) / 100,
-
-                                                fontFamily:
-                                                  Font.ques_fontfamily,
-                                                fontSize:
-                                                  Font.sregulartext_size,
-                                                padding: (mobileW * 2) / 100,
-                                                paddingHorizontal:
-                                                  (mobileW * 3.3) / 100,
-                                              },
-                                              item.time ==
-                                              this.state.time_take_data
-                                                ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
-                                            ]}
-                                          >
-                                            {item.time}
-                                          </Text>
-                                        </TouchableOpacity>
-                                      );
-                                    }}
-                                  />
-                                </View>
-                                <View style={{ width: "100%" }}>
-                                  <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.final_arr_two}
-                                    renderItem={({ item, index }) => {
-                                      return (
-                                        <TouchableOpacity
-                                          onPress={() => {
-                                            this.setState({
-                                              time_take_data: item.time,
-                                            });
-                                          }}
-                                        >
-                                          <Text
-                                            style={[
-                                              {
-                                                marginRight:
-                                                  (mobileW * 3) / 100,
-                                                marginTop: (mobileW * 3) / 100,
-
-                                                fontFamily:
-                                                  Font.ques_fontfamily,
-                                                fontSize:
-                                                  Font.sregulartext_size,
-                                                padding: (mobileW * 2) / 100,
-                                                paddingHorizontal:
-                                                  (mobileW * 3.3) / 100,
-                                              },
-                                              item.time ==
-                                              this.state.time_take_data
-                                                ? {
-                                                    backgroundColor:
-                                                      Colors.theme_color,
-                                                    color: "#fff",
-                                                  }
-                                                : {
-                                                    backgroundColor:
-                                                      Colors.gray6,
-                                                    color: "#000",
-                                                  },
-                                            ]}
-                                          >
-                                            {item.time}
-                                          </Text>
-                                        </TouchableOpacity>
-                                      );
-                                    }}
-                                  />
-                                </View>
-                              </View>
-                            ) : (
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontMediumItalic,
-                                  fontSize: (mobileW * 4) / 100,
-                                  alignSelf: "center",
-                                  marginTop: (mobileW * 3) / 100,
-                                  textAlign: "center",
-                                  marginLeft: (mobileW * 32) / 100,
-                                }}
-                              >
-                                {Lang_chg.no_data_Found[config.language]}
-                              </Text>
-                            )}
-                          </View>
-                        </ScrollView>
-                      </View>
-
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.submit_btn();
-                        }}
-                        style={{
-                          width: "98%",
-                          alignSelf: "center",
-                          borderRadius: (mobileW * 2) / 100,
-                          backgroundColor: Colors.theme_color,
-                          paddingVertical: (mobileW * 2.8) / 100,
-                          marginVertical: (mobileW * 6) / 100,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: Colors.textwhite,
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.subtext,
-                            alignSelf: "flex-end",
-                            textAlign: config.textalign,
-                            alignSelf: "center",
-                          }}
-                        >
-                          {Lang_chg.SAVECHANGERESCHEDULE[config.language]}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </ScrollView>
+                  {item.provider_name}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.DarkGrey,
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  {item.speciality}
+                </Text>
               </View>
             </View>
-          </Modal>
 
-          {/* -------------------------------------rating review modal------------------------------ */}
-
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            showsVerticalScrollIndicator={false}
-          >
-            <KeyboardAwareScrollView>
-              <Modal
-                backdropOpacity={3}
-                //  style={{backgroundColor: Colors.dim_grey}}
-                animationType="slide"
-                transparent={true}
-                visible={this.state.modalVisiblerating}
-                presentationStyle="overFullScreen"
-                onRequestClose={() => {
-                  this.setState({ modalVisiblerating: false });
+            {/* -------------------- appointment details--------------------- */}
+            <View
+              style={{
+                backgroundColor: Colors.appointmentdetaillightblue,
+                paddingHorizontal: s(13),
+                paddingVertical: vs(10)
+              }}>
+              <Text
+                style={{
+                  fontFamily: Font.Medium,
+                  fontSize: Font.small,
+                  color: Colors.darkText,
+                  alignSelf: 'flex-start',
+                  paddingBottom: (windowWidth * 3) / 100,
                 }}
               >
+                {LangProvider.appointment_schedule[languageIndex]}
+              </Text>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}>
+
                 <View
                   style={{
                     flex: 1,
-                    backgroundColor: "#00000090",
+                    marginTop: (windowWidth * 1) / 100,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    {LangProvider.Date[languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                      marginTop: vs(5)
+                    }} >
+                    {item.app_date}
+                  </Text>
+                </View>
 
-                    borderRadius: 0,
+                <View
+                  style={{
+                    flex: 1.35,
+                    marginTop: (windowWidth * 1) / 100,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    {LangProvider.Time[languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                      marginTop: vs(5)
+                    }} >
+                    {item.app_time}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 0.65,
+                    marginTop: (windowWidth * 1) / 100,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    {LangProvider.Type[languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.detailTitles,
+                      alignSelf: 'flex-start',
+                      textAlign: 'left',
+                      marginTop: vs(5)
+                    }} >
+                    {item?.task_type}
+                  </Text>
+                </View>
+
+              </View>
+
+              <View
+                style={{
+                  width: "100%",
+                  alignSelf: "center",
+                  borderTopWidth: 1.5,
+                  borderTopColor: '#D8D8D8',
+                  marginTop: vs(10),
+                  paddingTop: vs(8)
+                }}>
+
+                <View
+                  style={{
+                    width: "42%",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    alignItems: 'center'
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.DarkGrey,
+                    }}>
+                    {LangProvider.BookingOn[languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.DarkGrey,
+                      textTransform: "uppercase",
+                    }}>
+                    {item.booking_date}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+
+
+            {/* // patient symptom doctor */}
+            {item.service_type == "Doctor" &&
+              (item.symptom_recording != "" ||
+                item.symptom_text != "") && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    backgroundColor: "#FDF7EB",
+                    paddingVertical: vs(9),
+                    paddingHorizontal: s(13)
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.Theme,
+                      alignSelf: 'flex-start',
+                    }}>
+                    {LangProvider.PATIENT_SYMPTOM[languageIndex]}
+                  </Text>
+
+                  {item.symptom_recording != "" && (
+                    <View
+                      style={{
+                        width: "100%",
+                        alignSelf: "center",
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderBottomWidth: 1.5,
+                        borderColor: Colors.gainsboro,
+                        paddingVertical: vs(5)
+                      }}>
+                      <Text
+                        style={{
+                          width: '30%',
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.detailTitles,
+                          textAlign: 'left',
+                        }}
+                      >
+                        {LangProvider.Voice_Recording[languageIndex]}
+                      </Text>
+
+                      <View
+                        style={{
+                          width: '70%',
+                          flexDirection: "row",
+                          alignItems: 'center'
+                        }}>
+                        {/* <Text style={{ color: 'black', alignSelf: 'center' }}>{currentTimeString}</Text> */}
+                        <TouchableOpacity
+                          onPress={() => {
+                            classStateData.playState == "paused"
+                              ? onStartPlay(true)
+                              : pause();
+                          }}>
+                          <Image
+                            source={
+                              classStateData.playState == "paused"
+                                ? Icons.play
+                                : Icons.pause
+                            }
+                            style={{
+                              transform: [{ rotate: (Icons.pause && languageIndex == 1) ? "180deg" : "0deg" }],
+                              width: (windowWidth * 8) / 100,
+                              height: (windowWidth * 8) / 100,
+                            }}
+                          />
+                        </TouchableOpacity>
+
+                        <Slider
+                          onTouchStart={onSliderEditStart}
+                          onTouchEnd={onSliderEditEnd}
+                          onValueChange={onSliderEditing}
+                          value={classStateData.playSeconds}
+                          maximumValue={classStateData.duration}
+                          maximumTrackTintColor="gray"
+                          minimumTrackTintColor={Colors.Theme}
+                          thumbImage={classStateData.sliderIcon}
+                          style={{
+                            flex: 1,
+                            alignSelf: "center",
+                            marginHorizontal: Platform.select({ ios: 5 }),
+                            height: (windowWidth * 10) / 100,
+                            // transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
+                          }}
+                        />
+                        <Text
+                          style={{
+                            color: "black",
+                            alignSelf: "center",
+                          }}
+                        >
+                          {durationString}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+
+                  {(item.symptom_text != "" && item.symptom_text != null && item.symptom_text != undefined) && (
+                    <View style={{
+                      borderBottomWidth: 1.5,
+                      borderColor: Colors.gainsboro,
+                      paddingVertical: vs(9)
+                    }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Medium,
+                          fontSize: Font.small,
+                          color: Colors.detailTitles,
+                          alignSelf: 'flex-start',
+                          marginBottom: (windowWidth * 3.5) / 100,
+                        }}
+                      >
+                        {LangProvider.Description[languageIndex]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.small,
+                          color: Colors.detailTitles,
+                          alignSelf: 'flex-start',
+                        }}
+                      >
+                        {item.symptom_text}
+                      </Text>
+                    </View>
+                  )}
+
+                  {item.patient_prescription != "" && (
+                    <View
+                      style={{
+                        width: "100%",
+                        justifyContent: 'space-between',
+                        flexDirection: "row",
+                        alignItems: 'center',
+                        alignSelf: "center",
+                        paddingTop: vs(9)
+                      }}>
+
+                      <View
+                        style={{
+                          width: "90%",
+                          flexDirection: "row",
+                          alignItems: 'center',
+                        }}>
+
+                        <Image
+                          resizeMode="contain"
+                          source={Icons.Attachment}
+                          style={{
+                            width: "5%",
+                            height: 15,
+                            marginRight: (windowWidth * 2) / 100,
+                            borderColor: Colors.Theme,
+                          }}
+                        />
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                            textAlign: "auto",
+                          }}>
+                          {item.patient_prescription}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={{
+                          width: "10%",
+                          flexDirection: "row",
+                          justifyContent: 'flex-end',
+                        }}>
+                        <Text
+                          onPress={() => {
+                            setState(
+                              {
+                                viewPrescriptionImage:
+                                  config.img_url3 +
+                                  item.patient_prescription,
+                                modalPatientPrescription: true,
+                              },
+                              () => {
+                                console.log(
+                                  "viewPrescriptionImage ",
+                                  classStateData.viewPrescriptionImage
+                                );
+                              }
+                            );
+                          }}
+                          style={{
+                            fontFamily: Font.Medium,
+                            fontSize: Font.small,
+                            color: Colors.Theme,
+                          }} >
+                          {LangProvider.VIEW[languageIndex]}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                </View>
+              )}
+            {/* // prescription doctor */}
+            {item.acceptance_status == "Completed" &&
+              item.service_type == "Doctor" && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    paddingVertical: vs(10),
+                    paddingHorizontal: s(13),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.Theme,
+                      alignSelf: 'flex-start',
+                      paddingBottom: (windowWidth * 4) / 100,
+                    }}>
+                    {LangProvider.PRESCRIPTION[languageIndex]}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      width: "100%",
+                      paddingVertical: vs(10),
+                      borderBottomWidth: 1,
+                      borderBottomColor: Colors.Border
+                    }}>
+                    <View
+                      style={{
+                        width: "17%",
+                      }}>
+                      <Image
+                        source={Icons.prescription}
+                        style={{
+                          width: vs(40),
+                          height: s(40)
+                        }}
+                        resizeMode='contain'
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: "83%",
+                      }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                            alignSelf: 'flex-start',
+                            width: '70%'
+                          }} >
+                          {item.provider_prescription}
+                        </Text>
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            if (item.provider_prescription != "") {
+                              downloadPrescription(
+                                config.img_url3 +
+                                item.provider_prescription,
+                                item.provider_prescription
+                              );
+                            }
+                          }}>
+                          <Text
+                            style={{
+                              textAlign: "right",
+                              fontFamily: Font.Regular,
+                              fontSize: Font.xsmall,
+                              color: Colors.Theme,
+                            }}>
+                            {LangProvider.DOWNLOAD[languageIndex]}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.xsmall,
+                          color: Colors.lightGrey,
+                          alignSelf: 'flex-start',
+                          marginTop: vs(3)
+                        }}>
+                        {item.provider_upd}
+                      </Text>
+
+                    </View>
+                  </View>
+                </View>
+              )}
+
+            {/* // report lab */}
+            {item.acceptance_status == "Completed" &&
+              item.service_type == "Lab" && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    paddingHorizontal: s(13),
+                    borderBottomWidth: (windowWidth * 0.3) / 100,
+                    borderColor: Colors.gainsboro,
+                    paddingVertical: (windowWidth * 2.5) / 100,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.medium,
+                      color: Colors.Theme,
+                      alignSelf: 'flex-start',
+                      paddingBottom: (windowWidth * 4) / 100,
+                    }}
+                  >
+                    {LangProvider.ReportAttachment[languageIndex]}
+                  </Text>
+                  <FlatList
+                    data={item.report}
+                    scrollEnabled={true}
+                    nestedScrollEnabled={true}
+                    renderItem={({ item, index }) => {
+                      if (item.report != "") {
+                        return (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              width: "100%",
+                              paddingVertical: vs(10),
+                              borderBottomWidth: index == classStateData.appointmentDetails?.report.length - 1 ? 0 : 1,
+                              borderBottomColor: Colors.Border
+                            }}>
+                            <View
+                              style={{
+                                width: "17%",
+                              }}>
+                              <Image
+                                source={Icons.report}
+                                style={{
+                                  width: vs(40),
+                                  height: s(40),
+                                }}
+                              />
+                            </View>
+                            <View
+                              style={{
+                                width: "83%",
+                              }}>
+                              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text
+                                  numberOfLines={1}
+                                  style={{
+                                    fontFamily: Font.Regular,
+                                    fontSize: Font.small,
+                                    color: Colors.detailTitles,
+                                    alignSelf: 'flex-start',
+                                    width: '70%'
+                                  }}>
+                                  {item.report}
+                                </Text>
+
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (item.report != "") {
+                                      downloadPrescription(
+                                        config.img_url3 + item.report,
+                                        item.report
+                                      );
+                                    }
+                                  }}>
+                                  <Text
+                                    style={{
+                                      textAlign: "right",
+                                      fontFamily: Font.Regular,
+                                      fontSize: Font.xsmall,
+                                      color: Colors.Theme,
+                                    }}>
+                                    {LangProvider.DOWNLOAD[languageIndex]}
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+
+                              <Text
+                                style={{
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.xsmall,
+                                  color: Colors.lightGrey,
+                                  alignSelf: 'flex-start',
+                                  marginTop: vs(3)
+                                }}>
+                                {item.upload_date}
+                              </Text>
+
+                            </View>
+                          </View>
+                        );
+                      }
+                    }}
+                  />
+                </View>
+              )}
+
+
+
+
+            {/* Prescription */}
+
+            {/* patient details */}
+            <View
+              style={{
+                width: "100%",
+                alignSelf: "center",
+                paddingVertical: (windowWidth * 3) / 100,
+              }}>
+              <View
+                style={{
+                  width: "100%",
+                  paddingHorizontal: s(13),
+                  flexDirection: "row",
+                  alignItems: 'center',
+                  justifyContent: "space-between",
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.small,
+                    color: Colors.darkText,
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  {LangProvider.patient_details[languageIndex]}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setState({
+                      showPatientDetails:
+                        !classStateData.showPatientDetails,
+                    });
                   }}
                 >
                   <View
                     style={{
-                      width: "98%",
-                      backgroundColor: Colors.white_color,
-                      marginTop: (mobileW * 50) / 100,
-                      alignSelf: "center",
-                      borderRadius: (mobileW * 10) / 100,
-
-                      borderWidth: (mobileW * 0.3) / 100,
-                      borderColor: Colors.gainsboro,
-                      elevation: 5,
-                      height: (mobileH * 40) / 100,
+                      padding: 15,
+                      backgroundColor: Colors.backgroundcolor,
+                      justifyContent: "center",
                     }}
                   >
-                    {/* task booking section */}
+                    <Image
+                      style={{
+                        height: (windowWidth * 4.5) / 100,
+                        width: (windowWidth * 4.5) / 100,
+                        // backgroundColor: 'red'
+                        // position: "absolute",
+                        // top: (dHeight) ? 4 : 15,
+                        // right: 5,
+                      }}
+                      source={
+                        classStateData.showPatientDetails
+                          ? Icons.upArrow
+                          : Icons.downarrow
+                      }
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
 
+              {classStateData.showPatientDetails && (
+                <View
+                  style={{
+                    width: "100%",
+                    paddingHorizontal: s(13),
+                  }}>
+                  <Text
+                    style={{
+                      color: Colors.DarkGrey,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      textAlign: config.textalign,
+                      alignSelf: 'flex-start',
+                      marginTop: (windowWidth * 1) / 100,
+                    }}>
+                    {item.patient_name}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginTop: (windowWidth * 1.5) / 100,
+                      width: "100%",
+                    }}>
+                    <Image
+                      source={Icons.location}
+                      style={{
+                        marginTop: (windowWidth * 1) / 100,
+                        width: (windowWidth * 3.5) / 100,
+                        height: (windowWidth * 3.5) / 100,
+                        resizeMode: "contain",
+                        tintColor: Colors.Theme,
+                      }}
+                    />
+
+                    <Text
+                      style={{
+                        color: Colors.DarkGrey,
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        alignSelf: 'flex-start',
+                        marginLeft: (windowWidth * 3) / 100,
+                        width: "96%",
+                      }}
+                    >
+                      {item.patient_address}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: (windowWidth * 1.5) / 100,
+                    }}>
+                    {languageIndex == 0 ? (
+                      <Image
+                        source={Icons.arabic_call}
+                        style={{
+                          width: (windowWidth * 3.5) / 100,
+                          height: (windowWidth * 3.5) / 100,
+                          resizeMode: "contain",
+                          tintColor: Colors.Theme,
+                        }}
+                      />
+                    ) : (
+                      <Image
+                        source={Icons.arabic_call}
+                        style={{
+                          width: (windowWidth * 3.5) / 100,
+                          height: (windowWidth * 3.5) / 100,
+                          resizeMode: "contain",
+                          tintColor: Colors.Theme,
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        color: Colors.DarkGrey,
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        textAlign: config.textalign,
+                        marginHorizontal: (windowWidth * 3) / 100,
+                      }}
+                    >
+                      {item.patient_contact}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+
+
+            {item.acceptance_status == "Accepted" &&
+              item.service_type != "Doctor" &&
+              item.service_type != "Lab" && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    paddingVertical: (windowWidth * 2) / 100,
+                    flexDirection: "row",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.backgroundcolor,
+                    paddingHorizontal: s(13)
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      color: Colors.DarkGrey,
+                      width: "75%",
+                      alignSelf: 'flex-start',
+                      fontFamily: Font.Regular,
+                    }}>
+                    {
+                      LangProvider.appointment_accepted_otp_text[
+                      languageIndex
+                      ]
+                    }
+                  </Text>
+
+                  <FlatList
+                    horizontal
+                    data={otpList}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <View style={{
+                          height: 18,
+                          width: 18,
+                          borderRadius: 2,
+                          backgroundColor: Colors.detailTitles,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}>
+                          <Text
+                            style={{
+                              fontSize: Font.medium,
+                              fontFamily: Font.SemiBold,
+                              color: Colors.White
+                            }}
+                          >{item}</Text>
+                        </View>
+                      )
+                    }}
+                    ItemSeparatorComponent={() => {
+                      return (
+                        <View style={{ width: s(3) }}></View>
+                      )
+                    }}
+                    contentContainerStyle={{ paddingHorizontal: s(5), }}
+                  />
+
+                </View>
+              )}
+            {item.acceptance_status == "Completed" &&
+              item.service_type != "Doctor" &&
+              item.service_type != "Lab" && (
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                    paddingVertical: (windowWidth * 2) / 100,
+                    flexDirection: "row",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.backgroundcolor,
+                    paddingHorizontal: s(13)
+                  }} >
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      color: Colors.Green,
+                      width: "75%",
+                      alignSelf: 'flex-start',
+                      fontFamily: Font.Regular,
+                    }}
+                  >
+                    {
+                      LangProvider.appointment_closed_otp_text[
+                      languageIndex
+                      ]
+                    }
+                  </Text>
+                  <FlatList
+                    horizontal
+                    data={otpList}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <View style={{
+                          height: 18,
+                          width: 18,
+                          borderRadius: 2,
+                          backgroundColor: Colors.detailTitles,
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}>
+                          <Text
+                            style={{
+                              fontSize: Font.medium,
+                              fontFamily: Font.SemiBold,
+                              color: Colors.White
+                            }}
+                          >{item}</Text>
+                        </View>
+                      )
+                    }}
+                    ItemSeparatorComponent={() => {
+                      return (
+                        <View style={{ width: s(3) }}></View>
+                      )
+                    }}
+                    contentContainerStyle={{ paddingHorizontal: s(5), }}
+                  />
+                </View>
+              )}
+
+
+            {/* payment details */}
+            <View
+              style={{
+                backgroundColor: Colors.appointmentdetaillightgray,
+                width: "100%",
+                paddingHorizontal: s(13),
+                paddingVertical: vs(9)
+              }}>
+              <View
+                style={{
+                  width: "100%",
+                  alignSelf: "center",
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Medium,
+                    fontSize: Font.small,
+                    alignSelf: 'flex-start',
+                    color: Colors.darkText,
+                  }}>
+                  {LangProvider.Payment[languageIndex]}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingVertical: (windowWidth * 2) / 100,
+                    borderBottomWidth: 1.5,
+                    borderColor: '#CCCCCC',
+                  }}
+                >
+                  <FlatList
+                    data={item.task_details}
+                    scrollEnabled={true}
+                    nestedScrollEnabled={true}
+                    renderItem={({ item, index }) => {
+                      if (item.task_details != "") {
+                        return (
+                          <TouchableOpacity
+                            activeOpacity={0.9}
+                            onPress={() => {
+                              // check_all(item, index);
+                            }}
+                            style={{
+                              alignItems: "center",
+                              width: "100%",
+                              paddingVertical: (windowWidth * 1.7) / 100,
+                              flexDirection: "row",
+                              justifyContent: 'space-between'
+                            }}
+                          >
+                            <Text
+                              style={{
+                                alignSelf: "center",
+                                fontSize: Font.small,
+                                fontFamily: Font.Regular,
+                                color: Colors.DarkGrey,
+                              }}
+                            >
+                              {item.name}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: Font.small,
+                                fontFamily: Font.Regular,
+                                color: Colors.DarkGrey,
+                              }}>
+                              {item.price}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }
+                    }}
+                  />
+                </View>
+
+                {item.service_type == "Doctor" ? (
+                  item.task_type === "Home Visit" && (
                     <View
                       style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        marginTop: (mobileW * 4) / 100,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: (windowWidth * 2) / 100,
+                        // borderBottomWidth: (windowWidth * 0.3) / 100,
+                        borderColor: Colors.bordercolor,
+                        // marginTop: windowWidth * 2 / 100,
                       }}
                     >
                       <Text
                         style={{
-                          fontSize: (mobileW * 4.5) / 100,
-                          fontFamily: Font.fontregular,
+                          fontFamily: Font.Regular,
+                          fontSize: (windowWidth * 3.6) / 100,
                           color: "#000",
-                          textAlign: config.textRotate,
-                        }}
-                      >
-                        {Lang_chg.rate_appointment[config.language]}
+                        }}>
+                        { }
+                        {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
                       </Text>
-                      <View
+                      <Text
                         style={{
-                          width: "65%",
-                          alignSelf: "center",
-                          marginTop: (mobileW * 5) / 100,
-                          justifyContent: "center",
+                          fontFamily: Font.Regular,
+                          fontSize: (windowWidth * 3.6) / 100,
+                          color: "#000",
                         }}
                       >
-                        <StarRating
-                          disabled={false}
-                          fullStar={localimag.filledStar}
-                          emptyStar={localimag.unFilledStar}
-                          maxStars={5}
-                          starSize={45}
-                          rating={this.state.rating}
-                          selectedStar={(rating) => {
-                            this.setState({ rating: rating });
-                          }}
-                        />
-                      </View>
-                      {/* <View style={customStyle}>
-                        <TextInput
-                          onChangeText={(text) => {
-                          }}
-                          onFocus={() => {
-                              this.setState({ emailfocus: true });
-                            }}
-                            onBlur={() => {
-                              this.setState({
-                                emailfocus: this.state.email.length > 0 ? true : false,
-                              });
-                            }}
-                          returnKeyLabel="done"
-                          returnKeyType="done"
-                          onSubmitEditing={() => {
-                            Keyboard.dismiss();
-                          }}
-                          style={styles.textInputArea}
-                          numberOfLines={10}
-                          multiline={true}
-                        /> */}
-
-                      <View
-                        style={
-                          this.state.emailfocus
-                            ? styles.textInputFocus
-                            : styles.textInput
-                        }
-                      >
-                        <TextInput
-                          style={{
-                            width: "100%",
-                            color: Colors.textblack,
-                            fontSize: Font.placeholdersize,
-                            textAlign: config.textalign,
-                            height: (mobileW * 20) / 100,
-                            paddingLeft: (mobileW * 3) / 100,
-                            fontFamily: Font.placeholderfontfamily,
-                            borderRadius: (mobileW * 1) / 100,
-                            justifyContent: "flex-start",
-                            textAlign: config.textalign,
-                            textAlignVertical: "top",
-                          }}
-                          caretHidden={false}
-                          maxLength={200}
-                          placeholder={
-                            this.state.emailfocus != true
-                              ? Lang_chg.Write_review[config.language]
-                              : null
-                          }
-                          placeholderTextColor={Colors.placeholder_text}
-                          onChangeText={(txt) => {
-                            this.setState({ email: txt, textLength: txt });
-                          }}
-                          onFocus={() => {
-                            this.setState({ emailfocus: true });
-                          }}
-                          onBlur={() => {
-                            this.setState({
-                              emailfocus:
-                                this.state.email.length > 0 ? true : false,
-                            });
-                          }}
-                          ref={(input) => {
-                            this.textinput = input;
-                          }}
-                          keyboardType="email-address"
-                          returnKeyLabel="done"
-                          returnKeyType="done"
-                        />
-
-                        {this.state.emailfocus == true && (
-                          <View
-                            style={{
-                              position: "absolute",
-                              backgroundColor: "white",
-                              left: (mobileW * 4) / 100,
-                              top: (-mobileW * 3) / 100,
-                              paddingHorizontal: (mobileW * 1) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: "#0057A5",
-                                textAlign: config.textalign,
-                              }}
-                            >
-                              {Lang_chg.Write_review[config.language]}
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                      {this.state.textLength.length > 0 && (
-                        <Text
-                          style={{
-                            fontSize: 10,
-                            color: "#515C6F",
-                            textAlign: "right",
-                          }}
-                        >
-                          {" "}
-                          {this.state.textLength.length}/200{" "}
-                        </Text>
-                      )}
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          marginTop: (mobileW * 8) / 100,
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.setState({
-                              modalVisiblerating: false,
-                              emailfocus: false,
-                            });
-                          }}
-                          style={{
-                            width: "45%",
-                            paddingVertical: (mobileW * 2) / 100,
-                            alignItems: "center",
-                            borderWidth: 1,
-                            borderRadius: (mobileW * 1.5) / 100,
-                            borderColor: "#515C6F",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 4) / 100,
-                              fontFamily: Font.fontmedium,
-                              color: Colors.theme_color,
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {Lang_chg.cancelmedia[config.language]}
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.rating_btn();
-                          }}
-                          style={{
-                            width: "45%",
-                            paddingVertical: (mobileW * 2) / 100,
-                            alignItems: "center",
-                            borderRadius: (mobileW * 1.5) / 100,
-                            backgroundColor: Colors.theme_color,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 4) / 100,
-                              fontFamily: Font.fontmedium,
-                              color: "#fff",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {Lang_chg.submitbtntext[config.language]}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+                        {item.distance_fee}
+                      </Text>
                     </View>
-                  </View>
-                </View>
-              </Modal>
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: Colors.white_color,
-                  marginTop: (mobileW * 2) / 100,
-                  marginBottom: (mobileW * 40) / 100,
-                  shadowOpacity: 0.3,
-                  shadowColor: "#000",
-                  shadowOffset: { width: 2, height: 2 },
-                  elevation: 2,
-                }}
-              >
-                <View style={{}}>
-                  {/* booking heading */}
-
-                  <View>
-                    {/* // heading */}
-                    <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        justifyContent: "space-between",
-                        flexDirection: "row",
-                        borderBottomWidth: (mobileW * 0.3) / 100,
-                        borderColor: Colors.gainsboro,
-                        paddingVertical: (mobileW * 3) / 100,
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.regulartext_size,
-                            color: Colors.darkgraytextheading,
-                          }}
-                        >
-                          {Lang_chg.BookingID[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.regulartext_size,
-                            color: Colors.theme_color,
-                            marginLeft: (mobileW * 2) / 100,
-                          }}
-                        >
-                          {item.order_id}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text
-                          style={{
-                            color: "#FCFFFE",
-                            backgroundColor:
-                              item.acceptance_status == "Rejected"
-                                ? "#FF4500"
-                                : item.acceptance_status == "Pending"
-                                ? Colors.gold
-                                : Colors.buttoncolorhgreen,
-                            fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3) / 100,
-                            padding: (mobileW * 2) / 100,
-                            textTransform: "uppercase",
-                            paddingVertical: (mobileW * 0.6) / 100,
-                          }}
-                        >
-                          {item.acceptance_status}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        padding: (mobileW * 5) / 100,
-                        alignItems: "center",
-                        paddingVertical: (mobileW * 4) / 100,
-                      }}
-                    >
-                      <View style={{ width: "28%", alignSelf: "center" }}>
-                        <Image
-                          source={
-                            item.provider_image == "NA" ||
-                            item.provider_image == null ||
-                            item.provider_image == ""
-                              ? localimag.p1
-                              : { uri: config.img_url3 + item.provider_image }
-                          }
-                          style={{
-                            width: (mobileW * 21) / 100,
-                            height: (mobileW * 21) / 100,
-                            borderWidth: 1,
-                            borderColor: Colors.theme_color,
-                            borderRadius: (mobileW * 11.5) / 100,
-                          }}
-                        />
-                      </View>
-
-                      <View
-                        style={{
-                          width: "60%",
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              color: Colors.theme_color,
-                              fontSize: (mobileW * 3.6) / 100,
-                              textTransform: "uppercase",
-                              textAlign: config.textRotate,
-                            }}
-                          >
-                            {item.service_type}
-                          </Text>
-                          {item.hospital_id != "" && (
-                            <Text
-                              style={{
-                                color: "#FCFFFE",
-                                backgroundColor: "#FFA800",
-                                fontFamily: Font.fontmedium,
-                                fontSize: (mobileW * 3) / 100,
-                                padding: (mobileW * 2) / 100,
-                                marginTop: -3,
-                                marginLeft: 10,
-                                paddingVertical: (mobileW * 0.6) / 100,
-                              }}
-                            >
-                              {Lang_chg.Hospital[config.language]}
-                            </Text>
-                          )}
-                        </View>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.5) / 100,
-                            paddingVertical: (mobileW * 1.1) / 100,
-                            color: Colors.darkgraytextheading,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {item.provider_name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontregular,
-                            fontSize: (mobileW * 3.5) / 100,
-                            color: Colors.cardlighgray,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {item.speciality}
-                        </Text>
-                      </View>
-                    </View>
-                    {/* appointment details */}
-                    <View
-                      style={{
-                        backgroundColor: Colors.appointmentdetaillightblue,
-                        padding: (mobileW * 5) / 100,
-                      }}
-                    >
-                      <View>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.headingfont_booking,
-                            color: Colors.theme_color,
-                            textAlign: config.textRotate,
-                            paddingBottom: (mobileW * 3) / 100,
-                          }}
-                        >
-                          {Lang_chg.appointment_schedule[config.language]}
-                        </Text>
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          {/* image and store name */}
-
-                          <View
-                            style={{
-                              width: "50%",
-                              marginTop: (mobileW * 1) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.fontmedium,
-                                color: Colors.theme_color,
-                                fontSize: Font.regulartext_size,
-                                textAlign: config.textRotate,
-                              }}
-                            >
-                              {Lang_chg.AppointmentDate[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.fontmedium,
-                                fontSize: Font.ssubtext,
-                                color: Colors.darkgraytextheading,
-                                textAlign: config.textRotate,
-                                paddingTop: (mobileW * 1) / 100,
-                              }}
-                            >
-                              {item.app_date}
-                            </Text>
-
-                            <View
-                              style={{
-                                marginTop: (mobileW * 3) / 100,
-                                borderRadius: (mobileW * 1) / 100,
-                                borderWidth: 1,
-                                width: "75%",
-                                paddingVertical: (mobileW * 1) / 100,
-                                backgroundColor: "#fff",
-                                borderColor: Colors.theme_color,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: (mobileW * 3) / 100,
-                                  color: Colors.theme_color,
-                                  textAlign: "center",
-                                }}
-                              >
-                                {item.task_type}
-                              </Text>
-                            </View>
-                          </View>
-
-                          <View
-                            style={{
-                              width: "50%",
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <View>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  color: Colors.theme_color,
-                                  fontSize: Font.regulartext_size,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {Lang_chg.AppointmentTime[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.ssubtext,
-                                  textAlign: config.textRotate,
-                                  color: Colors.darkgraytextheading,
-                                  paddingTop: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {item.app_time}
-                              </Text>
-
-                              <View
-                                style={{
-                                  width: "100%",
-                                  flexDirection: "row",
-                                  marginTop: (mobileW * 3) / 100,
-                                }}
-                              >
-                                {config.language == 0 ? (
-                                  <Image
-                                    source={localimag.clock}
-                                    style={{
-                                      tintColor: Colors.theme_color,
-                                      resizeMode: "contain",
-                                      width: (mobileW * 4) / 100,
-                                      height: (mobileW * 4) / 100,
-                                    }}
-                                  />
-                                ) : (
-                                  <Image
-                                    source={localimag.clock_arabic}
-                                    style={{
-                                      tintColor: Colors.theme_color,
-                                      resizeMode: "contain",
-                                      width: (mobileW * 4) / 100,
-                                      height: (mobileW * 4) / 100,
-                                    }}
-                                  />
-                                )}
-
-                                <Text
-                                  style={{
-                                    color: Colors.theme_color,
-                                    fontFamily: Font.fontmedium,
-                                    textAlign: config.textRotate,
-                                    fontSize: (mobileW * 3.3) / 100,
-                                    marginLeft: (mobileW * 2) / 100,
-                                  }}
-                                >
-                                  {item.task_time}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    {/* // patient symptom doctor */}
-                    {item.service_type == "Doctor" &&
-                      (item.symptom_recording != "" ||
-                        item.symptom_text != "") && (
-                        <View
-                          style={{
-                            width: "100%",
-                            alignSelf: "center",
-                            backgroundColor: "#FDF7EB",
-                            paddingVertical: (mobileW * 4.5) / 100,
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: "90%",
-                              alignSelf: "center",
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.fontmedium,
-                                fontSize: Font.headingfont_booking,
-                                color: Colors.theme_color,
-                                textAlign: config.textRotate,
-                                paddingBottom: (mobileW * 2) / 100,
-                              }}
-                            >
-                              {Lang_chg.PATIENT_SYMPTOM[config.language]}
-                            </Text>
-                          </View>
-                          {item.symptom_recording != "" && (
-                            <View
-                              style={{
-                                width: "90%",
-                                alignSelf: "center",
-                                // justifyContent: 'space-between',
-                                // flexDirection: 'row',
-                                borderBottomWidth:
-                                  item.symptom_text != ""
-                                    ? (mobileW * 0.3) / 100
-                                    : 0,
-                                borderColor: Colors.gainsboro,
-                                paddingVertical: (mobileW * 4.5) / 100,
-                              }}
-                            >
-                              {/* <TouchableOpacity onPress={() => {
-                              this.onStartPlay(true)
-                            }}>
-                              <Text>Start -- {this.state.duration}</Text>
-                            </TouchableOpacity> */}
-                              <View
-                                style={{
-                                  // marginVertical: 15,
-                                  // marginHorizontal: 15,
-                                  flexDirection: "row",
-                                }}
-                              >
-                                {/* <Text style={{ color: 'black', alignSelf: 'center' }}>{currentTimeString}</Text> */}
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    this.state.playState == "paused"
-                                      ? this.onStartPlay(true)
-                                      : this.pause();
-                                  }}
-                                >
-                                  <Image
-                                    source={
-                                      this.state.playState == "paused"
-                                        ? localimag.play
-                                        : localimag.pause
-                                    }
-                                    style={{
-                                      width: (mobileW * 10) / 100,
-                                      height: (mobileW * 10) / 100,
-                                      // borderWidth: 1,
-                                      // borderColor: Colors.gainsboro,
-                                      // borderRadius: 15, //(mobileW * 11.5) / 100,
-                                    }}
-                                  />
-                                </TouchableOpacity>
-                                <Slider
-                                  onTouchStart={this.onSliderEditStart}
-                                  onTouchEnd={this.onSliderEditEnd}
-                                  onValueChange={this.onSliderEditing}
-                                  value={this.state.playSeconds}
-                                  maximumValue={this.state.duration}
-                                  maximumTrackTintColor="gray"
-                                  minimumTrackTintColor={Colors.theme_color}
-                                  thumbImage={this.state.sliderIcon}
-                                  style={{
-                                    flex: 1,
-                                    alignSelf: "center",
-                                    marginHorizontal: Platform.select({
-                                      ios: 5,
-                                    }),
-                                    // transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
-                                  }}
-                                />
-                                <Text
-                                  style={{
-                                    color: "black",
-                                    alignSelf: "center",
-                                  }}
-                                >
-                                  {durationString}
-                                </Text>
-                              </View>
-                            </View>
-                          )}
-                          {item.symptom_text != "" && (
-                            <View
-                              style={{
-                                width: "90%",
-                                alignSelf: "center",
-                                paddingVertical: (mobileW * 3.5) / 100,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.headingfont_booking,
-                                  color: Colors.darkgraytextheading,
-                                  textAlign: config.textRotate,
-                                  marginTop: (mobileW * 3) / 100,
-                                  marginBottom: (mobileW * 3.5) / 100,
-                                }}
-                              >
-                                {Lang_chg.SYMPTOM_DESCRIPTION[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: Font.sregulartext_size,
-                                  color: Colors.darkgraytextheading,
-                                  textAlign: config.textRotate,
-                                }}
-                              >
-                                {item.symptom_text}
-                              </Text>
-                            </View>
-                          )}
-                          {item.patient_prescription != "" && (
-                            <View
-                              style={{
-                                width: "90%",
-                                justifyContent: "flex-start",
-                                flexDirection: "row",
-                                alignSelf: "center",
-                              }}
-                            >
-                              <Image
-                                resizeMode="contain"
-                                source={localimag.upload}
-                                style={{
-                                  width: "5%",
-                                  height: 15,
-                                  marginRight: (mobileW * 2) / 100,
-                                  borderColor: Colors.theme_color,
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  width: "75%",
-                                  fontFamily: Font.fontregular,
-                                  fontSize: (mobileW * 3) / 100,
-                                  textAlign: "auto",
-                                  alignItems: "flex-start",
-                                  marginTop: (mobileW * 0.5) / 100,
-                                }}
-                              >
-                                {item.patient_prescription}
-                              </Text>
-                              <Text
-                                onPress={() => {
-                                  this.setState(
-                                    {
-                                      viewPrescriptionImage:
-                                        config.img_url3 +
-                                        item.patient_prescription,
-                                      modalPatientPrescription: true,
-                                    },
-                                    () => {
-                                      console.log(
-                                        "viewPrescriptionImage ",
-                                        this.state.viewPrescriptionImage
-                                      );
-                                    }
-                                  );
-                                }}
-                                style={{
-                                  width: Platform.OS === "ios" ? "10%" : "15%",
-                                  fontFamily: Font.fontsemibold,
-                                  fontSize: Font.regulartext_size,
-                                  color: Colors.theme_color,
-                                  marginLeft: (mobileW * 7) / 100,
-                                  marginRight: (mobileW * 3) / 100,
-                                  marginTop: (mobileW * 0.3) / 100,
-                                }}
-                              >
-                                {Lang_chg.VIEW[config.language]}
-                              </Text>
-                            </View>
-                          )}
-                        </View>
-                      )}
-                    {/* // prescription doctor */}
-                    {item.acceptance_status == "Completed" &&
-                      item.service_type == "Doctor" && (
-                        <View
-                          style={{
-                            width: "90%",
-                            alignSelf: "center",
-                            // justifyContent: 'space-between',
-                            // flexDirection: 'row',
-                            borderBottomWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.gainsboro,
-                            paddingVertical: (mobileW * 4.5) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.headingfont_booking,
-                              color: Colors.theme_color,
-                              textAlign: config.textRotate,
-                              paddingBottom: (mobileW * 4) / 100,
-                            }}
-                          >
-                            {Lang_chg.PRESCRIPTION[config.language]}
-                          </Text>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              width: "100%",
-                            }}
-                          >
-                            <View
-                              style={{
-                                width: "25%",
-                                // backgroundColor: 'red'
-                              }}
-                            >
-                              <Image
-                                source={localimag.prescription}
-                                style={{
-                                  width: (mobileW * 20.5) / 100,
-                                  height: (mobileW * 17.2) / 100,
-                                  // borderWidth: 1,
-                                  // borderColor: Colors.gainsboro,
-                                  // borderRadius: 15, //(mobileW * 11.5) / 100,
-                                }}
-                              />
-                            </View>
-                            <View
-                              style={{
-                                width: "75%",
-                                // backgroundColor: 'blue'
-                              }}
-                            >
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.smallheadingfont,
-                                  color: Colors.darkgraytextheading,
-                                  textAlign: config.textRotate,
-                                  marginTop: (mobileW * 2) / 100,
-                                  marginBottom: (mobileW * 2) / 100,
-                                }}
-                              >
-                                {item.provider_prescription}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontmedium,
-                                  fontSize: Font.ssubtext,
-                                  color: Colors.theme_color,
-                                  textAlign: config.textRotate,
-                                  marginBottom: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {item.provider_upd}
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (item.provider_prescription != "") {
-                                    this.downloadPrescription(
-                                      config.img_url3 +
-                                        item.provider_prescription,
-                                      item.provider_prescription
-                                    );
-                                  }
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    textAlign: "right",
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: Font.tabtextsize,
-                                    color: Colors.theme_color,
-                                    marginBottom: (mobileW * 3) / 100,
-                                  }}
-                                >
-                                  {Lang_chg.DOWNLOAD[config.language]}
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    {/* // report lab */}
-                    {item.acceptance_status == "Completed" &&
-                      item.service_type == "Lab" && (
-                        <View
-                          style={{
-                            width: "90%",
-                            alignSelf: "center",
-                            // justifyContent: 'space-between',
-                            // flexDirection: 'row',
-                            borderBottomWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.gainsboro,
-                            paddingVertical: (mobileW * 2.5) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.regulartext_size,
-                              color: Colors.theme_color,
-                              textAlign: config.textRotate,
-                              paddingBottom: (mobileW * 4) / 100,
-                            }}
-                          >
-                            {Lang_chg.ReportAttachment[config.language]}
-                          </Text>
-                          <FlatList
-                            data={item.report}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            ItemSeparatorComponent={({}) => {
-                              return (
-                                <View
-                                  style={{
-                                    height: 1,
-                                    width: "100%",
-                                    backgroundColor: Colors.gainsboro,
-                                  }}
-                                />
-                              );
-                            }}
-                            renderItem={({ item, index }) => {
-                              if (item.report != "") {
-                                return (
-                                  <View
-                                    style={{
-                                      flexDirection: "row",
-                                      width: "100%",
-                                      paddingVertical: (mobileW * 3.5) / 100,
-                                    }}
-                                  >
-                                    <View
-                                      style={{
-                                        width: "30%",
-                                      }}
-                                    >
-                                      <Image
-                                        source={localimag.report}
-                                        style={{
-                                          width: (mobileW * 14) / 100,
-                                          height: (mobileW * 16) / 100,
-                                          // borderWidth: 1,
-                                          // borderColor: Colors.gainsboro,
-                                          // borderRadius: 15, //(mobileW * 11.5) / 100,
-                                        }}
-                                      />
-                                    </View>
-                                    <View
-                                      style={{
-                                        width: "70%",
-                                      }}
-                                    >
-                                      <Text
-                                        numberOfLines={1}
-                                        style={{
-                                          fontFamily: Font.fontmedium,
-                                          fontSize: Font.smallheadingfont,
-                                          color: Colors.darkgraytextheading,
-                                          textAlign: config.textRotate,
-                                          marginTop: (mobileW * 2) / 100,
-                                          marginBottom: (mobileW * 2) / 100,
-                                        }}
-                                      >
-                                        {item.report}
-                                      </Text>
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.fontmedium,
-                                          fontSize: Font.ssubtext,
-                                          color: Colors.tabtextcolor,
-                                          textAlign: config.textRotate,
-                                          marginBottom: (mobileW * 1) / 100,
-                                        }}
-                                      >
-                                        {item.upload_date}
-                                      </Text>
-                                      <TouchableOpacity
-                                        onPress={() => {
-                                          if (item.report != "") {
-                                            this.downloadPrescription(
-                                              config.img_url3 + item.report,
-                                              item.report
-                                            );
-                                          }
-                                        }}
-                                      >
-                                        <Text
-                                          style={{
-                                            textAlign: "right",
-                                            fontFamily: Font.fontmedium,
-                                            fontSize: Font.tabtextsize,
-                                            color: Colors.theme_color,
-                                            marginBottom: (mobileW * 3) / 100,
-                                          }}
-                                        >
-                                          {Lang_chg.DOWNLOAD[config.language]}
-                                        </Text>
-                                      </TouchableOpacity>
-                                    </View>
-                                  </View>
-                                );
-                              }
-                            }}
-                          />
-                        </View>
-                      )}
-                    {/* // heading */}
-                    <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        justifyContent: "space-between",
-                        flexDirection: "row",
-                        borderBottomWidth: (mobileW * 0.3) / 100,
-                        borderColor: Colors.gainsboro,
-                        paddingVertical: (mobileW * 4.5) / 100,
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontregular,
-                            fontSize: Font.regulartext_size,
-                            color: Colors.darkgraytextheading,
-                          }}
-                        >
-                          {Lang_chg.BookingOn[config.language]}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: (mobileW * 3.2) / 100,
-                            color: Colors.lightgraytext,
-                            textTransform: "uppercase",
-                            marginLeft: (mobileW * 2) / 100,
-                          }}
-                        >
-                          {item.booking_date}
-                        </Text>
-                      </View>
-                    </View>
-
-                    {/* Prescription */}
-
-                    {/* patient details */}
-                    <View
-                      style={{
-                        width: "90%",
-                        alignSelf: "center",
-                        // paddingTop: (mobileW * 3) / 100,
-                        paddingBottom: (mobileW * 3) / 100,
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "100%",
-                          // backgroundColor: 'red',
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.headingfont_booking,
-                            color: Colors.theme_color,
-                            textAlign: config.textRotate,
-                            paddingBottom: 15,
-                            paddingTop: 15,
-                          }}
-                        >
-                          {Lang_chg.patient_details[config.language]}
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.setState({
-                              showPatientDetails:
-                                !this.state.showPatientDetails,
-                            });
-                          }}
-                        >
-                          <View
-                            style={{
-                              padding: 15,
-                              backgroundColor:
-                                Colors.appointmentdetaillightgray,
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Image
-                              style={{
-                                height: (mobileW * 4.5) / 100,
-                                width: (mobileW * 4.5) / 100,
-                                // backgroundColor: 'red'
-                                // position: "absolute",
-                                // top: (dHeight) ? 4 : 15,
-                                // right: 5,
-                              }}
-                              source={
-                                this.state.showPatientDetails
-                                  ? localimag.upArrow
-                                  : localimag.downarrow
-                              }
-                            />
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                      {this.state.showPatientDetails && (
-                        <>
-                          <Text
-                            style={{
-                              color: Colors.lightgraytext,
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.regulartext_size,
-                              textAlign: config.textalign,
-                              textAlign: config.textRotate,
-                              marginTop: (mobileW * 1) / 100,
-                            }}
-                          >
-                            {item.patient_name}
-                          </Text>
-
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              marginTop: (mobileW * 1.5) / 100,
-                              width: "100%",
-                            }}
-                          >
-                            <Image
-                              source={localimag.location}
-                              style={{
-                                marginTop: (mobileW * 1) / 100,
-                                width: (mobileW * 3.5) / 100,
-                                height: (mobileW * 3.5) / 100,
-                                resizeMode: "contain",
-                                tintColor: Colors.theme_color,
-                              }}
-                            />
-
-                            <Text
-                              style={{
-                                color: Colors.lightgraytext,
-                                fontFamily: Font.fontmedium,
-                                fontSize: Font.sregulartext_size,
-                                textAlign: config.textRotate,
-                                marginLeft: (mobileW * 3) / 100,
-                                width: "96%",
-                              }}
-                            >
-                              {item.patient_address}
-                            </Text>
-                          </View>
-
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              marginTop: (mobileW * 1.5) / 100,
-                            }}
-                          >
-                            {config.language == 0 ? (
-                              <Image
-                                source={require("../icons/ic_settings_phone_24px3x.png")}
-                                style={{
-                                  width: (mobileW * 3.5) / 100,
-                                  height: (mobileW * 3.5) / 100,
-                                  resizeMode: "contain",
-                                  tintColor: Colors.theme_color,
-                                }}
-                              />
-                            ) : (
-                              <Image
-                                source={localimag.arabic_call}
-                                style={{
-                                  width: (mobileW * 3.5) / 100,
-                                  height: (mobileW * 3.5) / 100,
-                                  resizeMode: "contain",
-                                  tintColor: Colors.theme_color,
-                                }}
-                              />
-                            )}
-                            <Text
-                              style={{
-                                color: Colors.lightgraytext,
-                                fontFamily: Font.fontmedium,
-                                fontSize: Font.sregulartext_size,
-                                textAlign: config.textalign,
-                                marginHorizontal: (mobileW * 3) / 100,
-                              }}
-                            >
-                              {item.patient_contact}
-                            </Text>
-                          </View>
-                        </>
-                      )}
-                    </View>
-                    {item.acceptance_status == "Accepted" &&
-                      item.service_type != "Doctor" &&
-                      item.service_type != "Lab" && (
-                        <View
-                          style={{
-                            width: "90%",
-                            alignSelf: "center",
-                            paddingVertical: (mobileW * 2) / 100,
-                            flexDirection: "row",
-                            borderTopWidth: 1,
-                            borderTopColor: Colors.bordercolor,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.lightgraytext,
-                              width: "75%",
-                              textAlign: config.textRotate,
-                              fontFamily: Font.fontmedium,
-                            }}
-                          >
-                            {
-                              Lang_chg.appointment_accepted_otp_text[
-                                config.language
-                              ]
-                            }
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.lightgraytext,
-                              width: "25%",
-                              textAlign: "right",
-                              fontFamily: Font.fontmedium,
-                            }}
-                          >
-                            {item.OTP}
-                          </Text>
-                        </View>
-                      )}
-                    {item.acceptance_status == "Completed" &&
-                      item.service_type != "Doctor" &&
-                      item.service_type != "Lab" && (
-                        <View
-                          style={{
-                            width: "90%",
-                            alignSelf: "center",
-                            paddingVertical: (mobileW * 2) / 100,
-                            flexDirection: "row",
-                            borderTopWidth: 1,
-                            borderTopColor: Colors.bordercolor,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.buttoncolorhgreen,
-                              width: "75%",
-                              textAlign: config.textRotate,
-                              fontFamily: Font.fontregular,
-                            }}
-                          >
-                            {
-                              Lang_chg.appointment_closed_otp_text[
-                                config.language
-                              ]
-                            }
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: (mobileW * 3.5) / 100,
-                              color: Colors.buttoncolorhgreen,
-                              width: "25%",
-                              textAlign: "right",
-                              fontFamily: Font.fontregular,
-                            }}
-                          >
-                            {item.OTP}
-                          </Text>
-                        </View>
-                      )}
-                    {/* payment details */}
-                    <View
-                      style={{
-                        backgroundColor: Colors.appointmentdetaillightgray,
-                        width: "100%",
-                      }}
-                    >
-                      <View
-                        style={{
-                          paddingTop: (mobileW * 3) / 100,
-                          width: "91%",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <View>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: Font.headingfont_booking,
-                              textAlign: config.textRotate,
-                              color: Colors.theme_color,
-                            }}
-                          >
-                            {Lang_chg.Payment[config.language]}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            borderBottomWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                          }}
-                        >
-                          <FlatList
-                            data={item.task_details}
-                            scrollEnabled={true}
-                            nestedScrollEnabled={true}
-                            renderItem={({ item, index }) => {
-                              if (item.task_details != "") {
-                                return (
-                                  <TouchableOpacity
-                                    activeOpacity={0.9}
-                                    onPress={() => {
-                                      // this.check_all(item, index);
-                                    }}
-                                    style={{
-                                      alignItems: "center",
-                                      width: "100%",
-                                      alignSelf: "center",
-                                      backgroundColor: "#F8F8F8",
-                                      paddingVertical: (mobileW * 1.7) / 100,
-                                      flexDirection: "row",
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        width: "70%",
-                                        textAlign: config.textRotate,
-                                        alignSelf: "center",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </Text>
-                                    <Text
-                                      style={{
-                                        width: "30%",
-                                        fontSize: (mobileW * 3.6) / 100,
-                                        fontFamily: Font.fontregular,
-                                        color: "#000",
-                                        textAlign: "right",
-                                      }}
-                                    >
-                                      {item.price}
-                                    </Text>
-                                  </TouchableOpacity>
-                                );
-                              }
-                            }}
-                          />
-                        </View>
-                        {item.service_type == "Doctor" ? (
-                          item.task_type === "Home Visit" && (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                paddingVertical: (mobileW * 2) / 100,
-                                // borderBottomWidth: (mobileW * 0.3) / 100,
-                                borderColor: Colors.bordercolor,
-                                // marginTop: mobileW * 2 / 100,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: (mobileW * 3.6) / 100,
-                                  color: "#000",
-                                }}
-                              >
-                                {Lang_chg.distanceFare[config.language]}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  fontSize: (mobileW * 3.6) / 100,
-                                  color: "#000",
-                                }}
-                              >
-                                {item.distance_fee}
-                              </Text>
-                            </View>
-                          )
-                        ) : (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: (mobileW * 2) / 100,
-                              // borderBottomWidth: (mobileW * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                              // marginTop: mobileW * 2 / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 3.6) / 100,
-                                color: "#000",
-                              }}
-                            >
-                              {Lang_chg.distanceFare[config.language]}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: Font.fontregular,
-                                fontSize: (mobileW * 3.6) / 100,
-                                color: "#000",
-                              }}
-                            >
-                              {item.distance_fee}
-                            </Text>
-                          </View>
-                        )}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (mobileW * 2) / 100,
-                            borderTopWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                            // marginTop: mobileW * 1 / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
-                            }}
-                          >
-                            {Lang_chg.subTotal[config.language]}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontmedium,
-                              fontSize: (mobileW * 3.7) / 100,
-                              color: Colors.theme_color,
-                              // marginTop: mobileW * 1 / 100,
-                            }}
-                          >
-                            {item.sub_total_price}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: (mobileW * 1) / 100,
-                            // borderBottomWidth: (mobileW * 0.3) / 100,
-                            borderColor: Colors.bordercolor,
-                            marginTop: (mobileW * 1) / 100,
-                            marginBottom: (mobileW * 3) / 100,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontFamily: Font.fontregular,
-                              fontSize: (mobileW * 3.6) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {item.vat_percent}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: Font.fontregular,
-                              fontSize: (mobileW * 3.6) / 100,
-                              color: "#000",
-                            }}
-                          >
-                            {item.vat}
-                          </Text>
-                        </View>
-
-                        {/* <View
-                            style={{
-                              
-                              paddingVertical: (mobileW * 3) / 100,
-                              borderTopWidth: (mobileW * 0.3) / 100,
-                              borderColor: Colors.bordercolor,
-                            }}>
-                           
-                            <Text
-                              style={{
-                                fontFamily: Font.fontmedium,
-                                fontSize: Font.regulartext_size,
-                                color: Colors.theme_color,
-                                textAlign:'right'
-                              }}>{item.price}
-                             
-                            </Text>
-                          </View> */}
-                      </View>
-                    </View>
-                    {/* last button */}
-                    <View
-                      style={[
-                        {
-                          width: "90%",
-                          alignSelf: "center",
-                          flexDirection: "row",
-                          backgroundColor: Colors.white_color,
-                          paddingTop: (mobileW * 2.5) / 100,
-                          paddingBottom: (mobileW * 1) / 100,
-                          alignItems: "center",
-                          // borderTopWidth: (mobileW * 0.3) / 100,
-                          borderColor: Colors.bordercolor,
-                        },
-                        item.acceptance_status != "Rejected"
-                          ? { justifyContent: "space-between" }
-                          : null,
-                      ]}
-                    >
-                      <View
-                        style={{
-                          alignItems: "center",
-                          flexDirection: "row",
-                        }}
-                      >
-                        {config.language == 0 ? (
-                          <Image
-                            source={localimag.purse}
-                            style={{
-                              resizeMode: "contain",
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        ) : (
-                          <Image
-                            source={localimag.purse_arbic}
-                            style={{
-                              resizeMode: "contain",
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        )}
-                        <Text
-                          style={{
-                            color: Colors.theme_color,
-                            fontSize: (mobileW * 3.7) / 100,
-                            fontFamily: Font.fontmedium,
-                            marginTop: 0.5,
-                            marginLeft: (mobileW * 2) / 100,
-                          }}
-                        >
-                          {item.price}
-                        </Text>
-                      </View>
-                      {item.acceptance_status == "Pending" && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.rescdule_click(),
-                              this.get_day(),
-                              this.setState({
-                                order_id: item.id,
-                                time_take_data: "",
-                              });
-                          }}
-                          style={{
-                            backgroundColor: Colors.buttoncolorhgreen,
-                            width: (mobileW * 26) / 100,
-                            borderRadius: (mobileW * 1) / 100,
-                            paddingVertical: (mobileW * 2) / 100,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              color: Colors.white_color,
-                              textTransform: "uppercase",
-                              fontFamily: Font.fontsemibold,
-                              fontSize: (mobileW * 3) / 100,
-                            }}
-                          >
-                            {Lang_chg.Reschedule[config.language]}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                      {item.acceptance_status == "Accepted" &&
-                        item.service_type == "Doctor" &&
-                        videoCallButton == true && (
-                          <>
-                            <TouchableOpacity
-                              onPress={() => {
-                                // this.setState({
-                                //   id: item.id,
-                                // }, () => {
-                                //   this.updateProviderAppointmentStatus("Accept")
-                                // })
-                                this.props.navigation.navigate("VideoCall", {
-                                  item: item,
-                                });
-                              }}
-                              style={{
-                                backgroundColor: Colors.buttoncolorhgreen,
-                                width: (mobileW * 26) / 100,
-                                borderRadius: (mobileW * 1) / 100,
-                                paddingVertical: (mobileW * 2) / 100,
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  textAlign: "center",
-                                  color: Colors.white_color,
-                                  textTransform: "uppercase",
-                                  fontFamily: Font.fontsemibold,
-                                  fontSize: (mobileW * 3) / 100,
-                                }}
-                              >
-                                {Lang_chg.VIDEO_CALL[config.language]}
-                              </Text>
-                            </TouchableOpacity>
-                          </>
-                        )}
-                      {item.acceptance_status == "Completed" && (
-                        <View style={{ alignItems: "flex-end" }}>
-                          {item.avg_rating != "" && item.avg_rating != 0 ? (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                paddingLeft: "2%",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontregular,
-                                  color: "#000",
-                                  fontSize: (mobileW * 3.5) / 100,
-                                  marginRight: (mobileW * 2) / 100,
-                                }}
-                              >
-                                {Lang_chg.rated[config.language]}
-                              </Text>
-                              <StarRating
-                                disabled={false}
-                                fullStar={localimag.filledStar}
-                                emptyStar={localimag.unFilledStar}
-                                maxStars={5}
-                                starSize={15}
-                                rating={item.avg_rating}
-                              />
-                            </View>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.setState({
-                                  modalVisiblerating: true,
-                                  set_order: item.order_id,
-                                });
-                              }}
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                paddingVertical: (mobileW * 2) / 100,
-                                paddingHorizontal: (mobileW * 2) / 100,
-                                backgroundColor: "#FFA800",
-                                borderRadius: (mobileW * 2) / 100,
-                              }}
-                            >
-                              <Image
-                                source={localimag.unFilledStar}
-                                style={{
-                                  resizeMode: "contain",
-                                  width: (mobileW * 4.5) / 100,
-                                  height: (mobileW * 4.5) / 100,
-                                  tintColor: "#fff",
-                                  alignSelf: "center",
-                                }}
-                              />
-
-                              <Text
-                                style={{
-                                  fontFamily: Font.fontsemibold,
-                                  color: "#fff",
-                                  fontSize: (mobileW * 4) / 100,
-                                  marginLeft: (mobileW * 1) / 100,
-                                }}
-                              >
-                                {Lang_chg.rate_appointment[config.language]}
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      )}
-                      {item.acceptance_status == "Rejected" &&
-                        item.rf_text != "" && (
-                          <View
-                            style={{
-                              backgroundColor: "#FF4500",
-                              width: (mobileW * 24) / 100,
-                              borderRadius: 1,
-                              paddingVertical: (mobileW * 1) / 100,
-                              justifyContent: "center",
-                              marginLeft: (mobileW * 2) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textAlign: "center",
-                                color: Colors.white_color,
-                                textTransform: "uppercase",
-                                fontFamily: Font.fontsemibold,
-                                fontSize: (mobileW * 2.5) / 100,
-                              }}
-                            >
-                              {Lang_chg.Refunde[config.language]}
-                            </Text>
-                          </View>
-                        )}
-                    </View>
-                    <View
-                      style={{
-                        width: "90%",
-                        paddingBottom: (mobileW * 2) / 100,
-                        alignSelf: "center",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <HTMLView value={item.rf_text} stylesheet={HTMLstyles} />
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <Modal
-                backdropOpacity={3}
-                //  style={{backgroundColor: Colors.dim_grey}}
-                animationType="slide"
-                transparent={true}
-                visible={this.state.modalPatientPrescription}
-                presentationStyle="overFullScreen"
-                onRequestClose={() => {
-                  this.setState({ modalPatientPrescription: false });
-                }}
-              >
-                <View
-                  style={{
-                    width: "96%",
-                    backgroundColor: Colors.white_color,
-                    margin: (mobileW * 15) / 100,
-                    borderRadius: (mobileW * 2) / 100,
-                    borderWidth: 1,
-                    borderColor: Colors.gray5,
-                    shadowOpacity: 0.5,
-                    shadowColor: "#000",
-                    shadowOffset: { width: 2, height: 2 },
-                    elevation: 5,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    flex: 1,
-                  }}
-                >
-                  <TouchableOpacity
+                  )
+                ) : (
+                  <View
                     style={{
-                      position: "absolute",
-                      top: -10,
-                      right: -5,
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        modalPatientPrescription: false,
-                      });
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      paddingVertical: (windowWidth * 2) / 100,
+                      // borderBottomWidth: (windowWidth * 0.3) / 100,
+                      borderColor: Colors.bordercolor,
+                      // marginTop: windowWidth * 2 / 100,
                     }}
                   >
-                    <Image
-                      source={localimag.cross}
+                    <Text
                       style={{
-                        resizeMode: "contain",
-                        width: 30,
-                        height: 30,
-                        alignSelf: "center",
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        color: Colors.DarkGrey,
+                      }}>
+                      {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
+
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.small,
+                        color: Colors.DarkGrey,
                       }}
-                    />
-                  </TouchableOpacity>
-                  <Image
-                    source={{
-                      uri: this.state.viewPrescriptionImage,
-                    }}
+                    >
+                      {item.distance_fee}
+                    </Text>
+                  </View>
+                )}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingVertical: (windowWidth * 2) / 100,
+                  }}>
+                  <Text
                     style={{
-                      resizeMode: "cover",
-                      width: "100%",
-                      height: (mobileH * 40) / 100,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.darkText,
+                    }}>
+                    {LangProvider.subTotal[languageIndex]}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      color: Colors.darkText,
+                    }}>
+                    {item.sub_total_price}
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingVertical: (windowWidth * 1) / 100,
+                    borderColor: Colors.bordercolor,
+                    marginTop: (windowWidth * 1) / 100,
+                    marginBottom: (windowWidth * 3) / 100,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.DarkGrey,
+                    }}
+                  >
+                    {item.vat_percent}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.small,
+                      color: Colors.DarkGrey,
+                    }}
+                  >
+                    {item.vat}
+                  </Text>
+                </View>
+
+
+              </View>
+            </View>
+
+            {/* Amount and ReSchedule */}
+            <View
+              style={[
+                {
+                  width: "90%",
+                  alignSelf: "center",
+                  flexDirection: "row",
+                  backgroundColor: Colors.White,
+                  paddingTop: (windowWidth * 2.5) / 100,
+                  paddingBottom: (windowWidth * 1) / 100,
+                  alignItems: "center",
+                  // borderTopWidth: (windowWidth * 0.3) / 100,
+                  borderColor: Colors.bordercolor,
+                },
+                item.acceptance_status != "Rejected"
+                  ? { justifyContent: "space-between" }
+                  : null,
+              ]}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                {languageIndex == 0 ? (
+                  <Image
+                    source={Icons.purse}
+                    style={{
+                      resizeMode: "contain",
+                      width: 15,
+                      height: 15,
+                      tintColor: Colors.Theme
                     }}
                   />
+                ) : (
+                  <Image
+                    source={Icons.purse_arbic}
+                    style={{
+                      resizeMode: "contain",
+                      width: 15,
+                      height: 15,
+                    }}
+                  />
+                )}
+                <Text
+                  style={{
+                    color: Colors.Theme,
+                    fontSize: Font.medium,
+                    fontFamily: Font.Medium,
+                    marginTop: 0.5,
+                    marginLeft: (windowWidth * 2) / 100,
+                  }}
+                >
+                  {item.price}
+                </Text>
+              </View>
+
+              {item.acceptance_status == "Pending" && (
+
+                classStateData.isScheduleagain ?
+                  <View style={{
+                    paddingHorizontal: s(8),
+                    paddingVertical: vs(4),
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <SkypeIndicator color={Colors.Theme} size={20} />
+                  </View>
+                  :
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      rescdule_click(),
+                        // get_day(),
+                        setState({
+                          order_id: item.id,
+                          time_take_data: "",
+                        });
+                    }}
+                    activeOpacity={0.8}
+                    style={{
+                      paddingHorizontal: s(8),
+                      paddingVertical: vs(4),
+                      borderWidth: 0.8,
+                      borderColor: Colors.Green,
+                      borderRadius: 5
+                    }} >
+
+                    <Text
+                      style={{
+                        fontSize: Font.small,
+                        fontFamily: Font.Regular,
+                        color: Colors.Green
+                      }}
+                    >{LangProvider.Reschedule[languageIndex]}</Text>
+                  </TouchableOpacity>
+
+              )}
+
+              {item.acceptance_status == "Accepted" &&
+                item.service_type == "Doctor" &&
+                videoCallButton == true && (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        // setState({
+                        //   id: item.id,
+                        // }, () => {
+                        //   updateProviderAppointmentStatus("Accept")
+                        // })
+                        navigation.navigate("VideoCall", {
+                          item: item,
+                        });
+                      }}
+                      style={{
+                        backgroundColor: Colors.Green,
+                        width: (windowWidth * 26) / 100,
+                        borderRadius: (windowWidth * 1) / 100,
+                        paddingVertical: (windowWidth * 2) / 100,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: Colors.White,
+                          textTransform: "uppercase",
+                          fontFamily: Font.SemiBold,
+                          fontSize: (windowWidth * 3) / 100,
+                        }}
+                      >
+                        {LangProvider.VIDEO_CALL[languageIndex]}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+
+              {item.acceptance_status == "Completed" && (
+                <View style={{ alignItems: "flex-end" }}>
+                  {
+                    item.avg_rating != "" && item.avg_rating != 0 ? (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            color: "#000",
+                            fontSize: (windowWidth * 3.5) / 100,
+                            marginRight: (windowWidth * 2) / 100,
+                          }}
+                        >
+                          {LangProvider.rated[languageIndex]}
+                        </Text>
+                        <StarRating
+                          disabled={false}
+                          fullStar={Icons.fillStar}
+                          emptyStar={Icons.outlineStar}
+                          maxStars={5}
+                          starSize={15}
+                          rating={item.avg_rating}
+                        />
+                      </View>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setState({ modalVisiblerating: true, set_order: item?.order_id })
+                        }}
+                        activeOpacity={0.8}
+                        style={{
+                          paddingHorizontal: s(8),
+                          paddingVertical: vs(4),
+                          backgroundColor: Colors.Yellow,
+                          borderRadius: 5,
+                          flexDirection: 'row',
+                          alignItems: 'center'
+                        }} >
+                        <SvgXml xml={whiteStar} />
+                        <Text
+                          style={{
+                            fontSize: Font.small,
+                            fontFamily: Font.SemiBold,
+                            color: Colors.White,
+                            marginLeft: s(7)
+                          }}
+                        >{LangProvider.Rate_Appointment[languageIndex]}</Text>
+                      </TouchableOpacity>
+                    )}
                 </View>
-              </Modal>
-            </KeyboardAwareScrollView>
-          </ScrollView>
-        </View>
-      );
-    } else {
-      return <View />;
-    }
+              )}
+
+              {item.acceptance_status == "Rejected" &&
+                item.rf_text != "" && (
+
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: Colors.Red,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xsmall,
+                      marginLeft: s(8)
+                    }}>
+                    {LangProvider.Refunded[languageIndex]}
+                  </Text>
+
+                )}
+            </View>
+
+
+            <View
+              style={{
+                width: "90%",
+                alignSelf: "center",
+                alignItems: "flex-start",
+              }}>
+              <HTMLView value={item.rf_text} stylesheet={HTMLstyles} />
+            </View>
+          </View>
+
+          {/* --------------------Note----------------- */}
+
+          <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
+
+            <SvgXml xml={Info} />
+
+            <View style={{ marginLeft: s(10) }}>
+              <Text
+                style={{
+                  fontSize: Font.small,
+                  fontFamily: Font.Medium,
+                  alignSelf: 'flex-start',
+                  color: Colors.detailTitles
+
+                }}>{LangProvider.Booking_Note[languageIndex]}</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                underlayColor={Colors.Highlight}
+                onPress={() => {
+                  setState({ isContactUsModal: true })
+                }}
+                style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                <Text
+                  style={{
+                    fontSize: Font.small,
+                    fontFamily: Font.Regular,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles
+
+                  }}>{LangProvider.Booking_Desc[languageIndex]}</Text>
+
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* -----------------Contact Us---------------- */}
+          <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
+
+            <SvgXml xml={contactUs} />
+
+            <View style={{ marginLeft: s(10) }}>
+              <Text
+                style={{
+                  fontSize: Font.small,
+                  fontFamily: Font.Regular,
+                  alignSelf: 'flex-start',
+                  color: Colors.detailTitles
+
+                }}>{LangProvider.Consultation_Help[languageIndex]}</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                underlayColor={Colors.Highlight}
+                onPress={() => {
+                  setState({ isContactUsModal: true })
+                }}
+                style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                <Text
+                  style={{
+                    fontSize: Font.small,
+                    fontFamily: Font.Regular,
+                    alignSelf: 'flex-start',
+                    color: Colors.Theme
+
+                  }}>{LangProvider.ContactUs[languageIndex]}</Text>
+                <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
+
+              </TouchableOpacity>
+            </View>
+
+          </View>
+
+
+
+        </KeyboardAwareScrollView>
+
+
+        {/* ---------------------------------------------------------- */}
+
+
+
+        {/* -------------------ReSchedule----------------- */}
+
+        <Modal
+          isVisible={classStateData.modalVisible}
+          animationIn='fadeInUpBig'
+          animationOut='fadeOutDownBig'
+          deviceWidth={windowWidth}
+          animationInTiming={350}
+          animationOutTimixng={350}
+          // onBackButtonPress={onRequestClose}
+          hasBackdrop={true}
+          useNativeDriver={true}
+          useNativeDriverForBackdrop={true}
+          // backdropColor='rgba(0,0,0,0.8)'
+          style={{ margin: 0 }} >
+
+
+
+          <View style={styles.modalContainer}>
+
+            {
+              classStateData?.isLoading &&
+              <View style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                // opacity: 0.8,
+                width: windowWidth,
+                height: windowHeight - 200,
+                borderRadius: 25,
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 999,
+              }}>
+                <SkypeIndicator color={Colors.Theme} size={20} />
+              </View>
+            }
+
+            {/* task booking section */}
+            <ScrollView
+              pointerEvents={(classStateData.isLoading || classStateData.isScheduleagain) ? 'none' : 'auto'}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: (windowWidth * 7) / 100,
+                paddingTop: vs(35),
+              }}>
+
+              <TouchableHighlight
+                onPress={() => {
+                  setState({ modalVisible: false })
+                }}
+                underlayColor={Colors.Highlight}
+                style={styles.closeContainer}
+              >
+                <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+              </TouchableHighlight>
+
+              <Text
+                style={{
+                  fontSize: Font.large,
+                  fontFamily: Font.SemiBold,
+                  alignSelf: 'flex-start',
+                  color: Colors.darkText
+
+                }}>{LangProvider.Reschedule[languageIndex]}</Text>
+
+              <View style={{ marginTop: vs(15) }}>
+
+                <View
+                  style={{
+                    width: "100%",
+                    alignSelf: "center",
+                  }}>
+
+                  <View style={{ paddingBottom: vs(9), flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                        color: Colors.Theme,
+                      }} >
+                      {item?.order_id}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                        color: Colors.Theme,
+                      }} >
+                      {item?.task_type}
+                    </Text>
+                  </View>
+
+                  {/* ----------Ordered Task--------- */}
+
+                  <View
+                    style={[
+                      {
+                        paddingVertical: vs(9),
+                        borderTopWidth: 1.5,
+                        borderColor: Colors.backgroundcolor,
+                      },
+                      classStateData.task_details?.length >= 3
+                        ? { height: (windowWidth * 40) / 100 }
+                        : { paddingVertical: vs(5) },
+                    ]}
+                  >
+                    {status === "doctor" ? (
+                      <FlatList
+                        data={classStateData.task_details}
+                        scrollEnabled={true}
+                        nestedScrollEnabled={true}
+                        renderItem={({ item, index }) => {
+                          if (
+                            classStateData.task_details != "" &&
+                            classStateData.task_details != null
+                          ) {
+                            return (
+                              <View
+                                style={{
+                                  alignItems: "center",
+                                  width: "100%",
+                                  alignSelf: "center",
+
+                                  paddingVertical: (windowWidth * 1.7) / 100,
+                                  flexDirection: "row",
+                                  marginTop: (windowWidth * 0.3) / 100,
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    width: "70%",
+                                    alignSelf: 'flex-start',
+                                    alignSelf: "center",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+
+                                    color: "#000",
+                                  }}
+                                >
+                                  {item.name}
+                                </Text>
+                                <Text
+                                  style={{
+                                    width: "30%",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+                                    color: "#000",
+                                    textAlign: "right",
+                                  }}
+                                >
+                                  {item.price}
+                                </Text>
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    ) : classStateData.slot_booking_id == "TASK_BOOKING" ? (
+                      <FlatList
+                        data={classStateData.task_details}
+                        scrollEnabled={true}
+                        nestedScrollEnabled={true}
+                        renderItem={({ item, index }) => {
+                          if (
+                            classStateData.task_details != "" &&
+                            classStateData.task_details != null
+                          ) {
+                            return (
+                              <View
+                                style={{
+                                  alignItems: "center",
+                                  width: "100%",
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 1.7) / 100,
+                                  flexDirection: "row",
+                                  marginTop: (windowWidth * 0.3) / 100,
+                                }} >
+                                <Text
+                                  style={{
+                                    width: "70%",
+                                    alignSelf: 'flex-start',
+                                    alignSelf: "center",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+                                    color: "#000",
+                                  }}>
+                                  {item.name}
+                                </Text>
+                                <Text
+                                  style={{
+                                    width: "30%",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+                                    color: "#000",
+                                    textAlign: "right",
+                                  }}
+                                >
+                                  {item.price}
+                                </Text>
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    ) : classStateData.slot_booking_id == "TESTS_BOOKING" ||
+                      classStateData.slot_booking_id == "PACKAGE_BOOKING" ? (
+                      <FlatList
+                        data={classStateData.task_details}
+                        scrollEnabled={true}
+                        nestedScrollEnabled={true}
+                        renderItem={({ item, index }) => {
+                          if (
+                            classStateData.task_details != "" &&
+                            classStateData.task_details != null
+                          ) {
+                            return (
+                              <View
+                                style={{
+                                  alignItems: "center",
+                                  width: "100%",
+                                  alignSelf: "center",
+                                  paddingVertical: (windowWidth * 1.7) / 100,
+                                  flexDirection: "row",
+                                  marginTop: (windowWidth * 0.3) / 100,
+                                }}>
+                                <Text
+                                  style={{
+                                    width: "70%",
+                                    alignSelf: 'flex-start',
+                                    alignSelf: "center",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+                                    color: "#000",
+                                  }}
+                                >
+                                  {item.name}
+                                </Text>
+                                <Text
+                                  style={{
+                                    width: "30%",
+                                    fontSize: (windowWidth * 3.6) / 100,
+                                    fontFamily: Font.Regular,
+                                    color: "#000",
+                                    textAlign: "right",
+                                  }}
+                                >
+                                  {item.price}
+                                </Text>
+                              </View>
+                            );
+                          }
+                        }}
+                      />
+                    ) : (
+                      <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
+                        data={item.task_details}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <View
+                              style={{
+                                borderRadius: (windowWidth * 2) / 100,
+                                marginRight: (windowWidth * 2) / 100,
+                                marginTop: (windowWidth * 2) / 100,
+                                borderColor: "#0168B3",
+                                borderWidth: 2,
+                                width: (windowWidth * 30) / 100,
+                                backgroundColor: "#fff",
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: "#0168B3",
+                                  borderTopLeftRadius:
+                                    (windowWidth * 1.2) / 100,
+                                  borderTopRightRadius:
+                                    (windowWidth * 1.2) / 100,
+                                  width: "100%",
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    // backgroundColor:'red',
+                                    // paddingHorizontal: (windowWidth * 5) / 100,
+                                    paddingVertical: (windowWidth * 1.5) / 100,
+                                    color: Colors.White,
+                                    fontFamily: Font.Medium,
+                                    fontSize: (windowWidth * 3) / 100,
+                                    textAlign: "center",
+                                    textTransform: "uppercase",
+                                  }}
+                                >
+                                  {item.name}
+                                </Text>
+                              </View>
+                              <Text
+                                style={{
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  fontFamily: Font.Medium,
+                                  textAlign: "center",
+                                  fontSize: Font.small,
+                                }}
+                              >
+                                {item.price}
+                              </Text>
+                            </View>
+                          );
+                        }}
+                      />
+                    )}
+                  </View>
+
+                  {/* ----------Ordered Task--------- */}
+
+                  <View
+                    style={{
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignSelf: "center",
+                      paddingTop: (windowWidth * 4) / 100,
+                      borderColor: Colors.gainsboro,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      {LangProvider.Appointmentschedule[languageIndex]}
+                    </Text>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Image
+                        source={Icons.Calendar}
+                        style={{
+                          resizeMode: "contain",
+                          // backgroundColor: Colors.White,
+                          width: 20,
+                          height: 20,
+                          alignSelf: "center",
+                        }}
+                      />
+
+                      <Text
+                        style={{
+                          color: Colors.Theme,
+                          fontFamily: Font.Medium,
+                          fontSize: Font.medium,
+                          marginLeft: (windowWidth * 1) / 100,
+                        }}
+                      >
+                        {classStateData.set_date}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: Colors.gainsboro,
+                      width: "100%",
+                      marginTop: (windowWidth * 2) / 100,
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      paddingTop: (windowWidth * 3) / 100,
+                      paddingBottom: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                        color: "#000",
+                      }}
+                    >
+                      {LangProvider.SelectDate[languageIndex]}
+                    </Text>
+
+                    <View style={{ width: "100%" }}>
+                      <FlatList
+                        horizontal={true}
+                        data={classStateData.date_array}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setState({
+                                  set_date: item.date1,
+                                  set_task: "task_base",
+                                  time_take_data: "",
+                                });
+                                status === "lab"
+                                  ? getLabTimeDate()
+                                  : status === "doctor"
+                                    ? getDoctorTimeDate()
+                                    : getTimeDate(),
+                                  check_date(item, index)
+                              }}
+                              style={{ width: (windowWidth * 15) / 100 }}
+                            >
+                              <Text
+                                style={{
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                  color: item.tick == 1 ? Colors.White : Colors.Black,
+                                  textAlign: "center",
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.small,
+
+                                  lineHeight: (windowWidth * 5) / 100,
+                                }}
+                              >
+                                {item.day}
+                                {"\n"}
+
+                                {item.datenew}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: Colors.gainsboro,
+                      width: "100%",
+                      marginTop: (windowWidth * 1.5) / 100,
+                      marginBottom: (windowWidth * 1.5) / 100,
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      paddingVertical: (windowWidth * 3) / 100,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      {LangProvider.Select_start_time[languageIndex]}
+                    </Text>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      <View style={{ width: "100%" }}>
+                        {classStateData.time_Arr != "" ? (
+                          <View style={{ width: "100%" }}>
+                            <View style={{ width: "100%" }}>
+                              <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={classStateData.final_one}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        setState({
+                                          time_take_data: item.time,
+                                        });
+                                      }}
+                                    >
+                                      <Text
+                                        style={[
+                                          {
+                                            marginRight:
+                                              (windowWidth * 3) / 100,
+                                            marginTop: (windowWidth * 3) / 100,
+
+                                            fontFamily:
+                                              Font.Regular,
+                                            fontSize:
+                                              Font.small,
+                                            padding: (windowWidth * 2) / 100,
+                                            paddingHorizontal:
+                                              (windowWidth * 3.3) / 100,
+                                          },
+                                          item.time ==
+                                            classStateData.time_take_data
+                                            ? {
+                                              backgroundColor:
+                                                Colors.Blue,
+                                              color: "#fff",
+                                            }
+                                            : {
+                                              backgroundColor:
+                                                '#E5E5E5',
+                                              color: "#000",
+                                            },
+                                        ]}
+                                      >
+                                        {item.time}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  );
+                                }}
+                              />
+                            </View>
+                            <View style={{ width: "100%" }}>
+                              <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={classStateData.final_arr_two}
+                                renderItem={({ item, index }) => {
+                                  return (
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        setState({
+                                          time_take_data: item.time,
+                                        });
+                                      }}
+                                    >
+                                      <Text
+                                        style={[
+                                          {
+                                            marginRight:
+                                              (windowWidth * 3) / 100,
+                                            marginTop: (windowWidth * 3) / 100,
+
+                                            fontFamily:
+                                              Font.Regular,
+                                            fontSize:
+                                              Font.small,
+                                            padding: (windowWidth * 2) / 100,
+                                            paddingHorizontal:
+                                              (windowWidth * 3.3) / 100,
+                                          },
+                                          item.time ==
+                                            classStateData.time_take_data
+                                            ? {
+                                              backgroundColor:
+                                                Colors.Blue,
+                                              color: "#fff",
+                                            }
+                                            : {
+                                              backgroundColor:
+                                                '#E5E5E5',
+                                              color: "#000",
+                                            },
+                                        ]}
+                                      >
+                                        {item.time}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  );
+                                }}
+                              />
+                            </View>
+                          </View>
+                        ) : (
+                          <Text
+                            style={{
+                              fontFamily: Font.MediumItalic,
+                              fontSize: (windowWidth * 4) / 100,
+                              alignSelf: "center",
+                              marginTop: (windowWidth * 3) / 100,
+                              textAlign: "center",
+                              marginLeft: (windowWidth * 32) / 100,
+                            }}
+                          >
+                            {LangProvider.noTime[languageIndex]}
+                          </Text>
+                        )}
+                      </View>
+                    </ScrollView>
+                  </View>
+
+                  <Button
+                    text={LangProvider.SAVECHANGERESCHEDULE[languageIndex]}
+                    onPress={() => submit_btn()}
+                    btnStyle={{ marginTop: vs(25) }}
+                    onLoading={classStateData.isScheduleagain}
+                  />
+
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        </Modal>
+
+
+
+
+        <RatingBottomSheet
+          visible={classStateData.modalVisiblerating}
+          onRequestClose={() => {
+            setState({ modalVisiblerating: false });
+          }}
+          value={classStateData.rating}
+          onSelectRating={(val) => {
+            setState({ rating: val });
+          }}
+          onChangeText={(txt) => {
+            setState({ reviewText: txt, textLength: txt });
+          }}
+          reviewValue={classStateData.reviewText}
+          rateProvider={() => rateProvider()}
+        />
+
+
+
+        <PrescriptionBottomSheet
+          visible={classStateData.modalPatientPrescription}
+          onRequestClose={() => {
+            setState({ modalPatientPrescription: false });
+          }}
+          data={classStateData.viewPrescriptionImage}
+        />
+
+        <ContactUsBottomSheet
+          visible={classStateData.isContactUsModal}
+          onRequestClose={() => {
+            setState({ isContactUsModal: false })
+          }}
+          data={item.order_id}
+          route={'AppointmentDetails'}
+        />
+
+      </View>
+    );
   }
+
 }
 const styles = StyleSheet.create({
   textInputFocus: {
-    borderColor: Colors.textblue,
-    backgroundColor: Colors.white2,
+    borderColor: Colors.Blue,
+    backgroundColor: Colors.White,
     borderBottomWidth: 1,
     borderWidth: 1,
     marginTop: 20,
     paddingLeft: 5,
     paddingRight: 5,
   },
-  textInput: {
-    borderColor: Colors.gray4,
-    backgroundColor: Colors.white2,
-    borderBottomWidth: 1,
-    borderWidth: 1,
-    marginTop: 20,
-    paddingLeft: 5,
-    paddingRight: 5,
+  modalContainer: {
+    width: windowWidth,
+    height: windowHeight - 200,
+    backgroundColor: Colors.White,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingHorizontal: s(13),
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 999,
   },
-  textInputArea: {
-    fontSize: (mobileW * 4) / 100,
-    fontFamily: Font.ques_fontfamily,
-    color: "#8F98A7",
-    height: 100,
-    width: "90%",
-    justifyContent: "flex-start",
-    textAlign: "center",
-    textAlignVertical: "top",
-    color: "#000",
-    // paddingTop: 10,
-    paddingVertical: (mobileW * 2) / 100,
-    textAlign: config.textalign,
+  closeContainer: {
+    height: s(35),
+    width: s(35),
+    borderRadius: s(50),
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: vs(20),
+    right: 0,
+    zIndex: 999
   },
+
 });
 const HTMLstyles = StyleSheet.create({
   font: {
-    color: "#FF0000",
+    color: Colors.Red,
+    fontSize: Font.small,
+    fontFamily: Font.Regular,
+    marginTop: vs(5)
   },
-  
+
 });

@@ -1,270 +1,207 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, TouchableHighlight } from "react-native";
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
+import { s, vs } from "react-native-size-matters";
+import { useSelector } from "react-redux";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import { ScreenHeader } from "../components/ScreenHeader";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
   Colors,
-  consolepro,
   Font,
-  Lang_chg,
-  localimag,
-  localStorage,
-  mobileW,
+  LangProvider,
+  Icons,
+  windowWidth,
   msgProvider,
-} from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
+} from "../Provider/Utils/Utils";
 
-const LabPackageDetails = (props) => {
-  const { navigation } = props;
-  const { packageId, providerId } = props.route.params;
+const LabPackageDetails = ({ navigation, route }) => {
+
+  const { loggedInUserDetails, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+
+  const { packageId, providerId } = route.params;
   const [labDetailsData, setLabDetailsData] = useState();
   const [showTaskDetails, isShowTaskDetails] = useState(false);
-  console.log("providerId ", packageId);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getPackageList();
+    getPackageDetails();
   }, []);
 
-  const getPackageList = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
+  const getPackageDetails = async () => {
+
     let url = config.baseURL + "api-get-package-details";
-    console.log("url", url);
 
     var data = new FormData();
-    data.append("lgoin_user_id", user_id);
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
     data.append("provider_id", providerId);
     data.append("package_id", packageId);
-
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
-        consolepro.consolelog("response ---> ", JSON.stringify(obj));
-
+        setIsLoading(false)
+        console.log("getPackageDetails-response ---> ", JSON.stringify(obj));
         if (obj.status == true) {
           setLabDetailsData(obj.result);
         } else {
           msgProvider.showError(obj.message);
           return false;
         }
-      })
-      .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+      }).catch((error) => {
+        setIsLoading(false)
+        console.log("-------- error ------- " + error);
       });
   };
 
   return (
-    <View style={Styles.container1}>
-      <View style={{ backgroundColor: "#f1f2f4", flex: 1 }}>
-        <View
-          style={{
-            backgroundColor: "#fff",
-            paddingVertical: (mobileW * 2) / 100,
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.LIGHT_CLIENT_BORDER,
-          }}
-        >
+    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+
+      <ScreenHeader
+        title={'Package Details'}
+        navigation={navigation}
+        onBackPress={() => navigation.pop()}
+        leftIcon
+      />
+
+      {
+      (labDetailsData != null && labDetailsData != "" && !isLoading) ?  (
+        <>
           <View
             style={{
-              padding: (mobileW * 2.5) / 100,
-              flexDirection: "row",
-              width: "99%",
-              alignSelf: "center",
-              paddingTop: (mobileW * 3) / 100,
-              backgroundColor: Colors.white_color,
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                width: "10%",
-                alignSelf: "center",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              >
-                <Image
-                  source={
-                    config.textalign == "right"
-                      ? localimag.arabic_back
-                      : localimag.backarrow
-                  }
-                  style={{
-                    resizeMode: "contain",
-                    width: (mobileW * 9) / 100,
-                    alignSelf: "center",
-                    height: (mobileW * 9) / 100,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: "80%",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontFamily: Font.fontmedium,
-                  fontSize: (mobileW * 4) / 100,
-                }}
-              >
-                {Lang_chg.PackageDetails[config.language]}
-              </Text>
-            </View>
-          </View>
-        </View>
-        {labDetailsData != null && labDetailsData != "" && (
-          <>
-            <View>
-              <View
-                style={{
-                  backgroundColor: "#fff",
-                }}
-              >
-                <Text
-                  style={{
-                    width: "100%",
-                    marginTop: (mobileW * 3) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
-                    color: "#000",
-                    fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 4.5) / 100,
-                    textAlign: "left",
-                  }}
-                >
-                  {labDetailsData.name}
-                </Text>
-                <Text
-                  style={{
-                    paddingVertical: (mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
-                    fontFamily: Font.fontregular,
-                    textAlign: "left",
-                    color: Colors.theme_color,
-                    fontSize: Font.sregulartext_size,
-                  }}
-                >
-                  {labDetailsData.task_count}
-                </Text>
-                <Text
-                  style={{
-                    paddingVertical: (mobileW * 2) / 100,
-                    paddingHorizontal: (mobileW * 4) / 100,
-                    textAlign: config.textalign,
-                    fontFamily: Font.fontmedium,
-                    fontSize: (mobileW * 5) / 100,
-                  }}
-                >
-                  {labDetailsData.price}
-                </Text>
-                <View
-                  style={{
-                    width: "100%",
-                    paddingHorizontal: (mobileW * 4) / 100,
-                    alignSelf: "center",
-                    borderColor: Colors.bordercolor,
-                    borderBottomWidth: (mobileW * 0.2) / 100,
-                    marginTop: (mobileW * 1) / 100,
-                  }}
-                />
-                {labDetailsData.task_content != null && (
-                  <>
-                    <Text
-                      style={{
-                        fontFamily: Font.fontregular,
-                        marginTop: (mobileW * 2) / 100,
-                        paddingHorizontal: (mobileW * 4) / 100,
-                        fontSize: Font.buttontext_size,
-                        textAlign: config.textRotate,
-                        color: Colors.lightgraytext,
-                      }}
-                    >
-                      {labDetailsData.task_heading}
-                    </Text>
-                    <HTMLView
-                      value={labDetailsData.task_content}
-                      stylesheet={{
-                        p: {
-                          fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
-                          color: Colors.lightgraytext,
-                          marginTop: (mobileW * 2) / 100,
-                          fontFamily: Font.fontregular,
-                        },
-                      }}
-                    />
-                  </>
-                )}
-                {labDetailsData.task_sub_content != null && (
-                  <View
-                    style={{
-                      width: "100%",
-                      alignSelf: "flex-start",
-                      backgroundColor: "#FFF2D9",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.fontregular,
-                        fontSize: Font.headingfont_booking,
-                        color: Colors.precautionText,
-                        paddingHorizontal: (mobileW * 4) / 100,
-                        marginTop: (mobileW * 2) / 100,
-                        textAlign: config.textRotate,
-                      }}
-                    >
-                      {labDetailsData.task_sub_heading}
-                    </Text>
-                    <HTMLView
-                      value={labDetailsData.task_sub_content}
-                      stylesheet={{
-                        p: {
-                          fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
-                          color: Colors.lightgraytext,
-                          marginTop: (mobileW * 2) / 100,
-                          fontFamily: Font.fontregular,
-                        },
-                      }}
-                    />
-                  </View>
-                )}
-              </View>
-            </View>
-            <View
-              style={{
-                width: (mobileW * 100) / 100,
-                backgroundColor: "#fff",
-                alignSelf: "center",
-                alignItems: "flex-start",
-                marginTop: (mobileW * 2) / 100,
-              }}
-            >
+              width: '100%',
+              paddingTop: s(9),
+              paddingBottom: labDetailsData.task_sub_content != null ? 0 :vs(9),
+              backgroundColor: Colors.White,
+              marginTop: vs(7)
+            }}>
+            <View style={{
+              paddingHorizontal: s(13),
+            }}>
+
               <Text
                 style={{
                   width: "100%",
-                  marginTop: (mobileW * 3) / 100,
-                  paddingHorizontal: (mobileW * 2) / 100,
-                  color: "#000",
-                  fontFamily: Font.fontregular,
-                  fontSize: (mobileW * 4) / 100,
+                  color: Colors.detailTitles,
+                  fontFamily: Font.Medium,
+                  fontSize: Font.xlarge,
                   textAlign: "left",
+                }}>
+                {labDetailsData.name}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  textAlign: "left",
+                  color: Colors.Theme,
+                  fontSize: Font.small,
+                  marginTop: vs(5)
                 }}
               >
-                {Lang_chg.TestsIncluded[config.language]}
+                {labDetailsData.task_count}
               </Text>
+              <Text
+                style={{
+                  marginTop: vs(10),
+                  alignSelf: 'flex-start',
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
+                }}
+              >
+                {labDetailsData.price}
+              </Text>
+
+              <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginVertical: vs(10) }}></View>
+
+              {labDetailsData.task_content != null && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: Font.Regular,
+                      fontSize: Font.medium,
+                      alignSelf: 'flex-start',
+                      color: Colors.detailTitles,
+                    }}>
+                    {labDetailsData.task_heading}
+                  </Text>
+                  <HTMLView
+                    value={labDetailsData.task_content}
+                    stylesheet={{
+                      p: {
+                        fontSize: Font.xsmall,
+                        color: Colors.detailTitles,
+                        marginTop: vs(8),
+                        fontFamily: Font.Regular,
+                      },
+                    }}
+                  />
+                </>
+              )}
+            </View>
+
+            {/* ----------------Precautions------------------ */}
+
+            {labDetailsData.task_sub_content != null && (
+              <View
+                style={{
+                  width: "100%",
+                  alignSelf: "flex-start",
+                  backgroundColor: "#FFF2D9",
+                  paddingHorizontal: s(13),
+                  paddingVertical: vs(9),
+                  marginTop: vs(7)
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Font.Bold,
+                    fontSize: Font.xsmall,
+                    color: Colors.precautionText,
+                    alignSelf: 'flex-start'
+                  }}>
+                  {labDetailsData.task_sub_heading}
+                </Text>
+                <HTMLView
+                  value={labDetailsData.task_sub_content}
+                  stylesheet={{
+                    p: {
+                      fontSize: Font.xsmall,
+                      color: Colors.detailTitles,
+                      marginTop: vs(4),
+                      fontFamily: Font.Regular,
+                    },
+                  }}
+                />
+              </View>
+            )}
+          </View>
+
+          {
+            labDetailsData.task_name.length > 0 &&
+            <View
+              style={{
+                width: '100%',
+                alignSelf: "center",
+                alignItems: "flex-start",
+                marginTop: vs(7),
+                paddingHorizontal: s(13),
+                paddingVertical: vs(10),
+                backgroundColor: Colors.White
+              }}>
+              <Text
+                style={{
+                  width: "100%",
+                  color: Colors.detailTitles,
+                  fontFamily: Font.Regular,
+                  fontSize: Font.xlarge,
+                  textAlign: "left",
+                }}>
+                {LangProvider.TestsIncluded[languageIndex]}
+              </Text>
+
               <FlatList
                 data={labDetailsData.task_name}
                 contentContainerStyle={{
-                  paddingBottom: (mobileW * 10) / 100,
                 }}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -279,60 +216,62 @@ const LabPackageDetails = (props) => {
                           if (item.subtask !== "" && item.subtask !== null) {
                             isShowTaskDetails(!showTaskDetails);
                           }
-                        }}
-                      >
+                        }}>
                         <View
                           style={{
                             width: "100%",
                             flexDirection: "row",
-                            justifyContent: "flex-start",
-                            // paddingVertical: (mobileW * 1) / 100,
-                            marginTop: (mobileW * 3) / 100,
-                            paddingHorizontal: (mobileW * 2) / 100,
-                          }}
-                        >
+                            justifyContent: 'space-between',
+                            marginTop: (windowWidth * 2) / 100,
+                          }}>
                           <Text
                             style={{
-                              width: "90%",
-                              fontSize: Font.subtext,
-                              color: Colors.theme_color,
-                              fontFamily: Font.fontmedium,
+                              width: "92%",
+                              fontSize: Font.small,
+                              color: Colors.Theme,
+                              fontFamily: Font.Regular,
                               textAlign: "left",
-                            }}
-                          >
+                            }} >
                             {item.name}
                           </Text>
                           {item.subtask !== "" && item.subtask !== null && (
-                            <View
-                              style={{
-                                width: "10%",
+                            <TouchableHighlight
+                              underlayColor={Colors.Highlight}
+                              onPress={() => {
+                                if (item.subtask !== "" && item.subtask !== null) {
+                                  isShowTaskDetails(!showTaskDetails);
+                                }
                               }}
-                            >
+                              style={{
+                                width: "8%",
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: vs(15)
+                              }}>
                               <Image
                                 style={{
-                                  height: (mobileW * 4.5) / 100,
-                                  width: (mobileW * 4.5) / 100,
+                                  height: (windowWidth * 4) / 100,
+                                  width: (windowWidth * 4) / 100,
                                 }}
                                 source={
                                   showTaskDetails
-                                    ? localimag.upArrow
-                                    : localimag.downarrow
+                                    ? Icons.upArrow
+                                    : Icons.downarrow
                                 }
                               />
-                            </View>
+                            </TouchableHighlight>
                           )}
                         </View>
                         {showTaskDetails && (
                           <Text
                             style={{
-                              paddingTop: (mobileW * 2) / 100,
-                              paddingHorizontal: (mobileW * 4) / 100,
-                              fontFamily: Font.fontregular,
+                              paddingVertical: vs(2),
+                              paddingHorizontal: s(15),
+                              fontFamily: Font.Regular,
                               textAlign: "left",
-                              color: Colors.subTaskColor,
-                              fontSize: Font.sregulartext_size,
-                            }}
-                          >
+                              color: Colors.dullGrey,
+                              fontSize: Font.xsmall,
+                            }}>
                             {item.subtask}
                           </Text>
                         )}
@@ -342,9 +281,12 @@ const LabPackageDetails = (props) => {
                 }}
               />
             </View>
-          </>
-        )}
-      </View>
+          }
+        </>
+      )
+      :
+      <LoadingSkeleton/>
+    }
     </View>
   );
 };

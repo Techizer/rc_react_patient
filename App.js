@@ -1,78 +1,83 @@
-import React, { Component } from "react";
-import { I18nManager } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { AppProvider, AppConsumer } from "./src/Provider/context/AppProvider";
-import Stacknav from "./src/Provider/Routenavigation";
-import { firebapushnotification } from "./src/firbase_pushnotification";
-import {
-  localStorage,
-} from "./src/Provider/utilslib/Utils";
-import FlashMessage from "react-native-flash-message";
-global.MapAddress = "NA";
-global.screens = "Splash";
-global.fcmtoken = "123456";
-global.isLogin = true;
+import React, { Component, useEffect } from "react";
+import { I18nManager, Platform, StatusBar } from "react-native";
+// import { Settings } from 'react-native-fbsdk-next';
+import * as Sentry from "@sentry/react-native";
+import { Tabby } from 'tabby-react-native-sdk'
+import MainStack from "./src/Provider/Stacks/MainStack";
+
 import RNRestart from "react-native-restart";
+import { useDispatch, useSelector } from "react-redux";
+import { AppLanguage, ContentAlign, LanguageIndex, Restart } from "./src/Redux/Actions";
+
+Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
 console.reportErrorsAsExceptions = false;
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.language_set();
-  }
-  componentDidMount() {
-    firebapushnotification.requestUserPermission();
-    // firebapushnotification.NotificationsListener();
-  }
-  language_set = async () => {
-    let languagecathc = await localStorage.getItemObject("languagecathc");
-    let languagesetenglish = await localStorage.getItemObject(
-      "languagesetenglish"
-    );
-    if (languagecathc == 0) {
-      if (languagesetenglish == 3) {
-        if (I18nManager.isRTL) {
-          console.log("HI Vikas");
+
+// Sentry.init({
+//   dsn: "https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776",
+//   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+//   // We recommend adjusting this value in production.
+//   tracesSampleRate: 1.0,
+// });
+
+// Settings.setAppID('386042973026214');
+const App = () => {
+
+
+  const { appLanguage, restart } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(Restart(false))
+    language_set()
+  }, [appLanguage])
+
+  const language_set = async () => {
+    console.log('setting layout direction.......');
+    // console.log({ restart });
+    if (appLanguage == 'en') {
+      if (I18nManager.isRTL) {
+        console.log("Left To Right");
+        if (restart == false) {
           I18nManager.forceRTL(false);
           I18nManager.allowRTL(false);
-        } else {
-          I18nManager.forceRTL(false);
-          I18nManager.allowRTL(false);
+          dispatch(Restart(true))
+          setTimeout(() => {
+            RNRestart.Restart();
+          }, 450);
         }
-        localStorage.removeItem("languagecathc");
-        localStorage.setItemObject("language", 0);
-        localStorage.removeItem("languagesetenglish");
-        RNRestart.Restart();
+
+      } else {
+        I18nManager.forceRTL(false);
+        I18nManager.allowRTL(false);
       }
-      localStorage.setItemObject("languagesetenglish", 3);
+      dispatch(LanguageIndex(0))
+      dispatch(ContentAlign('left'))
+    } else {
+      if (restart == false) {
+        I18nManager.forceRTL(true);
+        I18nManager.allowRTL(true);
+        dispatch(Restart(true))
+        setTimeout(() => {
+          RNRestart.Restart();
+        }, 450);
+      }
+      dispatch(ContentAlign('right'))
+      dispatch(LanguageIndex(1))
     }
-    //// I18nManager.forceRTL(false);
-    // config.language = value;
-  };
-  render() {
-    return (
-        <NavigationContainer>
-          <AppProvider {...this.props}>
-            <AppConsumer>
-              {(funcs) => {
-                global.props = { ...funcs };
-                return <Stacknav {...funcs} />;
-              }}
-            </AppConsumer>
-            <FlashMessage
-              // style={{
-              //   marginTop: Platform.OS == "ios" ? 0 : StatusBar.currentHeight,
-              // }}
-              position="top"
-              animated={true}
-              // titleStyle={{
-              //   fontFamily: Font.fontregular,
-              //   fontSize: 20
-              // }}
-            />
-          </AppProvider>
-        </NavigationContainer>
-    );
   }
+
+  ((Platform.OS === 'android') ? () => {
+    StatusBar.setTranslucent(true)
+    StatusBar.setBackgroundColor('transparent')
+    StatusBar.setBarStyle('dark-content')
+  } : () => { })()
+  return (
+    restart == true ?
+      null
+      :
+      <MainStack />
+  );
 }
 
+// throw new Error("My first Sentry error!");
 export default App;
+// export default Sentry.wrap(App);

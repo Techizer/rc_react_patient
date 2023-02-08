@@ -8,22 +8,23 @@ import {
 } from "react-native";
 import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
+import { s, vs } from "react-native-size-matters";
+import { ScreenHeader } from "../Provider/Utils/Utils";
+import { leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
   Colors,
   consolepro,
   Font,
-  Lang_chg,
-  localimag,
-  localStorage,
-  mobileW,
+  LangProvider,
+  Icons,
+  windowWidth,
   msgProvider,
-} from "../Provider/utilslib/Utils";
-import Styles from "../Styles";
+} from "../Provider/Utils/Utils";
 
-const CovidPackageDetails = (props) => {
-  const { navigation } = props;
+const CovidPackageDetails = ({ navigation }) => {
+
   const [covidTestDetailsData, setCovidTestDetailsData] = useState();
   const [taskDetails, setTaskDetails] = useState(false);
   const [index, setIndex] = useState(0);
@@ -40,15 +41,11 @@ const CovidPackageDetails = (props) => {
   }, [showTaskDetails]);
 
   const getCovidPackageList = async () => {
-    let user_details = await localStorage.getItemObject("user_arr");
-    let user_id = user_details["user_id"];
     let url = config.baseURL + "api-covid-test-details";
-    console.log("url", url);
 
     var data = new FormData();
     data.append("lgoin_user_id", user_id);
 
-    consolepro.consolelog("data", data);
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
@@ -83,479 +80,426 @@ const CovidPackageDetails = (props) => {
   };
 
   return (
-    <View style={Styles.container1}>
-      <View style={{ backgroundColor: "#f1f2f4", flex: 1 }}>
-        <View
-          style={{
-            padding: (mobileW * 2.5) / 100,
-            flexDirection: "row",
-            width: "99%",
-            alignSelf: "center",
-            paddingTop: (mobileW * 3) / 100,
-            backgroundColor: Colors.white_color,
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              width: "10%",
-              alignSelf: "center",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <Image
-                source={
-                  config.textalign == "right"
-                    ? localimag.arabic_back
-                    : localimag.backarrow
-                }
-                style={{
-                  resizeMode: "contain",
-                  width: (mobileW * 9) / 100,
-                  alignSelf: "center",
-                  height: (mobileW * 9) / 100,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: "80%",
-            }}
-          >
-            <Text
+    <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+
+      <ScreenHeader
+        title={LangProvider.PackageDetails[config.language]}
+        navigation={navigation}
+        onBackPress={() => navigation.pop()}
+        leftIcon={leftArrow}
+        rightIcon={Notification}
+      />
+
+
+      {covidTestDetailsData != null && covidTestDetailsData != "" && (
+        <>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View
               style={{
-                textAlign: "center",
-                fontFamily: Font.fontmedium,
-                fontSize: (mobileW * 4) / 100,
-              }}
-            >
-              {Lang_chg.PackageDetails[config.language]}
-            </Text>
-          </View>
-        </View>
-        {covidTestDetailsData != null && covidTestDetailsData != "" && (
-          <>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View>
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    marginVertical: (mobileW * 3) / 100,
-                  }}
-                >
-                  <View
+                backgroundColor: Colors.White,
+                marginTop: vs(7),
+                paddingHorizontal: s(13),
+                paddingVertical: vs(10)
+              }}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                }}>
+                <View style={{ width: "45%" }}>
+                  <Text
                     style={{
                       width: "100%",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <View style={{ width: "45%" }}>
-                      <Text
-                        style={{
-                          width: "100%",
-                          marginTop: (mobileW * 3) / 100,
-                          paddingHorizontal: (mobileW * 4) / 100,
-                          color: Colors.lightgraytext,
-                          fontFamily: Font.fontmedium,
-                          fontSize: (mobileW * 4.5) / 100,
-                          textAlign: "left",
-                        }}
-                      >
-                        {covidTestDetailsData.cheading}
-                      </Text>
-                      {covidTestDetailsData.ctitle != null && (
-                        <Text
-                          style={{
-                            fontFamily: Font.fontregular,
-                            marginTop: (mobileW * 2) / 100,
-                            paddingHorizontal: (mobileW * 4) / 100,
-                            fontSize: Font.buttontext_size,
-                            textAlign: config.textRotate,
-                            color: Colors.lightgraytext,
-                          }}
-                        >
-                          {covidTestDetailsData.ctitle}
-                        </Text>
-                      )}
-                    </View>
-                    <View
+                      color: Colors.detailTitles,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xlarge,
+                      textAlign: "left",
+                    }}>
+                    {covidTestDetailsData.cheading}
+                  </Text>
+                  {covidTestDetailsData.ctitle != null && (
+                    <Text
                       style={{
-                        width: "55%",
-                        flexDirection: "row",
-                        marginTop: (mobileW * 2) / 100,
+                        fontFamily: Font.Regular,
+                        marginTop: vs(5),
+                        fontSize: Font.medium,
+                        textAlign: config.textRotate,
+                        color: Colors.lightGrey,
                       }}
                     >
-                      {/* image and store name */}
+                      {covidTestDetailsData.ctitle}
+                    </Text>
+                  )}
+                </View>
+                <View
+                  style={{
+                    width: "55%",
+                    flexDirection: "row",
+                    alignItems: 'center'
+                  }}>
+                  {/* image and store name */}
 
-                      <View style={{ width: "33%" }}>
-                        <Image
-                          source={
-                            covidTestDetailsData.lab_image == "NA" ||
-                            covidTestDetailsData.lab_image == null ||
-                            covidTestDetailsData.lab_image == ""
-                              ? localimag.p1
-                              : {
-                                  uri:
-                                    config.img_url3 +
-                                    covidTestDetailsData.lab_image,
-                                }
+                  <View style={{ width: "33%" }}>
+                    <Image
+                      source={
+                        covidTestDetailsData.lab_image == "NA" ||
+                          covidTestDetailsData.lab_image == null ||
+                          covidTestDetailsData.lab_image == ""
+                          ? Icons.p1
+                          : {
+                            uri:
+                              config.img_url3 +
+                              covidTestDetailsData.lab_image,
                           }
-                          style={{
-                            width: (mobileW * 15) / 100,
-                            height: (mobileW * 15) / 100,
-                            borderWidth: 1,
-                            borderColor: "#0888D1",
-                            borderRadius: (mobileW * 10) / 100,
-                          }}
-                        />
-                      </View>
-
-                      <View
-                        style={{
-                          width: "50%",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.fontmedium,
-                            fontSize: Font.name,
-                            color: Colors.lightgraytext,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {covidTestDetailsData.lab_name}
-                        </Text>
-                        <Text
-                          style={{
-                            paddingVertical: (mobileW * 1.5) / 100,
-                            fontFamily: Font.fontregular,
-                            fontSize: Font.subtext,
-                            color: Colors.theme_color,
-                            textAlign: config.textRotate,
-                          }}
-                        >
-                          {covidTestDetailsData.lab_content}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  {covidTestDetailsData.ccontent != null && (
-                    <HTMLView
-                      value={covidTestDetailsData.ccontent}
-                      stylesheet={{
-                        p: {
-                          fontSize: Font.subtext,
-                          paddingHorizontal: (mobileW * 4) / 100,
-                          color: Colors.lightgraytext,
-                          marginTop: (mobileW * 3) / 100,
-                          marginBottom: (mobileW * 3) / 100,
-                          fontFamily: Font.fontregular,
-                        },
+                      }
+                      style={{
+                        width: (windowWidth * 15) / 100,
+                        height: (windowWidth * 15) / 100,
+                        borderWidth: 1,
+                        borderColor: "#0888D1",
+                        borderRadius: (windowWidth * 10) / 100,
                       }}
                     />
-                  )}
+                  </View>
+
+                  <View
+                    style={{
+                      width: "50%",
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        color: Colors.detailTitles,
+                        textAlign: config.textRotate,
+                      }}
+                    >
+                      {covidTestDetailsData.lab_name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.medium,
+                        color: Colors.Theme,
+                        textAlign: config.textRotate,
+                        marginTop: vs(5),
+                      }}
+                    >
+                      {covidTestDetailsData.lab_content}
+                    </Text>
+                  </View>
                 </View>
               </View>
 
-              <View
-                style={{
-                  width: (mobileW * 100) / 100,
-                  alignSelf: "center",
-                  alignItems: "flex-start",
-                }}
-              >
-                <FlatList
-                  data={taskDetails}
-                  extraData={taskDetails}
-                  contentContainerStyle={{
-                    paddingBottom: (mobileW * 10) / 100,
+              {covidTestDetailsData.ccontent != null && (
+                <HTMLView
+                  value={covidTestDetailsData.ccontent}
+                  stylesheet={{
+                    p: {
+                      fontSize: Font.medium,
+                      color: Colors.DarkGrey,
+                      marginTop: vs(9),
+                      fontFamily: Font.Regular,
+                    },
                   }}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({ item, index }) => {
-                    if (
-                      taskDetails != "" &&
-                      taskDetails != null &&
-                      taskDetails.length !== 0
-                    ) {
-                      return (
-                        <View>
+                />
+              )}
+            </View>
+
+
+            <View
+              style={{
+                width: windowWidth,
+                alignSelf: "center",
+                marginTop: vs(7),
+              }}>
+              <FlatList
+                data={taskDetails}
+                extraData={taskDetails}
+                contentContainerStyle={{
+                  paddingBottom: (windowWidth * 10) / 100,
+                }}
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={() => {
+                  return (
+                    <View style={{ height: vs(7) }}></View>
+                  )
+                }}
+                renderItem={({ item, index }) => {
+                  if (
+                    taskDetails != "" &&
+                    taskDetails != null &&
+                    taskDetails.length !== 0
+                  ) {
+                    return (
+                      <View>
+                        <View
+                          style={{
+                            width: "100%",
+                            justifyContent: "flex-start",
+                            backgroundColor: Colors.White,
+                            paddingHorizontal: s(13),
+                            paddingVertical: vs(10),
+                          }}>
+                          <Text
+                            style={{
+                              width: "90%",
+                              fontSize: Font.medium,
+                              color: Colors.lightGrey,
+                              fontFamily: Font.Medium,
+                              textAlign: "left",
+                            }}>
+                            {item.name}
+                          </Text>
+
+                          {
+                            item.sub_heading ?
+                              <Text
+                                style={{
+                                  width: "90%",
+                                  fontSize: Font.medium,
+                                  color: Colors.lightGrey,
+                                  marginTop: (windowWidth * 1) / 100,
+                                  fontFamily: Font.Medium,
+                                  textAlign: config.textRotate,
+                                }}>
+                                {item.sub_heading}
+                              </Text>
+                              :
+                              null
+                          }
+
                           <View
                             style={{
                               width: "100%",
+                              flexDirection: "row",
                               justifyContent: "flex-start",
-                              paddingTop: (mobileW * 3) / 100,
-                              backgroundColor: "#fff",
-                              marginBottom: (mobileW * 3) / 100,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                width: "90%",
-                                fontSize: Font.subtext,
-                                color: Colors.lightgraytext,
-                                fontFamily: Font.fontmedium,
-                                paddingHorizontal: (mobileW * 2) / 100,
-                                textAlign: "left",
-                              }}
-                            >
-                              {item.name}
-                            </Text>
+                              marginTop: (windowWidth * 3) / 100,
 
-                            <Text
+                            }} >
+                            <View
                               style={{
-                                width: "90%",
-                                fontSize: Font.subtext,
-                                color: Colors.textgray,
-                                marginTop: (mobileW * 1) / 100,
-                                fontFamily: Font.fontmedium,
-                                paddingHorizontal: (mobileW * 2) / 100,
-                                textAlign: "left",
-                              }}
-                            >
-                              {item.sub_heading}
-                            </Text>
+                                width: "50%",
+                              }} >
+                              <Text
+                                style={{
+                                  fontFamily: Font.Regular,
+                                  textAlign: "left",
+                                  fontSize: Font.medium,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  color: Colors.lightGrey,
+                                  textDecorationLine: "line-through",
+                                  textDecorationStyle: "solid",
+                                }}
+                              >
+                                {item.offerprice !== "" ? item.price : ""}
+                              </Text>
 
+                              <View
+                                style={{
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  flexDirection: "row",
+                                  justifyContent: "flex-start",
+                                  alignItem: "center",
+                                }} >
+                                <Text
+                                  style={{
+                                    textAlign: config.textalign,
+                                    fontFamily: Font.Medium,
+                                    fontSize: (windowWidth * 4) / 100,
+                                  }} >
+                                  {item.offerprice !== ""
+                                    ? item.offerprice
+                                    : item.price}
+                                </Text>
+
+                                {item.dis_off !== "" && (
+                                  <View
+                                    style={{
+                                      paddingVertical: (windowWidth * 0.5) / 100,
+                                      paddingHorizontal: (windowWidth * 3) / 100,
+                                      marginHorizontal: (windowWidth * 4) / 100,
+                                      borderColor: Colors.Green,
+                                      color: Colors.Green,
+                                      borderRadius: 5,
+                                      borderStyle: "dotted",
+                                      borderWidth: 1,
+                                    }}
+                                  >
+                                    <Text
+                                      style={{
+                                        fontFamily: Font.Regular,
+                                        textAlign: "left",
+                                        color: Colors.textGreenColor,
+                                        fontSize: Font.small,
+                                      }}
+                                    >
+                                      {item.dis_off}
+                                    </Text>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                width: "50%"
+                              }}>
+                              <Text
+                                style={{
+                                  fontFamily: Font.Regular,
+                                  textAlign: "left",
+                                  fontSize: Font.small,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  color: Colors.lightGrey,
+                                }}>
+                                {item.result_text}
+                              </Text>
+
+                              <Text
+                                style={{
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  textAlign: config.textRotate,
+                                  fontFamily: Font.Medium,
+                                  fontSize: (windowWidth * 4) / 100,
+                                }}
+                              >
+                                {item.result_time}
+                              </Text>
+                            </View>
+                          </View>
+
+                          {item.pcontent != null && item.pcontent !== "" && (
                             <View
                               style={{
                                 width: "100%",
                                 flexDirection: "row",
-                                justifyContent: "flex-start",
-                                marginTop: (mobileW * 3) / 100,
-                                paddingHorizontal: (mobileW * 2) / 100,
+                                backgroundColor: "#FFF2D9",
                               }}
                             >
                               <View
                                 style={{
-                                  width: "50%",
+                                  width: "90%",
+                                  alignSelf: "flex-start",
                                 }}
                               >
                                 <Text
                                   style={{
-                                    fontFamily: Font.fontregular,
-                                    textAlign: "left",
-                                    fontSize: Font.sregulartext_size,
-                                    marginTop: (mobileW * 3) / 100,
-                                    color: Colors.tablightcolo,
-                                    textDecorationLine: "line-through",
-                                    textDecorationStyle: "solid",
+                                    fontFamily: Font.Regular,
+                                    fontSize: Font.xlarge,
+                                    color: Colors.precautionText,
+                                    // marginTop: (windowWidth * 2) / 100,
+                                    paddingHorizontal: (windowWidth * 2) / 100,
+                                    paddingVertical: (windowWidth * 2) / 100,
+                                    textAlign: config.textRotate,
                                   }}
                                 >
-                                  {item.offerprice !== "" ? item.price : ""}
+                                  {item.pheading}
                                 </Text>
-
-                                <View
-                                  style={{
-                                    paddingVertical: (mobileW * 2) / 100,
-                                    flexDirection: "row",
-                                    justifyContent: "flex-start",
-                                    alignItem: "center",
-                                  }}
-                                >
-                                  <Text
+                                {item.status && (
+                                  <View
                                     style={{
-                                      textAlign: config.textalign,
-                                      fontFamily: Font.fontmedium,
-                                      fontSize: (mobileW * 4) / 100,
+                                      paddingHorizontal: (windowWidth * 2) / 100,
                                     }}
                                   >
-                                    {item.offerprice !== ""
-                                      ? item.offerprice
-                                      : item.price}
-                                  </Text>
-
-                                  {item.dis_off !== "" && (
-                                    <View
-                                      style={{
-                                        paddingVertical: (mobileW * 0.5) / 100,
-                                        paddingHorizontal: (mobileW * 3) / 100,
-                                        marginHorizontal: (mobileW * 4) / 100,
-                                        borderColor: Colors.buttoncolorhgreen,
-                                        color: Colors.buttoncolorhgreen,
-                                        borderRadius: 5,
-                                        borderStyle: "dotted",
-                                        borderWidth: 1,
+                                    <HTMLView
+                                      value={item.pcontent}
+                                      stylesheet={{
+                                        p: {
+                                          fontSize: Font.medium,
+                                          color: Colors.lightGrey,
+                                          fontFamily: Font.Regular,
+                                        },
                                       }}
-                                    >
-                                      <Text
-                                        style={{
-                                          fontFamily: Font.fontregular,
-                                          textAlign: "left",
-                                          color: Colors.textGreenColor,
-                                          fontSize: Font.sregulartext_size,
-                                        }}
-                                      >
-                                        {item.dis_off}
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
+                                    />
+                                  </View>
+                                )}
                               </View>
-
-                              <View
+                              <TouchableOpacity
+                                onPress={() => {
+                                  console.log("index----> ", index);
+                                  if (
+                                    item.pcontent !== "" &&
+                                    item.pcontent !== null
+                                  ) {
+                                    isShowTaskDetails(!showTaskDetails);
+                                    setIndex(index);
+                                  }
+                                }}
                                 style={{
-                                  width: "50%",
+                                  width: "10%",
+                                  marginTop: (windowWidth * 3) / 100,
+                                  // paddingVertical: (windowWidth * 2) / 100,
                                 }}
                               >
-                                <Text
+                                <Image
                                   style={{
-                                    fontFamily: Font.fontregular,
-                                    textAlign: "left",
-                                    fontSize: Font.sregulartext_size,
-                                    marginTop: (mobileW * 3) / 100,
-                                    color: Colors.tablightcolo,
+                                    height: (windowWidth * 4.5) / 100,
+                                    width: (windowWidth * 4.5) / 100,
                                   }}
-                                >
-                                  {item.result_text}
-                                </Text>
-
-                                <Text
-                                  style={{
-                                    paddingVertical: (mobileW * 2) / 100,
-                                    textAlign: config.textalign,
-                                    fontFamily: Font.fontmedium,
-                                    fontSize: (mobileW * 4) / 100,
-                                  }}
-                                >
-                                  {item.result_time}
-                                </Text>
-                              </View>
+                                  source={
+                                    item.status
+                                      ? Icons.upArrow
+                                      : Icons.downarrow
+                                  }
+                                />
+                              </TouchableOpacity>
                             </View>
-                            {item.pcontent != null && item.pcontent !== "" && (
-                              <View
-                                style={{
-                                  width: "100%",
-                                  flexDirection: "row",
-                                  backgroundColor: "#FFF2D9",
-                                }}
-                              >
-                                <View
-                                  style={{
-                                    width: "90%",
-                                    alignSelf: "flex-start",
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: Font.fontregular,
-                                      fontSize: Font.headingfont_booking,
-                                      color: Colors.precautionText,
-                                      // marginTop: (mobileW * 2) / 100,
-                                      paddingHorizontal: (mobileW * 2) / 100,
-                                      paddingVertical: (mobileW * 2) / 100,
-                                      textAlign: config.textRotate,
-                                    }}
-                                  >
-                                    {item.pheading}
-                                  </Text>
-                                  {item.status && (
-                                    <View
-                                      style={{
-                                        paddingHorizontal: (mobileW * 2) / 100,
-                                      }}
-                                    >
-                                      <HTMLView
-                                        value={item.pcontent}
-                                        stylesheet={{
-                                          p: {
-                                            fontSize: Font.subtext,
-                                            color: Colors.lightgraytext,
-                                            fontFamily: Font.fontregular,
-                                          },
-                                        }}
-                                      />
-                                    </View>
-                                  )}
-                                </View>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    console.log("index----> ", index);
-                                    if (
-                                      item.pcontent !== "" &&
-                                      item.pcontent !== null
-                                    ) {
-                                      isShowTaskDetails(!showTaskDetails);
-                                      setIndex(index);
-                                    }
-                                  }}
-                                  style={{
-                                    width: "10%",
-                                    marginTop: (mobileW * 3) / 100,
-                                    // paddingVertical: (mobileW * 2) / 100,
-                                  }}
-                                >
-                                  <Image
-                                    style={{
-                                      height: (mobileW * 4.5) / 100,
-                                      width: (mobileW * 4.5) / 100,
-                                    }}
-                                    source={
-                                      item.status
-                                        ? localimag.upArrow
-                                        : localimag.downarrow
-                                    }
-                                  />
-                                </TouchableOpacity>
-                              </View>
-                            )}
-                          </View>
+                          )}
                         </View>
-                      );
-                    }
-                  }}
-                />
-              </View>
-            </ScrollView>
+                      </View>
+                    );
+                  }
+                }}
+              />
+            </View>
+          </ScrollView>
 
-            <View
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              backgroundColor: Colors.White,
+              paddingHorizontal: (windowWidth * 5) / 100,
+              paddingVertical: (windowWidth * 2) / 100,
+              height: 80,
+              justifyContent: "center", //Centered horizontally
+              alignItems: "center", //Centered vertically
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Booking", {
+                  pass_status: "lab",
+                  nurse_id: "497", //live "595", //demo "497",
+                  indexPosition: 0,
+                });
+              }}
               style={{
                 width: "100%",
-                alignSelf: "center",
-                backgroundColor: Colors.white_color,
-                paddingHorizontal: (mobileW * 5) / 100,
-                paddingVertical: (mobileW * 2) / 100,
-                height: 80,
-                justifyContent: "center", //Centered horizontally
-                alignItems: "center", //Centered vertically
+                borderRadius: (windowWidth * 3) / 100,
+                backgroundColor: Colors.Theme,
+                paddingVertical: (windowWidth * 3) / 100,
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Booking", {
-                    pass_status: "lab",
-                    nurse_id: "595", //"497",
-                    indexPosition: 0,
-                  });
-                }}
+              <Text
                 style={{
-                  width: "100%",
-                  borderRadius: (mobileW * 3) / 100,
-                  backgroundColor: Colors.buttoncolorblue,
-                  paddingVertical: (mobileW * 3) / 100,
+                  color: Colors.White,
+                  fontFamily: Font.Medium,
+                  fontSize: Font.medium,
+                  alignSelf: "flex-end",
+                  textAlign: config.textalign,
+                  alignSelf: "center",
                 }}
               >
-                <Text
-                  style={{
-                    color: Colors.textwhite,
-                    fontFamily: Font.fontmedium,
-                    fontSize: Font.buttontextsize,
-                    alignSelf: "flex-end",
-                    textAlign: config.textalign,
-                    alignSelf: "center",
-                  }}
-                >
-                  {Lang_chg.BOOKNOW[config.language]}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </View>
+                {LangProvider.BOOKNOW[config.language]}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };

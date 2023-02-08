@@ -4,40 +4,19 @@ import {
   View,
   Image,
   StyleSheet,
-  Dimensions,
-  Text,
-  ActivityIndicator,
 } from "react-native";
 import {
   TextInput,
-  HelperText,
-  useTheme,
-  MD2Colors,
-  MD3Colors,
-  List,
 } from "react-native-paper";
-// import OutlineInput from 'react-native-outline-input';
-import Icon from "react-native-vector-icons/MaterialIcons";
-// import { hp, wp } from "../utils/responsive";
-// import { RF } from "../utils/responsive";
-// import Fonts, { fonts, fontSizes } from "../utils/Fonts";
-// import { Color } from "../utils";
-// const { height, width } = Dimensions.get("window");
+
 import {
   Colors,
-  localimag,
+  Icons,
   Font,
-  mobileH,
+  windowHeight,
   config,
-  mobileW,
-  Lang_chg,
-  apifuntion,
-  msgText,
-  msgTitle,
-  consolepro,
-  msgProvider,
-  localStorage,
-} from "../Provider/utilslib/Utils";
+
+} from "../Provider/Utils/Utils";
 
 const AuthInputBoxSec = ({
   lableText,
@@ -58,25 +37,28 @@ const AuthInputBoxSec = ({
   showCode,
   iconColor,
   isEditable,
+  onChangeText,
+  value,
+  numberOfLines,
+  multiline,
+  blurOnSubmit,
+  onSubmitEditing,
+  onFocus,
+  elementPosition=()=>{},
   ...props
 }) => {
-  //console.log(props.onSubmitEditing)
+
+  let position = null
+
   return (
     <>
-      <View style={[styles.mainContainer, mainContainer]}>
-        {/* {lableText ? (
-          <Text
-            style={{
-              fontFamily: Font.fontregular,
-              fontSize: 14,
-              marginBottom: 5,
-              marginTop: 15,
-              color: Colors.textblack,
-            }}
-          >
-            {lableText} {lblTxtInfo ? "(" + lblTxtInfo + ")" : ""}
-          </Text>
-        ) : null} */}
+      <View
+        onLayout={event => {
+          position = event.nativeEvent.layout
+          // console.log('event.nativeEvent.layout:', event.nativeEvent.layout);
+        }}
+        style={[styles.mainContainer, mainContainer]}>
+
         <View
           style={[
             styles.inputLayout,
@@ -86,116 +68,56 @@ const AuthInputBoxSec = ({
             inputLayout,
           ]}
         >
-          {/* {showCode ? (
-            <Text
-              style={{
-                // position: 'absolute',
-                // top: '50%',
-                // left: 0,
-                marginTop: 10,
-                marginRight: 10,
-                color: "black", //"#7C7C7C",
-                fontFamily: Font.fontregular,
-                fontSize: 14,
-              }}
-            >
-              +0
-            </Text>
-          ) : null} */}
+
           <View
             style={{
               width: "100%",
               alignSelf: "center",
-              // backgroundColor: 'red'
-            }}
-          >
-            <TextInput //OutlineInput
-              style={[
-                styles.inputFieldStyle,
-                inputFieldStyle,
-                {
-                  backgroundColor:
-                    props.editable == false
-                      ? Colors.tab_background_color
-                      : "white",
-                },
+            }} >
+
+            <TextInput
+              numberOfLines={numberOfLines}
+              style={[styles.inputFieldStyle,
+              {
+                backgroundColor: props.editable ? Colors.White : Colors.backgroundcolor
+              },
+                inputFieldStyle
               ]}
-              ref={(r) => {
-                inputRef && inputRef(r);
-              }}
+              ref={inputRef}
               label={lableText}
-              mode="outlined"
-              outlineColor={Colors.field_border_color}
-              activeOutlineColor={Colors.placholderactive}
-              // caretHidden={false}
-              // selectionColor="green"
-              // activeValueColor={Colors.textblack}
-              // activeBorderColor={Colors.placholderactive}
-              // activeLabelColor={Colors.placholderactive}
-              // passiveBorderColor={Colors.field_border_color}
-              // passiveLabelColor={Colors.gray4}
-              // passiveValueColor={Colors.gray4}
-              // height={48}
-              // width={'100%'}
+              mode='outlined'
+              outlineColor={Colors.Border}
+              activeOutlineColor={Colors.Theme}
               autoCapitalize="none"
-              {...props}
-              value={props.value}
-              // editable={(editable) ? editable : true}
+              onChangeText={onChangeText}
+              value={value}
+              onFocus={() => {
+                elementPosition(position)
+              }}
+              blurOnSubmit={blurOnSubmit}
+              onSubmitEditing={onSubmitEditing}
+              // maxLength={26}
               right={
                 disableImg && (
                   <TextInput.Icon
                     name={iconName}
                     onPress={iconPressAction}
                     forceTextInputFocus={false}
-                    color={Colors.regulartextcolor}
+                    color={Colors.DarkGrey}
                     style={{
-                      marginTop: 12,
+                      marginTop: 12
                     }}
                   />
                 )
               }
+              {...props}
             />
-          </View>
-          {/* {disableImg ? (
-            // <View style={[styles.imgView, imgView]}>
-            //     <Image
-            //         style={[styles.img, imgStyle]}
-            //         resizeMode="contain"
-            //         source={icon}
-            //     />
-            // </View>
-            <Icon
-              style={{
-                position: "absolute",
-                top: 6,
-                right: -35,
-                color: iconColor ? iconColor : "#7C7C7C",
-              }}
-              name={iconName}
-              size={25}
-              onPress={iconPressAction}
-            />
-          ) : null} */}
 
-          {/* <TouchableOpacity style={[styles.textStyle, textStyle]} {...props}>
-            {loading ?
-              <ActivityIndicator color="white" {...props} size={'small'} />
-              :
-              <Text style={{ color: THEME_WHITE }}>{buttin}</Text>
-            }
-          </TouchableOpacity> */}
+          </View>
+
         </View>
       </View>
-      {/* {error ? (
-                <View style={[styles.errorLayout, errorLayout]}>
-                    <Text
-                        ellipsizeMode="tail"
-                        numberOfLines={3}
-                        style={[styles.errorTxt]}>
-                        {error}
-                    </Text>
-                </View>
-            ) : null} */}
+
     </>
   );
 };
@@ -205,20 +127,13 @@ AuthInputBoxSec.defaultProps = { mainContainer: {} };
 const styles = StyleSheet.create({
   textStyle: {
     backgroundColor: "gray",
-    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   mainContainer: {
     width: "90%",
-    //paddingLeft: 10,
-    //paddingRight: 10,
-    // borderBottomWidth: 0.5,
-    // borderBottomColor: "lightgrey",
-    //paddingVertical: 5,
     justifyContent: "center",
     alignSelf: "center",
-    // marginBottom: 10,
   },
   imgView: {
     width: "15%",
@@ -230,34 +145,27 @@ const styles = StyleSheet.create({
   },
   inputLayout: {
     width: "100%",
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
+    height: 50,
   },
   inputFieldStyle: {
-    flex: 1,
+    height: '100%',
     width: "100%",
     height: 48,
-    color: Colors.textblack,
-    fontSize: Font.placeholdersize,
+    color: Colors.Black,
+    fontSize: Font.medium,
     textAlign: config.textalign,
-    //height: (mobileW * 12) / 100,
-    fontFamily: Font.placeholderfontfamily,
-    borderRadius: (mobileW * 1) / 100,
-    padding: 0,
-    margin: 0,
+    fontFamily: Font.Regular,
     includeFontPadding: false,
-    backgroundColor: "white",
     lineHeight: 48,
-    // borderColor: 'red', //Colors.placeholder_border
   },
   errorLayout: {
     backgroundColor: "red",
     marginVertical: 6,
-    borderRadius: 5,
+    borderRadius: 8,
     padding: 5,
   },
   errorTxt: {
-    color: "white",
+    color: "White",
     fontWeight: "bold",
     fontSize: 12,
   },
