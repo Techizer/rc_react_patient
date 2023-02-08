@@ -51,10 +51,10 @@ const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
 const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
-      ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-  // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-  // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+      // ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
+      // : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -107,6 +107,7 @@ const CartDetails = ({ navigation }) => {
     isPaymentOption: false
   })
 
+  // otp.rejected@tabby.ai
   const customerPayment = {
     payment: {
       amount: statesData.cartDetails?.total_price,
@@ -208,6 +209,7 @@ const CartDetails = ({ navigation }) => {
 
   useEffect(() => {
     if (tabbyPayment == true) {
+      AsyncStorage.removeItem('cartId')
       resetState()
       setState({ modalvisible: true });
       setTimeout(() => {
@@ -217,10 +219,6 @@ const CartDetails = ({ navigation }) => {
     }
   }, [isFocused])
 
-  const getCartId = async () => {
-    let Id = await AsyncStorage.getItem('cartId')
-    console.log(Id);
-  }
   const setState = payload => {
     setStatesData(prev => ({
       ...prev,
@@ -406,12 +404,7 @@ const CartDetails = ({ navigation }) => {
       .then((obj) => {
         if (obj.status == true) {
           // console.log("obj", obj);
-          var message_new;
-          if (obj.result == null) {
-            message_new = obj.message;
-          } else {
-            message_new = obj.result;
-          }
+          AsyncStorage.removeItem('cartId')
           resetState()
           // dispatch(SelectedProvider(null))
           setTimeout(() => {

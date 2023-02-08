@@ -1,10 +1,5 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
-// import Spinner from "react-native-spinkit";
-// import { Colors } from "react-native/Libraries/NewAppScreen";
-// import { color } from "react-native-reanimated";
-// import { Color, Fonts } from "../utils";
-// import { RF } from "../utils/responsive";
 import { Colors, Icons, Font, windowHeight, config, windowWidth, } from '../Provider/Utils/Utils';
 const OutlinedButton = ({
   text,

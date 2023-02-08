@@ -33,7 +33,8 @@ const AboutAppBottomSheet = ({
                 container: {
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: 25,
+                    borderTopLeftRadius: 25,
+                    borderTopRightRadius:25,
                     paddingTop: vs(55),
                     paddingBottom: vs(20),
                     paddingHorizontal: s(13),

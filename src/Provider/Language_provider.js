@@ -20,7 +20,7 @@ class Language_provider {
   createnewaccountbtn = ["Create a new account", "انشاء حساب جديد"];
   swipe_text = ["Swipe right to left", " اسحب من اليمين إلى اليسار  "];
   Trouble_SignIn = ["Trouble signing in? Get Help?", "هل تواجه مشكلة في تسجيل الدخول؟ احصل على مساعدة؟"];
-  Skip = ["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
+  Skip = ["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول ومواصلة استكشاف التطبيق"]
   //---------------------splash------------------
   Splashtext1 = [
     "The best care, in the best place. We Take Pride In Being The Best.",
@@ -96,7 +96,7 @@ class Language_provider {
   ];
   //---------------home screen----------------
   MyDashboard = ["Home", " الرئيسية  "];
-  SearchDoctorHospitalsorLabetc = ["Search Doctor", "ابحث عن دكتور"];
+  SearchDoctorHospitalsorLabetc = ["Search Doctor", "ابحث عن طبيب"];
   HomeHealthcareServiceAppointments = [
     "Home Healthcare Service Appointment ",
     " مواعيد خدمة الرعاية الصحية المنزلية  ",
@@ -296,8 +296,8 @@ class Language_provider {
     "BOOK HOURLY APPOINTMENT",
     "حجز موعد بنظام الساعة  ",
   ];
-  BOOKLABTESTAPPOINTMENT = ["BOOK LAB TESTS", "احجز الاختبارات المعملية"];
-  BookLabPackage = ["BOOK LAB PACKAGE", "باقة معمل الكتاب"];
+  BOOKLABTESTAPPOINTMENT = ["BOOK LAB TESTS", "احجز فحوصات مختبر"];
+  BookLabPackage = ["BOOK LAB PACKAGE", "حجز باقة مختبر"];
   HealthPackages = ["Health Packages", "الباقات الصحية"];
   PackageDetails = ["Package Details", "تفاصيل الباقة"];
   TestsIncluded = ["Tests Included", "تشمل الفحوصات"];
@@ -356,7 +356,7 @@ class Language_provider {
   Bad_gateway = ["Bad gateway", "بوابة غير صالحة  "];
   Go_back = ["GO BACK", "الرجوع للخلف  "];
   Bookings = ["Bookings", "الحجوزات  "];
-  AddPatient = ["Add Patient", " أضف مريض    "];
+  AddPatient = ["Add Patient", " إضافة مريض    "];
   Booking_detail = ["Booking", "حجز "];
   Searchphysi = [
     "Search Physiotherapist near your address",
@@ -368,7 +368,7 @@ class Language_provider {
   ];
   SearchBabyCare = [
     "Search Baby Care near your address",
-    "ابحث عن جليسة الأطفال بالقرب من عنوانك",
+    "ابحث عن رعاية أطفال بالقرب من عنوانك",
   ];
   SearchDoctor = [
     "Search Doctor near your address",
@@ -440,7 +440,7 @@ class Language_provider {
   Notification = ["Notification", " الاشعارات   "];
   MyAppointments = ["My Appointments", "مواعيدي  "];
   rated = ["Rated", "تم التقييم  "];
-  Write_review = ["Write a Review", "أكتب مراجعة "];
+  Write_review = ["Write a Review", "قيِّم الخدمة "];
   ProvideUAE = [
     "Provide UAE Id number starting with number (7)",
     "أدخل رقم الهوية الاماراتية يبدأ برقم (7)",
@@ -479,7 +479,7 @@ class Language_provider {
   Howitworks = ["How it works", "How it works"];
   BookConsultation = ["BOOK CONSULTATION", "حجز استشارة "];
   NearBy = ["Near by", "قريب من"];
-  OtpTime = ['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلب مرة أخرى.'];
+  OtpTime = ['You have 60 seconds to enter the OTP, if you do not receive the OTP, request again.', 'لديك 60 ثانية لإدخال كلمة المرور لمرة واحدة ، إذا لم تستلم كلمة المرور لمرة واحدة ، اطلبها مرة أخرى.'];
   NeedSupport = ["Need Support", "تحتاج مساعدة"];
   Add_Address = ["Add This Address", "أضف هذا العنوان"];
   Saved_Address = ["Saved Addresses", "العناوين المحفوظة"];
@@ -496,11 +496,11 @@ class Language_provider {
   You = ["You", "أنت"];
   OtherMembers = ["Other Members", "أعضاء آخرون"];
   Upload_Photo = ["Upload a photo of the member", "قم بتحميل صورة العضو"];
-  Photo_Size = ["Max. Upload Size 10 MB", "الأعلى. حجم الرفع 10 ميجا بايت"];
+  Photo_Size = ["Max. Upload Size 10 MB", "أقصى. حجم للرفع 10 ميجا بايت"];
   Archive = ["ARCHIVE", "أرشيف"];
   Merge = ["MERGE", "دمج"];
   Default_Address = ["Default Address", "العنوان الافتراضي"];
-  Advance_Filter = ["Advance Filter", "فلتر متقدم"];
+  Advance_Filter = ["Advance Filter", "تصفية متقدمة"];
   Consult_Type = ["Consultation Type", "نوع الاستشارة"];
   Doc_Exp = ["Doctor Experience", "خبرة الطبيب"];
   Select_Nationality = ["Select Nationality", "اختر الجنسية"];
@@ -530,7 +530,7 @@ class Language_provider {
   Email = ["Email Id", "البريد الالكتروني"];
   PhoneNumber = ["Mobile Number", "رقم الهاتف المحمول"];
   LoginIssue = ["Login Issue", "مشكلة تسجيل الدخول"];
-  Login_Issue = ['Post Your Login issue', 'انشر مشكلة تسجيل الدخول الخاصة بك'];
+  Login_Issue = ['Post Your Login issue', 'ارسل مشكلة تسجيل الدخول الخاصة بك'];
   OrderId = ["Order ID", "رقم التعريف الخاص بالطلب"];
   Booking_Note = ['Booking Notes', 'ملاحظات الحجز'];
   Booking_Desc = ['Solutions and drugs to be injected are not included', 'لا تشمل المحاليل والأدوية المراد حقنها']
@@ -548,7 +548,7 @@ class Language_provider {
   noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
   noLabsTestsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
   guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
-  guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
+  guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو زائر']
 
   noNursesTitle = ['Sorry, no Nurse found.', 'عذرا ، لم يتم العثور على ممرضة'];
   noNursesDesc = ['We have not found any Nurses at your location, as soon as we are available we will notify you.', 'لم نعثر على أي ممرضات في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
@@ -559,11 +559,11 @@ class Language_provider {
   noPhysiotherapistsTitle = ['Sorry, no Physiotherapists found.', 'عذرا ، لم يتم العثور على أخصائيين علاج طبيعي'];
   noPhysiotherapistsDesc = ['We have not found any Physiotherapists at your location, as soon as we are available we will notify you.', 'لم نعثر على أي أخصائي علاج طبيعي في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
 
-  noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين ممرضات'];
-  noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين للممرضات في موقعك ، بمجرد تواجدنا سنبلغك '];
+  noNurseAssisTitle = ['Sorry, no Nurse Assistants found.', 'عذرا ، لم يتم العثور على مساعدين تمريض'];
+  noNurseAssisDesc = ['We have not found any Nurse Assistants at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مساعدين تمريض في موقعك ، بمجرد تواجدنا سنبلغك '];
 
-  noBabyCareTitle = ['Sorry, no Baby Sitters found.', 'عذرا ، لم يتم العثور على جليسات الأطفال'];
-  noBabyCareDesc = ['We have not found any Baby Sitters at your location, as soon as we are available we will notify you.', 'لم نعثر على أي جليسات أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
+  noBabyCareTitle = ['Sorry, no Baby care found.', 'عذرا ، لم يتم العثور على رعاية أطفال'];
+  noBabyCareDesc = ['We have not found any Baby care at your location, as soon as we are available we will notify you.', 'لم نعثر على أي رعاية أطفال في موقعك ، بمجرد تواجدنا سنبلغك بذلك'];
 
   noLabsTitle = ['Sorry, no Labs found.', 'عذرا ، لم يتم العثور على مختبرات'];
   noLabsDesc = ['We have not found any Labs at your location, as soon as we are available we will notify you.', 'لم نعثر على أي مختبرات في موقعك ، وبمجرد تواجدنا سنبلغك بذلك'];
@@ -584,7 +584,7 @@ class Language_provider {
   emptyOtpMsg = ['Please enter the OTP', 'الرجاء إدخال كلمة المرور لمرة واحدة']
   emptyName = ['Please enter your name!', 'الرجاء إدخال  الاسم  ']
   emptyEmail = ['Email can not be empty', 'لا يمكن أن يكون البريد الإلكتروني فارغًا  ']
-  validEmail = ['Please enter valid email id', 'الرجاء إدخال معرف بريد إلكتروني صالح  ']
+  validEmail = ['Please enter valid email id', 'الرجاء إدخال بريد إلكتروني صالح  ']
   emptymobileNumber = ['Please enter mobile number!', 'الرجاء إدخال رقم الهاتف المحمول  '];
   validmobileNumber = ['Invalid mobile number!', '<string name="رقم الهاتف المحمول غير صالح'];
   emptyid = ['Please provide ID Number!', 'الرجاء ادخال رقم الهوية '];
@@ -613,7 +613,7 @@ class Language_provider {
   emptyImage = ['Please Provide Image', 'يرجى إضافة الصورة']
   NoInternet = ['Please check your network connection', 'يرجى التحقق من اتصالك بالشبكة ']
   sucess_message_login = ['Login Successfully', 'تم تسجيل الدخول بنجاح']
-  emptyComingsoon = ['Coming Soon', 'Coming Soon']
+  emptyComingsoon = ['Coming Soon', 'قريباً']
   PaymentIntention = ['Payment Initiation', ' بدء الدفع ']
   validIDnumberUAE = ['Id number must start with 7', 'يجب أن يبدأ رقم الهوية بالرقم 7'];
   allergyName = ['Please enter Allergy Name', 'الرجاء إدخال اسم الحساسية'];
@@ -685,7 +685,7 @@ class Language_provider {
   lengthPassword = ['Password length should be minimum 8 character', 'يجب ألا يقل طول كلمة المرور عن 8 أحرف'];
   emptynewPassword = ['Please enter new password', 'الرجاء إدخال كلمة المرور الجديدة'];
   emptyconfirmPassword = ['Please enter new password', 'الرجاء إدخال كلمة المرور الجديدة'];
-  emptyconfirm = ['please enter right password', 'الرجاء إدخال كلمة المرور الصحيحة'];
+  emptyconfirm = ['please enter correct password', 'الرجاء إدخال كلمة المرور الصحيحة'];
   emptyFirstName = ['Please enter first name', 'الرجاء إدخال الاسم الأول'];
   emptyLastName = ['Please enter last name', 'الرجاء إدخال الاسم الأخير'];
   emptyPhone = ['Please enter phone number', 'الرجاء إدخال رقم الهاتف'];
@@ -693,8 +693,8 @@ class Language_provider {
   loginFirst = ['Please login first', 'الرجاء تسجيل الدخول أولاً'];
   emptyContactResion = ['Please select contact reason', ' الرجاء اختيار سبب الاتصال '];
   emptyContactMessage = ['Please enter message', 'الرجاء إدخال الرسالة'];
-  networkconnection = ['Unable to connect. Please check that you are connected to the Internet and try again.', 'Unable to connect. Please check that you are connected to the Internet and try again.'];
-  servermessage = ['An Unexpected error occured , Please try again .If the problem continues , Please do contact us', 'An Unexpected error occured , Please try again .If the problem continues , Please do contact us'];
+  networkconnection = ['Unable to connect. Please check that you are connected to the Internet and try again.', 'غير قادر على الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى'];
+  servermessage = ['An Unexpected error occurred, Please try again. If the problem continues, please contact us', 'حدث خطأ غير متوقع ، يرجى المحاولة مرة أخرى ، إذا استمرت المشكلة ، يرجى الاتصال بنا'];
 
   TaskBase = ['Task Based Appointment Booking', 'بالمُهمة حجز موعد'];
   TaskBaseTitle = ['Task Based | Appointment Booking', 'بالمُهمة | حجز موعد'];
@@ -711,5 +711,6 @@ class Language_provider {
   PaymentOneDesc = ['Pay full amount using your Credit Card', 'ادفع كامل المبلغ باستخدام بطاقتك الائتمانية']
   PaymentTwoTitle = ['Buy Now Pay Later by ', 'اشتر الآن وادفع لاحقًا عن طريق ']
   PaymentTwoDesc = ['Pay in 4 interest free payments', 'ادفع على 4 دفعات بدون فوائد']
+  RecordAudio=['Record your symptoms','سجل أعراضك']
 }
 export const LangProvider = new Language_provider();

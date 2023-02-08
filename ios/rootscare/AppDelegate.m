@@ -85,7 +85,11 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 }
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
-  completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
+  if (@available(iOS 14.0, *)) {
+    completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionList | UNNotificationPresentationOptionBanner);
+  } else {
+    // Fallback on earlier versions
+  }
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

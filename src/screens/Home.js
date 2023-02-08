@@ -21,7 +21,7 @@ import {
   apifuntion,
   msgProvider,
 } from "../Provider/Utils/Utils";
-
+import {AudioPlayer} from 'react-native-simple-audio-player';
 import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/Utils/Utils";
 import Styles from "../Styles";
@@ -143,7 +143,7 @@ const Home = ({ navigation }) => {
     if (guest == false) {
       getNotificationCount();
       getTopBanners()
-      CartId()
+      // CartId()
     }
     if (isLanguageUpdated) {
       UpdateLanguage()
@@ -256,6 +256,9 @@ const Home = ({ navigation }) => {
           defaultAddress={address?.address}
         />
 
+        <AudioPlayer
+          url={'https://file-examples.com/storage/feeb72b10363daaeba4c0c9/2017/11/file_example_MP3_700KB.mp3'}
+        />
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}

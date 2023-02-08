@@ -310,7 +310,7 @@ const AddandEditMembers = ({
                         onRequestClose()
                         resetState()
                         changeType('addMember')
-                    }}
+                    }} 
                     underlayColor={Colors.Highlight}
                     style={styles.closeContainer}
                 >
@@ -324,7 +324,7 @@ const AddandEditMembers = ({
                         alignSelf: 'flex-start',
                         color: Colors.darkText
 
-                    }}>{type === 'addMember' ? LangProvider.Add_New_Member[languageIndex] : type === 'editMember' ? LangProvider.Edit_Member[languageIndex] : ''}</Text>
+                    }}>{type == 'addMember' ? LangProvider.Add_New_Member[languageIndex] : type === 'editMember' ? LangProvider.Edit[languageIndex] : ''}</Text>
 
                 <KeyboardAwareScrollView
                     // keyboardOpeningTime={200}

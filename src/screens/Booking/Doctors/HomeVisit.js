@@ -36,10 +36,10 @@ import AudioRecorderPlayer, {
   AudioEncoderAndroidType,
   AudioSourceAndroidType,
 } from "react-native-audio-recorder-player";
+// import {AudioPlayer} from 'react-native-simple-audio-player';
 import RNFetchBlob from "rn-fetch-blob";
 import Slider from "@react-native-community/slider";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { AUDIO_STATUS, pausePlayer, startPlayer } from "../../../components/AudioManager";
 import SoundPlayer from "react-native-sound-player";
 import { Alert } from "react-native";
 import { s, vs } from "react-native-size-matters";
@@ -47,6 +47,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingSkeleton from "../../../components/LoadingSkeleton";
 import { useIsFocused } from "@react-navigation/native";
 import { TabbyPaymentStatus } from "../../../Redux/Actions";
+import VoiceRecorder from "../../../components/AudioRecordModal";
 var Sound = require("react-native-sound");
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
@@ -61,6 +62,7 @@ const HomeVisit = ({ navigation }) => {
   const dispatch = useDispatch()
   const [statesData, setStatesData] = useState({
     bookingDetails: null,
+    symptomText: '',
     time_Arr: [],
     bookingDetails: null,
     set_date: "",
@@ -92,7 +94,7 @@ const HomeVisit = ({ navigation }) => {
   const [playSeconds, setPlaySeconds] = useState(0);
   const [duration, setDuration] = useState(0);
   const [sliderIcon, setSliderIcon] = useState();
-  const [audioFile, setAudioFile] = useState();
+  const [audioFile, setAudioFile] = useState('');
   const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
 
   useEffect(() => {
@@ -113,34 +115,7 @@ const HomeVisit = ({ navigation }) => {
         setSliderIcon(source);
       }
     );
-    let _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
-      "FinishedPlaying",
-      ({ success }) => {
-        console.log("finished playing", success);
-      }
-    );
-    let _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
-      "FinishedLoading",
-      ({ success }) => {
-        console.log("finished loading", success);
-      }
-    );
-    let _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingFile",
-      ({ success, name, type }) => {
-        console.log("finished loading file", success, name, type);
-        SoundPlayer.play();
-      }
-    );
-    let _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingURL",
-      ({ success, url }) => {
-        console.log("finished loading url", success, url);
-      }
-    );
-    return () => {
-      sound = null;
-    };
+
   }, [isFocused]);
 
   useEffect(() => {
@@ -148,18 +123,15 @@ const HomeVisit = ({ navigation }) => {
       setState({ isLoadingDetails: false })
     }
   }, [statesData.bookingDetails])
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('blur', () => {
-  //     setTimeout(() => {
-  //       resetState()
-  //     }, 450);
-  //   });
-  //   return unsubscribe
-  // }, [])
+
 
   const resetState = () => {
+    setImageName('')
+    setAudioFile('')
+    setIsShowRecordingPanel(false)
     setState({
       bookingDetails: null,
+      symptomText: '',
       time_Arr: [],
       bookingDetails: null,
       set_date: "",
@@ -188,249 +160,30 @@ const HomeVisit = ({ navigation }) => {
   }
 
   const customStyle = inputFocus ? styles.textInputFocus : styles.textInput;
-  var dirs = RNFetchBlob.fs.dirs;
-  var path = Platform.select({
-    ios: "audio.m4a",
-    android: `${dirs.CacheDir}/audio.mp3`,
-  });
-  audioRecorderPlayer.setSubscriptionDuration(0.1); // optional. Default is 0.5
-
-  Sound.setCategory("Playback", true); // true = mixWithOthers
-
-  const audioSet = {
-    AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-    AudioSourceAndroid: AudioSourceAndroidType.MIC,
-    AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-    AVNumberOfChannelsKeyIOS: 2,
-    AVFormatIDKeyIOS: AVEncodingOption.aac,
-  };
-
-  const onSliderEditStart = () => {
-    sliderEditing = true;
-  };
-
-  const onSliderEditEnd = () => {
-    sliderEditing = false;
-  };
-
-  const onSliderEditing = (value) => {
-    if (sound && playState == 'pause' && !sliderEditing) {
-      sound.setCurrentTime(value);
-      setPlaySeconds(value);
-    }
-  };
-
-  const onStartPlay = async (isPlay = false) => {
-    console.log("path ", audioFile);
-    console.log("sound onStartPlay ", sound);
-    if (sound != null) {
-      playMusic();
-      sound.play(playComplete);
-      setPlayState("playing");
-    } else {
-      let recordingUrl = audioFile;
-      console.log("onStartPlay", recordingUrl);
-
-      sound = new Sound(recordingUrl, "", (error) => {
-        if (error) {
-          console.log("failed to load the sound", error);
-          return;
-        }
-        // loaded successfully
-        console.log(
-          "duration in seconds: " +
-          sound.getDuration() +
-          "number of channels: " +
-          sound.getNumberOfChannels()
-        );
-        setPlayState(isPlay ? "playing" : "paused");
-        setDuration(sound.getDuration());
-        if (isPlay) {
-          // Play the sound with an onEnd callback
-          playMusic();
-          sound.play(playComplete);
-        }
-      });
-    }
-  };
-
-  const playComplete = (success) => {
-    if (success) {
-      console.log("successfully finished playing");
-    } else {
-      console.log("playback failed due to audio decoding errors");
-      Alert.alert("Notice", "audio file error. (Error code : 2)");
-    }
-    if (timeout) {
-      clearInterval(timeout);
-    }
-    setPlayState("paused");
-    setPlaySeconds(0);
-    sound.setCurrentTime(0);
-  }
-
-  const playMusic = () => {
-    console.log(sound, sound.isLoaded());
-    timeout = setInterval(() => {
-
-      if (sound != null && sound.isLoaded() && !sliderEditing) {
-        sound.getCurrentTime((seconds, isPlaying) => {
-          setPlaySeconds(seconds);
-        });
-      }
-    }, 100);
-  }
-
-  const pause = () => {
-    console.log("sound ", sound);
-    if (sound != null) {
-      sound.pause();
-    }
-    setPlayState("paused");
-  };
-
-
-  const onStartRecord = async () => {
-    console.log("onStartRecord");
-    sound = null;
-    setPlayWidth(0);
-    if (Platform.OS === "android") {
-      try {
-        const grants = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-
-        console.log("write external storage", grants);
-
-        if (
-          grants["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants["android.permission.READ_EXTERNAL_STORAGE"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants["android.permission.RECORD_AUDIO"] ===
-          PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log("permissions granted");
-          // const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-          // audioRecorderPlayer.addRecordBackListener((e) => {
-          //   console.log("Recording . . . ", e.currentPosition);
-          //   setRecordSecs(e.currentPosition);
-          //   setRecordTime(
-          //     audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-          //   );
-          //   return;
-          // });
-          const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-          audioRecorderPlayer.addRecordBackListener((e) => {
-            // console.log("Recording . . . ", e.currentPosition);
-            // console.log("isRecording . . . ", e);
-            setStopped(false);
-            setRecording(true);
-            setRecordSecs(e.currentPosition);
-            setRecordTime(
-              audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-            );
-            // console.log("uri . . . ", uri);
-            return;
-          });
-        } else {
-          console.log("All required permissions not granted");
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
-        return;
-      }
-    } else {
-      const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-      audioRecorderPlayer.addRecordBackListener((e) => {
-        console.log("Recording . . . ", e.currentPosition);
-        setStopped(false);
-        setRecording(e.isRecording);
-        setRecordSecs(e.currentPosition);
-        setRecordTime(
-          audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-        );
-        console.log("uri . . . ", uri);
-        return;
-      });
-    }
-  };
-
-  const onStopRecord = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setRecordSecs(0);
-    setRecordTime("00:00");
-    setRecording(false);
-    setStopped(true);
-    setAudioFile(result);
-    console.log("result ", result);
-  };
 
   const Camerapopen = async () => {
     mediaprovider
       .launchCamera()
       .then((obj) => {
-        console.log(obj);
-        console.log(obj.path);
+        console.log('Camerapopen', obj);
         setMedialModal(false);
-        var fileName;
-        if (Platform.OS === "ios") {
-          fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
-        } else {
-          fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
-        }
-
+        setImageName(obj.path);
       }).catch((error) => {
         setMedialModal(false);
       });
   };
 
   const Galleryopen = () => {
-    mediaprovider
-      .launchGellery()
+    mediaprovider.launchGellery()
       .then((obj) => {
-        console.log(obj);
-        console.log(obj.path);
+        console.log('Galleryopen', obj)
         setMedialModal(false);
-        if (Platform.OS === "ios") {
-          setImageName(obj.filename);
-        } else {
-          var fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
-        }
+        setImageName(obj.path);
       })
       .catch((error) => {
         setMedialModal(false);
       });
   };
-
-  const getAudioTimeString = (seconds) => {
-    // console.log("seconds:: ", seconds);
-    const h = parseInt(seconds / (60 * 60));
-    const m = parseInt((seconds % (60 * 60)) / 60);
-    const s = parseInt(seconds % 60);
-
-    return (
-      (h < 10 ? "0" + h : h) +
-      ":" +
-      (m < 10 ? "0" + m : m) +
-      ":" +
-      (s < 10 ? "0" + s : s)
-    );
-  };
-
 
   const getDay = () => {
     var today = new Date();
@@ -584,7 +337,7 @@ const HomeVisit = ({ navigation }) => {
 
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -692,8 +445,7 @@ const HomeVisit = ({ navigation }) => {
         setTimeout(() => {
           setState({ Error_popup: true });
         }, 700);
-
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -734,24 +486,28 @@ const HomeVisit = ({ navigation }) => {
       data.append('distance', '')
     }
 
+    // if (statesData.symptomText != '') {
+    //   data.append("symptom_text", statesData.symptomText);
+    // }
 
-    if (statesData.prescriptionsImage != "") {
+    if (imageName != "") {
       data.append("upload_prescription", {
-        uri: statesData.prescriptionsImage,
+        uri: imageName,
         type: "image/jpg",
-        name: statesData.prescriptionsImage,
+        name: imageName,
       });
     }
 
-    if (statesData.symptomsRecording != "") {
+    if (audioFile != '') {
       data.append("symptom_recording", {
-        uri: statesData.symptomsRecording,
+        uri: audioFile,
         type: "audio/m4a",
-        name: statesData.symptomsRecording,
+        name: audioFile,
       });
     }
-
-
+    console.log(imageName)
+    console.log(audioFile)
+    console.log('API request data*************', data);
     // return
     apifuntion
       .postApi(url, data)
@@ -774,7 +530,7 @@ const HomeVisit = ({ navigation }) => {
       })
       .catch((error) => {
         setState({ isAddingToCart: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -791,8 +547,7 @@ const HomeVisit = ({ navigation }) => {
     }
     setState({ date_array: data });
   };
-  const currentTimeString = getAudioTimeString(playSeconds);
-  const durationString = getAudioTimeString(duration);
+
   var Details = statesData.bookingDetails;
 
   if (statesData.isLoadingDetails) {
@@ -1030,16 +785,6 @@ const HomeVisit = ({ navigation }) => {
             isShowRecordingPanle &&
             <View style={{ paddingVertical: vs(9), width: '100%', backgroundColor: Colors.White }}>
               <View style={{ paddingHorizontal: s(13), }}>
-                {/* <Text
-                  style={{
-                    fontFamily: Font.Medium,
-                    fontSize: Font.medium,
-                    alignSelf: 'flex-start',
-                    color: Colors.detailTitles
-                  }}>
-                  {LangProvider.TalkToDoctor[languageIndex]}
-                </Text> */}
-
                 <View
                   style={{
                     paddingVertical: vs(15),
@@ -1058,7 +803,7 @@ const HomeVisit = ({ navigation }) => {
                     }} >
                     <TouchableOpacity
                       onPress={() => {
-                        isRecording ? onStopRecord() : onStartRecord();
+
                       }}
                       style={{
                         justifyContent: "center",
@@ -1069,7 +814,7 @@ const HomeVisit = ({ navigation }) => {
                       }}>
                       <Image
                         resizeMode="contain"
-                        source={isRecording ? Icons.stop : Icons.mic}
+                        source={Icons.mic}
                         style={{
                           width: (windowWidth * 10) / 100,
                           height: (windowWidth * 10) / 100,
@@ -1083,51 +828,23 @@ const HomeVisit = ({ navigation }) => {
                         fontSize: Font.medium,
                         marginLeft: (windowWidth * 1) / 100,
                       }}>
-                      {recordTime}
+                      {'recordTime'}
                     </Text>
                   </View>
 
-                  {isStopped && (
+                  {!isStopped && (
                     <View
                       style={{
-                        width: "65%",
+                        width: "100%",
                         alignSelf: "center",
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
                         flexDirection: "row",
                       }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          playState == "paused" ? onStartPlay(true) : pause();
-                        }}
-                      >
-                        <Image
-                          source={
-                            playState == "paused" ? Icons.play : Icons.pause
-                          }
-                          style={{
-                            width: (windowWidth * 10) / 100,
-                            height: (windowWidth * 10) / 100,
-                          }}
-                        />
-                      </TouchableOpacity>
-                      <Slider
-                        onTouchStart={onSliderEditStart}
-                        onTouchEnd={onSliderEditEnd}
-                        onValueChange={onSliderEditing}
-                        value={playSeconds}
-                        maximumValue={duration}
-                        maximumTrackTintColor="gray"
-                        minimumTrackTintColor={Colors.Theme}
-                        thumbImage={sliderIcon}
-                        style={{
-                          flex: 1,
-                          alignSelf: "center",
-                          marginHorizontal: Platform.select({ ios: 5 }),
-                          height: (windowWidth * 10) / 100,
-                        }}
-                      />
+                      {/* <AudioPlayer
+                        url={}
+                      /> */}
                     </View>
                   )}
 
@@ -1165,6 +882,7 @@ const HomeVisit = ({ navigation }) => {
                     <TextInput
                       placeholder="Example symptoms… I am felling down, my head is paining from last 2 days."
                       onChangeText={(text) => {
+                        setState({ symptomText: text })
                       }}
                       onFocus={() => setInputFocus(true)}
                       onBlur={() => setInputFocus(false)}
@@ -1182,7 +900,6 @@ const HomeVisit = ({ navigation }) => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      // this.setState({ mediamodal: true });
                       setMedialModal(true);
                     }}
                     style={{
@@ -1208,6 +925,7 @@ const HomeVisit = ({ navigation }) => {
                         fontSize: Font.small,
                         color: Colors.darkText,
                         alignSelf: 'flex-start',
+                        width: '90%'
                       }}>
                       {imageName === ""
                         ? LangProvider.Upload[languageIndex]
@@ -1219,78 +937,6 @@ const HomeVisit = ({ navigation }) => {
 
             </View>
           }
-
-          {/* <View
-            style={{
-              width: "100%",
-              backgroundColor: "#fff",
-              paddingVertical: (windowWidth * 3) / 100,
-              marginBottom: (windowWidth * 1) / 100,
-            }}
-          >
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              data={statesData.hourList}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      BookHour(item, index)
-                    }}
-                    style={[
-                      {
-                        borderRadius: (windowWidth * 2) / 100,
-                        marginLeft: (windowWidth * 2) / 100,
-                        width: (windowWidth * 35) / 100,
-                        backgroundColor: "#fff",
-                      },
-                      item.status == true
-                        ? {
-                          borderColor: Colors.Theme,
-                          borderWidth: 1.5,
-                        }
-                        : { borderColor: "#DFDFDF", borderWidth: 1 },
-                    ]}
-                  >
-                    <View
-                      style={{
-                        backgroundColor: "#0168B3",
-                        borderTopLeftRadius: (windowWidth * 1.1) / 100,
-                        borderTopRightRadius: (windowWidth * 1.1) / 100,
-                        width: "100%",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          paddingVertical: (windowWidth * 1.5) / 100,
-                          color: Colors.White,
-                          fontFamily: Font.Medium,
-                          fontSize: (windowWidth * 3) / 100,
-                          textTransform: "uppercase",
-                          textAlign: "center",
-                        }}
-                      >
-                        {item.duration}
-                      </Text>
-                    </View>
-
-                    <Text
-                      style={{
-                        paddingVertical: (windowWidth * 2) / 100,
-                        fontFamily: Font.Medium,
-                        textAlign: "center",
-                        fontSize: Font.small,
-                      }}
-                    >
-                      {item.price} {statesData.currency_symbol}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View> */}
-
 
           {/* ------------------Date Time--------------- */}
           <View
@@ -1806,6 +1452,9 @@ const HomeVisit = ({ navigation }) => {
             setMedialModal(false);
             // this.setState({ mediamodal: false });
           }}
+        />
+        <VoiceRecorder
+          visible={true}
         />
       </View>
 
