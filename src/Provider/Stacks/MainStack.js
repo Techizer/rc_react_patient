@@ -165,12 +165,12 @@ const MainStack = () => {
 
         // When the application is in quite state and opened by clicking on notification.
         messaging().getInitialNotification().then(async remoteMessage => {
-                console.log('getInitialNotification', remoteMessage);
-                if (remoteMessage && remoteMessage.data?.type == "Logout") {
-                    logout();
-                }
+            console.log('getInitialNotification', remoteMessage);
+            if (remoteMessage && remoteMessage.data?.type == "Logout") {
+                logout();
+            }
 
-            });
+        });
 
         // When the application is in background and opened by clicking on notification.
         messaging().onNotificationOpenedApp(async remoteMessage => {
@@ -182,7 +182,7 @@ const MainStack = () => {
     };
 
     const showVideoCallAlert = (data) => {
-        console.log("showVideoCallAlert", data);
+        // console.log("showVideoCallAlert", data);
         var myData = {
             fromUserId: data.fromUserId,
             fromUserName: data.fromUserName,
@@ -216,8 +216,7 @@ const MainStack = () => {
                 } else {
                     return false;
                 }
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 console.log("-------- error ------- " + error);
             });
     };

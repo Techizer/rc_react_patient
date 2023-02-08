@@ -58,7 +58,8 @@ const OnGoing = (props) => {
           } else {
             tempArr.push({
               ...iterator,
-              videoCall: false
+              // videoCall: false
+              videoCall: true
             })
           }
         } else {
@@ -71,7 +72,8 @@ const OnGoing = (props) => {
       } else {
         tempArr.push({
           ...iterator,
-          videoCall: false
+          // videoCall: false
+          videoCall: true
         })
       }
     }
