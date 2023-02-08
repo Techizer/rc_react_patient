@@ -39,7 +39,6 @@ const VideoCall = (props) => {
   const [participants, setParticipants] = useState(new Map());
   const [videoTracks, setVideoTracks] = useState(new Map());
   const [token, setToken] = useState("");
-  const [callDetails, setCallDetails] = useState({});
   const twilioVideo = useRef(null);
   const [mins, setMins] = useState(-1);
   const [secs, setSecs] = useState(0);
@@ -52,8 +51,6 @@ const VideoCall = (props) => {
     } else {
       get_call_token("patient_to_doctor_video_call");
     }
-
-    console.log(props);
     // returned function will be called on component unmount
     return () => {
       // console.log("countTimeInterval", countTimeInterval, "timerId", timerId);
@@ -89,6 +86,86 @@ const VideoCall = (props) => {
     return () => clearInterval(timerId);
   }, [started, secs, mins]);
 
+  const _requestAudioPermission = () => {
+    return PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      {
+        title: "Need permission to access microphone",
+        message:
+          "To run this demo we need permission to access your microphone",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK",
+      }
+    );
+  };
+
+  const _requestCameraPermission = () => {
+    return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+      title: "Need permission to access camera",
+      message: "To run this demo we need permission to access your camera",
+      buttonNegative: "Cancel",
+      buttonPositive: "OK",
+    });
+  };
+
+  const get_call_token = async (callType) => {
+    let url = config.baseURL + "api-get-video-access-token-with-push-notification";
+    var data = new FormData();
+    data.append("fromUserId", loggedInUserDetails.user_id);
+    data.append("fromUserName", props.route.params.item.patient_name);
+    data.append("order_id", props.route.params.item.order_id);
+    data.append(
+      "room_name",
+      "rootvideo_room_" + props.route.params.item.provider_id + "_" + loggedInUserDetails.user_id
+    );
+    data.append("toUserId", props.route.params.item.provider_id);
+    data.append("toUserName", props.route.params.item.provider_name);
+    data.append("type", callType);
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        if (obj.status == true) {
+          // console.log("obj.result", obj.result);
+          setToken(obj.result.token);
+        } else {
+          console.log("obj.result", obj.result);
+          return false;
+        }
+      }).catch((error) => {
+        console.log("-------- error ------- " + error);
+      });
+  };
+
+  const get_incoming_call_token = async (callType) => {
+
+    let url = config.baseURL + "api-get-video-access-token";
+
+    var data = new FormData();
+    data.append("identity", loggedInUserDetails.user_id);
+    data.append("fromUserId", props.route.params.item.fromUserId);
+    data.append("fromUserName", props.route.params.item.fromUserName);
+    data.append("order_id", props.route.params.item.order_id);
+    data.append("room_name", props.route.params.item.room_name);
+    data.append("toUserId", props.route.params.item.toUserId);
+    data.append("toUserName", props.route.params.item.toUserName);
+    data.append("type", props.route.params.item.type);
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        if (obj.status == true) {
+          // console.log("obj.result", obj.result);
+          setToken(obj.result);
+        } else {
+          console.log("obj.result", obj.result);
+          return false;
+        }
+      }).catch((error) => {
+        console.log("-------- error ------- " + error);
+      });
+  };
+
   const callTimeCall = () => {
     setStarted(true)
   }
@@ -117,89 +194,7 @@ const VideoCall = (props) => {
     // get_call_token('patient_to_doctor_video_call_reject')
   };
 
-  const get_call_token = async (callType) => {
 
-    let apiname = "api-get-video-access-token-with-push-notification";
-
-    let apishow = apiname; 
-
-    let url = config.baseURL + apishow;
-
-    var data = new FormData();
-    data.append("fromUserId", loggedInUserDetails.user_id);
-    data.append("fromUserName", props.route.params.item.patient_name);
-    data.append("order_id", props.route.params.item.order_id);
-    data.append(
-      "room_name",
-      "rootvideo_room_" + props.route.params.item.provider_id + "_" + loggedInUserDetails.user_id
-    );
-    data.append("toUserId", props.route.params.item.provider_id);
-    data.append("toUserName", props.route.params.item.provider_name);
-    data.append("type", callType);
-
-
-    apifuntion
-      .postApi(url, data)
-      .then((obj) => {
-        if (obj.status == true) {
-          console.log("obj.result", obj.result);
-          setToken(obj.result.token);
-          setCallDetails(obj.result);
-        } else {
-          console.log("obj.result", obj.result);
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("-------- error ------- " + error);
-      });
-  };
-
-  const get_incoming_call_token = async (callType) => {
-    let apiname = "api-get-video-access-token";
-
-    let apishow = apiname;
-
-    let url = config.baseURL + apishow;
-
-    var data = new FormData();
-    data.append("identity", loggedInUserDetails.user_id);
-    data.append("fromUserId", props.route.params.item.fromUserId);
-    data.append("fromUserName", props.route.params.item.fromUserName);
-    data.append("order_id", props.route.params.item.order_id);
-    data.append("room_name", props.route.params.item.room_name);
-    data.append("toUserId", props.route.params.item.toUserId);
-    data.append("toUserName", props.route.params.item.toUserName);
-    data.append("type", props.route.params.item.type);
-
-    // var myData = JSON.stringify({
-    //   "fromUserId": "406",
-    //   "fromUserName": "Mohammad Nabi",
-    //   "order_id": "ORD22-4486588",
-    //   "room_name": "rootvideo_room_443_406",
-    //   "toUserId": "443", "toUserName": "Binay raut",
-    //   "type": "doctor_to_patient_video_call"
-    // });
-
-
-    apifuntion
-      .postApi(url, data)
-      .then((obj) => {
-        // apifuntion.postRawApi(url, myData).then((obj) => {
-        // this.setState({ appoinment_detetails: '' })
-        if (obj.status == true) {
-          console.log("obj.result", obj.result);
-          setToken(obj.result);
-          setCallDetails(obj.result);
-        } else {
-          console.log("obj.result", obj.result);
-          return false;
-        }
-      })
-      .catch((error) => {
-      console.log("-------- error ------- " + error);
-      });
-  };
 
   const _onConnectButtonPress = async () => {
     if (Platform.OS === "android") {
@@ -212,7 +207,7 @@ const VideoCall = (props) => {
       dominantSpeakerEnabled: true,
     });
     setStatus("connecting");
-    countTimeCall();
+    // countTimeCall();
   };
 
   const _onEndButtonPress = () => {
@@ -238,7 +233,7 @@ const VideoCall = (props) => {
   };
 
   const _onRoomDidConnect = () => {
-    setStatus("connected");
+    console.log('_onRoomDidConnect');
   };
 
   const _onRoomDidDisconnect = ({ error }) => {
@@ -269,7 +264,7 @@ const VideoCall = (props) => {
 
   const _onParticipantAddedVideoTrack = ({ participant, track }) => {
     console.log("onParticipantAddedVideoTrack: ", participant, track);
-
+    setStatus("connected");
     setVideoTracks(
       new Map([
         ...videoTracks,
@@ -325,27 +320,7 @@ const VideoCall = (props) => {
     );
   };
 
-  const _requestAudioPermission = () => {
-    return PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      {
-        title: "Need permission to access microphone",
-        message:
-          "To run this demo we need permission to access your microphone",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK",
-      }
-    );
-  };
 
-  const _requestCameraPermission = () => {
-    return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-      title: "Need permission to access camera",
-      message: "To run this demo we need permission to access your camera",
-      buttonNegative: "Cancel",
-      buttonPositive: "OK",
-    });
-  };
 
   return (
     <View style={style1.container}>
@@ -483,16 +458,16 @@ const VideoCall = (props) => {
         </View>
       )}
 
-        <TwilioVideo
-          ref={twilioVideo}
-          onRoomDidConnect={_onRoomDidConnect}
-          onRoomDidDisconnect={_onRoomDidDisconnect}
-          onRoomDidFailToConnect={_onRoomDidFailToConnect}
-          onParticipantAddedVideoTrack={_onParticipantAddedVideoTrack}
-          onParticipantRemovedVideoTrack={_onParticipantRemovedVideoTrack}
-          onNetworkQualityLevelsChanged={_onNetworkLevelChanged}
-          onDominantSpeakerDidChange={_onDominantSpeakerDidChange}
-        />
+      <TwilioVideo
+        ref={twilioVideo}
+        onRoomDidConnect={_onRoomDidConnect}
+        onRoomDidDisconnect={_onRoomDidDisconnect}
+        onRoomDidFailToConnect={_onRoomDidFailToConnect}
+        onParticipantAddedVideoTrack={_onParticipantAddedVideoTrack}
+        onParticipantRemovedVideoTrack={_onParticipantRemovedVideoTrack}
+        onNetworkQualityLevelsChanged={_onNetworkLevelChanged}
+        onDominantSpeakerDidChange={_onDominantSpeakerDidChange}
+      />
 
     </View>
   );
