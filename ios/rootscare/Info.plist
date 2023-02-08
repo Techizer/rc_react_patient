@@ -101,5 +101,46 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+
+	<key>branch_universal_link_domains</key>
+    <array>
+        <string>rootscare.app.link</string>
+        <string>rootscare-alternate.app.link</string>
+    </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>rootscare://</string>
+                <string>https</string>
+                <string>386042973026214</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>io.Branch.rootscare</string>
+        </dict>
+    </array>
+    <!-- <key>FacebookAppID</key>
+    <string>386042973026214</string>
+    <key>FacebookClientToken</key>
+    <string>1419e9115b4486caf5b2b14a0a38712f</string>
+    <key>FacebookDisplayName</key>
+    <string>Rootscare</string> -->
+    <!-- <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fb-messenger-share-api</string>
+    </array> -->
+    <key>branch_key</key>
+    <dict>
+        <key>live</key>
+        <string>key_live_gj9QxU2L4grOhDb89xQdwfkkBul8VJtL</string>
+        <!-- <key>test</key>
+        <string>key_test_pl5EWe1UNaOQyus7V2ipnasydFspH54C</string> -->
+    </dict>
 </dict>
+
 </plist>

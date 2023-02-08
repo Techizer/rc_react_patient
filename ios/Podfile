@@ -22,12 +22,14 @@ target 'rootscare' do
   )
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
-
+  pod 'react-native-branch', path: '../node_modules/react-native-branch'
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
+
+  # pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
 
   target 'rootscareTests' do
     inherit! :complete
@@ -39,7 +41,7 @@ target 'rootscare' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
-  use_flipper!()
+  use_flipper!({ "Flipper-DoubleConversion" => "1.1.7" })
 
   post_install do |installer|
     find_and_replace("./node_modules/react-native/React/Base/RCTKeyCommands.m",

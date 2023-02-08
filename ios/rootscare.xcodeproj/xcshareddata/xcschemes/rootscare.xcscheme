@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+               BlueprintIdentifier = "78DB05F229912796003DE548"
                BuildableName = "rootscare.app"
                BlueprintName = "rootscare"
                ReferencedContainer = "container:rootscare.xcodeproj">
@@ -38,6 +38,28 @@
                ReferencedContainer = "container:rootscare.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "78DB060B29912798003DE548"
+               BuildableName = "rootscareUITests.xctest"
+               BlueprintName = "rootscareUITests"
+               ReferencedContainer = "container:rootscare.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "78DB060129912797003DE548"
+               BuildableName = "rootscareTests.xctest"
+               BlueprintName = "rootscareTests"
+               ReferencedContainer = "container:rootscare.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -54,7 +76,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "78DB05F229912796003DE548"
             BuildableName = "rootscare.app"
             BlueprintName = "rootscare"
             ReferencedContainer = "container:rootscare.xcodeproj">
@@ -71,7 +93,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "78DB05F229912796003DE548"
             BuildableName = "rootscare.app"
             BlueprintName = "rootscare"
             ReferencedContainer = "container:rootscare.xcodeproj">
