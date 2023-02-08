@@ -1,8 +1,10 @@
 /**
  * @format
  */
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { AppRegistry, LogBox, Platform } from 'react-native';
+import messaging from "@react-native-firebase/messaging";
+
 import App from './App';
 import { name as appName } from './app.json';
 import { PersistGate } from 'redux-persist/lib/integration/react'
@@ -14,6 +16,12 @@ import { StatusbarHeight, windowWidth } from './src/Provider/Utils/Utils';
 
 
 export default function Main() {
+
+    useEffect(() => {
+        messaging().setBackgroundMessageHandler(async remoteMessage => {
+            console.log('setBackgroundMessageHandler', remoteMessage);
+        });
+    }, [])
     return (
         <Provider store={store}>
             <PersistGate persistor={persistor} >
@@ -26,7 +34,7 @@ export default function Main() {
                     marginTop: Platform.OS === 'ios' ? ((windowWidth * 10) / 100) : StatusbarHeight + 20,
                     fontSize: Font.medium,
                     fontFamily: Font.Medium,
-                    alignSelf:'flex-start'
+                    alignSelf: 'flex-start'
                 }}
                 position="top"
                 animated={true}
@@ -35,6 +43,7 @@ export default function Main() {
         </Provider>
     );
 };
+
 
 AppRegistry.registerComponent(appName, () => Main);
 

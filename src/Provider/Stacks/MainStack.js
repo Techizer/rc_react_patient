@@ -132,7 +132,6 @@ const MainStack = () => {
 
     };
 
-
     const messageListener = async () => {
         PushNotification.createChannel(
             {
@@ -162,6 +161,23 @@ const MainStack = () => {
                 message: remoteMessage.data.body,
                 userInfo: remoteMessage.data,
             });
+        });
+
+        // When the application is in quite state and opened by clicking on notification.
+        messaging().getInitialNotification().then(async remoteMessage => {
+                console.log('getInitialNotification', remoteMessage);
+                if (remoteMessage && remoteMessage.data?.type == "Logout") {
+                    logout();
+                }
+
+            });
+
+        // When the application is in background and opened by clicking on notification.
+        messaging().onNotificationOpenedApp(async remoteMessage => {
+            console.log('onNotificationOpenedApp', remoteMessage);
+            if (remoteMessage && remoteMessage.data?.type == "Logout") {
+                logout();
+            }
         });
     };
 

@@ -1,5 +1,6 @@
 import React, { Component, useEffect } from "react";
-import { I18nManager, Platform, StatusBar } from "react-native";
+import { I18nManager, Platform, StatusBar, AppState } from "react-native";
+
 // import { Settings } from 'react-native-fbsdk-next';
 import * as Sentry from "@sentry/react-native";
 import { Tabby } from 'tabby-react-native-sdk'
@@ -21,14 +22,38 @@ console.reportErrorsAsExceptions = false;
 
 // Settings.setAppID('386042973026214');
 const App = () => {
-
-
   const { appLanguage, restart } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(Restart(false))
     language_set()
   }, [appLanguage])
+
+  useEffect(() => {
+    // appStateSubscription = AppState.addEventListener(
+    //   "change",
+    //   nextAppState => {
+    //     console.log("nextAppState", nextAppState);
+    //     setState({ appState: nextAppState });
+    //     if (nextAppState == 'inactive' || nextAppState == 'background') {
+    //       if (statesData.isPaymentInitiate == true) {
+    //         startTime = '';
+    //       }
+    //     }
+    //     if (nextAppState === "active") {
+    //       var endTime = new Date();
+    //       var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
+    //       var resultInMinutes = Math.round(difference / 60000);
+    //       console.log({ resultInMinutes });
+    //       if (resultInMinutes >= 1) {
+    //         remove_cart('auto')
+    //       }
+    //     }
+
+    //   }
+    // );
+   
+  }, [])
 
   const language_set = async () => {
     console.log('setting layout direction.......');

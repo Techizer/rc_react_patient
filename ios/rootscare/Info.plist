@@ -20,7 +20,19 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>io.Branch.Rootscare</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>Rootscare</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -85,7 +97,9 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -100,31 +114,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  
-  <key>branch_universal_link_domains</key>
-  <array>
-    <string>rootscare.app.link</string>
-    <string>rootscare-alternate.app.link</string>
-  </array>
-  <key>CFBundleURLTypes</key>
-  <array>
-    <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>CFBundleURLName</key>
-      <string>io.Branch.Rootscare</string>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>Rootscare</string>
-      </array>
-    </dict>
-  </array>
 	<key>branch_key</key>
 	<dict>
 		<key>live</key>
 		<string>key_live_gj9QxU2L4grOhDb89xQdwfkkBul8VJtL</string>
 	</dict>
-	
-  
+	<key>branch_universal_link_domains</key>
+	<array>
+		<string>rootscare.app.link</string>
+		<string>rootscare-alternate.app.link</string>
+	</array>
 </dict>
 </plist>
