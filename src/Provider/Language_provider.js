@@ -492,6 +492,7 @@ class Language_provider {
   Delete = ["DELETE", "حذف   "];
   Add_Member = ["ADD MEMBER", "إضافة عضو"];
   Add_New_Member = ["ADD NEW MEMBER", "إضافة عضو جديد"];
+  Edit_Member = ["EDIT MEMBER", "تحرير العضو"];
   Members = ["MEMBERS", "عضو"];
   You = ["You", "أنت"];
   OtherMembers = ["Other Members", "أعضاء آخرون"];

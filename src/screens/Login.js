@@ -1,17 +1,13 @@
 import {
   Text,
-  Dimensions,
   View,
-  PermissionsAndroid,
   Platform,
   BackHandler,
   Alert,
-  ScrollView,
   TouchableHighlight,
   Image,
   TouchableOpacity,
   Keyboard,
-  StatusBar,
   I18nManager,
 } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
