@@ -28,7 +28,7 @@ const Tabs = createMaterialTopTabNavigator()
 
 const AppoitmentIndex = ({ navigation, route }) => {
 
-  const { todayAppointments, appLanguage, guest } = useSelector(state => state.StorageReducer)
+  const { todayAppointments, appLanguage, deviceConnection,guest } = useSelector(state => state.StorageReducer)
   const insets = useSafeAreaInsets()
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -97,7 +97,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
 
 
 
-
+     
 
     </View>
   );

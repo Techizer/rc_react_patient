@@ -4,6 +4,7 @@ import { View } from "react-native-animatable";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
+import NoInternet from "../components/NoInternet";
 import { dummyUser, leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {
@@ -19,14 +20,16 @@ import {
 
 const LabPackageListing = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, deviceConnection,appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
 
   const { providerId } = route?.params || '';
   const [labData, setLabData] = useState(null);
 
   useEffect(() => {
-    getPackageList();
-  }, []);
+    if(deviceConnection){
+      getPackageList();
+    }
+  }, [deviceConnection]);
 
   const getPackageList = async () => {
     let url = config.baseURL + "api-lab-package-list";
@@ -67,7 +70,7 @@ const LabPackageListing = ({ navigation, route }) => {
           backgroundColor: Colors.White,
           paddingBottom: vs(15),
           paddingHorizontal: s(11),
-          marginTop:vs(7)
+          marginTop: vs(7)
         }}
       >
         <View
@@ -258,6 +261,10 @@ const LabPackageListing = ({ navigation, route }) => {
             );
           }
         }}
+      />
+
+      <NoInternet
+        visible={!deviceConnection}
       />
     </View>
   );

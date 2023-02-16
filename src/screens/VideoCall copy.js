@@ -54,7 +54,7 @@ const DefaultTime = {
 
 const VideoCall = (props) => {
 
-  const { loggedInUserDetails, currentRoute, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
 
   var runtimeSecondsToDisconnectOnNoAnswer = 0
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
@@ -70,7 +70,6 @@ const VideoCall = (props) => {
 
 
   useEffect(() => {
-    console.log({ currentRoute });
     if (props.route.params.item.isPage == "accept") {
       getIncomingCallTokenFromAPI('doctor_to_patient_video_call')
       setStatus(Statuses.Connecting)
@@ -230,20 +229,17 @@ const VideoCall = (props) => {
   };
 
   const endCall = () => {
-    let canGoBack = props.navigation.canGoBack();
     twilioVideo.current.disconnect();
-    if (canGoBack) {
-      console.log('goBack...');
-      setTimeout(() => {
-        props.navigation.goBack()
-      }, 1000);
-    } else {
-      console.log('direct navigate...');
-      props.navigation.navigate(currentRoute)
-    }
+    setTimeout(() => {
+      //   props?.navigation?.reset({
+      //     index: 0,
+      //     routes: [{ name: "DashboardStack" }],
+      // });
+      props.navigation.goBack()
+    }, 1000);
   };
 
-  const oponentImage = config.img_url3 + ((props?.route?.params?.item?.image != undefined && props?.route?.params?.item?.image != '') ? props?.route?.params?.item?.image : callDetails?.Receiver?.message?.image)
+  const oponentImage = (props?.route?.params?.item?.image != '' && props?.route?.params?.item?.image != null) ? config.img_url3 + props?.route?.params?.item?.image : ''
   return (
     <View style={styles.container}>
 

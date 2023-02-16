@@ -42,6 +42,7 @@ import LoadingSkeleton from "../components/LoadingSkeleton";
 import PaymentOptionBottomSheet from "../components/PaymentOptionBottomSheet";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoInternet from "../components/NoInternet";
 
 
 let startTime = new Date();
@@ -53,8 +54,8 @@ const appCredentials = {
     Platform.OS == "ios"
       ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
       : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-  // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-  // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -65,10 +66,10 @@ const appCredentials = {
 
 const CartDetails = ({ navigation }) => {
 
-  const { loggedInUserDetails, languageIndex, cart, selectedProvider, tabbyPayment } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection, cart, selectedProvider, tabbyPayment } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const isFocused = useIsFocused()
-  state = {
+  const state = {
     appState: AppState.currentState
   };
 
@@ -177,26 +178,26 @@ const CartDetails = ({ navigation }) => {
   const myTestPayment = { merchant_code: loggedInUserDetails.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare', lang: 'en', ...customerPayment }
 
   useEffect(() => {
-
-    getCartInfo()
-    getPayStatus();
-    appStateSubscription = AppState.addEventListener(
+    console.log(moment(startTime).format('HH:mm:ss'))
+    let appStateSubscription = AppState.addEventListener(
       "change",
       nextAppState => {
         console.log("nextAppState", nextAppState);
         setState({ appState: nextAppState });
         if (nextAppState == 'inactive' || nextAppState == 'background') {
-          if (statesData.isPaymentInitiate == true) {
-            startTime = '';
-          }
+
         }
         if (nextAppState === "active") {
-          var endTime = new Date();
-          var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
-          var resultInMinutes = Math.round(difference / 60000);
-          console.log({ resultInMinutes });
-          if (resultInMinutes >= 1) {
-            remove_cart('auto')
+          if (startTime != '') {
+            console.log(moment(startTime).format('HH:mm:mm'));
+            var endTime = new Date();
+            console.log(moment(endTime).format('HH:mm:mm'));
+            var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
+            var resultInMinutes = Math.round(difference / 60000);
+            console.log({ resultInMinutes });
+            if (resultInMinutes >= 1) {
+              remove_cart('auto')
+            }
           }
         }
 
@@ -205,6 +206,13 @@ const CartDetails = ({ navigation }) => {
     return () => appStateSubscription.remove()
 
   }, [])
+
+  useEffect(() => {
+    if (deviceConnection) {
+      getCartInfo()
+      getPayStatus();
+    }
+  }, [deviceConnection])
 
   useEffect(() => {
     if (tabbyPayment == true) {
@@ -289,6 +297,7 @@ const CartDetails = ({ navigation }) => {
   const startSDK = () => {
     console.log('starting payment sdk....');
     setState({ isLoading: true, isPaymentInitiate: true })
+    startTime = ''
     var appCredentialsLocal = {
       appCredentials: appCredentials,
       sessionParameters: {
@@ -1009,9 +1018,9 @@ const CartDetails = ({ navigation }) => {
             btnStyle={{ width: windowWidth / 2.5 }}
             text={LangProvider.ProceedToPay[languageIndex]}
             onPress={() => {
-              // startSDK();
+              startSDK();
               // StartTabbySdk()
-              setState({ isPaymentOption: true })
+              // setState({ isPaymentOption: true })
             }}
           />
 
@@ -1195,6 +1204,9 @@ const CartDetails = ({ navigation }) => {
         }}
       />
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
     </View>
   );
 

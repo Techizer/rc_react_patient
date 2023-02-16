@@ -48,6 +48,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Rootscare would like to access your media library for photos. Your photos won't be shared without your permission. It is safe and secure.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Rootscare would like to access your Camera for profile or patient photos. Your photos won't be shared without your permission. It is safe and secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -97,9 +99,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
-		<string>location</string>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

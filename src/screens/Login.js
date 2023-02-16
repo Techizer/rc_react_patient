@@ -68,27 +68,26 @@ const Login = ({ navigation }) => {
   const passRef = useRef()
 
   useEffect(() => {
-    // console.log(
-    //   { appLanguage },
-    //   { deviceToken },
-    //   { deviceType },
-    //   { contentAlign },
-    //   { rememberMe },
-    //   { appVersion },
-    //   { credentials },
-    //   languageIndex
-    // );
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
+    navigation.addListener('focus', payload =>
+    {
+      console.log('event is registered...');
+     return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    }
+  );
+  navigation.addListener('blur', payload =>
+    {
+      console.log('event is removed...');
+      return BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    }
+  );
   }, [])
 
 
   useFocusEffect(
     React.useCallback(() => {
-      checkLocationPermission()
-
+      setTimeout(() => {
+        checkLocationPermission()
+      }, 1000);
       return () => {
         checkLocationPermission
       };
@@ -241,7 +240,7 @@ const Login = ({ navigation }) => {
   };
 
 
-  updateAddress = async (userId) => {
+  const updateAddress = async (userId) => {
 
     let url = config.baseURL + "api-patient-address-update";
     var data = new FormData();
@@ -287,16 +286,12 @@ const Login = ({ navigation }) => {
 
     Keyboard.dismiss();
 
-    var email = loginData.email.trim();
-    if (email.length <= 0 || email.length <= 0) {
+    if (loginData.email == '') {
       msgProvider.showError(LangProvider.emptyEmailmobile[languageIndex]);
       return false;
     }
 
-    if (
-      loginData.password.length <= 0 ||
-      loginData.password.trim().length <= 0
-    ) {
+    if (loginData.password == '') {
       msgProvider.showError(LangProvider.emptyPassword[languageIndex]);
       return false;
     }
@@ -313,7 +308,7 @@ const Login = ({ navigation }) => {
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
 
-    // console.log('login body...', data);
+    console.log('login body...', data);
 
     // return
 
@@ -326,11 +321,11 @@ const Login = ({ navigation }) => {
         }))
         console.log('login response.....', obj);
         if (obj.status == true) {
-          msgProvider.showSuccess(obj.message);
+          // msgProvider.showSuccess(obj.message);
           // if (address != null) {
-            if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
-              updateAddress(obj?.result?.user_id)
-            }
+          if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
+            updateAddress(obj?.result?.user_id)
+          }
           // }
           const credentials = {
             email: loginData.email,
@@ -528,18 +523,22 @@ const Login = ({ navigation }) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                dispatch(RememberMe(!rememberMe))
-                if (!rememberMe) {
-                  dispatch(UserCredentials(null))
+                if (loginData.email != '' && loginData.password != '') {
+                  dispatch(RememberMe(!rememberMe))
+                  if (!rememberMe) {
+                    dispatch(UserCredentials(null))
+                  }
                 }
               }}>
 
 
               <TouchableOpacity
                 onPress={() => {
-                  dispatch(RememberMe(!rememberMe))
-                  if (!rememberMe) {
-                    dispatch(UserCredentials(null))
+                  if (loginData.email != '' && loginData.password != '') {
+                    dispatch(RememberMe(!rememberMe))
+                    if (!rememberMe) {
+                      dispatch(UserCredentials(null))
+                    }
                   }
                 }}
                 style={{

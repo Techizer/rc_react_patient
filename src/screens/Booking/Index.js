@@ -73,19 +73,19 @@ const BookingIndex = ({ navigation, route }) => {
 
       <ScreenHeader
         title={
-          ((selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'task') || selectedProvider.providerType == 'physiotherapy')?
+          ((selectedProvider && selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'task') || selectedProvider.providerType == 'physiotherapy') ?
             LangProvider.TaskBaseTitle[languageIndex]
             :
-            ((selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'hour') || selectedProvider.providerType == 'caregiver' || selectedProvider.providerType == 'babysitter') ?
+            ((selectedProvider && selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'hour') || selectedProvider.providerType == 'caregiver' || selectedProvider.providerType == 'babysitter') ?
               LangProvider.HourBaseTitle[languageIndex]
               :
-              (selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'ONLINE_CONSULT') ?
+              (selectedProvider && selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'ONLINE_CONSULT') ?
                 LangProvider.OnlineConsultation[languageIndex]
                 :
-                (selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'HOME_VISIT_CONSULT') ?
+                (selectedProvider && selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'HOME_VISIT_CONSULT') ?
                   LangProvider.HomeVisitConsultation[languageIndex]
                   :
-                  (selectedProvider.providerType == 'lab' && selectedProvider.bookingType == 'test') ?
+                  (selectedProvider && selectedProvider.providerType == 'lab' && selectedProvider.bookingType == 'test') ?
                     LangProvider.Lab_Test_Booking[languageIndex]
                     :
                     LangProvider.Lab_Package_Booking[languageIndex]

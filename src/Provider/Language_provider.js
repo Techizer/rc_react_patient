@@ -72,13 +72,13 @@ class Language_provider {
   Country_code = ["Country Code", "مفتاح الدولة"];
   otp = ["OTP Verification Code", "رمز التحقق لمرة واحدة  "];
   otptext = [
-    "We have sent the code verification to your email",
-    "لقد أرسلنا رمز التحقق إلى بريدك الإلكتروني  ",
+    "We have sent the 4 digit verification code in your registered mobile number",
+    "لقد أرسلنا رمز التحقق المكون من 4 أرقام إلى رقم جوالك المسجل لدينا",
   ];
   submitbtntext = ["SUBMIT", "تأكيد "];
   signupbtntext = ["SIGN UP", " التسجيل  "];
-  notrectext = ["Not received code?", "لم يتم استلام الرمز؟  "];
-  sendagaintext = ["Send Again", "أعد الإرسال  "];
+  notrectext = ["Not received code?", "لم يتم استلام الرمز؟"];
+  sendagaintext = ["Send Again", "أعد الإرسال"];
   notlogin = [
     "Can't Login,Need help?",
     "لا يمكنك تسجيل الدخول ، تحتاج إلى مساعدة؟",
@@ -190,10 +190,10 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 3.6.3", "الإصدار 3.6.1"];
+  version = ["Version 3.6.5", "الإصدار 3.6.5"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
-  aboutrootcare = ["About Rootscare", "حول روتس كير "];
+  aboutrootcare = ["About Rootscare", "حول روتس كير "]; 
   privacy = ["Privacy Policy", "سياسة الخصوصية  "];
   needsupport = ["Need Support ?", "تحتاج مساعدة؟  "];
   nationality = ["Nationality", "  الجنسية  "];
@@ -514,6 +514,7 @@ class Language_provider {
   ContactUs = ["Contact Us", "اتصل بنا"];
   Orders = ['Orders', 'ترتيب'];
   Voice_Recording = ['Voice Recording', 'تسجيل صوتي'];
+  Record_Symptom = ['Record your symptom', 'سجل الأعراض الخاصة بك']
   Description = ['Description', 'وصف'];
   Appoitment_Issue = ['Post Your Appointment issue', 'ارسل مشكلة موعدك'];
   Subject = ['Subject', 'موضوع'];
@@ -712,5 +713,7 @@ class Language_provider {
   PaymentOneDesc = ['Pay full amount using your Credit Card', 'ادفع كامل المبلغ باستخدام بطاقتك الائتمانية']
   PaymentTwoTitle = ['Buy Now Pay Later by ', 'اشتر الآن وادفع لاحقًا عن طريق ']
   PaymentTwoDesc = ['Pay in 4 interest free payments', 'ادفع على 4 دفعات بدون فوائد']
+  SupportTitle=['Support ticket posted','تم نشر تذكرة الدعم']
+  SupportMsg=['Your support ticket is under review by Rootscare resolution team. You will soon receive notification on the status.','بطاقة الدعم الخاصة بك قيد المراجعة من قبل فريق حل Rootscare. ستتلقى قريبًا إشعارًا بالحالة.']
 }
 export const LangProvider = new Language_provider();

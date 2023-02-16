@@ -1,5 +1,5 @@
 
-export const Splash_Logo=`<svg xmlns="http://www.w3.org/2000/svg" width="161.015" height="276.995" viewBox="0 0 161.015 276.995">
+export const Splash_Logo = `<svg xmlns="http://www.w3.org/2000/svg" width="161.015" height="276.995" viewBox="0 0 161.015 276.995">
 <g id="Logo_splash_pot" transform="translate(-112.388 -128.069)">
   <g id="Group_1105" data-name="Group 1105" transform="translate(112.388 128.069)">
     <g id="Group_1068" data-name="Group 1068" transform="translate(0 0)">
@@ -97,11 +97,11 @@ export const leftArrow = `<svg xmlns="http://www.w3.org/2000/svg" width="6.418" 
 <path id="Subtraction_11" data-name="Subtraction 11" d="M.427,0A.427.427,0,0,0,0,.427a.421.421,0,0,0,.121.3L5.389,5.99.178,11.2l-.027.027a.426.426,0,0,0,.276.75.421.421,0,0,0,.3-.118l.089-.084L5.921,6.667l-.007-.007L6.287,6.3a.432.432,0,0,0,0-.62l-.373-.358.007-.007L.74.136.726.121A.439.439,0,0,0,.427,0Z" transform="translate(6.418 11.979) rotate(180)" fill="#0c1016"/>
 </svg>`
 
-export const leftWhiteArrow=`<svg xmlns="http://www.w3.org/2000/svg" width="6.414" height="11.977" viewBox="0 0 6.414 11.977">
+export const leftWhiteArrow = `<svg xmlns="http://www.w3.org/2000/svg" width="6.414" height="11.977" viewBox="0 0 6.414 11.977">
 <path id="arrow_menu_left" d="M.43,0A.431.431,0,0,0,0,.43.419.419,0,0,0,.121.723l5.27,5.27L.18,11.2.15,11.23a.423.423,0,0,0,.279.746.442.442,0,0,0,.293-.115l.088-.086L5.92,6.666l-.008-.008L6.285,6.3a.4.4,0,0,0,.129-.307.415.415,0,0,0-.129-.309l-.373-.359.008-.006L.738.135.723.121A.419.419,0,0,0,.43,0Z" transform="translate(6.414 11.977) rotate(180)" fill="#fff"/>
 </svg>`
 
-export const rightWhiteArrow=`<svg xmlns="http://www.w3.org/2000/svg" width="6.41" height="11.977" viewBox="0 0 6.41 11.977">
+export const rightWhiteArrow = `<svg xmlns="http://www.w3.org/2000/svg" width="6.41" height="11.977" viewBox="0 0 6.41 11.977">
 <path id="arrow_menu_right" d="M9828.426,12.979a.429.429,0,0,1-.424-.432.442.442,0,0,1,.115-.293l5.271-5.264-5.215-5.215-.027-.029a.4.4,0,0,1-.145-.314.428.428,0,0,1,.424-.43.469.469,0,0,1,.3.113l.086.086,5.105,5.107-.006.008.371.357a.433.433,0,0,1,.129.316.422.422,0,0,1-.129.307l-.371.359.006.006-5.178,5.18-.014.014A.431.431,0,0,1,9828.426,12.979Z" transform="translate(-9828.002 -1.002)" fill="#fff"/>
 </svg>`
 
@@ -206,29 +206,29 @@ export const dummyUser = `<svg xmlns="http://www.w3.org/2000/svg" width="86" hei
 </g>
 </svg>`
 
-export const Notification= `<svg xmlns="http://www.w3.org/2000/svg" width="15.707" height="19.758" viewBox="0 0 15.707 19.758">
+export const Notification = `<svg xmlns="http://www.w3.org/2000/svg" width="15.707" height="19.758" viewBox="0 0 15.707 19.758">
 <g id="Notification_Icon_bell" transform="translate(-344.045 -93.992)">
   <path id="Subtraction_42" data-name="Subtraction 42" d="M18404.354,18093a1.708,1.708,0,0,1-1.641-1.523h3.281A1.7,1.7,0,0,1,18404.354,18093Zm7.855-3.039H18396.5v-.666l1.9-2.023v-5.67a6.176,6.176,0,0,1,4.58-6.143l.189-.045v-.906a1.181,1.181,0,1,1,2.355,0v.906l.189.045a6.176,6.176,0,0,1,4.58,6.143v5.67l1.908,2.023v.666Zm-7.855-13.166a4.393,4.393,0,0,0-3.221,1.4,4.935,4.935,0,0,0-1.316,3.4v6.834h9.08v-6.834a4.939,4.939,0,0,0-1.322-3.4A4.4,4.4,0,0,0,18404.354,18076.795Z" transform="translate(-18052.457 -17979.25)" fill="#17181a"/>
 </g>
 </svg>`
 
-export const Star =`<svg xmlns="http://www.w3.org/2000/svg" width="7.393" height="7.356" viewBox="0 0 7.393 7.356">
+export const Star = `<svg xmlns="http://www.w3.org/2000/svg" width="7.393" height="7.356" viewBox="0 0 7.393 7.356">
 <path id="Path_1963" data-name="Path 1963" d="M3.777.958a.5.5,0,0,1,.9,0l.746,1.58a.5.5,0,0,0,.376.281l1.7.263a.5.5,0,0,1,.282.843L6.525,5.22a.5.5,0,0,0-.135.428l.29,1.8a.5.5,0,0,1-.735.518L4.47,7.153a.5.5,0,0,0-.482,0l-1.475.811a.5.5,0,0,1-.735-.518l.29-1.8a.5.5,0,0,0-.135-.428L.674,3.925a.5.5,0,0,1,.282-.843l1.7-.263a.5.5,0,0,0,.376-.281Z" transform="translate(-0.533 -0.672)" fill="#fff"/>
 </svg>`
 
-export const Clock=`<svg xmlns="http://www.w3.org/2000/svg" width="11.488" height="10.788" viewBox="0 0 11.488 10.788">
+export const Clock = `<svg xmlns="http://www.w3.org/2000/svg" width="11.488" height="10.788" viewBox="0 0 11.488 10.788">
 <path id="Path_6667" data-name="Path 6667" d="M3477.494,7515.539a5.044,5.044,0,0,1,0-10.088,5.044,5.044,0,0,1,0,10.088Zm.561-5.044v-2.8h-1.121v3.923h2.8V7510.5Zm-6.3-3.766,1.978-1.978.8.79-1.984,1.984Zm9.51-1.978,1.978,1.978-.79.8-1.984-1.984.8-.79Z" transform="translate(-3471.75 -7504.751)" fill="#515c6f"/>
 </svg>`
 
-export const clockBlue=`<svg xmlns="http://www.w3.org/2000/svg" width="13.5" height="12.677" viewBox="0 0 13.5 12.677">
+export const clockBlue = `<svg xmlns="http://www.w3.org/2000/svg" width="13.5" height="12.677" viewBox="0 0 13.5 12.677">
 <path id="Path_6667" data-name="Path 6667" d="M3478.5,7517.427a5.927,5.927,0,0,1,0-11.854,5.927,5.927,0,0,1,0,11.854Zm.659-5.927v-3.293h-1.317v4.61h3.293V7511.5Zm-7.409-4.426,2.325-2.324.935.928-2.331,2.332Zm11.176-2.324,2.324,2.324-.928.936-2.331-2.332.935-.928Z" transform="translate(-3471.75 -7504.75)" fill="#0888d1"/>
 </svg>`
 
-export const Location =`<svg xmlns="http://www.w3.org/2000/svg" width="9.795" height="11.27" viewBox="0 0 9.795 11.27">
+export const Location = `<svg xmlns="http://www.w3.org/2000/svg" width="9.795" height="11.27" viewBox="0 0 9.795 11.27">
 <path id="Path_11886" data-name="Path 11886" d="M3649.359,6028.359l-3.461,2.912-3.461-2.912a4.9,4.9,0,1,1,6.922,0Zm-3.461-1.285a2.171,2.171,0,1,0-1.541-.635A2.181,2.181,0,0,0,3645.9,6027.074Zm0-1.088a1.1,1.1,0,1,1,.768-.321A1.07,1.07,0,0,1,3645.9,6025.986Z" transform="translate(-3641.001 -6020)" fill="#515c6f"/>
 </svg>`
 
-export const Capsule=`<svg xmlns="http://www.w3.org/2000/svg" width="55.185" height="18.937" viewBox="0 0 55.185 18.937">
+export const Capsule = `<svg xmlns="http://www.w3.org/2000/svg" width="55.185" height="18.937" viewBox="0 0 55.185 18.937">
 <g id="Group_3610" data-name="Group 3610" transform="translate(-69.184 -186.204)">
   <path id="Path_10161" data-name="Path 10161" d="M89.938,186.719l-7.951-.027c-3.213-.011-6.475-.319-9.221,1.729a8.911,8.911,0,0,0,5.258,16.084c.885.013,1.77.006,2.655.009l9.234.032a.872.872,0,0,0,.694-.3.884.884,0,0,0,.259-.653l.021-13.913q0-1,0-2.009A.967.967,0,0,0,89.938,186.719ZM74.576,201.679a7.01,7.01,0,0,1,3.652-13.094c1.071,0,2.142.007,3.213.011l7.543.026q-.01,6.482-.02,12.963,0,.527,0,1.054l-6.382-.022C79.991,202.607,76.907,203.019,74.576,201.679Z" transform="translate(0)" fill="#0888d1"/>
   <path id="Path_10162" data-name="Path 10162" d="M123.811,216.038l-3.021-.01h-.283q0-1.1.008-2.2,0-.552,0-1.1a.23.23,0,0,0-.226-.228l-1.877-.006a.23.23,0,0,0-.228.226q-.005,1.51-.01,3.021,0,.141,0,.283l-2.2-.008-1.1,0a.23.23,0,0,0-.228.226q0,.939-.006,1.877a.227.227,0,0,0,.226.228l3.021.01h.283q0,1.1-.008,2.2,0,.552,0,1.1a.23.23,0,0,0,.226.228l1.877.006a.227.227,0,0,0,.228-.226q.005-1.51.01-3.021v-.283l2.2.008,1.1,0a.23.23,0,0,0,.228-.226q0-.939.006-1.877A.23.23,0,0,0,123.811,216.038Z" transform="translate(-38.237 -21.72)" fill="#0888d1"/>
@@ -237,15 +237,15 @@ export const Capsule=`<svg xmlns="http://www.w3.org/2000/svg" width="55.185" hei
 </g>
 </svg>`
 
-export const GoldStar=`<svg xmlns="http://www.w3.org/2000/svg" width="13.09" height="13.024" viewBox="0 0 13.09 13.024">
+export const GoldStar = `<svg xmlns="http://www.w3.org/2000/svg" width="13.09" height="13.024" viewBox="0 0 13.09 13.024">
 <path id="Path_1963" data-name="Path 1963" d="M6.277,1.179a.885.885,0,0,1,1.6,0l1.32,2.8a.885.885,0,0,0,.665.5l3.009.467a.885.885,0,0,1,.5,1.492L11.143,8.725a.885.885,0,0,0-.239.758l.513,3.185a.885.885,0,0,1-1.3.916L7.5,12.147a.885.885,0,0,0-.853,0L4.039,13.584a.885.885,0,0,1-1.3-.916l.513-3.185a.885.885,0,0,0-.239-.758L.784,6.432a.885.885,0,0,1,.5-1.492l3.009-.467a.885.885,0,0,0,.665-.5Z" transform="translate(-0.533 -0.672)" fill="#ffa800"/>
 </svg>`
 
-export const GreyStar=`<svg xmlns="http://www.w3.org/2000/svg" width="16.042" height="16.042" viewBox="0 0 16.042 16.042">
+export const GreyStar = `<svg xmlns="http://www.w3.org/2000/svg" width="16.042" height="16.042" viewBox="0 0 16.042 16.042">
 <path id="Polygon_69" data-name="Polygon 69" d="M7.569.958a.5.5,0,0,1,.9,0l1.921,4.071a.5.5,0,0,0,.376.281l4.316.669a.5.5,0,0,1,.282.843l-3.148,3.241a.5.5,0,0,0-.135.428l.731,4.541a.5.5,0,0,1-.735.518l-3.819-2.1a.5.5,0,0,0-.482,0l-3.819,2.1a.5.5,0,0,1-.735-.518l.731-4.541a.5.5,0,0,0-.135-.428L.674,6.822a.5.5,0,0,1,.282-.843L5.272,5.31a.5.5,0,0,0,.376-.281Z" fill="#dfdfdf"/>
 </svg>`
 
-export const dummyDoc=`<svg xmlns="http://www.w3.org/2000/svg" width="21.472" height="21.472" viewBox="0 0 21.472 21.472">
+export const dummyDoc = `<svg xmlns="http://www.w3.org/2000/svg" width="21.472" height="21.472" viewBox="0 0 21.472 21.472">
 <g id="Group_3084" data-name="Group 3084" transform="translate(-59.558 -113.353)">
   <path id="Path_9376" data-name="Path 9376" d="M10.736,0A10.736,10.736,0,1,1,0,10.736,10.736,10.736,0,0,1,10.736,0Z" transform="translate(59.558 113.353)" fill="rgba(255,255,255,0.32)"/>
   <g id="Group_3083" data-name="Group 3083" transform="translate(62.08 116.655)">
@@ -281,11 +281,11 @@ export const dummyDoc=`<svg xmlns="http://www.w3.org/2000/svg" width="21.472" he
 </g>
 </svg>`
 
-export const Filter=`<svg xmlns="http://www.w3.org/2000/svg" width="19.03" height="12.687" viewBox="0 0 19.03 12.687">
+export const Filter = `<svg xmlns="http://www.w3.org/2000/svg" width="19.03" height="12.687" viewBox="0 0 19.03 12.687">
 <path id="Filter_icon" d="M3424.4,7968.687h4.229v-2.114H3424.4ZM3417,7956v2.114h19.03V7956Zm3.172,7.4h12.687v-2.114h-12.687Z" transform="translate(-3417 -7956)" fill="#fff"/>
 </svg>`
 
-export const BlackFilter=`<svg xmlns="http://www.w3.org/2000/svg" width="17.285" height="15" viewBox="0 0 17.285 15">
+export const BlackFilter = `<svg xmlns="http://www.w3.org/2000/svg" width="17.285" height="15" viewBox="0 0 17.285 15">
 <g id="Filter" transform="translate(-344 -97)">
   <path id="Line_227" data-name="Line 227" d="M17.285,1.5H0v-3H17.285Z" transform="translate(344 98.5)" fill="#354052"/>
   <path id="Line_228" data-name="Line 228" d="M9.975,1.5H0v-3H9.975Z" transform="translate(348 104.5)" fill="#354052"/>
@@ -293,11 +293,11 @@ export const BlackFilter=`<svg xmlns="http://www.w3.org/2000/svg" width="17.285"
 </g>
 </svg>`
 
-export const Search=`<svg xmlns="http://www.w3.org/2000/svg" width="13.742" height="13.742" viewBox="0 0 13.742 13.742">
+export const Search = `<svg xmlns="http://www.w3.org/2000/svg" width="13.742" height="13.742" viewBox="0 0 13.742 13.742">
 <path id="search_icon" d="M15450.078,16047.479l-2.683-2.683a5.9,5.9,0,0,1-3.56,1.172,5.985,5.985,0,1,1,5.988-5.984,5.929,5.929,0,0,1-1.172,3.56l2.678,2.683a.886.886,0,1,1-1.252,1.253Zm-10.451-7.5a4.21,4.21,0,1,0,4.209-4.209A4.215,4.215,0,0,0,15439.627,16039.983Z" transform="translate(-15437.851 -16033.998)" fill="#fff"/>
 </svg>`
 
-export const Cross=`<svg xmlns="http://www.w3.org/2000/svg" width="18.546" height="19" viewBox="0 0 18.546 19">
+export const Cross = `<svg xmlns="http://www.w3.org/2000/svg" width="18.546" height="19" viewBox="0 0 18.546 19">
 <g id="Group_1088" data-name="Group 1088" transform="translate(1 1)">
   <g id="Rectangle_2" data-name="Rectangle 2" transform="translate(-1 -1)" fill="#dbdbdb" stroke="#354052" stroke-width="1">
     <rect width="18.546" height="19" rx="9.273" stroke="none"/>
@@ -307,15 +307,15 @@ export const Cross=`<svg xmlns="http://www.w3.org/2000/svg" width="18.546" heigh
 </g>
 </svg>`
 
-export const Edit =`<svg xmlns="http://www.w3.org/2000/svg" width="12.2" height="12.2" viewBox="0 0 12.2 12.2">
+export const Edit = `<svg xmlns="http://www.w3.org/2000/svg" width="12.2" height="12.2" viewBox="0 0 12.2 12.2">
 <path id="ic_mode_edit_24px" d="M3,12.656V15.2H5.541l7.5-7.5L10.5,5.161ZM15,5.737a.675.675,0,0,0,0-.956L13.416,3.2a.675.675,0,0,0-.956,0l-1.24,1.24,2.541,2.541L15,5.737Z" transform="translate(-3 -2.997)" fill="#354052"/>
 </svg>`
 
-export const Address =`<svg xmlns="http://www.w3.org/2000/svg" width="14.081" height="17" viewBox="0 0 14.081 17">
+export const Address = `<svg xmlns="http://www.w3.org/2000/svg" width="14.081" height="17" viewBox="0 0 14.081 17">
 <path id="Path_6099" data-name="Path 6099" d="M3312.041,5197l-4.976-4.983a7.047,7.047,0,1,1,9.951,0Zm3.873-6.086a5.482,5.482,0,1,0-7.745,0l3.872,3.873Zm-3.873-2.308a1.575,1.575,0,1,1,1.1-.461A1.538,1.538,0,0,1,3312.041,5188.605Z" transform="translate(-3305 -5180)" fill="#17181a"/>
 </svg>`
 
-export const Add =`<svg xmlns="http://www.w3.org/2000/svg" width="10.221" height="10.221" viewBox="0 0 10.221 10.221">
+export const Add = `<svg xmlns="http://www.w3.org/2000/svg" width="10.221" height="10.221" viewBox="0 0 10.221 10.221">
 <path id="ic_add_24px" d="M15.221,10.84H10.84v4.38H9.38V10.84H5V9.38H9.38V5h1.46V9.38h4.38Z" transform="translate(-5 -5)" fill="#0888d1"/>
 </svg>`
 
@@ -323,30 +323,30 @@ export const Menu = `<svg xmlns="http://www.w3.org/2000/svg" width="2.75" height
 <path id="ic_more_vert_24px" d="M11.375,6.75A1.375,1.375,0,1,0,10,5.375,1.379,1.379,0,0,0,11.375,6.75Zm0,1.375A1.375,1.375,0,1,0,12.75,9.5,1.379,1.379,0,0,0,11.375,8.125Zm0,4.125a1.375,1.375,0,1,0,1.375,1.375A1.379,1.379,0,0,0,11.375,12.25Z" transform="translate(-10 -4)" fill="#354052"/>
 </svg>`
 
-export const whiteStar=`<svg xmlns="http://www.w3.org/2000/svg" width="12.042" height="12.042" viewBox="0 0 12.042 12.042">
+export const whiteStar = `<svg xmlns="http://www.w3.org/2000/svg" width="12.042" height="12.042" viewBox="0 0 12.042 12.042">
 <path id="Polygon_65" data-name="Polygon 65" d="M5.569.958a.5.5,0,0,1,.9,0l1.3,2.757A.5.5,0,0,0,8.15,4l2.936.455a.5.5,0,0,1,.282.843L9.216,7.508a.5.5,0,0,0-.135.428l.5,3.095a.5.5,0,0,1-.735.518l-2.583-1.42a.5.5,0,0,0-.482,0L3.2,11.548a.5.5,0,0,1-.735-.518l.5-3.095a.5.5,0,0,0-.135-.428L.674,5.294a.5.5,0,0,1,.282-.843L3.892,4a.5.5,0,0,0,.376-.281Z" fill="#fff"/>
 </svg>`
 
-export const VideoCall=`<svg xmlns="http://www.w3.org/2000/svg" width="12.308" height="12" viewBox="0 0 12.308 12">
+export const VideoCall = `<svg xmlns="http://www.w3.org/2000/svg" width="12.308" height="12" viewBox="0 0 12.308 12">
 <path id="video_call" data-name="video call" d="M3421.385,8811.461l1.846-1.384v3.692l-1.846-1.385v1.385h-4.308v-3.692h4.308Zm-5.071,4.154h8.763v-7.385h-9.846v8.24Zm.425,1.23L3414,8819v-11.385a.61.61,0,0,1,.615-.615h11.077a.61.61,0,0,1,.615.615v8.615a.609.609,0,0,1-.615.615Z" transform="translate(-3414 -8807)" fill="#fff"/>
 </svg>`
 
-export const rightBlue=`<svg xmlns="http://www.w3.org/2000/svg" width="4.892" height="8.561" viewBox="0 0 4.892 8.561">
+export const rightBlue = `<svg xmlns="http://www.w3.org/2000/svg" width="4.892" height="8.561" viewBox="0 0 4.892 8.561">
 <path id="back" d="M4.892,4.282h0a.609.609,0,0,1-.187.44h0L1.036,8.392l0,0a.611.611,0,1,1-.821-.905l3.2-3.2L.171,1.036h0A.611.611,0,0,1,1.036.171h0L4.705,3.84h0a.609.609,0,0,1,.187.44Z" fill="#0888d1"/>
 </svg>`
 
-export const contactUs=`<svg xmlns="http://www.w3.org/2000/svg" width="23.7" height="23.7" viewBox="0 0 23.7 23.7">
+export const contactUs = `<svg xmlns="http://www.w3.org/2000/svg" width="23.7" height="23.7" viewBox="0 0 23.7 23.7">
 <path id="Support-icon" d="M5090.451-3525.7a11.864,11.864,0,0,1-11.851-11.85,11.864,11.864,0,0,1,11.851-11.85,11.863,11.863,0,0,1,11.849,11.85A11.863,11.863,0,0,1,5090.451-3525.7Zm-2.305-6.549L5085-3529.1l.351.208a10,10,0,0,0,5.1,1.395,10.006,10.006,0,0,0,5.1-1.395l.351-.208-3-3-.144-.145-.19.073a5.972,5.972,0,0,1-2.116.391,5.962,5.962,0,0,1-2.114-.391l-.189-.073ZM5098.9-3543l-3,3-.146.144.074.193a5.854,5.854,0,0,1,.393,2.113,5.849,5.849,0,0,1-.393,2.112l-.074.193,2.859,2.857.288.289.208-.351a9.994,9.994,0,0,0,1.393-5.1,10,10,0,0,0-1.393-5.1l-.208-.351ZM5082-3543h0l-.208.349a10,10,0,0,0-1.4,5.1,9.965,9.965,0,0,0,1.4,5.1l.209.348,3.144-3.145-.071-.19a5.936,5.936,0,0,1-.394-2.114,5.854,5.854,0,0,1,.393-2.113l.074-.193L5082-3543Zm8.447,1.484a3.941,3.941,0,0,0-2.8,1.163,3.94,3.94,0,0,0-1.163,2.8,3.94,3.94,0,0,0,1.163,2.8,3.941,3.941,0,0,0,2.8,1.163,3.937,3.937,0,0,0,2.8-1.163,3.937,3.937,0,0,0,1.164-2.8,3.937,3.937,0,0,0-1.164-2.8A3.938,3.938,0,0,0,5090.451-3541.517Zm0-1.8a5.856,5.856,0,0,1,2.113.393l.19.074L5095.9-3546l-.351-.208a10,10,0,0,0-5.1-1.394,10,10,0,0,0-5.1,1.394L5085-3546l3.146,3.145.189-.072A5.936,5.936,0,0,1,5090.451-3543.318Z" transform="translate(-5078.6 3549.4)" fill="#0888d1"/>
 </svg>`
 
-export const roundCheck=`<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+export const roundCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
 <g id="roundCheckBox" transform="translate(-23 -469)">
   <rect id="Rectangle_1553" data-name="Rectangle 1553" width="14" height="14" rx="7" transform="translate(23 469)" fill="#0888d1"/>
   <path id="Path_23" data-name="Path 23" d="M5.408,4.941h0a.321.321,0,0,0-.1-.232h0L.545.089h0A.322.322,0,1,0,.112.566L4.631,4.941,2.922,6.65h0a.322.322,0,0,0,.455.455h0L5.309,5.174h0a.321.321,0,0,0,.1-.232Z" transform="translate(33.757 473.732) rotate(90)" fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
 </g>
 </svg>`
 
-export const redNoti=`<svg xmlns="http://www.w3.org/2000/svg" width="17.672" height="20.26" viewBox="0 0 17.672 20.26">
+export const redNoti = `<svg xmlns="http://www.w3.org/2000/svg" width="17.672" height="20.26" viewBox="0 0 17.672 20.26">
 <g id="Bell" transform="translate(-343.792 -51.74)">
   <g id="Group_34" data-name="Group 34" transform="translate(0 -42)">
     <path id="notifications" d="M11.1,22.26a1.975,1.975,0,0,0,1.907-2.026H9.2A1.975,1.975,0,0,0,11.1,22.26Zm6.2-6.078V10.61a6.448,6.448,0,0,0-4.767-6.382V3.519A1.514,1.514,0,0,0,11.1,2a1.514,1.514,0,0,0-1.43,1.519v.709A6.448,6.448,0,0,0,4.907,10.61v5.571L3,18.208v1.013H19.208V18.208Zm-1.907,1.013H6.814V10.61A4.412,4.412,0,0,1,11.1,6.052a4.412,4.412,0,0,1,4.29,4.558Z" transform="translate(340.792 91.74)" fill="#848a93"/>
@@ -358,7 +358,7 @@ export const redNoti=`<svg xmlns="http://www.w3.org/2000/svg" width="17.672" hei
 </g>
 </svg>`
 
-export const Login=`<svg xmlns="http://www.w3.org/2000/svg" width="19.218" height="23" viewBox="0 0 19.218 23">
+export const Login = `<svg xmlns="http://www.w3.org/2000/svg" width="19.218" height="23" viewBox="0 0 19.218 23">
 <g id="Signin" transform="translate(0.5 0.5)">
   <rect id="Rectangle_1916" data-name="Rectangle 1916" width="9" height="18" transform="translate(7 1)" fill="#c9e7f9"/>
   <path id="Path_151" data-name="Path 151" d="M16.943,2.276V19.724H6.069V22H19.218V0H6.069V2.276Z" transform="translate(-1)" fill="#515c6f" stroke="#fff" stroke-width="1"/>
@@ -366,7 +366,7 @@ export const Login=`<svg xmlns="http://www.w3.org/2000/svg" width="19.218" heigh
 </g>
 </svg>`
 
-export const Info=`<svg id="info" xmlns="http://www.w3.org/2000/svg" width="21.288" height="21.288" viewBox="0 0 21.288 21.288">
+export const Info = `<svg id="info" xmlns="http://www.w3.org/2000/svg" width="21.288" height="21.288" viewBox="0 0 21.288 21.288">
 <g id="Group_3921" data-name="Group 3921" transform="translate(0 0)">
   <g id="Group_3920" data-name="Group 3920">
     <path id="Path_11895" data-name="Path 11895" d="M10.644,0A10.644,10.644,0,1,0,21.288,10.644,10.638,10.638,0,0,0,10.644,0Zm0,19.8A9.159,9.159,0,1,1,19.8,10.644,9.169,9.169,0,0,1,10.644,19.8Z" transform="translate(0 0)" fill="#0168b3"/>
@@ -384,7 +384,7 @@ export const Info=`<svg id="info" xmlns="http://www.w3.org/2000/svg" width="21.2
 </g>
 </svg>`
 
-export const Tap=`<svg xmlns="http://www.w3.org/2000/svg" width="69.569" height="29.673" viewBox="0 0 69.569 29.673">
+export const Tap = `<svg xmlns="http://www.w3.org/2000/svg" width="69.569" height="29.673" viewBox="0 0 69.569 29.673">
 <g id="Tap_Payments" transform="translate(-4.275 -4.275)">
   <g id="Group_4168" data-name="Group 4168" transform="translate(43.804 12.429)">
     <path id="Path_12058" data-name="Path 12058" d="M135.706,838.9h.707v3.062h4.756v.662H136.42v5.95c0,2.543.811,3.867,2.861,3.867a3.1,3.1,0,0,0,1.784-.584l.292.564a3.9,3.9,0,0,1-2.206.688c-2.446,0-3.452-1.492-3.452-4.308v-9.9Z" transform="translate(-135.7 -838.9)" fill="#292929"/>
@@ -398,7 +398,7 @@ export const Tap=`<svg xmlns="http://www.w3.org/2000/svg" width="69.569" height=
 </g>
 </svg>`
 
-export const Tabby=`<svg xmlns="http://www.w3.org/2000/svg" width="71.389" height="22.42" viewBox="0 0 71.389 22.42">
+export const Tabby = `<svg xmlns="http://www.w3.org/2000/svg" width="71.389" height="22.42" viewBox="0 0 71.389 22.42">
 <g id="svgviewer-output" transform="translate(-2.477 -8.956)">
   <path id="Path_12064" data-name="Path 12064" d="M118.629,16.873l-4.689,17.9-.011.041h3.652l4.706-17.942Z" transform="translate(-48.42 -3.44)" fill="#292929"/>
   <path id="Path_12065" data-name="Path 12065" d="M13.831,23.622a3.953,3.953,0,0,1-1.761.407c-1.315,0-2.061-.21-2.143-1.273v-.072c0-.042,0-.08,0-.129v-3.1l0-.364V16.912h0v-.928l0-.368V13.51l-3.262.43a4.077,4.077,0,0,0,3.472-3.913V8.956H6.473v5.012l-.207.058v9.282c.121,2.608,1.839,4.158,4.659,4.158a7.463,7.463,0,0,0,2.934-.608l.019-.008V23.594Z" transform="translate(-1.646)" fill="#292929"/>
@@ -411,10 +411,135 @@ export const Tabby=`<svg xmlns="http://www.w3.org/2000/svg" width="71.389" heigh
 </g>
 </svg>`
 
+export const NoInternetConnection = `<svg xmlns="http://www.w3.org/2000/svg" width="138.001" height="133.746" viewBox="0 0 138.001 133.746">
+<g id="No_internet_svg" data-name="No internet svg" transform="translate(-539.828 -213.786)" style="mix-blend-mode: normal;isolation: isolate">
+  <g id="Group_4214" data-name="Group 4214" transform="translate(539.828 233.943)" style="mix-blend-mode: normal;isolation: isolate">
+    <g id="Group_4205" data-name="Group 4205" transform="translate(57.561 89.974)">
+      <g id="Group_4204" data-name="Group 4204">
+        <path id="Path_12121" data-name="Path 12121" d="M752.32,632.149a11.808,11.808,0,1,1,11.807,11.807A11.808,11.808,0,0,1,752.32,632.149Z" transform="translate(-752.32 -620.342)" fill="#365eaf"/>
+      </g>
+    </g>
+    <g id="Group_4207" data-name="Group 4207" transform="translate(37.638 68.572)">
+      <g id="Group_4206" data-name="Group 4206">
+        <path id="Path_12122" data-name="Path 12122" d="M737.81,562.739a3.687,3.687,0,0,1-3.2-1.842c-.287-.481-7.417-12.18-24.112-12.18-16.846,0-24.658,11.18-24.983,11.656a3.69,3.69,0,0,1-6.13-4.109c.407-.609,10.192-14.927,31.113-14.927,21.073,0,30.123,15.215,30.5,15.863a3.69,3.69,0,0,1-3.19,5.539Z" transform="translate(-678.771 -541.337)" fill="#c4e6ff"/>
+      </g>
+    </g>
+    <g id="Group_4209" data-name="Group 4209" transform="translate(23.616 44.357)">
+      <g id="Group_4208" data-name="Group 4208">
+        <path id="Path_12123" data-name="Path 12123" d="M714.09,480.45a3.685,3.685,0,0,1-3.2-1.842c-.458-.777-11.646-19.284-37.947-19.284-26.453,0-38.68,17.631-39.189,18.381a3.69,3.69,0,0,1-6.133-4.1c.59-.884,14.789-21.657,45.322-21.657,30.682,0,43.79,22.029,44.332,22.967a3.69,3.69,0,0,1-3.189,5.539Z" transform="translate(-627.007 -451.944)" fill="#c4e6ff"/>
+      </g>
+    </g>
+    <g id="Group_4211" data-name="Group 4211" transform="translate(13.283 22.552)">
+      <g id="Group_4210" data-name="Group 4210">
+        <path id="Path_12124" data-name="Path 12124" d="M696.611,405.191a3.689,3.689,0,0,1-3.2-1.842c-.581-.992-14.758-24.52-48.14-24.52-33.533,0-49.013,22.385-49.656,23.339a3.69,3.69,0,0,1-6.135-4.1c.725-1.087,18.177-26.617,55.791-26.617,37.766,0,53.86,27.051,54.528,28.2a3.691,3.691,0,0,1-3.191,5.539Z" transform="translate(-588.864 -371.45)" fill="#c4e6ff"/>
+      </g>
+    </g>
+    <g id="Group_4213" data-name="Group 4213" transform="translate(0)">
+      <g id="Group_4212" data-name="Group 4212">
+        <path id="Path_12125" data-name="Path 12125" d="M674.142,328.668a3.686,3.686,0,0,1-3.2-1.842c-.742-1.269-18.762-31.249-61.248-31.249-42.634,0-62.915,29.415-63.115,29.712a3.69,3.69,0,0,1-6.136-4.1c.9-1.347,22.532-32.992,69.251-32.992,46.87,0,66.808,33.505,67.633,34.932a3.69,3.69,0,0,1-3.189,5.539Z" transform="translate(-539.828 -288.197)" fill="#c4e6ff"/>
+      </g>
+    </g>
+  </g>
+  <g id="Group_4215" data-name="Group 4215" transform="translate(598.828 213.786)" style="mix-blend-mode: normal;isolation: isolate">
+    <path id="Path_12126" data-name="Path 12126" d="M771.2,310.5h-6.784l-6.008-71.323q-.2-4.07-.485-7.171t-.291-5.427a17.918,17.918,0,0,1,2.132-9.109q2.13-3.68,8.14-3.682,5.619,0,7.946,3.682a17.527,17.527,0,0,1,2.326,9.5q0,2.521-.1,5.718t-.484,6.492Z" transform="translate(-757.631 -213.786)" fill="#365eaf"/>
+  </g>
+</g>
+</svg>
+`
+
+export const Plug = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400.759" height="74.707" viewBox="0 0 400.759 74.707">
+<defs>
+  <linearGradient id="linear-gradient" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+    <stop offset="0" stop-color="#4085db"/>
+    <stop offset="1" stop-color="#c4e6ff"/>
+  </linearGradient>
+  <linearGradient id="linear-gradient-2" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+    <stop offset="0" stop-color="#c4e6ff"/>
+    <stop offset="1" stop-color="#73b2ff"/>
+  </linearGradient>
+  <linearGradient id="linear-gradient-3" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+    <stop offset="0" stop-color="#c4e6ff"/>
+    <stop offset="1" stop-color="#4085db"/>
+  </linearGradient>
+  <linearGradient id="linear-gradient-5" x1="-0.162" y1="0.801" x2="1.243" y2="0.339" xlink:href="#linear-gradient-3"/>
+  <linearGradient id="linear-gradient-8" x1="-0.577" y1="-1.829" x2="0.391" y2="-1.829" xlink:href="#linear-gradient-3"/>
+  <linearGradient id="linear-gradient-9" x1="2.694" y1="21.136" x2="3.69" y2="21.136" xlink:href="#linear-gradient-2"/>
+  <linearGradient id="linear-gradient-10" x1="2.494" y1="21.121" x2="3.491" y2="21.121" xlink:href="#linear-gradient-2"/>
+  <linearGradient id="linear-gradient-11" x1="2.623" y1="6.225" x2="3.648" y2="6.225" xlink:href="#linear-gradient-2"/>
+  <linearGradient id="linear-gradient-12" x1="1.184" y1="2.733" x2="2.209" y2="2.733" xlink:href="#linear-gradient-2"/>
+  <linearGradient id="linear-gradient-13" x1="1.144" y1="2.549" x2="2.158" y2="3.822" xlink:href="#linear-gradient-3"/>
+  <linearGradient id="linear-gradient-14" x1="3.896" y1="2.504" x2="5.053" y2="2.504" xlink:href="#linear-gradient-2"/>
+  <linearGradient id="linear-gradient-15" x1="3.89" y1="2.573" x2="5.046" y2="2.573" xlink:href="#linear-gradient-2"/>
+</defs>
+<g id="plug_play" data-name="plug&amp;play" transform="translate(-207.387 -857.391)" style="mix-blend-mode: normal;isolation: isolate">
+  <path id="Path_12127" data-name="Path 12127" d="M766.714,969.666c-1.986.98-3.785,2.252-5.665,3.417s-3.789,2.281-5.731,3.339a94.552,94.552,0,0,1-11.761,5.439,72.379,72.379,0,0,1-25.47,4.864,56.142,56.142,0,0,1-25.009-5.548c-7.938-3.958-14.548-10.021-22.07-14.65a42.757,42.757,0,0,0-13.264-5.549c-4.592-.988-9.582-1.053-13.859,1.107-.561.283-.157,1.1.411.975a28.374,28.374,0,0,1,12.605-.03,41,41,0,0,1,11.889,5.079c7.571,4.588,14.135,10.691,22,14.814,15.788,8.273,34.536,7.7,51.008,1.849a95.321,95.321,0,0,0,13.321-5.952q3.284-1.771,6.438-3.77a35.993,35.993,0,0,0,5.956-4.345C768.078,970.161,767.367,969.344,766.714,969.666Z" transform="translate(-159.573 -61.05)" fill="url(#linear-gradient)"/>
+  <g id="Group_4224" data-name="Group 4224" transform="translate(410.652 857.391)" style="mix-blend-mode: normal;isolation: isolate">
+    <g id="Group_4219" data-name="Group 4219" transform="translate(57.103 31.106)">
+      <g id="Group_4217" data-name="Group 4217">
+        <path id="Path_12128" data-name="Path 12128" d="M642.338,951.054l-1.49,10.989a5.741,5.741,0,0,1-1.745,3.4h.007c-.034.033-.071.063-.106.095s-.081.073-.122.108c-.128.11-.26.216-.4.315a5.262,5.262,0,0,1-.454.293c-.079.045-.158.09-.237.132s-.162.082-.244.12-.165.075-.251.109-.169.068-.255.1-.172.056-.259.083c-.068.022-.135.041-.2.056s-.127.034-.2.049-.131.03-.2.042h0c-.161.03-.322.052-.484.071a5.954,5.954,0,0,1-1.34-.026l-12.13-1.648-.391-.053-4.32-.585-.935-.128a.519.519,0,0,1-.443-.581l2.9-21.393a.521.521,0,0,1,.581-.443l1.535.21,3.787.514.06.008,3.183.432,9.21,1.25A5.765,5.765,0,0,1,642.338,951.054Z" transform="translate(-616.136 -942.146)" fill="url(#linear-gradient-2)"/>
+      </g>
+      <g id="Group_4218" data-name="Group 4218">
+        <path id="Path_12129" data-name="Path 12129" d="M639.11,965.439a5.542,5.542,0,0,1-.627.518,5.262,5.262,0,0,1-.454.293c-.079.045-.158.09-.237.132s-.162.082-.244.12-.165.075-.251.109-.169.068-.255.1-.172.056-.259.083c-.068.022-.135.041-.2.056s-.127.034-.2.049-.131.03-.2.042h0c-.161.03-.322.052-.484.071a5.954,5.954,0,0,1-1.34-.026l-12.13-1.648-.391-.053-4.32-.585-.935-.128a.519.519,0,0,1-.443-.581l2.9-21.393a.521.521,0,0,1,.581-.443l1.535.21,3.787.514.06.008,3.183.432-1.805,13.3a7.038,7.038,0,0,0,6.024,7.919Z" transform="translate(-616.136 -942.146)" fill="url(#linear-gradient-3)"/>
+      </g>
+    </g>
+    <g id="Group_4221" data-name="Group 4221" transform="translate(7.968 4.769)">
+      <g id="Group_4220" data-name="Group 4220">
+        <path id="Path_12130" data-name="Path 12130" d="M591.243,924.785v.049c-.007.574-.049,1.156-.112,1.741-.008.075-.015.146-.027.222-.015.172-.037.349-.06.522l-2.226,16.39a23.213,23.213,0,0,1-23.956,20.09c-.724-.03-1.456-.094-2.188-.191l-.8-.109h0l-.308-.041-11.23-1.524-.341-.045-2.95-.4-6.782-.92-2.59-.353-.172-.023c-.113-.015-.222-.037-.331-.06-.041-.008-.082-.019-.124-.027a.509.509,0,0,1-.071-.018,2.118,2.118,0,0,1-.229-.06,3.894,3.894,0,0,1-.574-.213c-.127-.056-.248-.12-.375-.188l-.008,0a1.781,1.781,0,0,1-.289-.177,3.929,3.929,0,0,1-.481-.346l-.09-.078c-.068-.061-.131-.12-.2-.18-.094-.09-.18-.184-.267-.282a.483.483,0,0,1-.082-.1c-.071-.086-.146-.173-.21-.267,0,0-.007-.008-.011-.011s-.007-.011-.007-.019a1.929,1.929,0,0,1-.124-.187,1.809,1.809,0,0,1-.1-.158l-.045-.079c-.042-.064-.075-.127-.109-.191a3.493,3.493,0,0,1-.154-.338c-.019-.049-.042-.1-.06-.15-.034-.082-.063-.169-.09-.255-.037-.124-.071-.244-.1-.367-.023-.083-.038-.169-.053-.256-.008-.041-.015-.079-.019-.12-.018-.128-.034-.255-.045-.383s-.015-.259-.015-.391a4.511,4.511,0,0,1,.041-.634l7.149-52.682a4.918,4.918,0,0,1,4.928-4.256h0a.239.239,0,0,1,.072,0,5.1,5.1,0,0,1,.533.042l2.762.375,6.782.919,3.236.439.06.008,11.225,1.523.026,0,1.088.146c.732.1,1.453.237,2.162.4a23.061,23.061,0,0,1,10.257,5.352v.007a.217.217,0,0,1,.049.038c.023.018.045.041.068.06.1.09.2.184.3.274a1.126,1.126,0,0,1,.1.094c.169.161.327.319.488.48l.023.023c.083.082.162.165.241.248s.169.177.251.27c.458.5.9,1.021,1.321,1.558a23.913,23.913,0,0,1,1.373,1.985c.188.3.365.6.533.9.1.184.2.364.3.552.259.491.5,1.006.724,1.516.075.169.15.338.218.518s.143.345.2.522.135.353.2.529.127.353.18.533c.12.36.229.717.326,1.081s.188.736.267,1.1c.045.188.082.368.116.555.034.158.056.312.09.469a22.719,22.719,0,0,1,.278,2.376c.015.187.026.379.037.57,0,.015,0,.023,0,.03,0,.184.011.375.008.559A10.033,10.033,0,0,1,591.243,924.785Z" transform="translate(-533.239 -897.712)" fill="url(#linear-gradient-2)"/>
+      </g>
+    </g>
+    <path id="Path_12131" data-name="Path 12131" d="M591.251,930.746c0-.184,0-.376-.008-.56-.007-.008-.007-.015,0-.03-.011-.191-.023-.383-.037-.57a22.719,22.719,0,0,0-.278-2.376c-.034-.158-.056-.312-.09-.469-.034-.187-.071-.367-.116-.555-.079-.367-.172-.739-.267-1.1s-.206-.72-.326-1.081c-.053-.18-.12-.357-.18-.533s-.128-.353-.2-.529-.127-.346-.2-.522-.142-.349-.218-.518c-.221-.51-.465-1.025-.724-1.516-.1-.188-.2-.368-.3-.552-.169-.3-.346-.6-.533-.9a23.925,23.925,0,0,0-1.373-1.985c-.424-.537-.863-1.062-1.321-1.558-.082-.094-.165-.184-.251-.27s-.158-.165-.241-.248l-.023-.023-.023-.023c.01.036.023.071.032.106.094.365.188.736.267,1.1.045.188.082.367.116.555.034.158.056.312.09.469a22.722,22.722,0,0,1,.278,2.376c.015.187.026.379.037.57,0,.015,0,.023,0,.03,0,.184.011.375.008.559a10.1,10.1,0,0,1-.008,1.01v.049c-.007.574-.049,1.156-.113,1.741-.007.075-.015.146-.026.222-.015.172-.037.349-.06.522l-2.226,16.39a23.213,23.213,0,0,1-23.956,20.09c-.725-.03-1.456-.094-2.188-.192l-.8-.109h0l-.308-.041-11.229-1.524-.341-.045-2.95-.4-6.782-.919-.513-.07-.584,4.306a4.512,4.512,0,0,0-.041.634c0,.132,0,.259.015.391s.027.255.045.383c0,.041.011.078.019.12.015.087.03.172.053.255.026.124.06.244.1.368.027.086.056.173.09.255.019.049.041.1.06.15a3.493,3.493,0,0,0,.154.338c.034.064.068.127.109.191l.045.079a1.811,1.811,0,0,0,.1.158,1.929,1.929,0,0,0,.124.187c0,.008,0,.011.007.019s.011.008.011.011c.064.094.139.18.21.267a.486.486,0,0,0,.082.1c.086.1.173.192.267.281.064.06.127.12.2.18l.09.079a3.9,3.9,0,0,0,.481.346,1.764,1.764,0,0,0,.289.177l.008,0c.127.068.248.132.375.188a3.881,3.881,0,0,0,.574.214,2.146,2.146,0,0,0,.229.06.546.546,0,0,0,.071.018c.042.008.083.019.124.027.109.023.218.045.331.06l.172.023,2.59.353,6.782.92,2.95.4.341.045,11.23,1.524.308.042h0l.8.109c.732.1,1.464.162,2.188.192a23.213,23.213,0,0,0,23.956-20.09l2.226-16.39c.023-.172.045-.349.06-.522.011-.075.019-.146.027-.222.063-.586.1-1.167.112-1.741v-.049A9.856,9.856,0,0,0,591.251,930.746Z" transform="translate(-525.271 -899.912)" fill="url(#linear-gradient-5)"/>
+    <g id="Group_4222" data-name="Group 4222" transform="translate(24.708 3.353)">
+      <path id="Path_12132" data-name="Path 12132" d="M581.661,902.247l-7.548,55.636-.477,3.509a6.11,6.11,0,0,1-.263,1.134h0a5.688,5.688,0,0,1-.394.916,6.107,6.107,0,0,1-11.335-1.479,5.678,5.678,0,0,1-.15-1.043v0a6.054,6.054,0,0,1,.045-1.164l.39-2.867,7.638-56.278a6.007,6.007,0,0,1,.683-2.09,0,0,0,0,1,0,0,6.1,6.1,0,0,1,11.308,1.539A6.037,6.037,0,0,1,581.661,902.247Z" transform="translate(-561.482 -895.322)" fill="url(#linear-gradient-2)"/>
+    </g>
+    <g id="Group_4223" data-name="Group 4223" transform="translate(0 0)">
+      <path id="Path_12133" data-name="Path 12133" d="M534.747,889.721a6.1,6.1,0,0,0-6.87,5.228L519.851,954.1a6.1,6.1,0,0,0,12.1,1.641l8.026-59.145A6.1,6.1,0,0,0,534.747,889.721Z" transform="translate(-519.795 -889.665)" fill="url(#linear-gradient-2)"/>
+    </g>
+  </g>
+  <path id="Path_12134" data-name="Path 12134" d="M291.234,960.89c-6.075.1-12.354,1.086-17.807,3.9-5.481,2.83-9.453,7.573-13.466,12.119-3.759,4.258-7.982,8.726-13.565,10.469-6.656,2.078-13.229-1.062-19.314-3.485a34.589,34.589,0,0,0-10.389-2.769,16.92,16.92,0,0,0-4.793.279,13.956,13.956,0,0,0-2.377.757,12.177,12.177,0,0,0-2.029,1.356c-.613.427.026,1.454.69,1.111a13.283,13.283,0,0,1,2.013-.67,14.344,14.344,0,0,1,2.046-.522,17.6,17.6,0,0,1,4.374-.246,31.5,31.5,0,0,1,9.139,2.387c6.087,2.375,12.486,5.507,19.207,4.221,12.228-2.339,17.17-15.373,26.583-21.918,5.808-4.039,12.9-4.853,19.731-5.725C291.974,962.067,291.964,960.879,291.234,960.89Z" transform="translate(0.14 -63.957)" fill="url(#linear-gradient-8)"/>
+  <g id="Group_4237" data-name="Group 4237" transform="translate(282.439 858.25)" style="mix-blend-mode: normal;isolation: isolate">
+    <g id="Group_4225" data-name="Group 4225" transform="translate(71.462 17.646)" style="mix-blend-mode: normal;isolation: isolate">
+      <path id="Path_12135" data-name="Path 12135" d="M463.59,933.2l-20.011,1.54a2.9,2.9,0,0,1-3.114-2.669h0a2.9,2.9,0,0,1,2.669-3.115l20.011-1.54a2.9,2.9,0,0,1,3.114,2.669h0A2.9,2.9,0,0,1,463.59,933.2Z" transform="translate(-440.456 -927.408)" fill="url(#linear-gradient-9)"/>
+    </g>
+    <g id="Group_4226" data-name="Group 4226" transform="translate(71.463 19.486)" style="mix-blend-mode: normal;isolation: isolate">
+      <path id="Path_12136" data-name="Path 12136" d="M463.46,932.592l-20.011,1.54a2.891,2.891,0,0,1-2.908-1.831,2.856,2.856,0,0,0-.076.86,2.9,2.9,0,0,0,3.114,2.67l20.011-1.541a2.9,2.9,0,0,0,2.669-3.115,2.856,2.856,0,0,0-.207-.838A2.892,2.892,0,0,1,463.46,932.592Z" transform="translate(-440.459 -930.337)" fill="#ced5e8"/>
+    </g>
+    <g id="Group_4227" data-name="Group 4227" transform="translate(73.462 43.638)" style="mix-blend-mode: normal;isolation: isolate">
+      <path id="Path_12137" data-name="Path 12137" d="M466.774,974.573l-20.01,1.54a2.9,2.9,0,0,1-3.115-2.669h0a2.9,2.9,0,0,1,2.669-3.115l20.011-1.54a2.9,2.9,0,0,1,3.114,2.669h0A2.9,2.9,0,0,1,466.774,974.573Z" transform="translate(-443.64 -968.78)" fill="url(#linear-gradient-10)"/>
+    </g>
+    <g id="Group_4228" data-name="Group 4228" transform="translate(73.464 45.478)" style="mix-blend-mode: normal;isolation: isolate">
+      <path id="Path_12138" data-name="Path 12138" d="M466.645,973.964l-20.011,1.54a2.891,2.891,0,0,1-2.908-1.831,2.862,2.862,0,0,0,3.039,3.53l20.011-1.54a2.861,2.861,0,0,0,2.462-3.953A2.891,2.891,0,0,1,466.645,973.964Z" transform="translate(-443.643 -971.709)" fill="#ced5e8"/>
+    </g>
+    <g id="Group_4236" data-name="Group 4236" transform="translate(0 -0.001)" style="mix-blend-mode: normal;isolation: isolate">
+      <g id="Group_4231" data-name="Group 4231" transform="translate(0 28.456)" style="mix-blend-mode: normal;isolation: isolate">
+        <g id="Group_4229" data-name="Group 4229">
+          <path id="Path_12139" data-name="Path 12139" d="M349.986,944.614l-17.937,1.38a5.783,5.783,0,0,0-5.322,6.21l.853,11.089a5.783,5.783,0,0,0,6.21,5.322l17.937-1.38a.518.518,0,0,0,.477-.557l-1.661-21.586A.518.518,0,0,0,349.986,944.614Z" transform="translate(-326.709 -944.613)" fill="url(#linear-gradient-11)"/>
+        </g>
+        <g id="Group_4230" data-name="Group 4230" transform="translate(2.413)" style="mix-blend-mode: multiply;isolation: isolate">
+          <path id="Path_12140" data-name="Path 12140" d="M351.413,944.614l-8.639.665,1.033,13.421a7.054,7.054,0,0,1-6.492,7.575l-6.764.521a5.77,5.77,0,0,0,4.667,1.819l17.937-1.38a.518.518,0,0,0,.477-.557l-1.661-21.586A.519.519,0,0,0,351.413,944.614Z" transform="translate(-330.551 -944.613)" fill="#d8e0ed"/>
+        </g>
+      </g>
+      <g id="Group_4233" data-name="Group 4233" transform="translate(17.828 4.433)" style="mix-blend-mode: normal;isolation: isolate">
+        <g id="Group_4232" data-name="Group 4232" style="mix-blend-mode: normal;isolation: isolate">
+          <path id="Path_12141" data-name="Path 12141" d="M407.31,910.931l4.091,53.162a4.328,4.328,0,0,1,0,.638c-.008.131-.02.259-.036.388s-.04.255-.064.381a1.183,1.183,0,0,1-.026.119c-.016.07-.036.139-.056.209,0,.012-.006.024-.01.036-.034.115-.07.229-.113.338-.031.09-.068.173-.107.261-.023.058-.05.112-.077.167a.134.134,0,0,1-.013.029,2.724,2.724,0,0,1-.135.255.032.032,0,0,1-.012.018,3,3,0,0,1-.181.291.1.1,0,0,1-.019.023,3.68,3.68,0,0,1-.231.308s0,.012-.008.017l-.013.014c-.069.09-.145.17-.222.254a.475.475,0,0,1-.091.1,3.6,3.6,0,0,1-.285.263c-.052.049-.107.094-.163.139s-.088.071-.134.107a4.373,4.373,0,0,1-.5.317,1.885,1.885,0,0,1-.3.159H408.6a3.986,3.986,0,0,1-.388.169,4.054,4.054,0,0,1-.588.179c-.094.023-.2.047-.306.065-.147.026-.3.045-.456.057l-.565.045-24.844,1.91c-.738.057-1.475.075-2.2.062A23.3,23.3,0,0,1,356.431,949.9l-1.272-16.537c-.016-.213-.028-.423-.04-.634,0-.038,0-.075,0-.113-.031-.591-.038-1.175-.013-1.753,0-.351.022-.708.054-1.06.009-.184.024-.373.04-.559.011-.006.009-.013.006-.028.021-.194.048-.386.072-.569a21.492,21.492,0,0,1,.415-2.365c.042-.153.075-.308.116-.464.047-.184.095-.361.148-.55.1-.363.219-.728.334-1.086s.249-.711.388-1.062c.063-.18.142-.355.211-.525s.151-.346.227-.521.149-.338.236-.511.164-.341.249-.506c.249-.5.523-.995.814-1.474.1-.181.214-.359.33-.534.188-.3.381-.582.585-.874.466-.656.965-1.3,1.492-1.907.456-.513.927-1.011,1.414-1.481.174-.176.362-.339.543-.512.172-.152.343-.3.522-.45.071-.064.143-.124.214-.183.09-.079.185-.155.281-.227a.094.094,0,0,1,.036-.026l0-.008a23.157,23.157,0,0,1,10.58-4.762q1.081-.188,2.192-.275l25.406-1.954A4.936,4.936,0,0,1,407.31,910.931Z" transform="translate(-355.087 -906.374)" fill="url(#linear-gradient-12)"/>
+        </g>
+      </g>
+      <path id="Path_12142" data-name="Path 12142" d="M389.966,963.744c-.738.057-1.475.075-2.2.062A23.3,23.3,0,0,1,364.947,942.3l-1.272-16.537c-.016-.213-.028-.423-.04-.635,0-.038,0-.075,0-.113-.031-.591-.038-1.175-.013-1.753,0-.351.021-.708.053-1.06.009-.184.024-.373.04-.559.01-.006.009-.013.006-.028.022-.194.048-.386.072-.569a21.506,21.506,0,0,1,.416-2.365c.041-.153.075-.308.116-.464.047-.184.095-.361.148-.55.1-.362.219-.728.334-1.086.042-.129.094-.253.139-.381q-.568.4-1.111.835l0,.008a.1.1,0,0,0-.036.026c-.1.072-.191.148-.281.227-.072.06-.143.12-.214.183-.179.15-.351.3-.522.45-.182.173-.369.336-.543.512-.487.47-.958.967-1.414,1.481-.527.611-1.027,1.251-1.492,1.907-.2.292-.4.578-.585.874-.117.175-.226.353-.33.534-.292.48-.565.976-.814,1.474-.085.165-.173.331-.249.506s-.164.337-.236.511-.155.347-.227.521-.148.345-.211.525c-.138.351-.27.7-.388,1.062s-.231.723-.334,1.086c-.053.19-.1.366-.148.55-.041.156-.074.312-.116.464a21.492,21.492,0,0,0-.415,2.365c-.025.183-.051.375-.072.569,0,.014,0,.022-.006.028-.016.186-.031.375-.04.559-.032.352-.052.71-.054,1.061-.024.579-.018,1.163.013,1.753,0,.038,0,.075,0,.113.012.211.023.422.04.635l1.272,16.537a23.3,23.3,0,0,0,22.815,21.507c.729.014,1.466-.005,2.2-.062l24.844-1.91.565-.045c.157-.012.309-.031.456-.057.107-.018.212-.042.306-.065a4.523,4.523,0,0,0,.976-.348h.007a1.9,1.9,0,0,0,.3-.159,4.415,4.415,0,0,0,.5-.317c.046-.036.093-.068.134-.107s.111-.09.163-.139a3.714,3.714,0,0,0,.285-.263.472.472,0,0,0,.091-.1c.078-.084.153-.164.222-.254l.013-.014c.007-.005.005-.013.008-.017a3.649,3.649,0,0,0,.231-.308.1.1,0,0,0,.019-.023,3.018,3.018,0,0,0,.181-.291.031.031,0,0,0,.012-.018,2.749,2.749,0,0,0,.135-.255.133.133,0,0,0,.013-.03c.027-.055.054-.109.077-.167.039-.088.076-.172.107-.261.043-.109.079-.223.113-.338,0-.012.006-.024.01-.036.019-.07.04-.139.056-.209a1.185,1.185,0,0,0,.026-.119c.024-.126.048-.253.064-.381s.029-.257.036-.388a4.327,4.327,0,0,0,0-.638l-.432-5.616Z" transform="translate(-337.259 -905.594)" fill="url(#linear-gradient-13)"/>
+      <g id="Group_4234" data-name="Group 4234" transform="translate(40.193 1.919)" style="mix-blend-mode: normal;isolation: isolate">
+        <path id="Path_12143" data-name="Path 12143" d="M396.338,902.392a6.122,6.122,0,0,0-5.634,6.574l4.594,59.685a6.122,6.122,0,0,0,12.208-.94l-4.594-59.685A6.122,6.122,0,0,0,396.338,902.392Z" transform="translate(-390.686 -902.374)" fill="url(#linear-gradient-14)"/>
+      </g>
+      <g id="Group_4235" data-name="Group 4235" transform="translate(65.127)" style="mix-blend-mode: normal;isolation: isolate">
+        <path id="Path_12144" data-name="Path 12144" d="M436.026,899.337h0a6.122,6.122,0,0,0-5.634,6.574l4.594,59.684a6.122,6.122,0,0,0,6.573,5.634h0a6.121,6.121,0,0,0,5.635-6.573L442.6,904.972A6.123,6.123,0,0,0,436.026,899.337Z" transform="translate(-430.374 -899.319)" fill="url(#linear-gradient-15)"/>
+      </g>
+    </g>
+  </g>
+</g>
+</svg>
+`
+
 export const Icons = {
   splashLogo: require("./SplashLogo.png"),
   logo: require("./Logo.png"),
-  logoPlain:require('./logoPlain.png'),
+  logoPlain: require('./logoPlain.png'),
   play: require("./play.png"),
   pause: require("./pause.png"),
   stop: require("./stopBtn.png"),
@@ -427,7 +552,7 @@ export const Icons = {
   HomeVisitConsultation: require("./homeDoc.png"),
   BookaLabTest: require("./labTest.png"),
 
-  
+
   Appointment: require("./appointmentDate.png"),
   Cart: require("./cart.png"),
   Emptycart: require("./emptyCart.png"),
@@ -457,8 +582,9 @@ export const Icons = {
   fillStar: require('./fillStar.png'),
   outlineStar: require('./outlineStar.png'),
   Attachment: require('./attachment.png'),
-  currentLoc:require('./locationCurrent.png'),
-  Success:require("./success.png"),
-  call:'require("./phoneCall.png")',
+  currentLoc: require('./locationCurrent.png'),
+  Success: require("./success.png"),
+  call: require("./phoneCall.png"),
+  Connect: require('./plug.jpg')
   
 };

@@ -8,11 +8,12 @@ import { s, vs } from 'react-native-size-matters';
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import AddEditAddress from '../components/Add_Edit_Address';
 import { useSelector } from 'react-redux';
+import NoInternet from '../components/NoInternet';
 
 
 const FindAddress = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
 
     let googlePlacesRef = useRef()
 
@@ -126,10 +127,6 @@ const FindAddress = ({ navigation }) => {
                 }
                 let details = responseJson
                 // console.log('address details........', responseJson);
-                let data2 = { 'latitude': details.geometry.location.lat, 'longitude': details.geometry.location.lng, 'address': details.formatted_address, 'city': city, 'administrative_area_level_1': administrative_area_level_1 }
-                add_location = data2
-                post_location = data2
-                // console.log('getadddressfromlatlong', add_location)
                 googlePlacesRef && googlePlacesRef.setAddressText(details.formatted_address)
                 setAddressData(prevState => ({
                     ...prevState,
@@ -139,10 +136,6 @@ const FindAddress = ({ navigation }) => {
                     type: 'addAddress',
                     addressBottomSheet: true
                 }))
-
-
-                // this.setState({ latdelta: event.latitudeDelta, longdelta: event.longitudeDelta, latitude: event.latitude, longitude: event.longitude, addressselected: details.formatted_address })
-                // this.setState({ add_my_location: data2 })
             })
 
 
@@ -218,10 +211,6 @@ const FindAddress = ({ navigation }) => {
                         //         city = details.address_components[i].long_name
                         //     }
                         // }
-                        let data2 = { 'latitude': details.geometry.location.lat, 'longitude': details.geometry.location.lng, 'address': details.formatted_address, 'city': city }
-                        add_location = data2
-                        post_location = data2
-
                         setAddressData(prevState => ({
                             ...prevState,
                             latitude: details?.geometry?.location?.lat,
@@ -230,13 +219,12 @@ const FindAddress = ({ navigation }) => {
                             type: 'addAddress',
                             addressBottomSheet: true
                         }))
-                        // console.log('add_location', add_location)
                     }}
                     query={{
 
                         key: config.mapkey,
                         language: config.maplanguage,
-                        components: `country:${loggedInUserDetails?.work_area === 'UAE' ? 'AE':'SA'}`
+                        components: `country:${loggedInUserDetails?.work_area === 'UAE' ? 'AE' : 'SA'}`
 
                     }}
                     styles={{
@@ -327,7 +315,9 @@ const FindAddress = ({ navigation }) => {
                 type={addressData.type}
             />
 
-
+            <NoInternet
+                visible={!deviceConnection}
+            />
         </View>
 
 

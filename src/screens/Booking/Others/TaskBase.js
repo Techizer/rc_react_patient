@@ -479,6 +479,11 @@ const TaskBase = ({ navigation, route }) => {
       msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
+
+    // if (statesData.bookingDetails.distancelogic == 0) {
+    //   msgProvider.showError('Please recheck your address or book a different provider.');
+    //   return false;
+    // }
     setState({ isAddingToCart: true })
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
@@ -1240,7 +1245,7 @@ const TaskBase = ({ navigation, route }) => {
                         <View
                           style={{
                             flexDirection: "row",
-                            alignItems:'center',
+                            alignItems: 'center',
                             width: "100%",
                             paddingTop: (windowWidth * 1.3) / 100,
                             justifyContent: "space-between",

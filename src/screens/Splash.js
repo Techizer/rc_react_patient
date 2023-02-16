@@ -25,12 +25,27 @@ import { SvgXml } from "react-native-svg";
 import { Logo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType } from "../Redux/Actions";
+import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType, onLogout, UserDetails } from "../Redux/Actions";
 
 
 const Splash = ({ navigation }) => {
 
-  const { appLanguage, deviceToken,languageIndex, deviceType, contentAlign, appVersion, loggedInUserDetails } = useSelector(state => state.StorageReducer)
+  const {
+    appLanguage,
+    deviceToken,
+    deviceName,
+    deviceId,
+    languageIndex,
+    deviceType,
+    contentAlign,
+    appVersion,
+    loggedInUserDetails,
+    address,
+    credentials,
+    rememberMe,
+    isLanguageUpdated,
+    deviceConnection
+  } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [splashData, setSplashData] = useState({
     email: '',
@@ -153,30 +168,139 @@ const Splash = ({ navigation }) => {
             }))
             setUpdateAppModal(true)
           } else {
-            new_authenticatesessinon();
+            CheckOldSession();
           }
         } else {
-          new_authenticatesessinon();
+          CheckOldSession();
           return false;
         }
       }).catch((error) => {
-        new_authenticatesessinon();
+        CheckOldSession();
         console.log("updateAppVersion-error ------- " + error);
       });
   };
 
-  const new_authenticatesessinon = async () => {
-    if (loggedInUserDetails != null) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "DashboardStack" }],
-      });
+  const CheckOldSession = () => {
+
+    if (loggedInUserDetails) {
+      console.log('if...........');
+      let url = config.baseURL + `api-check-login`;
+      var data = new FormData();
+      data.append("fcm_token", deviceToken);
+      data.append("user_id", loggedInUserDetails.user_id);
+
+      apifuntion
+        .postApi(url, data)
+        .then((obj) => {
+          console.log("CheckOldSession....... ", obj);
+          if (obj.result == true) {
+            if (credentials) {
+              LoginNewSession()
+            } else {
+              Logout()
+            }
+          } else {
+            Logout()
+          }
+
+        }).catch((error) => {
+          console.log("CheckOldSession-error ------- " + error);
+        });
     } else {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "AuthStack" }],
-      });
+      setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'AuthStack' }],
+        })
+      }, 350);
     }
+
+  }
+
+  const LoginNewSession = () => {
+    let url = config.baseURL + "api-patient-login";
+    var data = new FormData();
+
+    data.append("email_phone", credentials.email);
+    data.append("password", credentials.password);
+    data.append("device_type", deviceType);
+    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
+    data.append("fcm_token", deviceToken);
+
+    console.log('login body...', data);
+
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        console.log('login response.....', obj);
+        if (obj.status == true) {
+          dispatch(UserDetails(obj?.result))
+          setTimeout(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "DashboardStack" }],
+            });
+          }, 700);
+        } else {
+          setTimeout(() => {
+            msgProvider.showError(obj.message);
+          }, 700);
+          return false;
+        }
+      }).catch((error) => {
+        console.log("LoginUser-error ------- " + error);
+      });
+  }
+
+  const Logout = async () => {
+    let url = config.baseURL + "api-logout";
+    var data = new FormData();
+    data.append("user_id", loggedInUserDetails?.user_id);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        console.log("logout response", obj);
+        if (obj.status == true) {
+          dispatch(onLogout({
+            appLanguage,
+            deviceToken,
+            deviceId,
+            deviceName,
+            deviceType,
+            appVersion,
+            contentAlign,
+            address,
+            credentials,
+            rememberMe,
+            languageIndex,
+            isLanguageUpdated,
+            deviceConnection
+          }))
+          setTimeout(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'AuthStack' }],
+            })
+          }, 350);
+        } else {
+          setTimeout(() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'AuthStack' }],
+            })
+          }, 350);
+          return false;
+        }
+      }).catch((error) => {
+        setTimeout(() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'AuthStack' }],
+          })
+        }, 350);
+        console.log("-------- error ------- " + error);
+      });
   };
 
   const openAppStoreUrl = async (url) => {
@@ -355,32 +479,33 @@ const Splash = ({ navigation }) => {
                   marginTop: (windowWidth * 9) / 100,
                   alignSelf: "flex-end",
                   right: 16,
-                }}
-              >
-                {updateData.skipFlag && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setUpdateAppModal(false)
-                      new_authenticatesessinon()
-                    }}
-                    style={{
-                      width: (windowWidth * 35) / 100,
-                      flexDirection: "row",
-                      alignSelf: "center",
-                      justifyContent: "flex-end",
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.medium,
-                        color: Colors.Theme, //Colors.Blue,
-                        alignSelf: "center",
+                }}>
+                {
+                  updateData.skipFlag && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setUpdateAppModal(false)
+                        CheckOldSession()
                       }}
-                    >
-                      {updateData.skipText}
-                    </Text>
-                  </TouchableOpacity>
-                )}
+                      style={{
+                        width: (windowWidth * 35) / 100,
+                        flexDirection: "row",
+                        alignSelf: "center",
+                        justifyContent: "flex-end",
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.Regular,
+                          fontSize: Font.medium,
+                          color: Colors.Theme, //Colors.Blue,
+                          alignSelf: "center",
+                        }}
+                      >
+                        {updateData.skipText}
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                }
 
                 <TouchableOpacity
                   onPress={() => {

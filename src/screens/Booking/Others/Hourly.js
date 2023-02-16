@@ -442,6 +442,11 @@ const Hourly = ({ navigation, route }) => {
       return false;
     }
 
+    // if (statesData.bookingDetails.distancelogic == 0) {
+    //   msgProvider.showError('Please recheck your address or book a different provider.');
+    //   return false;
+    // }
+
     setState({ isAddingToCart: true })
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
@@ -496,6 +501,7 @@ const Hourly = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isAddingToCart: false })
+        msgProvider.showError('Something went wrong, please try again')
         console.log("-------- error ------- " + error);
         setState({ loading: false });
       });

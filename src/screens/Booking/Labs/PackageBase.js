@@ -24,7 +24,7 @@ import {
   Icons,
   Button,
 } from '../../../Provider/Utils/Utils';
-import { dummyUser, GoldStar, leftArrow, Notification } from '../../../Icons/Index';
+import { Capsule, dummyUser, GoldStar, leftArrow, Notification } from '../../../Icons/Index';
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 import moment from "moment";
@@ -473,6 +473,10 @@ const PackageBase = ({ navigation, route }) => {
       msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
+    // if (statesData.bookingDetails.distancelogic == 0) {
+    //   msgProvider.showError('Please recheck your address or book a different provider.');
+    //   return false;
+    // }
     setState({ isAddingToCart: true })
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
@@ -574,35 +578,34 @@ const PackageBase = ({ navigation, route }) => {
               <View
                 style={{
                   width: "70%",
-                  // justifyContent:'center',
+                  justifyContent: 'center',
                   alignSelf: "center",
-                  height: '100%',
-                  paddingTop: vs(3)
+                  paddingTop: vs(3),
                 }} >
                 <Text
                   style={{
                     fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     color: Colors.detailTitles,
-                    alignSelf: 'flex-start'
                   }}>
                   {Details?.provider_name}
                 </Text>
 
                 {
-                  Details?.qualification ?
+                  (Details && Details?.iso_text != '') &&
+                  <View style={{ flexDirection: 'row', marginTop: vs(2), alignItems: 'center' }}>
+                    <SvgXml xml={Capsule} height={vs(18)} width={s(55)} />
                     <Text
                       style={{
-                        fontFamily: Font.Regular,
+                        fontFamily: Font.Medium,
                         fontSize: Font.small,
-                        alignSelf: 'flex-start',
-                        color: Colors.lightGrey,
-                        marginTop: vs(2)
-                      }}>
-                      {Details?.qualification}
+                        color: Colors.Theme,
+                        marginLeft: 5
+                      }}
+                    >
+                      {Details?.iso_text}
                     </Text>
-                    :
-                    null
+                  </View>
                 }
                 {
                   Details?.speciality ?

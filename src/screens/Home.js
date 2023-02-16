@@ -4,12 +4,13 @@ import {
   FlatList,
   View,
   ScrollView,
-  StyleSheet,
+  BackHandler,
   Image,
   TouchableOpacity,
   ImageBackground,
   Alert,
-  Platforms
+  Platforms,
+  Platform
 } from "react-native";
 import {
   Colors,
@@ -29,9 +30,11 @@ import BannerCrousel from "../components/BannerCrousel";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { IsLanguageUpdated, Notifications } from "../Redux/Actions";
+import { CurrentRoute, IsLanguageUpdated, Notifications } from "../Redux/Actions";
 import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AudioPlayer } from "../components/AudioPlayer";
+import NoInternet from "../components/NoInternet";
 
 const HomeHealthcareServiceAppointments = [
   {
@@ -119,7 +122,10 @@ const Home = ({ navigation }) => {
     guest,
     appLanguage,
     languageIndex,
-    isLanguageUpdated, } = useSelector(state => state.StorageReducer)
+    isLanguageUpdated,
+    deviceConnection,
+    currentRoute
+  } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [homeData, setHomeData] = useState({
     profileImg: "",
@@ -129,25 +135,29 @@ const Home = ({ navigation }) => {
   })
   const isFocused = useIsFocused()
 
+  
+
   useEffect(() => {
     // console.log(address.address);
     // console.log(loggedInUserDetails);
     // console.log(isLanguageUpdated);
+    // console.log({deviceConnection});
+    // dispatch(CurrentRoute('HomeDrawer'))
     setTimeout(() => {
       setHomeData(prevState => ({
         ...prevState,
         isLoadingDetails: false
       }))
     }, 1000);
-    if (guest == false) {
+    if (guest == false && deviceConnection) {
       getNotificationCount();
       getTopBanners()
-      // CartId()
+      CartId()
     }
-    if (isLanguageUpdated) {
+    if (isLanguageUpdated && deviceConnection) {
       UpdateLanguage()
     }
-  }, [])
+  }, [deviceConnection])
 
   const CartId = async () => {
     let Id = await AsyncStorage.getItem('cartId')
@@ -250,10 +260,11 @@ const Home = ({ navigation }) => {
         <ScreenHeader
           navigation={navigation}
           // title={LangProvider.Home[languageIndex]}
-          leftIcon={loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : ''}
+          leftIcon={(loggedInUserDetails && loggedInUserDetails.image != '' && loggedInUserDetails.image != null) ? (config.img_url3 + loggedInUserDetails?.image) : ''}
           rightIcon={!guest}
           defaultAddress={address?.address}
         />
+
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}
@@ -565,10 +576,11 @@ const Home = ({ navigation }) => {
 
           </View>
         </ScrollView>
+
+        <NoInternet
+          visible={!deviceConnection}
+        />
       </View >
-
-
-
 
     </View >
   );

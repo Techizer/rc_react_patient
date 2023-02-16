@@ -28,12 +28,13 @@ import {
 import AuthInputBoxSec from "../../components/AuthInputBoxSec";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
+import NoInternet from "../../components/NoInternet";
 
 
 
 const Medical = () => {
 
-    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [medicalDetails, setMedicalDetails] = useState({
@@ -53,8 +54,10 @@ const Medical = () => {
     })
 
     useEffect(() => {
-        getMedical()
-    }, [])
+        if (deviceConnection) {
+            getMedical()
+        }
+    }, [deviceConnection])
     const getMedical = async () => {
 
         let url = config.baseURL + "api-patient-profile";
@@ -214,6 +217,7 @@ const Medical = () => {
                 }
             })
             .catch((error) => {
+                msgProvider.showSuccess(error);
                 setMedicalDetails(prevState => ({
                     ...prevState,
                     isLoading: false
@@ -254,7 +258,7 @@ const Medical = () => {
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
                                 marginBottom: vs(9),
-                                alignSelf:'flex-start'
+                                alignSelf: 'flex-start'
                             }} >
                             {LangProvider.allergies[languageIndex]}
                         </Text>
@@ -278,17 +282,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q1[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%',flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -301,7 +305,7 @@ const Medical = () => {
                                                     setMedicalDetails(prevState => ({ ...prevState, Allergic: index }))
                                                     if (index === 1) setMedicalDetails(prevState => ({ ...prevState, allergyName: '' }))
                                                 }}
-                                                style={{ flexDirection: 'row', alignItems: 'center'}}>
+                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
 
                                                 <View
                                                     style={{
@@ -342,7 +346,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -371,7 +375,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                alignSelf:'flex-start',
+                                alignSelf: 'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.current[languageIndex]}
@@ -396,17 +400,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q2[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -460,7 +464,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        // this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -489,7 +493,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                alignSelf:'flex-start',
+                                alignSelf: 'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.pastmedication[languageIndex]}
@@ -514,7 +518,7 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q3[languageIndex]}
                             </Text>
@@ -524,7 +528,7 @@ const Medical = () => {
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -578,7 +582,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -607,7 +611,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                alignSelf:'flex-start',
+                                alignSelf: 'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.injuries[languageIndex]}
@@ -632,17 +636,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q4[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -696,7 +700,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -725,7 +729,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                alignSelf:'flex-start',
+                                alignSelf: 'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.surgeries[languageIndex]}
@@ -750,7 +754,7 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q5[languageIndex]}
                             </Text>
@@ -760,7 +764,7 @@ const Medical = () => {
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -813,7 +817,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -842,7 +846,7 @@ const Medical = () => {
                                 color: Colors.darkText,
                                 fontFamily: Font.Medium,
                                 fontSize: Font.large,
-                                alignSelf:'flex-start',
+                                alignSelf: 'flex-start',
                                 marginBottom: vs(9)
                             }} >
                             {LangProvider.chronic[languageIndex]}
@@ -867,17 +871,17 @@ const Medical = () => {
                                     color: Colors.DarkGrey,
                                     fontFamily: Font.Regular,
                                     fontSize: Font.medium,
-                                    alignSelf:'flex-start'
+                                    alignSelf: 'flex-start'
                                 }}>
                                 {LangProvider.q6[languageIndex]}
                             </Text>
 
 
-                            <View style={{ width: '100%',  flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginTop: vs(10) }}>
                                 <FlatList
                                     showsHorizontalScrollIndicator={false}
                                     horizontal
-                                    data={languageIndex==0? ['Yes', 'No']:['نعم','لا']}
+                                    data={languageIndex == 0 ? ['Yes', 'No'] : ['نعم', 'لا']}
                                     ItemSeparatorComponent={() => {
                                         return (
                                             <View style={{ width: s(25) }} />
@@ -931,7 +935,7 @@ const Medical = () => {
                                     returnKeyLabel="done"
                                     returnKeyType="done"
                                     onSubmitEditing={() => {
-                                        //this.passwordInput.focus();
+                                        Keyboard.dismiss()
                                     }}
                                     blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                     editable
@@ -954,6 +958,10 @@ const Medical = () => {
                 </View>
 
             </KeyboardAwareScrollView>
+
+            <NoInternet
+                visible={!deviceConnection}
+            />
         </View>
     )
 }

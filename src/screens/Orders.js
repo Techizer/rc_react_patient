@@ -13,12 +13,13 @@ import {
 } from "../Provider/Utils/Utils";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useSelector } from "react-redux";
+import NoInternet from "../components/NoInternet";
 
 
 
 const Orders = ({ navigation }) => {
 
-  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, appLanguage, deviceConnection, } = useSelector(state => state.StorageReducer)
 
   const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -72,7 +73,9 @@ const Orders = ({ navigation }) => {
         onRefresh={() => setIsLoading(true)}
       />
 
-
+      <NoInternet
+        visible={!deviceConnection}
+      />
     </View>
   );
 }

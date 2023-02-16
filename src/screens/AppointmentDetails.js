@@ -31,24 +31,23 @@ import {
 import StarRating from "react-native-star-rating";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import moment from "moment-timezone";
-import Slider from "@react-native-community/slider";
-import SoundPlayer from "react-native-sound-player";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import RNFetchBlob from "rn-fetch-blob";
 import { s, vs } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import { SvgXml } from "react-native-svg";
-import { contactUs, Cross, Info, rightBlue, whiteStar } from "../Icons/Index";
+import { contactUs, Cross, dummyUser, Info, rightBlue, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "../components/RatingBottomSheet";
 import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
 import { useSelector } from "react-redux";
+import { AudioPlayer } from "../components/AudioPlayer";
+import NoInternet from "../components/NoInternet";
+import Loader from "../components/Loader";
 
-var Sound = require("react-native-sound");
 
 export default AppointmentDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection, appLanguage } = useSelector(state => state.StorageReducer)
 
   const { appointment_id, send_id, booking_type, status } = route?.params
   const [classStateData, setClassStateData] = useState({
@@ -65,9 +64,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
     reviewText: '',
     modalVisiblerating: false,
     new_task_type: "",
-    playState: "paused", //playing, paused
-    playSeconds: 0,
-    duration: 0,
     showPatientDetails: false,
     isContactUsModal: false,
     isLoading: false,
@@ -75,10 +71,9 @@ export default AppointmentDetails = ({ navigation, route }) => {
     isPlay: false,
     isLoadingDetails: true,
   })
-
-  let recordingUrl = '';
+  const [isDownloading, setIsDownloading] = useState(false)
   const insets = useSafeAreaInsets()
-  const [sound, setSound] = useState(null)
+
   const setState = payload => {
     setClassStateData(prev => ({
       ...prev,
@@ -86,153 +81,32 @@ export default AppointmentDetails = ({ navigation, route }) => {
     }))
   }
 
-  let sliderEditing = false;
-  Sound.setCategory("Playback", true); // true = mixWithOthers
-
   useEffect(() => {
     get_day();
-
   }, [classStateData.modalVisible])
   useEffect(() => {
-    FontAwesome.getImageSource("circle", 20, Colors.Theme).then(
-      (source) => setState({ sliderIcon: source })
-    );
-    getAllDetails(0);
-
-    _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
-      "FinishedPlaying",
-      ({ success }) => {
-        console.log("finished playing", success);
-      }
-    );
-    _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
-      "FinishedLoading",
-      ({ success }) => {
-        console.log("finished loading", success);
-      }
-    );
-    _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingFile",
-      ({ success, name, type }) => {
-        console.log("finished loading file", success, name, type);
-        SoundPlayer.play();
-      }
-    );
-    _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingURL",
-      ({ success, url }) => {
-        console.log("finished loading url", success, url);
-      }
-    );
-  }, [])
-
-
-  const onSliderEditStart = () => {
-    sliderEditing = true;
-  };
-
-  const onSliderEditEnd = () => {
-    sliderEditing = false;
-  };
-
-  const onSliderEditing = (value) => {
-    console.log('value value:: ', value, sliderEditing);
-    if (sound && classStateData.playState == "pause" && !sliderEditing) {
-      sound.setCurrentTime(value);
-      setState({ playSeconds: value });
+    if (deviceConnection) {
+      getAllDetails(0);
     }
-  };
-
-  const onStartPlay = async (isPlay = false) => {
-    setState({ isPlay: isPlay })
-    console.log({ sound });
-    if (sound != null) {
-      playMusic();
-      sound.play(playComplete);
-      setState({ playState: "playing", duration: sound.getDuration() });
-    } else {
-      setState(
-        {
-          playState: isPlay ? "playing" : "paused",
-          duration: sound.getDuration(),
-        }
-      );
-      if (isPlay) {
-        // Play the sound with an onEnd callback
-        playMusic();
-        sound.play(playComplete);
-      }
-
-    }
-
-  };
-
-  const playComplete = (success) => {
-    if (success) {
-      console.log('successfully finished playing');
-    } else {
-      console.log('playback failed due to audio decoding errors');
-      // Alert.alert('Notice', 'audio file error. (Error code : 2)');
-    }
-    if (timeout) {
-      clearInterval(timeout);
-    }
-    setState({ playState: 'paused', playSeconds: 0 });
-    sound.setCurrentTime(0);
-  };
-
-  const playMusic = () => {
-    timeout = setInterval(() => {
-
-      if (sound != null && sound.isLoaded() && !sliderEditing) {
-        sound.getCurrentTime((seconds, isPlaying) => {
-          setState({
-            playSeconds: seconds
-          });
-        })
-      }
-    }, 100);
-  }
-
-  const pause = () => {
-    if (sound != null) {
-      sound.pause();
-    }
-
-    setState({ playState: "paused" });
-  };
-
+  }, [deviceConnection])
 
   const getAllDetails = async (page) => {
     let url = config.baseURL + "api-patient-appointment-details";
-
     var data = new FormData();
     data.append("id", appointment_id);
-
     data.append("service_type", status);
 
-    console.log("data", data);
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        console.log("getAllDetails....", obj);
+        // console.log("getAllDetails....", obj);
 
         if (obj.status == true) {
-          recordingUrl = config.img_url3 + obj.result.symptom_recording;
-          const tempSound = new Sound(recordingUrl, "", (error) => {
-            if (error) {
-              console.log("failed to load the sound", error);
-              return;
-            }
-          })
-          setSound(tempSound)
           setState(
             {
               appointmentDetails: obj.result,
               message: obj.message,
             });
-          if (classStateData.appointmentDetails.symptom_recording != "") onStartPlay(false);
-          // console.log("obj.result", obj.result);
           setTimeout(() => {
             setState(
               {
@@ -950,7 +824,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
     setState({ date_array: arr });
   };
 
-
   const submit_btn = async () => {
 
     if (classStateData.time_take_data.length <= 0) {
@@ -1044,100 +917,81 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
   const permissionFunc = async (imgUrl, filename) => {
     if (Platform.OS == "ios") {
-      actualDownload(imgUrl, filename);
+      setIsDownloading(true)
+      setTimeout(() => {
+        actualDownload(imgUrl, filename);
+      }, 1500);
     } else {
-      // if (downloaded) {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          actualDownload(imgUrl, filename);
+          setIsDownloading(true)
+          setTimeout(() => {
+            actualDownload(imgUrl, filename);
+          }, 1500);
         } else {
-          // global.hideLoader();
           msgProvider.showError(
-            "You need to give storage permission to download the file"
+            "Grant storage permission to download the file"
           );
         }
       } catch (err) {
-        // global.props.hideLoader();
         console.warn(err);
       }
-      // }
-      // else {
-      //   // global.props.hideLoader();
-      //   msgProvider.showSuccess('File is already downloaded.');
-      // }
     }
   };
 
   const actualDownload = (imgUrl, filename) => {
+    // console.log(imgUrl);
+    // return
     const { dirs } = RNFetchBlob.fs;
     const dirToSave =
       Platform.OS == "ios" ? dirs.DocumentDir : dirs.DownloadDir;
-    const configfb = {
+    const AndroidConfig = {
       fileCache: true,
-      useDownloadManager: true,
-      notification: true,
-      mediaScannable: true,
+      addAndroidDownloads: {
+        useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+        notification: true,
+        mediaScannable: true,
+        title: filename,
+        path: `${dirToSave}/${filename}`,
+      }
+    };
+
+    const IosConfig = {
+      fileCache: true,
       title: filename,
       path: `${dirToSave}/${filename}`,
     };
-    const configOptions = Platform.select({
-      ios: {
-        fileCache: configfb.fileCache,
-        title: configfb.title,
-        path: configfb.path,
-        //appendExt: 'pdf',
-      },
-      android: configfb,
-    });
-
-    console.log("The file saved to 23233", configfb, dirs);
+    const configOptions = Platform.OS == 'ios' ? IosConfig : AndroidConfig
 
     RNFetchBlob.config(configOptions)
       .fetch("GET", imgUrl, {})
       .then((res) => {
+        console.log('RNFetchBlob', res);
         if (Platform.OS === "ios") {
-          RNFetchBlob.fs.writeFile(configfb.path, res.data, "base64");
-          RNFetchBlob.ios.previewDocument(configfb.path);
+          msgProvider.showSuccess("File downloaded");
+          setTimeout(() => {
+            RNFetchBlob.fs.writeFile(IosConfig.path, res.data, "base64");
+            RNFetchBlob.ios.previewDocument(IosConfig.path);
+          }, 1000);
         }
-        // setisdownloaded(false)
-        // global.props.hideLoader();
         if (Platform.OS == "android") {
           msgProvider.showSuccess("File downloaded");
         }
         console.log("The file saved to ", res);
-      })
-      .catch((e) => {
-        // setisdownloaded(true)
-        // global.props.hideLoader();
+        // RNFetchBlob.fs.unlink(res)
+      }).catch((e) => {
         msgProvider.showError(e.message);
-        console.log("The file saved to ERROR", e.message);
-      });
+        console.log("actualDownload-error", e.message);
+      }).finally(() => {
+        setIsDownloading(false)
+      })
   };
 
 
-  const getAudioTimeString = (seconds) => {
-    // console.log("seconds:: ", seconds);
-    const h = parseInt(seconds / (60 * 60));
-    const m = parseInt((seconds % (60 * 60)) / 60);
-    const s = parseInt(seconds % 60);
-
-    return (
-      (h < 10 ? "0" + h : h) +
-      ":" +
-      (m < 10 ? "0" + m : m) +
-      ":" +
-      (s < 10 ? "0" + s : s)
-    );
-  }
-
-
   var item = classStateData.appointmentDetails;
-  const currentTimeString = getAudioTimeString(classStateData.playSeconds);
-  const durationString = getAudioTimeString(classStateData.duration);
-
   if (classStateData.isLoadingDetails) {
 
     return (
@@ -1147,7 +1001,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
           navigation={navigation}
           onBackPress={() => {
             navigation.pop()
-            pause()
           }}
           leftIcon
           rightIcon
@@ -1267,14 +1120,13 @@ export default AppointmentDetails = ({ navigation, route }) => {
     }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View pointerEvents={isDownloading ? 'none' : 'auto'} style={{ flex: 1 }}>
 
         <ScreenHeader
           title={status === 'doctor' ? LangProvider.Consultation_Details[languageIndex] : status === 'lab' ? LangProvider.Lab_Test_Details[languageIndex] : LangProvider.Appointment_Details[languageIndex]}
           navigation={navigation}
           onBackPress={() => {
             navigation.pop()
-            pause()
           }}
           leftIcon
           rightIcon
@@ -1350,7 +1202,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     :
                     <Image
                       source={{ uri: config.img_url3 + item.provider_image }}
-                      style={{ height: s(75), width: s(75), borderRadius: s(85), borderWidth: 0.5, bordercolor: Colors.Highlight }}
+                      style={{ height: s(75), width: s(75), borderRadius: s(85), borderWidth: 0.5, borderColor: Colors.Highlight }}
                     />
                 }
               </View>
@@ -1608,59 +1460,12 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         {LangProvider.Voice_Recording[languageIndex]}
                       </Text>
 
-                      <View
-                        style={{
-                          width: '70%',
-                          flexDirection: "row",
-                          alignItems: 'center'
-                        }}>
-                        {/* <Text style={{ color: 'black', alignSelf: 'center' }}>{currentTimeString}</Text> */}
-                        <TouchableOpacity
-                          onPress={() => {
-                            classStateData.playState == "paused"
-                              ? onStartPlay(true)
-                              : pause();
-                          }}>
-                          <Image
-                            source={
-                              classStateData.playState == "paused"
-                                ? Icons.play
-                                : Icons.pause
-                            }
-                            style={{
-                              transform: [{ rotate: (Icons.pause && languageIndex == 1) ? "180deg" : "0deg" }],
-                              width: (windowWidth * 8) / 100,
-                              height: (windowWidth * 8) / 100,
-                            }}
-                          />
-                        </TouchableOpacity>
-
-                        <Slider
-                          onTouchStart={onSliderEditStart}
-                          onTouchEnd={onSliderEditEnd}
-                          onValueChange={onSliderEditing}
-                          value={classStateData.playSeconds}
-                          maximumValue={classStateData.duration}
-                          maximumTrackTintColor="gray"
-                          minimumTrackTintColor={Colors.Theme}
-                          thumbImage={classStateData.sliderIcon}
-                          style={{
-                            flex: 1,
-                            alignSelf: "center",
-                            marginHorizontal: Platform.select({ ios: 5 }),
-                            height: (windowWidth * 10) / 100,
-                            // transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }]
-                          }}
+                      <View style={{ width: '70%' }}>
+                        <AudioPlayer
+                          url={config.img_url3 + item.symptom_recording}
                         />
-                        <Text
-                          style={{
-                            color: "black",
-                            alignSelf: "center",
-                          }}
-                        >
-                          {durationString}
-                        </Text>
                       </View>
+
                     </View>
                   )}
 
@@ -1719,7 +1524,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             width: "5%",
                             height: 15,
                             marginRight: (windowWidth * 2) / 100,
-                            borderColor: Colors.Theme,
                           }}
                         />
                         <Text
@@ -1729,6 +1533,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             fontSize: Font.small,
                             color: Colors.detailTitles,
                             textAlign: "auto",
+                            width: '80%'
                           }}>
                           {item.patient_prescription}
                         </Text>
@@ -1748,14 +1553,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                   config.img_url3 +
                                   item.patient_prescription,
                                 modalPatientPrescription: true,
-                              },
-                              () => {
-                                console.log(
-                                  "viewPrescriptionImage ",
-                                  classStateData.viewPrescriptionImage
-                                );
-                              }
-                            );
+                              });
                           }}
                           style={{
                             fontFamily: Font.Medium,
@@ -1824,29 +1622,29 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             alignSelf: 'flex-start',
                             width: '70%'
                           }} >
-                          {item.provider_prescription}
+                          {item.patient_prescription}
                         </Text>
 
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (item.provider_prescription != "") {
+                        {
+                          item.provider_prescription != "" &&
+                          <TouchableOpacity
+                            onPress={() => {
                               downloadPrescription(
-                                config.img_url3 +
-                                item.provider_prescription,
+                                config.img_url3 + item.provider_prescription,
                                 item.provider_prescription
                               );
-                            }
-                          }}>
-                          <Text
-                            style={{
-                              textAlign: "right",
-                              fontFamily: Font.Regular,
-                              fontSize: Font.xsmall,
-                              color: Colors.Theme,
                             }}>
-                            {LangProvider.DOWNLOAD[languageIndex]}
-                          </Text>
-                        </TouchableOpacity>
+                            <Text
+                              style={{
+                                textAlign: "right",
+                                fontFamily: Font.Regular,
+                                fontSize: Font.xsmall,
+                                color: Colors.Theme,
+                              }}>
+                              {LangProvider.DOWNLOAD[languageIndex]}
+                            </Text>
+                          </TouchableOpacity>
+                        }
                       </View>
 
                       <Text
@@ -1932,25 +1730,26 @@ export default AppointmentDetails = ({ navigation, route }) => {
                                   {item.report}
                                 </Text>
 
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    if (item.report != "") {
+                                {
+                                  item.report != "" &&
+                                  <TouchableOpacity
+                                    onPress={() => {
                                       downloadPrescription(
                                         config.img_url3 + item.report,
                                         item.report
                                       );
-                                    }
-                                  }}>
-                                  <Text
-                                    style={{
-                                      textAlign: "right",
-                                      fontFamily: Font.Regular,
-                                      fontSize: Font.xsmall,
-                                      color: Colors.Theme,
                                     }}>
-                                    {LangProvider.DOWNLOAD[languageIndex]}
-                                  </Text>
-                                </TouchableOpacity>
+                                    <Text
+                                      style={{
+                                        textAlign: "right",
+                                        fontFamily: Font.Regular,
+                                        fontSize: Font.xsmall,
+                                        color: Colors.Theme,
+                                      }}>
+                                      {LangProvider.DOWNLOAD[languageIndex]}
+                                    </Text>
+                                  </TouchableOpacity>
+                                }
                               </View>
 
                               <Text
@@ -1973,10 +1772,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 </View>
               )}
 
-
-
-
-            {/* Prescription */}
 
             {/* patient details */}
             <View
@@ -2329,16 +2124,14 @@ export default AppointmentDetails = ({ navigation, route }) => {
                   />
                 </View>
 
-                {item.service_type == "Doctor" ? (
-                  item.task_type === "Home Visit" && (
+                {
+                  item.task_type != "Online consultation" && (
                     <View
                       style={{
                         flexDirection: "row",
                         justifyContent: "space-between",
                         paddingVertical: (windowWidth * 2) / 100,
-                        // borderBottomWidth: (windowWidth * 0.3) / 100,
                         borderColor: Colors.bordercolor,
-                        // marginTop: windowWidth * 2 / 100,
                       }}
                     >
                       <Text
@@ -2348,7 +2141,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           color: "#000",
                         }}>
                         { }
-                        {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
+                        {`${LangProvider.distanceFare[languageIndex]} ${item?.distancetext == '' ? '' : `(${item.distancetext})`}`}
                       </Text>
                       <Text
                         style={{
@@ -2361,37 +2154,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       </Text>
                     </View>
                   )
-                ) : (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      paddingVertical: (windowWidth * 2) / 100,
-                      // borderBottomWidth: (windowWidth * 0.3) / 100,
-                      borderColor: Colors.bordercolor,
-                      // marginTop: windowWidth * 2 / 100,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.small,
-                        color: Colors.DarkGrey,
-                      }}>
-                      {`${LangProvider.distanceFare[languageIndex]} ${item?.distance == '' ? '' : `(${item.distancetext})`}`}
-
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.small,
-                        color: Colors.DarkGrey,
-                      }}
-                    >
-                      {item.distance_fee}
-                    </Text>
-                  </View>
-                )}
+                }
                 <View
                   style={{
                     flexDirection: "row",
@@ -2555,36 +2318,31 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 videoCallButton == true && (
                   <>
                     <TouchableOpacity
+                      activeOpacity={0.8}
                       onPress={() => {
-                        // setState({
-                        //   id: item.id,
-                        // }, () => {
-                        //   updateProviderAppointmentStatus("Accept")
-                        // })
                         navigation.navigate("VideoCall", {
                           item: item,
                         });
                       }}
                       style={{
+                        paddingHorizontal: s(8),
+                        paddingVertical: vs(4),
                         backgroundColor: Colors.Green,
-                        width: (windowWidth * 26) / 100,
-                        borderRadius: (windowWidth * 1) / 100,
-                        paddingVertical: (windowWidth * 2) / 100,
-                        justifyContent: "center",
-                      }}
-                    >
+                        borderRadius: 5,
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                      }} >
+                      <SvgXml xml={VideoCall} />
                       <Text
                         style={{
-                          textAlign: "center",
-                          color: Colors.White,
-                          textTransform: "uppercase",
+                          fontSize: Font.small,
                           fontFamily: Font.SemiBold,
-                          fontSize: (windowWidth * 3) / 100,
+                          color: Colors.White,
+                          marginLeft: s(7)
                         }}
-                      >
-                        {LangProvider.VIDEO_CALL[languageIndex]}
-                      </Text>
+                      >{LangProvider.VIDEO_CALL[languageIndex]}</Text>
                     </TouchableOpacity>
+                    
                   </>
                 )}
 
@@ -3395,6 +3153,11 @@ export default AppointmentDetails = ({ navigation, route }) => {
           route={'AppointmentDetails'}
         />
 
+        <NoInternet
+          visible={!deviceConnection}
+        />
+
+        <Loader visible={isDownloading} />
       </View>
     );
   }

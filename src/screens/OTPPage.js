@@ -31,7 +31,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
-import { UserDetails } from "../Redux/Actions";
+import { Address, Guest, UserDetails } from "../Redux/Actions";
 
 const OTPPage = ({ navigation, route }) => {
 
@@ -46,7 +46,7 @@ const OTPPage = ({ navigation, route }) => {
     country_name
   } = route?.params
 
-  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
+  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex, address } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [otpData, setOtpData] = useState({
     otpSuccessModal: false,
@@ -58,11 +58,16 @@ const OTPPage = ({ navigation, route }) => {
   const otpRef = useRef()
   const insets = useSafeAreaInsets()
   useEffect(() => {
-   
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
+    navigation.addListener('focus', payload => {
+      console.log('event is registered...');
+      return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    }
+    );
+    navigation.addListener('blur', payload => {
+      console.log('event is removed...');
+      return BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    }
+    );
   }, [])
 
   const handleBackPress = () => {
@@ -111,7 +116,8 @@ const OTPPage = ({ navigation, route }) => {
     data.append("device_type", deviceType);
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
-    console.log("data", data);
+    console.log("otpVerify-------", data);
+    // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
@@ -119,8 +125,9 @@ const OTPPage = ({ navigation, route }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log("obj", obj);
+        console.log("otpVerify-------", obj);
         if (obj.status == true) {
+          UpdateAddress(obj?.result?.user_id)
           dispatch(UserDetails(obj?.result))
           setTimeout(() => {
             setOtpData(prevState => ({
@@ -142,6 +149,48 @@ const OTPPage = ({ navigation, route }) => {
           isLoading: false
         }))
         console.log("otpVerify-error ------- ", error);
+      });
+  };
+
+  const UpdateAddress = async (userId) => {
+
+    let url = config.baseURL + "api-patient-address-update";
+    var data = new FormData();
+    data.append("user_id", userId);
+    data.append("current_address", address.address);
+    data.append("lat", address.latitude);
+    data.append("lng", address.longitude);
+    data.append("landmark", '');
+    data.append("building_name", '');
+    data.append("title", '');
+    data.append("default", '0');
+
+    console.log(data);
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+        console.log("updateAddress-res----", obj);
+        let newAddressDetails = null
+        if (obj.status == true) {
+          newAddressDetails = {
+            latitude: obj?.result?.latitude,
+            longitude: obj?.result?.longitudes,
+            address: obj?.result?.current_address,
+            isAddressAdded: true
+          }
+          dispatch(Address(newAddressDetails))
+        } else {
+          newAddressDetails = {
+            latitude: '',
+            longitude: '',
+            address: '',
+            isAddressAdded: false
+          }
+          dispatch(Address(newAddressDetails))
+          return false;
+        }
+      }).catch((error) => {
+        console.log("-------- error ------- " + error);
       });
   };
 

@@ -29,8 +29,10 @@ import AppointmentDetails from '../../screens/AppointmentDetails';
 import Orders from '../../screens/Orders';
 import BookingIndex from '../../screens/Booking/Index';
 import { useDispatch, useSelector } from 'react-redux';
-import { onLogout } from '../../Redux/Actions';
+import { CurrentRoute, onLogout } from '../../Redux/Actions';
 import TabbyPayment from '../../screens/TabbyPayment';
+import { config } from '../configProvider';
+import { apifuntion } from '../APIProvider';
 
 
 const Stack = createStackNavigator()
@@ -50,6 +52,8 @@ const MainStack = () => {
         credentials,
         rememberMe,
         languageIndex,
+        isLanguageUpdated,
+        currentRoute
     } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const routeNameRef = useRef();
@@ -110,7 +114,6 @@ const MainStack = () => {
                 notification.finish(PushNotificationIOS.FetchResult.NoData);
             },
         });
-
     }
 
     const getNotificationCall = async () => {
@@ -149,7 +152,7 @@ const MainStack = () => {
         messaging().onMessage(async (remoteMessage) => {
             console.log("Notification msg****", JSON.stringify(remoteMessage));
             if (remoteMessage.data?.type == "Logout") {
-                logout();
+                Logout();
             }
             // PushNotificationIOS.addEventListener(type, onRemoteNotification);
             // return () => {
@@ -167,7 +170,7 @@ const MainStack = () => {
         messaging().getInitialNotification().then(async remoteMessage => {
             console.log('getInitialNotification', remoteMessage);
             if (remoteMessage && remoteMessage.data?.type == "Logout") {
-                logout();
+                Logout();
             }
 
         });
@@ -176,7 +179,7 @@ const MainStack = () => {
         messaging().onNotificationOpenedApp(async remoteMessage => {
             console.log('onNotificationOpenedApp', remoteMessage);
             if (remoteMessage && remoteMessage.data?.type == "Logout") {
-                logout();
+                Logout();
             }
         });
     };
@@ -191,6 +194,7 @@ const MainStack = () => {
             toUserId: data.toUserId,
             toUserName: data.toUserName,
             type: data.type,
+            image: data.image,
             isPage: "accept",
         };
         routeNameRef?.current?.navigate("VideoCall", { item: myData, })
@@ -208,9 +212,9 @@ const MainStack = () => {
         data.append("toUserId", data.fromUserId);
         data.append("toUserName", data.fromUserName);
         data.append("type", "patient_to_doctor_video_call_reject");
+        data.append('callStatus', 'reject')
 
-        apifuntion
-            .postApi(url, data, 1)
+        apifuntion.postApi(url, data, 1)
             .then((obj) => {
                 if (obj.status == true) {
                 } else {
@@ -221,27 +225,55 @@ const MainStack = () => {
             });
     };
 
-    const logout = async () => {
-        dispatch(onLogout({
-            appLanguage,
-            deviceToken,
-            deviceId,
-            deviceName,
-            deviceType,
-            appVersion,
-            contentAlign,
-            address,
-            credentials,
-            rememberMe,
-            languageIndex
-        }))
-        setTimeout(() => {
-            routeNameRef?.current?.reset({
-                index: 0,
-                routes: [{ name: "AuthStack" }],
+    const Logout = async () => {
+        let url = config.baseURL + "api-logout";
+        var data = new FormData();
+        data.append("user_id", loggedInUserDetails?.user_id);
+
+        apifuntion.postApi(url, data, 1)
+            .then((obj) => {
+                // console.log("logout response", obj);
+                if (obj.status == true) {
+                    dispatch(onLogout({
+                        appLanguage,
+                        deviceToken,
+                        deviceId,
+                        deviceName,
+                        deviceType,
+                        appVersion,
+                        contentAlign,
+                        address,
+                        credentials,
+                        rememberMe,
+                        languageIndex,
+                        isLanguageUpdated,
+                        deviceConnection
+                    }))
+                    setTimeout(() => {
+                        routeNameRef?.current?.reset({
+                            index: 0,
+                            routes: [{ name: "AuthStack" }],
+                        });
+                    }, 350);
+                } else {
+                    setTimeout(() => {
+                        routeNameRef?.current?.reset({
+                            index: 0,
+                            routes: [{ name: "AuthStack" }],
+                        });
+                    }, 350);
+                    return false;
+                }
+            }).catch((error) => {
+                setTimeout(() => {
+                    routeNameRef?.current?.reset({
+                        index: 0,
+                        routes: [{ name: "AuthStack" }],
+                    });
+                }, 350);
+                console.log("-------- error ------- " + error);
             });
-        }, 350);
-    }
+    };
 
     useEffect(() => {
         configureNotifications()
@@ -255,8 +287,13 @@ const MainStack = () => {
             //     routeNameRef.current = navigationRef.getCurrentRoute().name;
             //     console.log('................',routeNameRef.current)
             // }}
-            onStateChange={() => {
-                // checkSession()
+            onStateChange={(state) => {
+                // console.log('New Screen is', state)}
+                console.log('New Screen is', routeNameRef.current.getCurrentRoute().name)
+                if (routeNameRef.current.getCurrentRoute().name != 'VideoCall') {
+                    dispatch(CurrentRoute(routeNameRef.current.getCurrentRoute().name))
+                }
+                // console.log({currentRoute});
             }}>
             <Stack.Navigator
                 screenOptions={{

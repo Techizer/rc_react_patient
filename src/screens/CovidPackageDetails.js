@@ -15,7 +15,6 @@ import { config } from "../Provider/configProvider";
 import {
   apifuntion,
   Colors,
-  consolepro,
   Font,
   LangProvider,
   Icons,
@@ -49,7 +48,7 @@ const CovidPackageDetails = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 0)
       .then((obj) => {
-        consolepro.consolelog("response ---> ", JSON.stringify(obj));
+        console.log("response ---> ", JSON.stringify(obj));
 
         if (obj.status == true) {
           setCovidTestDetailsData(obj.result);
@@ -60,7 +59,7 @@ const CovidPackageDetails = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 

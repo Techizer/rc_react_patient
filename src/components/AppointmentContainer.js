@@ -44,8 +44,8 @@ const AppointmentContainer = ({
     navigation,
     isLoading
 }) => {
-    const { loggedInUserDetails, guest, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
-
+    const { loggedInUserDetails, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+    // console.log('/./././', Item);
     const [otp, setOtp] = useState([])
     const [rescheduleData, setRescheduleData] = useState({
         order_id: '',
@@ -98,7 +98,7 @@ const AppointmentContainer = ({
             set_task: Item?.booking_type,
             service_status: Item?.provider_type,
         }))
-        // console.log('************************', Item);
+        console.log('************************', Item);
     }, [Item])
 
 
@@ -1253,8 +1253,7 @@ const AppointmentContainer = ({
                                                     color: Colors.DarkGrey,
                                                     fontSize: Font.small,
                                                     marginRight: (windowWidth * 2) / 100,
-                                                }}
-                                            >
+                                                }}>
                                                 {LangProvider.rated[languageIndex]}
                                             </Text>
                                             <StarRating
@@ -1345,7 +1344,7 @@ const AppointmentContainer = ({
 
                                 {
                                     (Item?.dispaly_provider_type != 'Doctor' && Item?.dispaly_provider_type != 'Lab') &&
-                                    <View style={{ }}>
+                                    <View style={{}}>
                                         {Item?.acceptance_status === 'Accepted' ?
                                             <View
                                                 style={{
@@ -1401,7 +1400,7 @@ const AppointmentContainer = ({
                                 }
 
                                 {
-                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && Item.videoCall == true) &&
+                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && Item.acceptance_status === 'Accepted' && Item.videoCall == true) &&
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
@@ -1503,7 +1502,7 @@ const AppointmentContainer = ({
                                 bottom: 0,
                                 zIndex: 999,
                             }}>
-                               <SkypeIndicator color={Colors.Theme} size={20} />
+                                <SkypeIndicator color={Colors.Theme} size={20} />
                             </View>
                         }
 

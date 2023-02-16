@@ -239,7 +239,7 @@ const ServiceProviderContainer = ({
                     alignSelf: 'flex-start',
                     textAlign: 'left',
                     color: Colors.darkText,
-                    width: '80%'
+                    width: '80%' 
                   }}>
 
                   {Item.provider_name}
@@ -254,7 +254,6 @@ const ServiceProviderContainer = ({
                         fontFamily: Font.Regular,
                         color: Colors.Blue,
                         fontSize: Font.small,
-                        alignSelf: 'flex-start',
                         paddingHorizontal: vs(8)
                       }}
                     >
@@ -325,36 +324,39 @@ const ServiceProviderContainer = ({
                   </View>
                 }
 
+                {
+                  docType != 'ONLINE_CONSULT' &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: vs(15),
+                  }}>
+                    <SvgXml xml={Location} height={vs(12)} width={s(12)} />
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        color: Colors.DarkGrey,
+                        fontSize: Font.small,
+                        // alignSelf: 'flex-start',
+                        paddingHorizontal: s(7)
+                      }}
+                    >
+                      {LangProvider.NearBy[languageIndex]}
+                    </Text>
 
-                <View style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: vs(15),
-                }}>
-                  <SvgXml xml={Location} height={vs(12)} width={s(12)} />
-                  <Text
-                    style={{
-                      fontFamily: Font.Regular,
-                      color: Colors.DarkGrey,
-                      fontSize: Font.small,
-                      // alignSelf: 'flex-start',
-                      paddingHorizontal: s(7)
-                    }}
-                  >
-                    {LangProvider.NearBy[languageIndex]}
-                  </Text>
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        color: Colors.Blue,
+                        fontSize: Font.small,
+                      }}
+                    >
+                      {`${Item.distance}`}
+                    </Text>
 
-                  <Text
-                    style={{
-                      fontFamily: Font.Regular,
-                      color: Colors.Blue,
-                      fontSize: Font.small,
-                    }}
-                  >
-                    {`${Item.distance}`}
-                  </Text>
+                  </View>
+                }
 
-                </View>
 
                 <View style={{
                   flexDirection: 'row',

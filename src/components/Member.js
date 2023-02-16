@@ -149,8 +149,8 @@ const Member = ({
                                         <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>
-                                                {(patientDetails?.gender === '0' ? `${LangProvider.male[languageIndex]}` : `${LangProvider.female[languageIndex]}`)}
-                                                {`${patientDetails?.age}, `}
+                                                {(patientDetails?.gender === '0' ? `${LangProvider.male[languageIndex]}, ` : `${LangProvider.female[languageIndex]}`)}
+                                                {`${patientDetails?.age} `}
                                                 {type ? '' : `${LangProvider.Year[languageIndex]}`}
                                             </Text>
                                         </View>
@@ -169,7 +169,7 @@ const Member = ({
                                             }
                                         }}
                                         underlayColor={Colors.Highlight}
-                                        style={{ width: '6%', height: vs(15), borderRadius: 3, alignItems: 'center', justifyContent: 'center' }}>
+                                        style={{ width: '8%', height: vs(20), borderRadius: 3, alignItems: 'center', justifyContent: 'center' }}>
                                         <SvgXml xml={Menu} height={vs(11)} width={s(2.85)} />
 
                                     </TouchableHighlight>
@@ -180,20 +180,20 @@ const Member = ({
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
                                 <View style={{ width: '94%', flexDirection: 'row' }}>
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.Appointment_Bookings[languageIndex]}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{LangProvider.Appointment_Bookings[languageIndex]}</Text>
                                         <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.appointment_count}</Text>
                                     </View>
 
                                     <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.DoctorConsultation[languageIndex]}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{LangProvider.DoctorConsultation[languageIndex]}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.dc_count}</Text>
                                         </View>
                                     </View>
 
                                     <View style={{ flex: 1, alignItems: 'center' }}>
                                         <View style={{ width: '80%' }}>
-                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{LangProvider.Lab_Test[languageIndex]}</Text>
+                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{LangProvider.Lab_Test[languageIndex]}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{patientDetails?.lab_count}</Text>
                                         </View>
                                     </View>

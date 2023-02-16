@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
 import { SvgXml } from "react-native-svg";
 import { rightArrow } from "../../Icons/Index";
+import NoInternet from "../../components/NoInternet";
 
 
 
@@ -200,7 +201,7 @@ const foodList = [
 
 const LifeStyle = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, deviceConnection, languageIndex } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [lifeStyleDetails, setLifeStyleDetails] = useState({
@@ -221,8 +222,10 @@ const LifeStyle = ({ navigation }) => {
     })
 
     useEffect(() => {
-        getLifeStyle()
-    }, [])
+        if (deviceConnection) {
+            getLifeStyle()
+        }
+    }, [deviceConnection])
 
     const saveLifeStyle = async () => {
         Keyboard.dismiss()
@@ -285,6 +288,7 @@ const LifeStyle = ({ navigation }) => {
                 }
             })
             .catch((error) => {
+                msgProvider.showError(error);
                 setLifeStyleDetails(prevState => ({
                     ...prevState,
                     isLoading: false
@@ -412,7 +416,7 @@ const LifeStyle = ({ navigation }) => {
                                         width: "15%",
                                         alignItems: 'flex-end',
                                         justifyContent: 'center',
-                                        paddingHorizontal:5
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -477,7 +481,7 @@ const LifeStyle = ({ navigation }) => {
                                         width: "15%",
                                         alignItems: 'flex-end',
                                         justifyContent: 'center',
-                                        paddingHorizontal:5
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -542,7 +546,7 @@ const LifeStyle = ({ navigation }) => {
                                         width: "15%",
                                         alignItems: 'flex-end',
                                         justifyContent: 'center',
-                                        paddingHorizontal:5
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -606,8 +610,8 @@ const LifeStyle = ({ navigation }) => {
                                     style={{
                                         width: "15%",
                                         justifyContent: 'center',
-                                        alignItems:'flex-end',
-                                        paddingHorizontal:5
+                                        alignItems: 'flex-end',
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -672,7 +676,7 @@ const LifeStyle = ({ navigation }) => {
                                         width: "15%",
                                         alignItems: 'flex-end',
                                         justifyContent: 'center',
-                                        paddingHorizontal:5
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -737,7 +741,7 @@ const LifeStyle = ({ navigation }) => {
                                         width: "15%",
                                         alignItems: 'flex-end',
                                         justifyContent: 'center',
-                                        paddingHorizontal:5
+                                        paddingHorizontal: 5
                                     }}>
                                     <SvgXml
                                         xml={rightArrow}
@@ -822,6 +826,9 @@ const LifeStyle = ({ navigation }) => {
                 }}
             />
 
+            <NoInternet
+                visible={!deviceConnection}
+            />
         </View>
     )
 }

@@ -26,7 +26,7 @@ const BookingTypePopup = ({
     useEffect(() => {
         // console.log(data?.task_base_enable);
         // console.log(data?.hour_base_enable);
-        // console.log(data?.taskbase_enable);
+        // console.log(data?.task_base_enable);
         // console.log(data?.packagebase_enable);
 
         if (providerType == 'nurse') {
@@ -41,7 +41,7 @@ const BookingTypePopup = ({
                 setIsBtnTwoDisable(true)
             }
         } else {
-            if (data?.taskbase_enable == '0') {
+            if (data?.task_base_enable == '0') {
                 setIsBtnOneDisable(false)
             } else {
                 setIsBtnOneDisable(true)

@@ -9,12 +9,13 @@ import AddEditAddress from '../components/Add_Edit_Address';
 import AddressContainer from '../components/AddressContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Address } from '../Redux/Actions';
+import NoInternet from '../components/NoInternet';
 
 
 
 const ManageAddress = ({ navigation }) => {
 
-  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, appLanguage, deviceConnection } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
 
   const [addressSheet, setAddressSheet] = useState(false)
@@ -28,8 +29,10 @@ const ManageAddress = ({ navigation }) => {
   const sheetRef = React.useRef(null);
 
   useEffect(() => {
-    getAddresses()
-  }, [isFocused])
+    if (deviceConnection) {
+      getAddresses()
+    }
+  }, [isFocused, deviceConnection])
 
   const getAddresses = async () => {
     let url = config.baseURL + "api-patient-list-address";
@@ -63,9 +66,6 @@ const ManageAddress = ({ navigation }) => {
       console.log("getAddresses-error ------- " + error);
     });
   }
-
-
-
 
   return (
 
@@ -180,7 +180,9 @@ const ManageAddress = ({ navigation }) => {
         }}
       />
 
-
+      <NoInternet
+        visible={!deviceConnection}
+      />
 
     </View>
   );

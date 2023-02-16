@@ -11,10 +11,7 @@ import {
 import { Cross, dummyUser, Edit, Tabby, Tap } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import AuthInputBoxSec from "./AuthInputBoxSec";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
-import { Address } from "../Redux/Actions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
@@ -70,22 +67,12 @@ const PaymentOptionBottomSheet = ({
                         fontSize: Font.large,
                         fontFamily: Font.SemiBold,
                         alignSelf: 'flex-start',
-                        color: Colors.darkText
+                        color: Colors.darkText,
+                        paddingHorizontal: s(13)
 
                     }}>{LangProvider.Payment_Option[languageIndex]}</Text>
 
-                {/* <KeyboardAwareScrollView
-                    extraScrollHeight={50}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        paddingBottom: vs(15),
-                    }}
-                    showsVerticalScrollIndicator={false}> */}
-
-
-                <View style={{ marginTop: vs(15) }}>
+                <View style={{ marginTop: vs(15), paddingHorizontal: s(13), }}>
 
                     <TouchableOpacity
                         activeOpacity={0.8}
@@ -111,7 +98,7 @@ const PaymentOptionBottomSheet = ({
                                         fontSize: Font.small,
                                         fontFamily: Font.Regular,
                                         color: Colors.detailTitles,
-                                        alignSelf:'flex-start',
+                                        alignSelf: 'flex-start',
                                         marginBottom: vs(3)
 
                                     }}>{LangProvider.PaymentOneTitle[languageIndex]}
@@ -128,7 +115,7 @@ const PaymentOptionBottomSheet = ({
                                         fontSize: Font.xsmall,
                                         fontFamily: Font.Regular,
                                         color: Colors.lightGrey,
-                                        alignSelf:'flex-start'
+                                        alignSelf: 'flex-start'
 
                                     }}>{LangProvider.PaymentOneDesc[languageIndex]}
                                 </Text>
@@ -174,7 +161,7 @@ const PaymentOptionBottomSheet = ({
                                         fontSize: Font.small,
                                         fontFamily: Font.Regular,
                                         color: Colors.detailTitles,
-                                        alignSelf:'flex-start',
+                                        alignSelf: 'flex-start',
                                         marginBottom: vs(3)
 
                                     }}>{LangProvider.PaymentTwoTitle[languageIndex]}
@@ -191,7 +178,7 @@ const PaymentOptionBottomSheet = ({
                                         fontSize: Font.xsmall,
                                         fontFamily: Font.Regular,
                                         color: Colors.lightGrey,
-                                        alignSelf:'flex-start'
+                                        alignSelf: 'flex-start'
 
                                     }}>{LangProvider.PaymentTwoDesc[languageIndex]}
                                 </Text>
@@ -216,23 +203,20 @@ const PaymentOptionBottomSheet = ({
 
                 </View>
 
-
-                {/* </KeyboardAwareScrollView> */}
                 <View
                     style={{
                         width: "100%",
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         backgroundColor: Colors.White,
-                        paddingHorizontal: (windowWidth * 5) / 100,
-                        paddingVertical: (windowWidth * 2) / 100,
+                        height: 70,
                         alignItems: "center",
                         paddingHorizontal: '10%',
-                        position: 'absolute',
-                        bottom: insets.bottom,
-                        alignSelf: 'center'
+                        borderTopWidth: 1,
+                        borderTopColor: Colors.Border,
+                        position:'absolute',
+                        bottom:0
                     }}>
-
                     <View style={{ alignItems: 'flex-start' }}>
                         <Text
                             style={{
@@ -283,8 +267,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         paddingTop: vs(40),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
         position: 'absolute',
         bottom: 0,
         zIndex: 999

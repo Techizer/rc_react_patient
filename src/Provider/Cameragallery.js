@@ -20,21 +20,18 @@ const Cameragallery = ({
 
   return (
     <Modal
-      animationType="slide"
+      animationType='fade'
       transparent={true}
       visible={mediamodal}
       onRequestClose={onRequestClose}
     >
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={Canclemedia}
+      <View
         style={{
           flex: 1,
           backgroundColor: "#00000030",
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <View style={{ width: windowWidth }}>
           <View
             style={{
@@ -107,7 +104,7 @@ const Cameragallery = ({
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 

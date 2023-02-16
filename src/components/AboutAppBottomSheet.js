@@ -24,7 +24,7 @@ const AboutAppBottomSheet = ({
             closeOnPressBack={false}
             ref={visible}
             height={windowHeight / 1.5}
-            openDuration={250}
+            openDuration={350}
             closeDuration={350}
             customStyles={{
                 wrapper: {
@@ -33,7 +33,8 @@ const AboutAppBottomSheet = ({
                 container: {
                     justifyContent: "center",
                     alignItems: "center",
-                    borderRadius: 25,
+                    borderTopLeftRadius: 25,
+                    borderTopRightRadius: 25,
                     paddingTop: vs(55),
                     paddingBottom: vs(20),
                     paddingHorizontal: s(13),

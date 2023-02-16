@@ -50,7 +50,7 @@ const ListBottomSheet = ({
                     style={{
                         fontSize: Font.large,
                         fontFamily: Font.SemiBold,
-                        textAlign: config.textRotate,
+                        alignSelf: 'flex-start',
                         color: Colors.darkText
 
                     }}>{title}</Text>
@@ -84,7 +84,8 @@ const ListBottomSheet = ({
                                                 style={{
                                                     color: Colors.Black,
                                                     textAlign: config.textRotate,
-                                                    fontSize: Font.large
+                                                    fontSize: Font.large,
+                                                    alignSelf: 'flex-start',
                                                 }} >
                                                 {item.name}
                                             </Text>

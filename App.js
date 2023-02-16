@@ -1,33 +1,41 @@
 import React, { Component, useEffect } from "react";
 import { I18nManager, Platform, StatusBar, AppState } from "react-native";
+import NetInfo from '@react-native-community/netinfo'
 
-// import { Settings } from 'react-native-fbsdk-next';
-import * as Sentry from "@sentry/react-native";
-import { Tabby } from 'tabby-react-native-sdk'
 import MainStack from "./src/Provider/Stacks/MainStack";
 
 import RNRestart from "react-native-restart";
 import { useDispatch, useSelector } from "react-redux";
-import { AppLanguage, ContentAlign, LanguageIndex, Restart } from "./src/Redux/Actions";
+import { AppLanguage, ContentAlign, DeviceConnection, LanguageIndex, Restart } from "./src/Redux/Actions";
+import NoInternet from "./src/components/NoInternet";
 
-Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
 console.reportErrorsAsExceptions = false;
 
-// Sentry.init({
-//   dsn: "https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776",
-//   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-//   // We recommend adjusting this value in production.
-//   tracesSampleRate: 1.0,
-// });
-
-// Settings.setAppID('386042973026214');
 const App = () => {
-  const { appLanguage, restart } = useSelector(state => state.StorageReducer)
+  const { appLanguage, restart, deviceConnection } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(Restart(false))
     language_set()
   }, [appLanguage])
+
+  useEffect(() => {
+    NetInfo.fetch().then(state => {
+      dispatch(DeviceConnection(state.isConnected))
+    }).catch((err) => {
+      console.log('GetConnectivityStatus-err', err);
+    })
+    const checkConnectivity = NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected ? ", state.isConnected);
+      if (state.isConnected == false) {
+        dispatch(DeviceConnection(state.isConnected))
+      }
+    });
+    return () => {
+      checkConnectivity()
+    }
+  }, [])
 
   useEffect(() => {
     // appStateSubscription = AppState.addEventListener(
@@ -52,7 +60,7 @@ const App = () => {
 
     //   }
     // );
-   
+
   }, [])
 
   const language_set = async () => {
@@ -99,7 +107,13 @@ const App = () => {
     restart == true ?
       null
       :
-      <MainStack />
+      <>
+        <MainStack />
+
+        {/* <NoInternet
+          visible={!deviceConnection}
+        /> */}
+      </>
   );
 }
 

@@ -2,11 +2,7 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  ScrollView,
+  Keyboard,
   TextInput,
   Pressable,
 } from "react-native";
@@ -21,13 +17,18 @@ import {
   Icons,
   windowWidth,
   ScreenHeader,
-  Button
+  Button,
+  windowHeight
 } from "../Provider/Utils/Utils";
 import DropDownboxSec from '../components/DropDownboxSec'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
 import IssuesBottomSheet from "../components/ListBottomSheet";
 import { useSelector } from "react-redux";
+import NoInternet from "../components/NoInternet";
+import ReactNativeModal from "react-native-modal";
+import { SvgXml } from "react-native-svg";
+import { Cross } from "../Icons/Index";
 
 
 
@@ -36,7 +37,8 @@ const NeedSupport = ({ navigation }) => {
   const {
     languageIndex,
     loggedInUserDetails,
-    contentAlign
+    contentAlign,
+    deviceConnection
   } = useSelector(state => state.StorageReducer)
 
   const [needSupportData, setNeedSupportData] = useState({
@@ -51,8 +53,10 @@ const NeedSupport = ({ navigation }) => {
 
   const inputRef = useRef()
   useEffect(() => {
-    getAllTopics()
-  }, [])
+    if (deviceConnection) {
+      getAllTopics()
+    }
+  }, [deviceConnection])
 
   const getAllTopics = async () => {
 
@@ -93,10 +97,11 @@ const NeedSupport = ({ navigation }) => {
       msgProvider.showError(LangProvider.emptyMessage[languageIndex]);
       return false;
     }
-
+    Keyboard.dismiss()
     setNeedSupportData(prevState => ({
       ...prevState,
-      isLoading: true
+      isLoading: true,
+      selectissuefocus: false
     }))
     let url = config.baseURL + "api-insert-need-help";
     var data = new FormData();
@@ -114,6 +119,10 @@ const NeedSupport = ({ navigation }) => {
         if (obj.status == true) {
           let result = obj.result;
           msgProvider.showSuccess(obj?.message)
+          // setNeedSupportData(prevState => ({
+          //   ...prevState,
+          //   successmodal: true
+          // }))
           setTimeout(() => {
             navigation.pop()
           }, 450);
@@ -204,7 +213,7 @@ const NeedSupport = ({ navigation }) => {
               fontSize: Font.medium,
               color: Colors.DarkGrey,
               fontFamily: Font.Regular,
-              textAlign:'left'
+              textAlign: 'left'
             }} >
             {LangProvider.need_text[languageIndex]}{" "}
           </Text>
@@ -228,6 +237,7 @@ const NeedSupport = ({ navigation }) => {
                 : needSupportData.selectedIssue
             }
             boxPressAction={() => {
+              inputRef.current.blur()
               setNeedSupportData(prevState => ({
                 ...prevState,
                 issuesModal: true,
@@ -429,7 +439,60 @@ const NeedSupport = ({ navigation }) => {
         }}
       />
 
-      <Modal
+      {/* <ReactNativeModal
+        isVisible={true}
+        statusBarTranslucent={true}
+        animationIn='fadeInUpBig'
+        animationOut='fadeOutDownBig'
+        animationInTiming={350}
+        animationOutTimixng={350}
+        avoidKeyboard={false}
+        // onBackButtonPress={onRequestClose}
+        hasBackdrop={true}
+        useNativeDriver={true}
+        useNativeDriverForBackdrop={true}
+        // backdropColor='rgba(0,0,0,0.8)'
+        style={{ margin: 0, }} >
+
+        <View style={{
+          width: windowWidth,
+          height: (windowHeight / 2.8),
+          backgroundColor: Colors.White,
+          borderTopLeftRadius: 25,
+          borderTopRightRadius: 25,
+          paddingTop: vs(40),
+          paddingBottom: vs(20),
+          paddingHorizontal: s(13),
+          position: 'absolute',
+          bottom: 0,
+          zIndex: 999
+
+        }}>
+
+          <TouchableHighlight
+            onPress={() => {
+            
+            }}
+            underlayColor={Colors.Highlight}
+            style={{
+              height: s(35),
+              width: s(35),
+              borderRadius: s(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: vs(30),
+              right: s(11),
+              zIndex: 999
+            }}
+          >
+            <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+          </TouchableHighlight>
+        </View>
+      </ReactNativeModal> */}
+
+
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={needSupportData.successmodal}
@@ -491,7 +554,7 @@ const NeedSupport = ({ navigation }) => {
                 alignSelf: 'flex-start',
               }}
             >
-              {LangProvider.success[languageIndex]}
+              {LangProvider.SupportTitle[languageIndex]}
             </Text>
 
             <Text
@@ -503,7 +566,7 @@ const NeedSupport = ({ navigation }) => {
                 color: Colors.textgray,
               }}
             >
-              {LangProvider.text_of_modal[languageIndex]}
+              {LangProvider.SupportMsg[languageIndex]}
             </Text>
 
             <TouchableOpacity
@@ -539,8 +602,11 @@ const NeedSupport = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-      </Modal>
+      </Modal> */}
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
 
     </View>
   );

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   Image,
   Keyboard,
-  PermissionsAndroid,
   Platform,
   StyleSheet,
   Text,
@@ -11,7 +10,6 @@ import {
   FlatList,
   TouchableHighlight,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from "react-native";
 import { SkypeIndicator } from "react-native-indicators";
@@ -30,30 +28,17 @@ import {
   Cameragallery,
   msgProvider
 } from "../../../Provider/Utils/Utils";
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSourceAndroidType,
-} from "react-native-audio-recorder-player";
-import RNFetchBlob from "rn-fetch-blob";
-import Slider from "@react-native-community/slider";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { AUDIO_STATUS, pausePlayer, startPlayer } from "../../../components/AudioManager";
-import SoundPlayer from "react-native-sound-player";
-import { Alert } from "react-native";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSkeleton from "../../../components/LoadingSkeleton";
 import { useIsFocused } from "@react-navigation/native";
+import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import { TabbyPaymentStatus } from "../../../Redux/Actions";
-var Sound = require("react-native-sound");
+import AudioRecorder from "../../../components/AudioRecorder";
+import moment from "moment";
+import { AudioPlayer } from "../../../components/AudioPlayer";
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
-let arr = [];
-var sound = null;
-let sliderEditing = false;
-let timeout = null
+
 
 const HomeVisit = ({ navigation }) => {
 
@@ -73,27 +58,17 @@ const HomeVisit = ({ navigation }) => {
     check_currentdate: '',
     date_array: [],
     isLoadingDetails: true,
-    prescriptionsImage: '',
-    symptomsRecording: '',
-    symptom_text: '',
+    prescriptionsImage: null,
+    symptomsRecording: null,
+    symptomText: '',
     isAddingToCart: false,
     isLoadingDates: false
   })
   const isFocused = useIsFocused()
   const [inputFocus, setInputFocus] = useState(false);
-  const [recordSecs, setRecordSecs] = useState(0);
-  const [recordTime, setRecordTime] = useState("00:00");
-  const [isRecording, setRecording] = useState(false);
-  const [isStopped, setStopped] = useState(false);
-  const [playWidth, setPlayWidth] = useState(0);
-  const [imageName, setImageName] = useState("");
   const [mediaModal, setMedialModal] = useState(false);
-  const [playState, setPlayState] = useState("paused");
-  const [playSeconds, setPlaySeconds] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [sliderIcon, setSliderIcon] = useState();
-  const [audioFile, setAudioFile] = useState();
   const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
+  const sheetRef = useRef()
 
   useEffect(() => {
     if (isFocused) {
@@ -107,40 +82,6 @@ const HomeVisit = ({ navigation }) => {
         setState({ isLoadingDetails: false })
       })
     }
-
-    FontAwesome.getImageSource("circle", 20, Colors.Theme).then(
-      (source) => {
-        setSliderIcon(source);
-      }
-    );
-    let _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
-      "FinishedPlaying",
-      ({ success }) => {
-        console.log("finished playing", success);
-      }
-    );
-    let _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
-      "FinishedLoading",
-      ({ success }) => {
-        console.log("finished loading", success);
-      }
-    );
-    let _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingFile",
-      ({ success, name, type }) => {
-        console.log("finished loading file", success, name, type);
-        SoundPlayer.play();
-      }
-    );
-    let _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
-      "FinishedLoadingURL",
-      ({ success, url }) => {
-        console.log("finished loading url", success, url);
-      }
-    );
-    return () => {
-      sound = null;
-    };
   }, [isFocused]);
 
   useEffect(() => {
@@ -148,16 +89,9 @@ const HomeVisit = ({ navigation }) => {
       setState({ isLoadingDetails: false })
     }
   }, [statesData.bookingDetails])
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('blur', () => {
-  //     setTimeout(() => {
-  //       resetState()
-  //     }, 450);
-  //   });
-  //   return unsubscribe
-  // }, [])
 
   const resetState = () => {
+    setIsShowRecordingPanel(false)
     setState({
       bookingDetails: null,
       time_Arr: [],
@@ -172,12 +106,74 @@ const HomeVisit = ({ navigation }) => {
       check_currentdate: '',
       date_array: [],
       isLoadingDetails: true,
-      prescriptionsImage: '',
-      symptomsRecording: '',
-      symptom_text: '',
+      prescriptionsImage: null,
+      symptomsRecording: null,
+      symptomText: '',
       isAddingToCart: false,
       isLoadingDates: false
     })
+  }
+
+  const CheckMicrophonePermission = () => {
+    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.MICROPHONE) : PERMISSIONS.ANDROID.RECORD_AUDIO)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            GetMicrophonePermission()
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            setState({
+              symptomsRecording: null
+            })
+            sheetRef.current.open()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            msgProvider.showError('Please grant microphone permissions from phone settings')
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
+  }
+
+  const GetMicrophonePermission = () => {
+    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.MICROPHONE) : PERMISSIONS.ANDROID.RECORD_AUDIO)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            setState({
+              symptomsRecording: null
+            })
+            sheetRef.current.open()
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            break;
+        }
+      })
+      .catch((error) => {
+        console.log("locationPermission-error", error);
+      });
   }
 
   const setState = payload => {
@@ -188,208 +184,19 @@ const HomeVisit = ({ navigation }) => {
   }
 
   const customStyle = inputFocus ? styles.textInputFocus : styles.textInput;
-  var dirs = RNFetchBlob.fs.dirs;
-  var path = Platform.select({
-    ios: "audio.m4a",
-    android: `${dirs.CacheDir}/audio.mp3`,
-  });
-  audioRecorderPlayer.setSubscriptionDuration(0.1); // optional. Default is 0.5
-
-  Sound.setCategory("Playback", true); // true = mixWithOthers
-
-  const audioSet = {
-    AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-    AudioSourceAndroid: AudioSourceAndroidType.MIC,
-    AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-    AVNumberOfChannelsKeyIOS: 2,
-    AVFormatIDKeyIOS: AVEncodingOption.aac,
-  };
-
-  const onSliderEditStart = () => {
-    sliderEditing = true;
-  };
-
-  const onSliderEditEnd = () => {
-    sliderEditing = false;
-  };
-
-  const onSliderEditing = (value) => {
-    if (sound && playState == 'pause' && !sliderEditing) {
-      sound.setCurrentTime(value);
-      setPlaySeconds(value);
-    }
-  };
-
-  const onStartPlay = async (isPlay = false) => {
-    console.log("path ", audioFile);
-    console.log("sound onStartPlay ", sound);
-    if (sound != null) {
-      playMusic();
-      sound.play(playComplete);
-      setPlayState("playing");
-    } else {
-      let recordingUrl = audioFile;
-      console.log("onStartPlay", recordingUrl);
-
-      sound = new Sound(recordingUrl, "", (error) => {
-        if (error) {
-          console.log("failed to load the sound", error);
-          return;
-        }
-        // loaded successfully
-        console.log(
-          "duration in seconds: " +
-          sound.getDuration() +
-          "number of channels: " +
-          sound.getNumberOfChannels()
-        );
-        setPlayState(isPlay ? "playing" : "paused");
-        setDuration(sound.getDuration());
-        if (isPlay) {
-          // Play the sound with an onEnd callback
-          playMusic();
-          sound.play(playComplete);
-        }
-      });
-    }
-  };
-
-  const playComplete = (success) => {
-    if (success) {
-      console.log("successfully finished playing");
-    } else {
-      console.log("playback failed due to audio decoding errors");
-      Alert.alert("Notice", "audio file error. (Error code : 2)");
-    }
-    if (timeout) {
-      clearInterval(timeout);
-    }
-    setPlayState("paused");
-    setPlaySeconds(0);
-    sound.setCurrentTime(0);
-  }
-
-  const playMusic = () => {
-    console.log(sound, sound.isLoaded());
-    timeout = setInterval(() => {
-
-      if (sound != null && sound.isLoaded() && !sliderEditing) {
-        sound.getCurrentTime((seconds, isPlaying) => {
-          setPlaySeconds(seconds);
-        });
-      }
-    }, 100);
-  }
-
-  const pause = () => {
-    console.log("sound ", sound);
-    if (sound != null) {
-      sound.pause();
-    }
-    setPlayState("paused");
-  };
-
-
-  const onStartRecord = async () => {
-    console.log("onStartRecord");
-    sound = null;
-    setPlayWidth(0);
-    if (Platform.OS === "android") {
-      try {
-        const grants = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-
-        console.log("write external storage", grants);
-
-        if (
-          grants["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants["android.permission.READ_EXTERNAL_STORAGE"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants["android.permission.RECORD_AUDIO"] ===
-          PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log("permissions granted");
-          // const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-          // audioRecorderPlayer.addRecordBackListener((e) => {
-          //   console.log("Recording . . . ", e.currentPosition);
-          //   setRecordSecs(e.currentPosition);
-          //   setRecordTime(
-          //     audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-          //   );
-          //   return;
-          // });
-          const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-          audioRecorderPlayer.addRecordBackListener((e) => {
-            // console.log("Recording . . . ", e.currentPosition);
-            // console.log("isRecording . . . ", e);
-            setStopped(false);
-            setRecording(true);
-            setRecordSecs(e.currentPosition);
-            setRecordTime(
-              audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-            );
-            // console.log("uri . . . ", uri);
-            return;
-          });
-        } else {
-          console.log("All required permissions not granted");
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
-        return;
-      }
-    } else {
-      const uri = await audioRecorderPlayer.startRecorder(path, audioSet);
-      audioRecorderPlayer.addRecordBackListener((e) => {
-        console.log("Recording . . . ", e.currentPosition);
-        setStopped(false);
-        setRecording(e.isRecording);
-        setRecordSecs(e.currentPosition);
-        setRecordTime(
-          audioRecorderPlayer.mmss(Math.floor(e.currentPosition / 1000))
-        );
-        console.log("uri . . . ", uri);
-        return;
-      });
-    }
-  };
-
-  const onStopRecord = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    setRecordSecs(0);
-    setRecordTime("00:00");
-    setRecording(false);
-    setStopped(true);
-    setAudioFile(result);
-    console.log("result ", result);
-  };
 
   const Camerapopen = async () => {
     mediaprovider
       .launchCamera()
       .then((obj) => {
-        console.log(obj);
-        console.log(obj.path);
+        // console.log('Camerapopen', obj);
         setMedialModal(false);
-        var fileName;
-        if (Platform.OS === "ios") {
-          fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
-        } else {
-          fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
+        let imageObj = {
+          uri: obj.path,
+          type: "image/jpg",
+          name: obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length)
         }
-
+        setState({ prescriptionsImage: imageObj })
       }).catch((error) => {
         setMedialModal(false);
       });
@@ -399,38 +206,18 @@ const HomeVisit = ({ navigation }) => {
     mediaprovider
       .launchGellery()
       .then((obj) => {
-        console.log(obj);
-        console.log(obj.path);
+        // console.log('Galleryopen', obj);
         setMedialModal(false);
-        if (Platform.OS === "ios") {
-          setImageName(obj.filename);
-        } else {
-          var fileName =
-            obj.path !== undefined &&
-            obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length);
-          setImageName(fileName);
+        let imageObj = {
+          uri: obj.path,
+          type: "image/jpg",
+          name: obj.path.substring(obj.path.lastIndexOf("/") + 1, obj.length)
         }
-      })
-      .catch((error) => {
+        setState({ prescriptionsImage: imageObj })
+      }).catch((error) => {
         setMedialModal(false);
       });
   };
-
-  const getAudioTimeString = (seconds) => {
-    // console.log("seconds:: ", seconds);
-    const h = parseInt(seconds / (60 * 60));
-    const m = parseInt((seconds % (60 * 60)) / 60);
-    const s = parseInt(seconds % 60);
-
-    return (
-      (h < 10 ? "0" + h : h) +
-      ":" +
-      (m < 10 ? "0" + m : m) +
-      ":" +
-      (s < 10 ? "0" + s : s)
-    );
-  };
-
 
   const getDay = () => {
     var today = new Date();
@@ -584,7 +371,7 @@ const HomeVisit = ({ navigation }) => {
 
       })
       .catch((error) => {
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -620,7 +407,7 @@ const HomeVisit = ({ navigation }) => {
           let vatPrice = 0;
           let Total = 0;
           subTotal = subTotal + parseInt(obj.result.home_visit_task[0].task_price) + parseInt(obj.result?.distance_fare)
-          vatPrice = parseFloat(obj.result.home_visit_task[0].task_price * 5) / 100
+          vatPrice = parseFloat(obj.result.online_base_task[0].task_price * JSON.parse(obj.result.vat_price)) / 100
           Total = subTotal + vatPrice
           setState({
             bookingDetails: obj.result,
@@ -693,7 +480,7 @@ const HomeVisit = ({ navigation }) => {
           setState({ Error_popup: true });
         }, 700);
 
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
       });
   };
 
@@ -704,6 +491,10 @@ const HomeVisit = ({ navigation }) => {
       msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
+    // if (statesData.bookingDetails.distancelogic == 0) {
+    //   msgProvider.showError('Please recheck your address or book a different provider.');
+    //   return false;
+    // }
     setState({ isAddingToCart: true })
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
@@ -735,23 +526,18 @@ const HomeVisit = ({ navigation }) => {
     }
 
 
-    if (statesData.prescriptionsImage != "") {
-      data.append("upload_prescription", {
-        uri: statesData.prescriptionsImage,
-        type: "image/jpg",
-        name: statesData.prescriptionsImage,
-      });
+    if (statesData.prescriptionsImage != null) {
+      data.append("upload_prescription", statesData.prescriptionsImage);
     }
 
-    if (statesData.symptomsRecording != "") {
-      data.append("symptom_recording", {
-        uri: statesData.symptomsRecording,
-        type: "audio/m4a",
-        name: statesData.symptomsRecording,
-      });
+    if (statesData.symptomsRecording != null) {
+      data.append("symptom_recording", statesData.symptomsRecording);
     }
 
 
+    // console.log('body data', data);
+    // console.log('body data', statesData.prescriptionsImage);
+    // console.log('body data', statesData.symptomsRecording);
     // return
     apifuntion
       .postApi(url, data)
@@ -774,7 +560,7 @@ const HomeVisit = ({ navigation }) => {
       })
       .catch((error) => {
         setState({ isAddingToCart: false })
-        consolepro.consolelog("-------- error ------- " + error);
+        console.log("-------- error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -791,8 +577,7 @@ const HomeVisit = ({ navigation }) => {
     }
     setState({ date_array: data });
   };
-  const currentTimeString = getAudioTimeString(playSeconds);
-  const durationString = getAudioTimeString(duration);
+
   var Details = statesData.bookingDetails;
 
   if (statesData.isLoadingDetails) {
@@ -852,6 +637,19 @@ const HomeVisit = ({ navigation }) => {
                   }}>
                   {Details?.provider_name}
                 </Text>
+                {
+                  Details && Details?.hospital_name != '' &&
+                  <Text
+                    style={{
+                      fontFamily: Font.Medium,
+                      fontSize: Font.small,
+                      alignSelf: 'flex-start',
+                      color: Colors.Theme,
+                      marginTop: vs(2)
+                    }}>
+                    {Details?.hospital_name}
+                  </Text>
+                }
                 {
                   selectedProvider.providerType != 'lab' &&
                   <Text
@@ -1040,99 +838,40 @@ const HomeVisit = ({ navigation }) => {
                   {LangProvider.TalkToDoctor[languageIndex]}
                 </Text> */}
 
-                <View
+
+                {/* --------------Recoring Container-------------- */}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    CheckMicrophonePermission()
+                  }}
                   style={{
-                    paddingVertical: vs(15),
-                    flexDirection: isStopped ? 'row' : 'column',
-                    justifyContent: 'space-around',
-                    alignItems: 'center'
+                    justifyContent: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                    alignSelf: 'center'
+
                   }}>
-                  {/* --------------Recoring Container-------------- */}
-
-
-                  <View
+                  <Image
+                    resizeMode="contain"
+                    source={Icons.mic}
                     style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: 'row'
-                    }} >
-                    <TouchableOpacity
-                      onPress={() => {
-                        isRecording ? onStopRecord() : onStartRecord();
-                      }}
-                      style={{
-                        justifyContent: "center",
-                        alignContent: "center",
-                        alignItems: "center",
-                        alignSelf: 'center'
-
-                      }}>
-                      <Image
-                        resizeMode="contain"
-                        source={isRecording ? Icons.stop : Icons.mic}
-                        style={{
-                          width: (windowWidth * 10) / 100,
-                          height: (windowWidth * 10) / 100,
-                          borderColor: Colors.Theme,
-                        }}
-                      />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        fontFamily: Font.Regular,
-                        fontSize: Font.medium,
-                        marginLeft: (windowWidth * 1) / 100,
-                      }}>
-                      {recordTime}
-                    </Text>
-                  </View>
-
-                  {isStopped && (
-                    <View
-                      style={{
-                        width: "65%",
-                        alignSelf: "center",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        alignContent: "center",
-                        flexDirection: "row",
-                      }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          playState == "paused" ? onStartPlay(true) : pause();
-                        }}
-                      >
-                        <Image
-                          source={
-                            playState == "paused" ? Icons.play : Icons.pause
-                          }
-                          style={{
-                            width: (windowWidth * 10) / 100,
-                            height: (windowWidth * 10) / 100,
-                          }}
-                        />
-                      </TouchableOpacity>
-                      <Slider
-                        onTouchStart={onSliderEditStart}
-                        onTouchEnd={onSliderEditEnd}
-                        onValueChange={onSliderEditing}
-                        value={playSeconds}
-                        maximumValue={duration}
-                        maximumTrackTintColor="gray"
-                        minimumTrackTintColor={Colors.Theme}
-                        thumbImage={sliderIcon}
-                        style={{
-                          flex: 1,
-                          alignSelf: "center",
-                          marginHorizontal: Platform.select({ ios: 5 }),
-                          height: (windowWidth * 10) / 100,
-                        }}
-                      />
-                    </View>
-                  )}
-
-                </View>
+                      width: (windowWidth * 10) / 100,
+                      height: (windowWidth * 10) / 100,
+                      borderColor: Colors.Theme,
+                    }}
+                  />
+                </TouchableOpacity>
               </View>
+
+              {
+                statesData.symptomsRecording != null &&
+                <View style={{ width: '94%', marginTop: (windowWidth * 5) / 100, alignSelf: 'center' }}>
+                  <AudioPlayer
+                    url={statesData.symptomsRecording.uri}
+                  />
+                </View>
+              }
 
               <View style={{ width: '100%', alignSelf: 'center', height: vs(1.5), backgroundColor: Colors.backgroundcolor, marginTop: vs(6) }}></View>
 
@@ -1165,6 +904,7 @@ const HomeVisit = ({ navigation }) => {
                     <TextInput
                       placeholder="Example symptoms… I am felling down, my head is paining from last 2 days."
                       onChangeText={(text) => {
+                        setState({ symptomText: text })
                       }}
                       onFocus={() => setInputFocus(true)}
                       onBlur={() => setInputFocus(false)}
@@ -1182,7 +922,6 @@ const HomeVisit = ({ navigation }) => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      // this.setState({ mediamodal: true });
                       setMedialModal(true);
                     }}
                     style={{
@@ -1209,9 +948,9 @@ const HomeVisit = ({ navigation }) => {
                         color: Colors.darkText,
                         alignSelf: 'flex-start',
                       }}>
-                      {imageName === ""
+                      {statesData.prescriptionsImage == null
                         ? LangProvider.Upload[languageIndex]
-                        : imageName}
+                        : statesData.prescriptionsImage.name}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1219,78 +958,6 @@ const HomeVisit = ({ navigation }) => {
 
             </View>
           }
-
-          {/* <View
-            style={{
-              width: "100%",
-              backgroundColor: "#fff",
-              paddingVertical: (windowWidth * 3) / 100,
-              marginBottom: (windowWidth * 1) / 100,
-            }}
-          >
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              data={statesData.hourList}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      BookHour(item, index)
-                    }}
-                    style={[
-                      {
-                        borderRadius: (windowWidth * 2) / 100,
-                        marginLeft: (windowWidth * 2) / 100,
-                        width: (windowWidth * 35) / 100,
-                        backgroundColor: "#fff",
-                      },
-                      item.status == true
-                        ? {
-                          borderColor: Colors.Theme,
-                          borderWidth: 1.5,
-                        }
-                        : { borderColor: "#DFDFDF", borderWidth: 1 },
-                    ]}
-                  >
-                    <View
-                      style={{
-                        backgroundColor: "#0168B3",
-                        borderTopLeftRadius: (windowWidth * 1.1) / 100,
-                        borderTopRightRadius: (windowWidth * 1.1) / 100,
-                        width: "100%",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          paddingVertical: (windowWidth * 1.5) / 100,
-                          color: Colors.White,
-                          fontFamily: Font.Medium,
-                          fontSize: (windowWidth * 3) / 100,
-                          textTransform: "uppercase",
-                          textAlign: "center",
-                        }}
-                      >
-                        {item.duration}
-                      </Text>
-                    </View>
-
-                    <Text
-                      style={{
-                        paddingVertical: (windowWidth * 2) / 100,
-                        fontFamily: Font.Medium,
-                        textAlign: "center",
-                        fontSize: Font.small,
-                      }}
-                    >
-                      {item.price} {statesData.currency_symbol}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View> */}
-
 
           {/* ------------------Date Time--------------- */}
           <View
@@ -1757,7 +1424,7 @@ const HomeVisit = ({ navigation }) => {
             backgroundColor: Colors.White,
             paddingHorizontal: (windowWidth * 5) / 100,
             paddingVertical: (windowWidth * 2) / 100,
-            height: 80,
+            height: 70,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
@@ -1804,7 +1471,24 @@ const HomeVisit = ({ navigation }) => {
           }}
           Canclemedia={() => {
             setMedialModal(false);
-            // this.setState({ mediamodal: false });
+          }}
+        />
+
+        <AudioRecorder
+          visible={sheetRef}
+          onRequestClose={() => {
+            sheetRef.current.close()
+          }}
+          recordedAudioUri={(uri) => {
+            let audioObj = {
+              uri: uri,
+              type: "audio/m4a",
+              name: moment().format('x') + '.m4a',
+            }
+            // console.log(audioObj);
+            setState({
+              symptomsRecording: audioObj
+            })
           }}
         />
       </View>

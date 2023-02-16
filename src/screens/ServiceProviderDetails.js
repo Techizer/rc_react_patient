@@ -24,18 +24,19 @@ import {
   apifuntion,
   Button
 } from "../Provider/Utils/Utils";
-import { Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
+import { Capsule, Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import AboutAppBottomSheet from '../components/AboutAppBottomSheet'
 import { useDispatch, useSelector } from "react-redux";
 import { SelectedProvider } from "../Redux/Actions";
+import NoInternet from "../components/NoInternet";
 
 
 
 export default ServiceProviderDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, address, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, address, guest, deviceConnection, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const { docType, providerType, providerId, isFromHospital, hospitalId } = route?.params
   const [statesData, setStatesData] = useState({
@@ -48,12 +49,14 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     available_days: "",
     availability_arr: []
   })
-  const sheetRef=useRef()
+  const sheetRef = useRef()
   const insets = useSafeAreaInsets()
 
   useEffect(() => {
-    getProviderDetails()
-  }, [])
+    if (deviceConnection) {
+      getProviderDetails()
+    }
+  }, [deviceConnection])
 
   const setState = payload => {
     setStatesData(prev => ({
@@ -129,19 +132,27 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-service-provider-details";
     var data = new FormData();
     if (guest == true) {
-      console.log('if');
       data.append("id", providerId);
       data.append("login_user_id", 0);
       data.append("service_type", providerType);
       data.append("device_lang", languageIndex == 0 ? 'ENG' : 'AR');
       data.append("latitude", address?.latitude);
       data.append("longitudes", address?.longitude);
+      if (providerType === "doctor") {
+        data.append("docEnableFor", docType);
+      }
     } else {
       data.append("id", providerId);
       data.append("login_user_id", loggedInUserDetails.user_id);
       data.append("service_type", providerType);
       data.append("work_area", loggedInUserDetails.work_area);
+      if (providerType === "doctor") {
+        data.append("docEnableFor", docType);
+      }
     }
+
+    // console.log(data);
+    // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
@@ -385,6 +396,21 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                     }}>
                     {provider_details.provider_name}
                   </Text>
+
+                  {
+                    provider_details.hospital_name != '' &&
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.small,
+                        alignSelf: 'flex-start',
+                        color: Colors.Theme,
+                        marginTop: vs(2)
+                      }}>
+                      {provider_details.hospital_name}
+                    </Text>
+                  }
+
                   {
                     providerType != 'lab' &&
                     <Text
@@ -398,16 +424,34 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                       {provider_details.qualification}
                     </Text>
                   }
-                  <Text
+                  <View style={{ flexDirection: 'row', marginTop: vs(2), alignItems: 'center' }}>
+                    {
+                      providerType === 'lab' &&
+                      <SvgXml xml={Capsule} height={vs(18)} width={s(55)} />
+                    }
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.small,
+                        color: Colors.Theme,
+                        marginLeft: providerType === 'lab' ? 5 : 0
+                      }}
+                    >
+                      {providerType === 'lab' ? provider_details?.iso_text : provider_details.speciality}
+                    </Text>
+                  </View>
+
+                  {/* <Text
                     style={{
                       fontFamily: Font.Medium,
                       fontSize: Font.small,
                       alignSelf: 'flex-start',
-                      color: Colors.Blue,
+                      color: Colors.Theme,
                       marginTop: vs(5)
                     }}>
                     {providerType === 'lab' ? provider_details?.iso_text : provider_details.speciality}
-                  </Text>
+                  </Text> */}
+
                 </View>
               </View>
 
@@ -609,7 +653,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
                 {/* -------------Lab------------- */}
 
                 {
-                  (provider_details?.provider_available == '0' && providerType == 'lab' && provider_details?.taskbase_enable == '0') &&
+                  (provider_details?.provider_available == '0' && providerType == 'lab' && provider_details?.task_base_enable == '0') &&
                   <Button
                     text={LangProvider.BOOKLABTESTAPPOINTMENT[languageIndex]}
                     btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
@@ -676,7 +720,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
 
                 {
-                  (provider_details?.provider_available == '0' && provider_details?.task_base_enable == '0') &&
+                  ((providerType != 'lab' && providerType != 'doctor') && provider_details?.provider_available == '0' && provider_details?.task_base_enable == '0') &&
                   <Button
                     text={LangProvider.BOOKTASKBASEDAPPOINTMENT[languageIndex]}
                     btnStyle={{ marginTop: 0, backgroundColor: Colors.Green }}
@@ -709,7 +753,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
                 {
 
-                  (provider_details?.provider_available == '0' && provider_details?.hour_base_enable == '0') &&
+                  ((providerType != 'lab' && providerType != 'doctor') && provider_details?.provider_available == '0' && provider_details?.hour_base_enable == '0') &&
                   <Button
                     text={LangProvider.BOOKHOURLYAPPOINTMENT[languageIndex]}
                     btnStyle={{ marginTop: 10, backgroundColor: Colors.Theme }}
@@ -1130,6 +1174,9 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
         data={statesData.how_work_value}
       />
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
     </View>
   );
 

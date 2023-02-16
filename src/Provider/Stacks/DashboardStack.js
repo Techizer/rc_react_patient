@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Platform, View } from "react-native";
+import { Platform, View, BackHandler, Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -71,7 +71,7 @@ function HomeDrawer() {
 
 const DashboardStack = ({ navigation }) => {
 
-  const { loggedInUserDetails, appLanguage, } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
 
   const getAppointments = async () => {
@@ -142,6 +142,57 @@ const DashboardStack = ({ navigation }) => {
       });
   };
 
+  const handleBackPress = (index, type = 'add', isDone = false) => {
+    console.log({ index });
+    if ( type === 'add') {
+      if (!navigation.canGoBack() && index === 0) {
+        console.log('handleBackPress');
+        Alert.alert(
+          LangProvider.titleexitapp[languageIndex],
+          LangProvider.exitappmessage[languageIndex],
+          [
+            {
+              text: LangProvider.no_txt[languageIndex],
+              onPress: () => console.log("Cancel Pressed"),
+              style: LangProvider.no_txt[languageIndex],
+            },
+            {
+              text: LangProvider.yes_txt[languageIndex],
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          {
+            cancelable: false,
+          }
+        )
+        return true;
+      } else {
+        navigation.goBack()
+        return true;
+      }
+    } else {
+      if (isDone) {
+        return true
+      } else {
+        BackHandler.removeEventListener('hardwareBackPress', () => {
+          return handleBackPress(0, 'remove', true)
+        })
+      }
+
+    }
+
+  };
+
+  // useEffect(() => {
+  //   navigation.addListener('blur', payload => {
+  //     console.log('event is removed...');
+  //     return BackHandler.removeEventListener('hardwareBackPress', () => {
+  //       return handleBackPress(0)
+  //     })
+  //   }
+  //   );
+  // }, [])
+
   useEffect(() => {
     if (loggedInUserDetails != null) {
       getAppointments()
@@ -152,6 +203,25 @@ const DashboardStack = ({ navigation }) => {
 
   return (
     <Tab.Navigator
+      screenListeners={{
+        state: (s) => {
+          console.log('tab listner...', s.data.state.index);
+          if (s.data.state.index == 0 && !navigation.canGoBack()) {
+            console.log('event is registered...');
+            BackHandler.addEventListener('hardwareBackPress', (st) => {
+              console.log('inner indexe...', s.data.state.index);
+              return handleBackPress(s.data.state.index, 'add', true)
+            })
+          } else {
+            console.log('should remove;;;;;');
+            handleBackPress(s.data.state.index, 'remove', false)
+            // BackHandler.removeEventListener('hardwareBackPress', () => {
+            //   return handleBackPress(0, 'remove', false)
+            // })
+          }
+        }
+      }}
+      backBehavior='firstRoute'
       sceneContainerStyle={{
         backgroundColor: Colors.White
       }}

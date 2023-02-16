@@ -23,7 +23,8 @@ import {
     LANGUAGE_INDEX,
     CART,
     TABBY_PAYMENT,
-    LANGUAGE_UPDATED
+    LANGUAGE_UPDATED,
+    CURRENT_ROUTE
 } from './Types';
 
 const initialState = {
@@ -34,6 +35,7 @@ const initialState = {
     deviceId: null,
     deviceName: null,
     deviceType: null,
+    deviceConnection: null,
     appVersion: null,
     contentAlign: 'right',
     guest: null,
@@ -49,7 +51,8 @@ const initialState = {
     selectedProvider: null,
     cart: -1,
     tabbyPayment: false,
-    isLanguageUpdated:false
+    isLanguageUpdated: false,
+    currentRoute: ''
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -68,9 +71,14 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 credentials: action.payload.credentials,
                 rememberMe: action.payload.rememberMe,
                 languageIndex: action.payload.languageIndex,
-                isLanguageUpdated:action.payload.isLanguageUpdated
+                isLanguageUpdated: action.payload.isLanguageUpdated,
+                deviceConnection: action.payload.deviceConnection
             }
-
+        case CURRENT_ROUTE:
+            return {
+                ...state,
+                currentRoute: action.payload,
+            };
         case HAS_SESSION:
             return {
                 ...state,
@@ -159,7 +167,7 @@ export const ReducerCases = (state = initialState, action = {}) => {
         case DEVICE_CONNECTION:
             return {
                 ...state,
-                isInternet: action.payload,
+                deviceConnection: action.payload,
             };
         case APP_LANGUAGE:
             return {

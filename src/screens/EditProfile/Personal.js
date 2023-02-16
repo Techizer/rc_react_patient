@@ -1,16 +1,13 @@
 import {
     Text,
     View,
-    SafeAreaView,
-    ScrollView,
     TouchableOpacity,
     Image,
-    Modal,
     FlatList,
     Keyboard,
     Pressable,
 } from "react-native";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -34,11 +31,12 @@ import { s, vs } from "react-native-size-matters";
 import NationalityBottomSheet from "../../components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../Redux/Actions";
+import NoInternet from "../../components/NoInternet";
 
 
 const Personal = ({ navigation }) => {
 
-    const { loggedInUserDetails, languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [userDetails, setUserDetails] = useState({
@@ -62,10 +60,17 @@ const Personal = ({ navigation }) => {
     const [date, setDate] = useState(new Date(),)
     const [nationalityList, setNationalityList] = useState([])
 
+    const nameRef = useRef()
+    const numberRef = useRef()
+    const emailRef = useRef()
+    const addRef = useRef()
+
     useEffect(() => {
-        getProfile()
-        getNationality()
-    }, [])
+        if (deviceConnection) {
+            getProfile()
+            getNationality()
+        }
+    }, [deviceConnection])
 
     const Camerapopen = async () => {
         mediaprovider
@@ -249,14 +254,13 @@ const Personal = ({ navigation }) => {
         data.append("address", userDetails.address);
         data.append("work_area", userDetails.work_area);
         data.append("nationality", userDetails.nationality);
-        if (userDetails.profile_img != "") {
+        if (userDetails.profile_img != null) {
             data.append("image", {
                 uri: userDetails.profile_img,
                 type: "image/jpg",
                 name: userDetails.profile_img,
             });
         }
-
         apifuntion
             .postApi(url, data)
             .then((obj) => {
@@ -276,6 +280,7 @@ const Personal = ({ navigation }) => {
                 return false;
             })
             .catch((error) => {
+                msgProvider.showError(error);
                 setUserDetails(prevState => ({
                     ...prevState,
                     isLoading: false
@@ -355,18 +360,16 @@ const Personal = ({ navigation }) => {
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(18), width: '100%' }}
                         lableText={LangProvider.textinputname[languageIndex]}
-                        inputRef={(ref) => {
-                            this.nameInput = ref;
-                        }}
+                        inputRef={nameRef}
                         onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, name: text }))}
                         maxLength={50}
                         value={userDetails.name}
                         keyboardType="default"
                         autoCapitalize="none"
-                        returnKeyLabel="done"
-                        returnKeyType="done"
+                        returnKeyLabel="next"
+                        returnKeyType="next"
                         onSubmitEditing={() => {
-                            //this.passwordInput.focus();
+                            numberRef.current.focus();
                         }}
                         blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
@@ -377,9 +380,7 @@ const Personal = ({ navigation }) => {
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
                         // lableText={LangProvider.work_area[languageIndex]}
-                        inputRef={(ref) => {
-                            this.nameInput = ref;
-                        }}
+                        // inputRef={}
                         onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, work_area: text }))}
                         maxLength={50}
                         value={userDetails.work_area}
@@ -388,7 +389,7 @@ const Personal = ({ navigation }) => {
                         returnKeyLabel="done"
                         returnKeyType="done"
                         onSubmitEditing={() => {
-                            //this.passwordInput.focus();
+                            numberRef.current.focus()
                         }}
                         blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable={false}
@@ -411,9 +412,7 @@ const Personal = ({ navigation }) => {
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
                                 lableText={LangProvider.CC_code[languageIndex]}
-                                inputRef={(ref) => {
-                                    this.nameInput = ref;
-                                }}
+                                // inputRef={}
                                 onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, country_code: text }))}
                                 maxLength={50}
                                 value={userDetails.country_code}
@@ -437,18 +436,16 @@ const Personal = ({ navigation }) => {
                             <AuthInputBoxSec
                                 mainContainer={{ marginTop: vs(8), width: '100%' }}
                                 lableText={LangProvider.textinputnumber[languageIndex]}
-                                inputRef={(ref) => {
-                                    this.nameInput = ref;
-                                }}
+                                inputRef={numberRef}
                                 onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, mobile: text }))}
                                 maxLength={50}
                                 value={userDetails.mobile}
                                 keyboardType="default"
                                 autoCapitalize="none"
-                                returnKeyLabel="done"
-                                returnKeyType="done"
+                                returnKeyLabel="next"
+                                returnKeyType="next"
                                 onSubmitEditing={() => {
-                                    //this.passwordInput.focus();
+                                    emailRef.current.focus()
                                 }}
                                 blurOnSubmit={Platform.OS === 'ios' ? true : false}
                                 editable
@@ -472,18 +469,16 @@ const Personal = ({ navigation }) => {
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
                         lableText={LangProvider.textinputemails[languageIndex]}
-                        inputRef={(ref) => {
-                            this.nameInput = ref;
-                        }}
+                        inputRef={emailRef}
                         onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, email: text }))}
                         maxLength={50}
                         value={userDetails.email}
                         keyboardType="default"
                         autoCapitalize="none"
-                        returnKeyLabel="done"
-                        returnKeyType="done"
+                        returnKeyLabel="next"
+                        returnKeyType="next"
                         onSubmitEditing={() => {
-                            //this.passwordInput.focus();
+                            addRef.current.focus()
                         }}
                         blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
@@ -559,7 +554,7 @@ const Personal = ({ navigation }) => {
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal
-                            data={languageIndex==0?['Male', 'Female']:['ذكر','أنثى']}
+                            data={languageIndex == 0 ? ['Male', 'Female'] : ['ذكر', 'أنثى']}
                             ItemSeparatorComponent={() => {
                                 return (
                                     <View style={{ width: s(25) }} />
@@ -657,9 +652,7 @@ const Personal = ({ navigation }) => {
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(8), width: '100%' }}
                         lableText={LangProvider.textinputaddress[languageIndex]}
-                        inputRef={(ref) => {
-                            this.nameInput = ref;
-                        }}
+                        inputRef={addRef}
                         onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, address: text }))}
                         maxLength={50}
                         value={userDetails.address}
@@ -668,7 +661,7 @@ const Personal = ({ navigation }) => {
                         returnKeyLabel="done"
                         returnKeyType="done"
                         onSubmitEditing={() => {
-                            //this.passwordInput.focus();
+                            Keyboard.dismiss()
                         }}
                         blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable
@@ -679,9 +672,7 @@ const Personal = ({ navigation }) => {
                     <AuthInputBoxSec
                         mainContainer={{ marginTop: vs(10), width: '100%' }}
                         lableText={LangProvider.textinputidentity[languageIndex]}
-                        inputRef={(ref) => {
-                            this.nameInput = ref;
-                        }}
+                        // inputRef={}
                         onChangeText={(text) => setUserDetails(prevState => ({ ...prevState, identity: text }))}
                         maxLength={50}
                         value={userDetails.identity}
@@ -745,6 +736,10 @@ const Personal = ({ navigation }) => {
                 selectedIssue={(val) => {
                     setUserDetails(prevState => ({ ...prevState, nationality: val }))
                 }}
+            />
+
+            <NoInternet
+                visible={!deviceConnection}
             />
         </View>
     )

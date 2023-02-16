@@ -210,6 +210,7 @@ const AddEditAddress = ({
             });
     };
     return (
+        
         <Modal
             isVisible={visible}
             statusBarTranslucent={true}

@@ -31,7 +31,7 @@ import { useSelector } from "react-redux";
 
 const Signup = ({ navigation }) => {
 
-  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex} = useSelector(state => state.StorageReducer)
+  const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex } = useSelector(state => state.StorageReducer)
 
   const [registerData, setRegisterData] = useState({
     securePassword: true,
@@ -183,8 +183,8 @@ const Signup = ({ navigation }) => {
     data.append("device_lang", appLanguage);
     data.append("fcm_token", deviceToken);
 
-    console.log("data", data);
-
+    // console.log("data", data);
+    // return
     apifuntion
       .postApi(url, data)
       .then((obj) => {
@@ -357,7 +357,7 @@ const Signup = ({ navigation }) => {
             autoCapitalize="none"
             returnKeyType="next"
             onSubmitEditing={() => {
-              numberRef.focus();
+              numberRef.current.focus();
             }}
             blurOnSubmit={Platform.OS === 'ios' ? true : false}
             editable
@@ -486,7 +486,7 @@ const Signup = ({ navigation }) => {
                   fontFamily: Font.Regular,
                   color: Colors.lightGrey,
                   marginTop: vs(8),
-                  alignSelf:'flex-start'
+                  alignSelf: 'flex-start'
                 }}>
                 {LangProvider.mobletexttitle[languageIndex]}
               </Text>
@@ -531,7 +531,7 @@ const Signup = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 marginTop: vs(8),
-                alignSelf:'flex-start'
+                alignSelf: 'flex-start'
               }}
             >
               {LangProvider.ProvideUAE[languageIndex]}
@@ -544,7 +544,7 @@ const Signup = ({ navigation }) => {
                 fontFamily: Font.Regular,
                 color: Colors.lightGrey,
                 marginTop: vs(8),
-                alignSelf:'flex-start'
+                alignSelf: 'flex-start'
               }}
             >
               {LangProvider.Signuptext2[languageIndex]}
@@ -593,7 +593,7 @@ const Signup = ({ navigation }) => {
               fontFamily: Font.Regular,
               color: Colors.lightGrey,
               marginTop: vs(8),
-              alignSelf:'flex-start'
+              alignSelf: 'flex-start'
             }}
           >
             {LangProvider.Signuptext3[languageIndex]}
@@ -643,7 +643,7 @@ const Signup = ({ navigation }) => {
               fontFamily: Font.Regular,
               color: Colors.lightGrey,
               marginTop: vs(8),
-              alignSelf:'flex-start'
+              alignSelf: 'flex-start'
             }}
           >
             {LangProvider.Signuptext4[languageIndex]}
@@ -988,7 +988,7 @@ const Signup = ({ navigation }) => {
                           id_number: registerData.id,
                           password: registerData.password,
                           confirm_password: registerData.confirmPass,
-                          phone_number: registerData.number,
+                          phone_number: registerData.countryCode + registerData.number,
                           name: registerData.name,
                           email: registerData.email,
                           work_area: registerData.country_short_code,

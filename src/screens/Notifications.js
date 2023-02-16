@@ -24,10 +24,11 @@ import {
 import { leftArrow } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { useSelector } from "react-redux";
+import NoInternet from "../components/NoInternet";
 
 const Notifications = ({ navigation }) => {
 
-  const { loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
 
   const [statesData, setStatesData] = useState({
     isLoading: true,
@@ -47,8 +48,10 @@ const Notifications = ({ navigation }) => {
   }
 
   useEffect(() => {
-    get_notification()
-  }, [])
+    if (deviceConnection) {
+      get_notification()
+    }
+  }, [deviceConnection])
 
   const get_notification = async (page) => {
     let apishow = "api-get-all-notification";
@@ -70,7 +73,7 @@ const Notifications = ({ navigation }) => {
       })
       .catch((error) => {
         setState({ notificationdata: [], isLoading: false });
-        console.log("-------- error ------- " + error);
+        console.log("get_notification-error ------- " + error);
       });
   };
 
@@ -150,7 +153,7 @@ const Notifications = ({ navigation }) => {
                     </SkeletonPlaceholder>
 
                     <SkeletonPlaceholder>
-                      <SkeletonPlaceholder.Item width={(windowWidth * 70) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{marginLeft:s(15)}} />
+                      <SkeletonPlaceholder.Item width={(windowWidth * 70) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} style={{ marginLeft: s(15) }} />
                     </SkeletonPlaceholder>
                   </View>
 
@@ -162,11 +165,11 @@ const Notifications = ({ navigation }) => {
                     marginTop: vs(7),
                   }}>
 
-                      <SkeletonPlaceholder>
-                        <SkeletonPlaceholder.Item width={(windowWidth * 30) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
-                      </SkeletonPlaceholder>
+                    <SkeletonPlaceholder>
+                      <SkeletonPlaceholder.Item width={(windowWidth * 30) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
+                    </SkeletonPlaceholder>
 
-                    
+
                   </View>
                 </View>
               );
@@ -302,10 +305,6 @@ const Notifications = ({ navigation }) => {
           </View>
       }
 
-
-
-
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -417,6 +416,9 @@ const Notifications = ({ navigation }) => {
         </View>
       </Modal>
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
 
     </View>
   );

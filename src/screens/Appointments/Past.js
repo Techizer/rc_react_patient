@@ -16,12 +16,13 @@ import AppointmentContainer from "../../components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import NoInternet from "../../components/NoInternet";
 
 
 
 const Past = (props) => {
 
-  const { loggedInUserDetails, guest, languageIndex } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, guest, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
 
   const [appointments, setAppointments] = useState(guest ? [] : [1, 2, 3, 4, 5, 6, 7])
   const [isLoading, setIsLoading] = useState(guest ? false : true)
@@ -29,10 +30,10 @@ const Past = (props) => {
   const isFocused = useIsFocused()
   const insets = useSafeAreaInsets()
   useEffect(() => {
-    if (!guest) {
+    if (!guest && deviceConnection) {
       getAppointments()
     }
-  }, [isRefreshing, isFocused])
+  }, [isRefreshing, isFocused, deviceConnection])
 
 
 
@@ -118,7 +119,9 @@ const Past = (props) => {
         onRefresh={() => setIsRefreshing(true)}
       />
 
-
+      <NoInternet
+        visible={!deviceConnection}
+      />
     </View>
   );
 }

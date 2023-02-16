@@ -22,7 +22,8 @@ import {
     LANGUAGE_INDEX,
     CART,
     TABBY_PAYMENT,
-    LANGUAGE_UPDATED
+    LANGUAGE_UPDATED,
+    CURRENT_ROUTE
 } from './Types'
 
 const Guest = (payload) => ({
@@ -67,6 +68,11 @@ const DeviceName = (payload) => ({
 
 const DeviceType = (payload) => ({
     type: DEVICE_TYPE,
+    payload
+})
+
+const DeviceConnection = (payload) => ({
+    type: DEVICE_CONNECTION,
     payload
 })
 
@@ -144,7 +150,10 @@ const Cart = (payload) => {
     })
 
 }
-
+const CurrentRoute = (payload) => ({
+    type: CURRENT_ROUTE,
+    payload
+})
 
 
 const TabbyPaymentStatus = (payload) => ({
@@ -160,6 +169,7 @@ export {
     DeviceID,
     DeviceName,
     DeviceType,
+    DeviceConnection,
     AppVersion,
     AppLanguage,
     IsLanguageUpdated,
@@ -176,5 +186,6 @@ export {
     TodaysLabTests,
     SelectedProvider,
     Cart,
-    TabbyPaymentStatus
+    TabbyPaymentStatus,
+    CurrentRoute
 }

@@ -48,7 +48,8 @@ const Drawerscreen = ({ navigation }) => {
     rememberMe,
     languageIndex,
     selectedProvider,
-    isLanguageUpdated
+    isLanguageUpdated,
+    deviceConnection
   } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
@@ -56,7 +57,7 @@ const Drawerscreen = ({ navigation }) => {
 
   const [drawerData, setDrawerData] = useState({
     modalVisible: false,
-    profileImg: loggedInUserDetails ? config.img_url3 + loggedInUserDetails?.image : '',
+    profileImg: (loggedInUserDetails && loggedInUserDetails.image != '' && loggedInUserDetails.image != null) ? (config.img_url3 + loggedInUserDetails?.image) : '',
     name: loggedInUserDetails ? loggedInUserDetails?.first_name : '',
     isLogout: false
   })
@@ -98,7 +99,8 @@ const Drawerscreen = ({ navigation }) => {
             credentials,
             rememberMe,
             languageIndex,
-            isLanguageUpdated
+            isLanguageUpdated,
+            deviceConnection
           }))
           setDrawerData(prevState => ({
             ...prevState,
@@ -131,6 +133,12 @@ const Drawerscreen = ({ navigation }) => {
         }
       })
       .catch((error) => {
+        setTimeout(() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'AuthStack' }],
+          })
+        }, 350);
         console.log("-------- error ------- " + error);
       });
   };

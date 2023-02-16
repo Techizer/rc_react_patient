@@ -45,12 +45,18 @@ const ForgotOTP = ({ navigation, route }) => {
   const insets = useSafeAreaInsets()
   
   useEffect(() => {
-   
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
-    checkLocationPermission();
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
+    navigation.addListener('focus', payload =>
+      {
+        console.log('event is registered...');
+       return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+      }
+    );
+    navigation.addListener('blur', payload =>
+      {
+        console.log('event is removed...');
+        return BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+      }
+    );
   }, [])
 
   const handleBackPress = () => {

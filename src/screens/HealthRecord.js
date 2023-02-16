@@ -9,10 +9,11 @@ import { Add } from '../Icons/Index';
 import Member from '../components/Member';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectedProvider } from '../Redux/Actions';
+import NoInternet from '../components/NoInternet';
 
 const HealthRecord = (props) => {
 
-  const { loggedInUserDetails, languageIndex, selectedProvider } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, selectedProvider, deviceConnection } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [isBottomSheet, setIsBottomSheet] = useState(false)
   const [type, setType] = useState('addMember')
@@ -25,9 +26,11 @@ const HealthRecord = (props) => {
   const insets = useSafeAreaInsets()
 
   useEffect(() => {
-    console.log("selectedProvider:: ", selectedProvider)
-    getMember()
-  }, []);
+    // console.log("selectedProvider:: ", selectedProvider)
+    if (deviceConnection) {
+      getMember()
+    }
+  }, [deviceConnection]);
 
   const getMember = async () => {
 
@@ -68,7 +71,7 @@ const HealthRecord = (props) => {
 
       <View style={{ backgroundColor: Colors.White, marginTop: vs(7), paddingHorizontal: s(11), paddingVertical: vs(9), }}>
 
-        <View style={{ flexDirection: 'row', alignItems:'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(10), marginBottom: vs(10) }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Colors.Border, paddingBottom: vs(10), marginBottom: vs(10) }}>
           <Text
             style={{
 
@@ -81,7 +84,7 @@ const HealthRecord = (props) => {
             selectedProvider == null &&
             <TouchableOpacity
               underlayColor={Colors.Highlight}
-              style={{ flexDirection: 'row', alignItems: 'center', height:(windowWidth*7)/100,}}
+              style={{ flexDirection: 'row', alignItems: 'center', height: (windowWidth * 7) / 100, }}
               onPress={() => {
                 setIsBottomSheet(true)
                 setType('addMember')
@@ -160,7 +163,9 @@ const HealthRecord = (props) => {
             justifyContent: "center",
             alignItems: "center",
             position: 'absolute',
-            bottom: 0
+            bottom: 0,
+            borderTopWidth: 1,
+            borderTopColor: Colors.Border,
           }}>
           <Button
             text={LangProvider.Continue_Booking[languageIndex]}
@@ -219,6 +224,9 @@ const HealthRecord = (props) => {
         }}
       />
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
     </View>
   );
 

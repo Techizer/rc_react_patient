@@ -29,7 +29,7 @@ const AddandEditMembers = ({
     editMemberDetails = () => { }
 }) => {
 
-    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
     const [name, setName] = useState('')
     const [dob, setDOB] = useState('')
     const [gender, setGender] = useState('')
@@ -46,7 +46,7 @@ const AddandEditMembers = ({
         // console.log('selectedPatient............', selectedPatient);
         // console.log('type............', type);
         // console.log('isEditable............', isEditable);
-        console.log('selectedPatient............', selectedPatient);
+        // console.log('selectedPatient............', selectedPatient);
         if (selectedPatient != '' && selectedPatient != null && selectedPatient != undefined) {
             setName(selectedPatient.name != '' ? selectedPatient?.name : '')
             setDOB(selectedPatient.age != '' ? selectedPatient?.age : '')
@@ -495,12 +495,14 @@ const AddandEditMembers = ({
                                                             <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
                                                     }
 
-                                                    <TouchableOpacity
-                                                        activeOpacity={0.8}
-                                                        onPress={() => setMediamodal(true)}
-                                                        style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
-                                                        <SvgXml xml={Edit} />
-                                                    </TouchableOpacity>
+                                                    {
+                                                        isEditable &&
+                                                        <TouchableOpacity
+                                                            activeOpacity={0.8}
+                                                            onPress={() => setMediamodal(true)}
+                                                            style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
+                                                            <SvgXml xml={Edit} />
+                                                        </TouchableOpacity>}
 
                                                 </View>
                                             </View>
@@ -522,20 +524,20 @@ const AddandEditMembers = ({
                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
                                                     <View style={{ width: '94%', flexDirection: 'row' }}>
                                                         <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Appointent Bookings'}</Text>
+                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Appointent Bookings'}</Text>
                                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.appointment_count}</Text>
                                                         </View>
 
                                                         <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, justifyContent: 'center', alignItems: 'center' }}>
                                                             <View style={{ width: '80%' }}>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Doctor Consul.'}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Doctor Consul.'}</Text>
                                                                 <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.dc_count}</Text>
                                                             </View>
                                                         </View>
 
                                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                             <View style={{ width: '80%' }}>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: vs(20) }}>{'Lab Tests'}</Text>
+                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Lab Tests'}</Text>
                                                                 <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.lab_count}</Text>
                                                             </View>
                                                         </View>
@@ -701,7 +703,7 @@ const AddandEditMembers = ({
                 </KeyboardAwareScrollView>
                 <Cameragallery
                     mediamodal={mediamodal}
-                    onRequestClose={()=>{
+                    onRequestClose={() => {
                         setMediamodal(false)
                     }}
                     Camerapopen={() => {

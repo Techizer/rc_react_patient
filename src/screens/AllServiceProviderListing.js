@@ -27,16 +27,18 @@ import SearchInput from "../components/SearchInput";
 import FilterBottomSheet from "../components/FilterBottomSheet";
 import { useSelector } from "react-redux";
 import BookingTypePopup from "../components/BookingTypePopup";
+import NoInternet from "../components/NoInternet";
 
 const AllServiceProviderListing = ({ navigation, route }) => {
 
   const { pass_status, enableFor } = route.params || ''
-  const { address, loggedInUserDetails, guest, appLanguage, languageIndex, } = useSelector(state => state.StorageReducer)
+  const { address, loggedInUserDetails, guest, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
 
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [providersData, setProvidersData] = useState({
     message: "",
     searchProvider: "",
-    isHospitalDoctorList: false, 
+    isHospitalDoctorList: false,
     specialtyData: "",
     specialtyArr: [],
     specialtyModal: false,
@@ -48,10 +50,12 @@ const AllServiceProviderListing = ({ navigation, route }) => {
   })
   const insets = useSafeAreaInsets()
   useEffect(() => {
-    getProvidersList()
-  }, [])
+    if (!guest && deviceConnection) {
+      getProvidersList()
+    }
+  }, [deviceConnection, isRefreshing])
+
   const getProvidersList = async (search = null) => {
-    console.log(search);
     if (search != '' && search != null) {
       setProvidersData(prevState => ({
         ...prevState,
@@ -94,6 +98,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
     apifuntion.postApi(url, data, 1).then((res) => {
       // console.log("get_Services-response ", res)
       if (res.status == true) {
+        setIsRefreshing(false)
         setTimeout(() => {
           setProvidersData(prevState => ({
             ...prevState,
@@ -138,7 +143,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
           providersList: [],
           isLoading: false
         }))
-        console.log("-------- error ------- " + error);
+        console.log("getProvidersList-error ------- " + error);
       });
   };
 
@@ -272,10 +277,14 @@ const AllServiceProviderListing = ({ navigation, route }) => {
               docType={enableFor}
             />
           );
-        }
-        }
+        }}
+        refreshing={isRefreshing}
+        onRefresh={() => setIsRefreshing(true)}
       />
 
+      <NoInternet
+        visible={!deviceConnection}
+      />
       {/* <Modal
           animationType="slide"
           transparent={true}
