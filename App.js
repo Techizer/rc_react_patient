@@ -9,6 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppLanguage, ContentAlign, DeviceConnection, LanguageIndex, Restart } from "./src/Redux/Actions";
 import NoInternet from "./src/components/NoInternet";
 
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({ 
+  dsn: 'https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776', 
+});
+
+
 console.reportErrorsAsExceptions = false;
 
 const App = () => {

@@ -2342,7 +2342,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         }}
                       >{LangProvider.VIDEO_CALL[languageIndex]}</Text>
                     </TouchableOpacity>
-                    
+
                   </>
                 )}
 
