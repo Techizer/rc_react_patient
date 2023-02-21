@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Linking,
   StatusBar,
+  Platform,
 } from "react-native";
 import React, { Component, useEffect, useState } from "react";
 import {
@@ -64,8 +65,8 @@ const Splash = ({ navigation }) => {
     showHelp: '',
     helpTitle: '',
     helpUrl: '',
+    modalVisible3: false
   })
-  const [updateAppModal, setUpdateAppModal] = useState(false)
 
   useEffect(() => {
     const promise1 = getLanguage();
@@ -132,53 +133,71 @@ const Splash = ({ navigation }) => {
       if (appLanguage == 'ar') {
         dispatch(AppLanguage('ar'))
         dispatch(ContentAlign('right'))
-        updateAppVersion();
+        checkAppVersion();
       } else {
         dispatch(AppLanguage('en'))
         dispatch(ContentAlign('left'))
-        updateAppVersion();
+        checkAppVersion();
       }
     } else {
       dispatch(AppLanguage('ar'))
       dispatch(ContentAlign('right'))
-      updateAppVersion();
+      checkAppVersion();
     }
   };
 
-  const updateAppVersion = async () => {
+  const checkAppVersion = async () => {
     let language = appLanguage == 'en' ? 'ENG' : 'AR'
-    let url = config.baseURL + `api-ios-patient-update?divice_lang=${language}`;
-    apifuntion.getApi(url, 1)
-      .then((obj) => {
-        console.log("updateAppVersion-res...", obj);
-        if (obj.status == true) {
-          if (parseFloat(obj.result.appVer) > parseFloat(appVersion)) {
-            setUpdateData(prevState => ({
-              ...prevState,
-              appVer: obj.result.appVer,
-              updTitle: "<h3>" + obj.result.updTitle + "</h3>",
-              updText: "<p>" + obj.result.updText + "</p>",
-              skipFlag: obj.result.skipFlag,
-              skipText: obj.result.skipText,
-              rdrTo: obj.result.rdrTo,
-              rdrUrl: obj.result.rdrUrl,
-              showHelp: obj.result.showHelp,
-              helpTitle: obj.result.helpTitle,
-              helpUrl: obj.result.helpUrl,
-            }))
-            setUpdateAppModal(true)
-          } else {
-            CheckOldSession();
-          }
+    let url = config.baseURL + (Platform.OS == 'ios' ? `api-ios-patient-update?divice_lang=${language}` : `api-android-patient-update?divice_lang=${language}`)
+    // console.log("url", url, Configurations.language)
+    apifuntion.getApi(url, 1).then((obj) => {
+
+      if (obj.status == true) {
+
+        console.log({
+          MyVersion: appVersion,
+          FromApiVersion: obj?.result?.appVer,
+          Platform: Platform.OS
+        });
+
+        const newCode = obj?.result?.appVer?.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
+        const myCode = appVersion.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
+
+        console.log({ newCode, myCode });
+
+        if (parseInt(newCode) > parseInt(myCode)) {
+          setUpdateData(prev => ({
+            ...prev,
+            appVer: obj.result.appVer,
+            updTitle: '<h3>' + obj.result.updTitle + '</h3>',
+            updText: '<p>' + obj.result.updText + '</p>',
+            skipFlag: obj.result.skipFlag,
+            skipText: obj.result.skipText,
+            rdrTo: obj.result.rdrTo,
+            rdrUrl: obj.result.rdrUrl,
+            showHelp: obj.result.showHelp,
+            helpTitle: obj.result.helpTitle,
+            helpUrl: obj.result.helpUrl,
+            modalVisible3: true
+          }))
         } else {
-          CheckOldSession();
-          return false;
+          setTimeout(() => {
+            CheckOldSession()
+          }, 1000);
         }
-      }).catch((error) => {
-        CheckOldSession();
-        console.log("updateAppVersion-error ------- " + error);
-      });
-  };
+
+      } else {
+        setTimeout(() => {
+          CheckOldSession()
+        }, 1000);
+        return false;
+      }
+    }).catch((error) => {
+      CheckOldSession()
+      console.log("-------- error ------- " + error);
+    })
+
+  }
 
   const CheckOldSession = () => {
 
@@ -379,9 +398,12 @@ const Splash = ({ navigation }) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={updateAppModal}
+        visible={updateData.modalVisible3}
         onRequestClose={() => {
-          setUpdateAppModal(false)
+          setUpdateData(pre => ({
+            ...pre,
+            modalVisible3: false
+          }))
         }}
       >
         <TouchableOpacity
@@ -415,20 +437,15 @@ const Splash = ({ navigation }) => {
             >
               <View
                 style={{
-                  alignSelf: "flex-start",
-                  width: (windowWidth * 80) / 100,
-                  height: (windowWidth * 14) / 100,
-                  paddingVertical: (windowWidth * 3) / 100,
+                  width: '100%',
+                  // paddingVertical: (windowWidth * 3) / 100,
                   marginTop: (windowWidth * 2) / 100,
                   paddingLeft: (windowWidth * 4) / 100,
                   flexDirection: "row",
                   //  backgroundColor: 'red'
                 }}
               >
-                {/* <Image style={{ 
-                    width: windowWidth * 6 / 100, 
-                    height: windowWidth * 6 / 100 }} source={require('./icons/logo.png')}></Image> */}
-                {/* <Text style={{ fontFamily: Font.Medium, color: '#000', fontSize: windowWidth * 5 / 100, paddingLeft: windowWidth * 4 / 100 }}>{this.state.updTitle}</Text> */}
+                {/* <Image source={Icons.splashLogo} style={{ height: (windowWidth*10)/100, height: (windowWidth*10)/100 }} resizeMode='contain' /> */}
                 <HTMLView
                   value={updateData.updTitle}
                   stylesheet={{
@@ -459,7 +476,7 @@ const Splash = ({ navigation }) => {
                     p: {
                       fontFamily: Font.Regular,
                       color: Colors.Black, //'#515C6F', //Colors.DarkGrey,
-                      fontSize: (windowWidth * 4) / 100,
+                      fontSize: Font.medium,
                       textAlign: contentAlign,
                       opacity: 0.9,
                       // color: '#FF3366', // make links coloured pink
@@ -484,7 +501,10 @@ const Splash = ({ navigation }) => {
                   updateData.skipFlag && (
                     <TouchableOpacity
                       onPress={() => {
-                        setUpdateAppModal(false)
+                        setUpdateData(pre => ({
+                          ...pre,
+                          modalVisible3: false
+                        }))
                         CheckOldSession()
                       }}
                       style={{

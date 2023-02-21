@@ -72,11 +72,23 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-service-provider-details";
 
     var data = new FormData();
-    data.append("id", userId);
-    data.append("login_user_id", loggedInUserDetails.user_id);
-    data.append("service_type", providerType);
-    data.append("work_area", loggedInUserDetails.work_area);
+    if (guest == true) {
+      data.append("id", userId);
+      data.append("login_user_id", 0);
+      data.append("service_type", providerType);
+      data.append("device_lang", languageIndex == 0 ? 'ENG' : 'AR');
+      data.append("latitude", address?.latitude);
+      data.append("longitudes", address?.longitude);
 
+    } else {
+      data.append("id", userId);
+      data.append("login_user_id", loggedInUserDetails.user_id);
+      data.append("service_type", providerType);
+      data.append("work_area", loggedInUserDetails.work_area);
+    }
+    if (providerType === "doctor") {
+      data.append("docEnableFor", docType);
+    }
     // return false
     apifuntion
       .postApi(url, data)
@@ -138,19 +150,16 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
       data.append("device_lang", languageIndex == 0 ? 'ENG' : 'AR');
       data.append("latitude", address?.latitude);
       data.append("longitudes", address?.longitude);
-      if (providerType === "doctor") {
-        data.append("docEnableFor", docType);
-      }
+
     } else {
       data.append("id", providerId);
       data.append("login_user_id", loggedInUserDetails.user_id);
       data.append("service_type", providerType);
       data.append("work_area", loggedInUserDetails.work_area);
-      if (providerType === "doctor") {
-        data.append("docEnableFor", docType);
-      }
     }
-
+    if (providerType === "doctor") {
+      data.append("docEnableFor", docType);
+    }
     // console.log(data);
     // return
     apifuntion

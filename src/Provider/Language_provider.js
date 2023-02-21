@@ -190,7 +190,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 3.6.5", "الإصدار 3.6.5"];
+  version = ["Version 3.6.8", "الإصدار 3.6.8"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "]; 

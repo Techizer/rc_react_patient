@@ -16,11 +16,17 @@ const AboutAppBottomSheet = ({
     onRequestClose,
     data
 }) => {
-
+    const Backdrop = () => (
+        <View style={{
+            flex:1,
+            backgroundColor:'pink'
+        }}  />
+      );
     return (
 
         <RBSheet
             // animationType='slide'
+            BackdropComponent={Backdrop}
             closeOnPressBack={false}
             ref={visible}
             height={windowHeight / 1.5}
@@ -28,7 +34,8 @@ const AboutAppBottomSheet = ({
             closeDuration={350}
             customStyles={{
                 wrapper: {
-                    // backgroundColor: "rgba(255,255,255,1)"
+                    backgroundColor: "rgba(0,0,0,0.6)",
+                    
                 },
                 container: {
                     justifyContent: "center",
@@ -88,8 +95,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: vs(15),
-        right: s(11),
+        top: vs(0),
+        right: s(0),
         zIndex: 999
     }
 });

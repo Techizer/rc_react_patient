@@ -50,7 +50,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
   })
   const insets = useSafeAreaInsets()
   useEffect(() => {
-    if (!guest && deviceConnection) {
+    if (deviceConnection) {
       getProvidersList()
     }
   }, [deviceConnection, isRefreshing])
@@ -69,13 +69,10 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       config.baseURL + "api-patient-service-provider-list"
 
     var data = new FormData();
-    if (pass_status === "doctor") {
-      data.append("docEnableFor", enableFor);
-    }
+    
     if (guest) {
       data.append("login_user_id", 0);
       data.append("service_type", pass_status);
-      data.append("provider_name", "");
       data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'Ar');
       data.append("latitude", address.latitude);
       data.append("longitudes", address.longitude);
@@ -85,18 +82,20 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       data.append("service_type", pass_status);
       data.append("work_area", loggedInUserDetails.work_area);
       data.append("page_count", 1);
-
-      // --------When Search anything--------
-      if (search != '' && search != null) {
-        data.append("provider_name", providersData.searchProvider);
-      } else {
-        data.append("provider_name", '');
-      }
     }
-    // console.log(data);
+    if (pass_status === "doctor") {
+      data.append("docEnableFor", enableFor);
+    }
+    // --------When Search anything--------
+    if (search != '' && search != null) {
+      data.append("provider_name", providersData.searchProvider);
+    } else {
+      data.append("provider_name", '');
+    }
+    console.log(data);
     // return
     apifuntion.postApi(url, data, 1).then((res) => {
-      // console.log("get_Services-response ", res)
+      console.log("get_Services-response ", res)
       if (res.status == true) {
         setIsRefreshing(false)
         setTimeout(() => {
