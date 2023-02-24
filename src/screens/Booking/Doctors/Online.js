@@ -67,7 +67,8 @@ const Online = ({ navigation }) => {
   const [inputFocus, setInputFocus] = useState(false);
   const [mediaModal, setMedialModal] = useState(false);
   const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
-  const sheetRef = useRef()
+  const [isRecordAudio, setIsRecordAudio] = useState(false)
+
 
   useEffect(() => {
     if (isFocused) {
@@ -133,7 +134,7 @@ const Online = ({ navigation }) => {
             setState({
               symptomsRecording: null
             })
-            sheetRef.current.open()
+            setIsRecordAudio(true)
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
@@ -164,69 +165,7 @@ const Online = ({ navigation }) => {
             setState({
               symptomsRecording: null
             })
-            sheetRef.current.open()
-            break;
-          case RESULTS.BLOCKED:
-            console.log('The permission is denied and not requestable anymore');
-            break;
-        }
-      })
-      .catch((error) => {
-        console.log("locationPermission-error", error);
-      });
-  }
-
-  const CheckMediaPermission = () => {
-    check(Platform.OS === 'ios' ? (PERMISSIONS.IOS.MEDIA_LIBRARY) : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
-      .then((result) => {
-        switch (result) {
-          case RESULTS.UNAVAILABLE:
-            console.log('This feature is not available (on this device / in this context)');
-            break;
-          case RESULTS.DENIED:
-            console.log('The permission has not been requested / is denied but requestable');
-            GetMicrophonePermission()
-            break;
-          case RESULTS.LIMITED:
-            console.log('The permission is limited: some actions are possible');
-            break;
-          case RESULTS.GRANTED:
-            console.log('The permission is granted');
-            setState({
-              symptomsRecording: null
-            })
-            sheetRef.current.open()
-            break;
-          case RESULTS.BLOCKED:
-            console.log('The permission is denied and not requestable anymore');
-            msgProvider.showError('Please grant microphone permissions from phone settings')
-            break;
-        }
-      })
-      .catch((error) => {
-        console.log("locationPermission-error", error);
-      });
-  }
-
-  const GetMediaPermission = () => {
-    request(Platform.OS === 'ios' ? (PERMISSIONS.IOS.MEDIA_LIBRARY) : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
-      .then((result) => {
-        switch (result) {
-          case RESULTS.UNAVAILABLE:
-            console.log('This feature is not available (on this device / in this context)');
-            break;
-          case RESULTS.DENIED:
-            console.log('The permission has not been requested / is denied but requestable');
-            break;
-          case RESULTS.LIMITED:
-            console.log('The permission is limited: some actions are possible');
-            break;
-          case RESULTS.GRANTED:
-            console.log('The permission is granted');
-            setState({
-              symptomsRecording: null
-            })
-            sheetRef.current.open()
+            setIsRecordAudio(true)
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
@@ -910,16 +849,19 @@ const Online = ({ navigation }) => {
                   />
                 </TouchableOpacity>
 
-              </View>
 
-              {
-                statesData.symptomsRecording != null &&
-                <View style={{ width: '94%', marginTop: (windowWidth * 5) / 100, alignSelf: 'center' }}>
+                {
+                  statesData.symptomsRecording != null &&
                   <AudioPlayer
                     url={statesData.symptomsRecording.uri}
+                    containerStyle={{
+                      marginTop: (windowWidth * 5) / 100
+                    }}
                   />
-                </View>
-              }
+                }
+              </View>
+
+
 
               <View style={{ width: '100%', alignSelf: 'center', height: vs(1.5), backgroundColor: Colors.backgroundcolor, marginTop: vs(6) }}></View>
 
@@ -1469,13 +1411,14 @@ const Online = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 70,
+            paddingTop: (windowWidth * 2) / 100,
+            paddingBottom: (windowWidth * 7) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
             borderTopColor: Colors.Border,
+            position: 'absolute',
+            bottom: 0,
           }}>
 
           <View style={{ alignItems: 'flex-start' }}>
@@ -1522,9 +1465,9 @@ const Online = ({ navigation }) => {
         />
 
         <AudioRecorder
-          visible={sheetRef}
+          visible={isRecordAudio}
           onRequestClose={() => {
-            sheetRef.current.close()
+            setIsRecordAudio(false)
           }}
           recordedAudioUri={(uri) => {
             let audioObj = {

@@ -84,7 +84,7 @@ const NeedSupport = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getAllTopics-error ------- " + error);
       });
   };
   const submit_click = async () => {
@@ -141,7 +141,7 @@ const NeedSupport = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log("-------- error ------- " + error);
+        console.log("submit_click-error ------- " + error);
       });
   };
 

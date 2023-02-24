@@ -136,7 +136,7 @@ const SupportandMore = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("delete_click-error ------- " + error);
       });
   };
 

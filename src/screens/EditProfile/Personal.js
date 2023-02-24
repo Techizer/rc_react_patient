@@ -195,7 +195,7 @@ const Personal = ({ navigation }) => {
                 }
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("getProfile-error ------- " + error);
             });
     };
 

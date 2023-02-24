@@ -54,7 +54,7 @@ const LabPackageDetails = ({ navigation, route }) => {
         }
       }).catch((error) => {
         setIsLoading(false)
-        console.log("-------- error ------- " + error);
+        console.log("LabPackageDetails-error ------- " + error);
       });
   };
 

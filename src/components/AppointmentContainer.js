@@ -4,9 +4,11 @@ import {
     View,
     TouchableOpacity,
     StyleSheet,
+    Modal,
     TouchableHighlight,
     Image,
     ScrollView,
+    Platform,
 } from "react-native";
 import {
     SkypeIndicator,
@@ -14,7 +16,6 @@ import {
 import React, { Component, useEffect, useState } from "react";
 import { Icons, msgProvider, windowHeight } from "../Provider/Utils/Utils";
 import moment from "moment-timezone";
-import Modal from "react-native-modal";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 
@@ -34,6 +35,7 @@ import { Cross, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "./RatingBottomSheet";
 import StarRating from "react-native-star-rating";
 import { useSelector } from "react-redux";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 var videoCallButton = false;
 
@@ -52,9 +54,9 @@ const AppointmentContainer = ({
         service_status: '',
         send_id: '',
         time_take_data: '',
-        time_Arr: '',
-        final_one: '',
-        final_arr_two: '',
+        time_Arr: [],
+        final_one: [],
+        final_arr_two: [],
         set_date: '',
         newDate: '',
         rescdule_data: '',
@@ -67,6 +69,7 @@ const AppointmentContainer = ({
         timcurrent_for_check: '',
         isRescheduleModal: false,
         isLoading: false,
+        isLoadingDates: false,
         isScheduleagain: false,
     })
 
@@ -76,6 +79,7 @@ const AppointmentContainer = ({
         review: ''
     })
     const [currency, setCurrency] = useState('')
+    const insets = useSafeAreaInsets()
 
     const getUserCountry = async () => {
         if (loggedInUserDetails?.work_area === 'UAE') {
@@ -98,7 +102,7 @@ const AppointmentContainer = ({
             set_task: Item?.booking_type,
             service_status: Item?.provider_type,
         }))
-        console.log('************************', Item);
+        // console.log('************************', Item);
     }, [Item])
 
 
@@ -138,12 +142,12 @@ const AppointmentContainer = ({
             data.append("task_type", rescheduleData?.set_task);
         }
 
-        // console.log("reschedule-bodydata", data);
+        console.log("reschedule-bodydata", data);
         return false /
             apifuntion
                 .postApi(url, data)
                 .then((obj) => {
-                    // console.log("reschedule-response...", obj);
+                    console.log("reschedule-response...", obj.result.task_details);
                     if (obj.status == true) {
                         var currentDate = new Date();
                         let min = currentDate.getMinutes() < 10 ? "0" + currentDate.getMinutes() : currentDate.getMinutes();
@@ -216,7 +220,7 @@ const AppointmentContainer = ({
                                             Arr2.push({ time: nameArr[l], time_status: false });
                                         }
                                         new_time_slot.push({ time: nameArr[l], time_status: false });
-                                        console.log('???????????????????', Arr1);
+                                        // console.log('???????????????????', Arr1);
 
                                     }
                                 }
@@ -228,13 +232,6 @@ const AppointmentContainer = ({
                                 final_one: Arr1,
                                 final_arr_two: Arr2,
                             }))
-
-                            setTimeout(() => {
-                                setRescheduleData(prevState => ({
-                                    ...prevState,
-                                    isLoading: false
-                                }))
-                            }, 500);
                             /////////////////Main If/////////////////////
 
                         } else {
@@ -256,11 +253,14 @@ const AppointmentContainer = ({
                             task_details: obj.result.task_details,
 
                         }))
-
+                        setRescheduleData(prevState => ({
+                            ...prevState,
+                            isLoading: false
+                        }))
                         setTimeout(() => {
                             setRescheduleData(prevState => ({
                                 ...prevState,
-                                isRescheduleModal: true
+                                isRescheduleModal: true,
                             }))
                         }, 700);
 
@@ -270,13 +270,18 @@ const AppointmentContainer = ({
                             ...prevState,
                             rescdule_data: obj.result,
                             message: obj.message,
-                            // isRescheduleModal: true,
+                            isLoading: false,
 
                         }))
                     }
                 })
                 .catch((error) => {
-                    console.log("-------- error ------- " + error);
+                    console.log("reschedule-error ------- " + error);
+                    setRescheduleData(prevState => ({
+                        ...prevState,
+                        isLoading: false,
+
+                    }))
                 });
     };
 
@@ -352,7 +357,10 @@ const AppointmentContainer = ({
 
         setRescheduleData(prevState => ({
             ...prevState,
-            isLoading: true
+            isLoadingDates: true,
+            time_Arr: [],
+            final_one: [],
+            final_arr_two: []
         }))
         let url = config.baseURL + (rescheduleData?.service_status == 'doctor' ? 'api-patient-doctor-next-date-time' : rescheduleData?.service_status == 'lab' ? 'api-patient-lab-next-date-time' : 'api-patient-next-date-time');
 
@@ -371,7 +379,8 @@ const AppointmentContainer = ({
             .then((obj) => {
                 setRescheduleData(prevState => ({
                     ...prevState,
-                    isLoading: false
+                    isLoading: false,
+                    isLoadingDates: false
                 }))
                 if (obj.status == true) {
                     var current = new Date();
@@ -724,9 +733,10 @@ const AppointmentContainer = ({
             .catch((error) => {
                 setRescheduleData(prevState => ({
                     ...prevState,
-                    isLoading: false
+                    isLoading: false,
+                    isLoadingDates: false
                 }))
-                console.log("-------- error ------- " + error);
+                console.log("getTimeDate-error ------- " + error);
             });
     };
 
@@ -830,7 +840,7 @@ const AppointmentContainer = ({
                 }
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("bookTime-error ------- " + error);
             });
     };
 
@@ -871,7 +881,7 @@ const AppointmentContainer = ({
                 }
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("rateProvider-error ------- " + error);
             });
     };
     return (
@@ -1471,510 +1481,514 @@ const AppointmentContainer = ({
 
                 {/* -----------------BottomSheet---------------- */}
 
-                <Modal
-                    isVisible={rescheduleData?.isRescheduleModal}
-                    animationIn='fadeInUpBig'
-                    animationOut='fadeOutDownBig'
-                    deviceWidth={windowWidth}
-                    animationInTiming={350}
-                    animationOutTimixng={350}
-                    // onBackButtonPress={onRequestClose}
-                    hasBackdrop={true}
-                    useNativeDriver={true}
-                    useNativeDriverForBackdrop={true}
-                    // backdropColor='rgba(0,0,0,0.8)'
-                    style={{ margin: 0 }} >
 
 
-                    <View style={styles.modalContainer}>
+                <View style={{ flex: 1 }}>
+                    <Modal
+                        animationType='slide'
+                        visible={rescheduleData?.isRescheduleModal}
+                        transparent
+                        presentationStyle='overFullScreen'
+                    >
 
-                        {
-                            rescheduleData?.isLoading &&
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'rgba(0,0,0,0.3)',
-                                // opacity: 0.8,
-                                width: windowWidth,
-                                height: windowHeight - 250,
-                                borderRadius: 25,
-                                position: 'absolute',
-                                bottom: 0,
-                                zIndex: 999,
-                            }}>
-                                <SkypeIndicator color={Colors.Theme} size={20} />
-                            </View>
-                        }
+                        <View style={[styles.mainContainer]}>
 
-                        <ScrollView
-                            pointerEvents={(rescheduleData.isLoading || rescheduleData.isScheduleagain) ? 'none' : 'auto'}
-                            showsVerticalScrollIndicator={false}
-                            contentContainerStyle={{
-                                paddingBottom: (windowWidth * 7) / 100,
-                                paddingTop: vs(35),
-                            }}>
+                            <View style={[styles.subContainer]}>
 
-                            <TouchableHighlight
-                                onPress={() => {
-                                    setRescheduleData(prevState => ({
-                                        ...prevState,
-                                        isRescheduleModal: false
-                                    }))
-                                }}
-                                underlayColor={Colors.Highlight}
-                                style={styles.closeContainer}
-                            >
-                                <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                            </TouchableHighlight>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setRescheduleData(prevState => ({
+                                            ...prevState,
+                                            isRescheduleModal: false
+                                        }))
+                                    }}
+                                    style={styles.closeContainer}
+                                >
+                                    <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                                </TouchableOpacity>
 
-                            <Text
-                                style={{
-                                    fontSize: Font.large,
-                                    fontFamily: Font.SemiBold,
-                                    alignSelf: 'flex-start',
-                                    color: Colors.darkText
+                                <View style={styles.modalContainer}>
 
-                                }}>{LangProvider.Reschedule[languageIndex]}</Text>
+                                    <ScrollView
+                                        pointerEvents={(rescheduleData.isLoading || rescheduleData.isScheduleagain) ? 'none' : 'auto'}
+                                        showsVerticalScrollIndicator={false}
+                                        contentContainerStyle={{
+                                            paddingBottom: (windowWidth * 7) / 100,
+                                        }}>
 
-                            {/* ----------------------Main------------------ */}
+                                        <Text
+                                            style={{
+                                                fontSize: Font.large,
+                                                fontFamily: Font.SemiBold,
+                                                alignSelf: 'flex-start',
+                                                color: Colors.darkText,
+                                                paddingHorizontal: s(13)
 
+                                            }}>{LangProvider.Reschedule[languageIndex]}</Text>
 
-
-                            <View style={{ marginTop: vs(15) }}>
-
-                                <View
-                                    style={{
-                                        width: "100%",
-                                    }}>
-                                    {/* task booking section */}
-
-
-                                    <View
-                                        style={{
-                                            width: "100%",
-                                            alignSelf: "center",
-                                        }}
-                                    >
-                                        <View style={{ paddingBottom: vs(9), flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <Text
-                                                style={{
-                                                    fontFamily: Font.Medium,
-                                                    fontSize: Font.medium,
-                                                    alignSelf: 'flex-start',
-                                                    color: Colors.Theme,
-                                                }} >
-                                                {rescheduleData?.rescdule_data?.order_id}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: Font.Medium,
-                                                    fontSize: Font.medium,
-                                                    alignSelf: 'flex-start',
-                                                    color: Colors.Theme,
-                                                }} >
-                                                {rescheduleData?.rescdule_data?.task_type}
-                                            </Text>
-                                        </View>
-
-                                        <View
-                                            style={[
-                                                {
-                                                    paddingVertical: vs(9),
-                                                    borderTopWidth: 1.5,
-                                                    borderColor: Colors.backgroundcolor,
-                                                },
-                                                rescheduleData?.task_details?.length >= 3
-                                                    ? { height: (windowWidth * 40) / 100 }
-                                                    : { paddingVertical: vs(5) },
-                                            ]}
-                                        >
-                                            {rescheduleData?.rescdule_data?.slot_booking_id == "TASK_BOOKING" ? (
-                                                <FlatList
-                                                    data={rescheduleData?.task_details}
-                                                    scrollEnabled={true}
-                                                    nestedScrollEnabled={true}
-                                                    renderItem={({ item, index }) => {
-                                                        if ((rescheduleData?.task_details != '' && rescheduleData?.task_details != null)) {
-                                                            return (
-                                                                <View
-                                                                    style={{
-                                                                        alignItems: "center",
-                                                                        width: "100%",
-                                                                        alignSelf: "center",
-                                                                        paddingVertical: (windowWidth * 1.7) / 100,
-                                                                        flexDirection: "row",
-                                                                        marginTop: (windowWidth * 0.3) / 100,
-                                                                    }}>
-                                                                    <Text
-                                                                        style={{
-                                                                            width: "70%",
-                                                                            alignSelf: 'flex-start',
-                                                                            alignSelf: "center",
-                                                                            fontSize: (windowWidth * 3.6) / 100,
-                                                                            fontFamily: Font.Regular,
-                                                                            color: "#000",
-                                                                        }}
-                                                                    >
-                                                                        {item.name}
-                                                                    </Text>
-                                                                    <Text
-                                                                        style={{
-                                                                            width: "30%",
-                                                                            fontSize: (windowWidth * 3.6) / 100,
-                                                                            fontFamily: Font.Regular,
-                                                                            color: "#000",
-                                                                            textAlign: "right",
-                                                                        }}
-                                                                    >
-                                                                        {item.price}
-                                                                    </Text>
-                                                                </View>
-                                                            );
-                                                        } else {
-                                                            return <View></View>;
-                                                        }
-                                                    }}
-                                                ></FlatList>
-                                            ) : (
-                                                <FlatList
-                                                    showsHorizontalScrollIndicator={false}
-                                                    horizontal={true}
-                                                    data={rescheduleData?.task_details}
-                                                    renderItem={({ item, index }) => {
-                                                        return (
-                                                            <View
-                                                                style={{
-                                                                    borderRadius: (windowWidth * 2) / 100,
-                                                                    marginRight: (windowWidth * 2) / 100,
-                                                                    marginTop: (windowWidth * 2) / 100,
-                                                                    borderColor: "#0168B3",
-                                                                    borderWidth: 2,
-                                                                    width: (windowWidth * 30) / 100,
-                                                                    backgroundColor: "#fff",
-                                                                }}>
-                                                                <View
-                                                                    style={{
-                                                                        backgroundColor: "#0168B3",
-                                                                        borderTopLeftRadius: (windowWidth * 1.2) / 100,
-                                                                        borderTopRightRadius: (windowWidth * 1.2) / 100,
-                                                                        width: "100%",
-                                                                    }} >
-                                                                    <Text
-                                                                        style={{
-                                                                            // backgroundColor:'red',
-                                                                            // paddingHorizontal: (windowWidth * 5) / 100,
-                                                                            paddingVertical: (windowWidth * 1.5) / 100,
-                                                                            color: Colors.White,
-                                                                            fontFamily: Font.Medium,
-                                                                            fontSize: (windowWidth * 3) / 100,
-                                                                            textAlign: "center",
-                                                                            textTransform: "uppercase",
-                                                                        }}
-                                                                    >
-                                                                        {item.name}
-                                                                    </Text>
-                                                                </View>
-                                                                <Text
-                                                                    style={{
-                                                                        paddingVertical: (windowWidth * 2) / 100,
-                                                                        fontFamily: Font.Medium,
-                                                                        textAlign: "center",
-                                                                        fontSize: Font.small,
-                                                                    }}
-                                                                >
-                                                                    {item.price}
-                                                                </Text>
-                                                            </View>
-                                                        );
-                                                    }}
-                                                ></FlatList>
-                                            )}
-                                        </View>
-
-                                        {/* hourlybooking */}
-
+                                        {/* ----------------------Main------------------ */}
                                         <View
                                             style={{
                                                 width: "100%",
-                                                flexDirection: "row",
-                                                justifyContent: "space-between",
-                                                alignSelf: "center",
-                                                // borderBottomWidth: (windowWidth * 0.3) / 100,
-                                                borderColor: Colors.gainsboro,
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: Font.Medium,
-                                                    fontSize: Font.medium,
-                                                    alignSelf: 'flex-start',
-                                                }}
-                                            >
-                                                {LangProvider.Appointmentschedule[languageIndex]}
-                                            </Text>
+                                                marginTop: vs(15)
+                                            }}>
+                                            {/* task booking section */}
+
                                             <View
-                                                style={{ flexDirection: "row", alignItems: "center" }}
+                                                style={{
+                                                    width: "100%",
+                                                    alignSelf: "center",
+                                                }}
                                             >
-                                                <Image
-                                                    source={Icons.Calendar}
-                                                    style={{
-                                                        resizeMode: "contain",
-                                                        // backgroundColor: Colors.White,
-                                                        width: 20,
-                                                        height: 20,
+                                                <View style={{ paddingHorizontal: s(13), paddingBottom: vs(9), flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.Medium,
+                                                            fontSize: Font.medium,
+                                                            alignSelf: 'flex-start',
+                                                            color: Colors.Theme,
+                                                        }} >
+                                                        {rescheduleData?.rescdule_data?.order_id}
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.Medium,
+                                                            fontSize: Font.medium,
+                                                            alignSelf: 'flex-start',
+                                                            color: Colors.Theme,
+                                                        }} >
+                                                        {rescheduleData?.rescdule_data?.task_type}
+                                                    </Text>
+                                                </View>
 
-                                                        alignSelf: "center",
-                                                    }} />
-
-                                                <Text
-                                                    style={{
-                                                        color: Colors.Theme,
-                                                        fontFamily: Font.Medium,
-                                                        fontSize: Font.medium,
-                                                        marginLeft: (windowWidth * 1) / 100,
-                                                    }}
+                                                <View
+                                                    style={[
+                                                        {
+                                                            paddingHorizontal: s(13),
+                                                            paddingVertical: vs(9),
+                                                            borderTopWidth: 1.5,
+                                                            borderColor: Colors.backgroundcolor,
+                                                        },
+                                                        rescheduleData?.task_details?.length >= 3
+                                                            ? { height: (windowWidth * 40) / 100 }
+                                                            : { paddingVertical: vs(5) },
+                                                    ]}
                                                 >
-                                                    {rescheduleData?.set_date}
-                                                </Text>
-                                            </View>
-                                        </View>
-
-
-
-                                        <View
-                                            style={{
-                                                height: 2,
-                                                backgroundColor: Colors.backgroundcolor,
-                                                width: "100%",
-                                                marginTop: (windowWidth * 2) / 100,
-                                            }}
-                                        />
-                                        <View
-                                            style={{
-                                                width: "100%",
-                                                alignSelf: "center",
-                                                paddingTop: (windowWidth * 3) / 100,
-                                                paddingBottom: (windowWidth * 3) / 100,
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: Font.Regular,
-                                                    fontSize: Font.medium,
-                                                    color: "#000",
-                                                    alignSelf: 'flex-start',
-                                                }}
-                                            >
-                                                {LangProvider.SelectDate[languageIndex]}
-                                            </Text>
-
-                                            <View style={{ width: "100%" }}>
-                                                <FlatList
-                                                    horizontal={true}
-                                                    data={rescheduleData?.date_array}
-                                                    showsHorizontalScrollIndicator={false}
-                                                    renderItem={({ item, index }) => {
-                                                        return (
-                                                            <TouchableOpacity
-                                                                onPress={() => {
-                                                                    console.log(rescheduleData?.service_status);
-                                                                    setRescheduleData(prevState => ({
-                                                                        ...prevState,
-                                                                        set_date: item.date1,
-                                                                        time_take_data: '',
-                                                                    }))
-
-                                                                    getTimeDate(item.date1, Item?.provider_type)
-                                                                    check_date(item, index);
-                                                                }}
-                                                                style={{ width: (windowWidth * 15) / 100 }} >
-                                                                <Text
-                                                                    style={{
-                                                                        marginRight: (windowWidth * 3) / 100,
-                                                                        marginTop: (windowWidth * 3) / 100,
-                                                                        backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
-                                                                        color: item.tick == 1 ? Colors.White : Colors.Black,
-                                                                        textAlign: "center",
-                                                                        paddingVertical: (windowWidth * 2) / 100,
-                                                                        fontFamily: Font.Regular,
-                                                                        fontSize: Font.small,
-                                                                        lineHeight: (windowWidth * 5) / 100,
-                                                                    }}
-                                                                >
-                                                                    {item.day}
-                                                                    {"\n"}
-
-                                                                    {item.datenew}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        );
-                                                    }}
-                                                />
-                                            </View>
-                                        </View>
-
-                                        <View
-                                            style={{
-                                                borderWidth: 1,
-                                                borderColor: Colors.gainsboro,
-                                                width: "100%",
-                                                marginTop: (windowWidth * 1.5) / 100,
-                                                marginBottom: (windowWidth * 1.5) / 100,
-                                            }}
-                                        ></View>
-
-                                        <View
-                                            style={{
-                                                width: "100%",
-                                                alignSelf: "center",
-                                                paddingVertical: (windowWidth * 3) / 100,
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: Font.Regular,
-                                                    fontSize: Font.medium,
-                                                    alignSelf: 'flex-start',
-                                                }}
-                                            >
-                                                {LangProvider.Select_start_time[languageIndex]}
-                                            </Text>
-
-                                            {/* -----------------Time Arrays----------------- */}
-                                            <ScrollView
-                                                horizontal={true}
-                                                showsHorizontalScrollIndicator={false}
-                                            >
-                                                <View style={{ width: "100%" }}>
-                                                    {(rescheduleData?.time_Arr != '') ? (
-                                                        <View style={{ width: "100%" }}>
-                                                            <View style={{ width: "100%" }}>
-                                                                <FlatList
-                                                                    horizontal={true}
-                                                                    showsHorizontalScrollIndicator={false}
-                                                                    data={rescheduleData?.final_one}
-                                                                    renderItem={({ item, index }) => {
-                                                                        return (
-                                                                            <TouchableOpacity
-                                                                                onPress={() => {
-                                                                                    setRescheduleData(prevState => ({
-                                                                                        ...prevState,
-                                                                                        time_take_data: item?.time
-                                                                                    }))
-                                                                                }}>
-                                                                                <Text
-                                                                                    style={[
-                                                                                        {
-                                                                                            marginRight: (windowWidth * 3) / 100,
-                                                                                            marginTop: (windowWidth * 3) / 100,
-                                                                                            fontFamily: Font.Regular,
-                                                                                            fontSize: Font.small,
-                                                                                            padding: (windowWidth * 2) / 100,
-                                                                                            paddingHorizontal:
-                                                                                                (windowWidth * 3.3) / 100,
-                                                                                        },
-                                                                                        item.time ==
-                                                                                            rescheduleData?.time_take_data
-                                                                                            ? {
-                                                                                                backgroundColor:
-                                                                                                    Colors.Blue,
-                                                                                                color: Colors.White,
-                                                                                            }
-                                                                                            : {
-                                                                                                backgroundColor: '#E5E5E5',
-                                                                                                color: Colors.Black,
-                                                                                            },
-                                                                                    ]}
-                                                                                >
-                                                                                    {item.time}
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                        );
-                                                                    }}
-                                                                ></FlatList>
-                                                            </View>
-                                                            <View style={{ width: "100%" }}>
-                                                                <FlatList
-                                                                    horizontal={true}
-                                                                    showsHorizontalScrollIndicator={false}
-                                                                    data={rescheduleData?.final_arr_two}
-                                                                    renderItem={({ item, index }) => {
-                                                                        return (
-                                                                            <TouchableOpacity
-                                                                                onPress={() => {
-                                                                                    setRescheduleData(prevState => ({
-                                                                                        ...prevState,
-                                                                                        time_take_data: item?.time
-                                                                                    }))
-                                                                                }}>
-                                                                                <Text
-                                                                                    style={[
-                                                                                        {
-                                                                                            marginRight: (windowWidth * 3) / 100,
-                                                                                            marginTop: (windowWidth * 3) / 100,
-                                                                                            fontFamily: Font.Regular,
-                                                                                            fontSize: Font.small,
-                                                                                            padding: (windowWidth * 2) / 100,
-                                                                                            paddingHorizontal:
-                                                                                                (windowWidth * 3.3) / 100,
-                                                                                        },
-                                                                                        item.time ==
-                                                                                            rescheduleData?.time_take_data
-                                                                                            ? {
-                                                                                                backgroundColor:
-                                                                                                    Colors.Blue,
-                                                                                                color: Colors.White,
-                                                                                            }
-                                                                                            : {
-                                                                                                backgroundColor: '#E5E5E5',
-                                                                                                color: Colors.Black,
-                                                                                            },
-                                                                                    ]}
-                                                                                >
-                                                                                    {item.time}
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                        );
-                                                                    }}
-                                                                />
-                                                            </View>
-                                                        </View>
-                                                    ) : (
-                                                        <Text
-                                                            allowFontScaling={false}
-                                                            style={{
-                                                                fontFamily: Font.MediumItalic,
-                                                                fontSize: (windowWidth * 4) / 100,
-                                                                alignSelf: "center",
-                                                                marginTop: (windowWidth * 3) / 100,
-                                                                textAlign: "center",
-                                                                marginLeft: (windowWidth * 32) / 100,
+                                                    {rescheduleData?.rescdule_data?.slot_booking_id == "TASK_BOOKING" ? (
+                                                        <FlatList
+                                                            data={rescheduleData?.task_details}
+                                                            scrollEnabled={true}
+                                                            nestedScrollEnabled={true}
+                                                            renderItem={({ item, index }) => {
+                                                                if ((rescheduleData?.task_details != '' && rescheduleData?.task_details != null)) {
+                                                                    return (
+                                                                        <View
+                                                                            style={{
+                                                                                alignItems: "center",
+                                                                                width: "100%",
+                                                                                alignSelf: "center",
+                                                                                paddingVertical: (windowWidth * 1.7) / 100,
+                                                                                flexDirection: "row",
+                                                                                marginTop: (windowWidth * 0.3) / 100,
+                                                                            }}>
+                                                                            <Text
+                                                                                style={{
+                                                                                    width: "70%",
+                                                                                    alignSelf: 'flex-start',
+                                                                                    alignSelf: "center",
+                                                                                    fontSize: (windowWidth * 3.6) / 100,
+                                                                                    fontFamily: Font.Regular,
+                                                                                    color: "#000",
+                                                                                }}
+                                                                            >
+                                                                                {item.name}
+                                                                            </Text>
+                                                                            <Text
+                                                                                style={{
+                                                                                    width: "30%",
+                                                                                    fontSize: (windowWidth * 3.6) / 100,
+                                                                                    fontFamily: Font.Regular,
+                                                                                    color: "#000",
+                                                                                    textAlign: "right",
+                                                                                }}
+                                                                            >
+                                                                                {item.price}
+                                                                            </Text>
+                                                                        </View>
+                                                                    );
+                                                                } else {
+                                                                    return <View></View>;
+                                                                }
                                                             }}
-                                                        >
-                                                            {LangProvider.noTime[languageIndex]}
-                                                        </Text>
+                                                        ></FlatList>
+                                                    ) : (
+                                                        <FlatList
+                                                            showsHorizontalScrollIndicator={false}
+                                                            horizontal={true}
+                                                            data={rescheduleData?.task_details}
+                                                            renderItem={({ item, index }) => {
+                                                                return (
+                                                                    <View
+                                                                        style={{
+                                                                            borderRadius: (windowWidth * 2) / 100,
+                                                                            marginRight: (windowWidth * 2) / 100,
+                                                                            marginTop: (windowWidth * 2) / 100,
+                                                                            borderColor: "#0168B3",
+                                                                            borderWidth: 2,
+                                                                            width: (windowWidth * 30) / 100,
+                                                                            backgroundColor: "#fff",
+                                                                        }}>
+                                                                        <View
+                                                                            style={{
+                                                                                backgroundColor: "#0168B3",
+                                                                                borderTopLeftRadius: (windowWidth * 1.2) / 100,
+                                                                                borderTopRightRadius: (windowWidth * 1.2) / 100,
+                                                                                width: "100%",
+                                                                            }} >
+                                                                            <Text
+                                                                                style={{
+                                                                                    // backgroundColor:'red',
+                                                                                    // paddingHorizontal: (windowWidth * 5) / 100,
+                                                                                    paddingVertical: (windowWidth * 1.5) / 100,
+                                                                                    color: Colors.White,
+                                                                                    fontFamily: Font.Medium,
+                                                                                    fontSize: (windowWidth * 3) / 100,
+                                                                                    textAlign: "center",
+                                                                                    textTransform: "uppercase",
+                                                                                }}
+                                                                            >
+                                                                                {item.name}
+                                                                            </Text>
+                                                                        </View>
+                                                                        <Text
+                                                                            style={{
+                                                                                paddingVertical: (windowWidth * 2) / 100,
+                                                                                fontFamily: Font.Medium,
+                                                                                textAlign: "center",
+                                                                                fontSize: Font.small,
+                                                                            }}
+                                                                        >
+                                                                            {item.price}
+                                                                        </Text>
+                                                                    </View>
+                                                                );
+                                                            }}
+                                                        ></FlatList>
                                                     )}
                                                 </View>
-                                            </ScrollView>
+
+                                                {/* hourlybooking */}
+
+                                                <View
+                                                    style={{
+                                                        paddingHorizontal: s(13),
+                                                        width: "100%",
+                                                        flexDirection: "row",
+                                                        justifyContent: "space-between",
+                                                        alignSelf: "center",
+                                                        // borderBottomWidth: (windowWidth * 0.3) / 100,
+                                                        borderColor: Colors.gainsboro,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.Medium,
+                                                            fontSize: Font.medium,
+                                                            alignSelf: 'flex-start',
+                                                        }}
+                                                    >
+                                                        {LangProvider.Appointmentschedule[languageIndex]}
+                                                    </Text>
+                                                    <View
+                                                        style={{ flexDirection: "row", alignItems: "center" }}
+                                                    >
+                                                        <Image
+                                                            source={Icons.Calendar}
+                                                            style={{
+                                                                resizeMode: "contain",
+                                                                // backgroundColor: Colors.White,
+                                                                width: 20,
+                                                                height: 20,
+
+                                                                alignSelf: "center",
+                                                            }} />
+
+                                                        <Text
+                                                            style={{
+                                                                color: Colors.Theme,
+                                                                fontFamily: Font.Medium,
+                                                                fontSize: Font.medium,
+                                                                marginLeft: (windowWidth * 1) / 100,
+                                                            }}
+                                                        >
+                                                            {rescheduleData?.set_date}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+
+                                                <View
+                                                    style={{
+                                                        borderBottomWidth: 1,
+                                                        borderBottomColor: Colors.gainsboro,
+                                                        width: "100%",
+                                                        marginTop: (windowWidth * 1.5) / 100,
+                                                    }}
+                                                />
+
+                                                <View
+                                                    style={{
+                                                        width: "100%",
+                                                        alignSelf: "center",
+                                                        paddingTop: (windowWidth * 3) / 100,
+                                                        paddingBottom: (windowWidth * 3) / 100,
+                                                        paddingHorizontal: s(13),
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.medium,
+                                                            color: "#000",
+                                                            alignSelf: 'flex-start',
+                                                        }}
+                                                    >
+                                                        {LangProvider.SelectDate[languageIndex]}
+                                                    </Text>
+
+                                                    <View style={{ width: "100%" }}>
+                                                        <FlatList
+                                                            horizontal={true}
+                                                            data={rescheduleData?.date_array}
+                                                            showsHorizontalScrollIndicator={false}
+                                                            renderItem={({ item, index }) => {
+                                                                return (
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            console.log(rescheduleData?.service_status);
+                                                                            setRescheduleData(prevState => ({
+                                                                                ...prevState,
+                                                                                set_date: item.date1,
+                                                                                time_take_data: '',
+                                                                            }))
+
+                                                                            getTimeDate(item.date1, Item?.provider_type)
+                                                                            check_date(item, index);
+                                                                        }}
+                                                                        style={{ width: (windowWidth * 15) / 100 }} >
+                                                                        <Text
+                                                                            style={{
+                                                                                marginRight: (windowWidth * 3) / 100,
+                                                                                marginTop: (windowWidth * 3) / 100,
+                                                                                backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                                                                color: item.tick == 1 ? Colors.White : Colors.Black,
+                                                                                textAlign: "center",
+                                                                                paddingVertical: (windowWidth * 2) / 100,
+                                                                                fontFamily: Font.Regular,
+                                                                                fontSize: Font.small,
+                                                                                lineHeight: (windowWidth * 5) / 100,
+                                                                            }}
+                                                                        >
+                                                                            {item.day}
+                                                                            {"\n"}
+
+                                                                            {item.datenew}
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                );
+                                                            }}
+                                                        />
+                                                    </View>
+                                                </View>
+
+                                                <View
+                                                    style={{
+                                                        borderBottomWidth: 1,
+                                                        borderBottomColor: Colors.gainsboro,
+                                                        width: "100%",
+                                                        marginTop: (windowWidth * 1.5) / 100,
+                                                        marginBottom: (windowWidth * 1.5) / 100,
+                                                    }}
+                                                />
+
+                                                <View
+                                                    style={{
+                                                        width: "100%",
+                                                        alignSelf: "center",
+                                                        paddingVertical: (windowWidth * 3) / 100,
+                                                        paddingHorizontal: s(13),
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.medium,
+                                                            alignSelf: 'flex-start',
+                                                        }}
+                                                    >
+                                                        {LangProvider.Select_start_time[languageIndex]}
+                                                    </Text>
+
+                                                    {/* -----------------Time Arrays----------------- */}
+                                                    <ScrollView
+                                                        horizontal={true}
+                                                        showsHorizontalScrollIndicator={false}
+                                                    >
+                                                        <View style={{ width: "100%" }}>
+                                                            {(rescheduleData?.time_Arr.length > 0) ? (
+                                                                <View style={{ width: "100%" }}>
+                                                                    <View style={{ width: "100%" }}>
+                                                                        <FlatList
+                                                                            horizontal={true}
+                                                                            showsHorizontalScrollIndicator={false}
+                                                                            data={rescheduleData?.final_one}
+                                                                            renderItem={({ item, index }) => {
+                                                                                return (
+                                                                                    <TouchableOpacity
+                                                                                        onPress={() => {
+                                                                                            setRescheduleData(prevState => ({
+                                                                                                ...prevState,
+                                                                                                time_take_data: item?.time
+                                                                                            }))
+                                                                                        }}>
+                                                                                        <Text
+                                                                                            style={[
+                                                                                                {
+                                                                                                    marginRight: (windowWidth * 3) / 100,
+                                                                                                    marginTop: (windowWidth * 3) / 100,
+                                                                                                    fontFamily: Font.Regular,
+                                                                                                    fontSize: Font.small,
+                                                                                                    padding: (windowWidth * 2) / 100,
+                                                                                                    paddingHorizontal:
+                                                                                                        (windowWidth * 3.3) / 100,
+                                                                                                },
+                                                                                                item.time ==
+                                                                                                    rescheduleData?.time_take_data
+                                                                                                    ? {
+                                                                                                        backgroundColor:
+                                                                                                            Colors.Blue,
+                                                                                                        color: Colors.White,
+                                                                                                    }
+                                                                                                    : {
+                                                                                                        backgroundColor: '#E5E5E5',
+                                                                                                        color: Colors.Black,
+                                                                                                    },
+                                                                                            ]}
+                                                                                        >
+                                                                                            {item.time}
+                                                                                        </Text>
+                                                                                    </TouchableOpacity>
+                                                                                );
+                                                                            }}
+                                                                        ></FlatList>
+                                                                    </View>
+                                                                    <View style={{ width: "100%" }}>
+                                                                        <FlatList
+                                                                            horizontal={true}
+                                                                            showsHorizontalScrollIndicator={false}
+                                                                            data={rescheduleData?.final_arr_two}
+                                                                            renderItem={({ item, index }) => {
+                                                                                return (
+                                                                                    <TouchableOpacity
+                                                                                        onPress={() => {
+                                                                                            setRescheduleData(prevState => ({
+                                                                                                ...prevState,
+                                                                                                time_take_data: item?.time
+                                                                                            }))
+                                                                                        }}>
+                                                                                        <Text
+                                                                                            style={[
+                                                                                                {
+                                                                                                    marginRight: (windowWidth * 3) / 100,
+                                                                                                    marginTop: (windowWidth * 3) / 100,
+                                                                                                    fontFamily: Font.Regular,
+                                                                                                    fontSize: Font.small,
+                                                                                                    padding: (windowWidth * 2) / 100,
+                                                                                                    paddingHorizontal:
+                                                                                                        (windowWidth * 3.3) / 100,
+                                                                                                },
+                                                                                                item.time ==
+                                                                                                    rescheduleData?.time_take_data
+                                                                                                    ? {
+                                                                                                        backgroundColor:
+                                                                                                            Colors.Blue,
+                                                                                                        color: Colors.White,
+                                                                                                    }
+                                                                                                    : {
+                                                                                                        backgroundColor: '#E5E5E5',
+                                                                                                        color: Colors.Black,
+                                                                                                    },
+                                                                                            ]}
+                                                                                        >
+                                                                                            {item.time}
+                                                                                        </Text>
+                                                                                    </TouchableOpacity>
+                                                                                );
+                                                                            }}
+                                                                        />
+                                                                    </View>
+                                                                </View>
+                                                            ) :
+                                                                rescheduleData.isLoadingDates ?
+                                                                    (
+                                                                        <View style={{ width: windowWidth, paddingVertical: (windowWidth * 3) / 100 }}>
+                                                                            <SkypeIndicator color={Colors.Theme} size={20} />
+                                                                        </View>
+                                                                    )
+                                                                    :
+                                                                    (
+                                                                        <Text
+                                                                            allowFontScaling={false}
+                                                                            style={{
+                                                                                fontFamily: Font.MediumItalic,
+                                                                                fontSize: (windowWidth * 4) / 100,
+                                                                                alignSelf: "center",
+                                                                                marginTop: (windowWidth * 3) / 100,
+                                                                                textAlign: "center",
+                                                                                marginLeft: (windowWidth * 32) / 100,
+                                                                            }}
+                                                                        >
+                                                                            {LangProvider.noTime[languageIndex]}
+                                                                        </Text>
+                                                                    )}
+                                                        </View>
+                                                    </ScrollView>
+                                                </View>
+
+
+                                            </View>
                                         </View>
+
+
+                                    </ScrollView>
+
+                                    <View style={{
+                                        width: "100%",
+                                        position: 'absolute',
+                                        bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                                        paddingHorizontal: s(13),
+                                        backgroundColor: Colors.White,
+                                        paddingVertical: (windowWidth * 2) / 100,
+                                        alignItems: "center",
+                                        borderTopWidth: 1,
+                                        borderTopColor: Colors.Border,
+                                    }}>
 
                                         <Button
                                             text={LangProvider.SAVECHANGERESCHEDULE[languageIndex]}
                                             onPress={() => bookTime(Item?.id, Item?.provider_type)}
-                                            btnStyle={{ marginTop: vs(25) }}
                                             onLoading={rescheduleData.isScheduleagain}
                                         />
-
 
                                     </View>
                                 </View>
                             </View>
 
-                        </ScrollView>
-                    </View>
+                        </View>
 
-                </Modal>
 
+
+                    </Modal>
+                </View>
             </>
 
     );
@@ -1982,16 +1996,32 @@ const AppointmentContainer = ({
 
 const styles = StyleSheet.create({
 
-    modalContainer: {
+    mainContainer: {
         width: windowWidth,
-        height: windowHeight - 250,
-        backgroundColor: Colors.White,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        paddingHorizontal: s(13),
+        height: windowHeight,
         position: 'absolute',
         bottom: 0,
-        zIndex: 999,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.35,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+    },
+    modalContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.5,
+        backgroundColor: Colors.White,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999
+
     },
     closeContainer: {
         height: s(35),
@@ -1999,20 +2029,9 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(20),
-        right: 0,
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
-    },
-    Title: {
-        fontSize: 20,
-        fontFamily: Font.Regular,
-        color: Colors.Black,
-    },
-    Desc: {
-        fontSize: 16,
-        fontFamily: Font.Regular,
-        color: Colors.Secondary,
     },
 });
 

@@ -297,7 +297,9 @@ export const Search = `<svg xmlns="http://www.w3.org/2000/svg" width="13.742" he
 <path id="search_icon" d="M15450.078,16047.479l-2.683-2.683a5.9,5.9,0,0,1-3.56,1.172,5.985,5.985,0,1,1,5.988-5.984,5.929,5.929,0,0,1-1.172,3.56l2.678,2.683a.886.886,0,1,1-1.252,1.253Zm-10.451-7.5a4.21,4.21,0,1,0,4.209-4.209A4.215,4.215,0,0,0,15439.627,16039.983Z" transform="translate(-15437.851 -16033.998)" fill="#fff"/>
 </svg>`
 
-export const Cross = `<svg xmlns="http://www.w3.org/2000/svg" width="18.546" height="19" viewBox="0 0 18.546 19">
+export const Cross = `<svg height="329pt" viewBox="0 0 329.26933 329" width="329pt" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/></svg>`
+
+export const _Cross = `<svg xmlns="http://www.w3.org/2000/svg" width="18.546" height="19" viewBox="0 0 18.546 19">
 <g id="Group_1088" data-name="Group 1088" transform="translate(1 1)">
   <g id="Rectangle_2" data-name="Rectangle 2" transform="translate(-1 -1)" fill="#dbdbdb" stroke="#354052" stroke-width="1">
     <rect width="18.546" height="19" rx="9.273" stroke="none"/>
@@ -586,5 +588,5 @@ export const Icons = {
   Success: require("./success.png"),
   call: require("./phoneCall.png"),
   Connect: require('./plug.jpg')
-  
+
 };

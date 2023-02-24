@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, ScrollView, StyleSheet, TouchableHighlight, Keyboard, FlatList, } from "react-native";
-import Modal from "react-native-modal";
-import HTMLView from "react-native-htmlview";
+import { Text, Modal, TouchableOpacity, View, ScrollView, StyleSheet, TouchableHighlight, Keyboard, FlatList, Platform, } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 
@@ -9,6 +7,7 @@ import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, windowHeight, Button, LangProvider } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { useSelector } from "react-redux";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
@@ -19,10 +18,10 @@ const BookingTypePopup = ({
     onselect = () => { },
     data
 }) => {
-    // console.log('./././././',data);
     const { languageIndex } = useSelector(state => state.StorageReducer)
     const [isBtnOneDisable, setIsBtnOneDisable] = useState(false)
     const [isBtnTwoDisable, setIsBtnTwoDisable] = useState(false)
+    const insets = useSafeAreaInsets()
     useEffect(() => {
         // console.log(data?.task_base_enable);
         // console.log(data?.hour_base_enable);
@@ -56,80 +55,101 @@ const BookingTypePopup = ({
 
 
     return (
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            deviceWidth={windowWidth}
-            animationInTiming={350}
-            animationOutTimixng={350}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0 }} >
+
+        <View style={{ flex: 1 }}>
+            <Modal
+                animationType='slide'
+                visible={visible}
+                transparent
+                presentationStyle='overFullScreen'
+            >
+
+                <View style={styles.mainContainer}>
+
+                    <View style={styles.subContainer}>
+                        <TouchableOpacity
+                            onPress={onRequestClose}
+                            style={styles.closeContainer}
+                        >
+                            <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                        </TouchableOpacity>
+
+                        <View style={styles.modalContainer}>
+                            <Text
+                                style={{
+                                    fontSize: Font.large,
+                                    fontFamily: Font.SemiBold,
+                                    alignSelf: 'flex-start',
+                                    color: Colors.darkText,
+                                    paddingHorizontal: s(13),
+
+                                }}>{LangProvider.SelectAppointmentType[languageIndex]}</Text>
 
 
-            <View style={styles.modalContainer}>
-                <TouchableHighlight
-                    onPress={onRequestClose}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}
-                >
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
+                            <View style={{
+                                width: "100%",
+                                position: 'absolute',
+                                bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                                paddingHorizontal: s(13),
+                                backgroundColor: Colors.White,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                alignItems: "center",
+                                borderTopWidth: 1,
+                                borderTopColor: Colors.Border,
+                            }}>
+                                <Button
+                                    text={providerType == 'nurse' ? LangProvider.TaskBase[languageIndex] : LangProvider.Lab_Test_Booking[languageIndex]}
+                                    onPress={() => {
+                                        providerType == 'nurse' ? onselect('task') : onselect('test')
+                                    }}
+                                    btnStyle={{ marginBottom: vs(10) }}
+                                    disable={isBtnOneDisable}
+                                />
 
-                <Text
-                    style={{
-                        fontSize: Font.large,
-                        fontFamily: Font.SemiBold,
-                        alignSelf: 'flex-start',
-                        color: Colors.darkText
-
-                    }}>{LangProvider.SelectAppointmentType[languageIndex]}</Text>
-
-
-                <Button
-                    text={providerType == 'nurse' ? LangProvider.TaskBase[languageIndex] : LangProvider.Lab_Test_Booking[languageIndex]}
-                    onPress={() => {
-                        providerType == 'nurse' ? onselect('task') : onselect('test')
-                    }}
-                    btnStyle={{ marginTop: vs(15) }}
-                    disable={isBtnOneDisable}
-                />
-
-                <Button
-                    text={providerType == 'nurse' ? LangProvider.HourBase[languageIndex] : LangProvider.Lab_Package_Booking[languageIndex]}
-                    onPress={() => {
-                        providerType == 'nurse' ? onselect('hour') : onselect('package')
-                    }}
-                    btnStyle={{ marginTop: vs(15) }}
-                    disable={isBtnTwoDisable}
-                />
-
-            </View>
-
-        </Modal>
-
+                                <Button
+                                    text={providerType == 'nurse' ? LangProvider.HourBase[languageIndex] : LangProvider.Lab_Package_Booking[languageIndex]}
+                                    onPress={() => {
+                                        providerType == 'nurse' ? onselect('hour') : onselect('package')
+                                    }}
+                                    disable={isBtnTwoDisable}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal >
+        </View>
 
 
     )
 }
 const styles = StyleSheet.create({
 
-    modalContainer: {
+    mainContainer: {
         width: windowWidth,
-        height: windowHeight / 3,
-        backgroundColor: Colors.White,
-        borderRadius: 25,
-        paddingTop: vs(55),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
+        height: windowHeight,
         position: 'absolute',
         bottom: 0,
-        zIndex: 999
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 3,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+    },
+    modalContainer: {
+        width: windowWidth,
+        height: windowHeight / 3.8,
+        backgroundColor: Colors.White,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999
 
     },
     closeContainer: {
@@ -138,24 +158,12 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(30),
-        right: s(11),
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
-    }
+    },
 });
 
-const HTMLstyles = StyleSheet.create({
-    h4: {
-        color: "#0888D1",
-        fontSize: (windowWidth * 4.5) / 100,
-    },
-    h5: {
-        color: "#0888D1",
-        fontSize: (windowWidth * 4.3) / 100,
-        fontFamily: Font.Medium,
-    },
-});
 
 export default BookingTypePopup;
 

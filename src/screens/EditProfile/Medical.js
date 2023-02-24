@@ -147,7 +147,7 @@ const Medical = () => {
                 }
             })
             .catch((error) => {
-                console.log("getMedical-------- error ------- " + error);
+                console.log("getMedical-error ------- " + error);
             });
     };
 

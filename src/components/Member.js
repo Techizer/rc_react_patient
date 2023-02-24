@@ -141,12 +141,10 @@ const Member = ({
                         <View style={{ width: '78%', borderBottomWidth: type ? 0 : 1, borderBottomColor: Colors.Border, paddingBottom: vs(20) }}>
 
                             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                <View style={{ width: '70%' }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <View style={{}}>
-                                            <Text numberOfLines={1} style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText, }}>{patientDetails?.name}</Text>
-                                        </View>
-                                        <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ width: '80%' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', width:'100%' }}>
+                                            <Text numberOfLines={1} style={{maxWidth:'50%', alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText, }}>{patientDetails?.name}</Text>
+                                        <View style={{flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
                                             <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>
                                                 {(patientDetails?.gender === '0' ? `${LangProvider.male[languageIndex]}, ` : `${LangProvider.female[languageIndex]}`)}

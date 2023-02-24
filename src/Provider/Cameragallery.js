@@ -28,7 +28,7 @@ const Cameragallery = ({
       <View
         style={{
           flex: 1,
-          backgroundColor: "#00000030",
+          backgroundColor: 'rgba(0,0,0,0.7)',
           alignItems: "center",
           justifyContent: "center",
         }}>

@@ -120,7 +120,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoadingDetails: false });
-        console.log("-------- error ------- " + error);
+        console.log("getAllDetails-error ------- " + error);
       });
   };
 
@@ -255,7 +255,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("rescdule_click-error ------- " + error);
       });
   };
 
@@ -453,7 +453,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        console.log("-------- error ------- " + error);
+        console.log("getDoctorTimeDate-error ------- " + error);
       });
   };
 
@@ -562,7 +562,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        console.log("-------- error ------- " + error);
+        console.log("getLabTimeDate-error ------- " + error);
       });
   };
 
@@ -745,7 +745,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isLoading: false })
-        console.log("-------- error ------- " + error);
+        console.log("getTimeDate-error ------- " + error);
       });
   };
 
@@ -865,7 +865,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isScheduleagain: false })
-        console.log("-------- error ------- " + error);
+        console.log("submit_btn-error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -906,7 +906,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("rateProvider-error ------- " + error);
         setState({ loading: false });
       });
   };

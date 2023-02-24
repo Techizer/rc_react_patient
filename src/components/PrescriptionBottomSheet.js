@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, ScrollView, } from "react-native";
-import Modal from "react-native-modal";
+import { Text, TouchableOpacity, View, Image, StyleSheet, Modal, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, TextInput, ScrollView, } from "react-native";
 
 import { Colors, Font } from "../Provider/Colorsfont";
-import { windowWidth,  windowHeight } from "../Provider/Utils/Utils";
+import { windowWidth, windowHeight, LangProvider, config } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
 
 
 
@@ -17,78 +16,91 @@ const PrescriptionBottomSheet = ({
     data
 }) => {
 
-    const [reviewText, setReviewText] = useState('')
-    const [textLength, setTextLength] = useState(0)
+    const { languageIndex } = useSelector(state => state.StorageReducer)
 
     return (
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            deviceWidth={windowWidth}
-            animationInTiming={350}
-            animationOutTimixng={350}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0 }} >
+        <View style={{ flex: 1 }} >
+            <Modal
+                animationType='slide'
+                visible={visible}
+                transparent
+                presentationStyle='overFullScreen'
+            >
 
 
-            <View style={styles.modalContainer}>
-                <TouchableHighlight
-                    onPress={onRequestClose}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}
-                >
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
+                <View style={[styles.mainContainer]}>
 
-                {/* <Text
-                    style={{
-                        fontSize: Font.large,
-                        fontFamily: Font.SemiBold,
-                        textAlign: config.textRotate,
-                        color: Colors.darkText
+                    <View style={[styles.subContainer]}>
+                        <TouchableOpacity
+                            onPress={onRequestClose}
+                            underlayColor={Colors.Highlight}
+                            style={styles.closeContainer}
+                        >
+                           <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                        </TouchableOpacity>
+                        <View style={styles.modalContainer}>
+                            <Text
+                                style={{
+                                    fontSize: Font.large,
+                                    fontFamily: Font.SemiBold,
+                                    alignSelf: 'flex-start',
+                                    color: Colors.darkText,
+                                    paddingHorizontal:s(13)
 
-                    }}>{LangProvider.Rate_Appointment[config.language]}</Text> */}
-                <Image
-                    source={{
-                        uri: data,
-                    }}
-                    style={{
-                        resizeMode: "cover",
-                        width: "100%",
-                        height: (windowHeight * 40) / 100,
-                        marginTop: vs(15)
-                    }}
-                    resizeMode='contain'
-                />
+                                }}>{LangProvider.PRESCRIPTION[languageIndex]}
+                            </Text>
 
-            </View>
+                            <Image
+                                source={{
+                                    uri: data,
+                                }}
+                                style={{
+                                    resizeMode: "cover",
+                                    width: "100%",
+                                    height: (windowHeight * 25) / 100,
+                                }}
+                                resizeMode='contain'
+                            />
 
-        </Modal>
+                        </View>
 
+                    </View>
+                </View>
+
+
+            </Modal>
+        </View>
 
 
     )
 }
 const styles = StyleSheet.create({
 
-    modalContainer: {
+    mainContainer: {
         width: windowWidth,
-        height: windowHeight/2,
-        backgroundColor: Colors.White,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius:25,
-        paddingTop: vs(40),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
+        height: windowHeight,
         position: 'absolute',
         bottom: 0,
-        zIndex: 999
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 2.1,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+    },
+    modalContainer: {
+        width: windowWidth,
+        height: windowHeight / 2.5,
+        backgroundColor: Colors.White,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999
 
     },
     closeContainer: {
@@ -97,11 +109,10 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(30),
-        right: s(11),
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
-    }
+    },
 
 });
 

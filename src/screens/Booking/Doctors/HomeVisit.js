@@ -68,7 +68,8 @@ const HomeVisit = ({ navigation }) => {
   const [inputFocus, setInputFocus] = useState(false);
   const [mediaModal, setMedialModal] = useState(false);
   const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
-  const sheetRef = useRef()
+  const [isRecordAudio, setIsRecordAudio] = useState(false)
+
 
   useEffect(() => {
     if (isFocused) {
@@ -133,7 +134,7 @@ const HomeVisit = ({ navigation }) => {
             setState({
               symptomsRecording: null
             })
-            sheetRef.current.open()
+            setIsRecordAudio(true)
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
@@ -164,7 +165,7 @@ const HomeVisit = ({ navigation }) => {
             setState({
               symptomsRecording: null
             })
-            sheetRef.current.open()
+            setIsRecordAudio(true)
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
@@ -371,7 +372,7 @@ const HomeVisit = ({ navigation }) => {
 
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getDoctorTimeDate-error ------- " + error);
       });
   };
 
@@ -480,7 +481,7 @@ const HomeVisit = ({ navigation }) => {
           setState({ Error_popup: true });
         }, 700);
 
-        console.log("-------- error ------- " + error);
+        console.log("getDoctorServices-error ------- " + error);
       });
   };
 
@@ -560,7 +561,7 @@ const HomeVisit = ({ navigation }) => {
       })
       .catch((error) => {
         setState({ isAddingToCart: false })
-        console.log("-------- error ------- " + error);
+        console.log("AddToCart-error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -862,16 +863,21 @@ const HomeVisit = ({ navigation }) => {
                     }}
                   />
                 </TouchableOpacity>
-              </View>
 
-              {
-                statesData.symptomsRecording != null &&
-                <View style={{ width: '94%', marginTop: (windowWidth * 5) / 100, alignSelf: 'center' }}>
+                {
+                  statesData.symptomsRecording != null &&
+
                   <AudioPlayer
                     url={statesData.symptomsRecording.uri}
+                    containerStyle={{
+                      marginTop: (windowWidth * 5) / 100
+                    }}
                   />
-                </View>
-              }
+
+                }
+              </View>
+
+
 
               <View style={{ width: '100%', alignSelf: 'center', height: vs(1.5), backgroundColor: Colors.backgroundcolor, marginTop: vs(6) }}></View>
 
@@ -1422,13 +1428,14 @@ const HomeVisit = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 70,
+            paddingTop: (windowWidth * 2) / 100,
+            paddingBottom: (windowWidth * 7) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
             borderTopColor: Colors.Border,
+            position: 'absolute',
+            bottom: 0,
           }}>
 
           <View style={{ alignItems: 'flex-start' }}>
@@ -1475,9 +1482,9 @@ const HomeVisit = ({ navigation }) => {
         />
 
         <AudioRecorder
-          visible={sheetRef}
+          visible={isRecordAudio}
           onRequestClose={() => {
-            sheetRef.current.close()
+            setIsRecordAudio(false)
           }}
           recordedAudioUri={(uri) => {
             let audioObj = {

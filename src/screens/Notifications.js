@@ -101,7 +101,7 @@ const Notifications = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("update_notification-error ------- " + error);
       });
   };
 

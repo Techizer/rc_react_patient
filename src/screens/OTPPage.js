@@ -190,7 +190,7 @@ const OTPPage = ({ navigation, route }) => {
           return false;
         }
       }).catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("UpdateAddress-error ------- " + error);
       });
   };
 

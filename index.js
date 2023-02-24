@@ -66,6 +66,7 @@ export default function Main() {
 };
 
 
-AppRegistry.registerComponent(appName, () => Sentry.wrap(Main));
+// AppRegistry.registerComponent(appName, () => Sentry.wrap(Main));
+AppRegistry.registerComponent(appName, () => Main);
 
 LogBox.ignoreAllLogs(true)

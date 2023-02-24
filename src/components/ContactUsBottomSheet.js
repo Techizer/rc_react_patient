@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TextInput, View, Image, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableHighlight, Keyboard, FlatList, Platform, Pressable, } from "react-native";
-import Modal from "react-native-modal";
+import { Text, TextInput, View, Image, StyleSheet, Dimensions, Modal, TouchableOpacity, Keyboard, FlatList, Platform, Pressable, } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
 import { Colors, Font } from "../Provider/Colorsfont";
@@ -12,6 +11,7 @@ import AuthInputBoxSec from "./AuthInputBoxSec";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import NonEditableInput from "./NonEditableInput";
 import { useSelector } from "react-redux";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const EMAIL_REG = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 let deviceId = ''
@@ -24,7 +24,7 @@ const ContactUsBottomSheet = ({
     route
 }) => {
 
-    const { loggedInUserDetails, appLanguage,languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
 
     const [subject, setSubject] = useState('')
     const [phone, setPhone] = useState('')
@@ -39,6 +39,7 @@ const ContactUsBottomSheet = ({
 
     const onKeyboardShow = event => setKeyboardOffset(event.endCoordinates.height);
     const onKeyboardHide = () => setKeyboardOffset(0);
+    const insets = useSafeAreaInsets()
     const keyboardDidShowListener = useRef();
     const keyboardDidHideListener = useRef();
 
@@ -171,204 +172,224 @@ const ContactUsBottomSheet = ({
     };
 
     return (
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            deviceWidth={windowWidth}
-            animationInTiming={350}
-            animationOutTimixng={350}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0 }} >
 
+        <View style={{ flex: 1 }} pointerEvents={(isLoading) ? 'none' : 'auto'}>
+            <Modal
+                animationType='slide'
+                visible={visible}
+                transparent
+                presentationStyle='overFullScreen'
+            >
 
-            <View style={styles.modalContainer}>
-                <TouchableHighlight
-                    onPress={() => {
-                        Keyboard.dismiss()
-                        onRequestClose()
-                    }}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}>
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
+                <View style={[styles.mainContainer]}>
 
-                <Text
-                    style={{
-                        fontSize: Font.large,
-                        fontFamily: Font.SemiBold,
-                        alignSelf: 'flex-start',
-                        color: Colors.darkText
+                    <View style={[styles.subContainer]}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                Keyboard.dismiss()
+                                onRequestClose()
+                            }}
+                            style={styles.closeContainer}>
+                            <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                        </TouchableOpacity>
 
-                    }}>{route == 'Login' ? LangProvider.Login_Issue[languageIndex] : LangProvider.Appoitment_Issue[languageIndex]}</Text>
+                        <View style={styles.modalContainer}>
 
-                <KeyboardAwareScrollView
-                    // keyboardOpeningTime={200}
-                    extraScrollHeight={50}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        paddingBottom: vs(15),
-                    }}
-                    showsVerticalScrollIndicator={false}>
-
-
-
-                    <View style={{ marginTop: vs(15) }}>
-
-
-                        <NonEditableInput
-                            title={route == 'Login' ? LangProvider.Subject[languageIndex] : LangProvider.OrderId[languageIndex]}
-                            data={route == 'Login' ? LangProvider.LoginIssue[languageIndex] : data} />
-
-
-                        {
-                            !route == 'Login' &&
-                            <AuthInputBoxSec
-                                mainContainer={{ width: '100%' }}
-                                inputFieldStyle={{ height: vs(35) }}
-                                lableText={LangProvider.Subject[languageIndex]}
-                                inputRef={subjectRef}
-                                onChangeText={(val) => setSubject(val)}
-                                value={subject}
-                                keyboardType="default"
-                                autoCapitalize="none"
-                                returnKeyType="next"
-                                onSubmitEditing={() => {
-                                    descRef.current.focus()
+                            <KeyboardAwareScrollView
+                                // keyboardOpeningTime={200}
+                                extraScrollHeight={50}
+                                enableOnAndroid={true}
+                                keyboardShouldPersistTaps='handled'
+                                contentContainerStyle={{
+                                    justifyContent: 'center',
+                                    paddingBottom: vs(15),
+                                    paddingHorizontal: s(13),
                                 }}
-                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                editable
-                            />
-                        }
+                                showsVerticalScrollIndicator={false}>
 
-                        {
-                            route == 'Login' &&
-                            <>
-                                <AuthInputBoxSec
-                                    mainContainer={{ width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.Email[languageIndex]}
-                                    inputRef={emailRef}
-                                    onChangeText={(val) => setEmail(val)}
-                                    value={email}
-                                    keyboardType='email-address'
-                                    autoCapitalize="none"
-                                    returnKeyType="next"
-                                    onSubmitEditing={() => {
-                                        phoneRef.current.focus();
-                                    }}
-                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                    editable
-                                />
+                                <Text
+                                    style={{
+                                        fontSize: Font.large,
+                                        fontFamily: Font.SemiBold,
+                                        alignSelf: 'flex-start',
+                                        color: Colors.darkText
 
-                                <AuthInputBoxSec
-                                    mainContainer={{ width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.PhoneNumber[languageIndex]}
-                                    inputRef={phoneRef}
-                                    onChangeText={(val) => setPhone(val)}
-                                    value={phone}
-                                    keyboardType="numeric"
-                                    autoCapitalize="none"
-                                    returnKeyType="next"
-                                    onSubmitEditing={() => {
-                                        descRef.current.focus();
-                                    }}
-                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                    editable
-                                />
-                            </>
-                        }
+                                    }}>{route == 'Login' ? LangProvider.Login_Issue[languageIndex] : LangProvider.Appoitment_Issue[languageIndex]}</Text>
 
-                        <Pressable
-                            onPress={() => descRef.current.focus()}
-                            style={{
-                                width: "100%",
-                                // alignSelf: "center",
-                                marginTop: vs(10),
-                                borderColor: Colors.Border,
-                                borderWidth: 1,
-                                borderRadius: 6,
-                                height: vs(125),
-                                paddingHorizontal: s(8),
-                                paddingVertical: s(2),
-                            }}>
+                                <View style={{ marginTop: vs(25) }}>
 
-                            <TextInput
-                                ref={descRef}
-                                style={{
-                                    width: "100%",
-                                    color: Colors.Black,
-                                    fontSize: Font.medium,
-                                    textAlign: languageIndex == 0 ? 'left' : 'right',
-                                    fontFamily: Font.Regular,
-                                }}
-                                maxLength={250}
-                                multiline={true}
-                                placeholder={LangProvider.Description[languageIndex]}
-                                placeholderTextColor={Colors.MediumGrey}
-                                onChangeText={(txt) => {
-                                    setDesc(txt)
-                                }}
-                                keyboardType="default"
-                                returnKeyLabel="done"
-                                returnKeyType="done"
-                                onSubmitEditing={() => {
-                                    Keyboard.dismiss()
-                                }}
-                            />
-                        </Pressable>
+                                    <NonEditableInput
+                                        title={route == 'Login' ? LangProvider.Subject[languageIndex] : LangProvider.OrderId[languageIndex]}
+                                        data={route == 'Login' ? LangProvider.LoginIssue[languageIndex] : data} />
 
 
-                        <View style={{ marginTop: vs(35) }}>
-
-                            <Button
-                                text={LangProvider.submitbtntext[languageIndex]}
-                                onPress={() => {
-                                    if (route == 'Login') {
-                                        submitLoginIssue()
-
-                                    } else {
-                                        submitIssue()
+                                    {
+                                        !route == 'Login' &&
+                                        <AuthInputBoxSec
+                                            mainContainer={{ width: '100%' }}
+                                            inputFieldStyle={{ height: vs(35) }}
+                                            lableText={LangProvider.Subject[languageIndex]}
+                                            inputRef={subjectRef}
+                                            onChangeText={(val) => setSubject(val)}
+                                            value={subject}
+                                            keyboardType="default"
+                                            autoCapitalize="none"
+                                            returnKeyType="next"
+                                            onSubmitEditing={() => {
+                                                descRef.current.focus()
+                                            }}
+                                            blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                            editable
+                                        />
                                     }
-                                }}
-                                onLoading={isLoading}
-                            />
+
+                                    {
+                                        route == 'Login' &&
+                                        <>
+                                            <AuthInputBoxSec
+                                                mainContainer={{ width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.Email[languageIndex]}
+                                                inputRef={emailRef}
+                                                onChangeText={(val) => setEmail(val)}
+                                                value={email}
+                                                keyboardType='email-address'
+                                                autoCapitalize="none"
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => {
+                                                    phoneRef.current.focus();
+                                                }}
+                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                editable
+                                            />
+
+                                            <AuthInputBoxSec
+                                                mainContainer={{ width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.PhoneNumber[languageIndex]}
+                                                inputRef={phoneRef}
+                                                onChangeText={(val) => setPhone(val)}
+                                                value={phone}
+                                                keyboardType="numeric"
+                                                autoCapitalize="none"
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => {
+                                                    descRef.current.focus();
+                                                }}
+                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                editable
+                                            />
+                                        </>
+                                    }
+
+                                    <Pressable
+                                        onPress={() => descRef.current.focus()}
+                                        style={{
+                                            width: "100%",
+                                            // alignSelf: "center",
+                                            marginTop: vs(10),
+                                            borderColor: Colors.Border,
+                                            borderWidth: 1,
+                                            borderRadius: 6,
+                                            height: vs(125),
+                                            paddingHorizontal: s(8),
+                                            paddingVertical: s(2),
+                                        }}>
+
+                                        <TextInput
+                                            ref={descRef}
+                                            style={{
+                                                width: "100%",
+                                                color: Colors.Black,
+                                                fontSize: Font.medium,
+                                                textAlign: languageIndex == 0 ? 'left' : 'right',
+                                                fontFamily: Font.Regular,
+                                            }}
+                                            maxLength={250}
+                                            multiline={true}
+                                            placeholder={LangProvider.Description[languageIndex]}
+                                            placeholderTextColor={Colors.MediumGrey}
+                                            onChangeText={(txt) => {
+                                                setDesc(txt)
+                                            }}
+                                            keyboardType="default"
+                                            returnKeyLabel="done"
+                                            returnKeyType="done"
+                                            onSubmitEditing={() => {
+                                                Keyboard.dismiss()
+                                            }}
+                                        />
+                                    </Pressable>
+                                </View>
+
+
+                            </KeyboardAwareScrollView>
+
+                            <View style={{
+                                width: "100%",
+                                position: 'absolute',
+                                bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                                paddingHorizontal: s(13),
+                                backgroundColor: Colors.White,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                alignItems: "center",
+                                borderTopWidth: 1,
+                                borderTopColor: Colors.Border,
+                            }}>
+                                <Button
+                                    text={LangProvider.submitbtntext[languageIndex]}
+                                    onPress={() => {
+                                        if (route == 'Login') {
+                                            submitLoginIssue()
+
+                                        } else {
+                                            submitIssue()
+                                        }
+                                    }}
+                                    onLoading={isLoading}
+                                />
+                            </View>
+
                         </View>
-
-
                     </View>
 
-
-                </KeyboardAwareScrollView>
-            </View>
-
-        </Modal>
+                </View>
 
 
+
+
+            </Modal>
+
+        </View>
 
     )
 }
 const styles = StyleSheet.create({
+    mainContainer: {
+        width: windowWidth,
+        height: windowHeight,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.35,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+    },
     modalContainer: {
         width: windowWidth,
         height: windowHeight / 1.5,
         backgroundColor: Colors.White,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        paddingTop: vs(40),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
         position: 'absolute',
         bottom: 0,
-        zIndex: 999
+        zIndex: 9999
 
     },
     closeContainer: {
@@ -377,20 +398,9 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(30),
-        right: s(11),
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
-    },
-    Title: {
-        fontSize: 20,
-        fontFamily: Font.Regular,
-        color: Colors.Black,
-    },
-    Desc: {
-        fontSize: 16,
-        fontFamily: Font.Regular,
-        color: Colors.Secondary,
     },
 });
 

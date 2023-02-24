@@ -17,6 +17,7 @@ export const Colors = {
   tab_background_color: "#F1F2F4",
 
   // ----------------------------Ahsan
+  LightBlack:'rgba(0,0,0,0.8)',
   backgroundcolor: "#f1f2f4",
   Theme:'#0168B3',
   Primary:'#38ABEC',

@@ -49,7 +49,7 @@ const Past = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // console.log("getAppointments-response...", obj);
+        console.log("getAppointments-response...", obj);
         if (obj.status == true) {
           setTimeout(() => {
             setIsRefreshing(false)

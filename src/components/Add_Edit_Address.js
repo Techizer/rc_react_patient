@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, ActivityIndicator, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
-import Modal from "react-native-modal";
-import {
-    SkypeIndicator,
-} from 'react-native-indicators';
+import { Text, TouchableOpacity, View, Image, StyleSheet, Modal, TouchableHighlight, Keyboard, Alert, Platform, } from "react-native";
+import { BlurView } from "@react-native-community/blur";
+
+import { SkypeIndicator } from 'react-native-indicators';
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
     windowWidth, LangProvider, config, Icons, Button, apifuntion, msgProvider, windowHeight,
@@ -15,6 +14,7 @@ import AuthInputBoxSec from "./AuthInputBoxSec";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import { Address } from "../Redux/Actions";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
@@ -29,7 +29,7 @@ const AddEditAddress = ({
     length
 }) => {
 
-    const { address, loggedInUserDetails, guest, appLanguage, languageIndex, deviceType, contentAlign, } = useSelector(state => state.StorageReducer)
+    const { address, loggedInUserDetails, guest, languageIndex, contentAlign, } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const [title, setTitle] = useState('')
     const [googleAddress, setGoogleAddress] = useState('')
@@ -44,10 +44,11 @@ const AddEditAddress = ({
     const addressRef = useRef()
     const landmarkRef = useRef()
     const buildingRef = useRef()
+    const insets = useSafeAreaInsets()
 
     useEffect(() => {
 
-        console.log('addressDetails............', addressDetails);
+        // console.log('addressDetails............', addressDetails);
         if (addressDetails != '' && addressDetails != null && addressDetails != undefined) {
             setGoogleAddress(addressDetails.address != '' ? addressDetails.address : '')
 
@@ -71,9 +72,6 @@ const AddEditAddress = ({
         setDefaultAddress(false)
     }
 
-    const _scrollToInput = (reactNode: any) => {
-        scrollRef.props.scrollToFocusedInput(reactNode)
-    }
     const confirmDelete = () => {
         Alert.alert(
             LangProvider.Delete_Address[languageIndex],
@@ -134,7 +132,7 @@ const AddEditAddress = ({
                 setIsLoading(false)
                 msgProvider.showError(error.message)
                 onRequestClose()
-                console.log("-------- error ------- " + error);
+                console.log(" addAddress-error ------- " + error);
             });
     };
 
@@ -175,7 +173,7 @@ const AddEditAddress = ({
                 setIsLoading(false)
                 msgProvider.showError(error.message)
                 onRequestClose()
-                console.log("-------- error ------- " + error);
+                console.log("editAddress-error ------- " + error);
             });
     };
 
@@ -206,300 +204,326 @@ const AddEditAddress = ({
                 setIsDelete(false)
                 msgProvider.showError(obj.message)
                 onRequestClose()
-                console.log("-------- error ------- " + error);
+                console.log("deleteAddress-error ------- " + error);
             });
     };
     return (
-        
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            animationInTiming={350}
-            animationOutTimixng={350}
-            avoidKeyboard={false}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0, }} >
 
 
-            <View pointerEvents={(isLoading || isDelete) ? 'none' : 'auto'} style={styles.modalContainer}>
-                {
-                    isDelete &&
-                    <View style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'rgba(0,0,0,0.3)',
-                        // opacity: 0.8,
-                        width: windowWidth,
-                        height: windowHeight / 1.5,
-                        borderRadius: 25,
-                        position: 'absolute',
-                        bottom: 0,
-                        zIndex: 999,
-                    }}>
-                        <SkypeIndicator color={Colors.Theme} size={20} />
-                    </View>
-                }
-                <TouchableHighlight
-                    onPress={() => {
-                        onRequestClose()
-                        // resetState()
-                    }}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}
-                >
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
 
-                <Text
+
+        <View style={{ flex: 1 }} pointerEvents={(isLoading || isDelete) ? 'none' : 'auto'}>
+            <Modal
+                animationType='slide'
+                visible={visible}
+                transparent
+                presentationStyle='overFullScreen'
+            >
+                {/* <BlurView
                     style={{
-                        fontSize: Font.large,
-                        fontFamily: Font.SemiBold,
-                        alignSelf: 'flex-start',
-                        color: Colors.darkText
-
-                    }}>{type === 'editAddress' ? LangProvider.Edit_Address[languageIndex] : type === 'addAddress' ? LangProvider.Add_Address[languageIndex] : ''}</Text>
-
-                <KeyboardAwareScrollView
-                    // keyboardOpeningTime={200}
-                    extraScrollHeight={50}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        paddingBottom: vs(15),
+                        flex: 1,
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        // zIndex: 999
                     }}
-                    showsVerticalScrollIndicator={false}>
+                    blurType='ultraThinMaterialDark'
+                    blurAmount={15}
+                    reducedTransparencyFallbackColor="white"
+                /> */}
 
+                <View style={styles.mainContainer}>
 
-                    <View style={{ marginTop: vs(15) }}>
+                    <View style={styles.subContainer}>
+                        <TouchableOpacity
+                            onPress={onRequestClose}
+                            style={styles.closeContainer}
+                        >
+                            <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                        </TouchableOpacity>
+                        <View style={styles.modalContainer}>
 
-                        {
-
-                            <>
-                                <AuthInputBoxSec
-                                    mainContainer={{ width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.Address_Title[languageIndex]}
-                                    inputRef={titleRef}
-                                    onChangeText={(val) => setTitle(val)}
-                                    value={title}
-                                    keyboardType="default"
-                                    autoCapitalize="none"
-                                    returnKeyType="next"
-                                    onSubmitEditing={() => {
-                                        landmarkRef.current.focus();
-                                    }}
-                                    // onFocus={(event: Event) => {
-                                    //     _scrollToInput(event.target)
-                                    // }}
-                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                    editable
-                                />
-
-                                <AuthInputBoxSec
-                                    mainContainer={{ marginTop: vs(5), width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.Google_Address[languageIndex]}
-                                    inputRef={addressRef}
-                                    onChangeText={(val) => setGoogleAddress(val)}
-                                    value={googleAddress}
-                                    keyboardType="default"
-                                    autoCapitalize="none"
-                                    returnKeyType="next"
-                                    editable={false}
-                                    numberOfLines={1}
-                                    multiline
-                                />
-
-                                <AuthInputBoxSec
-                                    mainContainer={{ marginTop: vs(5), width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.Nearest_Address[languageIndex]}
-                                    inputRef={landmarkRef}
-                                    onChangeText={(val) => setNearest(val)}
-                                    value={nearest}
-                                    keyboardType="default"
-                                    autoCapitalize="none"
-                                    returnKeyType="next"
-                                    onSubmitEditing={() => {
-                                        buildingRef.current.focus()
-                                    }}
-                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                    editable
-                                />
-
-                                <AuthInputBoxSec
-                                    mainContainer={{ marginTop: vs(5), width: '100%' }}
-                                    inputFieldStyle={{ height: vs(35) }}
-                                    lableText={LangProvider.Building_Name[languageIndex]}
-                                    inputRef={buildingRef}
-                                    onChangeText={(val) => setBuilding(val)}
-                                    value={building}
-                                    keyboardType="default"
-                                    autoCapitalize="none"
-                                    returnKeyType="done"
-                                    onSubmitEditing={() => {
-                                        Keyboard.dismiss()
-                                    }}
-                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                    editable
-                                />
-
-                                {/* <TextInput placeholder="email"  style={{marginTop:50}} ref={titleRef} onSubmitEditing={()=>landmarkRef.current.focus()} returnKeyType={'next'} /> */}
-                                {/* <TextInput placeholder="pass"  style={{marginTop:100}} ref={landmarkRef} onSubmitEditing={()=>buildingRef.current.focus()} returnKeyType={'next'} /> */}
-
-
-                                <View
+                            <KeyboardAwareScrollView
+                                // keyboardOpeningTime={200}
+                                extraScrollHeight={50}
+                                enableOnAndroid={true}
+                                keyboardShouldPersistTaps='handled'
+                                contentContainerStyle={{
+                                    justifyContent: 'center',
+                                    paddingHorizontal: s(13),
+                                    paddingBottom: vs(15),
+                                }}
+                                showsVerticalScrollIndicator={false}>
+                                <Text
                                     style={{
-                                        width: "100%",
-                                        alignSelf: "center",
-                                        marginTop: vs(15),
-                                        flexDirection: "row",
-                                        alignItems: 'center'
-                                    }} >
+                                        fontSize: Font.large,
+                                        fontFamily: Font.SemiBold,
+                                        alignSelf: 'flex-start',
+                                        color: Colors.darkText
 
-                                    <TouchableOpacity
-                                        disabled={(addressDetails?.defult != '' && addressDetails?.defult != '0') ? false : true}
-                                        activeOpacity={0.8}
-                                        style={{
-                                            width: "37%",
-                                            flexDirection: "row",
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                        onPress={() => {
-                                            setDefaultAddress(!defaultAddress)
-                                        }}>
+                                    }}>{type === 'editAddress' ? LangProvider.Edit_Address[languageIndex] : type === 'addAddress' ? LangProvider.Add_Address[languageIndex] : ''}</Text>
+
+                                <View style={{ marginTop: vs(25) }}>
+
+                                    {
+
+                                        <>
+                                            <AuthInputBoxSec
+                                                mainContainer={{ width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.Address_Title[languageIndex]}
+                                                inputRef={titleRef}
+                                                onChangeText={(val) => setTitle(val)}
+                                                value={title}
+                                                keyboardType="default"
+                                                autoCapitalize="none"
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => {
+                                                    landmarkRef.current.focus();
+                                                }}
+                                                // onFocus={(event: Event) => {
+                                                //     _scrollToInput(event.target)
+                                                // }}
+                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                editable
+                                            />
+
+                                            <AuthInputBoxSec
+                                                mainContainer={{ marginTop: vs(5), width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.Google_Address[languageIndex]}
+                                                inputRef={addressRef}
+                                                onChangeText={(val) => setGoogleAddress(val)}
+                                                value={googleAddress}
+                                                keyboardType="default"
+                                                autoCapitalize="none"
+                                                returnKeyType="next"
+                                                editable={false}
+                                                numberOfLines={1}
+                                                multiline
+                                            />
+
+                                            <AuthInputBoxSec
+                                                mainContainer={{ marginTop: vs(5), width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.Nearest_Address[languageIndex]}
+                                                inputRef={landmarkRef}
+                                                onChangeText={(val) => setNearest(val)}
+                                                value={nearest}
+                                                keyboardType="default"
+                                                autoCapitalize="none"
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => {
+                                                    buildingRef.current.focus()
+                                                }}
+                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                editable
+                                            />
+
+                                            <AuthInputBoxSec
+                                                mainContainer={{ marginTop: vs(5), width: '100%' }}
+                                                inputFieldStyle={{ height: vs(35) }}
+                                                lableText={LangProvider.Building_Name[languageIndex]}
+                                                inputRef={buildingRef}
+                                                onChangeText={(val) => setBuilding(val)}
+                                                value={building}
+                                                keyboardType="default"
+                                                autoCapitalize="none"
+                                                returnKeyType="done"
+                                                onSubmitEditing={() => {
+                                                    Keyboard.dismiss()
+                                                }}
+                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                editable
+                                            />
+
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    alignSelf: "center",
+                                                    marginTop: vs(15),
+                                                    flexDirection: "row",
+                                                    alignItems: 'center'
+                                                }} >
+
+                                                <TouchableOpacity
+                                                    disabled={(addressDetails?.defult != '' && addressDetails?.defult != '0') ? false : true}
+                                                    activeOpacity={0.8}
+                                                    style={{
+                                                        width: "37%",
+                                                        flexDirection: "row",
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                    }}
+                                                    onPress={() => {
+                                                        setDefaultAddress(!defaultAddress)
+                                                    }}>
 
 
-                                        <TouchableOpacity
-                                            disabled={(addressDetails?.defult != '' && addressDetails?.defult != '0') ? false : true}
-                                            onPress={() => {
-                                                setDefaultAddress(!defaultAddress)
+                                                    <TouchableOpacity
+                                                        disabled={(addressDetails?.defult != '' && addressDetails?.defult != '0') ? false : true}
+                                                        onPress={() => {
+                                                            setDefaultAddress(!defaultAddress)
 
-                                            }}
-                                            style={{
-                                                height: 20,
-                                                width: 20,
-                                                borderRadius: 5,
-                                                backgroundColor: defaultAddress ? Colors.Theme : Colors.White,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                borderWidth: defaultAddress ? 0 : 1.3,
-                                                borderColor: Colors.Border
-                                            }}>
-                                            {
-                                                defaultAddress ?
-                                                    <Image
-                                                        style={{
-                                                            height: 14,
-                                                            width: 14,
-                                                            tintColor: Colors.White
                                                         }}
-                                                        resizeMode="contain"
-                                                        source={Icons.Tick}
-                                                    />
-                                                    :
-                                                    null
-                                            }
-                                        </TouchableOpacity>
-                                        <Text
-                                            style={{
-                                                color: Colors.inActiveText,
-                                                fontFamily: Font.Regular,
-                                                fontSize: Font.medium,
-                                            }}>
-                                            {LangProvider.Default_Address[languageIndex]}
-                                        </Text>
+                                                        style={{
+                                                            height: 20,
+                                                            width: 20,
+                                                            borderRadius: 5,
+                                                            backgroundColor: defaultAddress ? Colors.Theme : Colors.White,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            borderWidth: defaultAddress ? 0 : 1.3,
+                                                            borderColor: Colors.Border
+                                                        }}>
+                                                        {
+                                                            defaultAddress ?
+                                                                <Image
+                                                                    style={{
+                                                                        height: 14,
+                                                                        width: 14,
+                                                                        tintColor: Colors.White
+                                                                    }}
+                                                                    resizeMode="contain"
+                                                                    source={Icons.Tick}
+                                                                />
+                                                                :
+                                                                null
+                                                        }
+                                                    </TouchableOpacity>
+                                                    <Text
+                                                        style={{
+                                                            color: Colors.inActiveText,
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.medium,
+                                                        }}>
+                                                        {LangProvider.Default_Address[languageIndex]}
+                                                    </Text>
 
-                                    </TouchableOpacity>
+                                                </TouchableOpacity>
+                                            </View>
+
+                                        </>
+
+                                    }
+
+                                    {
+                                        (type == 'editAddress' && defaultAddress) &&
+                                        <Text style={{
+                                            fontSize: Font.small,
+                                            fontFamily: Font.Regular,
+                                            color: Colors.lightGrey,
+                                            marginTop: (windowWidth * 4) / 100,
+                                        }}>{LangProvider.CantDelete[languageIndex]}</Text>
+                                    }
+
+
+
+
+
+
                                 </View>
 
-                            </>
+                            </KeyboardAwareScrollView>
 
-                        }
+                            <View style={{
+                                width: "100%",
+                                position: 'absolute',
+                                bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                                paddingHorizontal: s(13),
+                                backgroundColor: Colors.White,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                alignItems: "center",
+                                borderTopWidth: 1,
+                                borderTopColor: Colors.Border,
+                            }}>
 
-                        {
-                            (type == 'editAddress' && defaultAddress) &&
-                            <Text style={{
-                                fontSize: Font.small,
-                                fontFamily: Font.Regular,
-                                color: Colors.lightGrey,
-                                marginTop: (windowWidth * 4) / 100,
-                            }}>{LangProvider.CantDelete[languageIndex]}</Text>
-                        }
+                                <Button
+                                    text={LangProvider.Save_Address[languageIndex]}
+                                    onPress={() => {
+                                        if (type == 'editAddress') {
+                                            editAddress()
+                                        } else {
+                                            addAddress()
+                                        }
+                                    }}
+                                    onLoading={isLoading}
+                                />
+
+                                {
+                                    (type == 'editAddress' && !defaultAddress) &&
 
 
-                        <View style={{ marginTop: vs(25) }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            height: (windowWidth * 6) / 100,
+                                            alignSelf: 'center',
+                                            // marginBottom: (windowWidth * 2) / 100,
+                                            marginTop: (windowWidth * 2) / 100,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                        activeOpacity={0.8}
+                                        onPress={() => {
+                                            confirmDelete()
+                                        }}>
+                                        {
+                                            isDelete ?
+                                                <SkypeIndicator color={Colors.Theme} size={20} />
+                                                :
+                                                <Text style={{
+                                                    fontSize: Font.small,
+                                                    fontFamily: Font.Medium,
+                                                    color: Colors.Theme,
 
-                            <Button
-                                text={LangProvider.Save_Address[languageIndex]}
-                                onPress={() => {
-                                    if (type == 'editAddress') {
-                                        editAddress()
-                                    } else {
-                                        addAddress()
-                                    }
-                                }}
-                                btnStyle={{ marginTop: vs(10) }}
-                                onLoading={isLoading}
-                            />
+                                                }}>{LangProvider.Delete[languageIndex]}</Text>
+                                        }
+
+                                    </TouchableOpacity>
+
+
+                                }
+                            </View>
                         </View>
-
-                        {
-                            (type == 'editAddress' && !defaultAddress) &&
-
-
-                            <TouchableOpacity
-                                activeOpacity={0.8}
-                                onPress={() => {
-                                    confirmDelete()
-                                }}>
-                                <Text style={{
-                                    fontSize: Font.small,
-                                    fontFamily: Font.Medium,
-                                    color: Colors.Theme,
-                                    marginTop: (windowWidth * 5) / 100,
-                                    alignSelf: 'center'
-                                }}>{LangProvider.Delete[languageIndex]}</Text>
-                            </TouchableOpacity>
-
-
-                        }
-
                     </View>
 
+                </View>
 
-                </KeyboardAwareScrollView>
-
-            </View>
-
-        </Modal >
-
+            </Modal>
+        </View>
 
 
     )
 }
 const styles = StyleSheet.create({
 
-    modalContainer: {
+    mainContainer: {
         width: windowWidth,
-        height: (windowHeight / 1.5),
-        backgroundColor: Colors.White,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        paddingTop: vs(40),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
+        height: windowHeight,
         position: 'absolute',
         bottom: 0,
-        zIndex: 999
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.35,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+    },
+    modalContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.5,
+        backgroundColor: Colors.White,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999
 
     },
     closeContainer: {
@@ -508,21 +532,17 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(30),
-        right: s(11),
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
     },
-    Title: {
-        fontSize: 20,
-        fontFamily: Font.Regular,
-        color: Colors.Black,
+    viewWrapper: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.2)'
     },
-    Desc: {
-        fontSize: 16,
-        fontFamily: Font.Regular,
-        color: Colors.Secondary,
-    },
+
 });
 
 export default AddEditAddress;

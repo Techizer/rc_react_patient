@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
-import Modal from "react-native-modal";
+import { Modal, Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
+import { BlurView } from "@react-native-community/blur";
+import { useSelector } from "react-redux";
+import { SvgXml } from "react-native-svg";
+import { s, vs } from "react-native-size-matters";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SkypeIndicator } from 'react-native-indicators';
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
@@ -8,14 +13,9 @@ import {
     Cameragallery, apifuntion, msgProvider, mediaprovider, windowHeight,
 } from "../Provider/Utils/Utils";
 import { Cross, dummyUser, Edit } from "../Icons/Index";
-import { s, vs } from "react-native-size-matters";
-import { SvgXml } from "react-native-svg";
 import AuthInputBoxSec from "./AuthInputBoxSec";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import OutlinedButton from "./OutlinedButton";
-import { useSelector } from "react-redux";
-
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 const AddandEditMembers = ({
@@ -41,7 +41,7 @@ const AddandEditMembers = ({
         load: false,
         type: ''
     })
-
+    const insets = useSafeAreaInsets()
     useEffect(() => {
         // console.log('selectedPatient............', selectedPatient);
         // console.log('type............', type);
@@ -216,7 +216,7 @@ const AddandEditMembers = ({
                 return false;
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("addMember-error ------- " + error);
                 setIsLoading(prevState => ({
                     ...prevState,
                     load: false,
@@ -288,437 +288,490 @@ const AddandEditMembers = ({
     }
 
     return (
-        <Modal
-            isVisible={visible}
-            statusBarTranslucent={true}
-            animationIn='fadeInUpBig'
-            animationOut='fadeOutDownBig'
-            deviceWidth={windowWidth}
-            animationInTiming={350}
-            animationOutTimixng={350}
-            // onBackButtonPress={onRequestClose}
-            hasBackdrop={true}
-            useNativeDriver={true}
-            useNativeDriverForBackdrop={true}
-            // backdropColor='rgba(0,0,0,0.8)'
-            style={{ margin: 0 }} >
 
-
-            <View pointerEvents={isLoading?.load ? 'none' : 'auto'} style={styles.modalContainer}>
-                <TouchableHighlight
-                    onPress={() => {
-                        onRequestClose()
-                        resetState()
-                        changeType('addMember')
-                    }}
-                    underlayColor={Colors.Highlight}
-                    style={styles.closeContainer}
-                >
-                    <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-                </TouchableHighlight>
-
-                <Text
+        <View style={{ flex: 1 }} pointerEvents={(isLoading || isDelete) ? 'none' : 'auto'}>
+            <Modal
+                animationType='slide'
+                visible={visible}
+                transparent
+                presentationStyle='overFullScreen'
+            >
+                {/* <BlurView
                     style={{
-                        fontSize: Font.large,
-                        fontFamily: Font.SemiBold,
-                        alignSelf: 'flex-start',
-                        color: Colors.darkText
-
-                    }}>{type === 'addMember' ? LangProvider.Add_New_Member[languageIndex] : type === 'editMember' ? LangProvider.Edit_Member[languageIndex] : ''}</Text>
-
-                <KeyboardAwareScrollView
-                    // keyboardOpeningTime={200}
-                    extraScrollHeight={50}
-                    enableOnAndroid={true}
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{
-                        justifyContent: 'center',
-                        paddingBottom: vs(15),
+                        flex: 1,
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        // zIndex: 999
                     }}
-                    showsVerticalScrollIndicator={false}>
+                    blurType='ultraThinMaterialDark'
+                    blurAmount={15}
+                    reducedTransparencyFallbackColor="white"
+                /> */}
+
+                <View style={[styles.mainContainer]}>
+
+                    <View style={[styles.subContainer, { height: (type === 'addMember' || isEditable) ? windowHeight / 1.35 : windowHeight / 2.1 }]}>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                onRequestClose()
+                                resetState()
+                                changeType('addMember')
+                            }}
+                            style={styles.closeContainer}
+                        >
+                            <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+                        </TouchableOpacity>
+
+                        <View style={[styles.modalContainer, { height: (type === 'addMember' || isEditable) ? windowHeight / 1.5 : windowHeight / 2.5 }]}>
+
+                            <KeyboardAwareScrollView
+                                // keyboardOpeningTime={200}
+                                extraScrollHeight={50}
+                                enableOnAndroid={true}
+                                keyboardShouldPersistTaps='handled'
+                                contentContainerStyle={{
+                                    justifyContent: 'center',
+                                    paddingBottom: vs(15),
+                                    paddingHorizontal: s(13),
+                                }}
+                                showsVerticalScrollIndicator={false}>
+
+                                <Text
+                                    style={{
+                                        fontSize: Font.large,
+                                        fontFamily: Font.SemiBold,
+                                        alignSelf: 'flex-start',
+                                        color: Colors.darkText
+
+                                    }}>{type === 'addMember' ? LangProvider.Add_New_Member[languageIndex] : type === 'editMember' ? LangProvider.Edit_Member[languageIndex] : ''}</Text>
 
 
+                                <View style={{ marginTop: vs(25) }}>
 
-                    <View style={{ marginTop: vs(15) }}>
+                                    {
+                                        (type === 'addMember') ?
+                                            <>
+                                                <TouchableHighlight
+                                                    underlayColor={Colors.Highlight}
+                                                    onPress={() => { setMediamodal(true) }}>
+                                                    <View style={{ flexDirection: 'row', }}>
+                                                        <View style={{ width: '21%', flexDirection: 'row', }}>
+                                                            {
+                                                                (profileImg != '' && profileImg != null) ?
+                                                                    <Image source={{ uri: profileImg }} style={{
+                                                                        height: vs(55),
+                                                                        width: vs(55),
+                                                                        borderRadius: vs(55),
+                                                                    }} />
+                                                                    :
+                                                                    <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
+                                                            }
+                                                            <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
+                                                                <SvgXml xml={Edit} />
+                                                            </View>
+                                                        </View>
 
-                        {
-                            (type === 'addMember') ?
-                                <>
-                                    <TouchableHighlight
-                                        underlayColor={Colors.Highlight}
-                                        onPress={() => { setMediamodal(true) }}>
-                                        <View style={{ flexDirection: 'row', }}>
-                                            <View style={{ width: '21%', flexDirection: 'row', }}>
-                                                {
-                                                    (profileImg != '' && profileImg != null) ?
-                                                        <Image source={{ uri: profileImg }} style={{
-                                                            height: vs(55),
-                                                            width: vs(55),
-                                                            borderRadius: vs(55),
-                                                        }} />
-                                                        :
-                                                        <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
-                                                }
-                                                <View style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
-                                                    <SvgXml xml={Edit} />
-                                                </View>
-                                            </View>
-
-                                            <View style={{ width: '79%', justifyContent: 'center', paddingHorizontal: s(10) }}>
-                                                <Text
-                                                    style={{
-                                                        fontSize: Font.small,
-                                                        fontFamily: Font.Regular,
-                                                        alignSelf: 'flex-start',
-                                                        color: Colors.darkText
-
-                                                    }}>{LangProvider.Upload_Photo[languageIndex]}</Text>
-                                                <Text
-                                                    style={{
-                                                        fontSize: Font.xsmall,
-                                                        fontFamily: Font.Regular,
-                                                        alignSelf: 'flex-start',
-                                                        color: Colors.lightGrey,
-                                                        marginTop: vs(2)
-
-                                                    }}>{LangProvider.Photo_Size[languageIndex]}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableHighlight>
-                                    <View style={{ marginTop: vs(10) }}>
-                                        <AuthInputBoxSec
-                                            mainContainer={{ width: '100%', }}
-                                            inputFieldStyle={{ height: vs(35) }}
-                                            lableText={LangProvider.textinputname[languageIndex]}
-                                            inputRef={nameRef}
-                                            onChangeText={(val) => setName(val)}
-                                            value={name}
-                                            keyboardType="default"
-                                            autoCapitalize="none"
-                                            returnKeyType="next"
-                                            onSubmitEditing={() => {
-                                                dobRef.current.focus();
-                                            }}
-                                            blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                            editable
-                                        />
-
-                                        <AuthInputBoxSec
-                                            mainContainer={{ marginTop: vs(5), width: '100%' }}
-                                            inputFieldStyle={{ height: vs(35) }}
-                                            lableText={LangProvider.PatientAge[languageIndex]}
-                                            inputRef={dobRef}
-                                            onChangeText={(val) => setDOB(val)}
-                                            value={dob}
-                                            keyboardType={"decimal-pad"}
-                                            autoCapitalize="none"
-                                            returnKeyType="done"
-                                            onSubmitEditing={() => {
-                                                Keyboard.dismiss()
-                                            }}
-                                            blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                            editable
-                                        />
-
-                                        {/* ------------------Gender------------------ */}
-                                        <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(20), paddingHorizontal: s(15) }}>
-
-                                            <Text
-                                                style={{
-                                                    fontSize: Font.small,
-                                                    fontFamily: Font.Regular,
-                                                    color: Colors.lightGrey,
-                                                    paddingRight: s(20)
-
-                                                }}>{LangProvider.Gender[languageIndex]}</Text>
-
-                                            <FlatList
-                                                showsHorizontalScrollIndicator={false}
-                                                horizontal
-                                                data={['Male', 'Female']}
-                                                ItemSeparatorComponent={() => {
-                                                    return (
-                                                        <View style={{ width: s(25) }} />
-                                                    )
-                                                }}
-                                                renderItem={({ item, index }) => {
-                                                    return (
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                                                            <TouchableOpacity
-                                                                activeOpacity={0.8}
-                                                                onPress={() => {
-                                                                    setGender(index)
-                                                                }}
-                                                                style={{
-                                                                    height: s(16),
-                                                                    width: s(16),
-                                                                    borderRadius: s(16),
-                                                                    borderWidth: index === gender ? 5 : 1,
-                                                                    borderColor: index === gender ? Colors.Blue : Colors.lightGrey
-                                                                }}>
-
-                                                            </TouchableOpacity>
+                                                        <View style={{ width: '79%', justifyContent: 'center', paddingHorizontal: s(10) }}>
                                                             <Text
                                                                 style={{
                                                                     fontSize: Font.small,
                                                                     fontFamily: Font.Regular,
                                                                     alignSelf: 'flex-start',
-                                                                    color: Colors.darkText,
-                                                                    marginLeft: s(8)
+                                                                    color: Colors.darkText
 
-                                                                }}>{item}</Text>
-                                                        </View>
+                                                                }}>{LangProvider.Upload_Photo[languageIndex]}</Text>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: Font.xsmall,
+                                                                    fontFamily: Font.Regular,
+                                                                    alignSelf: 'flex-start',
+                                                                    color: Colors.lightGrey,
+                                                                    marginTop: vs(2)
 
-                                                    );
-                                                }}
-                                            />
-
-                                        </View>
-
-                                    </View>
-                                </>
-                                :
-                                (type === 'editMember') ?
-                                    <>
-                                        <View style={{ flexDirection: 'row', width: '100%' }}>
-                                            <View style={{ width: '23%', flexDirection: 'row', height: vs(58) }}>
-                                                <View style={{ width: '90%', flexDirection: 'row', height: '100%' }}>
-                                                    {
-                                                        (profileImg != '' && profileImg != null) ?
-                                                            <Image source={{ uri: profileImg }} style={{
-                                                                height: vs(55),
-                                                                width: vs(55),
-                                                                borderRadius: vs(55),
-                                                            }} />
-                                                            :
-                                                            <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
-                                                    }
-
-                                                    {
-                                                        isEditable &&
-                                                        <TouchableOpacity
-                                                            activeOpacity={0.8}
-                                                            onPress={() => setMediamodal(true)}
-                                                            style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
-                                                            <SvgXml xml={Edit} />
-                                                        </TouchableOpacity>}
-
-                                                </View>
-                                            </View>
-
-                                            <View style={{ width: '80%', borderBottomWidth: type ? 0 : 1, borderBottomColor: Colors.Border, paddingBottom: vs(20) }}>
-
-                                                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                                                    <View style={{ width: '94%', }}>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText }}>{selectedPatient?.name}</Text>
-                                                            <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
-                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{(selectedPatient?.gender === '0' ? "Male" : 'Female') + ', ' + selectedPatient?.age + (' Year')}</Text>
-
+                                                                }}>{LangProvider.Photo_Size[languageIndex]}</Text>
                                                         </View>
                                                     </View>
-
-                                                </View>
-
-                                                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
-                                                    <View style={{ width: '94%', flexDirection: 'row' }}>
-                                                        <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
-                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Appointent Bookings'}</Text>
-                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.appointment_count}</Text>
-                                                        </View>
-
-                                                        <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, justifyContent: 'center', alignItems: 'center' }}>
-                                                            <View style={{ width: '80%' }}>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Doctor Consul.'}</Text>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.dc_count}</Text>
-                                                            </View>
-                                                        </View>
-
-                                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                            <View style={{ width: '80%' }}>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Lab Tests'}</Text>
-                                                                <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.lab_count}</Text>
-                                                            </View>
-                                                        </View>
-
-                                                    </View>
-                                                </View>
-
-                                            </View>
-                                        </View>
-
-                                        {/* --------------------------------------- */}
-
-                                        {
-                                            (isEditable && type === 'editMember') &&
-
-                                            <View style={{ marginTop: vs(10) }}>
-                                                <AuthInputBoxSec
-                                                    mainContainer={{ width: '100%', }}
-                                                    inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={LangProvider.textinputname[languageIndex]}
-                                                    inputRef={nameRef}
-                                                    onChangeText={(val) => setName(val)}
-                                                    value={name}
-                                                    keyboardType="default"
-                                                    autoCapitalize="none"
-                                                    returnKeyType="next"
-                                                    onSubmitEditing={() => {
-                                                        dobRef.current.focus();
-                                                    }}
-                                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                                    editable
-                                                />
-
-                                                <AuthInputBoxSec
-                                                    mainContainer={{ marginTop: vs(5), width: '100%' }}
-                                                    inputFieldStyle={{ height: vs(35) }}
-                                                    lableText={LangProvider.PatientAge[languageIndex]}
-                                                    inputRef={dobRef}
-                                                    onChangeText={(val) => setDOB(val)}
-                                                    value={dob}
-                                                    keyboardType={"decimal-pad"}
-                                                    autoCapitalize="none"
-                                                    returnKeyType="done"
-                                                    onSubmitEditing={() => {
-                                                        Keyboard.dismiss()
-                                                    }}
-                                                    blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                                    editable
-                                                />
-
-                                                {/* ------------------Gender------------------ */}
-                                                <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(20), paddingHorizontal: s(15) }}>
-
-                                                    <Text
-                                                        style={{
-                                                            fontSize: Font.small,
-                                                            fontFamily: Font.Regular,
-                                                            alignSelf: 'flex-start',
-                                                            color: Colors.lightGrey,
-                                                            paddingRight: s(20)
-
-                                                        }}>{LangProvider.Gender[languageIndex]}</Text>
-
-                                                    <FlatList
-                                                        showsHorizontalScrollIndicator={false}
-                                                        horizontal
-                                                        data={['Male', 'Female']}
-                                                        ItemSeparatorComponent={() => {
-                                                            return (
-                                                                <View style={{ width: s(25) }} />
-                                                            )
+                                                </TouchableHighlight>
+                                                <View style={{ marginTop: vs(10) }}>
+                                                    <AuthInputBoxSec
+                                                        mainContainer={{ width: '100%', }}
+                                                        inputFieldStyle={{ height: vs(35) }}
+                                                        lableText={LangProvider.textinputname[languageIndex]}
+                                                        inputRef={nameRef}
+                                                        onChangeText={(val) => setName(val)}
+                                                        value={name}
+                                                        keyboardType="default"
+                                                        autoCapitalize="none"
+                                                        returnKeyType="next"
+                                                        onSubmitEditing={() => {
+                                                            dobRef.current.focus();
                                                         }}
-                                                        renderItem={({ item, index }) => {
-                                                            return (
-                                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                        editable
+                                                    />
 
+                                                    <AuthInputBoxSec
+                                                        mainContainer={{ marginTop: vs(5), width: '100%' }}
+                                                        inputFieldStyle={{ height: vs(35) }}
+                                                        lableText={LangProvider.PatientAge[languageIndex]}
+                                                        inputRef={dobRef}
+                                                        onChangeText={(val) => setDOB(val)}
+                                                        value={dob}
+                                                        keyboardType={"decimal-pad"}
+                                                        autoCapitalize="none"
+                                                        returnKeyType="done"
+                                                        onSubmitEditing={() => {
+                                                            Keyboard.dismiss()
+                                                        }}
+                                                        blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                        editable
+                                                    />
+
+                                                    {/* ------------------Gender------------------ */}
+                                                    <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(20), paddingHorizontal: s(15) }}>
+
+                                                        <Text
+                                                            style={{
+                                                                fontSize: Font.small,
+                                                                fontFamily: Font.Regular,
+                                                                color: Colors.lightGrey,
+                                                                paddingRight: s(20)
+
+                                                            }}>{LangProvider.Gender[languageIndex]}</Text>
+
+                                                        <FlatList
+                                                            showsHorizontalScrollIndicator={false}
+                                                            horizontal
+                                                            data={['Male', 'Female']}
+                                                            ItemSeparatorComponent={() => {
+                                                                return (
+                                                                    <View style={{ width: s(25) }} />
+                                                                )
+                                                            }}
+                                                            renderItem={({ item, index }) => {
+                                                                return (
                                                                     <TouchableOpacity
                                                                         activeOpacity={0.8}
                                                                         onPress={() => {
                                                                             setGender(index)
                                                                         }}
-                                                                        style={{
-                                                                            height: s(16),
-                                                                            width: s(16),
-                                                                            borderRadius: s(16),
-                                                                            borderWidth: index === gender ? 5 : 1,
-                                                                            borderColor: index === gender ? Colors.Blue : Colors.lightGrey
-                                                                        }}>
+                                                                        style={{ flexDirection: 'row', alignItems: 'center' }}>
 
+                                                                        <TouchableOpacity
+                                                                            activeOpacity={0.8}
+                                                                            onPress={() => {
+                                                                                setGender(index)
+                                                                            }}
+                                                                            style={{
+                                                                                height: s(16),
+                                                                                width: s(16),
+                                                                                borderRadius: s(16),
+                                                                                borderWidth: index === gender ? 5 : 1,
+                                                                                borderColor: index === gender ? Colors.Blue : Colors.lightGrey
+                                                                            }}>
+
+                                                                        </TouchableOpacity>
+                                                                        <Text
+                                                                            style={{
+                                                                                fontSize: Font.small,
+                                                                                fontFamily: Font.Regular,
+                                                                                color: Colors.darkText,
+                                                                                marginLeft: s(8)
+
+                                                                            }}>{item}</Text>
                                                                     </TouchableOpacity>
-                                                                    <Text
-                                                                        style={{
-                                                                            fontSize: Font.small,
-                                                                            fontFamily: Font.Regular,
-                                                                            alignSelf: 'flex-start',
-                                                                            color: Colors.darkText,
-                                                                            marginLeft: s(8)
 
-                                                                        }}>{item}</Text>
-                                                                </View>
+                                                                );
+                                                            }}
+                                                        />
 
-                                                            );
-                                                        }}
-                                                    />
+                                                    </View>
 
                                                 </View>
+                                            </>
+                                            :
+                                            (type === 'editMember') ?
+                                                <>
+                                                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                                                        <View style={{ width: '23%', flexDirection: 'row', height: vs(58) }}>
+                                                            <View style={{ width: '90%', flexDirection: 'row', height: '100%' }}>
+                                                                {
+                                                                    (profileImg != '' && profileImg != null) ?
+                                                                        <Image source={{ uri: profileImg }} style={{
+                                                                            height: vs(55),
+                                                                            width: vs(55),
+                                                                            borderRadius: vs(55),
+                                                                        }} />
+                                                                        :
+                                                                        <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />
+                                                                }
 
-                                            </View>
-                                        }
-                                    </>
-                                    :
-                                    null
-                        }
+                                                                {
+                                                                    isEditable &&
+                                                                    <TouchableOpacity
+                                                                        activeOpacity={0.8}
+                                                                        onPress={() => setMediamodal(true)}
+                                                                        style={{ height: s(23), width: s(23), borderRadius: s(40), backgroundColor: Colors.White, justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 1, right: s(10), borderWidth: 1.2, borderColor: Colors.Border }}>
+                                                                        <SvgXml xml={Edit} />
+                                                                    </TouchableOpacity>}
 
+                                                            </View>
+                                                        </View>
 
-                        <View style={{ marginTop: vs(25) }}>
+                                                        <View style={{ width: '80%', borderBottomWidth: type ? 0 : 1, borderBottomColor: Colors.Border, paddingBottom: vs(20) }}>
 
-                            {
-                                (!isEditable && type === 'editMember') &&
-                                <OutlinedButton
-                                    text={LangProvider.Edit[languageIndex]}
-                                    onPress={() => { changeType('editMember') }}
-                                />
-                            }
-                            <Button
-                                text={type === 'addMember' ? LangProvider.Add_Member[languageIndex] : LangProvider.Save[languageIndex]}
-                                onPress={() => {
-                                    if (type === 'editMember') {
-                                        editMember()
-                                    } else {
-                                        addMember()
+                                                            <View style={{ width: '80%' }}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                                                                    <Text numberOfLines={1} style={{ maxWidth: '50%', alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.darkText, }}>{selectedPatient?.name}</Text>
+                                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <Text style={{ fontSize: 3.5, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>{'\u2B24'}</Text>
+                                                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.small, fontFamily: Font.Medium, color: Colors.lightGrey, marginLeft: (windowWidth * 2) / 100 }}>
+                                                                            {(selectedPatient?.gender === '0' ? `${LangProvider.male[languageIndex]}, ` : `${LangProvider.female[languageIndex]}`)}
+                                                                            {`${selectedPatient?.age} `}
+                                                                            {`${LangProvider.Year[languageIndex]}`}
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                            </View>
+
+                                                            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: vs(10) }}>
+                                                                <View style={{ width: '94%', flexDirection: 'row' }}>
+                                                                    <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border }}>
+                                                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Appointent Bookings'}</Text>
+                                                                        <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.appointment_count}</Text>
+                                                                    </View>
+
+                                                                    <View style={{ flex: 1, borderEndWidth: 1, borderEndColor: Colors.Border, justifyContent: 'center', alignItems: 'center' }}>
+                                                                        <View style={{ width: '80%' }}>
+                                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Doctor Consul.'}</Text>
+                                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.dc_count}</Text>
+                                                                        </View>
+                                                                    </View>
+
+                                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                                        <View style={{ width: '80%' }}>
+                                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.xsmall, fontFamily: Font.Regular, color: Colors.lightGrey, height: (windowWidth * 7) / 100 }}>{'Lab Tests'}</Text>
+                                                                            <Text style={{ alignSelf: 'flex-start', fontSize: Font.medium, fontFamily: Font.Medium, marginTop: vs(4), color: Colors.detailTitles }}>{selectedPatient?.lab_count}</Text>
+                                                                        </View>
+                                                                    </View>
+
+                                                                </View>
+                                                            </View>
+
+                                                        </View>
+                                                    </View>
+
+                                                    {/* --------------------------------------- */}
+
+                                                    {
+                                                        (isEditable && type === 'editMember') &&
+
+                                                        <View style={{ marginTop: vs(10) }}>
+                                                            <AuthInputBoxSec
+                                                                mainContainer={{ width: '100%', }}
+                                                                inputFieldStyle={{ height: vs(35) }}
+                                                                lableText={LangProvider.textinputname[languageIndex]}
+                                                                inputRef={nameRef}
+                                                                onChangeText={(val) => setName(val)}
+                                                                value={name}
+                                                                keyboardType="default"
+                                                                autoCapitalize="none"
+                                                                returnKeyType="next"
+                                                                onSubmitEditing={() => {
+                                                                    dobRef.current.focus();
+                                                                }}
+                                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                                editable
+                                                            />
+
+                                                            <AuthInputBoxSec
+                                                                mainContainer={{ marginTop: vs(5), width: '100%' }}
+                                                                inputFieldStyle={{ height: vs(35) }}
+                                                                lableText={LangProvider.PatientAge[languageIndex]}
+                                                                inputRef={dobRef}
+                                                                onChangeText={(val) => setDOB(val)}
+                                                                value={dob}
+                                                                keyboardType={"decimal-pad"}
+                                                                autoCapitalize="none"
+                                                                returnKeyType="done"
+                                                                onSubmitEditing={() => {
+                                                                    Keyboard.dismiss()
+                                                                }}
+                                                                blurOnSubmit={Platform.OS === 'ios' ? true : false}
+                                                                editable
+                                                            />
+
+                                                            {/* ------------------Gender------------------ */}
+                                                            <View style={{ width: '100%', height: vs(20), flexDirection: 'row', alignItems: 'center', marginTop: vs(20), paddingHorizontal: s(15) }}>
+
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: Font.small,
+                                                                        fontFamily: Font.Regular,
+                                                                        color: Colors.lightGrey,
+                                                                        paddingRight: s(20)
+
+                                                                    }}>{LangProvider.Gender[languageIndex]}</Text>
+
+                                                                <FlatList
+                                                                    showsHorizontalScrollIndicator={false}
+                                                                    horizontal
+                                                                    data={['Male', 'Female']}
+                                                                    ItemSeparatorComponent={() => {
+                                                                        return (
+                                                                            <View style={{ width: s(25) }} />
+                                                                        )
+                                                                    }}
+                                                                    renderItem={({ item, index }) => {
+                                                                        return (
+                                                                            <TouchableOpacity
+                                                                                activeOpacity={0.8}
+                                                                                onPress={() => {
+                                                                                    setGender(index)
+                                                                                }}
+                                                                                style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                                                                <TouchableOpacity
+                                                                                    activeOpacity={0.8}
+                                                                                    onPress={() => {
+                                                                                        setGender(index)
+                                                                                    }}
+                                                                                    style={{
+                                                                                        height: s(16),
+                                                                                        width: s(16),
+                                                                                        borderRadius: s(16),
+                                                                                        borderWidth: index === gender ? 5 : 1,
+                                                                                        borderColor: index === gender ? Colors.Blue : Colors.lightGrey
+                                                                                    }}>
+
+                                                                                </TouchableOpacity>
+                                                                                <Text
+                                                                                    style={{
+                                                                                        fontSize: Font.small,
+                                                                                        fontFamily: Font.Regular,
+                                                                                        color: Colors.darkText,
+                                                                                        marginLeft: s(8)
+
+                                                                                    }}>{item}</Text>
+                                                                            </TouchableOpacity>
+
+                                                                        );
+                                                                    }}
+                                                                />
+
+                                                            </View>
+
+                                                        </View>
+                                                    }
+                                                </>
+                                                :
+                                                null
                                     }
+
+
+
+
+
+                                </View>
+
+
+                            </KeyboardAwareScrollView>
+
+                            <View style={{
+                                width: "100%",
+                                position: 'absolute',
+                                bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                                paddingHorizontal: s(13),
+                                backgroundColor: Colors.White,
+                                paddingVertical: (windowWidth * 2) / 100,
+                                alignItems: "center",
+                                borderTopWidth: 1,
+                                borderTopColor: Colors.Border,
+                            }}>
+
+                                {
+                                    (!isEditable && type === 'editMember') &&
+                                    <OutlinedButton
+                                        text={LangProvider.Edit[languageIndex]}
+                                        onPress={() => { changeType('editMember') }}
+                                        // btnStyle={{ marginBottom: vs(10) }}
+                                    />
+                                }
+                                {
+                                    ((isEditable && type === 'editMember') || (type === 'addMember')) &&
+                                    <Button
+                                        text={type === 'addMember' ? LangProvider.Add_Member[languageIndex] : LangProvider.Save[languageIndex]}
+                                        onPress={() => {
+                                            if (type === 'editMember') {
+                                                editMember()
+                                            } else {
+                                                addMember()
+                                            }
+                                        }}
+
+                                        onLoading={(isLoading?.load && (isLoading?.type === 'add' || isLoading?.type === 'edit'))}
+                                    />
+                                }
+
+
+                                {
+                                    (type === 'editMember') &&
+
+                                    <TouchableOpacity
+                                        style={{
+                                            height: (windowWidth * 6) / 100,
+                                            alignSelf: 'center',
+                                            marginTop: (windowWidth * 2) / 100,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                        activeOpacity={0.8}
+                                        onPress={() => {
+                                            confirmDelete()
+                                        }}>
+                                        {
+                                            (isLoading?.load && isLoading?.type === 'delete') ?
+                                                <SkypeIndicator color={Colors.Theme} size={20} />
+                                                :
+                                                <Text style={{
+                                                    fontSize: Font.small,
+                                                    fontFamily: Font.Medium,
+                                                    color: Colors.Theme,
+
+                                                }}>{LangProvider.Delete[languageIndex]}</Text>
+                                        }
+
+                                    </TouchableOpacity>
+                                }
+                            </View>
+
+                            <Cameragallery
+                                mediamodal={mediamodal}
+                                onRequestClose={() => {
+                                    setMediamodal(false)
                                 }}
-                                btnStyle={{ marginTop: vs(10) }}
-                                onLoading={(isLoading?.load && (isLoading?.type === 'add' || isLoading?.type === 'edit'))}
+                                Camerapopen={() => {
+                                    Camerapopen()
+                                }}
+                                Galleryopen={() => {
+                                    Galleryopen()
+                                }}
+                                Canclemedia={() => {
+                                    setMediamodal(false)
+                                }}
                             />
                         </View>
 
-                        {
-                            (type === 'editMember') &&
-
-                            <TouchableOpacity
-                                activeOpacity={0.8}
-                                onPress={() => {
-                                    confirmDelete()
-
-                                }}>
-                                <Text style={{
-                                    fontSize: Font.small,
-                                    fontFamily: Font.Medium,
-                                    color: Colors.Theme,
-                                    marginTop: (windowWidth * 5) / 100,
-                                    alignSelf: 'center'
-                                }}>{LangProvider.Delete[languageIndex]}</Text>
-                            </TouchableOpacity>
-
-
-                        }
-
                     </View>
 
+                </View>
+            </Modal>
+        </View>
 
-                </KeyboardAwareScrollView>
-                <Cameragallery
-                    mediamodal={mediamodal}
-                    onRequestClose={() => {
-                        setMediamodal(false)
-                    }}
-                    Camerapopen={() => {
-                        Camerapopen()
-                    }}
-                    Galleryopen={() => {
-                        Galleryopen()
-                    }}
-                    Canclemedia={() => {
-                        setMediamodal(false)
-                    }}
-                />
-            </View>
-
-        </Modal>
 
 
 
@@ -727,20 +780,29 @@ const AddandEditMembers = ({
 const styles = StyleSheet.create({
 
     mainContainer: {
-        flex: 1,
-        backdropColor: 'pink',
+        width: windowWidth,
+        height: windowHeight,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0,0,0,0.7)'
+    },
+    subContainer: {
+        width: windowWidth,
+        height: windowHeight / 1.35,
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 9999,
     },
     modalContainer: {
         width: windowWidth,
-        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
-        borderRadius: 25,
-        paddingTop: vs(40),
-        paddingBottom: vs(20),
-        paddingHorizontal: s(13),
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: vs(20),
         position: 'absolute',
         bottom: 0,
-        zIndex: 999
+        zIndex: 9999
 
     },
     closeContainer: {
@@ -749,20 +811,9 @@ const styles = StyleSheet.create({
         borderRadius: s(50),
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        top: vs(30),
-        right: s(11),
+        alignSelf: 'center',
+        backgroundColor: Colors.LightBlack,
         zIndex: 999
-    },
-    Title: {
-        fontSize: 20,
-        fontFamily: Font.Regular,
-        color: Colors.Black,
-    },
-    Desc: {
-        fontSize: 16,
-        fontFamily: Font.Regular,
-        color: Colors.Secondary,
     },
 });
 

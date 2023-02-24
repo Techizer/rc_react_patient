@@ -50,8 +50,7 @@ const HealthRecord = (props) => {
         setMemberdetails(res.result.memebr_details)
 
       }
-    })
-      .catch((error) => {
+    }).catch((error) => {
         setMemberdetails([])
         setIsLoading(false)
         console.log("getMember-error ------- " + error);

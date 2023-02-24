@@ -72,10 +72,10 @@ const Drawerscreen = ({ navigation }) => {
       ...prevState,
       isLogout: true
     }))
-    logoutApi();
+    Logout();
   };
 
-  const logoutApi = async () => {
+  const Logout = async () => {
 
     let url = config.baseURL + "api-logout";
     var data = new FormData();
@@ -139,7 +139,7 @@ const Drawerscreen = ({ navigation }) => {
             routes: [{ name: 'AuthStack' }],
           })
         }, 350);
-        console.log("-------- error ------- " + error);
+        console.log("logout-error ------- " + error);
       });
   };
 

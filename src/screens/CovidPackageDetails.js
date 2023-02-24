@@ -59,7 +59,7 @@ const CovidPackageDetails = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getCovidPackageList-error ------- " + error);
       });
   };
 

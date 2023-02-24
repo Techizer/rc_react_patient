@@ -22,6 +22,7 @@ import {
   apifuntion,
   msgProvider,
 } from "../Provider/Utils/Utils";
+import { BlurView } from "@react-native-community/blur";
 
 import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/Utils/Utils";
@@ -35,6 +36,7 @@ import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AudioPlayer } from "../components/AudioPlayer";
 import NoInternet from "../components/NoInternet";
+import AboutAppBottomSheet from "../components/AboutAppBottomSheet";
 
 const HomeHealthcareServiceAppointments = [
   {
@@ -124,7 +126,8 @@ const Home = ({ navigation }) => {
     languageIndex,
     isLanguageUpdated,
     deviceConnection,
-    currentRoute
+    currentRoute,
+    deviceToken
   } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [homeData, setHomeData] = useState({
@@ -135,7 +138,7 @@ const Home = ({ navigation }) => {
   })
   const isFocused = useIsFocused()
 
-  
+
 
   useEffect(() => {
     // console.log(address.address);
@@ -264,7 +267,7 @@ const Home = ({ navigation }) => {
           rightIcon={!guest}
           defaultAddress={address?.address}
         />
-
+      
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}
@@ -580,6 +583,7 @@ const Home = ({ navigation }) => {
         <NoInternet
           visible={!deviceConnection}
         />
+
       </View >
 
     </View >

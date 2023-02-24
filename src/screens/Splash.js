@@ -151,7 +151,7 @@ const Splash = ({ navigation }) => {
     let url = config.baseURL + (Platform.OS == 'ios' ? `api-ios-patient-update?divice_lang=${language}` : `api-android-patient-update?divice_lang=${language}`)
     // console.log("url", url, Configurations.language)
     apifuntion.getApi(url, 1).then((obj) => {
-
+      // console.log('checkAppVersion-res', obj);
       if (obj.status == true) {
 
         console.log({
@@ -194,7 +194,7 @@ const Splash = ({ navigation }) => {
       }
     }).catch((error) => {
       CheckOldSession()
-      console.log("-------- error ------- " + error);
+      console.log("checkAppVersion-error ------- " + error);
     })
 
   }
@@ -318,7 +318,7 @@ const Splash = ({ navigation }) => {
             routes: [{ name: 'AuthStack' }],
           })
         }, 350);
-        console.log("-------- error ------- " + error);
+        console.log("Logout-error ------- " + error);
       });
   };
 

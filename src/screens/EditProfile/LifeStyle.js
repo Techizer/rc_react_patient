@@ -340,7 +340,7 @@ const LifeStyle = ({ navigation }) => {
                 }
             })
             .catch((error) => {
-                console.log("getLifeStyle-------- error ------- " + error);
+                console.log("getLifeStyle-error ------- " + error);
             });
     };
     return (
@@ -789,7 +789,8 @@ const LifeStyle = ({ navigation }) => {
 
                 }}
                 data={(lifeStyleDetails.type === 1 || lifeStyleDetails.type === 2) ? generalList : lifeStyleDetails.type === 3 ? bloodGroupList : lifeStyleDetails.type === 4 ? activityList : lifeStyleDetails.type === 5 ? foodList : lifeStyleDetails.type === 6 ? occupationList : null}
-                style={{ height: (lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup) ? windowHeight / 4 : windowHeight / 1.5 }}
+                modal={{ height: (lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup) ? windowHeight / 4 : windowHeight / 1.5 }}
+                sub={{ height: (lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup) ? windowHeight / 3.1 : windowHeight / 1.35 }}
                 title={lifeStyleDetails.type === 1 ?
                     LangProvider.smoking[languageIndex]
                     : lifeStyleDetails.type === 2 ?

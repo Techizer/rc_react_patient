@@ -53,6 +53,7 @@ const MainStack = () => {
         rememberMe,
         languageIndex,
         isLanguageUpdated,
+        deviceConnection,
         currentRoute
     } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
@@ -221,7 +222,7 @@ const MainStack = () => {
                     return false;
                 }
             }).catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("callRejectNotification-error ------- " + error);
             });
     };
 
@@ -271,7 +272,7 @@ const MainStack = () => {
                         routes: [{ name: "AuthStack" }],
                     });
                 }, 350);
-                console.log("-------- error ------- " + error);
+                console.log("Logout-error ------- " + error);
             });
     };
 

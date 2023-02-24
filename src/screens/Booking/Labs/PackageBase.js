@@ -402,7 +402,7 @@ const PackageBase = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getTimeDate-error ------- " + error);
       });
   };
 
@@ -527,7 +527,7 @@ const PackageBase = ({ navigation, route }) => {
       })
       .catch((error) => {
         setState({ isAddingToCart: false })
-        console.log("-------- error ------- " + error);
+        console.log("AddToCart-error ------- " + error);
         setState({ loading: false });
       });
   };
@@ -1287,13 +1287,14 @@ const PackageBase = ({ navigation, route }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 80,
+            paddingTop: (windowWidth * 2) / 100,
+            paddingBottom: (windowWidth * 7) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
             borderTopColor: Colors.Border,
+            position: 'absolute',
+            bottom: 0,
           }}>
 
           <View style={{ alignItems: 'flex-start' }}>

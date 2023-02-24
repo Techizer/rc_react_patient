@@ -195,7 +195,7 @@ const RescheduleBottomSheet = ({
                 }
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log(" get_time_date-error ------- " + error);
             });
     };
 
@@ -216,7 +216,7 @@ const RescheduleBottomSheet = ({
         }))
     };
 
-    const bookTime = async () => {
+    const BookNewTime = async () => {
         if (requestData.time_take_data.length <= 0) {
             msgProvider.showError(LangProvider.EmptyTime[config.language]);
             return false;
@@ -233,7 +233,7 @@ const RescheduleBottomSheet = ({
 
         console.log(bodyData);
 
-        return
+        // return
 
         apifuntion
             .postApi(url, data)
@@ -254,7 +254,7 @@ const RescheduleBottomSheet = ({
                 }
             })
             .catch((error) => {
-                console.log("-------- error ------- " + error);
+                console.log("BookNewTime-error ------- " + error);
             });
     };
     return (
@@ -729,7 +729,7 @@ const RescheduleBottomSheet = ({
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    bookTime();
+                                    BookNewTime();
                                 }}
                                 style={{
                                     width: "98%",
@@ -778,10 +778,10 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         width: windowWidth,
-        height: windowHeight/1.5,
+        height: windowHeight / 1.5,
         backgroundColor: Colors.White,
         borderTopLeftRadius: 25,
-        borderTopRightRadius:25,
+        borderTopRightRadius: 25,
         paddingTop: vs(40),
         paddingBottom: vs(20),
         paddingHorizontal: s(13),

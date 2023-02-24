@@ -12,7 +12,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 const volumeControlTime = 3000;
 
 export const AudioPlayer = (props) => {
-    const { url, style, repeatOnComponent, repeatOffComponent } = props;
+    const { url, containerStyle, repeatOnComponent, repeatOffComponent } = props;
     const [paused, setPaused] = useState(true);
 
     const videoRef = useRef(null);
@@ -96,10 +96,10 @@ export const AudioPlayer = (props) => {
     };
 
     return (
-        <View style={[style && style, {}]}>
+        <View style={[containerStyle]}>
             <Video
                 // source={{ uri: 'https://file-examples.com/storage/fe3f7d476663e91319de1d9/2017/11/file_example_MP3_700KB.mp3' }}
-                source={{ uri: url}}
+                source={{ uri: url }}
                 ref={videoRef}
                 playInBackground={false}
                 audioOnly={true}
@@ -114,42 +114,37 @@ export const AudioPlayer = (props) => {
                 style={{ height: 0, width: 0 }}
             />
 
-            <View>
-                <View style={{ paddingHorizontal: s(10) }}>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width:'100%' }}>
 
-                        <TouchableOpacity onPress={togglePlay}>
-                            <Image
-                                source={paused ? Icons.play : Icons.pause}
-                                style={styles.playIcon}
-                            />
-                        </TouchableOpacity>
+                <TouchableOpacity onPress={togglePlay}>
+                    <Image
+                        source={paused ? Icons.play : Icons.pause}
+                        style={styles.playIcon}
+                    />
+                </TouchableOpacity>
 
-                        <View style={styles.sliderContainer}>
-                            <Slider
-                                style={styles.slider}
-                                minimumValue={0}
-                                maximumValue={Math.max(totalLength, 1, currentPosition)}
-                                minimumTrackTintColor={Colors.Theme}
-                                maximumTrackTintColor={'grey'}
-                                onSlidingComplete={onSeek}
-                                value={currentPosition}
-                            />
-
-                        </View>
-                    </View>
-                    <View style={styles.durationContainer}>
-                        <Text style={[styles.timeText, { color: Colors.Theme }]}>
-                            {toHHMMSS(currentPosition)}
-                        </Text>
-                        <Text style={[styles.timeText, { color: Colors.DarkGrey }]}>
-                            {toHHMMSS(totalLength)}
-                        </Text>
-                    </View>
+                <View style={styles.sliderContainer}>
+                    <Slider
+                        minimumValue={0}
+                        maximumValue={Math.max(totalLength, 1, currentPosition)}
+                        minimumTrackTintColor={Colors.Theme}
+                        maximumTrackTintColor={'grey'}
+                        onSlidingComplete={onSeek}
+                        value={currentPosition}
+                    />
 
                 </View>
             </View>
+            <View style={styles.durationContainer}>
+                <Text style={[styles.timeText, { color: Colors.Theme }]}>
+                    {toHHMMSS(currentPosition)}
+                </Text>
+                <Text style={[styles.timeText, { color: Colors.DarkGrey }]}>
+                    {toHHMMSS(totalLength)}
+                </Text>
+            </View>
+
         </View>
     );
 };
@@ -162,7 +157,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     sliderContainer: {
-        width: "80%",
+        width: "87%",
     },
     slider: {
         width: "100%",
@@ -170,7 +165,7 @@ export const styles = StyleSheet.create({
     },
     durationContainer:
     {
-        width: '80%',
+        width: '87%',
         flexDirection: "row",
         justifyContent: "space-between",
         alignSelf: 'flex-end',

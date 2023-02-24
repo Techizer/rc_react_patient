@@ -47,9 +47,8 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
     modal2Visible: false,
     how_work_value: "",
     available_days: "",
-    availability_arr: []
+    availability_arr: [],
   })
-  const sheetRef = useRef()
   const insets = useSafeAreaInsets()
 
   useEffect(() => {
@@ -136,7 +135,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
         setState({
           isLoading: false
         });
-        console.log("-------- error ------- " + error);
+        console.log("getAvailableProviderDetails-error ------- " + error);
       });
   };
 
@@ -328,30 +327,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
               {/* <View style={{ width: '100%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(18) }}></View> */}
 
             </View>
-
-
-            {/* <View style={[styles.aboutContainer, { backgroundColor: Colors.White }]}>
-
-              <View style={{ flexDirection: 'row', width: '70%', height: '100%', alignItems: 'center' }}>
-                <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 7) / 100} height={(windowWidth * 7) / 100} borderRadius={s(20)} />
-                </SkeletonPlaceholder>
-                <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 15) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
-                </SkeletonPlaceholder>
-                <View style={{ height: '40%', borderWidth: 0.8, borderColor: Colors.backgroundcolor }}></View>
-                <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 15) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
-                </SkeletonPlaceholder>
-              </View>
-
-              <View style={{ width: '30%', height: '100%', justifyContent: 'center' }}>
-                <SkeletonPlaceholder>
-                  <SkeletonPlaceholder.Item width={(windowWidth * 15) / 100} height={(windowWidth * 4) / 100} borderRadius={s(4)} />
-                </SkeletonPlaceholder>
-              </View>
-
-            </View> */}
 
           </View>
           :
@@ -839,7 +814,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
               <View style={{ width: '30%', height: '100%', justifyContent: 'center' }}>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => sheetRef.current.open()}
+                  onPress={() => setState({ modalVisible: true })}
                 >
                   <Text
                     style={{
@@ -989,6 +964,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
                           <Text
                             onPress={() => {
+                              // console.log(item.pid );
                               if (guest) {
                                 dispatch(SelectedProvider({
                                   currentScreen: 'providerList',
@@ -1176,9 +1152,9 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
 
       <AboutAppBottomSheet
-        visible={sheetRef}
+        visible={modalVisible}
         onRequestClose={() => {
-          sheetRef.current.close();
+          setState({ modalVisible: false })
         }}
         data={statesData.how_work_value}
       />

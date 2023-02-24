@@ -117,7 +117,7 @@ const ForgotOTP = ({ navigation, route }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("sendagain-error ------- " + error);
       });
   };
 
@@ -174,7 +174,7 @@ const ForgotOTP = ({ navigation, route }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log("-------- error ------- " + error);
+        console.log("otpVerify-error ------- " + error);
       });
   };
 

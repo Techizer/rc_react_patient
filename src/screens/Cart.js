@@ -32,7 +32,7 @@ import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentW
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Clock, clockBlue, Cross } from "../Icons/Index";
+import { Clock, clockBlue, Cross, _Cross } from "../Icons/Index";
 import SuccessPopup from "../components/SuccessPopup";
 import moment from "moment";
 import SimpleToast from "react-native-simple-toast";
@@ -43,6 +43,7 @@ import PaymentOptionBottomSheet from "../components/PaymentOptionBottomSheet";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NoInternet from "../components/NoInternet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 let startTime = new Date();
@@ -54,8 +55,8 @@ const appCredentials = {
     Platform.OS == "ios"
       ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
       : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+  // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+  // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -75,7 +76,7 @@ const CartDetails = ({ navigation }) => {
 
   var sdkModule = RNGoSell.goSellSDK;
   var sdkModels = RNGoSell.goSellSDKModels;
-
+  const insets = useSafeAreaInsets()
   const [statesData, setStatesData] = useState({
     modalvisible: false,
     cartDetails: "",
@@ -463,7 +464,7 @@ const CartDetails = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getPayStatus-error ------- " + error);
       });
   };
 
@@ -515,7 +516,7 @@ const CartDetails = ({ navigation }) => {
           return false;
         }
       }).catch((error) => {
-        console.log("-------- error ------- " + error);
+        console.log("getCartInfo-error ------- " + error);
       }).finally(() => {
         setState({ loadCart: false })
       })
@@ -556,7 +557,7 @@ const CartDetails = ({ navigation }) => {
       .catch((error) => {
         AsyncStorage.removeItem('cartId')
         setState({ modalVisible3: false, isRemovingCart: false })
-        console.log("-------- error ------- " + error);
+        console.log("remove_cart-error ------- " + error);
       });
   };
 
@@ -683,7 +684,7 @@ const CartDetails = ({ navigation }) => {
                         }}
                         underlayColor={Colors.Highlight}
                         style={styles.closeContainer}>
-                        <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
+                        <SvgXml xml={_Cross} height={vs(19)} width={s(18)} />
                       </TouchableHighlight>
                     </View>
                   </View>
@@ -983,15 +984,15 @@ const CartDetails = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 80,
+            paddingTop: (windowWidth * 2) / 100,
+            paddingBottom: (windowWidth * 7) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
             borderTopColor: Colors.Border,
             position: 'absolute',
-            bottom: 0
+            bottom: 0,
+            zIndex:9999
           }}>
 
           <View style={{ alignItems: 'flex-start' }}>

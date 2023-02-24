@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Text, Platform, TouchableOpacity, Image, View, StyleSheet, TouchableHighlight, PermissionsAndroid } from "react-native";
+import { Text, Platform, TouchableOpacity, Image, View, StyleSheet, Modal, TouchableHighlight, PermissionsAndroid } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
+import { BlurView } from "@react-native-community/blur";
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -8,7 +9,6 @@ import AudioRecorderPlayer, {
   AudioEncoderAndroidType,
   AudioSourceAndroidType,
 } from "react-native-audio-recorder-player";
-import RBSheet from "react-native-raw-bottom-sheet";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import { Colors, Font } from "../Provider/Colorsfont";
 import { LangProvider } from "../Provider/Language_provider";
 import { Button, msgProvider, windowHeight, windowWidth } from "../Provider/Utils/Utils";
 import { AudioPlayer } from "./AudioPlayer";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -46,7 +47,7 @@ const AudioRecorder = ({
   const [audioFile, setAudioFile] = useState(null)
   const [recordTime, setRecordTime] = useState(null)
   const [forceStop, setForceStop] = useState(false)
-
+  const insets = useSafeAreaInsets()
   // useEffect(() => {
   //   if (forceStop) {
   //     console.log('.,.,.,..');
@@ -77,7 +78,7 @@ const AudioRecorder = ({
       grants["android.permission.READ_EXTERNAL_STORAGE"] ===
       PermissionsAndroid.RESULTS.GRANTED
     ) { onStartRecord() }
-    else{
+    else {
       msgProvider.showError('Please grant storage permissions first.')
     }
   }
@@ -112,167 +113,202 @@ const AudioRecorder = ({
   };
 
   return (
-    <RBSheet
-      // animationType='slide'
-      closeOnPressBack={false}
-      ref={visible}
-      height={windowHeight / 2.8}
-      openDuration={250}
-      closeDuration={350}
-      customStyles={{
-        wrapper: {
-          // backgroundColor: "rgba(255,255,255,1)"
-        },
-        container: {
-          borderTopLeftRadius: 25,
-          borderTopRightRadius: 25,
-          paddingTop: vs(25),
-        }
-      }}>
-      <TouchableHighlight
-        onPress={() => {
-          // setForceStop(true)
-          onRequestClose()
-          resetState()
-        }}
-        underlayColor={Colors.Highlight}
-        style={styles.closeContainer}
+
+    <View style={{ flex: 1 }}>
+      <Modal
+        animationType='slide'
+        visible={visible}
+        transparent
+        presentationStyle='overFullScreen'
       >
-        <SvgXml xml={Cross} height={vs(19)} width={s(18)} />
-      </TouchableHighlight>
-
-      <View style={{
-        paddingHorizontal: s(13),
-      }}>
-        <Text
+        {/* <BlurView
           style={{
-            fontSize: Font.large,
-            fontFamily: Font.SemiBold,
-            alignSelf: 'flex-start',
-            color: Colors.darkText
-
-          }}>{LangProvider.Record_Symptom[languageIndex]}</Text>
-
-        {
-          !isRecording &&
-          <TouchableOpacity
-            onPress={() => {
-              Platform.OS == 'ios' ?
-                onStartRecord()
-                :
-                CheckStoragePermission()
-            }}
-            style={{
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: 'center',
-              marginTop: (windowWidth * 5) / 100
-
-            }}>
-            <Image
-              resizeMode="contain"
-              source={Icons.mic}
-              style={{
-                width: (windowWidth * 10) / 100,
-                height: (windowWidth * 10) / 100,
-                borderColor: Colors.Theme,
-              }}
-            />
-          </TouchableOpacity>
-        }
-        {
-          isRecording &&
-          <TouchableOpacity
-            onPress={() => {
-              onStopRecord()
-            }}
-            style={{
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: 'center',
-              marginTop: (windowWidth * 5) / 100
-
-            }}>
-            <Image
-              resizeMode="contain"
-              source={Icons.stop}
-              style={{
-                width: (windowWidth * 10) / 100,
-                height: (windowWidth * 10) / 100,
-                borderColor: Colors.Theme,
-              }}
-            />
-          </TouchableOpacity>
-        }
-
-        {
-          isRecording &&
-          <Text
-            style={{
-              fontSize: Font.medium,
-              fontFamily: Font.Regular,
-              alignSelf: 'center',
-              color: Colors.DarkGrey,
-              marginTop: 5
-
-            }}>{recordTime}</Text>
-        }
-
-        {
-          audioFile != null &&
-          <View style={{ width: '94%', marginTop: (windowWidth * 5) / 100 }}>
-            <AudioPlayer
-              url={audioFile}
-            />
-          </View>
-        }
-      </View>
-
-      {
-        audioFile != null &&
-        <View
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 80,
-            justifyContent: "center",
-            alignItems: "center",
-            position: 'absolute',
+            flex: 1,
+            position: "absolute",
+            top: 0,
+            left: 0,
             bottom: 0,
-            borderTopWidth: 1,
-            borderTopColor: Colors.Border,
-          }}>
-          <Button
-            text={LangProvider.Save[languageIndex]}
-            onPress={() => {
-              onRequestClose()
-              recordedAudioUri(audioFile)
-            }} />
+            right: 0,
+          }}
+          blurType='ultraThinMaterialDark'
+          blurAmount={15}
+          reducedTransparencyFallbackColor="white"
+        /> */}
+
+        <View style={styles.mainContainer}>
+
+          <View style={styles.subContainer}>
+
+            {
+              !isRecording &&
+              <TouchableOpacity
+                onPress={() => {
+                  onRequestClose()
+                  resetState()
+                }}
+                style={styles.closeContainer}
+              >
+                <SvgXml xml={Cross} height={vs(12)} width={s(12)} />
+              </TouchableOpacity>
+            }
+            <View style={styles.modalContainer}>
+
+              <View style={{
+                paddingHorizontal: s(13)
+              }}>
+                <Text
+                  style={{
+                    fontSize: Font.large,
+                    fontFamily: Font.SemiBold,
+                    alignSelf: 'flex-start',
+                    color: Colors.darkText
+
+                  }}>{LangProvider.Record_Symptom[languageIndex]}</Text>
+
+
+                {
+                  !isRecording &&
+                  <TouchableOpacity
+                    onPress={() => {
+                      Platform.OS == 'ios' ?
+                        onStartRecord()
+                        :
+                        CheckStoragePermission()
+                    }}
+                    style={{
+                      justifyContent: "center",
+                      alignContent: "center",
+                      alignItems: "center",
+                      alignSelf: 'center',
+                      marginTop: (windowWidth * 5) / 100
+
+                    }}>
+                    <Image
+                      resizeMode="contain"
+                      source={Icons.mic}
+                      style={{
+                        width: (windowWidth * 10) / 100,
+                        height: (windowWidth * 10) / 100,
+                        borderColor: Colors.Theme,
+                      }}
+                    />
+                  </TouchableOpacity>
+                }
+                {
+                  isRecording &&
+                  <TouchableOpacity
+                    onPress={() => {
+                      onStopRecord()
+                    }}
+                    style={{
+                      justifyContent: "center",
+                      alignContent: "center",
+                      alignItems: "center",
+                      alignSelf: 'center',
+                      marginTop: (windowWidth * 5) / 100
+
+                    }}>
+                    <Image
+                      resizeMode="contain"
+                      source={Icons.stop}
+                      style={{
+                        width: (windowWidth * 10) / 100,
+                        height: (windowWidth * 10) / 100,
+                        borderColor: Colors.Theme,
+                      }}
+                    />
+                  </TouchableOpacity>
+                }
+
+                {
+                  isRecording &&
+                  <Text
+                    style={{
+                      fontSize: Font.medium,
+                      fontFamily: Font.Regular,
+                      alignSelf: 'center',
+                      color: Colors.DarkGrey,
+                      marginTop: 5
+
+                    }}>{recordTime}</Text>
+                }
+
+
+                {
+                  audioFile != null &&
+                  <AudioPlayer
+                    url={audioFile}
+                    containerStyle={{
+                      marginTop: (windowWidth * 5) / 100
+                    }}
+                  />
+                }
+
+              </View>
+              {
+                audioFile != null &&
+                <View
+                  style={{
+                    width: "100%",
+                    position: 'absolute',
+                    bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
+                    paddingHorizontal: s(13),
+                    backgroundColor: Colors.White,
+                    paddingVertical: (windowWidth * 2) / 100,
+                    alignItems: "center",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.Border,
+                  }}>
+                  <Button
+                    text={LangProvider.Save[languageIndex]}
+                    onPress={() => {
+                      onRequestClose()
+                      recordedAudioUri(audioFile)
+                    }} />
+                </View>
+
+              }
+            </View>
+
+
+          </View>
+
         </View>
 
-      }
-    </RBSheet>
+
+
+      </Modal>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
 
-  modalContainer: {
+  mainContainer: {
     width: windowWidth,
-    height: windowHeight / 1.5,
-    backgroundColor: Colors.White,
-    borderRadius: 25,
-    paddingTop: vs(55),
-    paddingBottom: vs(20),
-    paddingHorizontal: s(13),
+    height: windowHeight,
     position: 'absolute',
     bottom: 0,
-    zIndex: 999
+    zIndex: 9999,
+    backgroundColor: 'rgba(0,0,0,0.7)'
+  },
+  subContainer: {
+    width: windowWidth,
+    height: windowHeight / 2.27,
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 9999,
+  },
+  modalContainer: {
+    width: windowWidth,
+    height: windowHeight / 2.8,
+    backgroundColor: Colors.White,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingVertical: vs(20),
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 9999
 
   },
   closeContainer: {
@@ -281,11 +317,16 @@ const styles = StyleSheet.create({
     borderRadius: s(50),
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    top: vs(15),
-    right: s(11),
+    alignSelf: 'center',
+    backgroundColor: Colors.LightBlack,
     zIndex: 999
-  }
+  },
+  viewWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)'
+  },
 });
 
 export default AudioRecorder;
