@@ -68,18 +68,16 @@ const Login = ({ navigation }) => {
   const passRef = useRef()
 
   useEffect(() => {
-    navigation.addListener('focus', payload =>
-    {
+    navigation.addListener('focus', payload => {
       console.log('event is registered...');
-     return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+      return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
     }
-  );
-  navigation.addListener('blur', payload =>
-    {
+    );
+    navigation.addListener('blur', payload => {
       console.log('event is removed...');
       return BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
     }
-  );
+    );
   }, [])
 
 
@@ -224,9 +222,7 @@ const Login = ({ navigation }) => {
           latitude: details.geometry.location.lat,
           longitude: details.geometry.location.lng,
           address: details.formatted_address,
-          city: city,
-          administrative_area_level_1: administrative_area_level_1,
-          isAddressAdded: false
+          title: 'Home'
         };
 
         dispatch(Address(addDetails))
@@ -263,7 +259,7 @@ const Login = ({ navigation }) => {
             latitude: obj?.result?.latitude,
             longitude: obj?.result?.longitudes,
             address: obj?.result?.current_address,
-            isAddressAdded: true
+            title: 'Home'
           }
           dispatch(Address(newAddressDetails))
         } else {
@@ -271,7 +267,7 @@ const Login = ({ navigation }) => {
             latitude: '',
             longitude: '',
             address: '',
-            isAddressAdded: false
+            title: ''
           }
           dispatch(Address(newAddressDetails))
           return false;
@@ -308,7 +304,7 @@ const Login = ({ navigation }) => {
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
 
-    console.log('login body...', data);
+    // console.log('login body...', data);
 
     // return
 
@@ -336,7 +332,7 @@ const Login = ({ navigation }) => {
             latitude: obj?.result?.latitude,
             longitude: obj?.result?.longitudes,
             address: obj?.result?.current_address,
-            isAddressAdded: true
+            title: obj?.result?.address_title
           }
           dispatch(Address(newAddressDetails))
           dispatch(Guest(false))

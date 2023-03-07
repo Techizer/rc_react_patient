@@ -22,12 +22,14 @@ import { useSelector } from "react-redux";
 import NoInternet from "../../components/NoInternet";
 import { SkypeIndicator } from "react-native-indicators";
 
+let onEndReachedCalledDuringMomentum = true
 
-const OnGoing = (props) => {
+const Past = (props) => {
 
   const { loggedInUserDetails, guest, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
 
-  const [appointments, setAppointments] = useState(guest ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [dummy, setDummy] = useState(guest ? [] : [1, 2, 3, 4, 5, 6, 7])
+  const [appointments, setAppointments] = useState([])
   const [isLoading, setIsLoading] = useState(guest ? false : true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [loadMore, setLoadMore] = useState(false)
@@ -36,24 +38,29 @@ const OnGoing = (props) => {
   const isFocused = useIsFocused()
 
   useEffect(() => {
-    if (!guest && deviceConnection) {
+    if (!guest && deviceConnection && isFocused) {
       getAppointments(pageCount)
     }
-  }, [isRefreshing, isFocused, deviceConnection])
+  }, [isFocused, deviceConnection])
 
+  useEffect(() => {
+    if (!guest && deviceConnection && isRefreshing) {
+      getAppointments(pageCount)
+    }
+  }, [isRefreshing])
 
   const checkVideoCallStatus = (data) => {
     let tempArr = []
     let newArr = data.result
-    newArr.pop()
     let lastIndex = null
     if (data.result && data.result.length > 0) {
-      lastIndex = data.result.slice(-1)
-      console.log({ lastIndex });
+      lastIndex = data.result[data.result.length - 1]
+      // console.log({ lastIndex });
+      newArr.pop()
       // console.log({ newArr });
-      return
-      if (lastIndex[0].currentpage === 1) {
-        setTotalPage(lastIndex[0].lastpage === 1)
+      // return
+      if (lastIndex.currentpage === 1) {
+        setTotalPage(lastIndex.lastpage === 1)
         for (const iterator of newArr) {
           var currentTime = moment().unix();
           var appointmentDate = moment(iterator.appoitment_date).format("YYYY-MM-DD");
@@ -89,7 +96,6 @@ const OnGoing = (props) => {
         }
         setAppointments(tempArr)
       } else {
-        console.log('else');
         tempArr = appointments
         for (const iterator of newArr) {
           var currentTime = moment().unix();
@@ -142,28 +148,27 @@ const OnGoing = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then(async (obj) => {
-        // console.log("getAppointments-response...", obj);
+        console.log("getAppointments-response...", obj);
+        // return
         if (obj.status == true) {
           checkVideoCallStatus(obj)
-          setTimeout(() => {
-            setIsRefreshing(false)
-            setIsLoading(false)
-            setLoadMore(false)
-          }, 250);
         } else {
-          setIsRefreshing(false)
-          setIsLoading(false)
-          setLoadMore(false)
-          setAppointments([])
+          if (appointments.length > 0) {
+            setAppointments([...appointments])
+          } else {
+            setAppointments([])
+          }
           return false;
         }
       }).catch((error) => {
         setAppointments([])
+        console.log("getAppointments-error ------- " + error);
+      }).finally(() => {
+        setIsRefreshing(false)
         setIsLoading(false)
         setLoadMore(false)
-        setIsRefreshing(false)
-        console.log("getAppointments-error ------- " + error);
-      });
+        setDummy([])
+      })
   };
 
 
@@ -173,9 +178,11 @@ const OnGoing = (props) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <FlatList
+      initialNumToRender={6}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: vs(100) }}
-        data={appointments}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ paddingBottom: appointments.length > 6 ? vs(125) : 0 }}
+        data={isLoading ? dummy : appointments}
         ItemSeparatorComponent={() => {
           return (
             <View style={{ height: vs(7) }}></View>
@@ -215,21 +222,34 @@ const OnGoing = (props) => {
           if (loadMore) {
             return (
               <View style={{ paddingVertical: (windowWidth * 5) / 100 }}>
-                <SkypeIndicator color={Colors.Theme} size={20} />
+                <SkypeIndicator color={Colors.Theme} size={25} />
               </View>
             )
           }
           return null
         }}
         refreshing={isRefreshing}
-        onRefresh={() => setIsRefreshing(true)}
-        onEndReachedThreshold={0.5}
-        // onEndReached={val => {
-        //   setLoadMore(true)
-        //   let newPage = pageCount + 1
-        //   setPageCount(newPage)
-        //   getAppointments(newPage)
-        // }}
+        onRefresh={() => {
+          if (!isLoading) {
+            setPageCount(1)
+            setIsLoading(true)
+            setIsRefreshing(true)
+            setDummy([1, 2, 3, 4, 5, 6, 7])
+          }
+        }}
+        onEndReachedThreshold={0}
+        onMomentumScrollBegin={() => { onEndReachedCalledDuringMomentum = false; }}
+        onEndReached={val => {
+          if (!onEndReachedCalledDuringMomentum && !isLoading) {
+            console.log('onEndReached');
+            setLoadMore(true)
+            let newPage = pageCount + 1
+            setPageCount(newPage)
+            getAppointments(newPage)
+            onEndReachedCalledDuringMomentum = true;
+          }
+
+        }}
       />
 
       <NoInternet
@@ -240,4 +260,4 @@ const OnGoing = (props) => {
   );
 }
 
-export default OnGoing;
+export default Past;

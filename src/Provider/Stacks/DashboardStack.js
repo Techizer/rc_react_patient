@@ -88,12 +88,18 @@ const DashboardStack = ({ navigation }) => {
       .then((obj) => {
         // console.log("getAppointments-response...", obj);
         if (obj.status == true) {
-          dispatch(TodaysAppointments(obj?.result))
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            console.log('m,m,m,m,m,m,,m,m,m,m,m,m,m,');
+            dispatch(TodaysAppointments(obj?.result.length))
+          } else {
+            dispatch(TodaysAppointments(0))
+          }
         } else {
-          dispatch(TodaysAppointments([]))
+          dispatch(TodaysAppointments(0))
           return false;
         }
       }).catch((error) => {
+        dispatch(TodaysAppointments(0))
         console.log("getAppointments-error ------- " + error);
       });
   };
@@ -110,12 +116,17 @@ const DashboardStack = ({ navigation }) => {
       .then((obj) => {
         // console.log("getConsultations-response...", obj);
         if (obj.status == true) {
-          dispatch(TodaysConsultations(obj?.result))
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            dispatch(TodaysConsultations(obj?.result.length))
+          } else {
+            dispatch(TodaysConsultations(0))
+          }
         } else {
-          dispatch(TodaysConsultations([]))
+          dispatch(TodaysConsultations(0))
           return false;
         }
       }).catch((error) => {
+        dispatch(TodaysConsultations(0))
         console.log("getConsultations-error ------- " + error);
       });
   };
@@ -132,19 +143,24 @@ const DashboardStack = ({ navigation }) => {
       .then((obj) => {
         // console.log("getTests-response...", obj);
         if (obj.status == true) {
-          dispatch(TodaysLabTests(obj?.result))
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            dispatch(TodaysLabTests(obj?.result.length))
+          } else {
+            dispatch(TodaysLabTests(0))
+          }
         } else {
-          dispatch(TodaysLabTests([]))
+          dispatch(TodaysLabTests(0))
           return false;
         }
       }).catch((error) => {
+        dispatch(TodaysLabTests(0))
         console.log("getTests-error ------- " + error);
       });
   };
 
   const handleBackPress = (index, type = 'add', isDone = false) => {
     console.log({ index });
-    if ( type === 'add') {
+    if (type === 'add') {
       if (!navigation.canGoBack() && index === 0) {
         console.log('handleBackPress');
         Alert.alert(
@@ -205,15 +221,14 @@ const DashboardStack = ({ navigation }) => {
     <Tab.Navigator
       screenListeners={{
         state: (s) => {
-          console.log('tab listner...', s.data.state.index);
+          // console.log('tab listner...', s.data.state.index);
           if (s.data.state.index == 0 && !navigation.canGoBack()) {
-            console.log('event is registered...');
             BackHandler.addEventListener('hardwareBackPress', (st) => {
-              console.log('inner indexe...', s.data.state.index);
+              // console.log('inner indexe...', s.data.state.index);
               return handleBackPress(s.data.state.index, 'add', true)
             })
           } else {
-            console.log('should remove;;;;;');
+            // console.log('should remove;;;;;');
             handleBackPress(s.data.state.index, 'remove', false)
             // BackHandler.removeEventListener('hardwareBackPress', () => {
             //   return handleBackPress(0, 'remove', false)

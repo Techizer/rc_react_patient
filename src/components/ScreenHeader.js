@@ -41,14 +41,14 @@ export const ScreenHeader = ({
     rightIcon,
     leftIcon,
     defaultAddress,
-    isLoading
+    isLoading,
+    renderHeaderWOBack
 }) => {
 
     const insets = useSafeAreaInsets()
 
 
-    const { languageIndex, notiCount, guest, } = useSelector(state => state.StorageReducer)
-
+    const { languageIndex, notiCount, guest, address } = useSelector(state => state.StorageReducer)
 
     return (
         title != LangProvider.Home[config.language] ?
@@ -107,39 +107,48 @@ export const ScreenHeader = ({
                                     <View style={{ width: '14%' }}></View>
                         }
 
-                        <View
-                            style={{
-                                width: "72%",
-                                height: '80%',
-                                justifyContent: 'center'
-                            }}>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    fontFamily: Font.Medium,
-                                    fontSize: (windowWidth * 4) / 100,
-                                    color: Colors.darkText
-                                }}>{title}</Text>
-                        </View>
                         {
-                            rightIcon ?
-                                <TouchableHighlight
-                                    underlayColor={Colors.Highlight}
-                                    onPress={() => {
-                                        navigation.navigate("Notifications");
-                                    }}
+                            !renderHeaderWOBack ?
+                            <View style={{ flexDirection: 'row', width:'100%' }}>
+                                <View
                                     style={{
-                                        width: "14%",
-                                        height: '100%',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-
+                                        width: "72%",
+                                        height: '80%',
+                                        justifyContent: 'center'
                                     }}>
-                                    <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
-                                </TouchableHighlight>
-                                :
-                                <View style={{ width: '14%' }}></View>
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            fontFamily: Font.Medium,
+                                            fontSize: (windowWidth * 4) / 100,
+                                            color: Colors.darkText
+                                        }}>{title}</Text>
+                                </View>
+
+                                {
+                                    rightIcon ?
+                                        <TouchableHighlight
+                                            underlayColor={Colors.Highlight}
+                                            onPress={() => {
+                                                navigation.navigate("Notifications");
+                                            }}
+                                            style={{
+                                                width: "14%",
+                                                height: '100%',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+
+                                            }}>
+                                            <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
+                                        </TouchableHighlight>
+                                        :
+                                        <View style={{ width: '14%' }}></View>
+                                }
+                            </View>
+                            :
+                            renderHeaderWOBack()
                         }
+
                     </View>
                 </View>
             )
@@ -187,9 +196,7 @@ export const ScreenHeader = ({
                                         style={{ height: s(29), width: s(29), borderRadius: s(29), backgroundColor: Colors.backgroundcolor, alignSelf: 'center' }}
                                     />
 
-
                             }
-
 
                         </TouchableOpacity>
                     </View>
@@ -197,7 +204,7 @@ export const ScreenHeader = ({
                         width: "74%",
                         height: '100%',
                         justifyContent: 'center',
-                        paddingHorizontal: s(6)
+                        paddingHorizontal: s(6),
                     }}>
                         <TouchableOpacity
                             onPress={() => {
@@ -211,11 +218,13 @@ export const ScreenHeader = ({
                                 alignItems: "center",
                             }}>
                             <Text
+                                numberOfLines={1}
                                 style={{
                                     fontFamily: Font.Regular,
                                     fontSize: Font.small,
+                                    maxWidth: '25%',
                                 }}>
-                                {LangProvider.MyDashboard[languageIndex]}
+                                {(address?.title != '' && address?.title != null && address?.title != undefined) ? address?.title : LangProvider.MyDashboard[languageIndex]}
                             </Text>
                             <Image
                                 source={Icons.downarrow}

@@ -165,7 +165,7 @@ const OTPPage = ({ navigation, route }) => {
     data.append("title", '');
     data.append("default", '0');
 
-    console.log(data);
+    // console.log(data);
     apifuntion
       .postApi(url, data)
       .then((obj) => {
@@ -176,7 +176,7 @@ const OTPPage = ({ navigation, route }) => {
             latitude: obj?.result?.latitude,
             longitude: obj?.result?.longitudes,
             address: obj?.result?.current_address,
-            isAddressAdded: true
+            title: 'Home'
           }
           dispatch(Address(newAddressDetails))
         } else {
@@ -184,7 +184,7 @@ const OTPPage = ({ navigation, route }) => {
             latitude: '',
             longitude: '',
             address: '',
-            isAddressAdded: false
+            title: ''
           }
           dispatch(Address(newAddressDetails))
           return false;

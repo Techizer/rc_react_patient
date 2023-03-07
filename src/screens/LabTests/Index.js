@@ -70,7 +70,7 @@ const LabTestIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={todayLabTests?.length > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
+        initialRouteName={todayLabTests > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
         screenOptions={{
           tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },

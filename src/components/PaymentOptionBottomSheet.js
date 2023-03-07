@@ -42,7 +42,7 @@ const PaymentOptionBottomSheet = ({
                     <View style={[styles.subContainer]}>
                         <TouchableOpacity
                             onPress={() => {
-                                onRequestClose()
+                                onRequestClose(false)
                                 // resetState()
                             }}
                             underlayColor={Colors.Highlight}
@@ -196,8 +196,8 @@ const PaymentOptionBottomSheet = ({
                             <View
                                 style={{
                                     width: "100%",
-                                    flexDirection:'row',
-                                    justifyContent:'space-between',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
                                     position: 'absolute',
                                     bottom: Platform.OS == 'ios' ? insets.bottom - 15 : 0,
                                     paddingHorizontal: '10%',
@@ -233,7 +233,7 @@ const PaymentOptionBottomSheet = ({
                                         if (method == -1) {
                                             msgProvider.showError('Please select a method to pay!')
                                         } else {
-                                            onRequestClose()
+                                            onRequestClose(true)
                                             selectedPaymentMethod(method)
                                         }
                                     }}

@@ -33,6 +33,7 @@ const ServiceProviderContainer = ({
   const dispatch = useDispatch()
   const [isBookingModal, setIsBookingModal] = useState(false)
 
+
   return (
 
 
@@ -119,14 +120,15 @@ const ServiceProviderContainer = ({
       :
       (
         <>
-          <View style={{
-            // height: vs(160),
-            width: windowWidth,
-            backgroundColor: Colors.White,
-            alignItems: "center",
-            marginTop: vs(7),
-            paddingVertical: vs(8)
-          }}>
+          <View
+            style={{
+              // height: vs(160),
+              width: windowWidth,
+              backgroundColor: Colors.White,
+              alignItems: "center",
+              marginTop: vs(7),
+              paddingVertical: vs(8)
+            }}>
 
             {/* ----------Info Container--------- */}
 
@@ -239,7 +241,7 @@ const ServiceProviderContainer = ({
                     alignSelf: 'flex-start',
                     textAlign: 'left',
                     color: Colors.darkText,
-                    width: '80%' 
+                    width: '80%'
                   }}>
 
                   {Item.provider_name}
@@ -444,12 +446,14 @@ const ServiceProviderContainer = ({
                         dispatch(SelectedProvider({
                           currentScreen: 'providerList',
                           providerType: providerType,
+                          providerName: Item.provider_name,
                           providerId: Item.user_id,
                           isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
                           hospitalId: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined) ? Item?.hospital_id : '',
                           bookingType: providerType == 'physiotherapy' ? 'task' : 'hour',
                           docType: docType ? docType : '',
-                          packageId: ''
+                          packageId: '',
+                          providerImg: Item?.image
                         }))
                         setTimeout(() => {
                           navigation.navigate("HealthRecord")
@@ -494,12 +498,14 @@ const ServiceProviderContainer = ({
               dispatch(SelectedProvider({
                 currentScreen: 'providerList',
                 providerType: providerType,
+                providerName: Item.provider_name,
                 providerId: Item.user_id,
                 isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
                 hospitalId: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined) ? Item?.hospital_id : '',
                 bookingType: val,
                 docType: docType ? docType : '',
-                packageId: ''
+                packageId: '',
+                providerImg: Item?.image
               }))
               setTimeout(() => {
                 navigation.navigate("HealthRecord")

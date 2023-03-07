@@ -14,10 +14,34 @@ const TabbyPayment = ({ navigation, route }) => {
     const { loggedInUserDetails } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const { top, bottom: paddingBottom } = useSafeAreaInsets();
-    const { url, serviceType, cartId, transactionId } = route.params;
+    const { url, serviceType, cartId, transactionId, capturePayment } = route.params;
 
     const back = () => {
         navigation.pop();
+    };
+
+    const CapturePayment = async () => {
+        console.log('././././././././././././.', capturePayment);
+        let url = `https://api.tabby.ai/api/v1/payments/${transactionId}/captures`
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
+                'Accept': "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(capturePayment),
+        }).then((response) => {
+            // console.log(response.status);
+            return response.json()
+        }).then((res) => {
+            console.log('CapturePayment-res', res);
+        }).catch((error) => {
+            console.log("CapturePayment-error", error);
+        }).finally(() => {
+            TabbyPayment()
+        })
     };
 
     const TabbyPayment = async () => {
@@ -61,11 +85,11 @@ const TabbyPayment = ({ navigation, route }) => {
         console.log({ msg });
         if (msg === 'close' || msg === 'rejected') {
             msgProvider.showError('⛔️ You cancelled checkout process')
-            // handleCancel();
+            dispatch(TabbyPaymentStatus(false))
             navigation.pop();
         }
         if (msg === 'authorized') {
-            TabbyPayment()
+            CapturePayment()
             msgProvider.showSuccess('🎉 Payment done successfully')
 
         }

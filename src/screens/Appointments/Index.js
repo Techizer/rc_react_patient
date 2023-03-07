@@ -28,7 +28,10 @@ const Tabs = createMaterialTopTabNavigator()
 
 const AppoitmentIndex = ({ navigation, route }) => {
 
-  const { todayAppointments, appLanguage, deviceConnection,guest } = useSelector(state => state.StorageReducer)
+
+  const { todayAppointments, appLanguage, languageIndex, deviceConnection,guest } = useSelector(state => state.StorageReducer)
+
+  console.log({todayAppointments});
   const insets = useSafeAreaInsets()
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -67,7 +70,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={ todayAppointments?.length > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
+        initialRouteName={ todayAppointments > 0 ? LangProvider.Ongoing[languageIndex] : LangProvider.Upcoming[languageIndex]}
         screenOptions={{
           tabBarStyle: {  width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
@@ -89,9 +92,9 @@ const AppoitmentIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
-        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
-        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
+        <Tabs.Screen name={LangProvider.Upcoming[languageIndex]} component={Upcoming} />
+        <Tabs.Screen name={LangProvider.Ongoing[languageIndex]} component={OnGoing} />
+        <Tabs.Screen name={LangProvider.Past[languageIndex]} component={Past} />
 
       </Tabs.Navigator>
 

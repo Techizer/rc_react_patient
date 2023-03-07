@@ -33,6 +33,7 @@ import { CurrentRoute, onLogout } from '../../Redux/Actions';
 import TabbyPayment from '../../screens/TabbyPayment';
 import { config } from '../configProvider';
 import { apifuntion } from '../APIProvider';
+import Chat from '../../screens/Chat';
 
 
 const Stack = createStackNavigator()
@@ -230,50 +231,25 @@ const MainStack = () => {
         let url = config.baseURL + "api-logout";
         var data = new FormData();
         data.append("user_id", loggedInUserDetails?.user_id);
+        data.append("fcm_token", deviceToken);
 
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
                 // console.log("logout response", obj);
                 if (obj.status == true) {
-                    dispatch(onLogout({
-                        appLanguage,
-                        deviceToken,
-                        deviceId,
-                        deviceName,
-                        deviceType,
-                        appVersion,
-                        contentAlign,
-                        address,
-                        credentials,
-                        rememberMe,
-                        languageIndex,
-                        isLanguageUpdated,
-                        deviceConnection
-                    }))
-                    setTimeout(() => {
-                        routeNameRef?.current?.reset({
-                            index: 0,
-                            routes: [{ name: "AuthStack" }],
-                        });
-                    }, 350);
+
+
                 } else {
-                    setTimeout(() => {
-                        routeNameRef?.current?.reset({
-                            index: 0,
-                            routes: [{ name: "AuthStack" }],
-                        });
-                    }, 350);
-                    return false;
                 }
             }).catch((error) => {
-                setTimeout(() => {
-                    routeNameRef?.current?.reset({
-                        index: 0,
-                        routes: [{ name: "AuthStack" }],
-                    });
-                }, 350);
                 console.log("Logout-error ------- " + error);
-            });
+            }).finally(() => {
+                dispatch(onLogout())
+                routeNameRef?.current?.reset({
+                    index: 0,
+                    routes: [{ name: "AuthStack" }],
+                });
+            })
     };
 
     useEffect(() => {
@@ -290,7 +266,7 @@ const MainStack = () => {
             // }}
             onStateChange={(state) => {
                 // console.log('New Screen is', state)}
-                console.log('New Screen is', routeNameRef.current.getCurrentRoute().name)
+                // console.log('New Screen is', routeNameRef.current.getCurrentRoute().name)
                 if (routeNameRef.current.getCurrentRoute().name != 'VideoCall') {
                     dispatch(CurrentRoute(routeNameRef.current.getCurrentRoute().name))
                 }
@@ -409,6 +385,11 @@ const MainStack = () => {
                 <Stack.Screen
                     name="TabbyPayment"
                     component={TabbyPayment}
+                />
+
+                <Stack.Screen
+                    name="Chat"
+                    component={Chat}
                 />
 
             </Stack.Navigator>

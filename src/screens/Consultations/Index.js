@@ -25,7 +25,7 @@ const Tabs = createMaterialTopTabNavigator()
 
 const ConsultIndex = ({ navigation, route }) => {
 
-  const { todayConsultations, appLanguage } = useSelector(state => state.StorageReducer)
+  const { todayConsultations, languageIndex } = useSelector(state => state.StorageReducer)
 
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
@@ -39,7 +39,7 @@ const ConsultIndex = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
 
       <ScreenHeader
-        title={LangProvider.Doctor_Consultations[appLanguage == 'en' ? 0 : 1]}
+        title={LangProvider.Doctor_Consultations[languageIndex]}
         navigation={navigation}
         onBackPress={() => navigation.reset({
           index: 0,
@@ -67,7 +67,7 @@ const ConsultIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={todayConsultations?.length > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
+        initialRouteName={todayConsultations > 0 ? LangProvider.Ongoing[languageIndex] : LangProvider.Upcoming[languageIndex]}
         screenOptions={{
           tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
@@ -89,9 +89,9 @@ const ConsultIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
-        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
-        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
+        <Tabs.Screen name={LangProvider.Upcoming[languageIndex]} component={Upcoming} />
+        <Tabs.Screen name={LangProvider.Ongoing[languageIndex]} component={OnGoing} />
+        <Tabs.Screen name={LangProvider.Past[languageIndex]} component={Past} />
 
       </Tabs.Navigator>
 

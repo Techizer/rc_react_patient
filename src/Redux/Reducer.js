@@ -45,9 +45,9 @@ const initialState = {
     rememberMe: false,
     restart: false,
     notiCount: 0,
-    todayAppointments: null,
-    todayConsultations: null,
-    todayLabTests: null,
+    todayAppointments: 0,
+    todayConsultations: 0,
+    todayLabTests: 0,
     selectedProvider: null,
     cart: -1,
     tabbyPayment: false,
@@ -60,19 +60,19 @@ export const ReducerCases = (state = initialState, action = {}) => {
         case LOGOUT:
             return {
                 ...initialState,
-                appLanguage: action.payload.appLanguage,
-                deviceToken: action.payload.deviceToken,
-                deviceId: action.payload.deviceId,
-                deviceName: action.payload.deviceName,
-                deviceType: action.payload.deviceType,
-                appVersion: action.payload.appVersion,
-                contentAlign: action.payload.contentAlign,
-                address: action.payload.address,
-                credentials: action.payload.credentials,
-                rememberMe: action.payload.rememberMe,
-                languageIndex: action.payload.languageIndex,
-                isLanguageUpdated: action.payload.isLanguageUpdated,
-                deviceConnection: action.payload.deviceConnection
+                appLanguage: state.appLanguage,
+                deviceToken: state.deviceToken,
+                deviceId: state.deviceId,
+                deviceName: state.deviceName,
+                deviceType: state.deviceType,
+                appVersion: state.appVersion,
+                contentAlign: state.contentAlign,
+                address: state.address,
+                credentials: state.credentials,
+                rememberMe: state.rememberMe,
+                languageIndex: state.languageIndex,
+                isLanguageUpdated: state.isLanguageUpdated,
+                deviceConnection: state.deviceConnection
             }
         case CURRENT_ROUTE:
             return {

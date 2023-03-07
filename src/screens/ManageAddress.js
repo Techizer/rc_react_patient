@@ -130,7 +130,6 @@ const ManageAddress = ({ navigation }) => {
                 addressDetails={item}
                 showModal={(val) => {
                   setAddressSheet(val)
-                  // sheetRef.current.snapTo(0)
                 }}
                 navigation={navigation}
                 selected={selectedAddress}
@@ -170,13 +169,13 @@ const ManageAddress = ({ navigation }) => {
         length={addressList.length}
         editedAddress={(val) => {
           getAddresses()
-          let newAddress = {
-            latitude: addressList[selectedAddress]?.lat,
-            longitude: addressList[selectedAddress]?.lng,
-            address: addressList[selectedAddress]?.address,
-            isAddressAdded: true
-          }
-          dispatch(Address(newAddress))
+          // let newAddress = {
+          //   latitude: addressList[selectedAddress]?.lat,
+          //   longitude: addressList[selectedAddress]?.lng,
+          //   address: addressList[selectedAddress]?.address,
+          //   title: addressList[selectedAddress]?.title,
+          // }
+          // dispatch(Address(newAddress))
         }}
       />
 

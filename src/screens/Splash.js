@@ -281,21 +281,7 @@ const Splash = ({ navigation }) => {
       .then((obj) => {
         console.log("logout response", obj);
         if (obj.status == true) {
-          dispatch(onLogout({
-            appLanguage,
-            deviceToken,
-            deviceId,
-            deviceName,
-            deviceType,
-            appVersion,
-            contentAlign,
-            address,
-            credentials,
-            rememberMe,
-            languageIndex,
-            isLanguageUpdated,
-            deviceConnection
-          }))
+          dispatch(onLogout())
           setTimeout(() => {
             navigation.reset({
               index: 0,

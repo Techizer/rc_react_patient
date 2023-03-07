@@ -111,7 +111,7 @@ const AddEditAddress = ({
             latitude: addressDetails?.latitude,
             longitude: addressDetails?.longitude,
             address: addressDetails?.address,
-            isAddressAdded: true
+            title: title
         }
         dispatch(Address(newAddress))
 
@@ -159,10 +159,18 @@ const AddEditAddress = ({
         apifuntion
             .postApi(url, data, 1)
             .then((obj) => {
-                console.log("editAddress-res----", obj);
+                // console.log("editAddress-res----", obj);
                 setIsLoading(false)
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message)
+                    let newAddress = {
+                        latitude: addressDetails?.latitude,
+                        longitude: addressDetails?.longitude,
+                        address: addressDetails?.address,
+                        title: title
+                    }
+                    console.log({newAddress});
+                    dispatch(Address(newAddress))
                     onRequestClose()
                     editedAddress(title)
                 } else {

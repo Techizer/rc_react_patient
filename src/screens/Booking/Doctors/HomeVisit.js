@@ -37,6 +37,7 @@ import { TabbyPaymentStatus } from "../../../Redux/Actions";
 import AudioRecorder from "../../../components/AudioRecorder";
 import moment from "moment";
 import { AudioPlayer } from "../../../components/AudioPlayer";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
@@ -69,7 +70,7 @@ const HomeVisit = ({ navigation }) => {
   const [mediaModal, setMedialModal] = useState(false);
   const [isShowRecordingPanle, setIsShowRecordingPanel] = useState(false)
   const [isRecordAudio, setIsRecordAudio] = useState(false)
-
+  const insets = useSafeAreaInsets()
 
   useEffect(() => {
     if (isFocused) {
@@ -1429,7 +1430,7 @@ const HomeVisit = ({ navigation }) => {
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
             paddingTop: (windowWidth * 2) / 100,
-            paddingBottom: (windowWidth * 7) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,

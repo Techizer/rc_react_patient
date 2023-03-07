@@ -80,6 +80,7 @@ const Drawerscreen = ({ navigation }) => {
     let url = config.baseURL + "api-logout";
     var data = new FormData();
     data.append("user_id", loggedInUserDetails?.user_id);
+    data.append("fcm_token", deviceToken);
 
     apifuntion
       .postApi(url, data, 1)
@@ -87,44 +88,18 @@ const Drawerscreen = ({ navigation }) => {
         // console.log("logout response", obj);
 
         if (obj.status == true) {
-          dispatch(onLogout({
-            appLanguage,
-            deviceToken,
-            deviceId,
-            deviceName,
-            deviceType,
-            appVersion,
-            contentAlign,
-            address,
-            credentials,
-            rememberMe,
-            languageIndex,
-            isLanguageUpdated,
-            deviceConnection
-          }))
           setDrawerData(prevState => ({
             ...prevState,
             isLogout: false,
             modalVisible: false
           }))
-          setTimeout(() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'AuthStack' }],
-            })
-          }, 350);
         } else {
           setDrawerData(prevState => ({
             ...prevState,
             isLogout: false,
             modalVisible: false
           }))
-          setTimeout(() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'AuthStack' }],
-            })
-          }, 350);
+
           setTimeout(() => {
             // msgProvider.alert('', obj.message, false);
             // msgProvider.showError(obj.message);
@@ -133,14 +108,19 @@ const Drawerscreen = ({ navigation }) => {
         }
       })
       .catch((error) => {
-        setTimeout(() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'AuthStack' }],
-          })
-        }, 350);
+        setDrawerData(prevState => ({
+          ...prevState,
+          isLogout: false,
+          modalVisible: false
+        }))
         console.log("logout-error ------- " + error);
-      });
+      }).finally(() => {
+        dispatch(onLogout())
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'AuthStack' }],
+        })
+      })
   };
 
 

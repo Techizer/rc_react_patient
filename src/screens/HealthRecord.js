@@ -42,7 +42,7 @@ const HealthRecord = (props) => {
 
     // console.log("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {
-      console.log("getMembers-response ", res);
+      // console.log("getMembers-response ", res);
       setIsLoading(false)
       if (res.status == true) {
         setMemberCount(res.result.member_count)
@@ -51,10 +51,10 @@ const HealthRecord = (props) => {
 
       }
     }).catch((error) => {
-        setMemberdetails([])
-        setIsLoading(false)
-        console.log("getMember-error ------- " + error);
-      });
+      setMemberdetails([])
+      setIsLoading(false)
+      console.log("getMember-error ------- " + error);
+    });
   };
 
   return (
@@ -154,15 +154,13 @@ const HealthRecord = (props) => {
         <View
           style={{
             width: "100%",
-            alignSelf: "center",
-            backgroundColor: Colors.White,
-            paddingHorizontal: (windowWidth * 5) / 100,
-            paddingVertical: (windowWidth * 2) / 100,
-            height: 80,
-            justifyContent: "center",
-            alignItems: "center",
             position: 'absolute',
             bottom: 0,
+            paddingHorizontal: s(13),
+            backgroundColor: Colors.White,
+            paddingTop: (windowWidth * 2) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+            alignItems: "center",
             borderTopWidth: 1,
             borderTopColor: Colors.Border,
           }}>

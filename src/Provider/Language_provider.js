@@ -193,7 +193,7 @@ class Language_provider {
   version = ["Version 3.6.8", "الإصدار 3.6.8"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
-  aboutrootcare = ["About Rootscare", "حول روتس كير "]; 
+  aboutrootcare = ["About Rootscare", "حول روتس كير "];
   privacy = ["Privacy Policy", "سياسة الخصوصية  "];
   needsupport = ["Need Support ?", "تحتاج مساعدة؟  "];
   nationality = ["Nationality", "  الجنسية  "];
@@ -547,7 +547,7 @@ class Language_provider {
   guestConsultTitle = ['Oops! No Consultations Found', 'عفوًا! لم يتم العثور على استشارات'];
   guestConsultDesc = ['No Consultations record found, user type is Guest', 'لم يتم العثور على أي سجل للاستشارات،ونوع المستخدم ضيف'];
 
-  noLabsTitle = ['Sorry, no labs found', 'عذرا ، لم يتم العثور على مختبرات'];
+  noLabTestsTitle = ['Sorry, no lab tests found', 'عذرا ، لم يتم العثور على مختبرات'];
   noLabsTestsDesc = ['You can book a new test with our qualified labs!', 'يمكنك حجز فحص جديد مع مختبراتنا المؤهلة'];
   guestLabsTitle = ['Oops! No Labs Found', 'عفوًا! لم يتم العثور على مختبرات'];
   guestLabsDesc = ['No Labs record found, user type is Guest', 'لم يتم العثور على أي سجل مختبرات ، نوع المستخدم هو ضيف']
@@ -713,7 +713,15 @@ class Language_provider {
   PaymentOneDesc = ['Pay full amount using your Credit Card', 'ادفع كامل المبلغ باستخدام بطاقتك الائتمانية']
   PaymentTwoTitle = ['Buy Now Pay Later by ', 'اشتر الآن وادفع لاحقًا عن طريق ']
   PaymentTwoDesc = ['Pay in 4 interest free payments', 'ادفع على 4 دفعات بدون فوائد']
-  SupportTitle=['Support ticket posted','تم نشر تذكرة الدعم']
-  SupportMsg=['Your support ticket is under review by Rootscare resolution team. You will soon receive notification on the status.','بطاقة الدعم الخاصة بك قيد المراجعة من قبل فريق حل Rootscare. ستتلقى قريبًا إشعارًا بالحالة.']
+  SupportTitle = ['Support ticket posted', 'تم نشر تذكرة الدعم']
+  SupportMsg = ['Your support ticket is under review by Rootscare resolution team. You will soon receive notification on the status.', 'بطاقة الدعم الخاصة بك قيد المراجعة من قبل فريق حل Rootscare. ستتلقى قريبًا إشعارًا بالحالة.']
+  CartTime = ['Time Remaining - Checkout Information', 'الوقت المتبقي - معلومات الخروج']
+  CartInfo = ['You have 60 seconds to complete this order/appointment/booking, otherwise system will automatically cancel your slot and return back to previous screen.',
+    'لديك 60 ثانية لإكمال هذا الطلب / الموعد / الحجز ، وإلا فسيقوم النظام تلقائيًا بإلغاء الفترة الزمنية الخاصة بك والعودة إلى الشاشة السابقة.'
+  ]
+  ChatNote = ['Available chat consultation', '']
+  Chat = ['Chat with specialist', '']
+  ChatInit=['Chat with same medical specialist in this conversation window','']
+  BookNew=['Book a new consultation','']
 }
 export const LangProvider = new Language_provider();

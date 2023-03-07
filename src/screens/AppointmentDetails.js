@@ -35,7 +35,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import { s, vs } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import { SvgXml } from "react-native-svg";
-import { contactUs, Cross, dummyUser, Info, rightBlue, VideoCall, whiteStar } from "../Icons/Index";
+import { Chat, contactUs, Cross, dummyUser, Info, rightBlue, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "../components/RatingBottomSheet";
 import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
@@ -47,7 +47,7 @@ import Loader from "../components/Loader";
 
 export default AppointmentDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, languageIndex, deviceConnection, appLanguage } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection, selectedProvider } = useSelector(state => state.StorageReducer)
 
   const { appointment_id, send_id, booking_type, status } = route?.params
   const [classStateData, setClassStateData] = useState({
@@ -99,7 +99,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        // console.log("getAllDetails....", obj);
+        console.log("getAllDetails....", obj);
 
         if (obj.status == true) {
           setState(
@@ -1080,6 +1080,27 @@ export default AppointmentDetails = ({ navigation, route }) => {
     )
 
   } else {
+    const chatOptions = {
+      provider: {
+        id: item.provider_id,
+        name: item?.provider_name,
+        image: config.img_url3 + item?.provider_image,
+        service: item?.service_type,
+      },
+      patient: {
+        id: item?.patient_id,
+        name: item?.patient_name,
+        image: config.img_url3 + loggedInUserDetails?.image,
+        address: item?.patient_address
+      },
+      appointment: {
+        id: item?.id,
+        order: item?.order_id,
+        date: item?.app_date,
+        status: item?.acceptance_status
+      }
+
+    }
     /* check video call button enable or not */
     var videoCallButton = false;
     var currentDate = moment().unix();
@@ -2431,6 +2452,73 @@ export default AppointmentDetails = ({ navigation, route }) => {
             </View>
           </View>
 
+          {/* --------------------Chat----------------- */}
+
+          {/* <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <SvgXml xml={Chat} />
+              <View style={{ marginLeft: s(10) }}>
+                <Text
+                  style={{
+                    fontSize: Font.small,
+                    fontFamily: Font.Medium,
+                    alignSelf: 'flex-start',
+                    color: Colors.detailTitles
+
+                  }}>{LangProvider.ChatNote[languageIndex]}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  underlayColor={Colors.Highlight}
+                  onPress={() => {
+                    navigation.navigate('Chat', { chatOptions: chatOptions })
+                  }}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      fontFamily: Font.Regular,
+                      alignSelf: 'flex-start',
+                      color: Colors.Theme
+
+                    }}>{LangProvider.Chat[languageIndex]}</Text>
+                  <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
+
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ marginTop: vs(15) }}>
+              <Text
+                style={{
+                  fontSize: Font.xsmall,
+                  fontFamily: Font.Regular,
+                  alignSelf: 'flex-start',
+                  color: Colors.lightGrey
+
+                }}>{LangProvider.ChatInit[languageIndex]}</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                underlayColor={Colors.Highlight}
+                onPress={() => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "DashboardStack" }],
+                  });
+                }}
+                style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                <Text
+                  style={{
+                    fontSize: Font.small,
+                    fontFamily: Font.Medium,
+                    alignSelf: 'flex-start',
+                    color: Colors.Theme
+
+                  }}>{LangProvider.BookNew[languageIndex]}</Text>
+                <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
+
+              </TouchableOpacity>
+            </View>
+          </View> */}
+
           {/* --------------------Note----------------- */}
 
           <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
@@ -2465,6 +2553,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
+
           {/* -----------------Contact Us---------------- */}
           <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), flexDirection: 'row', alignItems: 'center' }}>
 
