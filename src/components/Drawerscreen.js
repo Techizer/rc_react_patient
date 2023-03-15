@@ -85,7 +85,7 @@ const Drawerscreen = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        // console.log("logout response", obj);
+        console.log("logout response", obj);
 
         if (obj.status == true) {
           setDrawerData(prevState => ({

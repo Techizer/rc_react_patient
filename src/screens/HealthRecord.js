@@ -19,10 +19,13 @@ const HealthRecord = (props) => {
   const [type, setType] = useState('addMember')
   const [memberCount, setMemberCount] = useState(0)
   const [patientDetails, setPatientdetails] = useState([])
-  const [memberdetails, setMemberdetails] = useState([1, 2, 3, 4, 5, 6])
+  const [memberdetails, setMemberdetails] = useState([])
+  const [dummy, setDummy] = useState([1, 2, 3, 4, 5, 6, 7])
   const [selectedMember, setSelectedMember] = useState(-1)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isEditable, setIsEditable] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
   const insets = useSafeAreaInsets()
 
   useEffect(() => {
@@ -32,9 +35,14 @@ const HealthRecord = (props) => {
     }
   }, [deviceConnection]);
 
-  const getMember = async () => {
+  useEffect(() => {
+    // console.log("selectedProvider:: ", selectedProvider)
+    if (deviceConnection && isRefreshing) {
+      getMember()
+    }
+  }, [deviceConnection, isRefreshing]);
 
-    setIsLoading(true)
+  const getMember = async () => {
     let url = config.baseURL + "api-patient-family-member";
     var data = new FormData();
 
@@ -43,7 +51,7 @@ const HealthRecord = (props) => {
     // console.log("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {
       // console.log("getMembers-response ", res);
-      setIsLoading(false)
+
       if (res.status == true) {
         setMemberCount(res.result.member_count)
         setPatientdetails(res.result.patient_details)
@@ -52,9 +60,12 @@ const HealthRecord = (props) => {
       }
     }).catch((error) => {
       setMemberdetails([])
-      setIsLoading(false)
       console.log("getMember-error ------- " + error);
-    });
+    }).finally(() => {
+      setIsLoading(false)
+      setIsRefreshing(false),
+        setDummy([])
+    })
   };
 
   return (
@@ -103,8 +114,12 @@ const HealthRecord = (props) => {
         {
 
           <FlatList
+            onLayout={(event) => {
+              var { x, y, width, height } = event.nativeEvent.layout;
+
+            }}
             showsVerticalScrollIndicator={false}
-            data={memberdetails}
+            data={isLoading ? dummy : memberdetails}
             ListHeaderComponent={() => {
               return (
                 <Member
@@ -141,7 +156,16 @@ const HealthRecord = (props) => {
                 />
               );
             }}
-          // contentContainerStyle={{ paddingBottom: memberdetails.length > 5 ? (windowWidth * 40) / 100 : 0 }}
+            refreshing={isRefreshing}
+            onRefresh={() => {
+              if (!isLoading) {
+                setMemberCount(0)
+                setIsLoading(true)
+                setIsRefreshing(true)
+                setDummy([1, 2, 3, 4, 5, 6, 7])
+              }
+            }}
+            contentContainerStyle={{ paddingBottom: (memberdetails.length > 6 )? (windowWidth * 50) / 100 : 0 }}
           />
         }
 

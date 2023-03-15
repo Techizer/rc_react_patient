@@ -148,7 +148,7 @@ const OnGoing = (props) => {
     apifuntion
       .postApi(url, data, 1)
       .then(async (obj) => {
-        console.log("getAppointments-response...", obj);
+        // console.log("getAppointments-response...", obj);
         // return
         if (obj.status == true) {
           checkVideoCallStatus(obj)
@@ -181,7 +181,7 @@ const OnGoing = (props) => {
         initialNumToRender={6}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: appointments.length > 6 ? vs(125) : 0 }}
+        contentContainerStyle={{ paddingBottom: appointments.length > 6 ? vs(125) : 100 }}
         data={isLoading ? dummy : appointments}
         ItemSeparatorComponent={() => {
           return (
@@ -237,7 +237,7 @@ const OnGoing = (props) => {
             setDummy([1, 2, 3, 4, 5, 6, 7])
           }
         }}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.1}
         onMomentumScrollBegin={() => { onEndReachedCalledDuringMomentum = false; }}
         onEndReached={val => {
           if (!onEndReachedCalledDuringMomentum) {

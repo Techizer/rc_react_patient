@@ -69,12 +69,12 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
     navigation.addListener('focus', payload => {
-      console.log('event is registered...');
+      // console.log('event is registered...');
       return BackHandler.addEventListener('hardwareBackPress', handleBackPress)
     }
     );
     navigation.addListener('blur', payload => {
-      console.log('event is removed...');
+      // console.log('event is removed...');
       return BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
     }
     );
@@ -252,7 +252,7 @@ const Login = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        console.log("updateAddress-res----", obj);
+        // console.log("updateAddress-res----", obj);
         let newAddressDetails = null
         if (obj.status == true) {
           newAddressDetails = {
@@ -315,7 +315,7 @@ const Login = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log('login response.....', obj);
+        // console.log('login response.....', obj);
         if (obj.status == true) {
           // msgProvider.showSuccess(obj.message);
           // if (address != null) {
@@ -368,11 +368,9 @@ const Login = ({ navigation }) => {
 
   const ChangeLanguage = (lan) => {
     if (lan == 'en') {
-      console.log('English...');
       dispatch(AppLanguage('en'))
       // dispatch(Restart(true))
     } else {
-      console.log('Arabic...');
       I18nManager.forceRTL(true);
       I18nManager.allowRTL(true);
       dispatch(AppLanguage('ar'))

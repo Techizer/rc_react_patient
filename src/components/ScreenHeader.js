@@ -109,7 +109,7 @@ export const ScreenHeader = ({
 
                         {
                             !renderHeaderWOBack ?
-                            <View style={{ flexDirection: 'row', width:'100%' }}>
+                            <View style={{ flexDirection: 'row', width:'100%',height: '100%', }}>
                                 <View
                                     style={{
                                         width: "72%",

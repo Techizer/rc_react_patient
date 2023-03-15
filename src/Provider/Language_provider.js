@@ -721,7 +721,8 @@ class Language_provider {
   ]
   ChatNote = ['Available chat consultation', '']
   Chat = ['Chat with specialist', '']
-  ChatInit=['Chat with same medical specialist in this conversation window','']
-  BookNew=['Book a new consultation','']
+  ChatInit = ['Chat with same medical specialist in this conversation window', '']
+  BookNew = ['Book a new consultation', '']
+  ChatClosed = ['Conversation Closed', '']
 }
 export const LangProvider = new Language_provider();

@@ -11,6 +11,7 @@ import {
   Modal,
   FlatList,
 } from "react-native";
+import { TabbyProductSnippetCreditCard,TabbySplititSnippet } from 'tabby-react-native-sdk';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -1145,6 +1146,12 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
             }
 
+            <TabbyProductSnippetCreditCard
+              lang={languageIndex == 0 ? 'en' : "ar"}
+              currency={loggedInUserDetails.currency_symbol}
+              price={'0'}
+              containerStyle={{ marginBottom: vs(30), marginTop: vs(7) }}
+            />
 
           </ScrollView>
       }

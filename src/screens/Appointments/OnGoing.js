@@ -112,7 +112,7 @@ const OnGoing = (props) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: appointments.length > 6 ? vs(125) : 0 }}
+        contentContainerStyle={{ paddingBottom: appointments.length > 6 ? vs(125) : 100 }}
         data={isLoading ? dummy : appointments}
         ItemSeparatorComponent={() => {
           return (

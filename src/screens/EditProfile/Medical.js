@@ -23,18 +23,19 @@ import {
     apifuntion,
     msgProvider,
     LangProvider,
-    Button
+    Button,
+    windowWidth
 } from "../../Provider/Utils/Utils";
 import AuthInputBoxSec from "../../components/AuthInputBoxSec";
 import { useDispatch, useSelector } from "react-redux";
-import { UserDetails } from "../../Redux/Actions";
+import { UserDetails, UserProfile } from "../../Redux/Actions";
 import NoInternet from "../../components/NoInternet";
 
 
 
 const Medical = () => {
 
-    const { loggedInUserDetails, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, languageIndex, deviceConnection, userProfile } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [medicalDetails, setMedicalDetails] = useState({
@@ -55,100 +56,79 @@ const Medical = () => {
 
     useEffect(() => {
         if (deviceConnection) {
-            getMedical()
+            getMedicalDetails()
         }
     }, [deviceConnection])
-    const getMedical = async () => {
 
-        let url = config.baseURL + "api-patient-profile";
-        var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+    const getMedicalDetails = async () => {
 
-        apifuntion.postApi(url, data)
-            .then((obj) => {
-                console.log("getMedical...", obj);
-                if (obj.status == true) {
-                    let result = obj.result;
+        if (userProfile["allergies_data"] != null && userProfile["allergies_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, allergyName: userProfile["allergies_data"] }))
+        }
+        if (userProfile["allergies"] != null && userProfile["allergies"] != "") {
+            if (userProfile["allergies"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, Allergic: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, Allergic: 1 }))
+            }
+        }
 
-                    if (result["allergies_data"] != null && result["allergies_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, allergyName: result["allergies_data"] }))
-                    }
-                    if (result["allergies"] != null && result["allergies"] != "") {
-                        if (result["allergies"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, Allergic: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, Allergic: 1 }))
-                        }
-                    }
+        if (userProfile["chronic_diseases_data"] != null && userProfile["chronic_diseases_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: userProfile["chronic_diseases_data"] }))
+        }
+        if (userProfile["chronic_diseases"] != null && userProfile["chronic_diseases"] != "") {
+            if (userProfile["chronic_diseases"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, chronicDisease: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, chronicDisease: 1 }))
+            }
+        }
 
-                    if (result["chronic_diseases_data"] != null && result["chronic_diseases_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, chronicDiseaseName: result["chronic_diseases_data"] }))
-                    }
-                    if (result["chronic_diseases"] != null && result["chronic_diseases"] != "") {
-                        if (result["chronic_diseases"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, chronicDisease: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, chronicDisease: 1 }))
-                        }
-                    }
+        if (userProfile["current_medication_data"] != null && userProfile["current_medication_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, currentMedName: userProfile["current_medication_data"] }))
+        }
+        if (userProfile["current_medication"] != null && userProfile["current_medication"] != "") {
+            if (userProfile["current_medication"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, currentMed: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, currentMed: 1 }))
+            }
+        }
 
-                    if (result["current_medication_data"] != null && result["current_medication_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, currentMedName: result["current_medication_data"] }))
-                    }
-                    if (result["current_medication"] != null && result["current_medication"] != "") {
-                        if (result["current_medication"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, currentMed: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, currentMed: 1 }))
-                        }
-                    }
+        if (userProfile["injuries_data"] != null && userProfile["injuries_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, injuryName: userProfile["injuries_data"] }))
+        }
+        if (userProfile["injuries"] != null && userProfile["injuries"] != "") {
+            if (userProfile["injuries"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, Injuries: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, Injuries: 1 }))
+            }
+        }
 
-                    if (result["injuries_data"] != null && result["injuries_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, injuryName: result["injuries_data"] }))
-                    }
-                    if (result["injuries"] != null && result["injuries"] != "") {
-                        if (result["injuries"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, Injuries: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, Injuries: 1 }))
-                        }
-                    }
+        if (userProfile["past_medication_data"] != null && userProfile["past_medication_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, pastMedName: userProfile["past_medication_data"] }))
+        }
+        if (userProfile["past_medication"] != null && userProfile["past_medication"] != "") {
+            if (userProfile["past_medication"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, pastMed: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, pastMed: 1 }))
+            }
+        }
 
-                    if (result["past_medication_data"] != null && result["past_medication_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, pastMedName: result["past_medication_data"] }))
-                    }
-                    if (result["past_medication"] != null && result["past_medication"] != "") {
-                        if (result["past_medication"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, pastMed: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, pastMed: 1 }))
-                        }
-                    }
+        if (userProfile["surgeries_data"] != null && userProfile["surgeries_data"] != "") {
+            setMedicalDetails(prevState => ({ ...prevState, surgeryName: userProfile["surgeries_data"] }))
+        }
+        if (userProfile["surgeries"] != null && userProfile["surgeries"] != "") {
+            if (userProfile["surgeries"] == "0") {
+                setMedicalDetails(prevState => ({ ...prevState, Surgeries: 0 }))
+            } else {
+                setMedicalDetails(prevState => ({ ...prevState, Surgeries: 1 }))
+            }
+        }
 
-                    if (result["surgeries_data"] != null && result["surgeries_data"] != "") {
-                        setMedicalDetails(prevState => ({ ...prevState, surgeryName: result["surgeries_data"] }))
-                    }
-                    if (result["surgeries"] != null && result["surgeries"] != "") {
-                        if (result["surgeries"] == "0") {
-                            setMedicalDetails(prevState => ({ ...prevState, Surgeries: 0 }))
-                        } else {
-                            setMedicalDetails(prevState => ({ ...prevState, Surgeries: 1 }))
-                        }
-                    }
 
-                } else {
-                    msgProvider.alert(
-                        LangProvider.information[languageIndex],
-                        obj.message[languageIndex],
-                        false
-                    );
-
-                    return false;
-                }
-            })
-            .catch((error) => {
-                console.log("getMedical-error ------- " + error);
-            });
     };
 
     const saveMedical = async () => {
@@ -206,10 +186,11 @@ const Medical = () => {
                     ...prevState,
                     isLoading: false
                 }))
-                console.log("saveMedical-response...", obj);
+                // console.log("saveMedical-response...", obj);
 
                 if (obj.status == true) {
-                    dispatch(UserDetails(obj?.result))
+                    // dispatch(UserDetails(obj?.result))
+                    dispatch(UserProfile(obj?.result))
                     msgProvider.showSuccess(obj.message);
                 } else {
                     msgProvider.showError(obj.message);
@@ -237,7 +218,7 @@ const Medical = () => {
                 contentContainerStyle={{
                     justifyContent: 'center',
                     paddingTop: vs(10),
-                    paddingBottom: vs(30),
+                    paddingBottom: vs(100),
                 }}
                 showsVerticalScrollIndicator={false}>
 
@@ -948,16 +929,31 @@ const Medical = () => {
                 </View>
 
 
-                <View style={{ width: '93%', alignSelf: 'center' }}>
-                    <Button
-                        text={LangProvider.submitbtntext[languageIndex]}
-                        onPress={() => saveMedical()}
-                        btnStyle={{ marginTop: vs(15) }}
-                        onLoading={medicalDetails.isLoading}
-                    />
-                </View>
+
+
 
             </KeyboardAwareScrollView>
+
+            <View
+                style={{
+                    width: "100%",
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingHorizontal: s(13),
+                    backgroundColor: Colors.White,
+                    paddingTop: (windowWidth * 2) / 100,
+                    paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+                    alignItems: "center",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.Border,
+                }}>
+                <Button
+                    text={LangProvider.submitbtntext[languageIndex]}
+                    onPress={() => saveMedical()}
+                    onLoading={medicalDetails.isLoading}
+                />
+
+            </View>
 
             <NoInternet
                 visible={!deviceConnection}

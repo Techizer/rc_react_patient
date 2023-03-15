@@ -41,7 +41,7 @@ export const AudioPlayer = (props) => {
     const onSeek = (time) => {
         // console.log('onseek');
         time = Math.round(time);
-        videoRef && videoRef.current.seek(time);
+        videoRef && videoRef?.current.seek(time);
         setCurrentPosition(time);
         setPaused(false);
     };
@@ -91,7 +91,7 @@ export const AudioPlayer = (props) => {
         setTimeout(() => {
             setPaused(true);
             setCurrentPosition(0);
-            videoRef.current.seek(0);
+            videoRef && videoRef?.current.seek(0);
         }, 350);
     };
 
@@ -115,7 +115,7 @@ export const AudioPlayer = (props) => {
             />
 
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width:'100%' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
 
                 <TouchableOpacity onPress={togglePlay}>
                     <Image

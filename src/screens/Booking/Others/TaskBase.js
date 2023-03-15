@@ -12,6 +12,7 @@ import {
   FlatList,
   Modal,
 } from "react-native";
+import { TabbyProductSnippetCreditCard } from 'tabby-react-native-sdk';
 import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
@@ -57,7 +58,7 @@ const TaskBase = ({ navigation, route }) => {
     selectedTime: "",
     vatPrice: "",
     totalPrice: "",
-    currency_symbol: loggedInUserDetails.currency_symbol,
+    currency_symbol: loggedInUserDetails?.currency_symbol,
     subTotal: '',
     isLoadingDetails: true,
     isAddingToCart: false,
@@ -116,7 +117,7 @@ const TaskBase = ({ navigation, route }) => {
       selectedTime: "",
       vatPrice: "",
       totalPrice: "",
-      currency_symbol: loggedInUserDetails.currency_symbol,
+      currency_symbol: loggedInUserDetails?.currency_symbol,
       subTotal: '',
       isLoadingDetails: true,
       isAddingToCart: false,
@@ -1217,6 +1218,16 @@ const TaskBase = ({ navigation, route }) => {
             </View>
           </View>
 
+          {/* ----------------Promo------------------- */}
+
+          <TabbyProductSnippetCreditCard
+            lang={languageIndex == 0 ? 'en' : "ar"}
+            currency={loggedInUserDetails.currency_symbol}
+            price={(statesData.selectedTasks != '' && statesData.selectedTasks != null) ? statesData.totalPrice : '0'}
+            containerStyle={{ marginTop: vs(7) }}
+          />
+
+
           {/* Payment section */}
           <View
             style={{
@@ -1282,6 +1293,7 @@ const TaskBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1310,6 +1322,7 @@ const TaskBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1336,6 +1349,7 @@ const TaskBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 borderColor: Colors.bordercolor,
                 marginBottom: (windowWidth * 2) / 100,

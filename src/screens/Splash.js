@@ -77,7 +77,7 @@ const Splash = ({ navigation }) => {
     const promise6 = getDeviceType();
     const promise7 = getAppVersion();
     Promise.all([promise1, promise2, promise3, promise4, promise5, promise6, promise7]).then((data) => {
-      console.log('promises resolved');
+      // console.log('promises resolved');
     }).catch((error) => {
       console.log(error);
     })
@@ -90,7 +90,6 @@ const Splash = ({ navigation }) => {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    console.log({ enabled });
     if (enabled) {
       // console.log("Authorization status:", authStatus);
       getFcmToken();
@@ -154,16 +153,16 @@ const Splash = ({ navigation }) => {
       // console.log('checkAppVersion-res', obj);
       if (obj.status == true) {
 
-        console.log({
-          MyVersion: appVersion,
-          FromApiVersion: obj?.result?.appVer,
-          Platform: Platform.OS
-        });
+        // console.log({
+        //   MyVersion: appVersion,
+        //   FromApiVersion: obj?.result?.appVer,
+        //   Platform: Platform.OS
+        // });
 
         const newCode = obj?.result?.appVer?.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
         const myCode = appVersion.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
 
-        console.log({ newCode, myCode });
+        // console.log({ newCode, myCode });
 
         if (parseInt(newCode) > parseInt(myCode)) {
           setUpdateData(prev => ({
@@ -202,7 +201,6 @@ const Splash = ({ navigation }) => {
   const CheckOldSession = () => {
 
     if (loggedInUserDetails) {
-      console.log('if...........');
       let url = config.baseURL + `api-check-login`;
       var data = new FormData();
       data.append("fcm_token", deviceToken);
@@ -211,7 +209,7 @@ const Splash = ({ navigation }) => {
       apifuntion
         .postApi(url, data)
         .then((obj) => {
-          console.log("CheckOldSession....... ", obj);
+          // console.log("CheckOldSession....... ", obj);
           if (obj.result == true) {
             if (credentials) {
               LoginNewSession()
@@ -246,12 +244,11 @@ const Splash = ({ navigation }) => {
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
 
-    console.log('login body...', data);
 
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log('login response.....', obj);
+        // console.log('login response.....', obj);
         if (obj.status == true) {
           dispatch(UserDetails(obj?.result))
           setTimeout(() => {
@@ -275,11 +272,11 @@ const Splash = ({ navigation }) => {
     let url = config.baseURL + "api-logout";
     var data = new FormData();
     data.append("user_id", loggedInUserDetails?.user_id);
-
+    data.append("fcm_token", deviceToken);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-        console.log("logout response", obj);
+        // console.log("logout response", obj);
         if (obj.status == true) {
           dispatch(onLogout())
           setTimeout(() => {

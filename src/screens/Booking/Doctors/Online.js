@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SkypeIndicator } from "react-native-indicators";
+import { TabbyProductSnippetCreditCard } from 'tabby-react-native-sdk';
 import { SvgXml } from "react-native-svg";
 import { dummyUser, GoldStar } from "../../../Icons/Index";
 import { Font } from "../../../Provider/Colorsfont";
@@ -86,7 +87,7 @@ const Online = ({ navigation }) => {
   }, [isFocused]);
 
   useEffect(() => {
-    // console.log('............',loggedInUserDetails?.currency_symbol);
+    console.log('............', loggedInUserDetails?.currency_symbol);
     if (statesData.bookingDetails) {
       setState({ isLoadingDetails: false })
     }
@@ -103,7 +104,7 @@ const Online = ({ navigation }) => {
       selectedTime: "",
       vatPrice: "",
       totalPrice: "",
-      currency_symbol: loggedInUserDetails.currency_symbol,
+      currency_symbol: loggedInUserDetails?.currency_symbol,
       subTotal: '',
       check_currentdate: '',
       date_array: [],
@@ -1249,6 +1250,14 @@ const Online = ({ navigation }) => {
             </View>
           </View>
 
+          {/* ----------------Promo------------------- */}
+
+          <TabbyProductSnippetCreditCard
+            lang={languageIndex == 0 ? 'en' : "ar"}
+            currency={loggedInUserDetails.currency_symbol}
+            price={statesData.totalPrice}
+            containerStyle={{ marginTop: vs(7) }}
+          />
           {/* Payment section */}
           <View
             style={{
@@ -1272,6 +1281,7 @@ const Online = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderBottomWidth: 1.5,
@@ -1325,6 +1335,7 @@ const Online = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 // borderTopWidth: 1.5,
@@ -1351,6 +1362,7 @@ const Online = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems: 'center',
                 justifyContent: "space-between",
                 borderColor: Colors.bordercolor,
                 marginBottom: (windowWidth * 2) / 100,

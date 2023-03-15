@@ -22,5 +22,5 @@ export const getIsAppointmentChatEnabled = (appointmentDate?: Date, apppointment
 }
 
 export const getISChatImplemented = (appointmentDateMilliseconds: number) => {
-    return appointmentDateMilliseconds > moment('2023-02-27').valueOf()
+    return appointmentDateMilliseconds > moment('2023-03-07').valueOf()
 }

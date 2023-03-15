@@ -13,7 +13,9 @@ import {
   AppState,
   BackHandler
 } from "react-native";
+import { TabbyCheckoutSnippet, } from 'tabby-react-native-sdk';
 import { SkypeIndicator } from "react-native-indicators";
+import { useFocusEffect } from '@react-navigation/native';
 import {
   Colors,
   Font,
@@ -28,6 +30,7 @@ import {
   Button
 } from "../Provider/Utils/Utils";
 import { WebView } from "react-native-webview";
+import BackgroundTimer from 'react-native-background-timer';
 import firestore from '@react-native-firebase/firestore'
 import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentWebView } from "tabby-react-native-sdk";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
@@ -38,7 +41,7 @@ import SuccessPopup from "../components/SuccessPopup";
 import moment from "moment";
 import SimpleToast from "react-native-simple-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Cart, SelectedProvider } from "../Redux/Actions";
+import { CartTime, TabbyPaymentStatus, TodaysAppointments, TodaysConsultations, TodaysLabTests } from "../Redux/Actions";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import PaymentOptionBottomSheet from "../components/PaymentOptionBottomSheet";
 import { useIsFocused } from "@react-navigation/native";
@@ -48,7 +51,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Message, MessageRoom } from "../Schemas/MessageRoomSchema";
 
 
-let startTime = new Date();
+let startTime = null
 let interval = null
 const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
   RNGoSell.goSellSDKModels;
@@ -70,7 +73,15 @@ const appCredentials = {
 
 const CartDetails = ({ navigation }) => {
 
-  const { loggedInUserDetails, languageIndex, deviceConnection, cart, selectedProvider, tabbyPayment, deviceToken } = useSelector(state => state.StorageReducer)
+  const {
+    loggedInUserDetails,
+    languageIndex,
+    deviceConnection,
+    cartTime,
+    selectedProvider,
+    tabbyPayment,
+    deviceToken
+  } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const isFocused = useIsFocused()
   const state = {
@@ -95,7 +106,7 @@ const CartDetails = ({ navigation }) => {
     task_details: "",
     notification_count: "",
     payment_status: "true",
-    currency_symbol: loggedInUserDetails.currency_symbol,
+    currency_symbol: loggedInUserDetails?.currency_symbol,
     tabbyPaymentId: '',
     payment_mode_country: "sar",
     loadCart: true,
@@ -207,33 +218,91 @@ const CartDetails = ({ navigation }) => {
       }
     ]
   }
-  const myTestPayment = { merchant_code: loggedInUserDetails.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare', lang: 'en', ...customerPayment }
+  const myTestPayment = { merchant_code: loggedInUserDetails?.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare', lang: 'en', ...customerPayment }
+
+  const newRoom = new MessageRoom({
+    AppointmentID: '',
+    Created: new Date(),
+    Expired: false,
+    ID: statesData.cartDetails.order_id,
+    LastOpened: new Date(),
+    Messages: [
+      new Message({
+        Body: `Appointment created on ${moment().format('hh:mm A, ddd, DD MMM YYYY')}`,
+        DateTime: new Date(),
+        DocPaths: [],
+        ImagePaths: [],
+        Milliseconds: moment().valueOf(),
+        NumChars: '',
+        ReadBit: 1,
+        ReceiverID: selectedProvider.providerId,
+        SenderID: loggedInUserDetails.user_id,
+        Shown: true,
+        SYSTEM: true,
+      }),
+      new Message({
+        Body: `Your consultation details will remain strictly confidential.\n\n- You are likely to receive a response after 9 am.\n- Your consultation will remain open for 3 days incase you have any follow-up questions.\n- In case of emergency, please rush to your nearest hospital.`,
+        DateTime: new Date(),
+        DocPaths: [],
+        ImagePaths: [],
+        Milliseconds: moment().valueOf(),
+        NumChars: '',
+        ReadBit: 1,
+        ReceiverID: selectedProvider.providerId,
+        SenderID: loggedInUserDetails.user_id,
+        Shown: true,
+        SYSTEM: true,
+      })
+    ],
+    Patient: {
+      ID: loggedInUserDetails.user_id,
+      Image: loggedInUserDetails?.image,
+      IsTyping: false,
+      FCM: deviceToken
+    },
+    Provider: {
+      ID: selectedProvider.providerId,
+      Image: selectedProvider.providerImg,
+      IsTyping: false,
+      FCM: null
+    }
+  })
 
   useEffect(() => {
-    console.log(moment(startTime).format('HH:mm:ss'))
+    startTime = new Date().getTime()
     let appStateSubscription = AppState.addEventListener(
       "change",
       nextAppState => {
         console.log("nextAppState", nextAppState);
         setState({ appState: nextAppState });
         if (nextAppState == 'inactive' || nextAppState == 'background') {
+          // interval = BackgroundTimer.runBackgroundTimer(() => {
+          //   //code that will be called every second 
+          //   setTimer((lastTimerCount) => {
+          //     lastTimerCount <= 1 && (
+          //       BackgroundTimer.stopBackgroundTimer(),
+          //       clearInterval(interval)
+          //     )
+          //     console.log('tic tac...', lastTimerCount - 1);
+          //     return lastTimerCount - 1
+          //   })
 
+          // }, 1000);
         }
         if (nextAppState === "active") {
-          if (timer === 0) {
-            remove_cart('auto')
+          if (startTime != '') {
+            console.log({ startTime });
+            var endTime = new Date().getTime();
+            console.log({ endTime });
+            let diffInSeconds = (endTime - startTime) / 1000;
+            diffInSeconds = Math.floor(diffInSeconds)
+            console.log({ diffInSeconds });
+            if (diffInSeconds >= 60) {
+              setTimer(0)
+            } else {
+              setTimer(timer - diffInSeconds)
+            }
           }
-          // if (startTime != '') {
-          //   console.log(moment(startTime).format('HH:mm:mm'));
-          //   var endTime = new Date();
-          //   console.log(moment(endTime).format('HH:mm:mm'));
-          //   var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
-          //   var resultInMinutes = Math.round(difference / 60000);
-          //   console.log({ resultInMinutes });
-          //   if (resultInMinutes >= 1) {
-          //     remove_cart('auto')
-          //   }
-          // }
         }
 
       }
@@ -251,36 +320,46 @@ const CartDetails = ({ navigation }) => {
 
   useEffect(() => {
     if (tabbyPayment == true) {
+      dispatch(TabbyPaymentStatus(false))
       resetState()
+      clearInterval(interval)
       setState({ modalvisible: true });
+      if (selectedProvider.providerType === 'doctor') {
+        dispatch(TodaysConsultations(0))
+      } else if (selectedProvider.providerType === 'lab') {
+        dispatch(TodaysLabTests(0))
+      } else {
+        dispatch(TodaysAppointments(0))
+      }
       setTimeout(() => {
         setState({ modalvisible: false })
+      }, 1000);
+
+      setTimeout(() => {
         navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
-      }, 350);
-    } else {
-      Timer()
+      }, 2000);
     }
   }, [isFocused])
 
-  useEffect(() => {
-    if (statesData.cartDetails) {
-      Timer()
-    }
-    return () => {
-      clearInterval(interval)
-    }
-  }, [statesData.cartDetails])
+  useFocusEffect(
+    React.useCallback(() => {
+      if (statesData.cartDetails) {
+        Timer()
+      }
+      return () => {
+        clearInterval(interval)
+      }
+    }, [statesData.cartDetails])
+  )
 
   useEffect(() => {
+    // console.log({timer});
     if (timer === 0) {
       remove_cart('auto')
     }
   }, [timer])
 
-  const getCartId = async () => {
-    let Id = await AsyncStorage.getItem('cartId')
-    console.log(Id);
-  }
+
   const setState = payload => {
     setStatesData(prev => ({
       ...prev,
@@ -328,19 +407,17 @@ const CartDetails = ({ navigation }) => {
   }
 
   const StartTabbySdk = async () => {
-    console.log({ customerPayment });
-    // return
     try {
       const { sessionId, paymentId, availableProducts } = await Tabby.createSession(myTestPayment);
-      console.log({
-        sessionId,
-      });
-      console.log({
-        paymentId,
-      });
-      console.log({
-        availableProducts
-      });
+      // console.log({
+      //   sessionId,
+      // });
+      // console.log({
+      //   paymentId,
+      // });
+      // console.log({
+      //   availableProducts
+      // });
       setState({ tabbyPaymentId: paymentId, })
       // return
       setTimeout(() => {
@@ -350,7 +427,9 @@ const CartDetails = ({ navigation }) => {
             serviceType: statesData.service_type,
             cartId: statesData.cartId,
             transactionId: paymentId,
-            capturePayment: CapturePayment
+            capturePayment: CapturePayment,
+            newRoom: newRoom,
+            cartTime: timer
           })
       }, 750);
     } catch (error) {
@@ -417,19 +496,16 @@ const CartDetails = ({ navigation }) => {
         msgProvider.showError('Payment is cancelled')
         setState({ isLoading: false, isPaymentInitiate: false })
         Timer()
-        startTime = new Date();
         break;
       case "FAILED":
         msgProvider.showError('Something went wrong, please contact admin')
         setState({ isLoading: false, isPaymentInitiate: false })
         Timer()
-        startTime = new Date();
         break;
       case "SDK_ERROR":
         msgProvider.showError('Something went wrong, please contact admin')
         setState({ isLoading: false, isPaymentInitiate: false })
         Timer()
-        startTime = new Date();
         console.log("sdk error............", status);
         break;
       case "NOT_IMPLEMENTED":
@@ -479,66 +555,28 @@ const CartDetails = ({ navigation }) => {
       .postApi(url, data, 1)
       .then((obj) => {
         if (obj.status == true) {
-          // console.log("obj", obj);
-          const newRoom = new MessageRoom({
-            AppointmentID: '',
-            Created: moment().format('hh:mm:ss A, DD MMM YYYY'),
-            Expired: false,
-            ID: statesData.cartDetails.order_id,
-            LastOpened: new Date(),
-            Messages: [
-              new Message({
-                Body: `Appointment created on ${moment().format('DD/MM/YYYY HH:mm:ss')}`,
-                DateTime: new Date(),
-                DocPaths: [],
-                ImagePaths: [],
-                Milliseconds: moment().valueOf(),
-                NumChars: '',
-                ReadBit: 1,
-                ReceiverID: selectedProvider.providerId,
-                SenderID: loggedInUserDetails.user_id,
-                Shown: true,
-                SYSTEM: true,
-              }),
-              new Message({
-                Body: `Your consultation details will remain strictly confidential.\n\n- You are likely to receive a response after 9 am.\n- Your consultation will remain open for 7 days incase you have any follow-up questions.\n- In case of emergency, please rush to your nearest hospital.`,
-                DateTime: new Date(),
-                DocPaths: [],
-                ImagePaths: [],
-                Milliseconds: moment().valueOf(),
-                NumChars: '',
-                ReadBit: 1,
-                ReceiverID: selectedProvider.providerId,
-                SenderID: loggedInUserDetails.user_id,
-                Shown: true,
-                SYSTEM: true,
-              })
-            ],
-            Patient: {
-              ID: loggedInUserDetails.user_id,
-              Image: loggedInUserDetails?.image,
-              IsTyping: false,
-              FCM: deviceToken
-            },
-            Provider: {
-              ID: selectedProvider.providerId,
-              Image: selectedProvider.providerImg,
-              IsTyping: false,
-              FCM: null
+          console.log("TapPayment...", obj);
+          firestore().collection(`Chats-${config.mode}`).doc(newRoom.MessageRoomDetails.ID).set(newRoom).finally(() => {
+            resetState()
+            if (selectedProvider.providerType === 'doctor') {
+              dispatch(TodaysConsultations(0))
+            } else if (selectedProvider.providerType === 'lab') {
+              dispatch(TodaysLabTests(0))
+            } else {
+              dispatch(TodaysAppointments(0))
             }
+            setState({ modalvisible: true, isLoading: false });
+            setTimeout(() => {
+              setState({ modalvisible: false })
+            }, 1000);
+
+            setTimeout(() => {
+              navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
+            }, 2000);
           })
 
-          // firestore().collection(`Chats-${config.mode}`).doc(newRoom.MessageRoomDetails.ID).set(newRoom).finally(() => {
-
-          // })
-          resetState()
-          setState({ modalvisible: true, isLoading: false });
-          setTimeout(() => {
-            setState({ modalvisible: false })
-            navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
-          }, 350);
         } else {
-          setState({ message: obj.message });
+          setState({ message: obj.message, isLoading: false });
           setTimeout(() => {
             msgProvider.showError(obj.message);
           }, 700);
@@ -548,7 +586,7 @@ const CartDetails = ({ navigation }) => {
       })
       .catch((error) => {
         console.log("TapPayment-error ------- " + error);
-        setState({ loading: false });
+        setState({ isLoading: false });
       });
   };
 
@@ -608,7 +646,6 @@ const CartDetails = ({ navigation }) => {
       .then((obj) => {
         console.log("get_cart-response...", obj.result);
         if (obj.status == true) {
-          // dispatch(Cart(obj.result[0].id))
           AsyncStorage.setItem('cartId', obj.result[0].id)
           setState({
             family_member_id: obj.result[0].family_member_id,
@@ -644,7 +681,7 @@ const CartDetails = ({ navigation }) => {
         console.log("remove_cart-response...", obj);
         if (obj.status == true) {
           AsyncStorage.removeItem('cartId')
-          dispatch(Cart(null))
+          dispatch(CartTime(0))
           if (type == 'auto') {
             msgProvider.showSuccess('You cart is removed automatically by the system.');
             setTimeout(() => {
@@ -757,7 +794,11 @@ const CartDetails = ({ navigation }) => {
           (statesData.cartDetails != "" && statesData.cartDetails != null) ?
             <View style={{ backgroundColor: Colors.White, paddingTop: vs(9), marginTop: vs(7) }}>
 
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView
+                contentContainerStyle={{ paddingBottom: (windowWidth * 70) / 100 }}
+                keyboardDismissMode="interactive"
+                keyboardShouldPersistTaps="always"
+                showsVerticalScrollIndicator={false}>
 
                 {/* -----------Name------------- */}
                 <View style={{ borderBottomWidth: 1.5, borderBottomColor: Colors.backgroundcolor, }}>
@@ -905,6 +946,7 @@ const CartDetails = ({ navigation }) => {
                           <View
                             style={{
                               flexDirection: "row",
+                              alignItems:'center',
                               justifyContent: "space-between",
                               paddingVertical: vs(5),
                             }}>
@@ -912,7 +954,6 @@ const CartDetails = ({ navigation }) => {
                               style={{
                                 fontFamily: Font.Regular,
                                 fontSize: Font.small,
-                                alignSelf: 'flex-start',
                                 color: Colors.detailTitles,
                               }}
                               numberOfLines={1}
@@ -923,7 +964,6 @@ const CartDetails = ({ navigation }) => {
                               style={{
                                 fontFamily: Font.Regular,
                                 fontSize: Font.small,
-                                alignSelf: 'flex-start',
                                 color: Colors.detailTitles,
                               }} >
                               {item.price}
@@ -945,13 +985,13 @@ const CartDetails = ({ navigation }) => {
                       <View
                         style={{
                           flexDirection: "row",
+                          alignItems: 'center',
                           justifyContent: "space-between",
                         }}>
                         <Text
                           style={{
                             fontFamily: Font.Regular,
                             fontSize: Font.small,
-                            alignSelf: 'flex-start',
                             color: Colors.detailTitles,
                           }}>
                           {/* {show_data?.distance_fare_text} */}
@@ -962,7 +1002,6 @@ const CartDetails = ({ navigation }) => {
                           style={{
                             fontFamily: Font.Regular,
                             fontSize: Font.small,
-                            alignSelf: 'flex-start',
                             color: Colors.detailTitles,
                           }}>
                           {show_data?.distance_fare}
@@ -973,6 +1012,7 @@ const CartDetails = ({ navigation }) => {
                     <View
                       style={{
                         flexDirection: "row",
+                        alignItems:'center',
                         justifyContent: "space-between",
                         marginTop: (windowWidth * 2) / 100,
                       }} >
@@ -980,7 +1020,6 @@ const CartDetails = ({ navigation }) => {
                         style={{
                           fontFamily: Font.Regular,
                           fontSize: Font.small,
-                          alignSelf: 'flex-start',
                           color: Colors.detailTitles,
                         }}>
                         {show_data?.vat_text}
@@ -989,7 +1028,6 @@ const CartDetails = ({ navigation }) => {
                         style={{
                           fontFamily: Font.Regular,
                           fontSize: Font.small,
-                          alignSelf: 'flex-start',
                           color: Colors.detailTitles,
                         }}
                       >
@@ -1003,6 +1041,7 @@ const CartDetails = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: "row",
+                      alignItems:'center',
                       justifyContent: "space-between",
                       marginTop: vs(10),
                     }}>
@@ -1033,7 +1072,8 @@ const CartDetails = ({ navigation }) => {
                 }}>
                   <View style={{
                     width: '100%',
-                    flexDirection: 'row'
+                    flexDirection: 'row',
+                    alignItems:'center',
                   }}>
                     <Text
                       style={{
@@ -1058,11 +1098,21 @@ const CartDetails = ({ navigation }) => {
                       fontFamily: Font.Regular,
                       fontSize: Font.xsmall,
                       color: Colors.detailTitles,
+                      textAlign:'left',
                       marginTop: vs(5)
                     }}>
                     {LangProvider.CartInfo[languageIndex]}
                   </Text>
                 </View>
+
+                {/* ----------------Promo------------------- */}
+                <TabbyCheckoutSnippet
+                  lang={languageIndex == 0 ? 'en' : "ar"}
+                  currency={loggedInUserDetails.currency_symbol}
+                  price={(show_data?.total_price != '' && show_data?.total_price != null) ? show_data?.total_price : '0'}
+                  circleFillColor={[Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme]}
+                // containerStyle={{ marginTop: vs(7) }}
+                />
               </ScrollView>
 
             </View>

@@ -12,6 +12,7 @@ import {
   FlatList,
   Modal,
 } from "react-native";
+import { TabbyProductSnippetCreditCard } from 'tabby-react-native-sdk';
 import { SkypeIndicator } from "react-native-indicators";
 import {
   Colors,
@@ -54,7 +55,7 @@ const PackageBase = ({ navigation, route }) => {
     selectedTime: "",
     vatPrice: "",
     totalPrice: "",
-    currency_symbol: loggedInUserDetails.currency_symbol,
+    currency_symbol: loggedInUserDetails?.currency_symbol,
     subTotal: '',
     isLoadingDetails: true,
     isAddingToCart: false,
@@ -94,7 +95,7 @@ const PackageBase = ({ navigation, route }) => {
       selectedTime: "",
       vatPrice: "",
       totalPrice: "",
-      currency_symbol: loggedInUserDetails.currency_symbol,
+      currency_symbol: loggedInUserDetails?.currency_symbol,
       subTotal: '',
       isLoadingDetails: true,
       isAddingToCart: false,
@@ -589,6 +590,7 @@ const PackageBase = ({ navigation, route }) => {
                     fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     color: Colors.detailTitles,
+                    alignSelf:'flex-start'
                   }}>
                   {Details?.provider_name}
                 </Text>
@@ -1117,6 +1119,16 @@ const PackageBase = ({ navigation, route }) => {
             </View>
           </View>
 
+          {/* ----------------Promo------------------- */}
+
+          <TabbyProductSnippetCreditCard
+            lang={languageIndex == 0 ? 'en' : "ar"}
+            currency={loggedInUserDetails.currency_symbol}
+            price={(statesData.selectedPackage != '' && statesData.selectedPackage != null) ? statesData.totalPrice : '0'}
+            containerStyle={{ marginTop: vs(7) }}
+          />
+
+
           {/* Payment section */}
           <View
             style={{
@@ -1140,6 +1152,7 @@ const PackageBase = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: "row",
+                  alignItems:'center',
                   width: "100%",
                   paddingTop: (windowWidth * 1.3) / 100,
                   justifyContent: "space-between",
@@ -1150,8 +1163,6 @@ const PackageBase = ({ navigation, route }) => {
                     fontFamily: Font.Regular,
                     fontSize: Font.small,
                     color: Colors.detailTitles,
-                    alignSelf: 'flex-start',
-                    width: '80%'
                   }}>
                   {statesData.selectedPackage.name}
                 </Text>
@@ -1161,7 +1172,6 @@ const PackageBase = ({ navigation, route }) => {
                     fontSize: Font.small,
                     color: Colors.detailTitles,
                     width: "20%",
-                    textAlign: "right",
                   }}>
                   {statesData.selectedPackage.price}{" "}
                   {statesData.currency_symbol}
@@ -1173,6 +1183,7 @@ const PackageBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1201,6 +1212,7 @@ const PackageBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1227,6 +1239,7 @@ const PackageBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 borderColor: Colors.bordercolor,
                 marginBottom: (windowWidth * 2) / 100,

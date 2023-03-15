@@ -2,26 +2,35 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux';
 import { TabbyPaymentWebView } from 'tabby-react-native-sdk';
+
 import { apifuntion } from '../Provider/APIProvider';
 import { config } from '../Provider/configProvider';
 import { msgProvider } from '../Provider/messageProvider';
-import { TabbyPaymentStatus } from '../Redux/Actions';
+import { CartTime, TabbyPaymentStatus } from '../Redux/Actions';
 
 const TabbyPayment = ({ navigation, route }) => {
 
     const { loggedInUserDetails } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const { top, bottom: paddingBottom } = useSafeAreaInsets();
-    const { url, serviceType, cartId, transactionId, capturePayment } = route.params;
+    const { url, serviceType, cartId, transactionId, capturePayment, newRoom, cartTime } = route.params;
 
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         dispatch(CartTime(cartTime))
+    //     }, [])
+    //   )
     const back = () => {
         navigation.pop();
     };
 
+
     const CapturePayment = async () => {
-        console.log('././././././././././././.', capturePayment);
+        // console.log('././././././././././././.', capturePayment);
         let url = `https://api.tabby.ai/api/v1/payments/${transactionId}/captures`
 
         fetch(url, {
@@ -36,9 +45,41 @@ const TabbyPayment = ({ navigation, route }) => {
             // console.log(response.status);
             return response.json()
         }).then((res) => {
-            console.log('CapturePayment-res', res);
+            // console.log('CapturePayment-res', res);
         }).catch((error) => {
             console.log("CapturePayment-error", error);
+        }).finally(() => {
+            WebHooks()
+        })
+    };
+
+    const WebHooks = async () => {
+        let url = `https://api.tabby.ai/api/v1/webhooks`
+        const body = {
+            url: "http://example.com",
+            is_test: true,
+            header: {
+                title: "string",
+                value: "string"
+            }
+        }
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
+                'Accept': "application/json",
+                "Content-Type": "application/json",
+                'X-Merchant-Code': loggedInUserDetails?.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare'
+            },
+            body: JSON.stringify(body),
+        }).then((response) => {
+            console.log(response.status);
+            return response.json()
+        }).then((res) => {
+            console.log('WebHooks-res', res);
+        }).catch((error) => {
+            console.log("WebHooks-error", error);
         }).finally(() => {
             TabbyPayment()
         })
@@ -60,10 +101,11 @@ const TabbyPayment = ({ navigation, route }) => {
                 if (obj.status == true) {
                     // console.log("obj", obj);
                     dispatch(TabbyPaymentStatus(true))
-                    setTimeout(() => {
-                        navigation.pop();
-                    }, 1500);
-
+                    firestore().collection(`Chats-${config.mode}`).doc(newRoom.MessageRoomDetails.ID).set(newRoom).finally(() => {
+                        setTimeout(() => {
+                            navigation.pop();
+                        }, 1000);
+                    })
                 } else {
                     dispatch(TabbyPaymentStatus(false))
                     setTimeout(() => {

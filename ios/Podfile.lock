@@ -1055,6 +1055,8 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-blur (4.3.0):
     - React-Core
   - react-native-branch (5.7.0):
@@ -1063,6 +1065,8 @@ PODS:
   - react-native-cameraroll (5.2.3):
     - React-Core
   - react-native-date-picker (4.2.6):
+    - React-Core
+  - react-native-document-picker (8.1.3):
     - React-Core
   - react-native-geolocation (3.0.5):
     - React-Core
@@ -1201,6 +1205,8 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController
+  - RNPDF (0.14.0):
+    - React
   - RNPermissions (3.6.1):
     - React-Core
   - RNReanimated (2.14.4):
@@ -1347,10 +1353,12 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-branch (from `../node_modules/react-native-branch`)
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -1388,6 +1396,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGosellSdkReactNative (from `../node_modules/@tap-payments/gosell-sdk-react-native`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNPDF (from `../node_modules/react-native-view-pdf`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1511,6 +1520,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-branch:
@@ -1519,6 +1530,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-geolocation-service:
@@ -1593,6 +1606,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@tap-payments/gosell-sdk-react-native"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNPDF:
+    :path: "../node_modules/react-native-view-pdf"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -1675,10 +1690,12 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-branch: 882341157fe7f47b0d8ac05b722040075eeefb7e
   react-native-cameraroll: 5b25d0be40185d02e522bf2abf8a1ba4e8faa107
   react-native-date-picker: 93e43b3084cea595b4d68b1405d6d99849663bd6
+  react-native-document-picker: 958e2bc82e128be69055be261aeac8d872c8d34c
   react-native-geolocation: 7383cbe9fa75b168bbbe40b566070fd0b44d30d6
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-netinfo: 2517ad504b3d303e90d7a431b0fcaef76d207983
@@ -1716,6 +1733,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGosellSdkReactNative: 95409a76ce0bd028e20324824aa313f7cfcd1a0b
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
+  RNPDF: 8526c7210ff375c29d2461c51945e2f5480f7b60
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: 73afd1a9b4087e403163e0d300854cb99260c9b6
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb

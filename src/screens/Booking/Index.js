@@ -73,19 +73,19 @@ const BookingIndex = ({ navigation, route }) => {
 
       <ScreenHeader
         title={
-          ((selectedProvider && selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'task') || selectedProvider.providerType == 'physiotherapy') ?
+          ((selectedProvider!=null && selectedProvider?.providerType == 'nurse' && selectedProvider?.bookingType == 'task') || selectedProvider?.providerType == 'physiotherapy') ?
             LangProvider.TaskBaseTitle[languageIndex]
             :
-            ((selectedProvider && selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'hour') || selectedProvider.providerType == 'caregiver' || selectedProvider.providerType == 'babysitter') ?
+            ((selectedProvider!=null && selectedProvider?.providerType == 'nurse' && selectedProvider?.bookingType == 'hour') || selectedProvider?.providerType == 'caregiver' || selectedProvider?.providerType == 'babysitter') ?
               LangProvider.HourBaseTitle[languageIndex]
               :
-              (selectedProvider && selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'ONLINE_CONSULT') ?
+              (selectedProvider!=null && selectedProvider?.providerType == 'doctor' && selectedProvider?.docType == 'ONLINE_CONSULT') ?
                 LangProvider.OnlineConsultation[languageIndex]
                 :
-                (selectedProvider && selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'HOME_VISIT_CONSULT') ?
+                (selectedProvider!=null && selectedProvider?.providerType == 'doctor' && selectedProvider?.docType == 'HOME_VISIT_CONSULT') ?
                   LangProvider.HomeVisitConsultation[languageIndex]
                   :
-                  (selectedProvider && selectedProvider.providerType == 'lab' && selectedProvider.bookingType == 'test') ?
+                  (selectedProvider!=null && selectedProvider?.providerType == 'lab' && selectedProvider?.bookingType == 'test') ?
                     LangProvider.Lab_Test_Booking[languageIndex]
                     :
                     LangProvider.Lab_Package_Booking[languageIndex]
@@ -99,22 +99,22 @@ const BookingIndex = ({ navigation, route }) => {
 
 
       {
-        ((selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'task') || selectedProvider.providerType == 'physiotherapy') ?
+        ((selectedProvider!=null && selectedProvider?.providerType == 'nurse' && selectedProvider?.bookingType == 'task') || selectedProvider?.providerType == 'physiotherapy') ?
 
           <TaskBase navigation={navigation} route={route} />
           :
 
-          ((selectedProvider.providerType == 'nurse' && selectedProvider.bookingType == 'hour') || selectedProvider.providerType == 'caregiver' || selectedProvider.providerType == 'babysitter') ?
+          ((selectedProvider!=null && selectedProvider?.providerType == 'nurse' && selectedProvider?.bookingType == 'hour') || selectedProvider?.providerType == 'caregiver' || selectedProvider?.providerType == 'babysitter') ?
             <Hourly navigation={navigation} route={route} />
             :
-            (selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'ONLINE_CONSULT') ?
+            (selectedProvider!=null && selectedProvider?.providerType == 'doctor' && selectedProvider?.docType == 'ONLINE_CONSULT') ?
               <Online navigation={navigation} route={route} />
               :
-              (selectedProvider.providerType == 'doctor' && selectedProvider.docType == 'HOME_VISIT_CONSULT') ?
+              (selectedProvider!=null && selectedProvider?.providerType == 'doctor' && selectedProvider?.docType == 'HOME_VISIT_CONSULT') ?
 
                 <HomeVisit navigation={navigation} route={route} />
                 :
-                (selectedProvider.providerType == 'lab' && selectedProvider.bookingType == 'test') ?
+                (selectedProvider!=null && selectedProvider?.providerType == 'lab' && selectedProvider?.bookingType == 'test') ?
                   <TestBase navigation={navigation} route={route} />
                   :
                   <PackageBase navigation={navigation} route={route} />

@@ -23,7 +23,8 @@ import {
     CART,
     TABBY_PAYMENT,
     LANGUAGE_UPDATED,
-    CURRENT_ROUTE
+    CURRENT_ROUTE,
+    USER_PROFILE
 } from './Types'
 
 const Guest = (payload) => ({
@@ -141,7 +142,7 @@ const SelectedProvider = (payload) => ({
     payload
 })
 
-const Cart = (payload) => {
+const CartTime = (payload) => {
 
     console.log({ payload });
     return ({
@@ -158,6 +159,11 @@ const CurrentRoute = (payload) => ({
 
 const TabbyPaymentStatus = (payload) => ({
     type: TABBY_PAYMENT,
+    payload
+})
+
+const UserProfile = (payload) => ({
+    type: USER_PROFILE,
     payload
 })
 
@@ -185,7 +191,8 @@ export {
     TodaysConsultations,
     TodaysLabTests,
     SelectedProvider,
-    Cart,
+    CartTime,
     TabbyPaymentStatus,
+    UserProfile,
     CurrentRoute
 }

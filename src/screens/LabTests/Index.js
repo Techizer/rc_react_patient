@@ -72,12 +72,13 @@ const LabTestIndex = ({ navigation, route }) => {
       <Tabs.Navigator
         initialRouteName={todayLabTests > 0 ? LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1] : LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]}
         screenOptions={{
-          tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
+          // tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
           tabBarScrollEnabled: true,
           tabBarActiveTintColor: Colors.Theme,
           tabBarInactiveTintColor: Colors.lightGrey,
           tabBarIndicatorContainerStyle: {
+            backgroundColor: Colors.tabsBackground,
             height: '100%',
             borderWidth: 0
             // marginTop:vs(7)

@@ -6,6 +6,7 @@ import {
     FlatList,
     Keyboard,
     Pressable,
+    Platform,
 } from "react-native";
 import React, { Component, useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,7 +23,8 @@ import {
     Cameragallery,
     mediaprovider,
     AuthInputBoxSec,
-    Button
+    Button,
+    windowWidth
 } from "../../Provider/Utils/Utils";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { SvgXml } from "react-native-svg";
@@ -30,13 +32,13 @@ import { dummyUser, Edit } from "../../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import NationalityBottomSheet from "../../components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
-import { UserDetails } from "../../Redux/Actions";
+import { UserDetails, UserProfile } from "../../Redux/Actions";
 import NoInternet from "../../components/NoInternet";
 
 
 const Personal = ({ navigation }) => {
 
-    const { loggedInUserDetails, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, languageIndex, deviceConnection, userProfile } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [userDetails, setUserDetails] = useState({
@@ -67,7 +69,7 @@ const Personal = ({ navigation }) => {
 
     useEffect(() => {
         if (deviceConnection) {
-            getProfile()
+            getProfileDetails()
             getNationality()
         }
     }, [deviceConnection])
@@ -139,64 +141,39 @@ const Personal = ({ navigation }) => {
     };
 
 
-    const getProfile = async () => {
+    const getProfileDetails = async () => {
+        setUserDetails(prevState => ({ ...prevState, name: userProfile["first_name"] }))
+        setUserDetails(prevState => ({ ...prevState, email: userProfile["email"] }))
+        setUserDetails(prevState => ({ ...prevState, user_id: userProfile["user_id"] }))
+        setUserDetails(prevState => ({ ...prevState, country_code: userProfile["country_code"] }))
+        setUserDetails(prevState => ({ ...prevState, work_area: userProfile["work_area"] }))
+        setUserDetails(prevState => ({ ...prevState, address: userProfile["address"] }))
+        setUserDetails(prevState => ({ ...prevState, identity: userProfile["id_number"] }))
 
-        let url = config.baseURL + "api-patient-profile";
-        var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        if (userProfile["phone_number"] != null && userProfile["phone_number"] != "") {
+            setUserDetails(prevState => ({ ...prevState, mobile: userProfile["phone_number"] }))
+        }
+        // if (userProfile["address"] != null && userProfile["address"] != "") {
+        //     this.setState({ addressfocus: true });
+        // }
 
-        apifuntion.postApi(url, data)
-            .then((obj) => {
-                console.log("getProfile...", obj);
-                if (obj.status == true) {
+        if (userProfile["dob"] != null && userProfile["dob"] != "") {
+            setUserDetails(prevState => ({ ...prevState, dob: userProfile["dob"] }))
+        }
 
-                    let result = obj.result;
-                    setUserDetails(prevState => ({ ...prevState, name: result["first_name"] }))
-                    setUserDetails(prevState => ({ ...prevState, email: result["email"] }))
-                    setUserDetails(prevState => ({ ...prevState, user_id: result["user_id"] }))
-                    setUserDetails(prevState => ({ ...prevState, country_code: result["country_code"] }))
-                    setUserDetails(prevState => ({ ...prevState, work_area: result["work_area"] }))
-                    setUserDetails(prevState => ({ ...prevState, address: result["address"] }))
-                    setUserDetails(prevState => ({ ...prevState, identity: result["id_number"] }))
-
-                    if (result["phone_number"] != null && result["phone_number"] != "") {
-                        setUserDetails(prevState => ({ ...prevState, mobile: result["phone_number"] }))
-                    }
-                    // if (result["address"] != null && result["address"] != "") {
-                    //     this.setState({ addressfocus: true });
-                    // }
-
-                    if (result["dob"] != null && result["dob"] != "") {
-                        setUserDetails(prevState => ({ ...prevState, dob: result["dob"] }))
-                    }
-
-                    if (result.nationality != null && result.nationality != "") {
-                        setUserDetails(prevState => ({ ...prevState, nationality: result["nationality"] }))
-                    }
-                    if (result["gender"] != null && result["gender"] != "") {
-                        if (result["gender"] == "0") {
-                            setUserDetails(prevState => ({ ...prevState, gender: 0 }))
-                        } else {
-                            setUserDetails(prevState => ({ ...prevState, gender: 1 }))
-                        }
-                    }
-                    if (result['image'] != null) {
-                        setUserDetails(prevState => ({ ...prevState, profile_img: config.img_url3 + result['image'] }))
-                    }
-
-                } else {
-                    msgProvider.alert(
-                        LangProvider.information[languageIndex],
-                        obj.message[languageIndex],
-                        false
-                    );
-
-                    return false;
-                }
-            })
-            .catch((error) => {
-                console.log("getProfile-error ------- " + error);
-            });
+        if (userProfile.nationality != null && userProfile.nationality != "") {
+            setUserDetails(prevState => ({ ...prevState, nationality: userProfile["nationality"] }))
+        }
+        if (userProfile["gender"] != null && userProfile["gender"] != "") {
+            if (userProfile["gender"] == "0") {
+                setUserDetails(prevState => ({ ...prevState, gender: 0 }))
+            } else {
+                setUserDetails(prevState => ({ ...prevState, gender: 1 }))
+            }
+        }
+        if (userProfile['image'] != null) {
+            setUserDetails(prevState => ({ ...prevState, profile_img: config.img_url3 + userProfile['image'] }))
+        }
     };
 
     const saveInfo = async () => {
@@ -268,9 +245,10 @@ const Personal = ({ navigation }) => {
                     ...prevState,
                     isLoading: false
                 }))
-                console.log("saveInfo-response....", obj);
+                // console.log("saveInfo-response....", obj);
                 if (obj.status == true) {
-                    dispatch(UserDetails(obj?.result))
+                    // dispatch(UserDetails(obj?.result))
+                    dispatch(UserProfile(obj?.result))
                     setTimeout(() => {
                         msgProvider.showSuccess(obj.message);
                     }, 500);
@@ -301,7 +279,7 @@ const Personal = ({ navigation }) => {
                 contentContainerStyle={{
                     justifyContent: 'center',
                     paddingTop: vs(10),
-                    paddingBottom: vs(30),
+                    paddingBottom: vs(100),
                 }}
                 showsVerticalScrollIndicator={false}>
 
@@ -686,19 +664,32 @@ const Personal = ({ navigation }) => {
                         blurOnSubmit={Platform.OS === 'ios' ? true : false}
                         editable={false}
                     />
-
-                    <Button
-                        text={LangProvider.submitbtntext[languageIndex]}
-                        onPress={() => saveInfo()}
-                        btnStyle={{ marginTop: vs(15) }}
-                        onLoading={userDetails.isLoading}
-                    />
-
                 </View>
 
 
 
             </KeyboardAwareScrollView>
+
+            <View
+                style={{
+                    width: "100%",
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingHorizontal: s(13),
+                    backgroundColor: Colors.White,
+                    paddingTop: (windowWidth * 2) / 100,
+                    paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+                    alignItems: "center",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.Border,
+                }}>
+
+                <Button
+                    text={LangProvider.submitbtntext[languageIndex]}
+                    onPress={() => saveInfo()}
+                    onLoading={userDetails.isLoading}
+                />
+            </View>
 
             <Cameragallery
                 mediamodal={mediamodal}

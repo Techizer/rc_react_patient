@@ -8,6 +8,7 @@ import {
     Modal,
     FlatList,
     Keyboard,
+    Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React, { Component, useEffect, useState } from "react";
@@ -22,11 +23,12 @@ import {
     msgProvider,
     LangProvider,
     Button,
-    windowHeight
+    windowHeight,
+    windowWidth
 } from "../../Provider/Utils/Utils";
 import ListBottomSheet from "../../components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
-import { UserDetails } from "../../Redux/Actions";
+import { UserDetails, UserProfile } from "../../Redux/Actions";
 import { SvgXml } from "react-native-svg";
 import { rightArrow } from "../../Icons/Index";
 import NoInternet from "../../components/NoInternet";
@@ -201,7 +203,7 @@ const foodList = [
 
 const LifeStyle = ({ navigation }) => {
 
-    const { loggedInUserDetails, appLanguage, deviceConnection, languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, appLanguage, deviceConnection, languageIndex, userProfile } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const insets = useSafeAreaInsets()
     const [lifeStyleDetails, setLifeStyleDetails] = useState({
@@ -223,7 +225,7 @@ const LifeStyle = ({ navigation }) => {
 
     useEffect(() => {
         if (deviceConnection) {
-            getLifeStyle()
+            getLifeStyleDetails()
         }
     }, [deviceConnection])
 
@@ -277,10 +279,11 @@ const LifeStyle = ({ navigation }) => {
                     ...prevState,
                     isLoading: false
                 }))
-                console.log("saveLifeStyle-response----", obj);
+                // console.log("saveLifeStyle-response----", obj);
 
                 if (obj.status == true) {
-                    dispatch(UserDetails(obj?.result))
+                    // dispatch(UserDetails(obj?.result))
+                    dispatch(UserProfile(obj?.result))
                     msgProvider.showSuccess(obj.message);
                 } else {
                     msgProvider.showError(obj.message);
@@ -297,51 +300,26 @@ const LifeStyle = ({ navigation }) => {
             });
     };
 
-    const getLifeStyle = async () => {
+    const getLifeStyleDetails = async () => {
 
-        let url = config.baseURL + "api-patient-profile";
-        var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
-
-        apifuntion.postApi(url, data)
-            .then((obj) => {
-                // console.log("getLifeStyle...", obj);
-                if (obj.status == true) {
-
-                    let result = obj.result;
-
-                    if (result["smoking"] != null && result["smoking"] != "") {
-                        setLifeStyleDetails(prevState => ({ ...prevState, smoking: result["smoking"] }))
-                    }
-                    if (result["blood_group"] != null && result["blood_group"] != "") {
-                        setLifeStyleDetails(prevState => ({ ...prevState, bloodGroup: result["blood_group"] }))
-                    }
-                    if (result["food_preference"] != null && result["food_preference"] != '') {
-                        setLifeStyleDetails(prevState => ({ ...prevState, food: result["food_preference"] }))
-                    }
-                    if (result["alcohol"] != null && result["alcohol"] != '') {
-                        setLifeStyleDetails(prevState => ({ ...prevState, alcohol: result["alcohol"] }))
-                    }
-                    if (result["occupation"] != null && result["occupation"] != '') {
-                        setLifeStyleDetails(prevState => ({ ...prevState, occupation: result["occupation"] }))
-                    }
-                    if (result["activity_level"] != null && result["activity_level"] != '') {
-                        setLifeStyleDetails(prevState => ({ ...prevState, activity: result["activity_level"] }))
-                    }
-
-                } else {
-                    msgProvider.alert(
-                        LangProvider.information[languageIndex],
-                        obj.message[languageIndex],
-                        false
-                    );
-
-                    return false;
-                }
-            })
-            .catch((error) => {
-                console.log("getLifeStyle-error ------- " + error);
-            });
+        if (userProfile["smoking"] != null && userProfile["smoking"] != "") {
+            setLifeStyleDetails(prevState => ({ ...prevState, smoking: userProfile["smoking"] }))
+        }
+        if (userProfile["blood_group"] != null && userProfile["blood_group"] != "") {
+            setLifeStyleDetails(prevState => ({ ...prevState, bloodGroup: userProfile["blood_group"] }))
+        }
+        if (userProfile["food_preference"] != null && userProfile["food_preference"] != '') {
+            setLifeStyleDetails(prevState => ({ ...prevState, food: userProfile["food_preference"] }))
+        }
+        if (userProfile["alcohol"] != null && userProfile["alcohol"] != '') {
+            setLifeStyleDetails(prevState => ({ ...prevState, alcohol: userProfile["alcohol"] }))
+        }
+        if (userProfile["occupation"] != null && userProfile["occupation"] != '') {
+            setLifeStyleDetails(prevState => ({ ...prevState, occupation: userProfile["occupation"] }))
+        }
+        if (userProfile["activity_level"] != null && userProfile["activity_level"] != '') {
+            setLifeStyleDetails(prevState => ({ ...prevState, activity: userProfile["activity_level"] }))
+        }
     };
     return (
         <View
@@ -356,7 +334,7 @@ const LifeStyle = ({ navigation }) => {
                 contentContainerStyle={{
                     justifyContent: 'center',
                     paddingTop: vs(10),
-                    paddingBottom: vs(30),
+                    paddingBottom: vs(100),
                 }}
                 showsVerticalScrollIndicator={false}>
 
@@ -754,18 +732,29 @@ const LifeStyle = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <Button
-                        text={LangProvider.submitbtntext[languageIndex]}
-                        onPress={() => saveLifeStyle()}
-                        btnStyle={{ marginTop: vs(15) }}
-                        onLoading={lifeStyleDetails.isLoading}
-                    />
-
-
                 </View>
 
-
             </KeyboardAwareScrollView>
+
+            <View
+                style={{
+                    width: "100%",
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingHorizontal: s(13),
+                    backgroundColor: Colors.White,
+                    paddingTop: (windowWidth * 2) / 100,
+                    paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+                    alignItems: "center",
+                    borderTopWidth: 1,
+                    borderTopColor: Colors.Border,
+                }}>
+                <Button
+                    text={LangProvider.submitbtntext[languageIndex]}
+                    onPress={() => saveLifeStyle()}
+                    onLoading={lifeStyleDetails.isLoading}
+                />
+            </View>
 
             <ListBottomSheet
                 visible={lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup || lifeStyleDetails.bloodGroupPopup || lifeStyleDetails.activityPopup || lifeStyleDetails.foodPopup || lifeStyleDetails.occupationPopup}

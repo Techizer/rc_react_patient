@@ -43,6 +43,7 @@ import { useSelector } from "react-redux";
 import { AudioPlayer } from "../components/AudioPlayer";
 import NoInternet from "../components/NoInternet";
 import Loader from "../components/Loader";
+import { getISChatImplemented } from "../Provider/AppFunctions";
 
 
 export default AppointmentDetails = ({ navigation, route }) => {
@@ -70,6 +71,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     isScheduleagain: false,
     isPlay: false,
     isLoadingDetails: true,
+    isChat: false
   })
   const [isDownloading, setIsDownloading] = useState(false)
   const insets = useSafeAreaInsets()
@@ -84,12 +86,38 @@ export default AppointmentDetails = ({ navigation, route }) => {
   useEffect(() => {
     get_day();
   }, [classStateData.modalVisible])
+
   useEffect(() => {
     if (deviceConnection) {
       getAllDetails(0);
     }
   }, [deviceConnection])
 
+  useEffect(() => {
+    if (classStateData.appointmentDetails) {
+      if (getISChatImplemented(moment(classStateData.appointmentDetails.booking_date).valueOf())) {
+        setState({ isChat: true })
+      }
+    }
+  }, [classStateData.appointmentDetails])
+
+  useEffect(() => {
+    if (classStateData.appointmentDetails) {
+      var appointmentDate = moment(classStateData.appointmentDetails.app_date).format("YYYY-MM-DD");
+      var current = moment().startOf('day');
+
+      var date1 = moment(appointmentDate);
+      var date2 = new Date();
+      date2 = moment(date2).format("YYYY-MM-DD")
+      date2 = moment(date2)
+      // return
+      // Calculate the difference in days
+      var diffInDays = date2.diff(date1, 'days');
+
+      console.log(diffInDays); // Output: 45
+    }
+
+  }, [classStateData.appointmentDetails])
   const getAllDetails = async (page) => {
     let url = config.baseURL + "api-patient-appointment-details";
     var data = new FormData();
@@ -99,8 +127,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        console.log("getAllDetails....", obj);
-
+        // console.log("getAllDetails....", obj);
         if (obj.status == true) {
           setState(
             {
@@ -148,8 +175,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log("rescdule_click:....", JSON.stringify(obj));
-
+        // console.log("rescdule_click:....", JSON.stringify(obj));
         if (obj.status == true) {
           var current = new Date();
           let min =
@@ -273,7 +299,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
       .then((obj) => {
         setState({ isLoading: false })
         if (obj.status == true) {
-          console.log("obj.result", obj.result);
+          // console.log("obj.result", obj.result);
           if (
             classStateData.rescdule_data.slot_booking_id === "HOMEVISIT_BOOKING"
           ) {
@@ -751,7 +777,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
   const check_date = (item, index) => {
     let data = classStateData.date_array;
-    console.log("new data", data);
+    // console.log("new data", data);
 
     for (let i = 0; i < data.length; i++) {
       if (i == index) {
@@ -820,7 +846,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
       arr.push({ date1: date1, datenew: datenew, day: dayName, tick: tick });
     }
-    console.log(',,,,,,,,,,,,,,,,', arr);
     setState({ date_array: arr });
   };
 
@@ -2454,70 +2479,74 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
           {/* --------------------Chat----------------- */}
 
-          {/* <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SvgXml xml={Chat} />
-              <View style={{ marginLeft: s(10) }}>
+          {
+            ((item.acceptance_status == "Accepted" || item.acceptance_status == "Completed") && item.service_type == "Doctor" && classStateData.isChat) &&
+            <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <SvgXml xml={Chat} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate('Chat', { chatOptions: chatOptions })
+                  }}
+                  style={{ marginLeft: s(10) }}>
+                  <Text
+                    style={{
+                      fontSize: Font.small,
+                      fontFamily: Font.Medium,
+                      alignSelf: 'flex-start',
+                      color: Colors.detailTitles
+
+                    }}>{LangProvider.ChatNote[languageIndex]}</Text>
+                  <View
+                    style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
+                    <Text
+                      style={{
+                        fontSize: Font.small,
+                        fontFamily: Font.Regular,
+                        alignSelf: 'flex-start',
+                        color: Colors.Theme
+
+                      }}>{LangProvider.Chat[languageIndex]}</Text>
+                    <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
+
+                  </View>
+                </TouchableOpacity>
+
+              </View>
+              <View style={{ marginTop: vs(15) }}>
                 <Text
                   style={{
-                    fontSize: Font.small,
-                    fontFamily: Font.Medium,
+                    fontSize: Font.xsmall,
+                    fontFamily: Font.Regular,
                     alignSelf: 'flex-start',
-                    color: Colors.detailTitles
+                    color: Colors.lightGrey
 
-                  }}>{LangProvider.ChatNote[languageIndex]}</Text>
+                  }}>{LangProvider.ChatInit[languageIndex]}</Text>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   underlayColor={Colors.Highlight}
                   onPress={() => {
-                    navigation.navigate('Chat', { chatOptions: chatOptions })
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "DashboardStack" }],
+                    });
                   }}
                   style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
                   <Text
                     style={{
                       fontSize: Font.small,
-                      fontFamily: Font.Regular,
+                      fontFamily: Font.Medium,
                       alignSelf: 'flex-start',
                       color: Colors.Theme
 
-                    }}>{LangProvider.Chat[languageIndex]}</Text>
+                    }}>{LangProvider.BookNew[languageIndex]}</Text>
                   <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
 
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ marginTop: vs(15) }}>
-              <Text
-                style={{
-                  fontSize: Font.xsmall,
-                  fontFamily: Font.Regular,
-                  alignSelf: 'flex-start',
-                  color: Colors.lightGrey
-
-                }}>{LangProvider.ChatInit[languageIndex]}</Text>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                underlayColor={Colors.Highlight}
-                onPress={() => {
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "DashboardStack" }],
-                  });
-                }}
-                style={{ flexDirection: 'row', alignItems: 'center', marginTop: vs(3) }}>
-                <Text
-                  style={{
-                    fontSize: Font.small,
-                    fontFamily: Font.Medium,
-                    alignSelf: 'flex-start',
-                    color: Colors.Theme
-
-                  }}>{LangProvider.BookNew[languageIndex]}</Text>
-                <SvgXml xml={rightBlue} style={{ transform: [{ rotate: (languageIndex == 1) ? "180deg" : "0deg" }], marginLeft: s(6) }} height={vs(9)} width={s(5)} />
-
-              </TouchableOpacity>
-            </View>
-          </View> */}
+          }
 
           {/* --------------------Note----------------- */}
 

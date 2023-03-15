@@ -68,13 +68,15 @@ const ConsultIndex = ({ navigation, route }) => {
 
       <Tabs.Navigator
         initialRouteName={todayConsultations > 0 ? LangProvider.Ongoing[languageIndex] : LangProvider.Upcoming[languageIndex]}
+        // style={{ elevation: 0 }}
         screenOptions={{
-          tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
+          // tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
           tabBarScrollEnabled: true,
           tabBarActiveTintColor: Colors.Theme,
           tabBarInactiveTintColor: Colors.lightGrey,
           tabBarIndicatorContainerStyle: {
+            backgroundColor: Colors.tabsBackground,
             height: '100%',
             borderWidth: 0
             // marginTop:vs(7)

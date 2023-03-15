@@ -152,7 +152,7 @@ const MainStack = () => {
 
 
         messaging().onMessage(async (remoteMessage) => {
-            console.log("Notification msg****", JSON.stringify(remoteMessage));
+            console.log("Notification msg****",remoteMessage);
             if (remoteMessage.data?.type == "Logout") {
                 Logout();
             }
@@ -233,6 +233,7 @@ const MainStack = () => {
         data.append("user_id", loggedInUserDetails?.user_id);
         data.append("fcm_token", deviceToken);
 
+        console.log(data);
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
                 // console.log("logout response", obj);

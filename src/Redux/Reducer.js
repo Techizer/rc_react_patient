@@ -24,7 +24,8 @@ import {
     CART,
     TABBY_PAYMENT,
     LANGUAGE_UPDATED,
-    CURRENT_ROUTE
+    CURRENT_ROUTE,
+    USER_PROFILE
 } from './Types';
 
 const initialState = {
@@ -49,8 +50,9 @@ const initialState = {
     todayConsultations: 0,
     todayLabTests: 0,
     selectedProvider: null,
-    cart: -1,
+    cartTime: 0,
     tabbyPayment: false,
+    userProfile: null,
     isLanguageUpdated: false,
     currentRoute: ''
 };
@@ -72,7 +74,9 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 rememberMe: state.rememberMe,
                 languageIndex: state.languageIndex,
                 isLanguageUpdated: state.isLanguageUpdated,
-                deviceConnection: state.deviceConnection
+                deviceConnection: state.deviceConnection,
+                loggedInUserDetails: state.loggedInUserDetails,
+                selectedProvider: state.selectedProvider
             }
         case CURRENT_ROUTE:
             return {
@@ -87,7 +91,7 @@ export const ReducerCases = (state = initialState, action = {}) => {
         case CART:
             return {
                 ...state,
-                cart: action.payload,
+                cartTime: action.payload,
             };
         case NOTI_COUNT:
             return {
@@ -198,6 +202,11 @@ export const ReducerCases = (state = initialState, action = {}) => {
             return {
                 ...state,
                 tabbyPayment: action.payload,
+            };
+        case USER_PROFILE:
+            return {
+                ...state,
+                userProfile: action.payload,
             };
         default:
             return state;

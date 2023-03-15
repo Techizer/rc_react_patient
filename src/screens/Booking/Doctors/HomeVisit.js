@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { TabbyProductSnippetCreditCard } from 'tabby-react-native-sdk';
 import { SkypeIndicator } from "react-native-indicators";
 import { SvgXml } from "react-native-svg";
 import { dummyUser, GoldStar } from "../../../Icons/Index";
@@ -54,7 +55,7 @@ const HomeVisit = ({ navigation }) => {
     selectedTime: "",
     vatPrice: "",
     totalPrice: "",
-    currency_symbol: loggedInUserDetails.currency_symbol,
+    currency_symbol: loggedInUserDetails?.currency_symbol,
     subTotal: '',
     check_currentdate: '',
     date_array: [],
@@ -103,7 +104,7 @@ const HomeVisit = ({ navigation }) => {
       selectedTime: "",
       vatPrice: "",
       totalPrice: "",
-      currency_symbol: loggedInUserDetails.currency_symbol,
+      currency_symbol: loggedInUserDetails?.currency_symbol,
       subTotal: '',
       check_currentdate: '',
       date_array: [],
@@ -1263,6 +1264,15 @@ const HomeVisit = ({ navigation }) => {
             </View>
           </View>
 
+          {/* ----------------Promo------------------- */}
+
+          <TabbyProductSnippetCreditCard
+            lang={languageIndex == 0 ? 'en' : "ar"}
+            currency={loggedInUserDetails.currency_symbol}
+            price={statesData.totalPrice}
+            containerStyle={{ marginTop: vs(7) }}
+          />
+
           {/* Payment section */}
           <View
             style={{
@@ -1286,6 +1296,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderBottomWidth: 1.5,
@@ -1314,6 +1325,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 // borderTopWidth: 1.5,
@@ -1342,6 +1354,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1368,6 +1381,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
+                alignItems:'center',
                 justifyContent: "space-between",
                 borderColor: Colors.bordercolor,
                 marginBottom: (windowWidth * 2) / 100,

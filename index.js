@@ -17,16 +17,16 @@ import FlashMessage from "react-native-flash-message";
 import { Font } from './src/Provider/Colorsfont';
 import { config, StatusbarHeight, windowWidth } from './src/Provider/Utils/Utils';
 
-Sentry.init({
-    dsn: "https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776",
-    // enableNative: false,
-    tracesSampleRate: 1.0,
-    integrations: [
-        new Sentry.ReactNativeTracing({
-            tracingOrigins: ["localhost", config.baseURL, /^\//],
-        }),
-    ],
-});
+// Sentry.init({
+//     dsn: "https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776",
+//     // enableNative: false,
+//     tracesSampleRate: 1.0,
+//     integrations: [
+//         new Sentry.ReactNativeTracing({
+//             tracingOrigins: ["localhost", config.baseURL, /^\//],
+//         }),
+//     ],
+// });
 Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
 // Settings.setAppID('386042973026214');
 

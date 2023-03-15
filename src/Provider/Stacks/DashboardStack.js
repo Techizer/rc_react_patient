@@ -21,7 +21,6 @@ import { config } from "../configProvider";
 import { vs } from "react-native-size-matters";
 import { apifuntion } from "../APIProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { TodaysAppointments, TodaysConsultations, TodaysLabTests } from "../../Redux/Actions";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -74,89 +73,7 @@ const DashboardStack = ({ navigation }) => {
   const { loggedInUserDetails, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
 
-  const getAppointments = async () => {
-
-    let url = config.baseURL + "api-patient-today-appointment";
-
-    var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
-    data.append("service_type", 'all');
-    data.append("page_count", 1);
-
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("getAppointments-response...", obj);
-        if (obj.status == true) {
-          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
-            console.log('m,m,m,m,m,m,,m,m,m,m,m,m,m,');
-            dispatch(TodaysAppointments(obj?.result.length))
-          } else {
-            dispatch(TodaysAppointments(0))
-          }
-        } else {
-          dispatch(TodaysAppointments(0))
-          return false;
-        }
-      }).catch((error) => {
-        dispatch(TodaysAppointments(0))
-        console.log("getAppointments-error ------- " + error);
-      });
-  };
-
-  const getConsultations = async () => {
-    let url = config.baseURL + "api-patient-today-appointment";
-    var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
-    data.append("service_type", 'doctor');
-    data.append("page_count", 1);
-
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("getConsultations-response...", obj);
-        if (obj.status == true) {
-          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
-            dispatch(TodaysConsultations(obj?.result.length))
-          } else {
-            dispatch(TodaysConsultations(0))
-          }
-        } else {
-          dispatch(TodaysConsultations(0))
-          return false;
-        }
-      }).catch((error) => {
-        dispatch(TodaysConsultations(0))
-        console.log("getConsultations-error ------- " + error);
-      });
-  };
-
-  const getTests = async () => {
-    let url = config.baseURL + "api-patient-today-appointment";
-    var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
-    data.append("service_type", 'lab');
-    data.append("page_count", 1);
-
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("getTests-response...", obj);
-        if (obj.status == true) {
-          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
-            dispatch(TodaysLabTests(obj?.result.length))
-          } else {
-            dispatch(TodaysLabTests(0))
-          }
-        } else {
-          dispatch(TodaysLabTests(0))
-          return false;
-        }
-      }).catch((error) => {
-        dispatch(TodaysLabTests(0))
-        console.log("getTests-error ------- " + error);
-      });
-  };
+  
 
   const handleBackPress = (index, type = 'add', isDone = false) => {
     console.log({ index });
@@ -208,14 +125,6 @@ const DashboardStack = ({ navigation }) => {
   //   }
   //   );
   // }, [])
-
-  useEffect(() => {
-    if (loggedInUserDetails != null) {
-      getAppointments()
-      getConsultations()
-      getTests()
-    }
-  }, [])
 
   return (
     <Tab.Navigator

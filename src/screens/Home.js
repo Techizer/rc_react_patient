@@ -22,8 +22,8 @@ import {
   apifuntion,
   msgProvider,
 } from "../Provider/Utils/Utils";
-import { BlurView } from "@react-native-community/blur";
-
+import { useFocusEffect } from '@react-navigation/native';
+import { TabbyProductSnippetCreditCard,TabbySplititSnippet } from 'tabby-react-native-sdk';
 import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/Utils/Utils";
 import Styles from "../Styles";
@@ -31,7 +31,7 @@ import BannerCrousel from "../components/BannerCrousel";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { CurrentRoute, IsLanguageUpdated, Notifications } from "../Redux/Actions";
+import { CurrentRoute, IsLanguageUpdated, Notifications, TodaysAppointments, TodaysConsultations, TodaysLabTests, UserProfile } from "../Redux/Actions";
 import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AudioPlayer } from "../components/AudioPlayer";
@@ -137,30 +137,134 @@ const Home = ({ navigation }) => {
     isLoadingDetails: true
   })
   const isFocused = useIsFocused()
-
-
-
   useEffect(() => {
-    // console.log(address.address);
-    // console.log(loggedInUserDetails);
-    // console.log(isLanguageUpdated);
-    // console.log({deviceConnection});
-    // dispatch(CurrentRoute('HomeDrawer'))
-    setTimeout(() => {
-      setHomeData(prevState => ({
-        ...prevState,
-        isLoadingDetails: false
-      }))
-    }, 1000);
-    if (guest == false && deviceConnection) {
-      getNotificationCount();
-      getTopBanners()
-      CartId()
-    }
-    if (isLanguageUpdated && deviceConnection) {
-      UpdateLanguage()
+    if (isFocused) {
+      setTimeout(() => {
+        setHomeData(prevState => ({
+          ...prevState,
+          isLoadingDetails: false
+        }))
+      }, 1000);
+      if (!guest) {
+        if (deviceConnection) {
+          getAppointments()
+          getConsultations()
+          getTests()
+          getNotificationCount();
+          getTopBanners()
+          CartId()
+          getProfile()
+          if (isLanguageUpdated) {
+            UpdateLanguage()
+          }
+        }
+      }
     }
   }, [deviceConnection])
+
+
+  const getAppointments = async () => {
+    let url = config.baseURL + "api-patient-today-appointment";
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'all');
+    data.append("page_count", 1);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // console.log("getAppointments-response...", obj);
+        if (obj.status == true) {
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            dispatch(TodaysAppointments(obj?.result.length))
+          } else {
+            dispatch(TodaysAppointments(0))
+          }
+        } else {
+          dispatch(TodaysAppointments(0))
+          return false;
+        }
+      }).catch((error) => {
+        dispatch(TodaysAppointments(0))
+        console.log("getAppointments-error ------- " + error);
+      });
+  };
+
+  const getConsultations = async () => {
+    let url = config.baseURL + "api-patient-today-appointment";
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'doctor');
+    data.append("page_count", 1);
+
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // console.log("getConsultations-response...", obj);
+        if (obj.status == true) {
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            dispatch(TodaysConsultations(obj?.result.length))
+          } else {
+            dispatch(TodaysConsultations(0))
+          }
+        } else {
+          dispatch(TodaysConsultations(0))
+          return false;
+        }
+      }).catch((error) => {
+        dispatch(TodaysConsultations(0))
+        console.log("getConsultations-error ------- " + error);
+      });
+  };
+
+  const getTests = async () => {
+    let url = config.baseURL + "api-patient-today-appointment";
+    var data = new FormData();
+    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("service_type", 'lab');
+    data.append("page_count", 1);
+    apifuntion
+      .postApi(url, data, 1)
+      .then((obj) => {
+        // console.log("getTests-response...", obj);
+        if (obj.status == true) {
+          if (obj.result != null && obj.result.length > 0 && obj.result.length > 1) {
+            dispatch(TodaysLabTests(obj?.result.length))
+          } else {
+            dispatch(TodaysLabTests(0))
+          }
+        } else {
+          dispatch(TodaysLabTests(0))
+          return false;
+        }
+      }).catch((error) => {
+        dispatch(TodaysLabTests(0))
+        console.log("getTests-error ------- " + error);
+      });
+  };
+
+  const getProfile = async () => {
+    let url = config.baseURL + "api-patient-profile";
+    var data = new FormData();
+    data.append("user_id", loggedInUserDetails.user_id);
+
+    apifuntion.postApi(url, data)
+      .then((obj) => {
+        // console.log("getProfile...", obj);
+        if (obj.status == true) {
+          dispatch(UserProfile(obj?.result))
+        } else {
+          msgProvider.alert(
+            LangProvider.information[languageIndex],
+            obj.message[languageIndex],
+            false
+          );
+          return false;
+        }
+      }).catch((error) => {
+        console.log("getProfile-error ------- " + error);
+      });
+  };
 
   const CartId = async () => {
     let Id = await AsyncStorage.getItem('cartId')
@@ -267,7 +371,7 @@ const Home = ({ navigation }) => {
           rightIcon={!guest}
           defaultAddress={address?.address}
         />
-      
+
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, backgroundColor: Colors.backgroundcolor, paddingBottom: Platform.OS === 'ios' ? vs(80) : vs(70) }}
           showsVerticalScrollIndicator={false}
@@ -446,7 +550,7 @@ const Home = ({ navigation }) => {
 
 
             {/* FlatList 3 */}
-            <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), marginBottom: vs(30) }}>
+            <View style={{ paddingHorizontal: s(12), marginTop: vs(7), width: '100%', backgroundColor: Colors.White, justifyContent: 'center', paddingVertical: vs(9), }}>
               <Text style={{
                 fontSize: Font.medium,
                 fontFamily: Font.Medium,
@@ -578,6 +682,21 @@ const Home = ({ navigation }) => {
             </View>
 
           </View>
+
+          {/* ----------------Promo------------------- */}
+          <TabbyProductSnippetCreditCard
+            lang={languageIndex == 0 ? 'en' : "ar"}
+            currency={loggedInUserDetails.currency_symbol}
+            price={'0'}
+            containerStyle={{ marginBottom: vs(30), marginTop: vs(7) }}
+          />
+
+          {/* <TabbySplititSnippet
+            currency="SAR"
+            // price="6000"
+            lang="en"
+            containerStyle={{ marginBottom: vs(30), marginTop: vs(7) }}
+          /> */}
         </ScrollView>
 
         <NoInternet

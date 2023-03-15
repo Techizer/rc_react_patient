@@ -573,6 +573,7 @@ export const Icons = {
   Cart: require("./cart.png"),
   Emptycart: require("./emptyCart.png"),
   mic: require("./record.png"),
+  Mic: require("./mic.png"),
   cross: require("./cross.png"),
   search: require("./search.png"),
   search2: require("./searchTwo.png"),
@@ -589,7 +590,7 @@ export const Icons = {
   needsupportimg: require("./support.png"),
   arabic_call: require("./arabicCall.png"),
   purse_arbic: require("./arabicWallet.png"),
-
+ 
   Tick: require('./tick.png'),
   Notification: require('./notification.png'),
   Add: require('./add.png'),
@@ -598,9 +599,14 @@ export const Icons = {
   fillStar: require('./fillStar.png'),
   outlineStar: require('./outlineStar.png'),
   Attachment: require('./attachment.png'),
+  Camera: require('./camera.png'),
+  Audio: require('./audio.png'),
+  Document: require('./document.png'),
+  Gallery: require('./gallery.png'),
   currentLoc: require('./locationCurrent.png'),
   Success: require("./success.png"),
   call: require("./phoneCall.png"),
-  Connect: require('./plug.jpg')
+  Connect: require('./plug.jpg'),
+  Pdf: require('./pdf.png'),
 
 };

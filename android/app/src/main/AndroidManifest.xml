@@ -65,6 +65,7 @@
 
         </activity>
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_gj9QxU2L4grOhDb89xQdwfkkBul8VJtL" />
+        <!-- <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notification" /> -->
         <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_foreground"
             android:value="false" />

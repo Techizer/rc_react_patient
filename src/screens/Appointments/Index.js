@@ -29,9 +29,9 @@ const Tabs = createMaterialTopTabNavigator()
 const AppoitmentIndex = ({ navigation, route }) => {
 
 
-  const { todayAppointments, appLanguage, languageIndex, deviceConnection,guest } = useSelector(state => state.StorageReducer)
+  const { todayAppointments, appLanguage, languageIndex, deviceConnection, guest } = useSelector(state => state.StorageReducer)
 
-  console.log({todayAppointments});
+  console.log({ todayAppointments });
   const insets = useSafeAreaInsets()
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -70,14 +70,15 @@ const AppoitmentIndex = ({ navigation, route }) => {
 
 
       <Tabs.Navigator
-        initialRouteName={ todayAppointments > 0 ? LangProvider.Ongoing[languageIndex] : LangProvider.Upcoming[languageIndex]}
+        initialRouteName={todayAppointments > 0 ? LangProvider.Ongoing[languageIndex] : LangProvider.Upcoming[languageIndex]}
         screenOptions={{
-          tabBarStyle: {  width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
+          // tabBarStyle: { width: '100%', backgroundColor: Colors.backgroundcolor, borderWidth: 0, },
           tabBarItemStyle: { width: windowWidth / 3, },
           tabBarScrollEnabled: true,
           tabBarActiveTintColor: Colors.Theme,
           tabBarInactiveTintColor: Colors.lightGrey,
           tabBarIndicatorContainerStyle: {
+            backgroundColor: Colors.tabsBackground,
             height: '100%',
             borderWidth: 0
             // marginTop:vs(7)
@@ -100,7 +101,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
 
 
 
-     
+
 
     </View>
   );
