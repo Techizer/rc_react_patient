@@ -111,12 +111,17 @@ const AppointmentContainer = ({
         let tempArr = []
         if (Item?.acceptance_status === 'Accepted') {
             if ((Item?.otp != null && Item?.otp != '')) {
-                let OTP = Item?.otp?.split('')
+                let OTP = Item?.otp
+                // console.log(OTP)
+                if (languageIndex == 1) {
+                    OTP = OTP.split("").reverse().join("");
+                }
+                console.log({OTP})
+                OTP = OTP?.split('')
                 for (let index = 0; index < Item?.otp.length; index++) {
                     tempArr.push(OTP[index])
                 }
                 setOtp(tempArr)
-                // console.log(tempArr);
             }
         }
     }
