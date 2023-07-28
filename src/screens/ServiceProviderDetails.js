@@ -82,7 +82,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
     } else {
       data.append("id", userId);
-      data.append("login_user_id", loggedInUserDetails.user_id);
+      data.append("login_user_id", loggedInUserDetails?.user_id);
       data.append("service_type", providerType);
       data.append("work_area", loggedInUserDetails.work_area);
     }
@@ -153,7 +153,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
     } else {
       data.append("id", providerId);
-      data.append("login_user_id", loggedInUserDetails.user_id);
+      data.append("login_user_id", loggedInUserDetails?.user_id);
       data.append("service_type", providerType);
       data.append("work_area", loggedInUserDetails.work_area);
     }

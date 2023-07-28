@@ -1,58 +1,31 @@
 import { Alert } from "react-native";
-import Toast from 'react-native-simple-toast';
-import { showMessage } from "react-native-flash-message";
-import { Font } from './Utils/Utils';
+import Toast from 'react-native-toast-message';
+import { Font, StatusbarHeight, windowHeight } from './Utils/Utils';
 import { LangProvider } from "./Utils/Utils";
 class messageFunctionsProviders {
 	showError = (message) => {
-		showMessage({
-			message: message, //"SORRY!",
-			description: "",
-			type: "danger",
-			//color: '#000000',
-			backgroundColor: 'red',
-			duration: 4000,
-			titleStyle: {
-				fontFamily: Font.Regular,
-				fontSize: Font.xlarge 
-			},
-			textStyle: {
-				fontFamily: Font.Regular,
-				fontSize: Font.xlarge
-			}
+		Toast.show({
+			type: 'error',
+			text1: 'Alert!',
+			text2: message,
+			position: 'top',
+			topOffset	:StatusbarHeight + windowHeight/25
+
 		});
+
 	}
 
 	showSuccess = (message, duration = 4000) => {
-		showMessage({
-			message: message,
-			description: "",
-			type: "success",
-			//color: '#000000',
-			backgroundColor: '#71AC2B', //'#006400', //'#228B22',
-			duration: duration,
-			titleStyle: {
-				fontFamily: Font.Regular,
-				fontSize: Font.medium
-			}
+		Toast.show({
+			type: 'success',
+			text1: 'Congratulations!',
+			text2: message,
+			position: 'top',
+			topOffset	:StatusbarHeight + windowHeight/25
 		});
 	}
-	toast(message, position) {
-		if (position == 'center') {
-			Toast.showWithGravity(message, Toast.SHORT, Toast.CENTER);
-		}
-		else if (position == 'top') {
-			Toast.showWithGravity(message, Toast.SHORT, Toast.TOP);
-		}
-		else if (position == 'bottom') {
-			Toast.showWithGravity(message, Toast.SHORT, Toast.BOTTOM);
 
-		}
-		else if (position == 'long') {
-			Toast.showWithGravity(message, Toast.LONG, Toast.CENTER);
-		}
 
-	}
 
 	alert(title, message, callback) {
 		if (callback === false) {

@@ -24,7 +24,10 @@ import {
     TABBY_PAYMENT,
     LANGUAGE_UPDATED,
     CURRENT_ROUTE,
-    USER_PROFILE
+    USER_PROFILE,
+    APP_STATE,
+    VIDEO_CALL,
+    VIDEO_CALL_DATA
 } from './Types'
 
 const Guest = (payload) => ({
@@ -117,7 +120,7 @@ const InternetStatus = (payload) => ({
     payload
 })
 
-const Notifications = (payload) => ({
+const UnReadNotifications = (payload) => ({
     type: NOTI_COUNT,
     payload
 })
@@ -167,6 +170,22 @@ const UserProfile = (payload) => ({
     payload
 })
 
+const setAppState = payload => ({
+    type: APP_STATE,
+    payload
+})
+
+
+const setVideoCall = payload => ({
+    type: VIDEO_CALL,
+    payload
+})
+
+const setVideoCallData = payload => ({
+    type: VIDEO_CALL_DATA,
+    payload
+})
+
 export {
     Guest,
     UserDetails,
@@ -186,7 +205,7 @@ export {
     RememberMe,
     Restart,
     onLogout,
-    Notifications,
+    UnReadNotifications,
     TodaysAppointments,
     TodaysConsultations,
     TodaysLabTests,
@@ -194,5 +213,8 @@ export {
     CartTime,
     TabbyPaymentStatus,
     UserProfile,
-    CurrentRoute
+    CurrentRoute,
+    setAppState,
+    setVideoCall,
+    setVideoCallData
 }

@@ -10,16 +10,12 @@ import { AppLanguage, ContentAlign, DeviceConnection, LanguageIndex, Restart } f
 import NoInternet from "./src/components/NoInternet";
 
 import * as Sentry from '@sentry/react-native';
-
-Sentry.init({ 
-  dsn: 'https://1c13f9143d964a7b9615a947ac616d4f@o4504395052482560.ingest.sentry.io/4504592054091776', 
-});
-
+import VideoCall from "./src/components/VideoCall";
 
 console.reportErrorsAsExceptions = false;
 
 const App = () => {
-  const { appLanguage, restart, deviceConnection } = useSelector(state => state.StorageReducer)
+  const { appLanguage, restart, deviceConnection, isVideoCall } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(Restart(false))
@@ -116,7 +112,12 @@ const App = () => {
       :
       <>
         <MainStack />
-
+        {
+          isVideoCall &&
+          <VideoCall
+            isVisible={isVideoCall}
+          />
+        }
         {/* <NoInternet
           visible={!deviceConnection}
         /> */}

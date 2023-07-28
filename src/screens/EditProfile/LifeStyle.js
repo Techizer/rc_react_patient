@@ -231,10 +231,7 @@ const LifeStyle = ({ navigation }) => {
 
     const saveLifeStyle = async () => {
         Keyboard.dismiss()
-        setLifeStyleDetails(prevState => ({
-            ...prevState,
-            isLoading: true
-        }))
+       
 
         if (lifeStyleDetails.smoking === '') {
             msgProvider.showError(LangProvider.smoking_msg[languageIndex]);
@@ -261,10 +258,14 @@ const LifeStyle = ({ navigation }) => {
             return false;
         }
 
+        setLifeStyleDetails(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         let url = config.baseURL + "api-edit-patient-profile-style";
 
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("user_id", loggedInUserDetails?.user_id);
         data.append("smoking", lifeStyleDetails.smoking);
         data.append("alcohol", lifeStyleDetails.alcohol);
         data.append("blood_group", lifeStyleDetails.bloodGroup);

@@ -34,8 +34,9 @@ import { SvgXml } from "react-native-svg";
 import { Cross, VideoCall, whiteStar } from "../Icons/Index";
 import RatingBottomSheet from "./RatingBottomSheet";
 import StarRating from "react-native-star-rating";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { setVideoCall, setVideoCallData } from "../Redux/Actions";
 
 var videoCallButton = false;
 
@@ -47,6 +48,7 @@ const AppointmentContainer = ({
     isLoading
 }) => {
     const { loggedInUserDetails, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+    const dispatch = useDispatch()
     // console.log('/./././', Item);
     const [otp, setOtp] = useState([])
     const [rescheduleData, setRescheduleData] = useState({
@@ -90,7 +92,7 @@ const AppointmentContainer = ({
     }
 
     useEffect(() => {
-        // console.log('**********************', rescheduleData.final_one);
+        // console.log('**********************', Item.appointment_type);
         getDay()
     }, [rescheduleData.isRescheduleModal])
 
@@ -116,7 +118,6 @@ const AppointmentContainer = ({
                 if (languageIndex == 1) {
                     OTP = OTP.split("").reverse().join("");
                 }
-                console.log({OTP})
                 OTP = OTP?.split('')
                 for (let index = 0; index < Item?.otp.length; index++) {
                     tempArr.push(OTP[index])
@@ -140,7 +141,7 @@ const AppointmentContainer = ({
         let url = config.baseURL + (type == 'doctor' ? "api-patient-doctor-reschedule-appointment" : type == 'lab' ? "api-patient-lab-reschedule-appointment" : "api-patient-reschedule-appointment");
 
         var data = new FormData();
-        data.append("login_user_id", loggedInUserDetails.user_id);
+        data.append("login_user_id", loggedInUserDetails?.user_id);
         data.append("order_id", Id);
         data.append("service_type", type);
         if (type === 'lab') {
@@ -852,7 +853,7 @@ const AppointmentContainer = ({
     const rateProvider = async () => {
         let url = config.baseURL + "api-patient-insert-review";
         var data = new FormData();
-        data.append("lgoin_user_id", loggedInUserDetails.user_id);
+        data.append("lgoin_user_id", loggedInUserDetails?.user_id);
         data.append("service_type", Item?.provider_type);
         data.append("order_id", Item?.order_id);
         data.append("rating", ratingData.rating);
@@ -889,6 +890,8 @@ const AppointmentContainer = ({
                 console.log("rateProvider-error ------- " + error);
             });
     };
+
+
     return (
 
         isLoading ?
@@ -999,7 +1002,7 @@ const AppointmentContainer = ({
                         backgroundColor: Colors.White,
                         width: '100%',
                         paddingHorizontal: s(11),
-                        paddingVertical: vs(9)
+                        paddingVertical: vs(9),
                     }}>
                     {/* --------------------------- */}
                     <View
@@ -1318,9 +1321,9 @@ const AppointmentContainer = ({
                             <View style={{
                                 flexDirection: "row",
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
-                                width: Item?.dispaly_provider_type === 'Doctor' ? '100%' : "83%",
+                                width: Item?.dispaly_provider_type === LangProvider.Doctor[languageIndex] ? '100%' : "83%",
                                 marginTop: vs(7),
+                                justifyContent: 'space-between'
                             }}>
                                 <View>
                                     <Text
@@ -1358,71 +1361,85 @@ const AppointmentContainer = ({
 
 
                                 {
-                                    (Item?.dispaly_provider_type != 'Doctor' && Item?.dispaly_provider_type != 'Lab') &&
-                                    <View style={{}}>
-                                        {Item?.acceptance_status === 'Accepted' ?
-                                            <View
-                                                style={{
-                                                    paddingHorizontal: s(8),
-                                                    paddingVertical: vs(4),
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center'
-                                                }} >
+                                    (Item?.dispaly_provider_type != LangProvider.Doctor[languageIndex]
+                                        &&
+                                        Item?.dispaly_provider_type != LangProvider.Lab[languageIndex]
+                                        &&
+                                        Item?.acceptance_status === 'Accepted') &&
 
-                                                <Text
-                                                    style={{
-                                                        fontSize: Font.small,
-                                                        fontFamily: Font.Regular,
-                                                        color: Colors.Black
-                                                    }}
-                                                >{'OTP'}</Text>
+                                    <View
+                                        style={{
+                                            paddingHorizontal: s(8),
+                                            paddingVertical: vs(4),
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            width: '40%',
 
-                                                <FlatList
-                                                    horizontal
-                                                    data={otp}
-                                                    renderItem={({ item, index }) => {
-                                                        return (
-                                                            <View style={{
-                                                                height: 18,
-                                                                width: 18,
-                                                                borderRadius: 2,
-                                                                backgroundColor: Colors.detailTitles,
-                                                                justifyContent: 'center',
-                                                                alignItems: 'center'
-                                                            }}>
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize: Font.medium,
-                                                                        fontFamily: Font.SemiBold,
-                                                                        color: Colors.White
-                                                                    }}
-                                                                >{item}</Text>
-                                                            </View>
-                                                        )
-                                                    }}
-                                                    ItemSeparatorComponent={() => {
-                                                        return (
-                                                            <View style={{ width: s(3) }}></View>
-                                                        )
-                                                    }}
-                                                    contentContainerStyle={{ paddingHorizontal: s(5), }}
-                                                />
-                                            </View>
-                                            :
-                                            null
-                                        }
+                                        }} >
+
+                                        <Text
+                                            style={{
+                                                fontSize: Font.small,
+                                                fontFamily: Font.Regular,
+                                                color: Colors.Black
+                                            }}
+                                        >{'OTP'}</Text>
+
+                                        <FlatList
+                                            horizontal
+                                            data={otp}
+                                            renderItem={({ item, index }) => {
+                                                return (
+                                                    <View style={{
+                                                        height: 18,
+                                                        width: 18,
+                                                        borderRadius: 2,
+                                                        backgroundColor: Colors.detailTitles,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: Font.medium,
+                                                                fontFamily: Font.SemiBold,
+                                                                color: Colors.White
+                                                            }}
+                                                        >{item}</Text>
+                                                    </View>
+                                                )
+                                            }}
+                                            ItemSeparatorComponent={() => {
+                                                return (
+                                                    <View style={{ width: s(3) }}></View>
+                                                )
+                                            }}
+                                            contentContainerStyle={{ paddingHorizontal: s(5), }}
+                                        />
                                     </View>
+
                                 }
 
                                 {
-                                    (Item?.dispaly_provider_type === 'Doctor' && Item.appointment_type == "Online consultation" && Item.acceptance_status === 'Accepted' && Item.videoCall == true) &&
+                                    (Item?.dispaly_provider_type == LangProvider.Doctor[languageIndex] && Item.appointment_type == LangProvider.OnlineConsultation[languageIndex] && Item.acceptance_status === 'Accepted' && Item.videoCall == true) &&
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
-                                            navigation.navigate(
-                                                "VideoCall",
-                                                { item: Item }
-                                            );
+                                            var videoDetails = {
+                                                fromUserId: loggedInUserDetails?.user_id,
+                                                fromUserName: loggedInUserDetails?.first_name,
+                                                order_id: Item?.order_id,
+                                                room_name: "rootvideo_room_" + loggedInUserDetails?.user_id + "_" + Item?.provider_id,
+                                                toUserId: Item?.provider_id,
+                                                toUserName: Item?.provider_name,
+                                                type: 'patient_to_doctor_video_call',
+                                                image: '',
+                                                isPage: "outGoing",
+                                            };
+
+                                            dispatch(setVideoCallData(videoDetails))
+                                            setTimeout(() => {
+                                              dispatch(setVideoCall(true))
+                                            }, 500);
                                         }}
                                         style={{
                                             paddingHorizontal: s(8),

@@ -31,7 +31,7 @@ import BannerCrousel from "../components/BannerCrousel";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { CurrentRoute, IsLanguageUpdated, Notifications, TodaysAppointments, TodaysConsultations, TodaysLabTests, UserProfile } from "../Redux/Actions";
+import { CurrentRoute, IsLanguageUpdated, UnReadNotifications, TodaysAppointments, TodaysConsultations, TodaysLabTests, UserProfile } from "../Redux/Actions";
 import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AudioPlayer } from "../components/AudioPlayer";
@@ -166,7 +166,7 @@ const Home = ({ navigation }) => {
   const getAppointments = async () => {
     let url = config.baseURL + "api-patient-today-appointment";
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", 'all');
     data.append("page_count", 1);
 
@@ -193,7 +193,7 @@ const Home = ({ navigation }) => {
   const getConsultations = async () => {
     let url = config.baseURL + "api-patient-today-appointment";
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", 'doctor');
     data.append("page_count", 1);
 
@@ -220,7 +220,7 @@ const Home = ({ navigation }) => {
   const getTests = async () => {
     let url = config.baseURL + "api-patient-today-appointment";
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", 'lab');
     data.append("page_count", 1);
     apifuntion
@@ -246,7 +246,7 @@ const Home = ({ navigation }) => {
   const getProfile = async () => {
     let url = config.baseURL + "api-patient-profile";
     var data = new FormData();
-    data.append("user_id", loggedInUserDetails.user_id);
+    data.append("user_id", loggedInUserDetails?.user_id);
 
     apifuntion.postApi(url, data)
       .then((obj) => {
@@ -298,7 +298,7 @@ const Home = ({ navigation }) => {
 
     let url = config.baseURL + "api-patient-dashboard";
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
 
     apifuntion.postApi(url, data, 1)
       .then((obj) => {
@@ -320,14 +320,14 @@ const Home = ({ navigation }) => {
 
     let url = config.baseURL + "api-notification-count";
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
 
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
         // console.log("getNotificationCount-response", obj);
         if (obj.status == true) {
-          dispatch(Notifications(obj?.result))
+          dispatch(UnReadNotifications(obj?.result))
         } else {
           return false;
         }
@@ -340,7 +340,7 @@ const Home = ({ navigation }) => {
   const UpdateLanguage = async (language) => {
     let url = config.baseURL + "api-language-update";
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     console.log(data);
     apifuntion

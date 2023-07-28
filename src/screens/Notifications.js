@@ -19,16 +19,18 @@ import {
   Icons,
   LangProvider,
   apifuntion,
-  ScreenHeader
+  ScreenHeader,
+  msgProvider
 } from "../Provider/Utils/Utils";
 import { leftArrow } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoInternet from "../components/NoInternet";
+import { UnReadNotifications } from "../Redux/Actions";
 
 const Notifications = ({ navigation }) => {
 
-  const { loggedInUserDetails, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection, contentAlign } = useSelector(state => state.StorageReducer)
 
   const [statesData, setStatesData] = useState({
     isLoading: true,
@@ -37,7 +39,9 @@ const Notifications = ({ navigation }) => {
     modalVisible: false,
     body_name: "",
     message: "",
+    isReadAll: true
   })
+  const dispatch=useDispatch()
   const insets = useSafeAreaInsets()
 
   const setState = payload => {
@@ -49,7 +53,7 @@ const Notifications = ({ navigation }) => {
 
   useEffect(() => {
     if (deviceConnection) {
-      get_notification()
+      get_notification(1)
     }
   }, [deviceConnection])
 
@@ -59,22 +63,34 @@ const Notifications = ({ navigation }) => {
     let url = config.baseURL + apishow;
 
     var data = new FormData();
-    data.append("id", loggedInUserDetails.user_id);
+    data.append("id", loggedInUserDetails?.user_id);
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
 
         if (obj.status == true) {
-          setState({ notificationdata: obj.result, message: obj.message, isLoading: false });
+          setState({ notificationdata: obj.result, message: obj.message });
+          if (obj.result && obj.result.length > 0) {
+            for (const iterator of obj.result) {
+              if (iterator.read == '0') {
+                console.log('unread');
+                setState({ isReadAll: false })
+                return
+              }
+            }
+          } else {
+            setState({ isReadAll: false })
+          }
         } else {
-          setState({ notificationdata: obj.result, message: obj.message, isLoading: false });
+          setState({ notificationdata: obj.result, message: obj.message});
           return false;
         }
-      })
-      .catch((error) => {
+      }).catch((error) => {
         setState({ notificationdata: [], isLoading: false });
         console.log("get_notification-error ------- " + error);
-      });
+      }).finally(()=>{
+        setState({isLoading: false });
+      })
   };
 
   const update_notification = async () => {
@@ -105,6 +121,30 @@ const Notifications = ({ navigation }) => {
       });
   };
 
+  const ReadAll = async () => {
+    let apishow = "api-update-all-notification";
+    let url = config.baseURL + apishow;
+
+    var data = new FormData();
+    data.append("login_user_id", loggedInUserDetails?.user_id);
+    apifuntion
+      .postApi(url, data)
+      .then((obj) => {
+
+        if (obj.status == true) {
+          dispatch(UnReadNotifications(0))
+          msgProvider.showSuccess(obj.message)
+          setState({ isReadAll: true })
+        } else {
+          msgProvider.showError(obj.message)
+        }
+      }).catch((error) => {
+        msgProvider.showError(obj.message)
+        console.log("ReadAll-error ------- " + error);
+      }).finally(() => {
+        get_notification(1)
+      })
+  };
   return (
 
     <View
@@ -179,9 +219,34 @@ const Notifications = ({ navigation }) => {
           <View
             style={{
               flex: 1,
-              paddingBottom: insets.bottom,
               backgroundColor: Colors.Highlight
             }}>
+
+
+            {!statesData.isReadAll &&
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={ReadAll}
+                style={{
+                  width: '40%',
+                  height: 30,
+                  paddingHorizontal: '4%',
+                  justifyContent: 'center',
+                  alignItems: 'flex-start'
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: Font.large,
+                    fontFamily: Font.Medium,
+                    color: Colors.Theme,
+                    textAlign: contentAlign
+
+                  }}
+                >
+                  {LangProvider.ReadAll[languageIndex]}
+                </Text>
+              </TouchableOpacity>}
 
             {statesData.notificationdata == "" ||
               (statesData.notificationdata == null && (
@@ -204,7 +269,7 @@ const Notifications = ({ navigation }) => {
               statesData.notificationdata != null && (
                 <FlatList
                   data={statesData.notificationdata}
-                  // contentContainerStyle={{  paddingBottom: insets.bottom }}
+                  contentContainerStyle={{  paddingBottom: insets.bottom }}
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity

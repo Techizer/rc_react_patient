@@ -227,8 +227,8 @@ const PackageBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-lab-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider.providerId);
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", selectedProvider.providerType);
 
     apifuntion
@@ -316,7 +316,7 @@ const PackageBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-lab-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider.providerId);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
     data.append("date", selectedDate);
     data.append("task_type", 'task_base');
     data.append("service_type", selectedProvider.providerType);
@@ -486,10 +486,10 @@ const PackageBase = ({ navigation, route }) => {
 
     data.append("hospital_id", selectedProvider.hospitalId);
     data.append("service_type", selectedProvider.providerType);
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("currency_symbol", statesData.currency_symbol);
     data.append("family_member_id", selectedProvider.family_member_id);
-    data.append("provider_id", selectedProvider.providerId);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
     data.append("task_id", statesData.selectedPackage.pid);
     data.append("task_price", statesData.selectedPackage.price);
     data.append("task_type", "package_base");
@@ -516,7 +516,6 @@ const PackageBase = ({ navigation, route }) => {
       .then((obj) => {
         setState({ isAddingToCart: false })
         if (obj.status == true) {
-          // msgProvider.toast(LangProvider.sucess_message_login[languageIndex])
           setTimeout(() => {
             navigation.navigate("CartDetails")
           }, 700);

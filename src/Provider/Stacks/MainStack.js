@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
-import { Alert, Platform } from 'react-native';
+import React, { useEffect, useMemo, useRef } from 'react'
+import { Alert, AppState, Platform } from 'react-native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { NavigationContainer, useNavigationContainerRef, } from '@react-navigation/native';
 import messaging from "@react-native-firebase/messaging";
@@ -9,7 +9,6 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import Splash from '../../screens/Splash';
 import AuthStack from './AuthStack';
 import DashboardStack from './DashboardStack';
-import VideoCall from '../../screens/VideoCall';
 import ManageAddress from '../../screens/ManageAddress';
 import Notifications from '../../screens/Notifications';
 import CovidPackageDetails from '../../screens/CovidPackageDetails';
@@ -29,11 +28,13 @@ import AppointmentDetails from '../../screens/AppointmentDetails';
 import Orders from '../../screens/Orders';
 import BookingIndex from '../../screens/Booking/Index';
 import { useDispatch, useSelector } from 'react-redux';
-import { CurrentRoute, onLogout } from '../../Redux/Actions';
+import { CurrentRoute, onLogout, setAppState, setVideoCall, setVideoCallData } from '../../Redux/Actions';
 import TabbyPayment from '../../screens/TabbyPayment';
 import { config } from '../configProvider';
 import { apifuntion } from '../APIProvider';
 import Chat from '../../screens/Chat';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CheckSession } from '../APIFunctions';
 
 
 const Stack = createStackNavigator()
@@ -41,196 +42,20 @@ const Stack = createStackNavigator()
 const MainStack = () => {
 
     const {
-        appLanguage,
         deviceToken,
-        deviceId,
-        deviceName,
-        deviceType,
-        appVersion,
-        contentAlign,
         loggedInUserDetails,
-        address,
-        credentials,
-        rememberMe,
-        languageIndex,
-        isLanguageUpdated,
-        deviceConnection,
-        currentRoute
+        currentRoute,
+        appState
     } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const routeNameRef = useRef();
     const navigationRef = useNavigationContainerRef();
 
-    const configureNotifications = () => {
-        PushNotification.configure({
-            onNotification: function (notification) {
-                if (notification.userInteraction) {
-                    // Handle notification click
-                    // console.log("PushNotification.configure", notification);
-
-                    if (notification.data?.type == "doctor_to_patient_video_call") {
-                        let data;
-                        if (Platform.OS === "ios") {
-                            data = JSON.parse(notification.data.notidata);
-                        } else {
-                            data = notification.data;
-                            // console.log("data", data);
-                        }
-                        Alert.alert(
-                            "Video call",
-                            "video call from " + data?.fromUserName,
-                            [
-                                {
-                                    text: "Reject",
-                                    onPress: () => {
-                                        callRejectNotification(data);
-                                    },
-                                    style: "cancel",
-                                },
-                                {
-                                    text: "Accept",
-                                    onPress: () => {
-                                        // val messageBody = json.optString("message")
-                                        // val roomName = json.getString("room_name")
-                                        // val fromUserName = json.optString("fromUserName")
-                                        // val fromUserId = json.getString("fromUserId")
-                                        // val toUserName = json.getString("toUserName")
-                                        // val toUserId = json.getString("toUserId")
-                                        // val orderId = json.getString("order_id")
-                                        showVideoCallAlert(data);
-                                    },
-                                    style: "default",
-                                },
-                            ],
-                            {
-                                cancelable: true,
-                                // onDismiss: () =>
-                                //   Alert.alert(
-                                //     "This alert was dismissed by tapping outside of the alert dialog."
-                                //   ),
-                            }
-                        );
-                    }
-                }
-
-                notification.finish(PushNotificationIOS.FetchResult.NoData);
-            },
-        });
-    }
-
-    const getNotificationCall = async () => {
-        PushNotification.createChannel(
-            {
-                channelId: "rootscares1", // (required)
-                channelName: "rootscare messasge", // (required)
-
-                importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
-                vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-                priority: "high",
-                soundName: "default",
-                playSound: true,
-                ignoreInForeground: false,
-                smallIcon: "app_icon",
-            },
-            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-        );
-
-    };
-
-    const messageListener = async () => {
-        PushNotification.createChannel(
-            {
-                channelId: "rootscares1", // (required)
-                channelName: "rootscare messasge", // (required)
-                smallIcon: "app_icon",
-                importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
-                vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-                ignoreInForeground: false,
-            },
-            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-        );
-
-
-        messaging().onMessage(async (remoteMessage) => {
-            console.log("Notification msg****",remoteMessage);
-            if (remoteMessage.data?.type == "Logout") {
-                Logout();
-            }
-            // PushNotificationIOS.addEventListener(type, onRemoteNotification);
-            // return () => {
-            //   PushNotificationIOS.removeEventListener(type);
-            // };
-            PushNotification.localNotification({
-                channelId: "rootscares1",
-                title: remoteMessage.data.title,
-                message: remoteMessage.data.body,
-                userInfo: remoteMessage.data,
-            });
-        });
-
-        // When the application is in quite state and opened by clicking on notification.
-        messaging().getInitialNotification().then(async remoteMessage => {
-            console.log('getInitialNotification', remoteMessage);
-            if (remoteMessage && remoteMessage.data?.type == "Logout") {
-                Logout();
-            }
-
-        });
-
-        // When the application is in background and opened by clicking on notification.
-        messaging().onNotificationOpenedApp(async remoteMessage => {
-            console.log('onNotificationOpenedApp', remoteMessage);
-            if (remoteMessage && remoteMessage.data?.type == "Logout") {
-                Logout();
-            }
-        });
-    };
-
-    const showVideoCallAlert = (data) => {
-        // console.log("showVideoCallAlert", data);
-        var myData = {
-            fromUserId: data.fromUserId,
-            fromUserName: data.fromUserName,
-            order_id: data.order_id,
-            room_name: data.room_name,
-            toUserId: data.toUserId,
-            toUserName: data.toUserName,
-            type: data.type,
-            image: data.image,
-            isPage: "accept",
-        };
-        routeNameRef?.current?.navigate("VideoCall", { item: myData, })
-    };
-
-    const callRejectNotification = async (data) => {
-        let apiName = "api-get-video-access-token-with-push-notification";
-        let url = config.baseURL + apiName;
-
-        var data = new FormData();
-        data.append("fromUserId", loggedInUserDetails.user_id);
-        data.append("fromUserName", data.toUserName);
-        data.append("order_id", data.order_id);
-        data.append("room_name", data.room_name);
-        data.append("toUserId", data.fromUserId);
-        data.append("toUserName", data.fromUserName);
-        data.append("type", "patient_to_doctor_video_call_reject");
-        data.append('callStatus', 'reject')
-
-        apifuntion.postApi(url, data, 1)
-            .then((obj) => {
-                if (obj.status == true) {
-                } else {
-                    return false;
-                }
-            }).catch((error) => {
-                console.log("callRejectNotification-error ------- " + error);
-            });
-    };
-
     const Logout = async () => {
+        let ID = await AsyncStorage.getItem('userId')
         let url = config.baseURL + "api-logout";
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails?.user_id);
+        data.append("user_id", ID);
         data.append("fcm_token", deviceToken);
 
         console.log(data);
@@ -253,10 +78,258 @@ const MainStack = () => {
             })
     };
 
+    const configureNotifications = () => {
+        PushNotification.configure({
+            onNotification: async function (notification) {
+                let data = (Platform.OS == "ios") ? JSON.parse(notification.data.notidata) : notification.data
+                var videoDetails = {
+                    fromUserId: data.fromUserId,
+                    fromUserName: data.fromUserName,
+                    order_id: data.order_id,
+                    room_name: data.room_name,
+                    toUserId: data.toUserId,
+                    toUserName: data.toUserName,
+                    type: data.type,
+                    image: data.image,
+                    isPage: "accept",
+                };
+                await AsyncStorage.setItem('fromUserId', data.fromUserId)
+                await AsyncStorage.setItem('fromUserName', data.fromUserName)
+                await AsyncStorage.setItem('order_id', data.order_id)
+                await AsyncStorage.setItem('room_name', data.room_name)
+                await AsyncStorage.setItem('toUserId', data.toUserId)
+                await AsyncStorage.setItem('toUserName', data.toUserName)
+                await AsyncStorage.setItem('type', data.type)
+                dispatch(setVideoCallData(videoDetails))
+
+
+                if (Platform.OS === 'ios') {
+                    if (notification.userInteraction) {
+                        if (notification.data?.type == "doctor_to_patient_video_call") {
+                            Alert.alert(
+                                "Incoming Video call",
+                                data.message,
+                                [
+                                    {
+                                        text: "Reject",
+                                        onPress: () => {
+                                            console.log("Cancel Pressed");
+                                            callRejectNotification(data)
+                                        },
+                                        style: "cancel",
+                                    },
+                                    {
+                                        text: "Accept",
+                                        onPress: () => {
+                                            console.log("Accept Pressed");
+                                            setTimeout(() => {
+                                                dispatch(setVideoCall(true))
+                                            }, 500);
+                                        },
+                                        style: "default",
+                                    },
+                                ],
+                                {
+                                    cancelable: true,
+                                }
+                            )
+                        }
+                    }
+
+
+                } else {
+                    if (notification.action === 'Accept') {
+                        if (notification.data?.type == "doctor_to_patient_video_call") {
+
+                            setTimeout(() => {
+                                dispatch(setVideoCall(true))
+                            }, 1000);
+                        }
+                    } else if (notification.action === 'Reject') {
+                        // callRejectNotification();
+                    } else {
+                        console.log('waiting...');
+                    }
+                }
+
+                // notification.finish(PushNotificationIOS.FetchResult.NoData);
+            },
+        });
+    }
+
+    const onRemoteNotification = (notification) => {
+        // const isClicked = notification.getData().userInteraction === 1;
+
+        // Use the appropriate result based on what you needed to do for this notification
+        const result = PushNotificationIOS.FetchResult.NoData;
+        notification.finish(result);
+    };
+
+    const showNotification = (remoteMessage) => {
+        PushNotification.localNotification({
+            channelId: "rootscares1",
+            title: remoteMessage.data.title,
+            message: remoteMessage.data.body,
+            userInfo: remoteMessage.data,
+            actions: remoteMessage.data?.type == "doctor_to_patient_video_call" ? '["Accept", "Reject"]' : [],
+        });
+
+    };
+
+    const messageListener = async () => {
+        PushNotification.createChannel(
+            {
+                channelId: "rootscares1", // (required)
+                channelName: "rootscare messasge", // (required)
+                smallIcon: "app_icon",
+                importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
+                vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+                ignoreInForeground: false,
+            },
+            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+        );
+
+
+        messaging().onMessage(async (remoteMessage) => {
+            console.log("Notification msg****", remoteMessage);
+            if (remoteMessage && !remoteMessage?.collapseKey) {
+                showNotification(remoteMessage)
+                if (remoteMessage.data?.type == "Logout") {
+                    Logout();
+                }
+            }
+
+        });
+
+        // --------------------------------------
+
+        // messaging().setBackgroundMessageHandler(async remoteMessage => {
+        //     console.log('setBackgroundMessageHandler', remoteMessage);
+        //     if (remoteMessage) {
+        //         if (Platform.OS === 'android') showNotification(remoteMessage)
+        //     }
+        // });
+
+
+        // When the application is opened from a quit state.
+        messaging().getInitialNotification()
+            .then(async remoteMessage => {
+                console.log('getInitialNotification', remoteMessage);
+
+            });
+
+        // When the application is running, but in the background.
+        messaging().onNotificationOpenedApp(async remoteMessage => {
+            console.log('AppBackgroundNotification', remoteMessage);
+
+        });
+    };
+
+    const callRejectNotification = async () => {
+
+        let fromUserId = await AsyncStorage.getItem('fromUserId')
+        let fromUserName = await AsyncStorage.getItem('fromUserName')
+        let order_id = await AsyncStorage.getItem('order_id')
+        let room_name = await AsyncStorage.getItem('room_name')
+        let toUserId = await AsyncStorage.getItem('toUserId')
+        let toUserName = await AsyncStorage.getItem('toUserName')
+        let type = await AsyncStorage.getItem('type')
+
+        let apiName = "api-get-video-access-token-with-push-notification";
+        let url = config.baseURL + apiName;
+
+        var data = new FormData();
+        data.append("fromUserId", fromUserId);
+        data.append("fromUserName", fromUserName);
+        data.append("order_id", order_id);
+        data.append("room_name", room_name);
+        data.append("toUserId", toUserId);
+        data.append("toUserName", toUserName);
+        data.append("type", type);
+        data.append('callStatus', "reject")
+
+
+        apifuntion.postApi(url, data, 1)
+            .then((obj) => {
+                if (obj.status == true) {
+                } else {
+                    return false;
+                }
+            }).catch((error) => {
+                console.log("callRejectNotification-error ------- " + error);
+            });
+    };
+
     useEffect(() => {
         configureNotifications()
         messageListener()
     }, [])
+
+    useEffect(() => {
+        appStateSubscription = AppState.addEventListener(
+            "change",
+            async (nextAppState) => {
+                console.log("nextAppState", nextAppState);
+                dispatch(setAppState(nextAppState))
+                if (nextAppState == 'inactive' || nextAppState == 'background') {
+
+                }
+                if (nextAppState === "active") {
+                }
+
+            }
+        );
+        return () => appStateSubscription.remove()
+    }, [])
+
+    useEffect(() => {
+        const type = 'notification';
+        PushNotificationIOS.addEventListener(type, onRemoteNotification);
+        // if (tab != 'Message') {
+        //   PushNotificationIOS.removeEventListener(type);
+        // }
+        return () => {
+            PushNotificationIOS.removeEventListener(type);
+        };
+    }, []);
+
+    useMemo(() => {
+        if (appState != '' && appState === 'active') {
+            console.log('routeName', routeNameRef?.current?.getCurrentRoute()?.name);
+            const currentRoute = (
+                routeNameRef?.current?.getCurrentRoute()
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'Splash'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'Login'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'Signup'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotPage'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotOTP'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'OTPPage'
+                &&
+                routeNameRef?.current?.getCurrentRoute()?.name != 'TermsAndConditions'
+            )
+            CheckSession().then((authStatus) => {
+                if (!authStatus) {
+                    if (currentRoute) {
+                        routeNameRef?.current.reset({
+                            index: 0,
+                            routes: [{ name: 'AuthStack' }],
+                        });
+                    }
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    }, [appState])
+
+
+
 
     return (
         <NavigationContainer
@@ -292,11 +365,6 @@ const MainStack = () => {
                 <Stack.Screen
                     name={'DashboardStack'}
                     component={DashboardStack} />
-
-                <Stack.Screen
-                    name="VideoCall"
-                    component={VideoCall}
-                />
 
                 <Stack.Screen
                     name="HealthRecord"

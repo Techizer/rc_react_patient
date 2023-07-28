@@ -99,6 +99,7 @@ const Splash = ({ navigation }) => {
     try {
       const fcmToken = await messaging().getToken()
       if (fcmToken) {
+        console.log({fcmToken});
         dispatch(DeviceToken(fcmToken))
       } else {
         dispatch(DeviceToken(null))
@@ -204,7 +205,7 @@ const Splash = ({ navigation }) => {
       let url = config.baseURL + `api-check-login`;
       var data = new FormData();
       data.append("fcm_token", deviceToken);
-      data.append("user_id", loggedInUserDetails.user_id);
+      data.append("user_id", loggedInUserDetails?.user_id);
 
       apifuntion
         .postApi(url, data)

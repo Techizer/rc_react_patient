@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "309641440857-sques305piob71lio2a881objrumnc5c.apps.googleusercontent.com",
+              "client_id": "309641440857-67aggg5eu5phbmogshe22v245tajbhms.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.rootscare"
+                "bundle_id": "com.paitent.rootscare"
               }
             }
           ]
@@ -43,12 +43,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:309641440857:android:a326e065666b2dc3720b48",
+        "mobilesdk_app_id": "1:309641440857:android:49e1f8988506622a720b48",
         "android_client_info": {
-          "package_name": "com.rootscare.serviceprovider"
+          "package_name": "com.rootscare.patient"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "309641440857-7s9bk75nud8mjmidmou3rc09cbdi4297.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rootscare.patient",
+            "certificate_hash": "521ac2a53ce1f4325cd0fc473c1bf3ecf464d253"
+          }
+        },
+        {
+          "client_id": "309641440857-lot1sij5bi58v5ra8f2h3fgs1i79res9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rootscare.patient",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "309641440857-7p0uk8ul2h952cj45ln70b10eh16pho0.apps.googleusercontent.com",
           "client_type": 3
@@ -67,10 +83,62 @@
               "client_type": 3
             },
             {
-              "client_id": "309641440857-sques305piob71lio2a881objrumnc5c.apps.googleusercontent.com",
+              "client_id": "309641440857-67aggg5eu5phbmogshe22v245tajbhms.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.rootscare"
+                "bundle_id": "com.paitent.rootscare"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309641440857:android:a326e065666b2dc3720b48",
+        "android_client_info": {
+          "package_name": "com.rootscare.serviceprovider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309641440857-2qadvh1lr5ec1cov4ceqsdageurfchk5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rootscare.serviceprovider",
+            "certificate_hash": "2ac62e3b10589dfa7281a6ac3b9394bd563335d2"
+          }
+        },
+        {
+          "client_id": "309641440857-bj590kk7ms900o3beoceem64m540mh4l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rootscare.serviceprovider",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "309641440857-7p0uk8ul2h952cj45ln70b10eh16pho0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_QFS9EoA1lFJUMEZVCBhf7pl_B9Y2UfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309641440857-7p0uk8ul2h952cj45ln70b10eh16pho0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "309641440857-67aggg5eu5phbmogshe22v245tajbhms.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.paitent.rootscare"
               }
             }
           ]

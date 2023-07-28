@@ -60,7 +60,6 @@ const Upcoming = (props) => {
       // console.log({ newArr });
       // return
       if (lastIndex.currentpage === 1) {
-        console.log('/././././././././.');
         setTotalPage(lastIndex.lastpage === 1)
         for (const iterator of newArr) {
           var currentTime = moment().unix();
@@ -142,7 +141,7 @@ const Upcoming = (props) => {
     let url = config.baseURL + "api-patient-upcoming-appointment";
 
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", 'doctor');
     data.append("page_count", page);
 

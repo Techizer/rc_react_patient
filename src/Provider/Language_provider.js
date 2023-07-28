@@ -190,7 +190,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 3.6.8", "الإصدار 3.6.8"];
+  version = ["Version 3.7.0", "الإصدار 3.7.0"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "];
@@ -704,7 +704,7 @@ class Language_provider {
   HourBaseTitle = ['Hourly | Appointment Booking', ' بالساعة | حجز موعد']
   Lab_Test_Booking = ['Lab Test Booking', 'حجز فحص مختبر ']
   Lab_Package_Booking = ['Lab Package Booking', 'حجز باقة المختبر']
-  OnlineConsultation = ["Online Consultation", "الاستشارة عبر الإنترنت"];
+  OnlineConsultation = ["Online consultation", "استشارة عن بُعد"];
   HomeVisitConsultation = ["Home Visit Consultation", "استشارة زيارة منزلية"];
   Amount_Payable = ['Amount Payable', 'المبلغ المستحق']
   SelectAppointmentType = ['Would you please select your booking preference?', 'هل يمكنك من فضلك تحديد تفضيل الحجز الخاص بك؟']
@@ -719,10 +719,12 @@ class Language_provider {
   CartInfo = ['You have 60 seconds to complete this order/appointment/booking, otherwise system will automatically cancel your slot and return back to previous screen.',
     'لديك 60 ثانية لإكمال هذا الطلب / الموعد / الحجز ، وإلا فسيقوم النظام تلقائيًا بإلغاء الفترة الزمنية الخاصة بك والعودة إلى الشاشة السابقة.'
   ]
-  ChatNote = ['Available chat consultation', '']
-  Chat = ['Chat with specialist', '']
-  ChatInit = ['Chat with same medical specialist in this conversation window', '']
-  BookNew = ['Book a new consultation', '']
-  ChatClosed = ['Conversation Closed', '']
+  ChatNote = ['Available chat consultation', 'التشاور الدردشة المتاحة']
+  Chat = ['Chat with specialist', 'الدردشة مع المتخصص']
+  ChatInit = ['Chat with same medical specialist in this conversation window', 'تحدث مع نفس الاختصاصي الطبي في نافذة المحادثة هذه']
+  BookNew = ['Book a new consultation', 'احجز استشارة جديدة']
+  ChatClosed = ['FOLLOW UP CONSULTATION', 'متابعة الاستشارة']
+  ReadAll = ['Mark all as read', 'اشر عليها بانها قرات']
+  WriteMsg = ['Write your message here...', 'اكتب رسالتك هنا...']
 }
 export const LangProvider = new Language_provider();

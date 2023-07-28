@@ -81,7 +81,7 @@ const ChatMessage = ({
                                         fontSize: Font.small,
 
 
-                                    }} >{isMine ? 'SYMPTOMS:' : 'PRESCRIBED MEDICINES'}</Text>
+                                    }} >{isMine ? 'Document:' : 'PRESCRIBED MEDICINES'}</Text>
 
                                 {
                                     Body != '' &&
@@ -126,7 +126,7 @@ const ChatMessage = ({
                                             fontSize: Font.xsmall,
                                             marginTop: vs(5)
 
-                                        }} >{isMine ? 'VIEW SYMPTOMS' : 'VIEW PRESCRIPTION'}</Text>
+                                        }} >{isMine ? 'VIEW FILE' : 'VIEW PRESCRIPTION'}</Text>
                                 </TouchableOpacity>
 
                             </View>

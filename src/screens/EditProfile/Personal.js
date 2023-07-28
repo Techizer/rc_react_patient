@@ -103,7 +103,7 @@ const Personal = ({ navigation }) => {
 
         let url = config.baseURL + "api-getnationality";
         var data = new FormData();
-        data.append("login_user_id", loggedInUserDetails.user_id);
+        data.append("login_user_id", loggedInUserDetails?.user_id);
 
         apifuntion.postApi(url, data, 1)
             .then((obj) => {
@@ -178,10 +178,6 @@ const Personal = ({ navigation }) => {
 
     const saveInfo = async () => {
         Keyboard.dismiss();
-        setUserDetails(prevState => ({
-            ...prevState,
-            isLoading: true
-        }))
         if (userDetails.name.length <= 0 || userDetails.name.trim().length <= 0) {
             msgProvider.showError(LangProvider.emptyName[languageIndex]);
             return false;
@@ -219,10 +215,14 @@ const Personal = ({ navigation }) => {
             return false;
         }
 
+        setUserDetails(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         let url = config.baseURL + "api-edit-patient-profile-personal";
         var phone_number_send = userDetails.country_code + userDetails.mobile;
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("user_id", loggedInUserDetails?.user_id);
         data.append("first_name", userDetails.name);
         data.append("phone_number", phone_number_send);
         data.append("gender", userDetails.gender);
@@ -246,8 +246,9 @@ const Personal = ({ navigation }) => {
                     isLoading: false
                 }))
                 // console.log("saveInfo-response....", obj);
+                // console.log("saveInfo-response....", loggedInUserDetails);
                 if (obj.status == true) {
-                    // dispatch(UserDetails(obj?.result))
+                    dispatch(UserDetails(obj?.result))
                     dispatch(UserProfile(obj?.result))
                     setTimeout(() => {
                         msgProvider.showSuccess(obj.message);
@@ -296,7 +297,8 @@ const Personal = ({ navigation }) => {
                                     <Image source={{ uri: userDetails.profile_img }} style={{
                                         height: s(65),
                                         width: s(65),
-                                        borderRadius: s(100)
+                                        borderRadius: s(100),
+                                        backgroundColor: Colors.backgroundcolor,
                                     }} />
                                     :
                                     <SvgXml xml={dummyUser} height={s(65)} width={s(65)} />

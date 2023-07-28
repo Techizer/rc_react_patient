@@ -30,7 +30,6 @@ import {
   Button
 } from "../Provider/Utils/Utils";
 import { WebView } from "react-native-webview";
-import BackgroundTimer from 'react-native-background-timer';
 import firestore from '@react-native-firebase/firestore'
 import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentWebView } from "tabby-react-native-sdk";
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
@@ -129,8 +128,8 @@ const CartDetails = ({ navigation }) => {
       amount: statesData.cartDetails?.total_price,
       currency: statesData.currency_symbol,
       buyer: {
-        email: 'card.success@tabby.ai',
-        phone: '500000001',
+        email: '',
+        phone: '',
         name: loggedInUserDetails.first_name,
         dob: loggedInUserDetails.dob,
       },
@@ -149,27 +148,27 @@ const CartDetails = ({ navigation }) => {
         reference_id: statesData.cartDetails.order_id,
         items: [
           {
-            title: 'Nurse',
-            description: 'Jersey',
+            title: statesData.cartDetails?.service_display_type,
+            description: statesData.cartDetails.display_task_type,
             quantity: 1,
-            unit_price: '10.00',
+            unit_price: statesData.cartDetails?.total_price,
             reference_id: statesData.cartDetails.order_id,
             product_url: 'http://example.com',
-            category: 'Nurse',
+            category: statesData.cartDetails?.service_display_type,
           },
         ],
       },
       order_history: [
         {
           purchased_at: '2019-08-24T14:15:22Z',
-          amount: '0.00',
+          amount: statesData.cartDetails?.total_price,
           payment_method: 'card',
           status: 'new',
           buyer: {
-            email: 'card.success@tabby.ai',
-            phone: '500000001',
-            name: 'Ahmed Zia',
-            dob: '2019-08-24',
+            email: '',
+            phone: '',
+            name: loggedInUserDetails.first_name,
+            dob: loggedInUserDetails.dob,
           },
           shipping_address: {
             city: 'string',
@@ -178,13 +177,13 @@ const CartDetails = ({ navigation }) => {
           },
           items: [
             {
-              title: 'string',
-              description: 'string',
+              title: statesData.cartDetails?.service_display_type,
+              description: statesData.cartDetails.display_task_type,
               quantity: 1,
-              unit_price: '0.00',
-              reference_id: 'string',
+              unit_price: statesData.cartDetails?.total_price,
+              reference_id: statesData.cartDetails.order_id,
               product_url: 'http://example.com',
-              category: 'string',
+              category:  statesData.cartDetails?.service_display_type,
             },
           ],
         },
@@ -235,8 +234,8 @@ const CartDetails = ({ navigation }) => {
         Milliseconds: moment().valueOf(),
         NumChars: '',
         ReadBit: 1,
-        ReceiverID: selectedProvider.providerId,
-        SenderID: loggedInUserDetails.user_id,
+        ReceiverID: selectedProvider ? selectedProvider?.providerId : '',
+        SenderID: loggedInUserDetails?.user_id,
         Shown: true,
         SYSTEM: true,
       }),
@@ -248,21 +247,21 @@ const CartDetails = ({ navigation }) => {
         Milliseconds: moment().valueOf(),
         NumChars: '',
         ReadBit: 1,
-        ReceiverID: selectedProvider.providerId,
-        SenderID: loggedInUserDetails.user_id,
+        ReceiverID: selectedProvider ? selectedProvider?.providerId : '',
+        SenderID: loggedInUserDetails?.user_id,
         Shown: true,
         SYSTEM: true,
       })
     ],
     Patient: {
-      ID: loggedInUserDetails.user_id,
+      ID: loggedInUserDetails?.user_id,
       Image: loggedInUserDetails?.image,
       IsTyping: false,
       FCM: deviceToken
     },
     Provider: {
-      ID: selectedProvider.providerId,
-      Image: selectedProvider.providerImg,
+      ID: selectedProvider ? selectedProvider?.providerId : '',
+      Image: selectedProvider ? selectedProvider?.providerImg : '',
       IsTyping: false,
       FCM: null
     }
@@ -320,6 +319,7 @@ const CartDetails = ({ navigation }) => {
 
   useEffect(() => {
     if (tabbyPayment == true) {
+      console.log('iffffffffff');
       dispatch(TabbyPaymentStatus(false))
       resetState()
       clearInterval(interval)
@@ -339,7 +339,7 @@ const CartDetails = ({ navigation }) => {
         navigation.navigate(selectedProvider.providerType === 'doctor' ? 'Consultation' : selectedProvider.providerType === 'lab' ? 'LabTest' : 'Apointment')
       }, 2000);
     }
-  }, [isFocused])
+  }, [isFocused, tabbyPayment])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -547,7 +547,7 @@ const CartDetails = ({ navigation }) => {
     var data = new FormData();
 
     data.append("service_type", statesData.service_type);
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("cart_id", statesData.cartId);
     data.append("trid", paymentId);
 
@@ -623,7 +623,7 @@ const CartDetails = ({ navigation }) => {
     }
 
     let customer = {
-      isdNumber: loggedInUserDetails.user_id,
+      isdNumber: loggedInUserDetails?.user_id,
       number: "00000000",
       customerId: "",
       first_name: loggedInUserDetails.first_name,
@@ -633,13 +633,13 @@ const CartDetails = ({ navigation }) => {
     };
 
     setState({
-      user_id: loggedInUserDetails.user_id,
+      user_id: loggedInUserDetails?.user_id,
       customerDetails: customer,
     });
     let url = config.baseURL + "api-patient-cart-details";
 
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
 
     apifuntion
       .postApi(url, data)
@@ -683,7 +683,7 @@ const CartDetails = ({ navigation }) => {
           AsyncStorage.removeItem('cartId')
           dispatch(CartTime(0))
           if (type == 'auto') {
-            msgProvider.showSuccess('You cart is removed automatically by the system.');
+            msgProvider.showError('You cart is removed automatically by the system.');
             setTimeout(() => {
               navigation.pop()
             }, 300);
@@ -946,7 +946,7 @@ const CartDetails = ({ navigation }) => {
                           <View
                             style={{
                               flexDirection: "row",
-                              alignItems:'center',
+                              alignItems: 'center',
                               justifyContent: "space-between",
                               paddingVertical: vs(5),
                             }}>
@@ -1012,7 +1012,7 @@ const CartDetails = ({ navigation }) => {
                     <View
                       style={{
                         flexDirection: "row",
-                        alignItems:'center',
+                        alignItems: 'center',
                         justifyContent: "space-between",
                         marginTop: (windowWidth * 2) / 100,
                       }} >
@@ -1041,7 +1041,7 @@ const CartDetails = ({ navigation }) => {
                   <View
                     style={{
                       flexDirection: "row",
-                      alignItems:'center',
+                      alignItems: 'center',
                       justifyContent: "space-between",
                       marginTop: vs(10),
                     }}>
@@ -1073,7 +1073,7 @@ const CartDetails = ({ navigation }) => {
                   <View style={{
                     width: '100%',
                     flexDirection: 'row',
-                    alignItems:'center',
+                    alignItems: 'center',
                   }}>
                     <Text
                       style={{
@@ -1098,7 +1098,7 @@ const CartDetails = ({ navigation }) => {
                       fontFamily: Font.Regular,
                       fontSize: Font.xsmall,
                       color: Colors.detailTitles,
-                      textAlign:'left',
+                      textAlign: 'left',
                       marginTop: vs(5)
                     }}>
                     {LangProvider.CartInfo[languageIndex]}

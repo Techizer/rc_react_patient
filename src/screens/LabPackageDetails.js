@@ -38,7 +38,7 @@ const LabPackageDetails = ({ navigation, route }) => {
     let url = config.baseURL + "api-get-package-details";
 
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("provider_id", providerId);
     data.append("package_id", packageId);
     apifuntion

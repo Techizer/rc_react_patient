@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet, Modal, } from "react-native";
-import { BlurView } from "@react-native-community/blur";
 import PDFView from 'react-native-view-pdf';
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
@@ -10,8 +9,6 @@ import { Cross, dummyUser, Edit } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ImageZoom from "react-native-image-pan-zoom";
 import { SkypeIndicator } from "react-native-indicators";
 
 

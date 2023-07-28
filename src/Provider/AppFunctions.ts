@@ -14,13 +14,37 @@ export const getIsAppointmentChatEnabled = (appointmentDate?: Date, apppointment
     const limitMillis = moment(limitSOD).valueOf()
     const nowMillis = moment().valueOf()
 
-    console.log({acceptedDate, limitSOD, appointmentMillis, limitMillis, nowMillis, diffBwAppAndLimit: (((limitMillis - appointmentMillis)/1000)/60/60/24) + ' Days', diffBwLimitAndNow: (((limitMillis - nowMillis)/1000)/60/60/24) + ' Days'});
+    console.log({ acceptedDate, limitSOD, appointmentMillis, limitMillis, nowMillis, diffBwAppAndLimit: (((limitMillis - appointmentMillis) / 1000) / 60 / 60 / 24) + ' Days', diffBwLimitAndNow: (((limitMillis - nowMillis) / 1000) / 60 / 60 / 24) + ' Days' });
 
 
     return (apppointmentStatus.toLowerCase() === 'accepted' || apppointmentStatus.toLowerCase() === 'completed') &&
         (limitMillis > nowMillis)
 }
 
-export const getISChatImplemented = (appointmentDateMilliseconds: number) => {
-    return appointmentDateMilliseconds > moment('2023-03-07').valueOf()
+export const getISChatImplemented = (appointmentDate: string, appointmentTime: string) => {
+
+    // const appointmentMoment = moment(appointmentDate);
+    // const todayDate = moment();
+    // const expirationDate = appointmentMoment.add(7, 'days');
+    // return todayDate.isBefore(expirationDate);
+
+    const givenTimeString = `${appointmentDate} ${appointmentTime}`;
+
+    // const givenTimeString = 'Tue, 25 Jul 2023 07:50 PM - 10:15 AM'
+
+    const dateString = givenTimeString.split(' ')[1] + ' ' + givenTimeString.split(' ')[2] + ' ' + givenTimeString.split(' ')[3];
+    const startTimeString = givenTimeString.split(' ')[4] + ' ' + givenTimeString.split(' ')[5];
+
+    const givenDate = moment(dateString, 'D MMM YYYY');
+    const startTime = moment(startTimeString, 'h:mm A');
+
+    const givenDateTime = moment(givenDate).set({ hour: startTime.hours(), minute: startTime.minutes() });
+
+    const updatedDateTime = moment(givenDateTime).add(6, 'hours');
+
+    const sixHoursOrMorePassed = moment().isAfter(updatedDateTime);
+
+    console.log({ sixHoursOrMorePassed });
+
+    return sixHoursOrMorePassed
 }

@@ -379,7 +379,6 @@ class StateListScreen extends Component {
                                     );
                                 }}
                                 //Setting the number of column
-                                keyExtractor={item => item.zone_id}
                                 ListFooterComponent={<FooterListPagination
                                     listDataLength={this.state.statelistData.length}
                                     ended={this.state.ended}

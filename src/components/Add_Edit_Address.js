@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet, Modal, TouchableHighlight, Keyboard, Alert, Platform, } from "react-native";
-import { BlurView } from "@react-native-community/blur";
-
+import Toast from 'react-native-toast-message'
 import { SkypeIndicator } from 'react-native-indicators';
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
@@ -97,7 +96,7 @@ const AddEditAddress = ({
             return false;
         }
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("user_id", loggedInUserDetails?.user_id);
         data.append("current_address", addressDetails?.address);
         data.append("lat", addressDetails?.latitude);
         data.append("lng", addressDetails?.longitude);
@@ -144,7 +143,7 @@ const AddEditAddress = ({
             return false;
         }
         var data = new FormData();
-        data.append("login_user_id", loggedInUserDetails.user_id);
+        data.append("login_user_id", loggedInUserDetails?.user_id);
         data.append("id", addressDetails?.id);
         data.append("current_address", addressDetails?.address);
         data.append("lat", addressDetails?.latitude);
@@ -169,10 +168,12 @@ const AddEditAddress = ({
                         address: addressDetails?.address,
                         title: title
                     }
-                    console.log({newAddress});
                     dispatch(Address(newAddress))
-                    onRequestClose()
                     editedAddress(title)
+                    setTimeout(() => {
+                        onRequestClose()
+                    }, 750);
+                   
                 } else {
                     return false;
                 }
@@ -190,7 +191,7 @@ const AddEditAddress = ({
         let url = config.baseURL + "api-delete-patient-address";
 
         var data = new FormData();
-        data.append("login_user_id", loggedInUserDetails.user_id);
+        data.append("login_user_id", loggedInUserDetails?.user_id);
         data.append("id", addressDetails?.id);
 
         apifuntion
@@ -243,7 +244,7 @@ const AddEditAddress = ({
                 /> */}
 
                 <View style={styles.mainContainer}>
-
+                    <Toast />
                     <View style={styles.subContainer}>
                         <TouchableOpacity
                             onPress={onRequestClose}

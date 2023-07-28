@@ -62,7 +62,7 @@ const NeedSupport = ({ navigation }) => {
 
     let url = config.baseURL + "api-patient-need-help-topic";
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
 
     apifuntion
       .postApi(url, data)
@@ -105,7 +105,7 @@ const NeedSupport = ({ navigation }) => {
     }))
     let url = config.baseURL + "api-insert-need-help";
     var data = new FormData();
-    data.append("user_id", loggedInUserDetails.user_id);
+    data.append("user_id", loggedInUserDetails?.user_id);
     data.append("issue_topic", needSupportData.selectedIssue);
     data.append("message", needSupportData.message);
     data.append("service_type", loggedInUserDetails.user_type);
@@ -253,31 +253,26 @@ const NeedSupport = ({ navigation }) => {
             }}
             style={{
               width: "100%",
-              alignSelf: "center",
+              alignSelf: 'flex-start',
               marginTop: vs(15),
               borderColor: needSupportData.selectissuefocus ? Colors.Theme : Colors.Border,
               borderWidth: 1,
               borderRadius: 6,
               height: vs(125),
               paddingHorizontal: s(8),
-              paddingVertical: s(6),
             }}>
-
             <TextInput
+              multiline
               ref={inputRef}
               style={{
-                width: "100%",
+                flex: 1,
+                textAlignVertical: 'top',
                 color: Colors.Black,
                 fontSize: Font.medium,
-                alignSelf: 'flex-start',
                 fontFamily: Font.Regular,
-                textAlign: contentAlign,
-                height: '100%',
-                paddingTop: 10
-
+                textAlign:contentAlign
               }}
               maxLength={250}
-              multiline={true}
               placeholder={LangProvider.text_input_topic[languageIndex]}
               placeholderTextColor={Colors.MediumGrey}
               onChangeText={(txt) => {
@@ -301,7 +296,6 @@ const NeedSupport = ({ navigation }) => {
               keyboardType="default"
               returnKeyLabel="done"
             />
-
           </Pressable>
 
           <Button

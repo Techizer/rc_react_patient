@@ -134,10 +134,7 @@ const Medical = () => {
     const saveMedical = async () => {
 
         Keyboard.dismiss()
-        setMedicalDetails(prevState => ({
-            ...prevState,
-            isLoading: true
-        }))
+
         if (medicalDetails.Allergic === 0 & medicalDetails.allergyName === '') {
             msgProvider.showError(LangProvider.allergyName[languageIndex]);
             return false;
@@ -163,10 +160,14 @@ const Medical = () => {
             return false;
         }
 
+        setMedicalDetails(prevState => ({
+            ...prevState,
+            isLoading: true
+        }))
         let url = config.baseURL + "api-edit-patient-profile-medical";
 
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("user_id", loggedInUserDetails?.user_id);
         data.append("allergies", medicalDetails.Allergic);
         data.append("allergies_data", medicalDetails.allergyName);
         data.append("current_medication", medicalDetails.currentMed);

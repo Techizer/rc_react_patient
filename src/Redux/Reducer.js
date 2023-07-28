@@ -25,7 +25,10 @@ import {
     TABBY_PAYMENT,
     LANGUAGE_UPDATED,
     CURRENT_ROUTE,
-    USER_PROFILE
+    USER_PROFILE,
+    APP_STATE,
+    VIDEO_CALL,
+    VIDEO_CALL_DATA
 } from './Types';
 
 const initialState = {
@@ -54,7 +57,10 @@ const initialState = {
     tabbyPayment: false,
     userProfile: null,
     isLanguageUpdated: false,
-    currentRoute: ''
+    currentRoute: '',
+    appState: '',
+    isVideoCall: false,
+    videoDetails: null
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -208,6 +214,23 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 ...state,
                 userProfile: action.payload,
             };
+        case APP_STATE:
+            return {
+                ...state,
+                appState: action.payload,
+            };
+
+        case VIDEO_CALL:
+            return {
+                ...state,
+                isVideoCall: action.payload,
+            };
+        case VIDEO_CALL_DATA:
+            return {
+                ...state,
+                videoDetails: action.payload,
+            };
+
         default:
             return state;
     }

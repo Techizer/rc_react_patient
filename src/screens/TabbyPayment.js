@@ -36,7 +36,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
+                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
             },
@@ -90,7 +90,7 @@ const TabbyPayment = ({ navigation, route }) => {
         var data = new FormData();
 
         data.append("service_type", serviceType);
-        data.append("login_user_id", loggedInUserDetails.user_id);
+        data.append("login_user_id", loggedInUserDetails?.user_id);
         data.append("cart_id", cartId);
         data.append("trid", transactionId);
 
@@ -108,6 +108,7 @@ const TabbyPayment = ({ navigation, route }) => {
                     })
                 } else {
                     dispatch(TabbyPaymentStatus(false))
+                    msgProvider.showError('Error in capturing payment')
                     setTimeout(() => {
                         navigation.pop();
                     }, 1500);

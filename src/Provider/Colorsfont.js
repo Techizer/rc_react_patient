@@ -34,7 +34,7 @@ export const Colors = {
   Highlight:'#E2E7EE82',
   Black: "#000000",
   White:'#ffffff',
-  orange: "#FFA800",
+  orange: "#ffa800",
   inActiveText:'#0C1016',
   ButtonBorder:'#E2EBF0',
   darkText:'#17181A',

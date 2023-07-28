@@ -70,7 +70,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
 
     var data = new FormData();
     
-    if (guest) {
+    if (guest) { 
       data.append("login_user_id", 0);
       data.append("service_type", pass_status);
       data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'Ar');
@@ -78,7 +78,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       data.append("longitudes", address.longitude);
       data.append("page_count", 1);
     } else {
-      data.append("login_user_id", loggedInUserDetails.user_id);
+      data.append("login_user_id", loggedInUserDetails?.user_id);
       data.append("service_type", pass_status);
       data.append("work_area", loggedInUserDetails.work_area);
       data.append("page_count", 1);

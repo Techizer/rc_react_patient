@@ -58,7 +58,7 @@ const SupportandMore = ({ navigation }) => {
   const Update = async (language) => {
     let url = config.baseURL + "api-language-update";
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("device_lang", supportData.language == 'en' ? 'ENG' : 'AR');
     console.log(data);
     apifuntion
@@ -114,7 +114,7 @@ const SupportandMore = ({ navigation }) => {
     let url = config.baseURL + "api-delete-user";
     console.log("url", url);
     var data = new FormData();
-    data.append("user_id", loggedInUserDetails.user_id);
+    data.append("user_id", loggedInUserDetails?.user_id);
 
     apifuntion
       .postApi(url, data, 1)

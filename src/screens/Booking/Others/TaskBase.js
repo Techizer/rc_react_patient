@@ -202,8 +202,8 @@ const TaskBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider.providerId);
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", selectedProvider.providerType);
 
     apifuntion
@@ -287,7 +287,7 @@ const TaskBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider.providerId);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
     data.append("date", selectedDate);
     data.append("task_type", 'task_base');
     data.append("service_type", selectedProvider.providerType);
@@ -493,10 +493,10 @@ const TaskBase = ({ navigation, route }) => {
 
     data.append("hospital_id", selectedProvider.hospitalId);
     data.append("service_type", selectedProvider.providerType);
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("currency_symbol", statesData.currency_symbol);
     data.append("family_member_id", selectedProvider.family_member_id);
-    data.append("provider_id", selectedProvider.providerId);
+    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
     data.append('task_id', statesData.selectedTasksIds);
     data.append('task_price', statesData.selectedTasksPrices);
     data.append("task_type", "task_base");

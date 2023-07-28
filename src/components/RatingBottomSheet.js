@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Modal, View, Image, StyleSheet, TouchableOpacity, Keyboard, FlatList, TextInput, Pressable, } from "react-native";
-
+import Toast from "react-native-toast-message";
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, LangProvider, Button, Icons, msgProvider, windowHeight } from "../Provider/Utils/Utils";
 import { Cross, } from "../Icons/Index";
@@ -38,6 +38,7 @@ const RatingBottomSheet = ({
             >
 
                 <View style={[styles.mainContainer]}>
+                    <Toast/>
 
                     <View style={[styles.subContainer]}>
                         <TouchableOpacity
@@ -110,6 +111,7 @@ const RatingBottomSheet = ({
                                                     alignSelf: 'flex-start',
                                                     // height: '100%',
                                                     fontFamily: Font.Regular,
+                                                    width:'100%'
                                                 }}
                                                 maxLength={200}
                                                 multiline
@@ -225,7 +227,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: s(7),
         paddingVertical: s(0),
         height: (windowWidth * 30) / 100,
-        // backgroundColor:'pink'
     },
 
 });

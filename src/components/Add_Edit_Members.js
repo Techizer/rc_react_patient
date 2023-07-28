@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Text, TouchableOpacity, View, Image, StyleSheet, TouchableHighlight, Keyboard, FlatList, Alert, Platform, } from "react-native";
-import { BlurView } from "@react-native-community/blur";
 import { useSelector } from "react-redux";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SkypeIndicator } from 'react-native-indicators';
+import Toast from 'react-native-toast-message'
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
@@ -76,6 +76,7 @@ const AddandEditMembers = ({
                 setMediamodal(false)
             });
     };
+    
     const Galleryopen = () => {
         mediaprovider
             .launchGellery(true)
@@ -134,10 +135,10 @@ const AddandEditMembers = ({
                         onRequestClose()
                         resetState()
                         changeType('addMember')
-                    }, 350);
+                    }, 750);
                     deletedMember(selectedPatient?.id)
                 } else {
-                    msgProvider.alert("", obj.message, false);
+                    msgProvider.showError(obj.message);
                 }
                 return false;
             })
@@ -177,13 +178,13 @@ const AddandEditMembers = ({
 
         var data = new FormData();
 
-        data.append("patient_id", loggedInUserDetails.user_id);
+        data.append("patient_id", loggedInUserDetails?.user_id);
         data.append("first_name", name);
         data.append("last_name", "");
         data.append("gender", gender);
         data.append("age", dob);
-        data.append("created_by", loggedInUserDetails.user_id);
-        data.append("updated_by", loggedInUserDetails.user_id);
+        data.append("created_by", loggedInUserDetails?.user_id);
+        data.append("updated_by", loggedInUserDetails?.user_id);
         if (profileImg != '' && profileImg != null) {
             data.append('image', {
                 uri: profileImg,
@@ -211,7 +212,7 @@ const AddandEditMembers = ({
                     resetState()
                     changeType('addMember')
                 } else {
-                    msgProvider.alert("", obj.message, false);
+                    msgProvider.showError(obj.message);
                 }
                 return false;
             })
@@ -266,7 +267,7 @@ const AddandEditMembers = ({
                         onRequestClose()
                         resetState()
                         changeType('addMember')
-                    }, 350);
+                    }, 750);
                     editMemberDetails(obj?.result?.memebr_details)
                 } else {
                     msgProvider.showError(obj?.message)
@@ -296,6 +297,7 @@ const AddandEditMembers = ({
                 transparent
                 presentationStyle='overFullScreen'
             >
+                
                 {/* <BlurView
                     style={{
                         flex: 1,
@@ -312,7 +314,7 @@ const AddandEditMembers = ({
                 /> */}
 
                 <View style={[styles.mainContainer]}>
-
+                <Toast/>
                     <View style={[styles.subContainer, { height: (type === 'addMember' || isEditable) ? windowHeight / 1.35 : windowHeight / 2.1 }]}>
 
                         <TouchableOpacity

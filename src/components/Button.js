@@ -30,7 +30,7 @@ export const Button = ({
         onLoading ?
           <SkypeIndicator color={Colors.White} size={16} count={3} />
           :
-          <Text style={[styles.buttonText, customStyles.buttonText]}>{text}</Text>
+          <Text style={[styles.buttonText]}>{text}</Text>
       }
 
     </TouchableOpacity>

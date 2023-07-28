@@ -37,7 +37,7 @@ const ManageAddress = ({ navigation }) => {
   const getAddresses = async () => {
     let url = config.baseURL + "api-patient-list-address";
     var data = new FormData();
-    data.append('login_user_id', loggedInUserDetails.user_id)
+    data.append('login_user_id', loggedInUserDetails?.user_id)
 
 
     apifuntion.postApi(url, data, 1).then((obj) => {

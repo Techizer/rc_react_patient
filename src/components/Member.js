@@ -132,6 +132,7 @@ const Member = ({
                                         height: vs(55),
                                         width: vs(55),
                                         borderRadius: vs(55),
+                                        backgroundColor:Colors.backgroundcolor
                                     }} />
                                     :
                                     <SvgXml xml={dummyUser} height={vs(55)} width={s(55)} />

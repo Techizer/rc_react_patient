@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
   I18nManager,
+  PermissionsAndroid,
 } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -37,6 +38,7 @@ import AuthInputBoxSec from "../components/AuthInputBoxSec";
 import { leftWhiteArrow, rightWhiteArrow } from "../Icons/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCredentials, UserDetails } from "../Redux/Actions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Login = ({ navigation }) => {
@@ -166,7 +168,8 @@ const Login = ({ navigation }) => {
       })
       .catch((error) => {
         console.log("locationPermission-error", error);
-      });
+      }).finally(() => {
+      })
   }
 
   const getCurrentLocation = async () => {
@@ -304,7 +307,7 @@ const Login = ({ navigation }) => {
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
 
-    // console.log('login body...', data);
+    console.log('login body...', data);
 
     // return
 
@@ -315,14 +318,12 @@ const Login = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        // console.log('login response.....', obj);
+        console.log('login response.....', obj);
         if (obj.status == true) {
-          // msgProvider.showSuccess(obj.message);
-          // if (address != null) {
+          AsyncStorage.setItem('userId', obj?.result?.user_id)
           if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
             updateAddress(obj?.result?.user_id)
           }
-          // }
           const credentials = {
             email: loginData.email,
             password: loginData.password,
@@ -361,6 +362,7 @@ const Login = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
+        msgProvider.showError('Something went wrong, Please try again');
         console.log("LoginUser-error ------- " + error);
       });
   };

@@ -12,6 +12,7 @@ import {
   PermissionsAndroid,
   TouchableHighlight,
 } from "react-native";
+import firestore from '@react-native-firebase/firestore'
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { SkypeIndicator } from "react-native-indicators";
@@ -39,18 +40,23 @@ import { Chat, contactUs, Cross, dummyUser, Info, rightBlue, VideoCall, whiteSta
 import RatingBottomSheet from "../components/RatingBottomSheet";
 import PrescriptionBottomSheet from "../components/PrescriptionBottomSheet";
 import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AudioPlayer } from "../components/AudioPlayer";
 import NoInternet from "../components/NoInternet";
 import Loader from "../components/Loader";
 import { getISChatImplemented } from "../Provider/AppFunctions";
+import { setVideoCall, setVideoCallData } from "../Redux/Actions";
 
 
 export default AppointmentDetails = ({ navigation, route }) => {
 
-  const { loggedInUserDetails, languageIndex, deviceConnection, selectedProvider } = useSelector(state => state.StorageReducer)
+  const { loggedInUserDetails, languageIndex, deviceConnection, contentAlign, selectedProvider } = useSelector(state => state.StorageReducer)
+  const dispatch = useDispatch()
+
 
   const { appointment_id, send_id, booking_type, status } = route?.params
+
+
   const [classStateData, setClassStateData] = useState({
     modalVisible: false,
     modalPatientPrescription: false,
@@ -71,7 +77,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     isScheduleagain: false,
     isPlay: false,
     isLoadingDetails: true,
-    isChat: false
+    isChat: false,
   })
   const [isDownloading, setIsDownloading] = useState(false)
   const insets = useSafeAreaInsets()
@@ -93,31 +99,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     }
   }, [deviceConnection])
 
-  useEffect(() => {
-    if (classStateData.appointmentDetails) {
-      if (getISChatImplemented(moment(classStateData.appointmentDetails.booking_date).valueOf())) {
-        setState({ isChat: true })
-      }
-    }
-  }, [classStateData.appointmentDetails])
 
-  useEffect(() => {
-    if (classStateData.appointmentDetails) {
-      var appointmentDate = moment(classStateData.appointmentDetails.app_date).format("YYYY-MM-DD");
-      var current = moment().startOf('day');
-
-      var date1 = moment(appointmentDate);
-      var date2 = new Date();
-      date2 = moment(date2).format("YYYY-MM-DD")
-      date2 = moment(date2)
-      // return
-      // Calculate the difference in days
-      var diffInDays = date2.diff(date1, 'days');
-
-      console.log(diffInDays); // Output: 45
-    }
-
-  }, [classStateData.appointmentDetails])
   const getAllDetails = async (page) => {
     let url = config.baseURL + "api-patient-appointment-details";
     var data = new FormData();
@@ -127,28 +109,43 @@ export default AppointmentDetails = ({ navigation, route }) => {
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        // console.log("getAllDetails....", obj);
+        // console.log("getAllDetails....", obj.result);
         if (obj.status == true) {
           setState(
             {
               appointmentDetails: obj.result,
               message: obj.message,
             });
-          setTimeout(() => {
-            setState(
-              {
-                isLoadingDetails: false
-              });
-          }, 750);
+          if (obj.result.acceptance_status === 'Accepted' || obj.result.acceptance_status === 'Completed') {
+            if (getISChatImplemented(moment(obj.result.app_date, obj.result.app_time))) {
+              firestore()
+                .collection(`Chats-${config.mode}`)
+                .doc(obj.result?.order_id)
+                .onSnapshot(documentSnapshot => {
+                  if (!documentSnapshot.exists) {
+                    setState({ isChat: false })
+                  } else {
+                    const roomDetails = documentSnapshot.data()
+                    setState({ isChat: false })
+                  }
+                })
+            } else {
+              setState({ isChat: true })
+            }
+          } else {
+            setState({ isChat: false })
+          }
         } else {
-          setState({ nurse_data: obj.result, message: obj.message, isLoadingDetails: false });
+          setState({ appointmentDetails: obj.result, message: obj.message, });
           return false;
         }
       })
       .catch((error) => {
-        setState({ isLoadingDetails: false });
         console.log("getAllDetails-error ------- " + error);
-      });
+      }).finally(() => {
+        setState({ isLoadingDetails: false });
+
+      })
   };
 
   const rescdule_click = async () => {
@@ -163,7 +160,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
           : "api-patient-reschedule-appointment");
 
     var data = new FormData();
-    data.append("login_user_id", loggedInUserDetails.user_id);
+    data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("order_id", appointment_id);
     data.append("service_type", status);
     if (status === "lab") {
@@ -900,7 +897,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-insert-review";
     var data = new FormData();
     console.log("data", data);
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", status);
     data.append("order_id", classStateData.set_order);
     data.append("rating", classStateData.rating);
@@ -1157,12 +1154,15 @@ export default AppointmentDetails = ({ navigation, route }) => {
     let tempArr = []
     var otpList = [];
     if ((item?.OTP != null && item?.OTP != '')) {
-      let OTP = item?.OTP?.split('')
-      for (let index = 0; index < item?.OTP.length; index++) {
+      let OTP = item?.OTP
+      if (languageIndex == 1) {
+        OTP = OTP.split("").reverse().join("");
+      }
+      OTP = OTP?.split('')
+      for (let index = 0; index < OTP.length; index++) {
         tempArr.push(OTP[index])
       }
       otpList = tempArr
-      // console.log(tempArr);
     }
 
     return (
@@ -1461,7 +1461,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
 
             {/* // patient symptom doctor */}
-            {item.service_type == "Doctor" &&
+            {item.service_type == LangProvider.Doctor[languageIndex] &&
               (item.symptom_recording != "" ||
                 item.symptom_text != "") && (
                 <View
@@ -1615,7 +1615,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               )}
             {/* // prescription doctor */}
             {item.acceptance_status == "Completed" &&
-              item.service_type == "Doctor" && (
+              item.service_type == LangProvider.Doctor[languageIndex] && (
                 <View
                   style={{
                     width: "100%",
@@ -1668,7 +1668,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                             alignSelf: 'flex-start',
                             width: '70%'
                           }} >
-                          {item.patient_prescription}
+                          {item.provider_prescription}
                         </Text>
 
                         {
@@ -1839,11 +1839,11 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     fontFamily: Font.Medium,
                     fontSize: Font.small,
                     color: Colors.darkText,
-                    alignSelf: 'flex-start',
                   }}
                 >
                   {LangProvider.patient_details[languageIndex]}
                 </Text>
+
                 <TouchableOpacity
                   onPress={() => {
                     setState({
@@ -1854,15 +1854,15 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 >
                   <View
                     style={{
-                      padding: 15,
+                      padding: 8,
                       backgroundColor: Colors.backgroundcolor,
                       justifyContent: "center",
                     }}
                   >
                     <Image
                       style={{
-                        height: (windowWidth * 4.5) / 100,
-                        width: (windowWidth * 4.5) / 100,
+                        height: (windowWidth * 4) / 100,
+                        width: (windowWidth * 4) / 100,
                         // backgroundColor: 'red'
                         // position: "absolute",
                         // top: (dHeight) ? 4 : 15,
@@ -1918,9 +1918,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         color: Colors.DarkGrey,
                         fontFamily: Font.Regular,
                         fontSize: Font.small,
-                        alignSelf: 'flex-start',
-                        marginLeft: (windowWidth * 3) / 100,
-                        width: "96%",
+                        textAlign: contentAlign,
+                        marginHorizontal: (windowWidth * 3) / 100,
                       }}
                     >
                       {item.patient_address}
@@ -1971,34 +1970,39 @@ export default AppointmentDetails = ({ navigation, route }) => {
             </View>
 
 
-            {item.acceptance_status == "Accepted" &&
-              item.service_type != "Doctor" &&
-              item.service_type != "Lab" && (
+
+            {/* --------------OTP-------------- */}
+            {
+              ((item?.service_type != LangProvider.Doctor[languageIndex]
+                &&
+                item?.service_type != LangProvider.Lab[languageIndex])
+                &&
+                item.acceptance_status == "Accepted")
+              && (
                 <View
                   style={{
                     width: "100%",
-                    alignSelf: "center",
                     paddingVertical: (windowWidth * 2) / 100,
                     flexDirection: "row",
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     borderTopWidth: 1,
                     borderTopColor: Colors.backgroundcolor,
-                    paddingHorizontal: s(13)
-                  }}>
+                    paddingHorizontal: s(13),
+                  }} >
                   <Text
                     style={{
                       fontSize: Font.small,
                       color: Colors.DarkGrey,
-                      width: "75%",
-                      alignSelf: 'flex-start',
                       fontFamily: Font.Regular,
-                    }}>
+                    }}
+                  >
                     {
                       LangProvider.appointment_accepted_otp_text[
                       languageIndex
                       ]
                     }
                   </Text>
-
                   <FlatList
                     horizontal
                     data={otpList}
@@ -2027,68 +2031,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                         <View style={{ width: s(3) }}></View>
                       )
                     }}
-                    contentContainerStyle={{ paddingHorizontal: s(5), }}
-                  />
-
-                </View>
-              )}
-            {item.acceptance_status == "Completed" &&
-              item.service_type != "Doctor" &&
-              item.service_type != "Lab" && (
-                <View
-                  style={{
-                    width: "100%",
-                    alignSelf: "center",
-                    paddingVertical: (windowWidth * 2) / 100,
-                    flexDirection: "row",
-                    borderTopWidth: 1,
-                    borderTopColor: Colors.backgroundcolor,
-                    paddingHorizontal: s(13)
-                  }} >
-                  <Text
-                    style={{
-                      fontSize: Font.small,
-                      color: Colors.Green,
-                      width: "75%",
-                      alignSelf: 'flex-start',
-                      fontFamily: Font.Regular,
-                    }}
-                  >
-                    {
-                      LangProvider.appointment_closed_otp_text[
-                      languageIndex
-                      ]
-                    }
-                  </Text>
-                  <FlatList
-                    horizontal
-                    data={otpList}
-                    renderItem={({ item, index }) => {
-                      return (
-                        <View style={{
-                          height: 18,
-                          width: 18,
-                          borderRadius: 2,
-                          backgroundColor: Colors.detailTitles,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
-                          <Text
-                            style={{
-                              fontSize: Font.medium,
-                              fontFamily: Font.SemiBold,
-                              color: Colors.White
-                            }}
-                          >{item}</Text>
-                        </View>
-                      )
-                    }}
-                    ItemSeparatorComponent={() => {
-                      return (
-                        <View style={{ width: s(3) }}></View>
-                      )
-                    }}
-                    contentContainerStyle={{ paddingHorizontal: s(5), }}
+                    contentContainerStyle={{ paddingHorizontal: s(20) }}
                   />
                 </View>
               )}
@@ -2359,16 +2302,34 @@ export default AppointmentDetails = ({ navigation, route }) => {
 
               )}
 
-              {item.acceptance_status == "Accepted" &&
-                item.service_type == "Doctor" &&
-                videoCallButton == true && (
+              {(
+                item.acceptance_status == "Accepted"
+                &&
+                item.service_type == LangProvider.Doctor[languageIndex]
+                &&
+                item.task_type == LangProvider.OnlineConsultation[languageIndex]
+                &&
+                videoCallButton == true) && (
                   <>
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        navigation.navigate("VideoCall", {
-                          item: item,
-                        });
+
+                        var videoDetails = {
+                          fromUserId: loggedInUserDetails?.user_id,
+                          fromUserName: loggedInUserDetails?.first_name,
+                          order_id: item?.order_id,
+                          room_name: "rootvideo_room_" + loggedInUserDetails?.user_id + "_" + item?.provider_id,
+                          toUserId: item?.provider_id,
+                          toUserName: item?.provider_name,
+                          type: 'patient_to_doctor_video_call',
+                          image: item?.provider_image,
+                          isPage: "outGoing",
+                        };
+                        dispatch(setVideoCallData(videoDetails))
+                        setTimeout(() => {
+                          dispatch(setVideoCall(true))
+                        }, 500);
                       }}
                       style={{
                         paddingHorizontal: s(8),
@@ -2480,14 +2441,14 @@ export default AppointmentDetails = ({ navigation, route }) => {
           {/* --------------------Chat----------------- */}
 
           {
-            ((item.acceptance_status == "Accepted" || item.acceptance_status == "Completed") && item.service_type == "Doctor" && classStateData.isChat) &&
+            ((item.acceptance_status == "Accepted" || item.acceptance_status == "Completed") && item.service_type == LangProvider.Doctor[languageIndex]) &&
             <View style={{ marginTop: vs(7), backgroundColor: Colors.White, paddingHorizontal: s(13), paddingVertical: vs(9), }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <SvgXml xml={Chat} />
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    navigation.navigate('Chat', { chatOptions: chatOptions })
+                    navigation.navigate('Chat', { chatOptions: chatOptions, isEnabled: (classStateData.isChat) })
                   }}
                   style={{ marginLeft: s(10) }}>
                   <Text
@@ -3267,7 +3228,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
           onRequestClose={() => {
             setState({ isContactUsModal: false })
           }}
-          data={item.order_id}
+          Id={item.order_id}
           route={'AppointmentDetails'}
         />
 

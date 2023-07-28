@@ -831,21 +831,21 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.1100)
-  - Permission-Camera (3.6.1):
+  - Permission-Camera (3.8.4):
     - RNPermissions
-  - Permission-LocationAccuracy (3.6.1):
+  - Permission-LocationAccuracy (3.8.4):
     - RNPermissions
-  - Permission-LocationAlways (3.6.1):
+  - Permission-LocationAlways (3.8.4):
     - RNPermissions
-  - Permission-LocationWhenInUse (3.6.1):
+  - Permission-LocationWhenInUse (3.8.4):
     - RNPermissions
-  - Permission-MediaLibrary (3.6.1):
+  - Permission-MediaLibrary (3.8.4):
     - RNPermissions
-  - Permission-Microphone (3.6.1):
+  - Permission-Microphone (3.8.4):
     - RNPermissions
-  - Permission-Notifications (3.6.1):
+  - Permission-Notifications (3.8.4):
     - RNPermissions
-  - Permission-PhotoLibrary (3.6.1):
+  - Permission-PhotoLibrary (3.8.4):
     - RNPermissions
   - PromisesObjC (2.1.1)
   - RCT-Folly (2021.06.28.00-v2):
@@ -1055,10 +1055,6 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
-  - react-native-background-timer (2.4.1):
-    - React-Core
-  - react-native-blur (4.3.0):
-    - React-Core
   - react-native-branch (5.7.0):
     - Branch (= 1.45.2)
     - React-Core
@@ -1091,7 +1087,7 @@ PODS:
     - React-Core
   - react-native-spinkit (1.4.1):
     - React
-  - react-native-twilio-video-webrtc (3.1.0):
+  - react-native-twilio-video-webrtc (3.2.0):
     - React
     - TwilioVideo (~> 4.6)
   - react-native-video (5.2.1):
@@ -1170,7 +1166,7 @@ PODS:
     - React-Core
   - RNAudioRecorderPlayer (3.5.3):
     - React-Core
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.19.1):
     - React-Core
   - RNCMaskedView (0.2.8):
     - React-Core
@@ -1207,7 +1203,7 @@ PODS:
     - TOCropViewController
   - RNPDF (0.14.0):
     - React
-  - RNPermissions (3.6.1):
+  - RNPermissions (3.8.4):
     - React-Core
   - RNReanimated (2.14.4):
     - DoubleConversion
@@ -1353,8 +1349,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
-  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
-  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-branch (from `../node_modules/react-native-branch`)
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
@@ -1520,10 +1514,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
-  react-native-background-timer:
-    :path: "../node_modules/react-native-background-timer"
-  react-native-blur:
-    :path: "../node_modules/@react-native-community/blur"
   react-native-branch:
     :path: "../node_modules/react-native-branch"
   react-native-cameraroll:
@@ -1633,7 +1623,7 @@ SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  Branch: 1fc81857f63403d4682305088b11270719dca8db
+  Branch: c1a7fa1811ef9203c01bc6c2588a229eb3ee1a84
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CardIODynamic: 4a0d2d0e7b82993ceca67491564934c3475fbe79
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -1668,14 +1658,14 @@ SPEC CHECKSUMS:
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Permission-Camera: bf6791b17c7f614b6826019fcfdcc286d3a107f6
-  Permission-LocationAccuracy: 76df17de5c6b8bc2eee34e61ee92cdd7a864c73d
-  Permission-LocationAlways: 8d99b025c9f73c696e0cdb367e42525f2e9a26f2
-  Permission-LocationWhenInUse: 3ba99e45c852763f730eabecec2870c2382b7bd4
-  Permission-MediaLibrary: a994236bae41b3597a376ff08298fb1c6d84729b
-  Permission-Microphone: 48212dd4d28025d9930d583e3c7a56da7268665c
-  Permission-Notifications: 150484ae586eb9be4e32217582a78350a9bb31c3
-  Permission-PhotoLibrary: 5b34ca67279f7201ae109cef36f9806a6596002d
+  Permission-Camera: 7ec9ee99704766ff9b90198183387a7f5d82b0c1
+  Permission-LocationAccuracy: a38ddb5c5d0b8e656f3c86e4a500f9bb88bc099d
+  Permission-LocationAlways: 8fd5518716c3045f9c4edf77b901126098d79b60
+  Permission-LocationWhenInUse: 24d97eeb25d8ff9f2232e070f792eeb1360ccaf0
+  Permission-MediaLibrary: c5bb0ad28143730f154820f3efd993985025ff18
+  Permission-Microphone: 3c985f25f8f89889c9e056622476deb291877194
+  Permission-Notifications: e06c4b115105e9aed6ed8d03c9894c23c1051731
+  Permission-PhotoLibrary: 6db9318df71ad74e9774cecedde95285f5a32d6a
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 3e917ea5377751094f38145fdece525aa90545a0
@@ -1690,8 +1680,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
-  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-branch: 882341157fe7f47b0d8ac05b722040075eeefb7e
   react-native-cameraroll: 5b25d0be40185d02e522bf2abf8a1ba4e8faa107
   react-native-date-picker: 93e43b3084cea595b4d68b1405d6d99849663bd6
@@ -1705,7 +1693,7 @@ SPEC CHECKSUMS:
   react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
-  react-native-twilio-video-webrtc: e2a899018ce860eb8dd703bd51d82903517f47b7
+  react-native-twilio-video-webrtc: 55b6948742aac81f62ca692c97d055aa0206648f
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
@@ -1722,7 +1710,7 @@ SPEC CHECKSUMS:
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAudioRecorderPlayer: 6638283925b46808310c9fdf803ebabc3abdbadc
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNCAsyncStorage: f47fe18526970a69c34b548883e1aeceb115e3e1
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNDateTimePicker: 1dd15d7ed1ab7d999056bc77879a42920d139c12
@@ -1734,7 +1722,7 @@ SPEC CHECKSUMS:
   RNGosellSdkReactNative: 95409a76ce0bd028e20324824aa313f7cfcd1a0b
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNPDF: 8526c7210ff375c29d2461c51945e2f5480f7b60
-  RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
+  RNPermissions: f1b49dd05fa9b83993cd05a9ee115247944d8f1a
   RNReanimated: 73afd1a9b4087e403163e0d300854cb99260c9b6
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNSentry: 7e90aec2633d2fdad8aeb839c9915e4376fd27d1

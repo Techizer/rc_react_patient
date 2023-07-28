@@ -17,7 +17,6 @@ import { LangProvider } from '../Provider/Language_provider'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { apifuntion, Button, mediaprovider, msgProvider, windowWidth } from '../Provider/Utils/Utils'
 import MediaOptions from '../components/MediaOptions'
-import { MessageType } from 'react-native-flash-message'
 import ChatMessage from '../components/ChatMessage'
 
 
@@ -31,12 +30,13 @@ const Chat = ({ navigation, route }) => {
     const insets = useSafeAreaInsets()
     const messageInputRef = useRef()
 
-    const { chatOptions } = route?.params
+    const { chatOptions, isEnabled } = route?.params
 
     const {
         loggedInUserDetails,
         deviceToken,
-        languageIndex
+        languageIndex,
+        contentAlign
     } = useSelector(state => state.StorageReducer)
     const { provider, patient, appointment } = chatOptions
     !chatOptions ? (() => { navigation.canGoBack() && navigation.goBack(); return (<></>) })() : true
@@ -47,7 +47,6 @@ const Chat = ({ navigation, route }) => {
     const [docs, setDocs] = useState([]);
     const [attachment, setAttachment] = useState([])
     const [type, setType] = useState('')
-    const [isExpired, setIsExpired] = useState(false)
 
     useEffect(() => {
         firestore()
@@ -196,7 +195,7 @@ const Chat = ({ navigation, route }) => {
         }
     };
 
-    const UploadFile = async (msg: MessageType) => {
+    const UploadFile = async (msg: any) => {
         let url = config.baseURL + "api-chat-image";
         var data = new FormData();
         for (var i = 0; i < attachment.length; i++) {
@@ -325,7 +324,7 @@ const Chat = ({ navigation, route }) => {
                                     source={{ uri: provider?.image }} />
                             </View>
 
-                            <View style={{ flex: 1, justifyContent: 'center', }}>
+                            <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'center' }}>
                                 <Text style={{
                                     color: Colors.Black,
                                     fontFamily: Font.SemiBold,
@@ -374,11 +373,12 @@ const Chat = ({ navigation, route }) => {
                 }}>
 
                     {
-                        isExpired ?
+                        !isEnabled ?
                             <Button
                                 text={LangProvider.ChatClosed[languageIndex]}
-                                btnStyle={{backgroundColor:'#FFA800'}}
-                                 />
+                                btnStyle={{ backgroundColor: Colors.orange }}
+                                onPress={() => navigation.pop()}
+                            />
                             :
                             <View
                                 style={{
@@ -465,9 +465,15 @@ const Chat = ({ navigation, route }) => {
                                             justifyContent: 'center',
                                         }}>
                                             <TextInput
-                                                placeholder='Write your message here..'
+                                                placeholder={LangProvider.WriteMsg[languageIndex]}
                                                 placeholderTextColor={'#515C6F'}
-                                                style={{ width: '100%', color: Colors.Black, fontSize: Font.small }}
+                                                style={{
+                                                    width: '100%',
+                                                    color: Colors.Black,
+                                                    fontSize: Font.small,
+                                                    textAlign: contentAlign
+
+                                                }}
                                                 multiline
                                                 value={messageInput}
                                                 returnKeyType='next'
@@ -543,7 +549,9 @@ const Chat = ({ navigation, route }) => {
                                             onSendMessage()
                                         }}>
 
-                                        <SvgXml xml={Send} />
+                                        <SvgXml xml={Send} style={{
+                                            transform: languageIndex == 1 ? [{ rotate: "180deg" }] : [{ rotate: "0deg" }]
+                                        }} />
                                     </Pressable>
 
 

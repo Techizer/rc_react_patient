@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, TouchableOpacity, View, ScrollView, StyleSheet, TouchableHighlight, Keyboard, FlatList, Modal, } from "react-native";
-import { BlurView } from "@react-native-community/blur";
 import HTMLView from "react-native-htmlview";
 import { SvgXml } from "react-native-svg";
 import { s, vs } from "react-native-size-matters";

@@ -157,7 +157,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     sliderContainer: {
-        width: "87%",
+        width: "82%",
     },
     slider: {
         width: "100%",
@@ -165,7 +165,7 @@ export const styles = StyleSheet.create({
     },
     durationContainer:
     {
-        width: '87%',
+        width: '82%',
         flexDirection: "row",
         justifyContent: "space-between",
         alignSelf: 'flex-end',

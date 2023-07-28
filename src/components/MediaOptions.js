@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet, Modal, TouchableHighlight, Keyboard, Alert, Platform, } from "react-native";
-import { BlurView } from "@react-native-community/blur";
-
-import { SkypeIndicator } from 'react-native-indicators';
 import { Colors, Font } from "../Provider/Colorsfont";
 import {
     windowWidth, LangProvider, config, Icons, Button, apifuntion, msgProvider, windowHeight,

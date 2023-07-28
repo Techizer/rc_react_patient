@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View, Image, StyleSheet, Dimensions, Modal, TouchableOpacity, Keyboard, FlatList, Platform, Pressable, } from "react-native";
 import DeviceInfo from "react-native-device-info";
+import Toast from "react-native-toast-message";
 
 import { Colors, Font } from "../Provider/Colorsfont";
 import { windowWidth, LangProvider, config, Button, msgProvider, apifuntion, windowHeight, } from "../Provider/Utils/Utils";
@@ -20,7 +21,7 @@ let deviceName = ''
 const ContactUsBottomSheet = ({
     visible,
     onRequestClose,
-    data,
+    Id,
     route
 }) => {
 
@@ -107,15 +108,11 @@ const ContactUsBottomSheet = ({
                 console.log("submitLoginIssue-response...", obj);
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message);
-                    setTimeout(() => {
-                        onRequestClose()
-                        setSubject('')
-                        setDesc('')
-                        setEmail('')
-                        setPhone('')
-                    }, 350);
+                    setSubject('')
+                    setDesc('')
+                    setEmail('')
+                    setPhone('')
                 } else {
-                    onRequestClose()
                     msgProvider.showError(obj.message);
                     setSubject('')
                     setDesc('')
@@ -127,7 +124,11 @@ const ContactUsBottomSheet = ({
             .catch((error) => {
                 setIsLoading(false)
                 console.log("submitLoginIssue-error ------- " + error);
-            });
+            }).finally(() => {
+                setTimeout(() => {
+                    onRequestClose()
+                }, 2500);
+            })
     };
     const submitIssue = async () => {
         if (!desc) {
@@ -137,7 +138,7 @@ const ContactUsBottomSheet = ({
         setIsLoading(true)
         let url = config.baseURL + "api-app-insert-need-help";
         var data = new FormData();
-        data.append("user_id", loggedInUserDetails.user_id);
+        data.append("user_id", loggedInUserDetails?.user_id);
         data.append("service_type", loggedInUserDetails.user_type);
         data.append("subject", subject);
         data.append("order_id", Id);
@@ -150,25 +151,21 @@ const ContactUsBottomSheet = ({
                 console.log("submitIssue-response...", obj);
                 if (obj.status == true) {
                     msgProvider.showSuccess(obj.message);
-                    setTimeout(() => {
-                        onRequestClose()
-                        setSubject('')
-                        setDesc('')
-                    }, 350);
+                    setSubject('')
+                    setDesc('')
                 } else {
-                    onRequestClose()
-                    msgProvider.alert(
-                        LangProvider.information[languageIndex],
-                        obj.message[languageIndex],
-                        false
-                    );
+                    msgProvider.showError('Something went wrong, please try later');
                     return false;
                 }
             })
             .catch((error) => {
                 setIsLoading(false)
                 console.log("submitIssue-error ------- " + error);
-            });
+            }).finally(() => {
+                setTimeout(() => {
+                    onRequestClose()
+                }, 2500);
+            })
     };
 
     return (
@@ -183,6 +180,7 @@ const ContactUsBottomSheet = ({
 
                 <View style={[styles.mainContainer]}>
 
+                    <Toast />
                     <View style={[styles.subContainer]}>
                         <TouchableOpacity
                             onPress={() => {
@@ -220,7 +218,7 @@ const ContactUsBottomSheet = ({
 
                                     <NonEditableInput
                                         title={route == 'Login' ? LangProvider.Subject[languageIndex] : LangProvider.OrderId[languageIndex]}
-                                        data={route == 'Login' ? LangProvider.LoginIssue[languageIndex] : data} />
+                                        data={route == 'Login' ? LangProvider.LoginIssue[languageIndex] : Id} />
 
 
                                     {

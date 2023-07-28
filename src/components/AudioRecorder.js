@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text, Platform, TouchableOpacity, Image, View, StyleSheet, Modal, TouchableHighlight, PermissionsAndroid } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
-import { BlurView } from "@react-native-community/blur";
-import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,

@@ -78,7 +78,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
-    bundleInDebug:true
+    bundleInDebug:false
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -123,6 +123,14 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false)
 
 android {
+//     compileSdkVersion 27
+//    dexOptions {
+//     jumboMode true
+//     } 
+//     compileOptions {
+//         sourceCompatibility 1.8
+//         targetCompatibility 1.8
+//     }
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -136,8 +144,8 @@ android {
         applicationId "com.rootscare"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
-        versionName "3.6.9"
+        versionCode 44
+        versionName "3.7.0"
         multiDexEnabled true
     }
     splits {
@@ -167,13 +175,16 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            minifyEnabled false
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // debuggable false
+            // shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 

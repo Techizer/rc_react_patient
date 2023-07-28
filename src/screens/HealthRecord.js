@@ -46,7 +46,7 @@ const HealthRecord = (props) => {
     let url = config.baseURL + "api-patient-family-member";
     var data = new FormData();
 
-    data.append("user_id", loggedInUserDetails.user_id);
+    data.append("user_id", loggedInUserDetails?.user_id);
 
     // console.log("get_Services-query-data......", data);
     apifuntion.postApi(url, data, 1).then((res) => {

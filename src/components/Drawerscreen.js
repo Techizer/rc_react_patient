@@ -63,6 +63,15 @@ const Drawerscreen = ({ navigation }) => {
   })
 
   useEffect(() => {
+    setDrawerData(prevState => ({
+      ...prevState,
+      profileImg: (loggedInUserDetails && loggedInUserDetails.image != '' && loggedInUserDetails.image != null) ? (config.img_url3 + loggedInUserDetails?.image) : '',
+      name: loggedInUserDetails ? loggedInUserDetails?.first_name : '',
+    }))
+
+  }, [loggedInUserDetails])
+
+  useEffect(() => {
     // console.log({ loggedInUserDetails });
     dispatch(SelectedProvider(null))
   }, [])

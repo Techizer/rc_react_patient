@@ -72,7 +72,7 @@ const Upcoming = (props) => {
     let url = config.baseURL + "api-patient-upcoming-appointment";
 
     var data = new FormData();
-    data.append("lgoin_user_id", loggedInUserDetails.user_id);
+    data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", 'lab');
     data.append("page_count", page);
 
