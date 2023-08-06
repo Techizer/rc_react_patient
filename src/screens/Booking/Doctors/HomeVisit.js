@@ -1268,7 +1268,7 @@ const HomeVisit = ({ navigation }) => {
 
           <TabbyProductSnippetCreditCard
             lang={languageIndex == 0 ? 'en' : "ar"}
-            currency={loggedInUserDetails.currency_symbol}
+            currency={loggedInUserDetails?.currency_symbol}
             price={statesData.totalPrice}
             containerStyle={{ marginTop: vs(7) }}
           />

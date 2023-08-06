@@ -1222,7 +1222,7 @@ const TaskBase = ({ navigation, route }) => {
 
           <TabbyProductSnippetCreditCard
             lang={languageIndex == 0 ? 'en' : "ar"}
-            currency={loggedInUserDetails.currency_symbol}
+            currency={loggedInUserDetails?.currency_symbol}
             price={(statesData.selectedTasks != '' && statesData.selectedTasks != null) ? statesData.totalPrice : '0'}
             containerStyle={{ marginTop: vs(7) }}
           />

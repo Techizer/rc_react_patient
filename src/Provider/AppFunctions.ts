@@ -23,13 +23,9 @@ export const getIsAppointmentChatEnabled = (appointmentDate?: Date, apppointment
 
 export const getISChatImplemented = (appointmentDate: string, appointmentTime: string) => {
 
-    // const appointmentMoment = moment(appointmentDate);
-    // const todayDate = moment();
-    // const expirationDate = appointmentMoment.add(7, 'days');
-    // return todayDate.isBefore(expirationDate);
-
+    
     const givenTimeString = `${appointmentDate} ${appointmentTime}`;
-
+    
     // const givenTimeString = 'Tue, 25 Jul 2023 07:50 PM - 10:15 AM'
 
     const dateString = givenTimeString.split(' ')[1] + ' ' + givenTimeString.split(' ')[2] + ' ' + givenTimeString.split(' ')[3];

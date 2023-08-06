@@ -1122,7 +1122,7 @@ const PackageBase = ({ navigation, route }) => {
 
           <TabbyProductSnippetCreditCard
             lang={languageIndex == 0 ? 'en' : "ar"}
-            currency={loggedInUserDetails.currency_symbol}
+            currency={loggedInUserDetails?.currency_symbol}
             price={(statesData.selectedPackage != '' && statesData.selectedPackage != null) ? statesData.totalPrice : '0'}
             containerStyle={{ marginTop: vs(7) }}
           />

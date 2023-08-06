@@ -1108,7 +1108,7 @@ const CartDetails = ({ navigation }) => {
                 {/* ----------------Promo------------------- */}
                 <TabbyCheckoutSnippet
                   lang={languageIndex == 0 ? 'en' : "ar"}
-                  currency={loggedInUserDetails.currency_symbol}
+                  currency={loggedInUserDetails?.currency_symbol}
                   price={(show_data?.total_price != '' && show_data?.total_price != null) ? show_data?.total_price : '0'}
                   circleFillColor={[Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme]}
                 // containerStyle={{ marginTop: vs(7) }}

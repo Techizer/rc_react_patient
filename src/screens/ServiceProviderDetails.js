@@ -1148,7 +1148,7 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
 
             <TabbyProductSnippetCreditCard
               lang={languageIndex == 0 ? 'en' : "ar"}
-              currency={loggedInUserDetails.currency_symbol}
+              currency={loggedInUserDetails?.currency_symbol}
               price={'0'}
               containerStyle={{ marginBottom: vs(30), marginTop: vs(7) }}
             />

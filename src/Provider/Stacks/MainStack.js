@@ -45,7 +45,8 @@ const MainStack = () => {
         deviceToken,
         loggedInUserDetails,
         currentRoute,
-        appState
+        appState,
+        guest
     } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
     const routeNameRef = useRef();
@@ -313,18 +314,20 @@ const MainStack = () => {
                 &&
                 routeNameRef?.current?.getCurrentRoute()?.name != 'TermsAndConditions'
             )
-            CheckSession().then((authStatus) => {
-                if (!authStatus) {
-                    if (currentRoute) {
-                        routeNameRef?.current.reset({
-                            index: 0,
-                            routes: [{ name: 'AuthStack' }],
-                        });
+            if (!guest) {
+                CheckSession().then((authStatus) => {
+                    if (!authStatus) {
+                        if (currentRoute) {
+                            routeNameRef?.current.reset({
+                                index: 0,
+                                routes: [{ name: 'AuthStack' }],
+                            });
+                        }
                     }
-                }
-            }).catch((error) => {
-                console.log(error);
-            })
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
         }
     }, [appState])
 

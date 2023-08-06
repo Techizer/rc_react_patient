@@ -154,16 +154,16 @@ const Splash = ({ navigation }) => {
       // console.log('checkAppVersion-res', obj);
       if (obj.status == true) {
 
-        // console.log({
-        //   MyVersion: appVersion,
-        //   FromApiVersion: obj?.result?.appVer,
-        //   Platform: Platform.OS
-        // });
+        console.log({
+          MyVersion: appVersion,
+          FromApiVersion: obj?.result?.appVer,
+          Platform: Platform.OS
+        });
 
         const newCode = obj?.result?.appVer?.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
         const myCode = appVersion.split('.').map((i, _i) => (`${i}`.length > 0 && _i !== 0) ? `${i}`.charAt(0) : `${i}`).join('')
 
-        // console.log({ newCode, myCode });
+        console.log({ newCode, myCode });
 
         if (parseInt(newCode) > parseInt(myCode)) {
           setUpdateData(prev => ({

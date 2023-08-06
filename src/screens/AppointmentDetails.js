@@ -109,7 +109,8 @@ export default AppointmentDetails = ({ navigation, route }) => {
     apifuntion
       .postApi(url, data, page)
       .then((obj) => {
-        // console.log("getAllDetails....", obj.result);
+        // console.log("getAllDetails....", obj.result.app_date);
+        // console.log("getAllDetails....", obj.result.app_time);
         if (obj.status == true) {
           setState(
             {
@@ -117,7 +118,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               message: obj.message,
             });
           if (obj.result.acceptance_status === 'Accepted' || obj.result.acceptance_status === 'Completed') {
-            if (getISChatImplemented(moment(obj.result.app_date, obj.result.app_time))) {
+            if (getISChatImplemented(obj.result.app_date, obj.result.app_time)) {
               firestore()
                 .collection(`Chats-${config.mode}`)
                 .doc(obj.result?.order_id)
