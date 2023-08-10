@@ -1,3 +1,4 @@
+
 import {
     DEVICE_TOKEN,
     USER_DETAIL,
@@ -27,7 +28,10 @@ import {
     USER_PROFILE,
     APP_STATE,
     VIDEO_CALL,
-    VIDEO_CALL_DATA
+    VIDEO_CALL_DATA,
+    INCOMING_VIDEO_CALL,
+    VIDEO_CALL_STATUS,
+    NO_INTERNET,
 } from './Types'
 
 const Guest = (payload) => ({
@@ -186,6 +190,21 @@ const setVideoCallData = payload => ({
     payload
 })
 
+const setIsIncomingCall = payload => ({
+    type: INCOMING_VIDEO_CALL,
+    payload
+})
+
+const setVideoCallStatus = payload => ({
+    type: VIDEO_CALL_STATUS,
+    payload
+})
+
+const setNoInternet = payload => ({
+    type: NO_INTERNET,
+    payload
+})
+
 export {
     Guest,
     UserDetails,
@@ -215,6 +234,9 @@ export {
     UserProfile,
     CurrentRoute,
     setAppState,
+    setIsIncomingCall,
     setVideoCall,
-    setVideoCallData
+    setVideoCallData,
+    setVideoCallStatus,
+    setNoInternet
 }

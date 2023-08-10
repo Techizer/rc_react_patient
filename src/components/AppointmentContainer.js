@@ -1,3 +1,4 @@
+
 import {
     FlatList,
     Text,
@@ -1420,7 +1421,15 @@ const AppointmentContainer = ({
                                 }
 
                                 {
-                                    (Item?.dispaly_provider_type == LangProvider.Doctor[languageIndex] && Item.appointment_type == LangProvider.OnlineConsultation[languageIndex] && Item.acceptance_status === 'Accepted' && Item.videoCall == true) &&
+                                    (
+                                        Item?.dispaly_provider_type == LangProvider.Doctor[languageIndex]
+                                        &&
+                                        Item.appointment_type == LangProvider.OnlineConsultation[languageIndex]
+                                        &&
+                                        Item.acceptance_status === 'Accepted'
+                                        &&
+                                        Item.videoCall == true
+                                    ) &&
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
@@ -1438,7 +1447,7 @@ const AppointmentContainer = ({
 
                                             dispatch(setVideoCallData(videoDetails))
                                             setTimeout(() => {
-                                              dispatch(setVideoCall(true))
+                                                dispatch(setVideoCall(true))
                                             }, 500);
                                         }}
                                         style={{

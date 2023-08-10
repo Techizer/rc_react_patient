@@ -1,4 +1,5 @@
-import { DeviceToken, onLogout, UserDetails } from '../Redux/Actions';
+
+import { DeviceConnection, DeviceToken, onLogout, setVideoCallStatus, UserDetails } from '../Redux/Actions';
 import { store } from '../Redux/Index'
 
 // Function to get the Redux state
@@ -18,9 +19,25 @@ const setLogout = () => {
     store.dispatch(onLogout());
 };
 
+const setConnection = (isConnected) => {
+    const { callStatus, isVideoCall } = getReduxState();
+
+    store.dispatch(DeviceConnection(isConnected));
+    if (!isConnected && isVideoCall && (callStatus == 7 || callStatus == 2)) {
+        setTimeout(() => {
+            store.dispatch(setVideoCallStatus(10))
+        }, 1000);
+    } else if (!isConnected && isVideoCall && (callStatus == 0 || callStatus == 1 || callStatus == 8)) {
+        store.dispatch(setVideoCallStatus(0))
+    } else if (!isConnected && isVideoCall && (callStatus == 4 || callStatus == 5 || callStatus == 9)) {
+        store.dispatch(setVideoCallStatus(callStatus))
+    }
+};
 
 export {
     getReduxState,
     setUserData,
-    setLogout
+    setLogout,
+    setConnection
 };
+

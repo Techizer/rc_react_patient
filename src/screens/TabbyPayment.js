@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,7 +35,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
+                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
             },
@@ -124,7 +123,7 @@ const TabbyPayment = ({ navigation, route }) => {
             });
     };
 
-    const parseMessage = (msg: WebViewResult) => {
+    const parseMessage = (msg) => {
         console.log({ msg });
         if (msg === 'close' || msg === 'rejected') {
             msgProvider.showError('⛔️ You cancelled checkout process')
@@ -147,3 +146,4 @@ const TabbyPayment = ({ navigation, route }) => {
 };
 
 export default TabbyPayment;
+

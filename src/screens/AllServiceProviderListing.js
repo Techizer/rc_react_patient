@@ -69,8 +69,8 @@ const AllServiceProviderListing = ({ navigation, route }) => {
       config.baseURL + "api-patient-service-provider-list"
 
     var data = new FormData();
-    
-    if (guest) { 
+
+    if (guest) {
       data.append("login_user_id", 0);
       data.append("service_type", pass_status);
       data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'Ar');
@@ -220,7 +220,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         data={providersData.providersList}
         keyExtractor={(item, index) => `Provider ${index}`}
-        ListHeaderComponent={providersData.providersList.length > 0 ? listHeader(pass_status) : null}
+        ListHeaderComponent={(providersData.providersList.length > 0 || providersData.searchProvider != '') ? listHeader(pass_status) : null}
         contentContainerStyle={{ paddingBottom: (windowWidth * 15) / 100 }}
         ListEmptyComponent={() => {
           return (
@@ -281,9 +281,7 @@ const AllServiceProviderListing = ({ navigation, route }) => {
         onRefresh={() => setIsRefreshing(true)}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
+
       {/* <Modal
           animationType="slide"
           transparent={true}

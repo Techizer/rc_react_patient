@@ -26,7 +26,7 @@ import { SvgXml } from "react-native-svg";
 import { Logo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType, onLogout, UserDetails } from "../Redux/Actions";
+import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType, onLogout, setVideoCall, setVideoCallStatus, UserDetails } from "../Redux/Actions";
 
 
 const Splash = ({ navigation }) => {
@@ -99,7 +99,7 @@ const Splash = ({ navigation }) => {
     try {
       const fcmToken = await messaging().getToken()
       if (fcmToken) {
-        console.log({fcmToken});
+        console.log({ fcmToken });
         dispatch(DeviceToken(fcmToken))
       } else {
         dispatch(DeviceToken(null))
@@ -129,6 +129,8 @@ const Splash = ({ navigation }) => {
     dispatch(DeviceType(Platform.OS))
   }
   const getLanguage = async () => {
+    dispatch(setVideoCallStatus(0))
+    dispatch(setVideoCall(false))
     if (appLanguage != null) {
       if (appLanguage == 'ar') {
         dispatch(AppLanguage('ar'))

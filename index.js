@@ -14,7 +14,6 @@ import { PersistGate } from 'redux-persist/lib/integration/react'
 import messaging from '@react-native-firebase/messaging';
 import { Provider, useDispatch } from "react-redux";
 import { store, persistor } from './src/Redux/Index'
-import { Font } from './src/Provider/Colorsfont';
 import PushNotification from "react-native-push-notification";
 
 Sentry.init({
@@ -27,8 +26,8 @@ Sentry.init({
     //     }),
     // ],
 });
-// Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
-Tabby.setApiKey('pk_94369327-33a2-4a25-bdf3-cb04ad59be2f')
+Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
+// Tabby.setApiKey('pk_94369327-33a2-4a25-bdf3-cb04ad59be2f')
 // Settings.setAppID('386042973026214');
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
@@ -61,3 +60,4 @@ AppRegistry.registerComponent(appName, () => Sentry.wrap(Main));
 // AppRegistry.registerComponent(appName, () => Main);
 
 LogBox.ignoreAllLogs(true)
+

@@ -2,7 +2,7 @@ import React, { Component, useEffect } from "react";
 import { I18nManager, Platform, StatusBar, AppState } from "react-native";
 import NetInfo from '@react-native-community/netinfo'
 
-import MainStack from "./src/Provider/Stacks/MainStack";
+import MainStack from './src/Provider/Stacks/MainStack'
 
 import RNRestart from "react-native-restart";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,56 +15,13 @@ import VideoCall from "./src/components/VideoCall";
 console.reportErrorsAsExceptions = false;
 
 const App = () => {
-  const { appLanguage, restart, deviceConnection, isVideoCall } = useSelector(state => state.StorageReducer)
+  const { appLanguage, restart, isVideoCall, noInternet } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(Restart(false))
     language_set()
   }, [appLanguage])
 
-  useEffect(() => {
-    NetInfo.fetch().then(state => {
-      dispatch(DeviceConnection(state.isConnected))
-    }).catch((err) => {
-      console.log('GetConnectivityStatus-err', err);
-    })
-    const checkConnectivity = NetInfo.addEventListener(state => {
-      // console.log("Connection type", state.type);
-      // console.log("Is connected ? ", state.isConnected);
-      if (state.isConnected == false) {
-        dispatch(DeviceConnection(state.isConnected))
-      }
-    });
-    return () => {
-      checkConnectivity()
-    }
-  }, [])
-
-  useEffect(() => {
-    // appStateSubscription = AppState.addEventListener(
-    //   "change",
-    //   nextAppState => {
-    //     console.log("nextAppState", nextAppState);
-    //     setState({ appState: nextAppState });
-    //     if (nextAppState == 'inactive' || nextAppState == 'background') {
-    //       if (statesData.isPaymentInitiate == true) {
-    //         startTime = '';
-    //       }
-    //     }
-    //     if (nextAppState === "active") {
-    //       var endTime = new Date();
-    //       var difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
-    //       var resultInMinutes = Math.round(difference / 60000);
-    //       console.log({ resultInMinutes });
-    //       if (resultInMinutes >= 1) {
-    //         remove_cart('auto')
-    //       }
-    //     }
-
-    //   }
-    // );
-
-  }, [])
 
   const language_set = async () => {
     console.log('setting layout direction.......');
@@ -118,9 +75,14 @@ const App = () => {
             isVisible={isVideoCall}
           />
         }
-        {/* <NoInternet
-          visible={!deviceConnection}
-        /> */}
+
+        {
+          noInternet &&
+          <NoInternet
+            visible={noInternet}
+          />
+        }
+
       </>
   );
 }

@@ -373,7 +373,7 @@ const Chat = ({ navigation, route }) => {
                 }}>
 
                     {
-                        isEnabled ?
+                        !isEnabled ?
                             <Button
                                 text={LangProvider.ChatClosed[languageIndex]}
                                 btnStyle={{ backgroundColor: Colors.orange }}

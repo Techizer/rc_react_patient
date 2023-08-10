@@ -1,3 +1,4 @@
+
 import React, { Component, useEffect, useState } from "react";
 import HTMLView from "react-native-htmlview";
 import {
@@ -2380,7 +2381,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           emptyStar={Icons.outlineStar}
                           maxStars={5}
                           starSize={15}
-                          rating={item.avg_rating}
+                          rating={parseInt(item.avg_rating)}
                         />
                       </View>
                     ) : (
@@ -3231,10 +3232,6 @@ export default AppointmentDetails = ({ navigation, route }) => {
           }}
           Id={item.order_id}
           route={'AppointmentDetails'}
-        />
-
-        <NoInternet
-          visible={!deviceConnection}
         />
 
         <Loader visible={isDownloading} />

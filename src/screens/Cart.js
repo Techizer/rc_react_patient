@@ -1,3 +1,4 @@
+
 import React, { Component, useEffect, useState } from "react";
 import {
   Platform,
@@ -58,10 +59,10 @@ const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
 const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
-      ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+      // ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
+      // : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -128,8 +129,8 @@ const CartDetails = ({ navigation }) => {
       amount: statesData.cartDetails?.total_price,
       currency: statesData.currency_symbol,
       buyer: {
-        email: '',
-        phone: '',
+        email: 'card.success@tabby.ai',
+        phone: '500000001',
         name: loggedInUserDetails.first_name,
         dob: loggedInUserDetails.dob,
       },
@@ -231,7 +232,7 @@ const CartDetails = ({ navigation }) => {
         DateTime: new Date(),
         DocPaths: [],
         ImagePaths: [],
-        Milliseconds: moment().valueOf(),
+        Milliseconds: moment().valueOf(), 
         NumChars: '',
         ReadBit: 1,
         ReceiverID: selectedProvider ? selectedProvider?.providerId : '',
@@ -1405,10 +1406,7 @@ const CartDetails = ({ navigation }) => {
           }
         }}
       />
-
-      <NoInternet
-        visible={!deviceConnection}
-      />
+   
     </View>
   );
 

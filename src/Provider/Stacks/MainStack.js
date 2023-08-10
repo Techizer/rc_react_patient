@@ -5,6 +5,9 @@ import { NavigationContainer, useNavigationContainerRef, } from '@react-navigati
 import messaging from "@react-native-firebase/messaging";
 import PushNotification, { Importance } from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import NetInfo from "@react-native-community/netinfo";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Splash from '../../screens/Splash';
 import AuthStack from './AuthStack';
@@ -22,19 +25,17 @@ import LabPackageDetails from '../../screens/LabPackageDetails';
 import TermsAndConditions from '../../screens/TermsAndConditions';
 import NeedSupport from '../../screens/NeedSupport';
 import HealthRecord from '../../screens/HealthRecord';
-// -----------------------------------------
 import CartDetails from '../../screens/Cart'
 import AppointmentDetails from '../../screens/AppointmentDetails';
 import Orders from '../../screens/Orders';
 import BookingIndex from '../../screens/Booking/Index';
-import { useDispatch, useSelector } from 'react-redux';
-import { CurrentRoute, onLogout, setAppState, setVideoCall, setVideoCallData } from '../../Redux/Actions';
 import TabbyPayment from '../../screens/TabbyPayment';
-import { config } from '../configProvider';
-import { apifuntion } from '../APIProvider';
 import Chat from '../../screens/Chat';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CheckSession } from '../APIFunctions';
+
+import { CurrentRoute, onLogout, setAppState, setVideoCall, setVideoCallData, setVideoCallStatus } from '../../Redux/Actions';
+import { config } from '../../Provider/configProvider';
+import { apifuntion } from '../../Provider/APIProvider';
+import { callRejectNotification, CheckSession, Network } from '../../Provider/APIFunctions';
 
 
 const Stack = createStackNavigator()
@@ -51,6 +52,9 @@ const MainStack = () => {
     const dispatch = useDispatch()
     const routeNameRef = useRef();
     const navigationRef = useNavigationContainerRef();
+
+
+
 
     const Logout = async () => {
         let ID = await AsyncStorage.getItem('userId')
@@ -94,15 +98,11 @@ const MainStack = () => {
                     image: data.image,
                     isPage: "accept",
                 };
-                await AsyncStorage.setItem('fromUserId', data.fromUserId)
-                await AsyncStorage.setItem('fromUserName', data.fromUserName)
-                await AsyncStorage.setItem('order_id', data.order_id)
-                await AsyncStorage.setItem('room_name', data.room_name)
-                await AsyncStorage.setItem('toUserId', data.toUserId)
-                await AsyncStorage.setItem('toUserName', data.toUserName)
-                await AsyncStorage.setItem('type', data.type)
                 dispatch(setVideoCallData(videoDetails))
 
+                // if (data?.type == "Logout") {
+                //     Logout();
+                // }
 
                 if (Platform.OS === 'ios') {
                     if (notification.userInteraction) {
@@ -147,7 +147,7 @@ const MainStack = () => {
                             }, 1000);
                         }
                     } else if (notification.action === 'Reject') {
-                        // callRejectNotification();
+                        callRejectNotification(data);
                     } else {
                         console.log('waiting...');
                     }
@@ -180,25 +180,45 @@ const MainStack = () => {
     const messageListener = async () => {
         PushNotification.createChannel(
             {
-                channelId: "rootscares1", // (required)
-                channelName: "rootscare messasge", // (required)
+                channelId: "rootscares1",
+                channelName: "rootscare messasge",
                 smallIcon: "app_icon",
-                importance: Importance.HIGH, // (optional) default: 4. Int value of the Android notification importance
-                vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+                importance: Importance.HIGH,
+                vibrate: true,
                 ignoreInForeground: false,
             },
-            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+            (created) => console.log(`createChannel returned '${created}'`)
         );
 
 
         messaging().onMessage(async (remoteMessage) => {
             console.log("Notification msg****", remoteMessage);
-            if (remoteMessage && !remoteMessage?.collapseKey) {
-                showNotification(remoteMessage)
-                if (remoteMessage.data?.type == "Logout") {
-                    Logout();
+
+            if (remoteMessage) {
+                if (Platform.OS === 'ios' && !remoteMessage.collapseKey) {
+                    if (remoteMessage.data?.type == "patient_to_doctor_video_call_reject") {
+                        dispatch(setVideoCallStatus(9))
+                    } else {
+                        showNotification(remoteMessage)
+                        if (remoteMessage.data?.type == "Logout") {
+                            Logout();
+                        }
+                    }
+
+                } else {
+                    if (remoteMessage.data?.type == "patient_to_doctor_video_call_reject") {
+                        dispatch(setVideoCallStatus(9))
+                    } else {
+                        showNotification(remoteMessage)
+                        if (remoteMessage.data?.type == "Logout") {
+                            Logout();
+                        }
+                    }
+
                 }
+
             }
+
 
         });
 
@@ -224,41 +244,6 @@ const MainStack = () => {
             console.log('AppBackgroundNotification', remoteMessage);
 
         });
-    };
-
-    const callRejectNotification = async () => {
-
-        let fromUserId = await AsyncStorage.getItem('fromUserId')
-        let fromUserName = await AsyncStorage.getItem('fromUserName')
-        let order_id = await AsyncStorage.getItem('order_id')
-        let room_name = await AsyncStorage.getItem('room_name')
-        let toUserId = await AsyncStorage.getItem('toUserId')
-        let toUserName = await AsyncStorage.getItem('toUserName')
-        let type = await AsyncStorage.getItem('type')
-
-        let apiName = "api-get-video-access-token-with-push-notification";
-        let url = config.baseURL + apiName;
-
-        var data = new FormData();
-        data.append("fromUserId", fromUserId);
-        data.append("fromUserName", fromUserName);
-        data.append("order_id", order_id);
-        data.append("room_name", room_name);
-        data.append("toUserId", toUserId);
-        data.append("toUserName", toUserName);
-        data.append("type", type);
-        data.append('callStatus', "reject")
-
-
-        apifuntion.postApi(url, data, 1)
-            .then((obj) => {
-                if (obj.status == true) {
-                } else {
-                    return false;
-                }
-            }).catch((error) => {
-                console.log("callRejectNotification-error ------- " + error);
-            });
     };
 
     useEffect(() => {
@@ -294,44 +279,51 @@ const MainStack = () => {
         };
     }, []);
 
-    useMemo(() => {
-        if (appState != '' && appState === 'active') {
-            console.log('routeName', routeNameRef?.current?.getCurrentRoute()?.name);
-            const currentRoute = (
-                routeNameRef?.current?.getCurrentRoute()
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'Splash'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'Login'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'Signup'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotPage'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotOTP'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'OTPPage'
-                &&
-                routeNameRef?.current?.getCurrentRoute()?.name != 'TermsAndConditions'
-            )
-            if (!guest) {
-                CheckSession().then((authStatus) => {
-                    if (!authStatus) {
-                        if (currentRoute) {
-                            routeNameRef?.current.reset({
-                                index: 0,
-                                routes: [{ name: 'AuthStack' }],
-                            });
-                        }
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                })
-            }
+    useEffect(() => {
+        const checkConnectivity = NetInfo.addEventListener(state => {
+            Network(state)
+        });
+        return () => {
+            checkConnectivity()
         }
-    }, [appState])
+    }, [])
 
-
+    // useMemo(() => {
+    //     if (appState != '' && appState === 'active') {
+    //         console.log('routeName', routeNameRef?.current?.getCurrentRoute()?.name);
+    //         const currentRoute = (
+    //             routeNameRef?.current?.getCurrentRoute()
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'Splash'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'Login'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'Signup'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotPage'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'ForgotOTP'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'OTPPage'
+    //             &&
+    //             routeNameRef?.current?.getCurrentRoute()?.name != 'TermsAndConditions'
+    //         )
+    //         if (!guest) {
+    //             CheckSession().then((authStatus) => {
+    //                 if (!authStatus) {
+    //                     if (currentRoute) {
+    //                         routeNameRef?.current.reset({
+    //                             index: 0,
+    //                             routes: [{ name: 'AuthStack' }],
+    //                         });
+    //                     }
+    //                 }
+    //             }).catch((error) => {
+    //                 console.log(error);
+    //             })
+    //         }
+    //     }
+    // }, [appState])
 
 
     return (

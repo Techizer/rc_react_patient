@@ -1,3 +1,4 @@
+
 import {
     HAS_SESSION,
     USER_DETAIL,
@@ -28,7 +29,10 @@ import {
     USER_PROFILE,
     APP_STATE,
     VIDEO_CALL,
-    VIDEO_CALL_DATA
+    VIDEO_CALL_DATA,
+    INCOMING_VIDEO_CALL,
+    VIDEO_CALL_STATUS,
+    NO_INTERNET
 } from './Types';
 
 const initialState = {
@@ -59,8 +63,11 @@ const initialState = {
     isLanguageUpdated: false,
     currentRoute: '',
     appState: '',
+    isIncomingCall: false,
     isVideoCall: false,
-    videoDetails: null
+    videoDetails: null,
+    callStatus: 0,
+    noInternet: false
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -220,6 +227,12 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 appState: action.payload,
             };
 
+        case INCOMING_VIDEO_CALL:
+            return {
+                ...state,
+                isIncomingCall: action.payload,
+            };
+
         case VIDEO_CALL:
             return {
                 ...state,
@@ -230,8 +243,18 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 ...state,
                 videoDetails: action.payload,
             };
-
+        case VIDEO_CALL_STATUS:
+            return {
+                ...state,
+                callStatus: action.payload,
+            };
+        case NO_INTERNET:
+            return {
+                ...state,
+                noInternet: action.payload,
+            };
         default:
             return state;
     }
 }
+
