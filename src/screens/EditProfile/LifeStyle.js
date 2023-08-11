@@ -817,9 +817,6 @@ const LifeStyle = ({ navigation }) => {
                 }}
             />
 
-            <NoInternet
-                visible={!deviceConnection}
-            />
         </View>
     )
 }

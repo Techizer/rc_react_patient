@@ -183,9 +183,6 @@ const Upcoming = (props) => {
         }}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
 
     </View>
   );

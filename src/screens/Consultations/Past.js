@@ -254,10 +254,6 @@ const Past = (props) => {
         }}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
-
     </View>
   );
 }

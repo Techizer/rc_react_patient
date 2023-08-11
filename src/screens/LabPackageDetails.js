@@ -290,9 +290,7 @@ const LabPackageDetails = ({ navigation, route }) => {
           :
           <LoadingSkeleton />
       }
-      <NoInternet
-        visible={!deviceConnection}
-      />
+     
     </View>
   );
 };

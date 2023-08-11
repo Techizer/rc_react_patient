@@ -481,9 +481,6 @@ const Notifications = ({ navigation }) => {
         </View>
       </Modal>
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
 
     </View>
   );

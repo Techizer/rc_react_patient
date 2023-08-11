@@ -321,9 +321,7 @@ const FindAddress = ({ navigation }) => {
                 type={addressData.type}
             />
 
-            <NoInternet
-                visible={!deviceConnection}
-            />
+           
         </View>
 
 

@@ -731,9 +731,6 @@ const Personal = ({ navigation }) => {
                 }}
             />
 
-            <NoInternet
-                visible={!deviceConnection}
-            />
         </View>
     )
 }

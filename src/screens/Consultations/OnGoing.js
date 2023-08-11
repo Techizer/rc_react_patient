@@ -252,10 +252,6 @@ const OnGoing = (props) => {
         }}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
-
     </View>
   );
 }

@@ -598,10 +598,6 @@ const NeedSupport = ({ navigation }) => {
         </TouchableOpacity>
       </Modal> */}
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
-
     </View>
   );
 

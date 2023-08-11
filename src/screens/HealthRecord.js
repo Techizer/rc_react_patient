@@ -245,9 +245,6 @@ const HealthRecord = (props) => {
         }}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
     </View>
   );
 

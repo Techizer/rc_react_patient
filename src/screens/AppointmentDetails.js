@@ -46,7 +46,7 @@ import { AudioPlayer } from "../components/AudioPlayer";
 import NoInternet from "../components/NoInternet";
 import Loader from "../components/Loader";
 import { getISChatImplemented } from "../Provider/AppFunctions";
-import { setVideoCall, setVideoCallData } from "../Redux/Actions";
+import { setVideoCall, setVideoCallData, setVideoCallStatus } from "../Redux/Actions";
 
 
 export default AppointmentDetails = ({ navigation, route }) => {
@@ -2329,6 +2329,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                           isPage: "outGoing",
                         };
                         dispatch(setVideoCallData(videoDetails))
+                        dispatch(setVideoCallStatus(1))
                         setTimeout(() => {
                           dispatch(setVideoCall(true))
                         }, 500);

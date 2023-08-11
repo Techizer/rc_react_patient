@@ -73,9 +73,6 @@ const Orders = ({ navigation }) => {
         onRefresh={() => setIsLoading(true)}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
     </View>
   );
 }

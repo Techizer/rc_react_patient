@@ -956,9 +956,6 @@ const Medical = () => {
 
             </View>
 
-            <NoInternet
-                visible={!deviceConnection}
-            />
         </View>
     )
 }

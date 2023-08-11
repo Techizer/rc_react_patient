@@ -9,7 +9,7 @@ class messageFunctionsProviders {
 			text1: 'Alert!',
 			text2: message,
 			position: 'top',
-			topOffset	:StatusbarHeight + windowHeight/25
+			topOffset: StatusbarHeight + windowHeight / 25
 
 		});
 
@@ -21,7 +21,7 @@ class messageFunctionsProviders {
 			text1: 'Congratulations!',
 			text2: message,
 			position: 'top',
-			topOffset	:StatusbarHeight + windowHeight/25
+			topOffset: StatusbarHeight + windowHeight / 25
 		});
 	}
 

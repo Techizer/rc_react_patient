@@ -1166,9 +1166,6 @@ export default ServiceProviderDetails = ({ navigation, route }) => {
         data={statesData.how_work_value}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
     </View>
   );
 

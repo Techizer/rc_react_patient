@@ -699,10 +699,7 @@ const Home = ({ navigation }) => {
           /> */}
         </ScrollView>
 
-        <NoInternet
-          visible={!deviceConnection}
-        />
-
+      
       </View >
 
     </View >

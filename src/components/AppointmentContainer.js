@@ -37,7 +37,7 @@ import RatingBottomSheet from "./RatingBottomSheet";
 import StarRating from "react-native-star-rating";
 import { useDispatch, useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { setVideoCall, setVideoCallData } from "../Redux/Actions";
+import { setNoInternet, setVideoCall, setVideoCallData, setVideoCallStatus } from "../Redux/Actions";
 
 var videoCallButton = false;
 
@@ -48,9 +48,21 @@ const AppointmentContainer = ({
     navigation,
     isLoading
 }) => {
-    const { loggedInUserDetails, guest, appLanguage, languageIndex } = useSelector(state => state.StorageReducer)
+    const { loggedInUserDetails, guest, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
-    // console.log('/./././', Item);
+
+    var videoDetails = {
+        fromUserId: loggedInUserDetails?.user_id,
+        fromUserName: loggedInUserDetails?.first_name,
+        order_id: Item?.order_id,
+        room_name: "rootvideo_room_" + loggedInUserDetails?.user_id + "_" + Item?.provider_id,
+        toUserId: Item?.provider_id,
+        toUserName: Item?.provider_name,
+        type: 'patient_to_doctor_video_call',
+        image: '',
+        isPage: "outGoing",
+    };
+
     const [otp, setOtp] = useState([])
     const [rescheduleData, setRescheduleData] = useState({
         order_id: '',
@@ -1433,22 +1445,15 @@ const AppointmentContainer = ({
                                     <TouchableOpacity
                                         activeOpacity={0.8}
                                         onPress={() => {
-                                            var videoDetails = {
-                                                fromUserId: loggedInUserDetails?.user_id,
-                                                fromUserName: loggedInUserDetails?.first_name,
-                                                order_id: Item?.order_id,
-                                                room_name: "rootvideo_room_" + loggedInUserDetails?.user_id + "_" + Item?.provider_id,
-                                                toUserId: Item?.provider_id,
-                                                toUserName: Item?.provider_name,
-                                                type: 'patient_to_doctor_video_call',
-                                                image: '',
-                                                isPage: "outGoing",
-                                            };
-
-                                            dispatch(setVideoCallData(videoDetails))
-                                            setTimeout(() => {
-                                                dispatch(setVideoCall(true))
-                                            }, 500);
+                                            if (!deviceConnection) {
+                                                dispatch(setNoInternet(true))
+                                            } else {
+                                                dispatch(setVideoCallData(videoDetails))
+                                                dispatch(setVideoCallStatus(1))
+                                                setTimeout(() => {
+                                                    dispatch(setVideoCall(true))
+                                                }, 500);
+                                            }
                                         }}
                                         style={{
                                             paddingHorizontal: s(8),

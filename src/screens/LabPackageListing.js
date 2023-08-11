@@ -262,10 +262,6 @@ const LabPackageListing = ({ navigation, route }) => {
           }
         }}
       />
-
-      <NoInternet
-        visible={!deviceConnection}
-      />
     </View>
   );
 };

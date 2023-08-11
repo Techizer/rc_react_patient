@@ -1,5 +1,5 @@
 
-import { DeviceConnection, DeviceToken, onLogout, setVideoCallStatus, UserDetails } from '../Redux/Actions';
+import { DeviceConnection, DeviceToken, onLogout, setVideoCall, setVideoCallStatus, UserDetails } from '../Redux/Actions';
 import { store } from '../Redux/Index'
 
 // Function to get the Redux state
@@ -29,9 +29,15 @@ const setConnection = (isConnected) => {
         }, 1000);
     } else if (!isConnected && isVideoCall && (callStatus == 0 || callStatus == 1 || callStatus == 8)) {
         store.dispatch(setVideoCallStatus(0))
+        setTimeout(() => {
+            store.dispatch(setVideoCall(false))
+        }, 2000);
     } else if (!isConnected && isVideoCall && (callStatus == 4 || callStatus == 5 || callStatus == 9)) {
         store.dispatch(setVideoCallStatus(callStatus))
     }
+    // else if (isConnected && isVideoCall && (callStatus == 0 || callStatus == 1 || callStatus == 8)) {
+    //     store.dispatch(setVideoCallStatus(callStatus))
+    // }
 };
 
 export {

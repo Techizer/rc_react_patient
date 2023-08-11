@@ -147,6 +147,7 @@ const NoInternet = ({
                                 <TouchableOpacity
                                     onPress={() => {
                                         dispatch(setNoInternet(false))
+                                        console.log('hehehhe');
                                     }}
                                     activeOpacity={0.8}
                                     style={styles.Btn}>

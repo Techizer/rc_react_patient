@@ -38,6 +38,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
         message: remoteMessage.data.body,
         userInfo: remoteMessage.data,
         actions: remoteMessage.data?.type == "doctor_to_patient_video_call" ? '["Accept", "Reject"]' : [],
+        playSound: true
     });
 
 });

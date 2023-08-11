@@ -176,10 +176,8 @@ const VideoCall = ({
     useEffect(() => {
         if (videoDetails?.isPage == "accept") {
             getIncomingCallTokenFromAPI('doctor_to_patient_video_call')
-            dispatch(setVideoCallStatus(Statuses.Connecting))
         } else {
             getOutgoingCallTokenFromAPI()
-            dispatch(setVideoCallStatus(Statuses.Calling))
         }
 
         return () => {
@@ -231,7 +229,8 @@ const VideoCall = ({
     }, [started, callTime.seconds, callTime.minutes, callTime.hours]);
 
     useEffect(() => {
-        if (callStatus === Statuses.Declined || Statuses.Disconnected) {
+        console.log({callStatus});
+        if (callStatus === Statuses.Declined) {
             endCall()
         }
     }, [callStatus])
@@ -313,9 +312,7 @@ const VideoCall = ({
         setTimeout(() => {
             dispatch(setVideoCall(false))
         }, 1000);
-        setTimeout(() => {
-            dispatch(setVideoCallStatus(0))
-        }, 3000);
+       
     };
 
     const _requestAudioPermission = () => {
@@ -366,7 +363,9 @@ const VideoCall = ({
                             dispatch(setVideoCallStatus(Statuses.Disconnected))
                         }
                         else {
-                            dispatch(setVideoCallStatus(Statuses.Ended))
+                            if (callStatus != Statuses.Declined) {
+                                dispatch(setVideoCallStatus(Statuses.Ended))
+                            }
                         }
                     }}
                     onRoomDidFailToConnect={(props) => {
@@ -388,7 +387,9 @@ const VideoCall = ({
                     }}
                     onParticipantRemovedVideoTrack={() => {
                         console.log({ VideoCall: '_onParticipantRemovedVideoTrack' });
-                        dispatch(setVideoCallStatus(Statuses.Ended))
+                        if (callStatus != Statuses.Declined) {
+                            dispatch(setVideoCallStatus(Statuses.Ended))
+                        }
                         setTrackData(NullTrackData)
 
                         setCallTime(DefaultTime)

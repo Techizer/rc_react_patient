@@ -179,10 +179,6 @@ const ManageAddress = ({ navigation }) => {
         }}
       />
 
-      <NoInternet
-        visible={!deviceConnection}
-      />
-
     </View>
   );
 
