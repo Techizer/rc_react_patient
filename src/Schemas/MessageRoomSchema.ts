@@ -68,8 +68,6 @@ export class Message {
     }
 
     isSentByMe = (myID: String): Boolean => {
-        console.log({myID});
-        
         return (this.MessageDetails.SenderID === myID)
     }
 }

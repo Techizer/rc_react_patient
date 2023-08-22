@@ -95,7 +95,7 @@ const MediaOptions = ({
                             {
                                 options.map((item, index) => {
                                     return (
-                                        <View style={{ alignItems: 'center', marginLeft: index == 0 ? 0 : (windowWidth * 8) / 100 }}>
+                                        <View key={index} style={{ alignItems: 'center', marginLeft: index == 0 ? 0 : (windowWidth * 8) / 100 }}>
                                             <TouchableOpacity
                                                 activeOpacity={0.8}
                                                 onPress={() => {

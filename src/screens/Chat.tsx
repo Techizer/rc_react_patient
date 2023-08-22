@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Dimensions, StatusBar, Platform, Image, TextInput, KeyboardAvoidingView, Pressable, StyleSheet, Keyboard, TouchableHighlight, TouchableOpacity } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
-import { getIsAppointmentChatEnabled } from '../Provider/AppFunctions'
+import { getIsAppointmentChatEnabled, GetThumbnail } from '../Provider/AppFunctions'
 import { ScreenHeader } from '../components/ScreenHeader'
 import firestore from '@react-native-firebase/firestore'
 import { config } from '../Provider/configProvider'
@@ -20,11 +20,10 @@ import MediaOptions from '../components/MediaOptions'
 import ChatMessage from '../components/ChatMessage'
 
 
-
 const Chat = ({ navigation, route }) => {
 
 
-    const [room, setRoom] = useState<MessageRoom>()
+    const [room, setRoom] = useState()
     const [isAutoResendable, setIsAutoResendable] = useState<Boolean>(true)
     const [messageInput, setMessageInput] = useState<string>('')
     const insets = useSafeAreaInsets()
@@ -48,11 +47,16 @@ const Chat = ({ navigation, route }) => {
     const [attachment, setAttachment] = useState([])
     const [type, setType] = useState('')
 
+    let currentDate = null;
+    let currentGroup = null;
+
     useEffect(() => {
         firestore()
             .collection(`Chats-${config.mode}`)
             .doc(appointment?.order)
             .onSnapshot(documentSnapshot => {
+                const groupedMessages = [];
+
                 if (!documentSnapshot.exists) {
                     const room = new MessageRoom({
                         ID: appointment?.order,
@@ -84,9 +88,23 @@ const Chat = ({ navigation, route }) => {
                         })
                 } else {
                     const roomDetails = documentSnapshot.data()
-                    // console.log({ roomDetails });
+                    // console.log({ roomDetails: roomDetails?.MessageRoomDetails });
+
                     roomDetails?.MessageRoomDetails?.Messages?.reverse()
-                    setRoom(roomDetails)
+                    roomDetails?.MessageRoomDetails?.Messages?.forEach((message: any) => {
+                        const messageDate = message?.MessageDetails.DateTime?.toDate();
+                        const messageDateString = messageDate.toDateString();
+
+
+                        const existingGroup = groupedMessages.find((group) => group.date === messageDateString);
+
+                        if (existingGroup) {
+                            existingGroup.messages.push(message);
+                        } else {
+                            groupedMessages.push({ date: messageDateString, messages: [message] });
+                        }
+                    });
+                    setRoom(groupedMessages)
                 }
             })
     }, [])
@@ -108,30 +126,30 @@ const Chat = ({ navigation, route }) => {
         };
     }, [])
 
-    // useEffect(() => {
-    //     if (path.length > 0) {
-    //         console.log({ path });
 
-    //     }
-    // }, [path])
+
     const Galleryopen = () => {
         let tempArr = []
         mediaprovider
             .launchGellery(true)
             .then((obj) => {
                 // console.log('Galleryopen..............', obj);
+                setMediaOptions(false)
                 const fileName = obj?.path.split('/')
-                const source = {
-                    name: Platform.OS == 'ios' ? obj.filename : fileName[fileName.length - 1],
-                    type: obj.mime,
-                    uri: obj?.path,
+                let source = {
+                    data: {
+                        name: Platform.OS == 'ios' ? obj.filename : fileName[fileName.length - 1],
+                        type: obj.mime,
+                        uri: obj?.path,
+                    }
                 };
                 tempArr.push(source)
                 setAttachment(tempArr)
                 setType('image')
-                setMediaOptions(false)
+
             })
             .catch((error) => {
+                setMediaOptions(false)
                 console.log('Galleryopen-error', error);
             });
     };
@@ -142,17 +160,20 @@ const Chat = ({ navigation, route }) => {
             .launchCamera(true)
             .then((obj) => {
                 // console.log('Camerapopen..............', obj);
+                setMediaOptions(false)
                 const fileName = obj?.path.split('/')
-                const source = {
-                    name: fileName[fileName.length - 1],
-                    type: obj.mime,
-                    uri: obj?.path,
+                let source = {
+                    data: {
+                        name: fileName[fileName.length - 1],
+                        type: obj.mime,
+                        uri: obj?.path,
+                    }
                 };
                 tempArr.push(source)
                 setAttachment(tempArr)
                 setType('image')
-                setMediaOptions(false)
             }).catch((error) => {
+                setMediaOptions(false)
                 console.log('Camerapopen..............', error);
             });
     };
@@ -163,29 +184,34 @@ const Chat = ({ navigation, route }) => {
             const res = await DocumentPicker.pick({
                 type: [
                     DocumentPicker.types.pdf,
-                    //   DocumentPicker.types.docx,
-                    //   DocumentPicker.types.doc,
-                    //   DocumentPicker.types.ppt,
-                    //   DocumentPicker.types.xls,
-                    //   DocumentPicker.types.audio,
-                    //   DocumentPicker.types.images,
-                    //   DocumentPicker.types.allFiles,
-                    //   DocumentPicker.types.plainText,
-                    //   DocumentPicker.types.video,
                 ],
+                copyTo: "cachesDirectory"
             });
-            console.log('Document Pick Response', res);
-            const source = {
-                name: res[0].name,
-                type: res[0].type,
-                uri: res[0].uri,
+            // console.log('Document Pick Response', res);
+            setMediaOptions(false)
+            let source = {
+                data: {
+                    name: res[0].name,
+                    type: res[0].type,
+                    uri: res[0].uri,
+                }
             };
+            const result = await GetThumbnail(res[0].fileCopyUri)
+            source = {
+                data: {
+                    ...source.data
+                },
+                thumbnail: result.uri
+            }
             tempArr.push(source)
             setAttachment(tempArr)
             setType('pdf')
-            setMediaOptions(false)
+
+
+
 
         } catch (err) {
+            setMediaOptions(false)
             if (DocumentPicker.isCancel(err)) {
                 console.log('You did not select any file')
             } else {
@@ -199,7 +225,7 @@ const Chat = ({ navigation, route }) => {
         let url = config.baseURL + "api-chat-image";
         var data = new FormData();
         for (var i = 0; i < attachment.length; i++) {
-            data.append("chat_image[]", attachment[i]);
+            data.append("chat_image[]", attachment[i]?.data);
         }
 
         apifuntion.postApi(url, data, 1)
@@ -225,13 +251,12 @@ const Chat = ({ navigation, route }) => {
     };
 
     const onSendMessage = async () => {
-        // console.log(imgs);
-        // return
 
+        const messageDate = new Date();
+        const messageDateString = messageDate.toDateString();
         if (attachment.length == 0) {
             if (isAutoResendable) {
                 setIsAutoResendable(false)
-
                 const newMessage = new Message({
                     Body: messageInput,
                     DateTime: new Date(),
@@ -240,16 +265,28 @@ const Chat = ({ navigation, route }) => {
                     Milliseconds: moment().valueOf(),
                     NumChars: messageInput.length,
                     ReadBit: 1,
-                    ReceiverID: provider?.id,
                     SenderID: loggedInUserDetails?.user_id,
+                    ReceiverID: provider?.id,
                     Shown: true,
                     SYSTEM: false
                 })
 
-                setRoom(r => {
-                    r?.MessageRoomDetails.Messages.unshift(newMessage)
-                    return r
-                })
+                setRoom((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+
+                    const lastGroup = updatedMessages[updatedMessages.length - 1];
+                    if (lastGroup && lastGroup.date === messageDateString) {
+                        lastGroup.messages.push(newMessage);
+                    } else {
+                        updatedMessages.push({
+                            date: messageDateString,
+                            messages: [newMessage],
+                        });
+                    }
+
+                    return updatedMessages;
+                });
+
                 setMessageInput('')
                 await firestore().collection(`Chats-${config.mode}`).doc(appointment?.order).update({ 'MessageRoomDetails.Messages': firestore.FieldValue.arrayUnion(newMessage) }).finally(() => {
                     setIsAutoResendable(true)
@@ -259,8 +296,8 @@ const Chat = ({ navigation, route }) => {
             const newMessage = new Message({
                 Body: messageInput,
                 DateTime: new Date(),
-                DocPaths: type === 'pdf' ? [attachment[0].uri] : [],
-                ImagePaths: type === 'image' ? [attachment[0].uri] : [],
+                DocPaths: type === 'pdf' ? [attachment[0].data.uri, attachment[0].thumbnail, attachment[0]?.data.name] : [],
+                ImagePaths: type === 'image' ? [attachment[0].data.uri] : [],
                 Milliseconds: moment().valueOf(),
                 NumChars: messageInput.length,
                 ReadBit: 1,
@@ -270,11 +307,24 @@ const Chat = ({ navigation, route }) => {
                 SYSTEM: false
             })
             setAttachment([])
-            setRoom(r => {
-                r?.MessageRoomDetails.Messages.unshift(newMessage)
-                return r
-            })
+            setRoom((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+
+                const lastGroup = updatedMessages[0];
+                console.log(lastGroup.date);
+                if (lastGroup && lastGroup.date === messageDateString) {
+                    lastGroup.messages.unshift(newMessage);
+                } else {
+                    updatedMessages.unshift({
+                        date: messageDateString,
+                        messages: [newMessage],
+                    });
+                }
+
+                return updatedMessages;
+            });
             setMessageInput('')
+            // return
             UploadFile(newMessage)
 
 
@@ -284,10 +334,13 @@ const Chat = ({ navigation, route }) => {
 
 
     const renderMessageItem = ({ item, index }) => {
+
         return (
 
             <ChatMessage
                 Item={item}
+                navigation={navigation}
+                Index={index}
             />
         )
     }
@@ -354,12 +407,11 @@ const Chat = ({ navigation, route }) => {
                     <FlatList
                         style={{ flex: 1, zIndex: 2 }}
                         contentContainerStyle={{ paddingHorizontal: '2%', zIndex: 3, paddingBottom: vs(28), paddingTop: vs(32) }}
-                        data={room?.MessageRoomDetails?.Messages}
+                        data={room}
                         keyExtractor={(i, _i) => 'message' + _i}
                         inverted={true}
                         renderItem={renderMessageItem}
                         showsVerticalScrollIndicator={false}
-                        ItemSeparatorComponent={() => (<View style={{ marginVertical: vs(6) }} />)}
                     // ListEmptyComponent={() => (<Text style={{ width: '100%', alignSelf: 'center', textAlign: 'center' }} >No Messages</Text>)}
                     />
                 </View>
@@ -373,7 +425,7 @@ const Chat = ({ navigation, route }) => {
                 }}>
 
                     {
-                        !isEnabled ?
+                        isEnabled ?
                             <Button
                                 text={LangProvider.ChatClosed[languageIndex]}
                                 btnStyle={{ backgroundColor: Colors.orange }}
@@ -385,10 +437,6 @@ const Chat = ({ navigation, route }) => {
                                     width: '100%',
                                     justifyContent: 'space-between',
                                     flexDirection: 'row',
-                                    // backgroundColor: Colors.White,
-                                    // paddingBottom: (Platform.OS == 'ios') ? insets.bottom - (windowWidth * 3) / 100 : vs(9),
-                                    // paddingVertical: vs(9),
-                                    // paddingHorizontal: s(13),
                                 }}
                             >
                                 <View style={{
@@ -405,9 +453,6 @@ const Chat = ({ navigation, route }) => {
                                             alignItems: 'center',
                                             justifyContent: 'space-between',
                                             width: '100%',
-                                            // height: 50,
-                                            // paddingVertical: vs(10),
-                                            // backgroundColor:'#d6d6d6'
                                         }}>
                                             <View style={{
                                                 flexDirection: 'row',
@@ -416,7 +461,7 @@ const Chat = ({ navigation, route }) => {
                                                 {
                                                     type === 'image' ?
                                                         <Image
-                                                            source={{ uri: attachment[0].uri }}
+                                                            source={{ uri: attachment[0].data.uri }}
                                                             style={{ height: 50, width: 50, borderRadius: (windowWidth * 2) / 100, }}
                                                         />
                                                         :
@@ -435,7 +480,7 @@ const Chat = ({ navigation, route }) => {
                                                         width: '75%',
                                                     }}
                                                 >
-                                                    {attachment[0].name}
+                                                    {attachment[0].data.name}
                                                 </Text>
                                             </View>
                                             <TouchableHighlight
@@ -470,7 +515,7 @@ const Chat = ({ navigation, route }) => {
                                                 style={{
                                                     width: '100%',
                                                     color: Colors.Black,
-                                                    fontSize: Font.small,
+                                                    fontSize: Font.medium,
                                                     textAlign: contentAlign
 
                                                 }}

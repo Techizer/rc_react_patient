@@ -8,17 +8,20 @@ import { useSelector } from 'react-redux'
 import { SvgXml } from 'react-native-svg'
 import { LangProvider } from '../Provider/Language_provider'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { windowWidth } from '../Provider/Utils/Utils'
+import { Icons, windowWidth } from '../Provider/Utils/Utils'
 import FullFileView from './FullFileView'
 
 
-
 const ChatMessage = ({
-    Item
+    Item,
+    navigation,
+    Index
 }) => {
 
     const [textShown, setTextShown] = useState(false);
     const [lengthMore, setLengthMore] = useState(false);
+    const [distance, setDistance] = useState(0);
+    const [gap, setGap] = useState(0);
     const [isFileVisible, setIsFileVisible] = useState(false);
     const toggleNumberOfLines = () => {
         setTextShown(!textShown);
@@ -33,159 +36,212 @@ const ChatMessage = ({
         languageIndex
     } = useSelector(state => state.StorageReducer)
 
-    const messageItem = new Message(Item?.MessageDetails)
-    const { MessageDetails, isSentByMe } = messageItem
-    const { Body, SYSTEM, ImagePaths, DocPaths } = MessageDetails
-    const isMine = isSentByMe(loggedInUserDetails?.user_id)
-
-    var str = moment(MessageDetails.Milliseconds).format('hh:mm A, DD MMM YY')
-
     const onTextLayout = useCallback(e => {
+        if (e.nativeEvent.lines.length >= 4) console.log(e.nativeEvent.lines.length >= 4)
         setLengthMore(e.nativeEvent.lines.length >= 4);
-        // console.log(e.nativeEvent);
     }, []);
+
     return (
+        <>
 
-        <View style={{
-            width: '100%',
-            alignItems: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
-            justifyContent: 'center',
-            zIndex: 5,
-        }}>
-            <View style={{
-                // width: SYSTEM ? (windowWidth/1.2): (windowWidth/1.2),
-                maxWidth: SYSTEM ? (windowWidth / 1.3) : (windowWidth / 1.2),
-                alignItems: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
-            }}>
-                <View style={{
-                    backgroundColor: SYSTEM ? '#FFF2D9' : isMine ? Colors.Theme : '#FFFFFF',
-                    padding: 8,
-                    borderRadius: 8,
-                }}>
+            {
+                Item?.messages.map((message, index) => {
 
-                    {
-                        (ImagePaths?.length > 0 || DocPaths?.length > 0) ?
+                    const { Body, SYSTEM, ImagePaths, DocPaths } = message.MessageDetails
+                    const isMine = JSON.parse(message.MessageDetails.SenderID == loggedInUserDetails?.user_id)
+                    var time = moment(message.MessageDetails.Milliseconds).format('h:mm A')
+
+
+                    return (
+                        <>
                             <View
-                                style={[{
-                                    backgroundColor: isMine ? Colors.Theme : '#FFFFFF',
-                                    borderRadius: 8,
-                                    width: (windowWidth / 1.4),
-                                    // maxWidth: (windowWidth / 1.2),
-                                    alignSelf: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
-                                }]}>
-                                <Text
-                                    style={{
-                                        textAlign: SYSTEM ? 'left' : 'left',
-                                        color: isMine ? '#FFFFFF' : Colors.lightGrey,
-                                        fontFamily: Font.Regular,
-                                        fontSize: Font.small,
-
-
-                                    }} >{isMine ? 'Document:' : 'PRESCRIBED MEDICINES'}</Text>
-
-                                {
-                                    Body != '' &&
-                                    <>
-                                        <Text
-                                            onTextLayout={onTextLayout}
-                                            numberOfLines={textShown ? undefined : 4}
-                                            style={{
-                                                textAlign: SYSTEM ? 'left' : 'left',
-                                                color: isMine ? '#FFFFFF' : '#0C1016',
-                                                fontFamily: Font.Regular,
-                                                fontSize: 11,
-                                                marginTop: vs(5)
-                                            }} >{Body}</Text>
-                                        {
-                                            lengthMore ?
-                                                <Text
-                                                    onPress={toggleNumberOfLines}
-                                                    style={{
-                                                        fontSize: Font.small,
-                                                        fontFamily: Font.Regular,
-                                                        marginTop: 10,
-                                                        color: SYSTEM ? '#A47C32' : isMine ? '#FFFFFF' : '#0C1016',
-                                                    }}>{textShown ? 'Read less' : 'Read more'}</Text>
-                                                : null
-                                        }
-                                    </>
-                                }
-                                <View style={{ borderTopWidth: 0.5, borderTopColor: isMine ? Colors.White : Colors.Border, marginVertical: vs(3) }} />
-
-                                <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    onPress={() => {
-                                        setIsFileVisible(true)
-                                    }}
-                                >
-                                    <Text
+                                key={index}
+                                style={{
+                                    width: '100%',
+                                    alignItems: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
+                                    justifyContent: 'center',
+                                    zIndex: 5,
+                                    marginBottom: SYSTEM ? vs(8) : vs(5),
+                                }}>
+                                <View style={{
+                                    maxWidth: SYSTEM ? (windowWidth / 1.3) : (windowWidth / 1.6),
+                                    alignItems: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
+                                }}>
+                                    <Pressable
+                                        onPress={() => {
+                                            if (ImagePaths?.length > 0 || DocPaths?.length > 0) {
+                                                navigation.navigate('FileView', { Images: ImagePaths, Docs: DocPaths })
+                                            }
+                                        }}
                                         style={{
-                                            textAlign: SYSTEM ? 'left' : 'left',
-                                            color: isMine ? '#FFFFFF' : Colors.Theme,
-                                            fontFamily: isMine ? Font.Regular : Font.Medium,
-                                            fontSize: Font.xsmall,
-                                            marginTop: vs(5)
+                                            backgroundColor: SYSTEM ? '#FFF2D9' : isMine ? Colors.Theme : '#FFFFFF',
+                                            padding: 8,
+                                            borderRadius: 8,
+                                        }}>
 
-                                        }} >{isMine ? 'VIEW FILE' : 'VIEW PRESCRIPTION'}</Text>
-                                </TouchableOpacity>
+                                        {
+                                            (ImagePaths?.length > 0 || DocPaths?.length > 0) ?
+                                                <View
+                                                    style={[{
+                                                        backgroundColor: isMine ? Colors.Theme : '#FFFFFF',
+                                                        borderRadius: 8,
+                                                        width: (windowWidth / 2),
+                                                        alignSelf: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
+                                                    }]}>
+
+                                                    {
+                                                        DocPaths.length > 0 ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                height: (windowWidth / 3),
+                                                                borderRadius: 8,
+                                                                backgroundColor: Colors.Highlight
+                                                            }}>
+                                                                <View style={{
+                                                                    height: (windowWidth / 4.4),
+                                                                    width: '100%',
+                                                                }}>
+                                                                    <Image
+                                                                        source={{ uri: DocPaths[1] }}
+                                                                        style={{ height: '100%', width: '100%', borderTopLeftRadius: 8, borderTopRightRadius: 8, }}
+                                                                        resizeMode='cover'
+                                                                    />
+
+                                                                </View>
+
+                                                                <View style={{
+                                                                    flexDirection: 'row',
+                                                                    height: '30%',
+                                                                    alignItems: 'center',
+                                                                    paddingHorizontal: '3%'
+                                                                }}>
+                                                                    <Image
+                                                                        source={Icons.Pdf}
+                                                                        style={{ height: 22, width: 22, }}
+                                                                        resizeMode='contain'
+                                                                    />
+
+                                                                    <Text
+                                                                        numberOfLines={1}
+                                                                        style={{
+                                                                            fontSize: Font.small,
+                                                                            fontFamily: Font.Regular,
+                                                                            paddingHorizontal: '3%'
+                                                                        }}>{DocPaths[2]}</Text>
+                                                                </View>
+                                                            </View>
+                                                            :
+                                                            <Image
+                                                                source={{ uri: ImagePaths[0] }}
+                                                                style={{
+                                                                    width: '100%',
+                                                                    height: windowWidth / 3,
+                                                                    borderRadius: 8,
+                                                                }}
+                                                            />
+                                                    }
+
+                                                    {
+                                                        Body != '' &&
+                                                        <>
+                                                            <Text
+                                                                style={{
+                                                                    textAlign: SYSTEM ? 'left' : 'left',
+                                                                    color: isMine ? '#FFFFFF' : '#0C1016',
+                                                                    fontFamily: Font.Regular,
+                                                                    fontSize: 11,
+                                                                    marginTop: vs(5)
+                                                                }} >{Body}</Text>
+
+
+                                                        </>
+                                                    }
+                                                    {
+                                                        !SYSTEM &&
+                                                        <Text style={{
+                                                            textAlign: 'right',
+                                                            color: isMine ? Colors.White : '#8F98A7',
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.xsmall,
+                                                            width: '100%',
+                                                            marginTop: vs(3),
+
+
+                                                        }}>
+                                                            {time}
+                                                        </Text>
+                                                    }
+
+
+                                                </View>
+                                                :
+                                                <>
+
+                                                    <Text
+                                                        style={{
+                                                            textAlign: SYSTEM ? 'left' : 'left',
+                                                            color: SYSTEM ? '#A47C32' : isMine ? '#FFFFFF' : '#0C1016',
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: SYSTEM ? Font.small : Font.medium,
+
+
+                                                        }} >{Body}</Text>
+
+                                                    {!SYSTEM &&
+                                                        <Text style={{
+                                                            textAlign: 'right',
+                                                            color: isMine ? Colors.White : '#8F98A7',
+                                                            fontFamily: Font.Regular,
+                                                            fontSize: Font.xsmall,
+                                                            marginTop: vs(5),
+                                                            alignSelf: 'flex-end'
+                                                        }}>
+                                                            {time}
+                                                        </Text>
+                                                    }
+
+                                                    {/* {
+                                                        lengthMore ?
+                                                            <Text
+                                                                onPress={toggleNumberOfLines}
+                                                                style={{
+                                                                    fontSize: Font.small,
+                                                                    fontFamily: Font.Regular,
+                                                                    marginTop: 10,
+                                                                    color: SYSTEM ? '#A47C32' : isMine ? '#FFFFFF' : '#0C1016',
+                                                                }}>{textShown ? 'Read less' : 'Read more'}</Text>
+                                                            : null
+                                                    } */}
+                                                </>
+                                        }
+                                    </Pressable>
+                                </View>
+
+
 
                             </View>
-                            :
-                            <>
-                                <Text
-                                    onTextLayout={onTextLayout}
-                                    numberOfLines={textShown ? undefined : 8}
-                                    style={{
-                                        textAlign: SYSTEM ? 'left' : 'left',
-                                        color: SYSTEM ? '#A47C32' : isMine ? '#FFFFFF' : '#0C1016',
-                                        fontFamily: Font.Regular,
-                                        fontSize: SYSTEM ? Font.small : Font.medium,
+                        </>
+                    )
+                })
+            }
 
 
-                                    }} >{Body}</Text>
-                                {
-                                    lengthMore ?
-                                        <Text
-                                            onPress={toggleNumberOfLines}
-                                            style={{
-                                                fontSize: Font.small,
-                                                fontFamily: Font.Regular,
-                                                marginTop: 10,
-                                                color: SYSTEM ? '#A47C32' : isMine ? '#FFFFFF' : '#0C1016',
-                                            }}>{textShown ? 'Read less' : 'Read more'}</Text>
-                                        : null
-                                }
-                            </>
-                    }
+            <View style={styles.date}>
+                <View style={styles.horizontalLine}></View>
+                <View style={{
+                    backgroundColor: Colors.backgroundcolor,
+                    paddingHorizontal: 10,
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    zIndex: 9999,
+                    paddingBottom: 3
+                }}>
+                    <Text>{Item.date}</Text>
                 </View>
-
-                {!SYSTEM &&
-                    <Text style={{
-                        textAlign: isMine ? 'right' : 'left',
-                        color: '#8F98A7',
-                        fontFamily: Font.Regular,
-                        fontSize: Font.xsmall,
-                        width: '100%',
-                        marginTop: vs(3),
-
-
-                    }}>
-                        {str}
-                    </Text>
-                }
-
             </View>
 
-            <FullFileView
-                visible={isFileVisible}
-                onRequestClose={() => {
-                    setIsFileVisible(false)
-                }}
-                Images={ImagePaths}
-                Docs={DocPaths}
-            />
 
-        </View>
+        </>
 
     )
 
@@ -197,6 +253,17 @@ const styles = StyleSheet.create({
         width: '92%',
         maxWidth: '92%',
 
-    }
+    },
+    date: {
+        height: windowWidth / 10,
+        width: '100%',
+        justifyContent: 'center',
+
+    },
+    horizontalLine: {
+        width: '100%',
+        height: 0.4,
+        backgroundColor: Colors.lightGrey,
+    },
 })
 export default ChatMessage;

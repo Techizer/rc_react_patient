@@ -36,6 +36,7 @@ import { CurrentRoute, onLogout, setAppState, setVideoCall, setVideoCallData, se
 import { config } from '../../Provider/configProvider';
 import { apifuntion } from '../../Provider/APIProvider';
 import { callRejectNotification, CheckSession, Network } from '../../Provider/APIFunctions';
+import FileView from '../../screens/FileView';
 
 
 const Stack = createStackNavigator()
@@ -457,6 +458,11 @@ const MainStack = () => {
                 <Stack.Screen
                     name="Chat"
                     component={Chat}
+                />
+
+                <Stack.Screen
+                    name="FileView"
+                    component={FileView}
                 />
 
             </Stack.Navigator>

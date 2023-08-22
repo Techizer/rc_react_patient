@@ -56,10 +56,8 @@ export const ScreenHeader = ({
                 <View
                     style={{
                         width: windowWidth,
-                        height: (windowWidth * 25) / 100,
-                        // height: headerHeight + insets,
-                        paddingTop: insets.top,
-                        paddingBottom: (windowWidth * 0.5) / 100,
+                        height: windowHeight / 9,
+                        paddingTop: windowHeight / 22,
                         backgroundColor: Colors.White,
                         borderBottomWidth: 0.9,
                         borderBottomColor: Colors.Border
@@ -109,44 +107,44 @@ export const ScreenHeader = ({
 
                         {
                             !renderHeaderWOBack ?
-                            <View style={{ flexDirection: 'row', width:'100%',height: '100%', }}>
-                                <View
-                                    style={{
-                                        width: "72%",
-                                        height: '80%',
-                                        justifyContent: 'center'
-                                    }}>
-                                    <Text
+                                <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', height: '100%', }}>
+                                    <View
                                         style={{
-                                            textAlign: "center",
-                                            fontFamily: Font.Medium,
-                                            fontSize: (windowWidth * 4) / 100,
-                                            color: Colors.darkText
-                                        }}>{title}</Text>
-                                </View>
-
-                                {
-                                    rightIcon ?
-                                        <TouchableHighlight
-                                            underlayColor={Colors.Highlight}
-                                            onPress={() => {
-                                                navigation.navigate("Notifications");
-                                            }}
+                                            width: "72%",
+                                            height: '80%',
+                                            justifyContent: 'center'
+                                        }}>
+                                        <Text
                                             style={{
-                                                width: "14%",
-                                                height: '100%',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
+                                                textAlign: "center",
+                                                fontFamily: Font.Medium,
+                                                fontSize: (windowWidth * 4) / 100,
+                                                color: Colors.darkText
+                                            }}>{title}</Text>
+                                    </View>
 
-                                            }}>
-                                            <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
-                                        </TouchableHighlight>
-                                        :
-                                        <View style={{ width: '14%' }}></View>
-                                }
-                            </View>
-                            :
-                            renderHeaderWOBack()
+                                    {
+                                        rightIcon ?
+                                            <TouchableHighlight
+                                                underlayColor={Colors.Highlight}
+                                                onPress={() => {
+                                                    navigation.navigate("Notifications");
+                                                }}
+                                                style={{
+                                                    width: "14%",
+                                                    height: '100%',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+
+                                                }}>
+                                                <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
+                                            </TouchableHighlight>
+                                            :
+                                            <View style={{ width: '14%' }}></View>
+                                    }
+                                </View>
+                                :
+                                renderHeaderWOBack()
                         }
 
                     </View>
@@ -155,12 +153,8 @@ export const ScreenHeader = ({
             :
             (<View style={{
                 width: windowWidth,
-                // height: headerHeight + StatusbarHeight,
-                // paddingTop: StatusbarHeight + 10,
-                height: (windowWidth * 25) / 100,
-                paddingTop: insets.top,
-                paddingBottom: (windowWidth * 0.5) / 100,
-                // paddingTop: (windowWidth * 10) / 100,
+                height: windowHeight / 9,
+                paddingTop: windowHeight / 22,
                 backgroundColor: Colors.White,
                 borderBottomWidth: 0.9,
                 borderBottomColor: Colors.Border
@@ -171,7 +165,7 @@ export const ScreenHeader = ({
                         width: "100%",
                         height: '100%',
                         alignSelf: "center",
-                        // alignItems: "center",
+                        alignItems: "center",
                     }}>
                     <View
                         style={{

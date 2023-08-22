@@ -318,7 +318,7 @@ const Login = ({ navigation }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log('login response.....', obj);
+        // console.log('login response.....', obj);
         if (obj.status == true) {
           AsyncStorage.setItem('userId', obj?.result?.user_id)
           if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
