@@ -64,7 +64,7 @@ const ChatMessage = ({
                                     marginBottom: SYSTEM ? vs(8) : vs(5),
                                 }}>
                                 <View style={{
-                                    maxWidth: SYSTEM ? (windowWidth / 1.3) : (windowWidth / 1.6),
+                                    maxWidth: SYSTEM ? (windowWidth / 1.3) : (windowWidth / 1.4),
                                     alignItems: SYSTEM ? 'center' : isMine ? 'flex-end' : 'flex-start',
                                 }}>
                                     <Pressable
@@ -193,7 +193,7 @@ const ChatMessage = ({
                                                             color: isMine ? Colors.White : '#8F98A7',
                                                             fontFamily: Font.Regular,
                                                             fontSize: Font.xsmall,
-                                                            marginTop: vs(5),
+                                                            marginTop: windowWidth / 40,
                                                             alignSelf: 'flex-end'
                                                         }}>
                                                             {time}
