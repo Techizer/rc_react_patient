@@ -31,13 +31,13 @@ import {
 } from "../../../Provider/Utils/Utils";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingSkeleton from "../../../components/LoadingSkeleton";
+import LoadingSkeleton from "../../../Components/LoadingSkeleton";
 import { useIsFocused } from "@react-navigation/native";
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import { TabbyPaymentStatus } from "../../../Redux/Actions";
-import AudioRecorder from "../../../components/AudioRecorder";
+import AudioRecorder from "../../../Components/AudioRecorder";
 import moment from "moment";
-import { AudioPlayer } from "../../../components/AudioPlayer";
+import { AudioPlayer } from "../../../Components/AudioPlayer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Online = ({ navigation }) => {

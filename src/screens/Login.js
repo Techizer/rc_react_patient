@@ -18,7 +18,7 @@ import React, { Component, useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import Geolocation from "react-native-geolocation-service";
-import ContactUsBottomSheet from "../components/ContactUsBottomSheet";
+import ContactUsBottomSheet from "../Components/ContactUsBottomSheet";
 
 import {
   Colors,
@@ -34,7 +34,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { s, vs } from "react-native-size-matters";
 
-import AuthInputBoxSec from "../components/AuthInputBoxSec";
+import AuthInputBoxSec from "../Components/AuthInputBoxSec";
 import { leftWhiteArrow, rightWhiteArrow } from "../Icons/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCredentials, UserDetails } from "../Redux/Actions";

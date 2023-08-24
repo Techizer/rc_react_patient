@@ -11,9 +11,9 @@ import {
   Font,
   LangProvider,
 } from "../Provider/Utils/Utils";
-import { ScreenHeader } from "../components/ScreenHeader";
+import { ScreenHeader } from "../Components/ScreenHeader";
 import { useSelector } from "react-redux";
-import NoInternet from "../components/NoInternet";
+import NoInternet from "../Components/NoInternet";
 
 
 

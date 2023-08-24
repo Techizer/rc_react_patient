@@ -26,12 +26,12 @@ import {
     windowHeight,
     windowWidth
 } from "../../Provider/Utils/Utils";
-import ListBottomSheet from "../../components/ListBottomSheet";
+import ListBottomSheet from "../../Components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails, UserProfile } from "../../Redux/Actions";
 import { SvgXml } from "react-native-svg";
 import { rightArrow } from "../../Icons/Index";
-import NoInternet from "../../components/NoInternet";
+import NoInternet from "../../Components/NoInternet";
 
 
 

@@ -9,9 +9,9 @@ import { mediaprovider } from "../Mediaprovider";
 import { apifuntion } from "../APIProvider";
 import { Colors, Font } from "../Colorsfont";
 import { Icons } from "../../Icons/Index";
-import { ScreenHeader } from "../../components/ScreenHeader";
-import { Button } from "../../components/Button";
-import AuthInputBoxSec from "../../components/AuthInputBoxSec";
+import { ScreenHeader } from "../../Components/ScreenHeader";
+import { Button } from "../../Components/Button";
+import AuthInputBoxSec from "../../Components/AuthInputBoxSec";
 
 const windowHeight = Math.round(Dimensions.get("window").height);
 const windowWidth = Math.round(Dimensions.get("window").width);

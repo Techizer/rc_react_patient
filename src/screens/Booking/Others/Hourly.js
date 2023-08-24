@@ -28,7 +28,7 @@ import { s, vs } from "react-native-size-matters";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import LoadingSkeleton from "../../../components/LoadingSkeleton";
+import LoadingSkeleton from "../../../Components/LoadingSkeleton";
 import { TabbyPaymentStatus } from "../../../Redux/Actions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

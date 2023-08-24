@@ -7,10 +7,10 @@ import MainStack from "./src/Provider/Stacks/MainStack";
 import RNRestart from "react-native-restart";
 import { useDispatch, useSelector } from "react-redux";
 import { AppLanguage, ContentAlign, DeviceConnection, LanguageIndex, Restart } from "./src/Redux/Actions";
-import NoInternet from "./src/components/NoInternet";
+import NoInternet from "./src/Components/NoInternet";
 
 import * as Sentry from '@sentry/react-native';
-import VideoCall from "./src/components/VideoCall";
+import VideoCall from "./src/Components/VideoCall";
 
 console.reportErrorsAsExceptions = false;
 

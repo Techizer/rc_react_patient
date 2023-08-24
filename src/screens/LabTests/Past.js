@@ -14,12 +14,12 @@ import {
   apifuntion,
   windowWidth,
 } from "../../Provider/Utils/Utils";
-import AppointmentContainer from "../../components/AppointmentContainer";
+import AppointmentContainer from "../../Components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import moment from "moment-timezone";
 import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import NoInternet from "../../components/NoInternet";
+import NoInternet from "../../Components/NoInternet";
 import { SkypeIndicator } from "react-native-indicators";
 
 let onEndReachedCalledDuringMomentum = true

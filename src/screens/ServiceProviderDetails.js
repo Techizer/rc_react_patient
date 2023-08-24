@@ -28,10 +28,10 @@ import {
 import { Capsule, Clock, dummyDoc, dummyUser, GoldStar, leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import AboutAppBottomSheet from '../components/AboutAppBottomSheet'
+import AboutAppBottomSheet from '../Components/AboutAppBottomSheet'
 import { useDispatch, useSelector } from "react-redux";
 import { SelectedProvider } from "../Redux/Actions";
-import NoInternet from "../components/NoInternet";
+import NoInternet from "../Components/NoInternet";
 
 
 

@@ -22,12 +22,12 @@ import {
 
 import { leftArrow, Notification } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
-import ServiceProviderContainer from "../components/ServiceProviderContainer";
-import SearchInput from "../components/SearchInput";
-import FilterBottomSheet from "../components/FilterBottomSheet";
+import ServiceProviderContainer from "../Components/ServiceProviderContainer";
+import SearchInput from "../Components/SearchInput";
+import FilterBottomSheet from "../Components/FilterBottomSheet";
 import { useSelector } from "react-redux";
-import BookingTypePopup from "../components/BookingTypePopup";
-import NoInternet from "../components/NoInternet";
+import BookingTypePopup from "../Components/BookingTypePopup";
+import NoInternet from "../Components/NoInternet";
 
 const AllServiceProviderListing = ({ navigation, route }) => {
 

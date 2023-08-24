@@ -20,12 +20,12 @@ import {
   Button,
   windowHeight
 } from "../Provider/Utils/Utils";
-import DropDownboxSec from '../components/DropDownboxSec'
+import DropDownboxSec from '../Components/DropDownboxSec'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { s, vs } from "react-native-size-matters";
-import IssuesBottomSheet from "../components/ListBottomSheet";
+import IssuesBottomSheet from "../Components/ListBottomSheet";
 import { useSelector } from "react-redux";
-import NoInternet from "../components/NoInternet";
+import NoInternet from "../Components/NoInternet";
 import ReactNativeModal from "react-native-modal";
 import { SvgXml } from "react-native-svg";
 import { Cross } from "../Icons/Index";

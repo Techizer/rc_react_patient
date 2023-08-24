@@ -25,7 +25,7 @@ import {
 import { leftArrow } from "../Icons/Index";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
-import NoInternet from "../components/NoInternet";
+import NoInternet from "../Components/NoInternet";
 import { UnReadNotifications } from "../Redux/Actions";
 
 const Notifications = ({ navigation }) => {

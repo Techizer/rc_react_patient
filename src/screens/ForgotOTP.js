@@ -26,7 +26,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { leftArrow, rightArrow } from "../Icons/Index";
-import AuthInputBoxSec from "../components/AuthInputBoxSec";
+import AuthInputBoxSec from "../Components/AuthInputBoxSec";
 import { useSelector } from "react-redux";
 
 const ForgotOTP = ({ navigation, route }) => {

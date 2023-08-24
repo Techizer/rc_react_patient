@@ -14,7 +14,7 @@ import {
 } from "../Provider/Utils/Utils";
 
 import Styles from "../Styles";
-import { ScreenHeader } from "../components/ScreenHeader";
+import { ScreenHeader } from "../Components/ScreenHeader";
 
 const LabTests = ({navigation}) => {
 

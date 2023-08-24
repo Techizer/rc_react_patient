@@ -554,7 +554,7 @@ export const Send=`<svg xmlns="http://www.w3.org/2000/svg" width="15.104" height
 
 export const Icons = {
   splashLogo: require("./SplashLogo.png"),
-  logo: require("./Logo.png"),
+  logo: require("./logo.png"),
   logoPlain: require('./logoPlain.png'),
   play: require("./play.png"),
   pause: require("./pause.png"),

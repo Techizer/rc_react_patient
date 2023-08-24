@@ -6,14 +6,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DrawerActions } from '@react-navigation/native';
 
 
-import TabItem from '../../components/TabItem'
+import TabItem from '../../Components/TabItem'
 import Home from "../../screens/Home";
 import AppointmentIndex from '../../screens/Appointments/Index'
 import ConsultIndex from "../../screens/Consultations/Index";
 import Profile from "../../screens/Profile";
 import LabTestIndex from "../../screens/LabTests/Index";
 
-import Drawerscreen from "../../components/Drawerscreen";
+import Drawerscreen from "../../Components/Drawerscreen";
 
 import { Colors } from "../Colorsfont";
 import { LangProvider } from '../Utils/Utils';

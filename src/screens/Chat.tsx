@@ -2,7 +2,7 @@ import { View, Text, FlatList, Dimensions, StatusBar, Platform, Image, TextInput
 import React, { useEffect, useRef, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
 import { getIsAppointmentChatEnabled } from '../Provider/AppFunctions'
-import { ScreenHeader } from '../components/ScreenHeader'
+import { ScreenHeader } from '../Components/ScreenHeader'
 import firestore from '@react-native-firebase/firestore'
 import { config } from '../Provider/configProvider'
 import { Message, MessageRoom } from '../Schemas/MessageRoomSchema'
@@ -16,8 +16,8 @@ import { Icons, Send, _Cross } from '../Icons/Index'
 import { LangProvider } from '../Provider/Language_provider'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { apifuntion, Button, mediaprovider, msgProvider, windowWidth } from '../Provider/Utils/Utils'
-import MediaOptions from '../components/MediaOptions'
-import ChatMessage from '../components/ChatMessage'
+import MediaOptions from '../Components/MediaOptions'
+import ChatMessage from '../Components/ChatMessage'
 
 
 

@@ -4,9 +4,9 @@ import { View } from "react-native-animatable";
 import HTMLView from "react-native-htmlview";
 import { s, vs } from "react-native-size-matters";
 import { useSelector } from "react-redux";
-import LoadingSkeleton from "../components/LoadingSkeleton";
-import NoInternet from "../components/NoInternet";
-import { ScreenHeader } from "../components/ScreenHeader";
+import LoadingSkeleton from "../Components/LoadingSkeleton";
+import NoInternet from "../Components/NoInternet";
+import { ScreenHeader } from "../Components/ScreenHeader";
 import { config } from "../Provider/configProvider";
 import {
   apifuntion,
