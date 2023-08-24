@@ -32,7 +32,7 @@ import BookingIndex from '../../screens/Booking/Index';
 import TabbyPayment from '../../screens/TabbyPayment';
 import Chat from '../../screens/Chat';
 
-import { CurrentRoute, onLogout, setAppState, setVideoCall, setVideoCallData, setVideoCallStatus } from '../../Redux/Actions';
+import { CurrentRoute, DeviceConnection, onLogout, setAppState, setVideoCall, setVideoCallData, setVideoCallStatus } from '../../Redux/Actions';
 import { config } from '../../Provider/configProvider';
 import { apifuntion } from '../../Provider/APIProvider';
 import { callRejectNotification, CheckSession, Network } from '../../Provider/APIFunctions';
@@ -253,6 +253,7 @@ const MainStack = () => {
     useEffect(() => {
         configureNotifications()
         messageListener()
+
     }, [])
 
     useEffect(() => {
@@ -284,6 +285,9 @@ const MainStack = () => {
     }, []);
 
     useEffect(() => {
+        NetInfo.fetch().then(state => {
+            dispatch(DeviceConnection(state.isConnected))
+        });
         const checkConnectivity = NetInfo.addEventListener(state => {
             Network(state)
         });

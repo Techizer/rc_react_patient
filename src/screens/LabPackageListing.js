@@ -4,7 +4,7 @@ import { View } from "react-native-animatable";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import NoInternet from "../components/NoInternet";
+import NoInternet from "../Components/NoInternet";
 import { dummyUser, leftArrow, Notification } from "../Icons/Index";
 import { config } from "../Provider/configProvider";
 import {

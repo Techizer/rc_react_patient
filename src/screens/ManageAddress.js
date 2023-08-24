@@ -5,11 +5,11 @@ import { Colors, Font, msgProvider, config, windowWidth, LangProvider, apifuntio
 import { s, vs } from 'react-native-size-matters';
 import { SvgXml } from 'react-native-svg';
 import { Add } from '../Icons/Index';
-import AddEditAddress from '../components/Add_Edit_Address';
-import AddressContainer from '../components/AddressContainer';
+import AddEditAddress from '../Components/Add_Edit_Address';
+import AddressContainer from '../Components/AddressContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Address } from '../Redux/Actions';
-import NoInternet from '../components/NoInternet';
+import NoInternet from '../Components/NoInternet';
 
 
 

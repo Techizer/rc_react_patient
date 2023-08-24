@@ -15,7 +15,7 @@ import {
   windowHeight,
   StatusbarHeight,
 } from "../../Provider/Utils/Utils";
-import { ScreenHeader } from "../../components/ScreenHeader";
+import { ScreenHeader } from "../../Components/ScreenHeader";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";

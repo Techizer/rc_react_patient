@@ -6,9 +6,9 @@ import { msgProvider, Icons, config, LangProvider, Font, Colors, ScreenHeader } 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { s, vs } from 'react-native-size-matters';
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
-import AddEditAddress from '../components/Add_Edit_Address';
+import AddEditAddress from '../Components/Add_Edit_Address';
 import { useSelector } from 'react-redux';
-import NoInternet from '../components/NoInternet';
+import NoInternet from '../Components/NoInternet';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 

@@ -26,10 +26,10 @@ import {
     Button,
     windowWidth
 } from "../../Provider/Utils/Utils";
-import AuthInputBoxSec from "../../components/AuthInputBoxSec";
+import AuthInputBoxSec from "../../Components/AuthInputBoxSec";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails, UserProfile } from "../../Redux/Actions";
-import NoInternet from "../../components/NoInternet";
+import NoInternet from "../../Components/NoInternet";
 
 
 

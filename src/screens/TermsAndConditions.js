@@ -10,7 +10,7 @@ import {
 import { WebView } from "react-native-webview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { ScreenHeader } from "../components/ScreenHeader";
+import { ScreenHeader } from "../Components/ScreenHeader";
 import { leftArrow } from "../Icons/Index";
 import {
   Colors,

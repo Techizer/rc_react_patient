@@ -30,10 +30,10 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import { SvgXml } from "react-native-svg";
 import { dummyUser, Edit } from "../../Icons/Index";
 import { s, vs } from "react-native-size-matters";
-import NationalityBottomSheet from "../../components/ListBottomSheet";
+import NationalityBottomSheet from "../../Components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails, UserProfile } from "../../Redux/Actions";
-import NoInternet from "../../components/NoInternet";
+import NoInternet from "../../Components/NoInternet";
 
 
 const Personal = ({ navigation }) => {

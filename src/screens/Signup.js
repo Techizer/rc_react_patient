@@ -23,7 +23,7 @@ import {
   LangProvider,
   Button
 } from "../Provider/Utils/Utils";
-import AuthInputBoxSec from "../components/AuthInputBoxSec";
+import AuthInputBoxSec from "../Components/AuthInputBoxSec";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { leftArrow, Logo, rightArrow } from "../Icons/Index";

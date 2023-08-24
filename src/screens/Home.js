@@ -27,16 +27,16 @@ import { TabbyProductSnippetCreditCard,TabbySplititSnippet } from 'tabby-react-n
 import { s, vs } from "react-native-size-matters"
 import { ScreenHeader } from "../Provider/Utils/Utils";
 import Styles from "../Styles";
-import BannerCrousel from "../components/BannerCrousel";
+import BannerCrousel from "../Components/BannerCrousel";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { CurrentRoute, IsLanguageUpdated, UnReadNotifications, TodaysAppointments, TodaysConsultations, TodaysLabTests, UserProfile } from "../Redux/Actions";
-import HomeLoadingSkeleton from "../components/HomeLoadingSkeleton";
+import HomeLoadingSkeleton from "../Components/HomeLoadingSkeleton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AudioPlayer } from "../components/AudioPlayer";
-import NoInternet from "../components/NoInternet";
-import AboutAppBottomSheet from "../components/AboutAppBottomSheet";
+import { AudioPlayer } from "../Components/AudioPlayer";
+import NoInternet from "../Components/NoInternet";
+import AboutAppBottomSheet from "../Components/AboutAppBottomSheet";
 
 const HomeHealthcareServiceAppointments = [
   {

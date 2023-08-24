@@ -12,7 +12,7 @@ import {
   windowWidth,
   LangProvider,
 } from "../../Provider/Utils/Utils";
-import { ScreenHeader } from "../../components/ScreenHeader";
+import { ScreenHeader } from "../../Components/ScreenHeader";
 import { useSelector } from "react-redux";
 import TaskBase from "./Others/TaskBase";
 import TestBase from "./Labs/TestBase";

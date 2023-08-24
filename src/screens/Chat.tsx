@@ -2,7 +2,7 @@ import { View, Text, FlatList, Dimensions, StatusBar, Platform, Image, TextInput
 import React, { useEffect, useRef, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
 import { getIsAppointmentChatEnabled, GetThumbnail } from '../Provider/AppFunctions'
-import { ScreenHeader } from '../components/ScreenHeader'
+import { ScreenHeader } from '../Components/ScreenHeader'
 import firestore from '@react-native-firebase/firestore'
 import { config } from '../Provider/configProvider'
 import { Message, MessageRoom } from '../Schemas/MessageRoomSchema'
@@ -16,8 +16,8 @@ import { Icons, Send, _Cross } from '../Icons/Index'
 import { LangProvider } from '../Provider/Language_provider'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { apifuntion, Button, mediaprovider, msgProvider, windowWidth } from '../Provider/Utils/Utils'
-import MediaOptions from '../components/MediaOptions'
-import ChatMessage from '../components/ChatMessage'
+import MediaOptions from '../Components/MediaOptions'
+import ChatMessage from '../Components/ChatMessage'
 
 
 const Chat = ({ navigation, route }) => {
@@ -89,8 +89,8 @@ const Chat = ({ navigation, route }) => {
                         })
                 } else {
                     const roomDetails = documentSnapshot.data()
-                    // console.log({ roomDetails: roomDetails?.MessageRoomDetails });
-                    setIsTyping(roomDetails.MessageRoomDetails.Provider.isTyping)
+                    // console.log({ roomDetails: roomDetails?.MessageRoomDetails.Provider.IsTyping});
+                    setIsTyping(roomDetails?.MessageRoomDetails.Provider.IsTyping)
 
                     roomDetails?.MessageRoomDetails?.Messages?.reverse()
                     roomDetails?.MessageRoomDetails?.Messages?.forEach((message: any) => {
@@ -135,8 +135,8 @@ const Chat = ({ navigation, route }) => {
     };
 
     const keyboardDidHide = async () => {
-        await firestore().collection(`Chats-${config.mode}`).doc(appointment?.order).update({ 'MessageRoomDetails.Patient.IsTyping': false }).finally(()=>{
-            navigation.pop()
+        await firestore().collection(`Chats-${config.mode}`).doc(appointment?.order).update({ 'MessageRoomDetails.Patient.IsTyping': false }).finally(() => {
+
         })
 
     };
@@ -211,13 +211,7 @@ const Chat = ({ navigation, route }) => {
                     uri: res[0].uri,
                 }
             };
-            const result = await GetThumbnail(res[0].fileCopyUri)
-            source = {
-                data: {
-                    ...source.data
-                },
-                thumbnail: result.uri
-            }
+            // const result = await GetThumbnail(res[0].fileCopyUri)
             tempArr.push(source)
             setAttachment(tempArr)
             setType('pdf')
@@ -242,7 +236,7 @@ const Chat = ({ navigation, route }) => {
         for (var i = 0; i < attachment.length; i++) {
             data.append("chat_image", attachment[i]?.data);
             data.append("thumbnail", "");
-            data.append("name", "");
+            data.append("name", attachment[i]?.data.name);
         }
 
         apifuntion.postApi(url, data, 1)
@@ -250,9 +244,9 @@ const Chat = ({ navigation, route }) => {
                 if (obj.status == true) {
                     console.log("UploadFile-res...", obj);
                     if (type === 'image') {
-                        msg.MessageDetails.ImagePaths = obj.result
+                        msg.MessageDetails.ImagePaths = [obj.result.image]
                     } else {
-                        msg.MessageDetails.DocPaths = obj.result
+                        msg.MessageDetails.DocPaths = [obj.result.image, msg.MessageDetails.DocPaths[1]]
                     }
                     await firestore().collection(`Chats-${config.mode}`).doc(appointment?.order).update({ 'MessageRoomDetails.Messages': firestore.FieldValue.arrayUnion(msg) }).finally(() => {
                         setIsAutoResendable(true)
@@ -313,7 +307,7 @@ const Chat = ({ navigation, route }) => {
             const newMessage = new Message({
                 Body: messageInput,
                 DateTime: new Date(),
-                DocPaths: type === 'pdf' ? [attachment[0].data.uri, attachment[0].thumbnail, attachment[0]?.data.name] : [],
+                DocPaths: type === 'pdf' ? [attachment[0].data.uri, attachment[0]?.data.name] : [],
                 ImagePaths: type === 'image' ? [attachment[0].data.uri] : [],
                 Milliseconds: moment().valueOf(),
                 NumChars: messageInput.length,
@@ -374,6 +368,7 @@ const Chat = ({ navigation, route }) => {
                 leftIcon
                 onBackPress={() => {
                     keyboardDidHide()
+                    navigation.pop()
                 }}
                 renderHeaderWOBack={() => {
                     return (
@@ -406,7 +401,8 @@ const Chat = ({ navigation, route }) => {
                                 <Text style={{
                                     color: '#8F98A7',
                                     fontFamily: Font.Medium,
-                                    fontSize: Font.xsmall
+                                    fontSize: Font.xsmall,
+                                    fontStyle: isTyping ? 'italic' : 'normal'
                                 }} allowFontScaling={false} >{isTyping ? 'Typing...' : `Consultation ID: ${appointment?.order}`}</Text>
 
                             </View>
@@ -558,12 +554,11 @@ const Chat = ({ navigation, route }) => {
                                                 paddingVertical: Platform.OS == 'ios' ? 0 : vs(10),
                                                 justifyContent: 'flex-end',
                                                 alignItems: 'flex-end',
-                                                // alignSelf: 'flex-end',
                                             }}>
                                             <View
                                                 style={{
-                                                    width: (windowWidth * 4.9) / 100,
-                                                    height: (windowWidth * 4.9) / 100,
+                                                    width: '100%',
+                                                    height: windowWidth / 20,
                                                     borderRadius: (windowWidth * 20) / 100,
                                                     justifyContent: 'center',
                                                     alignItems: 'center'

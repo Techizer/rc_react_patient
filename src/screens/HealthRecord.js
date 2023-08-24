@@ -4,12 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 import { Colors, Font, config, windowWidth, LangProvider, apifuntion, ScreenHeader, Button } from '../Provider/Utils/Utils';
 import { s, vs } from 'react-native-size-matters';
-import AddEditMembers from '../components/Add_Edit_Members'
+import AddEditMembers from '../Components/Add_Edit_Members'
 import { Add } from '../Icons/Index';
-import Member from '../components/Member';
+import Member from '../Components/Member';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectedProvider } from '../Redux/Actions';
-import NoInternet from '../components/NoInternet';
+import NoInternet from '../Components/NoInternet';
 
 const HealthRecord = (props) => {
 
