@@ -129,10 +129,10 @@ const Notifications = ({ navigation }) => {
     data.append("login_user_id", loggedInUserDetails?.user_id);
     apifuntion
       .postApi(url, data)
-      .then((obj) => {
+      .then((obj) => { 
 
         if (obj.status == true) {
-          dispatch(UnReadNotifications(0))
+          dispatch(UnReadNotifications('0'))
           msgProvider.showSuccess(obj.message)
           setState({ isReadAll: true })
         } else {

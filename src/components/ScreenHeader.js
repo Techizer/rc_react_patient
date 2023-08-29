@@ -137,7 +137,7 @@ export const ScreenHeader = ({
                                                     alignItems: 'center',
 
                                                 }}>
-                                                <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
+                                                <SvgXml xml={notiCount == '0' ? Notification : redNoti} height={vs(20.26)} width={s(16.21)} />
                                             </TouchableHighlight>
                                             :
                                             <View style={{ width: '14%' }}></View>
@@ -271,7 +271,7 @@ export const ScreenHeader = ({
                                         alignItems: 'center',
 
                                     }}>
-                                    <SvgXml xml={notiCount > 0 ? redNoti : Notification} height={vs(20.26)} width={s(16.21)} />
+                                    <SvgXml xml={notiCount == '0' ? Notification : redNoti} height={vs(20.26)} width={s(16.21)} />
                                 </TouchableHighlight>
                             </>
                             :

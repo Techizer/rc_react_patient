@@ -1386,7 +1386,7 @@ const AppointmentContainer = ({
                                             paddingVertical: vs(4),
                                             flexDirection: 'row',
                                             alignItems: 'center',
-                                            width: '40%',
+                                            width: '45%',
 
                                         }} >
 
@@ -1399,6 +1399,7 @@ const AppointmentContainer = ({
                                         >{'OTP'}</Text>
 
                                         <FlatList
+                                            showsHorizontalScrollIndicator={false}
                                             horizontal
                                             data={otp}
                                             renderItem={({ item, index }) => {

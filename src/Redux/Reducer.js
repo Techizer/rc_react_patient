@@ -52,7 +52,7 @@ const initialState = {
     credentials: null,
     rememberMe: false,
     restart: false,
-    notiCount: 0,
+    notiCount: '0',
     todayAppointments: 0,
     todayConsultations: 0,
     todayLabTests: 0,
