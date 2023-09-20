@@ -682,15 +682,8 @@ const Login = ({ navigation }) => {
                   }}>
                   {LangProvider.Digits[languageIndex]}
 
-          {/* <View
-            style={{
-              width: "100%",
-              alignSelf: "center",
-              marginTop: vs(15),
-              flexDirection: "row",
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }} >
+                </Text>
+              </View>
 
             </View>
 
