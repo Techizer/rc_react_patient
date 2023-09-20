@@ -11,7 +11,8 @@ import {
   I18nManager,
   TextInput,
   StyleSheet,
-  Pressable
+  Pressable,
+  ScrollView
 } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -481,206 +482,205 @@ const Login = ({ navigation }) => {
   return (
     <View
       pointerEvents={loginData.isLoading ? 'none' : 'auto'}
-      style={{ flex: 1, backgroundColor: Colors.White, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      style={{ flex: 1, backgroundColor: '#e6e6e6', }}>
 
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         // keyboardOpeningTime={200}
         extraScrollHeight={50}
         enableOnAndroid={true}
         keyboardShouldPersistTaps='handled'
         contentContainerStyle={{
-          paddingBottom: vs(30),
+          paddingVertical: vs(10),
+          backgroundColor: Colors.White,
+          justifyContent: 'center'
         }}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}> */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: windowWidth / 5 }}>
 
-        <View
-          style={{
-            width: "100%",
-            alignItems: 'center',
-            marginTop: vs(40),
-          }}>
-          <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
-        </View>
+        <View style={{ backgroundColor: Colors.White, paddingVertical: vs(10), }}>
 
-        <View
-          style={{
-            width: "100%",
-            alignSelf: "center",
-            marginTop: vs(25)
-          }}>
-          <Text
+          <View
             style={{
-              fontSize: 24,
-              fontFamily: Font.Medium,
-              alignSelf: 'center',
-              // textAlign: contentAlign,
-              color: Colors.darkText
-
-            }}
-          >
-            {LangProvider.Login[languageIndex]}
-          </Text>
-
-          <Text
-            style={{
-              // textAlign: contentAlign,
-              alignSelf: 'flex-start',
-              fontSize: Font.large,
-              fontFamily: Font.Regular,
-              color: Colors.inActiveText,
-              marginTop: vs(6),
-              paddingHorizontal: '16%'
-            }}
-          >
-            {LangProvider.Logintext[languageIndex]}
-          </Text>
-
-
-
-          <View style={[styles.inputMainContainer,]}>
-            <View style={styles.titleContainer}>
-              <Text allowFontScaling={false} style={styles.title}>{'Phone Number'}</Text>
-            </View>
-
-            <View style={[styles.inputContainer]}>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => setLoginData({ showCountries: !loginData.showCountries })}
-                style={[styles.codeContainer]}>
-
-                <View style={{
-                  height: '100%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: '10%',
-                  justifyContent: 'space-between',
-                }}>
-                  <Image source={loginData.code === '966' ? Icons.Saudia : Icons.UAE} style={styles.flag} />
-                  <Text
-                    allowFontScaling={false}
-                    style={styles.inputText}>
-                    {`+${loginData.code}`}
-
-                  </Text>
-                  <SvgXml xml={rightArrow} height={s(13)} width={s(13)} style={{ transform: [{ rotate: loginData.showCountries ? "270deg" : "90deg" }] }} />
-                </View>
-
-                {
-                  loginData.showCountries &&
-                  <View style={styles.countryContainer}>
-                    {
-                      countries.map((item, index) => {
-                        return (
-                          <Pressable
-                            key={item.code}
-                            onPress={() => {
-                              setLoginData({ showCountries: false, code: item.code })
-                            }}
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              paddingHorizontal: '10%',
-                              marginTop: index == 0 ? 0 : 5
-                            }}>
-                            <Image source={item.icon} style={styles.flag} />
-                            <Text
-                              allowFontScaling={false}
-                              style={styles.inputText}>
-                              {`+${item.code}`}
-
-                            </Text>
-                          </Pressable>
-                        )
-                      })
-                    }
-                  </View>
-                }
-
-              </TouchableOpacity>
-
-              <View style={{ justifyContent: 'center' }}>
-                <View style={[styles.separator]} />
-              </View>
-
-              <View style={[styles.numberContainer]}>
-
-                <TextInput
-                  ref={numberRef}
-                  style={{}}
-                  onChangeText={(val) => setLoginData({ number: val })}
-                  placeholder={'Phone Number'}
-                  editable={true}
-                  blurOnSubmit={false}
-                  autoCapitalize="none"
-                  value={loginData.number}
-                  allowFontScaling={false}
-                  keyboardType='decimal-pad'
-                  returnKeyType='done'
-                  onSubmitEditing={() => Keyboard.dismiss()}
-                />
-              </View>
-
-            </View>
+              width: "100%",
+              alignItems: 'center',
+              marginTop: vs(40),
+            }}>
+            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
           </View>
 
+          <View
+            style={{
+              width: "100%",
+              alignSelf: "center",
+              marginTop: vs(25)
+            }}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontFamily: Font.Medium,
+                alignSelf: 'center',
+                // textAlign: contentAlign,
+                color: Colors.darkText
 
-          <View style={{ width: '90%', alignSelf: 'center', marginTop: windowWidth / 20 }}>
+              }}
+            >
+              {LangProvider.Login[languageIndex]}
+            </Text>
 
             <Text
               style={{
+                // textAlign: contentAlign,
+                alignSelf: 'flex-start',
+                fontSize: Font.large,
                 fontFamily: Font.Regular,
-                fontSize: Font.medium,
-                color: Colors.regulartextcolor,
-                // fontWeight:'600'
-              }}>
-              {'YOUR PHONE NUMBER MUST CONTAIN'}
-
+                color: Colors.inActiveText,
+                marginTop: vs(6),
+                paddingHorizontal: '16%',
+                textAlign: 'center'
+              }}
+            >
+              {LangProvider.Logintext[languageIndex]}
             </Text>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
-              <Ellipse style={{ alignSelf: 'center' }}
-                name={'ellipse'}
-                size={12}
-                color={Colors.Border}
-              />
+
+
+            <View style={[styles.inputMainContainer,]}>
+              <View style={styles.titleContainer}>
+                <Text allowFontScaling={false} style={styles.title}>{'Phone Number'}</Text>
+              </View>
+
+              <View style={[styles.inputContainer]}>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => setLoginData({ showCountries: !loginData.showCountries })}
+                  style={[styles.codeContainer]}>
+
+                  <View style={{
+                    height: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: '10%',
+                    justifyContent: 'space-between',
+                  }}>
+                    <Image source={loginData.code === '966' ? Icons.Saudia : Icons.UAE} style={styles.flag} />
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.inputText}>
+                      {`+${loginData.code}`}
+
+                    </Text>
+                    <SvgXml xml={rightArrow} height={s(13)} width={s(13)} style={{ transform: [{ rotate: loginData.showCountries ? "270deg" : "90deg" }] }} />
+                  </View>
+
+                  {
+                    loginData.showCountries &&
+                    <View style={styles.countryContainer}>
+                      {
+                        countries.map((item, index) => {
+                          return (
+                            <Pressable
+                              key={item.code}
+                              onPress={() => {
+                                setLoginData({ showCountries: false, code: item.code })
+                              }}
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                paddingHorizontal: '10%',
+                                marginTop: index == 0 ? 0 : 5
+                              }}>
+                              <Image source={item.icon} style={styles.flag} />
+                              <Text
+                                allowFontScaling={false}
+                                style={styles.inputText}>
+                                {`+${item.code}`}
+
+                              </Text>
+                            </Pressable>
+                          )
+                        })
+                      }
+                    </View>
+                  }
+
+                </TouchableOpacity>
+
+                <View style={{ justifyContent: 'center' }}>
+                  <View style={[styles.separator]} />
+                </View>
+
+                <View style={[styles.numberContainer]}>
+
+                  <TextInput
+                    ref={numberRef}
+                    style={{ textAlign: contentAlign, }}
+                    onChangeText={(val) => setLoginData({ number: val })}
+                    placeholder={LangProvider.Phone[languageIndex]}
+                    editable={true}
+                    blurOnSubmit={false}
+                    autoCapitalize="none"
+                    value={loginData.number}
+                    allowFontScaling={false}
+                    keyboardType='decimal-pad'
+                    returnKeyType='done'
+                    onSubmitEditing={() => Keyboard.dismiss()}
+                  />
+                </View>
+
+              </View>
+            </View>
+
+
+            <View style={{ width: '90%', alignSelf: 'center', marginTop: windowWidth / 20, alignItems: 'flex-start' }}>
 
               <Text
                 style={{
                   fontFamily: Font.Regular,
                   fontSize: Font.medium,
                   color: Colors.regulartextcolor,
-                  marginHorizontal: 5
+                  textAlign: contentAlign
+                  // fontWeight:'600'
                 }}>
-                {'An area code'}
+                {LangProvider.PhoneInstruction[languageIndex]}
 
               </Text>
-            </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
-              <Ellipse style={{ alignSelf: 'center' }}
-                name={'ellipse'}
-                size={12}
-                color={Colors.Border}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
+                <Ellipse style={{ alignSelf: 'center' }}
+                  name={'ellipse'}
+                  size={12}
+                  color={Colors.Border}
+                />
 
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.medium,
-                  color: Colors.regulartextcolor,
-                  marginHorizontal: 5
-                }}>
-                {'Exactly 9 numbers'}
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.medium,
+                    color: Colors.regulartextcolor,
+                    marginHorizontal: 5
+                  }}>
+                  {LangProvider.Code[languageIndex]}
 
-              </Text>
-            </View>
+                </Text>
+              </View>
 
-          </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
+                <Ellipse style={{ alignSelf: 'center' }}
+                  name={'ellipse'}
+                  size={12}
+                  color={Colors.Border}
+                />
 
-
-        
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.medium,
+                    color: Colors.regulartextcolor,
+                    marginHorizontal: 5
+                  }}>
+                  {LangProvider.Digits[languageIndex]}
 
           {/* <View
             style={{
@@ -692,248 +692,210 @@ const Login = ({ navigation }) => {
               justifyContent: 'space-between'
             }} >
 
+            </View>
+
+
+            <Button
+              text={LangProvider.Request[languageIndex]}
+              onPress={() => LoginUser()}
+              btnStyle={{ marginTop: vs(15), width: '90%' }}
+              onLoading={loginData.isLoading}
+            />
+
+            <Text style={{
+              fontSize: Font.xlarge,
+              fontFamily: Font.Regular,
+              color: Colors.Black,
+              alignSelf: 'center',
+              marginVertical: windowWidth / 25
+            }}>{LangProvider.Or[languageIndex]}</Text>
+
+            <Text style={{
+              fontSize: Font.xlarge,
+              fontFamily: Font.Medium,
+              color: Colors.Theme,
+              alignSelf: 'center'
+            }}>{LangProvider.Skip[languageIndex]}</Text>
+
+          </View>
+
+
+          <View style={{ alignSelf: 'center', flexDirection: 'row', width: '90%', justifyContent: 'space-between', alignItems: 'center', marginTop: windowWidth / 8 }}>
+            <Text style={{
+              fontSize: Font.xlarge,
+              fontFamily: Font.Regular,
+              color: Colors.Black,
+              alignSelf: 'center',
+              marginVertical: windowWidth / 25
+            }}>{LangProvider.donot[languageIndex]}</Text>
+
             <TouchableOpacity
               activeOpacity={0.8}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                if (loginData.email != '' && loginData.password != '') {
-                  dispatch(RememberMe(!rememberMe))
-                  if (!rememberMe) {
-                    dispatch(UserCredentials(null))
-                  }
-                }
-              }}>
-
-
-              <TouchableOpacity
-                onPress={() => {
-                  if (loginData.email != '' && loginData.password != '') {
-                    dispatch(RememberMe(!rememberMe))
-                    if (!rememberMe) {
-                      dispatch(UserCredentials(null))
-                    }
-                  }
-                }}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 5,
-                  backgroundColor: rememberMe ? Colors.Theme : Colors.White,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: rememberMe ? 0 : 1.3,
-                  borderColor: Colors.Border
-                }}>
-                {
-                  rememberMe ?
-                    <Image
-                      style={{
-                        height: 14,
-                        width: 14,
-                        tintColor: Colors.White
-                      }}
-                      resizeMode="contain"
-                      source={Icons.Tick}
-                    />
-                    :
-                    null
-                }
-              </TouchableOpacity>
-              <Text
-                style={{
-                  color: Colors.inActiveText,
-                  fontFamily: Font.Regular,
-                  fontSize: Font.medium,
-                  marginLeft: s(10)
-                }}>
-                {LangProvider.Remember[languageIndex]}
-              </Text>
-
-            </TouchableOpacity>
-
-
-            <View style={{ alignSelf: "center", }}>
-              <Text
-                onPress={() => {
-                  navigation.navigate("ForgotPage");
-                }}
-                style={{
-                  color: Colors.Blue,
-                  fontFamily: Font.Regular,
-                  fontSize: Font.medium,
-                  alignSelf: 'flex-end'
-                }}
-              >
-                {LangProvider.Forgotpassword[languageIndex]}
-              </Text>
-            </View>
-          </View> */}
-
-          <Button
-            text={LangProvider.Contiunebtn[languageIndex]}
-            onPress={() => LoginUser()}
-            btnStyle={{ marginTop: vs(15) }}
-            onLoading={loginData.isLoading}
-          />
-
-          <TouchableHighlight
-            underlayColor={Colors.Highlight}
-            onPress={() => {
-              setLoginData(prevState => ({
-                ...prevState,
-                isContactUs: true
-              }))
-            }}
-            style={{ marginTop: vs(25), paddingVertical: vs(5), width: '100%' }}
-          >
-            <Text
-              style={{
-                fontSize: Font.medium,
-                fontFamily: Font.Regular,
-                color: Colors.DarkGrey,
-                alignSelf: 'flex-start',
-                textDecorationLine: 'underline',
-
-              }}
+              onPress={() => navigation.navigate('Signup')}
             >
-              {LangProvider.Trouble_SignIn[languageIndex]}
-            </Text>
-          </TouchableHighlight>
-
-
+              <Text style={{
+                fontSize: Font.xlarge,
+                fontFamily: Font.Medium,
+                color: Colors.Theme,
+                alignSelf: 'center'
+              }}>{LangProvider.Signup[languageIndex]}</Text>
+            </TouchableOpacity>
+          </View>
 
         </View>
 
+        {/* </KeyboardAwareScrollView> */}
 
 
+        {/* <View
+        style={{
+          width: "100%",
+          alignSelf: "center",
+          marginTop: vs(15),
+          flexDirection: "row",
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }} >
 
-        {/* //--------------------------------------------------------------------------------bottom */}
-
-        <View
+        <TouchableOpacity
+          activeOpacity={0.8}
           style={{
-            width: "100%",
-            marginTop: vs(30)
+            flexDirection: "row",
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            if (loginData.email != '' && loginData.password != '') {
+              dispatch(RememberMe(!rememberMe))
+              if (!rememberMe) {
+                dispatch(UserCredentials(null))
+              }
+            }
           }}>
+
+
           <TouchableOpacity
-            activeOpacity={0.8}
             onPress={() => {
-              dispatch(UserDetails(null))
-              dispatch(Guest(true))
-              setTimeout(() => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: "DashboardStack" }],
-                });
-              }, 250);
+              if (loginData.email != '' && loginData.password != '') {
+                dispatch(RememberMe(!rememberMe))
+                if (!rememberMe) {
+                  dispatch(UserCredentials(null))
+                }
+              }
             }}
             style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              flexDirection: 'row',
-              justifyContent: "space-between",
-              backgroundColor: Colors.Theme,
-              paddingVertical: vs(6),
-              paddingHorizontal: (windowWidth * 5) / 100
-            }} >
-            <Text
-              style={[
-                {
-                  fontSize: Font.small,
-                  color: Colors.White,
-                  fontFamily: Font.Regular,
-                  textAlign: contentAlign
-                }
-              ]}
-            >
-              {LangProvider.Skip[languageIndex]}
-            </Text>
-
-            <SvgXml xml={contentAlign == "right" ? leftWhiteArrow : rightWhiteArrow}
-              height={vs(11.98)} width={s(6.42)} color={Colors.White}
-            />
+              height: 20,
+              width: 20,
+              borderRadius: 5,
+              backgroundColor: rememberMe ? Colors.Theme : Colors.White,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: rememberMe ? 0 : 1.3,
+              borderColor: Colors.Border
+            }}>
+            {
+              rememberMe ?
+                <Image
+                  style={{
+                    height: 14,
+                    width: 14,
+                    tintColor: Colors.White
+                  }}
+                  resizeMode="contain"
+                  source={Icons.Tick}
+                />
+                :
+                null
+            }
           </TouchableOpacity>
-
-        </View>
-
-
-        <View
-          style={{
-            width: "100%",
-            paddingVertical: vs(15),
-            paddingHorizontal: s(15),
-            backgroundColor: Colors.appointmentdetaillightblue
-          }} >
-
           <Text
             style={{
-              alignSelf: 'flex-start',
+              color: Colors.inActiveText,
               fontFamily: Font.Regular,
               fontSize: Font.medium,
-              color: Colors.DarkGrey,
+              marginLeft: s(10)
             }}>
-            {LangProvider.donot[languageIndex]}
+            {LangProvider.Remember[languageIndex]}
           </Text>
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Signup')}
+        </TouchableOpacity>
+
+
+        <View style={{ alignSelf: "center", }}>
+          <Text
+            onPress={() => {
+              navigation.navigate("ForgotPage");
+            }}
+            style={{
+              color: Colors.Blue,
+              fontFamily: Font.Regular,
+              fontSize: Font.medium,
+              alignSelf: 'flex-end'
+            }}
           >
-            <Text
-              style={{
-                alignSelf: 'flex-start',
-                fontFamily: Font.Medium,
-                fontSize: Font.medium,
-                color: Colors.Blue,
-                marginTop: (windowWidth * 2) / 100,
-              }}>
-              {LangProvider.createnewaccountbtn[languageIndex]}
-            </Text>
-          </TouchableOpacity>
+            {LangProvider.Forgotpassword[languageIndex]}
+          </Text>
         </View>
+      </View> */}
+
+        <TouchableHighlight
+          underlayColor={Colors.Highlight}
+          onPress={() => {
+            setLoginData(prevState => ({
+              ...prevState,
+              isContactUs: true
+            }))
+          }}
+          style={{ paddingVertical: vs(15), width: '90%', alignSelf: 'center' }}
+        >
+          <Text
+            style={{
+              fontSize: Font.medium,
+              fontFamily: Font.Regular,
+              color: Colors.DarkGrey,
+              alignSelf: 'flex-start',
+              textDecorationLine: 'underline',
+
+            }}
+          >
+            {LangProvider.Trouble_SignIn[languageIndex]}
+          </Text>
+        </TouchableHighlight>
+
 
         {/* //--------------------------------------------------------------------------------Language */}
 
         <View
           style={{
             width: "90%",
-            paddingVertical: (windowWidth * 2) / 100,
             alignSelf: 'center',
-            marginTop: vs(15)
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
           }}>
           <Text
             style={[
               {
-                fontSize: Font.medium,
+                fontSize: Font.large,
                 color: Colors.Black,
                 fontFamily: Font.Regular,
-                alignSelf: 'flex-start',
               }
             ]}
           >
             {LangProvider.languagetxt[languageIndex]}{" "}
           </Text>
 
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: 'space-between',
-              paddingVertical: (windowWidth * 5) / 100,
-            }}
-          >
+
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', width: '40%', justifyContent: 'space-between' }}>
             <TouchableOpacity
               onPress={() => {
                 ChangeLanguage('en')
               }}
               style={{
                 width: "45%",
-                backgroundColor: appLanguage == 'en' ? Colors.lightBlue : Colors.White,
-                borderColor: Colors.lightGrey,
+                backgroundColor: appLanguage == 'en' ? Colors.Theme : Colors.White,
+                borderColor: Colors.Theme,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
                 paddingVertical: (windowWidth * 1.5) / 100,
@@ -942,7 +904,7 @@ const Login = ({ navigation }) => {
               <Text
                 style={{
                   fontSize: Font.medium,
-                  color: Colors.Black,
+                  color: appLanguage == 'en' ? Colors.White : Colors.Black,
                   fontFamily: Font.Regular,
                   alignSelf: "center",
                 }}
@@ -959,8 +921,8 @@ const Login = ({ navigation }) => {
               style={{
                 width: "45%",
                 alignSelf: "center",
-                backgroundColor: appLanguage == 'ar' ? Colors.lightBlue : Colors.White,
-                borderColor: Colors.lightGrey,
+                backgroundColor: appLanguage == 'ar' ? Colors.Theme : Colors.White,
+                borderColor: Colors.Theme,
                 borderWidth: 1,
                 borderRadius: (windowWidth * 2) / 100,
                 paddingVertical: (windowWidth * 1.5) / 100,
@@ -968,7 +930,7 @@ const Login = ({ navigation }) => {
               <Text
                 style={{
                   fontSize: Font.medium,
-                  color: Colors.Black,
+                  color: appLanguage == 'ar' ? Colors.White : Colors.Black,
                   fontFamily: Font.Regular,
                   alignSelf: "center",
                 }}
@@ -976,13 +938,11 @@ const Login = ({ navigation }) => {
                 {LangProvider.AR[languageIndex]}
               </Text>
             </TouchableOpacity>
-
           </View>
-
 
         </View>
 
-      </KeyboardAwareScrollView>
+      </ScrollView>
 
 
       <ContactUsBottomSheet

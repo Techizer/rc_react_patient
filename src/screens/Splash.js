@@ -371,7 +371,7 @@ const Splash = ({ navigation }) => {
 
 
       <View style={{ width: '65%', alignSelf: 'center', marginTop: windowWidth * 3 / 100 }}>
-        <Text style={{ marginTop: windowWidth / 10, fontSize: 24, color: Colors.Black, fontFamily: Font.Bold, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext1[languageIndex]} </Text>
+        <Text style={{ marginTop: windowWidth / 10, fontSize: 24, color: Colors.Black, fontFamily: Font.Medium, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext1[languageIndex]} </Text>
       </View>
 
 

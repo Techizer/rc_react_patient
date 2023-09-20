@@ -12,15 +12,21 @@ class Language_provider {
     "Email Id/Mobile Number",
     "البريد الالكتروني / رقم الهاتف المحمول",
   ];
+  Phone = ['Phone Number', 'رقم التليفون']
+  PhoneInstruction = ['YOUR PHONE NUMBER MUST CONTAIN', "رقم هاتفك يجب أن يحتوي على"]
+  Code = ['An area code', "رمز المنطقة"]
+  Digits = ['Exactly 9 numbers', "9 أرقام بالضبط"]
   password = ["Password", "كلمة المرور  "];
   Remember = ["Remember Me", "تذكرني  "];
   Forgotpassword = ["Forgot Password ?", "نسيت كلمة المرور؟"];
   Contiunebtn = ["CONTINUE", " استمرار "];
-  donot = ["Don't have an account, click below?", "ليس لديك حساب ، انقر أدناه؟"];
+  Request = ["Request OTP", "طلب كلمة مرور لمرة واحدة"];
+  donot = ["Don't have an account?  ", "ليس لديك حساب؟"];
   createnewaccountbtn = ["Create a new account", "انشاء حساب جديد"];
   swipe_text = ["Swipe right to left", " اسحب من اليمين إلى اليسار  "];
   Trouble_SignIn = ["Trouble signing in? Get Help?", "هل تواجه مشكلة في تسجيل الدخول؟ احصل على مساعدة؟"];
-  Skip = ["Skip login now & continuing exploring the app", "تخطي تسجيل الدخول الآن ومواصلة استكشاف التطبيق"]
+  Or = ['Or', 'أو']
+  Skip = ["Skip Login Now", "تخطي تسجيل الدخول الآن"]
   //---------------------splash------------------
   Splashtext1 = [
     "The best care, in the best place. We Take Pride In Being The Best.",
@@ -35,7 +41,7 @@ class Language_provider {
 
   Splashtext4 = ["Chap Organization", "منظمة الفصل"];
 
-  Signup = ["Sign up", " التسجيل  "];
+  Signup = ["Signup", " التسجيل  "];
   Signuptext1 = ["Register to open your Account", "قم بالتسجيل لفتح حسابك   "];
   textinputname = ["Full Name", " الاسم الكامل  "];
   textinputnumber = ["Mobile Number", "رقم الهاتف المحمول "];
