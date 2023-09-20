@@ -26,8 +26,8 @@ Sentry.init({
     //     }),
     // ],
 });
-// Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
-Tabby.setApiKey('pk_94369327-33a2-4a25-bdf3-cb04ad59be2f')
+Tabby.setApiKey('pk_test_aa6a4bab-8837-4017-a513-98235fe49e4c')
+// Tabby.setApiKey('pk_94369327-33a2-4a25-bdf3-cb04ad59be2f')
 // Settings.setAppID('386042973026214');
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {

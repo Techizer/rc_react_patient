@@ -35,7 +35,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
+                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
             },
@@ -67,7 +67,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
+                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
                 'X-Merchant-Code': loggedInUserDetails?.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare'

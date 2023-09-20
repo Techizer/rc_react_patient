@@ -7,7 +7,7 @@ class Language_provider {
   Update = ["UPDATE", "تحديث"];
   OK = ["OK", "موافق  "];
   Login = ["Welcome Back!", " !أهلاً بعودتك    "];
-  Logintext = ["Please sign in to continue ", "الرجاء تسجيل الدخول للاستمرار "];
+  Logintext = ["Enter your phone number in order to send your OTP login security code", "أدخل رقم هاتفك لإرسال رمز أمان تسجيل الدخول لمرة واحدة (OTP) الخاص بك"];
   Mobileno = [
     "Email Id/Mobile Number",
     "البريد الالكتروني / رقم الهاتف المحمول",
@@ -31,6 +31,10 @@ class Language_provider {
     "It’s our duty to care for your health. We Treat our Clients like Family.",
     "من واجبنا الاهتمام بصحتك. نتعامل مع عملائنا كعائلة.",
   ];
+  Splashtext3 = ["Accredited by", "المعتمدة من قبل"];
+
+  Splashtext4 = ["Chap Organization", "منظمة الفصل"];
+
   Signup = ["Sign up", " التسجيل  "];
   Signuptext1 = ["Register to open your Account", "قم بالتسجيل لفتح حسابك   "];
   textinputname = ["Full Name", " الاسم الكامل  "];

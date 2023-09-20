@@ -9,15 +9,19 @@ import {
   TouchableOpacity,
   Keyboard,
   I18nManager,
-  PermissionsAndroid,
+  TextInput,
+  StyleSheet,
+  Pressable
 } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Ellipse from 'react-native-vector-icons/Ionicons';
 import RNRestart from "react-native-restart";
 import React, { Component, useEffect, useRef, useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { request, check, PERMISSIONS, RESULTS } from "react-native-permissions";
 import Geolocation from "react-native-geolocation-service";
+
 import ContactUsBottomSheet from "../Components/ContactUsBottomSheet";
 
 import {
@@ -29,13 +33,14 @@ import {
   apifuntion,
   LangProvider,
   msgProvider,
-  Button
+  Button,
+  countries
 } from "../Provider/Utils/Utils";
 import { SvgXml } from 'react-native-svg';
 import { s, vs } from "react-native-size-matters";
 
 import AuthInputBoxSec from "../Components/AuthInputBoxSec";
-import { leftWhiteArrow, rightWhiteArrow } from "../Icons/Index";
+import { leftWhiteArrow, rightArrow, rightWhiteArrow } from "../Icons/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCredentials, UserDetails } from "../Redux/Actions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -55,19 +60,109 @@ const Login = ({ navigation }) => {
     selectedProvider
   } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
+
   const [loginData, setLoginData] = useState({
-    isSecurePassword: true,
-    email: rememberMe ? credentials?.email : '',
-    password: rememberMe ? credentials?.password : '',
+    code: '966',
+    number: '',
     lat: '',
     lng: '',
     address: '',
     isContactUs: false,
-    isLoading: false
+    isLoading: false,
+    showCountries: false
   })
   const insets = useSafeAreaInsets();
   const emailRef = useRef()
   const passRef = useRef()
+  const numberRef = useRef()
+
+
+  const styles = StyleSheet.create({
+
+    inputMainContainer: {
+      width: "90%",
+      height: windowWidth / 6,
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      flexDirection: 'row',
+      // alignItems:'center',
+      marginTop: windowWidth / 10,
+      zIndex: 999
+    },
+    inputContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      height: windowWidth / 7.5,
+      borderColor: Colors.Border,
+      borderRadius: 8,
+      borderBottomLeftRadius: loginData.showCountries ? 0 : 8,
+      borderWidth: 1,
+      backgroundColor: Colors.White
+    },
+
+    codeContainer: {
+      width: '32%',
+      height: '100%',
+    },
+
+    numberContainer: {
+      width: '65%',
+      height: '100%',
+      justifyContent: 'center',
+      paddingHorizontal: '2%'
+    },
+    separator: {
+      width: 1,
+      height: '65%',
+      backgroundColor: Colors.Border
+    },
+
+    titleContainer: {
+      position: 'absolute',
+      paddingHorizontal: 5,
+      // paddingVertical: 1,
+      backgroundColor: Colors.White,
+      top: 5,
+      left: '3%',
+      zIndex: 9999
+    },
+    title: {
+      fontSize: Font.small,
+      fontFamily: Font.Regular,
+      includeFontPadding: false,
+      color: Colors.Primary
+    },
+    flag: {
+      height: windowWidth / 14,
+      width: windowWidth / 14,
+    },
+    inputText: {
+      fontSize: Font.medium,
+      fontFamily: Font.Regular,
+      includeFontPadding: false,
+      color: Colors.Black
+    },
+    countryContainer: {
+      paddingVertical: 10,
+      // height: 100,
+      width: '100%',
+      position: 'absolute',
+      top: '99%',
+      left: -1,
+      backgroundColor: Colors.White,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8,
+      borderLeftColor: Colors.Border,
+      borderRightColor: Colors.Border,
+      borderBottomColor: Colors.Border,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderBottomWidth: 1
+
+    }
+  });
+
 
   useEffect(() => {
     navigation.addListener('focus', payload => {
@@ -386,7 +481,7 @@ const Login = ({ navigation }) => {
   return (
     <View
       pointerEvents={loginData.isLoading ? 'none' : 'auto'}
-      style={{ flex: 1, justifyContent: 'center', backgroundColor: Colors.White, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      style={{ flex: 1, backgroundColor: Colors.White, paddingTop: insets.top, paddingBottom: insets.bottom }}>
 
       <KeyboardAwareScrollView
         // keyboardOpeningTime={200}
@@ -394,7 +489,6 @@ const Login = ({ navigation }) => {
         enableOnAndroid={true}
         keyboardShouldPersistTaps='handled'
         contentContainerStyle={{
-          justifyContent: 'center',
           paddingBottom: vs(30),
         }}
         showsVerticalScrollIndicator={false}>
@@ -410,15 +504,15 @@ const Login = ({ navigation }) => {
 
         <View
           style={{
-            width: "90%",
+            width: "100%",
             alignSelf: "center",
             marginTop: vs(25)
           }}>
           <Text
             style={{
-              fontSize: Font.xxxlarge,
+              fontSize: 24,
               fontFamily: Font.Medium,
-              alignSelf: 'flex-start',
+              alignSelf: 'center',
               // textAlign: contentAlign,
               color: Colors.darkText
 
@@ -431,77 +525,164 @@ const Login = ({ navigation }) => {
             style={{
               // textAlign: contentAlign,
               alignSelf: 'flex-start',
-              fontSize: Font.medium,
+              fontSize: Font.large,
               fontFamily: Font.Regular,
               color: Colors.inActiveText,
-              marginTop: vs(4)
+              marginTop: vs(6),
+              paddingHorizontal: '16%'
             }}
           >
             {LangProvider.Logintext[languageIndex]}
           </Text>
 
-          {/* ----------------------------------------email------------------------------------ */}
 
 
-          <AuthInputBoxSec
-            mainContainer={{ marginTop: vs(18), width: '100%' }}
-            lableText={LangProvider.Mobileno[languageIndex]}
-            inputRef={emailRef}
-            onChangeText={(val) => {
-              setLoginData(prevState => ({
-                ...prevState,
-                email: val
-              }))
-            }}
-            value={loginData.email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            DarkGrey={Colors.DarkGrey}
-            returnKeyType="next"
-            onSubmitEditing={() => {
-              passRef.current.focus();
-            }}
-            blurOnSubmit={Platform.OS === 'ios' ? true : false}
-            editable
-          />
+          <View style={[styles.inputMainContainer,]}>
+            <View style={styles.titleContainer}>
+              <Text allowFontScaling={false} style={styles.title}>{'Phone Number'}</Text>
+            </View>
 
-          {/* ----------------------------------------------------pssword--- */}
+            <View style={[styles.inputContainer]}>
 
-          <AuthInputBoxSec
-            mainContainer={{ marginTop: vs(8), width: '100%' }}
-            lableText={LangProvider.password[languageIndex]}
-            inputRef={passRef}
-            onChangeText={(val) => {
-              setLoginData(prevState => ({
-                ...prevState,
-                password: val
-              }))
-            }}
-            value={loginData.password}
-            keyboardType="default"
-            autoCapitalize="none"
-            returnKeyLabel="done"
-            returnKeyType="done"
-            secureTextEntry={loginData.isSecurePassword}
-            disableImg={true}
-            iconName={loginData.isSecurePassword ? "eye-off" : "eye"}
-            iconPressAction={() => {
-              setLoginData(prevState => ({
-                ...prevState,
-                isSecurePassword: !loginData.isSecurePassword
-              }))
-            }}
-            onSubmitEditing={() => {
-              Keyboard.dismiss();
-            }}
-            blurOnSubmit={Platform.OS === 'ios' ? true : false}
-            editable
-          />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setLoginData({ showCountries: !loginData.showCountries })}
+                style={[styles.codeContainer]}>
+
+                <View style={{
+                  height: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: '10%',
+                  justifyContent: 'space-between',
+                }}>
+                  <Image source={loginData.code === '966' ? Icons.Saudia : Icons.UAE} style={styles.flag} />
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.inputText}>
+                    {`+${loginData.code}`}
+
+                  </Text>
+                  <SvgXml xml={rightArrow} height={s(13)} width={s(13)} style={{ transform: [{ rotate: loginData.showCountries ? "270deg" : "90deg" }] }} />
+                </View>
+
+                {
+                  loginData.showCountries &&
+                  <View style={styles.countryContainer}>
+                    {
+                      countries.map((item, index) => {
+                        return (
+                          <Pressable
+                            key={item.code}
+                            onPress={() => {
+                              setLoginData({ showCountries: false, code: item.code })
+                            }}
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              paddingHorizontal: '10%',
+                              marginTop: index == 0 ? 0 : 5
+                            }}>
+                            <Image source={item.icon} style={styles.flag} />
+                            <Text
+                              allowFontScaling={false}
+                              style={styles.inputText}>
+                              {`+${item.code}`}
+
+                            </Text>
+                          </Pressable>
+                        )
+                      })
+                    }
+                  </View>
+                }
+
+              </TouchableOpacity>
+
+              <View style={{ justifyContent: 'center' }}>
+                <View style={[styles.separator]} />
+              </View>
+
+              <View style={[styles.numberContainer]}>
+
+                <TextInput
+                  ref={numberRef}
+                  style={{}}
+                  onChangeText={(val) => setLoginData({ number: val })}
+                  placeholder={'Phone Number'}
+                  editable={true}
+                  blurOnSubmit={false}
+                  autoCapitalize="none"
+                  value={loginData.number}
+                  allowFontScaling={false}
+                  keyboardType='decimal-pad'
+                  returnKeyType='done'
+                  onSubmitEditing={() => Keyboard.dismiss()}
+                />
+              </View>
+
+            </View>
+          </View>
 
 
-          {/* ----------------------------------------------------------------------------checkbox */}
+          <View style={{ width: '90%', alignSelf: 'center', marginTop: windowWidth / 20 }}>
 
-          <View
+            <Text
+              style={{
+                fontFamily: Font.Regular,
+                fontSize: Font.medium,
+                color: Colors.regulartextcolor,
+                // fontWeight:'600'
+              }}>
+              {'YOUR PHONE NUMBER MUST CONTAIN'}
+
+            </Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
+              <Ellipse style={{ alignSelf: 'center' }}
+                name={'ellipse'}
+                size={12}
+                color={Colors.Border}
+              />
+
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
+                  color: Colors.regulartextcolor,
+                  marginHorizontal: 5
+                }}>
+                {'An area code'}
+
+              </Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 13 }}>
+              <Ellipse style={{ alignSelf: 'center' }}
+                name={'ellipse'}
+                size={12}
+                color={Colors.Border}
+              />
+
+              <Text
+                style={{
+                  fontFamily: Font.Regular,
+                  fontSize: Font.medium,
+                  color: Colors.regulartextcolor,
+                  marginHorizontal: 5
+                }}>
+                {'Exactly 9 numbers'}
+
+              </Text>
+            </View>
+
+          </View>
+
+
+        
+
+          {/* <View
             style={{
               width: "100%",
               alignSelf: "center",
@@ -590,7 +771,7 @@ const Login = ({ navigation }) => {
                 {LangProvider.Forgotpassword[languageIndex]}
               </Text>
             </View>
-          </View>
+          </View> */}
 
           <Button
             text={LangProvider.Contiunebtn[languageIndex]}

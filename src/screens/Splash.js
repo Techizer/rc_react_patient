@@ -24,7 +24,7 @@ import HTMLView from "react-native-htmlview";
 import messaging from "@react-native-firebase/messaging";
 import DeviceInfo from "react-native-device-info";
 import { SvgXml } from "react-native-svg";
-import { Logo, Splash_Logo } from "../Icons/Index";
+import { Logo, PatternLogo, SplashLogo, Splash_Logo } from "../Icons/Index";
 import { vs } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import { AppLanguage, AppVersion, ContentAlign, DeviceID, DeviceName, DeviceToken, DeviceType, onLogout, setVideoCall, setVideoCallStatus, UserDetails } from "../Redux/Actions";
@@ -109,7 +109,7 @@ const Splash = ({ navigation }) => {
     }
   };
 
-  
+
   const requestNotificationPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -348,64 +348,48 @@ const Splash = ({ navigation }) => {
       style={{
         width: "100%",
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Colors.White,
       }}
     >
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={Colors.White}
-        hidden={false}
-        translucent={false}
-        networkActivityIndicatorVisible={true}
-      />
-      {/* <SvgXml xml={Splash_Logo} /> */}
 
-      <Image source={Icons.splashLogo} style={{ height: windowWidth - 100, height: windowWidth - 100 }} resizeMode='contain' />
 
-      <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View>
 
-      <View
-        style={{
-          width: "50%",
-          alignSelf: "center",
-        }}>
-        <Text
-          style={{
-            paddingVertical: vs(14),
-            fontSize: Font.xlarge,
-            color: Colors.lightGrey,
-            fontFamily: Font.Regular,
-            alignSelf: "center",
-            textAlign: "center",
-          }}
-        >
-          {LangProvider.Splashtext1[languageIndex]}
-        </Text>
+      <View style={{ position: 'absolute', top: 0 }}>
+        <SvgXml xml={PatternLogo} />
       </View>
 
-      <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(15) }}></View>
-
-      <View
-        style={{
-          width: "63%",
-          alignSelf: "center",
-          marginTop: vs(15),
-        }}
-      >
-        <Text
-          style={{
-            fontSize: Font.medium,
-            color: Colors.lightGrey,
-            fontFamily: Font.Regular,
-            alignSelf: "center",
-            textAlign: "center",
-          }}
-        >
-          {LangProvider.Splashtext2[languageIndex]}
-        </Text>
+      <View style={{ marginTop: windowWidth / 2.2 }}>
+        <SvgXml xml={SplashLogo} style={{ alignSelf: 'center' }} />
       </View>
+
+
+
+      {/* <Image source={Icons.splashLogo} style={{ height: windowWidth - 100, height: windowWidth - 100 }} resizeMode='contain' /> */}
+
+      {/* <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View> */}
+
+
+      <View style={{ width: '65%', alignSelf: 'center', marginTop: windowWidth * 3 / 100 }}>
+        <Text style={{ marginTop: windowWidth / 10, fontSize: 24, color: Colors.Black, fontFamily: Font.Bold, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext1[languageIndex]} </Text>
+      </View>
+
+
+      <View style={{ width: '63%', alignSelf: 'center', marginTop: windowWidth * 4 / 100 }}>
+        <Text style={{ marginTop: windowWidth / 10, fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext2[languageIndex]} </Text>
+      </View>
+
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', position: 'absolute', bottom: windowWidth / 10 }}>
+        <Image style={{ height: windowWidth * 20 / 100, width: windowWidth * 20 / 100, resizeMode: 'contain', alignSelf: 'center', marginTop: windowWidth * 5 / 100 }}
+          source={Icons.SplashStamp} />
+
+        <View style={{ marginLeft: windowWidth / 20 }}>
+          <Text style={{ fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, }}>{LangProvider.Splashtext3[languageIndex]} </Text>
+          <Text style={{ marginTop: 3, fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, }}>{LangProvider.Splashtext4[languageIndex]} </Text>
+        </View>
+      </View>
+
 
       <Modal
         animationType="fade"

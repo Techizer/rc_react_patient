@@ -18,6 +18,18 @@ const windowWidth = Math.round(Dimensions.get("window").width);
 const deviceHeight = Dimensions.get('screen').height;
 const StatusbarHeight = (Platform.OS === 'ios' ? windowHeight * 0.03695 : StatusBar.currentHeight)
 
+const countries = [
+  {
+    id: '1',
+    icon: require('../../Icons/saudia.png'),
+    code: '966'
+  },
+  {
+    id: '2',
+    icon: require('../../Icons/uae.png'),
+    code: '971'
+  }
+]
 
 export {
   config,
@@ -36,4 +48,5 @@ export {
   ScreenHeader,
   Button,
   AuthInputBoxSec,
+  countries
 };
