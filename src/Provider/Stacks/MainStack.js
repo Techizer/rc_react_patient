@@ -35,7 +35,7 @@ import Chat from '../../screens/Chat';
 import { CurrentRoute, DeviceConnection, onLogout, setAppState, setVideoCall, setVideoCallData, setVideoCallStatus } from '../../Redux/Actions';
 import { config } from '../../Provider/configProvider';
 import { apifuntion } from '../../Provider/APIProvider';
-import { callRejectNotification, CheckSession, Network } from '../../Provider/APIFunctions';
+import { callRejectNotification, CheckSession, get_notification, Network } from '../../Provider/APIFunctions';
 import FileView from '../../screens/FileView';
 
 
@@ -170,6 +170,7 @@ const MainStack = () => {
     };
 
     const showNotification = (remoteMessage) => {
+        console.log({remoteMessage});
         PushNotification.localNotification({
             channelId: "rootscares1",
             title: remoteMessage.data.title,
@@ -203,6 +204,7 @@ const MainStack = () => {
                     if (remoteMessage.data?.type == "patient_to_doctor_video_call_reject") {
                         dispatch(setVideoCallStatus(9))
                     } else {
+                        console.log('else');
                         showNotification(remoteMessage)
                         if (remoteMessage.data?.type == "Logout") {
                             Logout();
@@ -344,6 +346,7 @@ const MainStack = () => {
             onStateChange={(state) => {
                 // console.log('New Screen is', state)}
                 // console.log('New Screen is', routeNameRef.current.getCurrentRoute().name)
+                // get_notification()
                 if (routeNameRef.current.getCurrentRoute().name != 'VideoCall') {
                     dispatch(CurrentRoute(routeNameRef.current.getCurrentRoute().name))
                 }

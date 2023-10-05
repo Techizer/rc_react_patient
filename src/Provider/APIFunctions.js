@@ -3,6 +3,8 @@ import messaging from '@react-native-firebase/messaging';
 import { apifuntion } from './APIProvider';
 import { config } from './configProvider';
 import { getReduxState, setConnection, setLogout, setUserData } from './ReduxStates';
+import { store } from '../Redux/Index'
+import { UnReadNotifications } from '../Redux/Actions';
 
 const Network = (state) => {
   setConnection(state.isConnected)
@@ -116,8 +118,35 @@ const callRejectNotification = async (details) => {
     });
 };
 
+const get_notification = async (page) => {
+  const { loggedInUserDetails } = getReduxState();
+  let apishow = "api-get-all-notification";
+
+  let url = config.baseURL + apishow;
+
+  var data = new FormData();
+  data.append("id", loggedInUserDetails?.user_id);
+  apifuntion.postApi(url, data, page).then((obj) => {
+
+    if (obj.status == true) {
+      if (obj.result && obj.result.length > 0) {
+        store.dispatch(UnReadNotifications('1'))
+      } else {
+        store.dispatch(UnReadNotifications('0'))
+      }
+    } else {
+      store.dispatch(UnReadNotifications('0'))
+      return false;
+    }
+  }).catch((error) => {
+    store.dispatch(UnReadNotifications('0'))
+    console.log("get_notification-error*------- " + error);
+  })
+};
+
 export {
   CheckSession,
   callRejectNotification,
-  Network
+  Network,
+  get_notification
 }

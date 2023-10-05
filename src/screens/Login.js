@@ -45,6 +45,7 @@ import { leftWhiteArrow, rightArrow, rightWhiteArrow } from "../Icons/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { Address, AppLanguage, ContentAlign, Guest, RememberMe, Restart, UserCredentials, UserDetails } from "../Redux/Actions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import OTP from "../Components/OTP";
 
 
 const Login = ({ navigation }) => {
@@ -72,6 +73,8 @@ const Login = ({ navigation }) => {
     isLoading: false,
     showCountries: false
   })
+  const [showOTPModal, setShowOTPModal] = useState(false);
+
   const insets = useSafeAreaInsets();
   const emailRef = useRef()
   const passRef = useRef()
@@ -164,6 +167,13 @@ const Login = ({ navigation }) => {
     }
   });
 
+
+  const setState = (payload) => {
+    setLoginData(prev => ({
+      ...prev,
+      ...payload
+    }))
+  }
 
   useEffect(() => {
     navigation.addListener('focus', payload => {
@@ -325,144 +335,68 @@ const Login = ({ navigation }) => {
         };
 
         dispatch(Address(addDetails))
-        setLoginData(prevState => ({
-          ...prevState,
-          lat: details.geometry.location.lat,
-          lng: details.geometry.location.lng,
-          address: details.formatted_address,
-        }))
+
       });
   };
 
+  const SendOTP = async () => {
 
-  const updateAddress = async (userId) => {
-
-    let url = config.baseURL + "api-patient-address-update";
-    var data = new FormData();
-    data.append("user_id", userId);
-    data.append("current_address", loginData.address);
-    data.append("lat", loginData.lat);
-    data.append("lng", loginData.lng);
-    data.append("landmark", '');
-    data.append("building_name", '');
-    data.append("title", '');
-    data.append("default", '0');
-
-    apifuntion
-      .postApi(url, data, 1)
-      .then((obj) => {
-        // console.log("updateAddress-res----", obj);
-        let newAddressDetails = null
-        if (obj.status == true) {
-          newAddressDetails = {
-            latitude: obj?.result?.latitude,
-            longitude: obj?.result?.longitudes,
-            address: obj?.result?.current_address,
-            title: 'Home'
-          }
-          dispatch(Address(newAddressDetails))
-        } else {
-          newAddressDetails = {
-            latitude: '',
-            longitude: '',
-            address: '',
-            title: ''
-          }
-          dispatch(Address(newAddressDetails))
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log("updateAddress-error ------- " + error);
-      });
-  };
-
-  const LoginUser = async () => {
-
+    let conditionsFailed = false;
     Keyboard.dismiss();
+    numberRef.current && numberRef.current.blur();
 
-    if (loginData.email == '') {
-      msgProvider.showError(LangProvider.emptyEmailmobile[languageIndex]);
-      return false;
+    let number = `${loginData.code}${loginData.number}`
+    if (loginData.number.length <= 0 || loginData.number.trim().length <= 0) {
+      msgProvider.showError('Please enter your number')
+      conditionsFailed = true;
+      return
+    }
+    if (loginData.number.length < 9 || loginData.number.trim().length < 9) {
+      msgProvider.showError('Invalid Number')
+      conditionsFailed = true;
+      return
     }
 
-    if (loginData.password == '') {
-      msgProvider.showError(LangProvider.emptyPassword[languageIndex]);
-      return false;
+    if (loginData.number.length > 9 || loginData.number.trim().length > 9) {
+      msgProvider.showError('Invalid Number')
+      conditionsFailed = true;
+      return
     }
-    setLoginData(prevState => ({
-      ...prevState,
-      isLoading: true
-    }))
-    let url = config.baseURL + "api-patient-login";
-    var data = new FormData();
+    if (conditionsFailed) {
+      return false
+    } else {
 
-    data.append("email_phone", loginData.email);
-    data.append("password", loginData.password);
-    data.append("device_type", deviceType);
-    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
-    data.append("fcm_token", deviceToken);
+      setState({ isLoading: true })
+      let url = config.baseURL + "api-login-send-otp";
+      var data = new FormData();
+      data.append('countrycode', loginData.code)
+      data.append('phone_number', `${loginData.code}${loginData.number}`)
+      data.append('type', `patient`)
 
-    console.log('login body...', data);
+      // console.log(data._parts);
+      apifuntion.postApi(url, data, 1).then((obj) => {
 
-    // return
-
-    apifuntion
-      .postApi(url, data)
-      .then((obj) => {
-        setLoginData(prevState => ({
-          ...prevState,
-          isLoading: false
-        }))
-        // console.log('login response.....', obj);
+        console.log('Send OTP Response', obj)
         if (obj.status == true) {
-          AsyncStorage.setItem('userId', obj?.result?.user_id)
-          if (obj.result?.current_address == '' || obj.result?.current_address == null || obj.result?.current_address == undefined) {
-            updateAddress(obj?.result?.user_id)
-          }
-          const credentials = {
-            email: loginData.email,
-            password: loginData.password,
-          };
+          msgProvider.showSuccess('OTP sent to your number')
+          setState({ isLoading: false })
+          setTimeout(() => {
+            setShowOTPModal(true)
+          }, 500);
 
-          let newAddressDetails = {
-            latitude: obj?.result?.latitude,
-            longitude: obj?.result?.longitudes,
-            address: obj?.result?.current_address,
-            title: obj?.result?.address_title
-          }
-          dispatch(Address(newAddressDetails))
-          dispatch(Guest(false))
-          if (rememberMe) {
-            dispatch(UserCredentials(credentials))
-          }
-          dispatch(UserDetails(obj?.result))
-          setTimeout(() => {
-            // if (selectedProvider!=null && (selectedProvider.currentScreen == 'providerList' || selectedProvider.currentScreen == 'providerDetails')) {
-            //   navigation.goBack()
-            // } else {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "DashboardStack" }],
-            });
-            // }
-          }, 700);
+
         } else {
-          setTimeout(() => {
-            msgProvider.showError(obj.message);
-          }, 700);
-          return false;
+          setState({ isLoading: false })
+          msgProvider.showError(obj?.message)
         }
       }).catch((error) => {
-        setLoginData(prevState => ({
-          ...prevState,
-          isLoading: false
-        }))
-        msgProvider.showError('Something went wrong, Please try again');
-        console.log("LoginUser-error ------- " + error);
-      });
-  };
+        setState({ isLoading: false })
+        msgProvider.showError('Something went wrong, please try again later.')
+        console.log("Send OTP-error ------- ", error)
+      })
+    }
 
+  }
 
   const ChangeLanguage = (lan) => {
     if (lan == 'en') {
@@ -505,7 +439,7 @@ const Login = ({ navigation }) => {
               alignItems: 'center',
               marginTop: vs(40),
             }}>
-            <Image source={Icons.logo} style={{ height: windowWidth - 297, height: windowWidth - 297 }} resizeMode='contain' />
+            <Image source={Icons.logo} style={{ height: windowWidth - 320, height: windowWidth - 325 }} resizeMode='contain' />
           </View>
 
           <View
@@ -553,7 +487,7 @@ const Login = ({ navigation }) => {
 
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => setLoginData({ showCountries: !loginData.showCountries })}
+                  onPress={() => setState({ showCountries: !loginData.showCountries })}
                   style={[styles.codeContainer]}>
 
                   <View style={{
@@ -582,7 +516,7 @@ const Login = ({ navigation }) => {
                             <Pressable
                               key={item.code}
                               onPress={() => {
-                                setLoginData({ showCountries: false, code: item.code })
+                                setState({ showCountries: false, code: item.code })
                               }}
                               style={{
                                 flexDirection: 'row',
@@ -614,9 +548,10 @@ const Login = ({ navigation }) => {
                 <View style={[styles.numberContainer]}>
 
                   <TextInput
+                    maxLength={9}
                     ref={numberRef}
                     style={{ textAlign: contentAlign, }}
-                    onChangeText={(val) => setLoginData({ number: val })}
+                    onChangeText={(val) => setState({ number: val })}
                     placeholder={LangProvider.Phone[languageIndex]}
                     editable={true}
                     blurOnSubmit={false}
@@ -690,7 +625,7 @@ const Login = ({ navigation }) => {
 
             <Button
               text={LangProvider.Request[languageIndex]}
-              onPress={() => LoginUser()}
+              onPress={() => SendOTP()}
               btnStyle={{ marginTop: vs(15), width: '90%' }}
               onLoading={loginData.isLoading}
             />
@@ -703,12 +638,25 @@ const Login = ({ navigation }) => {
               marginVertical: windowWidth / 25
             }}>{LangProvider.Or[languageIndex]}</Text>
 
-            <Text style={{
-              fontSize: Font.xlarge,
-              fontFamily: Font.Medium,
-              color: Colors.Theme,
-              alignSelf: 'center'
-            }}>{LangProvider.Skip[languageIndex]}</Text>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                dispatch(UserDetails(null))
+                dispatch(Guest(true))
+                setTimeout(() => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "DashboardStack" }],
+                  });
+                }, 250);
+              }}>
+              <Text style={{
+                fontSize: Font.xlarge,
+                fontFamily: Font.Medium,
+                color: Colors.Theme,
+                alignSelf: 'center'
+              }}>{LangProvider.Skip[languageIndex]}</Text>
+            </TouchableOpacity>
 
           </View>
 
@@ -834,10 +782,9 @@ const Login = ({ navigation }) => {
         <TouchableHighlight
           underlayColor={Colors.Highlight}
           onPress={() => {
-            setLoginData(prevState => ({
-              ...prevState,
+            setState({
               isContactUs: true
-            }))
+            })
           }}
           style={{ paddingVertical: vs(15), width: '90%', alignSelf: 'center' }}
         >
@@ -941,12 +888,19 @@ const Login = ({ navigation }) => {
       <ContactUsBottomSheet
         visible={loginData.isContactUs}
         onRequestClose={() => {
-          setLoginData(prevState => ({
-            ...prevState,
+          setState({
             isContactUs: false
-          }))
+          })
         }}
         route={'Login'}
+      />
+
+      <OTP
+        visible={showOTPModal}
+        onRequestClose={() => setShowOTPModal(false)}
+        contact={`${loginData?.code}${loginData?.number}`}
+        countryCode={`${loginData?.code}`}
+        type={'Login'}
       />
 
     </View>

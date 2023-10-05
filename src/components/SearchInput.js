@@ -32,7 +32,8 @@ const SearchInput = ({
     onCrossPress,
     isSearch,
     onFilterPress,
-    navigation
+    navigation,
+    containerStyle
 }) => {
     const {appLanguage, languageIndex} = useSelector(state => state.StorageReducer)
     const inputRef = useRef()
@@ -98,7 +99,7 @@ const SearchInput = ({
                         alignItems: "center",
                     }}>
                     {/* search box */}
-                    <View style={{ width: '100%', height: '100%', flexDirection: 'row', borderRadius: 9, backgroundColor: Colors.White, alignItems: 'center' }}>
+                    <View style={[{ width: '100%', height: '100%', flexDirection: 'row', borderRadius: 9, backgroundColor: Colors.White, alignItems: 'center' }, containerStyle]}>
                         <View style={{ width: '86%', paddingHorizontal: s(8), }}>
                             <TextInput 
                                 ref={inputRef}

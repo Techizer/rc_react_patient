@@ -292,7 +292,7 @@ const HomeVisit = ({ navigation }) => {
     let url = config.baseURL + "api-patient-doctor-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("date", selectedDate);
     data.append("service_type", selectedProvider.providerType);
 
@@ -397,7 +397,7 @@ const HomeVisit = ({ navigation }) => {
     let url = config.baseURL + "api-patient-doctor-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", selectedProvider.providerType);
 
@@ -507,7 +507,7 @@ const HomeVisit = ({ navigation }) => {
     data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("currency_symbol", statesData.currency_symbol);
     data.append("family_member_id", selectedProvider.family_member_id);
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("task_id", statesData.bookingDetails?.home_visit_task[0].id);
     data.append("task_price", statesData.bookingDetails?.home_visit_task[0].task_price);
     data.append("task_type", 'home_visit');
@@ -1296,7 +1296,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderBottomWidth: 1.5,
@@ -1325,7 +1325,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 // borderTopWidth: 1.5,
@@ -1354,7 +1354,7 @@ const HomeVisit = ({ navigation }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1378,31 +1378,34 @@ const HomeVisit = ({ navigation }) => {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems:'center',
-                justifyContent: "space-between",
-                borderColor: Colors.bordercolor,
-                marginBottom: (windowWidth * 2) / 100,
-              }}>
-              <Text
+            {
+              statesData.vatPrice != '0' &&
+              < View
                 style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
+                  flexDirection: "row",
+                  alignItems: 'center',
+                  justifyContent: "space-between",
+                  borderColor: Colors.bordercolor,
+                  marginBottom: (windowWidth * 2) / 100,
                 }}>
-                {Details?.vat_text}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
-                }}>
-                {`${statesData.vatPrice} ${statesData.currency_symbol}`}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {Details?.vat_text}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {`${statesData.vatPrice} ${statesData.currency_symbol}`}
+                </Text>
+              </View>
+            }
 
             <View
               style={{
@@ -1434,17 +1437,17 @@ const HomeVisit = ({ navigation }) => {
 
           </View>
 
-        </ScrollView>
+        </ScrollView >
 
         {/* ------------------Checkout------------- */}
-        <View
+        < View
           style={{
             width: "100%",
             flexDirection: 'row',
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
             paddingTop: (windowWidth * 2) / 100,
-            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - vs(5) : (windowWidth * 2) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
@@ -1481,7 +1484,7 @@ const HomeVisit = ({ navigation }) => {
             }}
           />
 
-        </View>
+        </View >
 
         <Cameragallery
           mediamodal={mediaModal}
@@ -1513,7 +1516,7 @@ const HomeVisit = ({ navigation }) => {
             })
           }}
         />
-      </View>
+      </View >
 
     )
   }

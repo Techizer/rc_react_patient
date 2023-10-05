@@ -31,7 +31,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
 
   const { todayAppointments, appLanguage, languageIndex, deviceConnection, guest } = useSelector(state => state.StorageReducer)
 
-  console.log({ todayAppointments });
+  // console.log({ todayAppointments });
   const insets = useSafeAreaInsets()
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
@@ -49,7 +49,7 @@ const AppoitmentIndex = ({ navigation, route }) => {
           routes: [{ name: 'Home' }],
         })}
         leftIcon
-        rightIcon
+        rightIcon={!guest}
       />
 
       {/* <View style={{

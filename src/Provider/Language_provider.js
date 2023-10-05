@@ -37,9 +37,9 @@ class Language_provider {
     "It’s our duty to care for your health. We Treat our Clients like Family.",
     "من واجبنا الاهتمام بصحتك. نتعامل مع عملائنا كعائلة.",
   ];
-  Splashtext3 = ["Accredited by", "المعتمدة من قبل"];
+  Splashtext3 = ["Accredited by", "الاعتماد الأمريكي في"];
 
-  Splashtext4 = ["Chap Organization", "منظمة الفصل"];
+  Splashtext4 = ["Chap Organization", "الرعاية الصحية"];
 
   Signup = ["Signup", " التسجيل  "];
   Signuptext1 = ["Register to open your Account", "قم بالتسجيل لفتح حسابك   "];
@@ -132,6 +132,9 @@ class Language_provider {
     "Search Nurse near your address",
     "ابحث عن ممرضة بالقرب من عنوانك",
   ];
+  ApplyCoupon=['Apply Coupon', 'تطبيق القسيمة']
+  Coupons = ['Coupons', 'كوبونات']
+  SearchCoupon = ["Search Coupon", "قسيمة البحث"];
   Editprofile = ["Edit Account", "تعديل الحساب  "];
   tabnameprofile = ["Personal", " شخصي     "];
   tabnamemedical = ["Medical", " طبي    "];
@@ -200,7 +203,7 @@ class Language_provider {
 
   //-------------------------------------------------------------------------------supportandmore
   supporttext = ["Support & More", " الدعم و المزيد "];
-  version = ["Version 3.7.0", "الإصدار 3.7.0"];
+  version = ["Version 3.7.5", "الإصدار 3.7.5"];
   languagetxt = ["Language Preference", " اللغة المفضلة  "];
   termtxt = ["Terms and Conditions", "الشروط والأحكام  "];
   aboutrootcare = ["About Rootscare", "حول روتس كير "];
@@ -355,6 +358,11 @@ class Language_provider {
     "Are you sure you want to delete this item from cart ?",
     "هل أنت متأكد من حذف هذا العنصر؟ ",
   ];
+  removeCoupon = [
+    "Are you sure you want to remove this coupon?",
+    "هل أنت متأكد أنك تريد إزالة هذه القسيمة؟",
+  ];
+
   ProceedToPay = ["PROCEED TO PAY", "الانتقال إلى الدفع"];
   Time = ["Time", "الوقت  "];
   we_wii_back = ["We'll be right back.", "سوف نعود حالاً  "];
@@ -726,7 +734,7 @@ class Language_provider {
   SupportTitle = ['Support ticket posted', 'تم نشر تذكرة الدعم']
   SupportMsg = ['Your support ticket is under review by Rootscare resolution team. You will soon receive notification on the status.', 'بطاقة الدعم الخاصة بك قيد المراجعة من قبل فريق حل Rootscare. ستتلقى قريبًا إشعارًا بالحالة.']
   CartTime = ['Time Remaining - Checkout Information', 'الوقت المتبقي - معلومات الخروج']
-  CartInfo = ['You have 60 seconds to complete this order/appointment/booking, otherwise system will automatically cancel your slot and return back to previous screen.',
+  CartInfo = ['You have 2 mins to complete this order/appointment/booking, otherwise system will automatically cancel your slot and return back to previous screen.',
     'لديك 60 ثانية لإكمال هذا الطلب / الموعد / الحجز ، وإلا فسيقوم النظام تلقائيًا بإلغاء الفترة الزمنية الخاصة بك والعودة إلى الشاشة السابقة.'
   ]
   ChatNote = ['Available chat consultation', 'التشاور الدردشة المتاحة']
@@ -736,5 +744,6 @@ class Language_provider {
   ChatClosed = ['FOLLOW UP CONSULTATION', 'متابعة الاستشارة']
   ReadAll = ['Mark all as read', 'اشر عليها بانها قرات']
   WriteMsg = ['Write your message here...', 'اكتب رسالتك هنا...']
+  Coupon=['Coupon','قسيمة']
 }
 export const LangProvider = new Language_provider();

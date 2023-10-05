@@ -36,7 +36,7 @@ import { Tabby, Payment as TabbyPaymentData, TabbyCheckoutPayload, TabbyPaymentW
 import RNGoSell from "@tap-payments/gosell-sdk-react-native";
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
-import { Clock, clockBlue, Cross, _Cross } from "../Icons/Index";
+import { Clock, clockBlue, Cross, _Cross, Coupon, rightArrow, leftArrow } from "../Icons/Index";
 import SuccessPopup from "../Components/SuccessPopup";
 import moment from "moment";
 import SimpleToast from "react-native-simple-toast";
@@ -49,6 +49,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import NoInternet from "../Components/NoInternet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Message, MessageRoom } from "../Schemas/MessageRoomSchema";
+import Coupons from "../Components/Coupons";
 
 
 let startTime = null
@@ -59,10 +60,10 @@ const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
 const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
-      // ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      // : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-      ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+      ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
+      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -107,6 +108,7 @@ const CartDetails = ({ navigation }) => {
     notification_count: "",
     payment_status: "true",
     currency_symbol: loggedInUserDetails?.currency_symbol,
+    booking_type: '',
     tabbyPaymentId: '',
     payment_mode_country: "sar",
     loadCart: true,
@@ -120,17 +122,21 @@ const CartDetails = ({ navigation }) => {
     totalAmount: '',
     service_type: '',
     cartId: '',
-    isPaymentOption: false
+    isPaymentOption: false,
+    isShowCoupons: false,
+    cartMsg: ''
   })
-  const [timer, setTimer] = useState(60)
+  const [timer, setTimer] = useState(120)
 
+  // 'card.success@tabby.ai'
+  // '500000001'
   const customerPayment = {
     payment: {
       amount: statesData.cartDetails?.total_price,
       currency: statesData.currency_symbol,
       buyer: {
-        email: 'card.success@tabby.ai',
-        phone: '500000001',
+        email: '',
+        phone: loggedInUserDetails.phone_number,
         name: loggedInUserDetails.first_name,
         dob: loggedInUserDetails.dob,
       },
@@ -184,13 +190,14 @@ const CartDetails = ({ navigation }) => {
               unit_price: statesData.cartDetails?.total_price,
               reference_id: statesData.cartDetails.order_id,
               product_url: 'http://example.com',
-              category:  statesData.cartDetails?.service_display_type,
+              category: statesData.cartDetails?.service_display_type,
             },
           ],
         },
       ],
     },
   };
+
 
   const CapturePayment = {
     amount: statesData.cartDetails?.total_price,
@@ -232,7 +239,7 @@ const CartDetails = ({ navigation }) => {
         DateTime: new Date(),
         DocPaths: [],
         ImagePaths: [],
-        Milliseconds: moment().valueOf(), 
+        Milliseconds: moment().valueOf(),
         NumChars: '',
         ReadBit: 1,
         ReceiverID: selectedProvider ? selectedProvider?.providerId : '',
@@ -316,11 +323,10 @@ const CartDetails = ({ navigation }) => {
       getCartInfo()
       getPayStatus();
     }
-  }, [deviceConnection])
+  }, [deviceConnection, statesData.isShowCoupons])
 
   useEffect(() => {
     if (tabbyPayment == true) {
-      console.log('iffffffffff');
       dispatch(TabbyPaymentStatus(false))
       resetState()
       clearInterval(interval)
@@ -354,11 +360,24 @@ const CartDetails = ({ navigation }) => {
   )
 
   useEffect(() => {
-    // console.log({timer});
     if (timer === 0) {
+      setState({ isShowCoupons: false })
       remove_cart('auto')
     }
   }, [timer])
+
+
+  const Timer = () => {
+    interval = setInterval(() => {
+      setTimer((lastTimerCount) => {
+        lastTimerCount <= 1 && (
+          clearInterval(interval)
+        )
+        return lastTimerCount - 1
+      })
+    }, 1000)
+  }
+
 
 
   const setState = payload => {
@@ -396,16 +415,7 @@ const CartDetails = ({ navigation }) => {
     })
   }
 
-  const Timer = () => {
-    interval = setInterval(() => {
-      setTimer((lastTimerCount) => {
-        lastTimerCount <= 1 && (
-          clearInterval(interval)
-        )
-        return lastTimerCount - 1
-      })
-    }, 1000)
-  }
+
 
   const StartTabbySdk = async () => {
     try {
@@ -487,7 +497,7 @@ const CartDetails = ({ navigation }) => {
   }
 
   const handleResult = (error, status) => {
-    // console.log("status is..... " + status);
+    console.log("status is..... " + status);
     var resultStr = String(status.sdk_result);
     switch (resultStr) {
       case "SUCCESS":
@@ -652,10 +662,16 @@ const CartDetails = ({ navigation }) => {
             family_member_id: obj.result[0].family_member_id,
             cartDetails: obj.result[0],
             service_type: obj.result[0].service_type,
+            booking_type: obj.result[0].booking_type,
             cartId: obj.result[0].id,
             provider_name: obj.result[0].provider_details.provider_name,
             task_details: obj.result[0].task_details,
-            totalAmount: obj.result[0].total_price
+            totalAmount: obj.result[0].total_price,
+            subTotal: obj.result[0].sub_total_price,
+            coupon: obj.result[0].couponcode,
+            couponId: obj.result[0].couponcodeid,
+            couponPer: obj.result[0].coupondiscount,
+            couponTotal: obj.result[0].couponamount,
           });
         } else {
           setState({ cartDetails: obj.result });
@@ -771,11 +787,50 @@ const CartDetails = ({ navigation }) => {
     );
   };
 
+  const RemoveCoupon = async (couponId) => {
+    setState({ isRemoveCoupon: true })
+
+    let url =
+      config.baseURL + "api-remove-coupon"
+
+    var data = new FormData();
+
+    data.append("service_type", statesData.service_type);
+    data.append("carttotal", statesData.totalAmount);
+    data.append("subtotal", statesData.subTotal);
+    data.append("couponcodeid", statesData.couponId);
+    data.append("userid", loggedInUserDetails.user_id);
+    data.append("cartid", statesData.cartId);
+    data.append("couponamount", statesData.couponTotal);
+
+    // console.log(data._parts);
+    // return
+    apifuntion.postApi(url, data, 1).then((res) => {
+      setState({ isRemoveCoupon: false, modalVisible3: false })
+      // console.log("api-remove-coupon ", res)
+      if (res.status == true) {
+        msgProvider.showSuccess('Coupon removed successfully!')
+      } else {
+        msgProvider.showError(res?.message)
+      }
+    }).catch((error) => {
+      setState({ isRemoveCoupon: false, modalVisible3: false })
+      msgProvider.showError(error?.message)
+      console.log("remove-coupon-error ------- " + error);
+    }).finally(() => {
+      getCartInfo()
+    })
+  };
+
   var show_data = statesData.cartDetails;
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+  const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   return (
     <View
       pointerEvents={(statesData.isLoading || statesData.isRemovingCart) ? 'none' : 'auto'}
       style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
+
       <ScreenHeader
         title={LangProvider.CartItem[languageIndex]}
         navigation={navigation}
@@ -790,6 +845,39 @@ const CartDetails = ({ navigation }) => {
         leftIcon
         isLoading={statesData.isGoingBack}
       />
+
+      {
+        (statesData.cartDetails != "" && statesData.cartDetails != null && !!!statesData.coupon) &&
+
+        <View style={styles.couponContainer}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SvgXml xml={Coupon} />
+            <Text
+              style={{
+                fontFamily: Font.Medium,
+                fontSize: Font.large,
+                color: Colors.detailTitles,
+                marginHorizontal: s(10)
+              }}>
+              {LangProvider.ApplyCoupon[languageIndex]}</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => setState({ isShowCoupons: true })}
+            style={{
+              height: s(25),
+              width: s(25),
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: Colors.Highlight
+            }}>
+            <SvgXml xml={languageIndex == 0 ? rightArrow : leftArrow} />
+          </TouchableOpacity>
+
+        </View>
+      }
       <>
         {
           (statesData.cartDetails != "" && statesData.cartDetails != null) ?
@@ -830,7 +918,7 @@ const CartDetails = ({ navigation }) => {
                     <View style={{ width: '10%', justifyContent: 'center', alignItems: 'center' }}>
                       <TouchableHighlight
                         onPress={() => {
-                          setState({ modalVisible3: true });
+                          setState({ modalVisible3: true, cartMsg: LangProvider.remove_msg[languageIndex] });
                         }}
                         underlayColor={Colors.Highlight}
                         style={styles.closeContainer}>
@@ -974,6 +1062,81 @@ const CartDetails = ({ navigation }) => {
                       }
                     }}
                   />
+
+                  {/* ----------------Coupon--------------- */}
+
+                  {
+                    !!statesData.coupon &&
+                    <View style={{
+                      borderTopWidth: 1,
+                      borderTopColor: '#00000029',
+                      paddingBottom: vs(10),
+                    }}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: 'center',
+                          // justifyContent: "space-between",
+                          marginTop: vs(10),
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                          }}>
+                          {`${LangProvider.Coupon[languageIndex]}`}
+                        </Text>
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            setState({ modalVisible3: true, cartMsg: LangProvider.removeCoupon[languageIndex] });
+                          }}>
+                          {/* <SvgXml xml={_Cross} height={vs(19)} width={s(18)} />
+                           */}
+                          <Text
+                            style={{
+                              fontFamily: Font.Regular,
+                              fontSize: Font.small,
+                              color: Colors.Red,
+                              marginHorizontal: s(10)
+                            }}>
+                            {`Remove`}
+                          </Text>
+                        </TouchableOpacity>
+
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: 'center',
+                          justifyContent: "space-between",
+                          marginTop: vs(5),
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                          }}>
+                          {`${statesData.coupon} (${statesData.couponPer + '%'})`}
+                        </Text>
+
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                          }}>
+                          {`- ${statesData.couponTotal} ${statesData.currency_symbol}`}
+                        </Text>
+                      </View>
+
+
+                    </View>
+                  }
+
                   {/* ----------------------------------- */}
                   <View
                     style={{
@@ -1010,35 +1173,39 @@ const CartDetails = ({ navigation }) => {
                       </View>
                     )}
 
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: 'center',
-                        justifyContent: "space-between",
-                        marginTop: (windowWidth * 2) / 100,
-                      }} >
-                      <Text
+                    {
+                      show_data?.vat_percent_used != '0' &&
+                      <View
                         style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.small,
-                          color: Colors.detailTitles,
-                        }}>
-                        {show_data?.vat_text}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.Regular,
-                          fontSize: Font.small,
-                          color: Colors.detailTitles,
-                        }}
-                      >
-                        {show_data?.vat_price}
-                      </Text>
-                    </View>
+                          flexDirection: "row",
+                          alignItems: 'center',
+                          justifyContent: "space-between",
+                          marginTop: (windowWidth * 2) / 100,
+                        }} >
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                          }}>
+                          {show_data?.vat_text}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Font.Regular,
+                            fontSize: Font.small,
+                            color: Colors.detailTitles,
+                          }}
+                        >
+                          {show_data?.vat_price}
+                        </Text>
+                      </View>
+
+                    }
 
                   </View>
 
-                  {/* ----------------------------------- */}
+                  {/* -----------------Total------------------ */}
                   <View
                     style={{
                       flexDirection: "row",
@@ -1083,7 +1250,7 @@ const CartDetails = ({ navigation }) => {
                         color: Colors.precautionText,
                         width: '13%'
                       }}>
-                      {timer <= 1 ? '00:00' : timer < 10 ? `00:0${timer}` : `00:${timer}`}
+                      {formattedTime}
                     </Text>
                     <Text
                       style={{
@@ -1182,7 +1349,7 @@ const CartDetails = ({ navigation }) => {
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
             paddingTop: (windowWidth * 2) / 100,
-            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - vs(5) : (windowWidth * 2) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,
@@ -1259,7 +1426,7 @@ const CartDetails = ({ navigation }) => {
             <View
               style={{
                 backgroundColor: "#fff",
-                borderRadius: 2,
+                borderRadius: 10,
                 width: "100%",
               }}
             >
@@ -1294,8 +1461,8 @@ const CartDetails = ({ navigation }) => {
               <View
                 style={{
                   alignSelf: "flex-start",
-                  paddingVertical: (windowWidth * 1) / 100,
-                  paddingLeft: (windowWidth * 4) / 100,
+                  paddingTop: (windowWidth * 1) / 100,
+                  paddingHorizontal: s(16),
                   flexDirection: "row",
                   alignItems: "center",
                 }}
@@ -1307,7 +1474,7 @@ const CartDetails = ({ navigation }) => {
                     fontSize: (windowWidth * 4) / 100,
                   }}
                 >
-                  {LangProvider.remove_msg[languageIndex]}
+                  {statesData.cartMsg}
                 </Text>
               </View>
 
@@ -1317,7 +1484,7 @@ const CartDetails = ({ navigation }) => {
                   justifyContent: "space-around",
                   width: "40%",
                   paddingBottom: (windowWidth * 5) / 100,
-                  marginTop: (windowWidth * 9) / 100,
+                  marginTop: vs(15),
                   alignSelf: "flex-end",
                   right: 10,
                 }}
@@ -1346,8 +1513,9 @@ const CartDetails = ({ navigation }) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    setState({ isRemovingCart: true }),
-                      remove_cart('manual');
+                    statesData.cartMsg == LangProvider.remove_msg[languageIndex] && setState({ isRemovingCart: true })
+                    statesData.cartMsg == LangProvider.removeCoupon[languageIndex] ? RemoveCoupon() : remove_cart('manual');
+
                   }}
                   activeOpacity={0.8}
                   style={{
@@ -1355,7 +1523,7 @@ const CartDetails = ({ navigation }) => {
                     justifyContent: "center",
                   }}>
                   {
-                    statesData.isRemovingCart ?
+                    (statesData.isRemovingCart || statesData.isRemoveCoupon) ?
                       <SkypeIndicator color={Colors.Theme} size={20} />
                       :
                       <Text
@@ -1406,7 +1574,21 @@ const CartDetails = ({ navigation }) => {
           }
         }}
       />
-   
+
+      <Coupons
+        visible={statesData.isShowCoupons}
+        onRequestClose={() => setState({ isShowCoupons: false })}
+        details={{
+          provider: statesData.service_type,
+          country: loggedInUserDetails.work_area,
+          task: statesData.booking_type,
+          total: statesData.totalAmount,
+          subTotal: statesData.subTotal,
+          userId: loggedInUserDetails.user_id,
+          cartId: statesData.cartId
+        }}
+      />
+
     </View>
   );
 
@@ -1422,6 +1604,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 999
   },
+  couponContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: vs(8),
+    paddingHorizontal: s(16),
+    backgroundColor: Colors.White,
+    // marginTop:vs(7)
+  }
 
 });
 export default CartDetails;

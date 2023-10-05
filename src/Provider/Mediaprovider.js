@@ -31,9 +31,10 @@ class mediaProvider {
     let cropvalue = crop == null ? false : crop;
     return new Promise((resolve, reject) => {
       ImagePicker.openCamera({
-        // width: 200,
-        // height: 200,
+        width: 500,
+        height: 500,
         cropping: cropvalue,
+        cropperCircleOverlay:cropvalue,
         includeBase64: true,
         includeExif: true,
         // compressImageQuality: 0.4,
@@ -50,9 +51,10 @@ class mediaProvider {
     let cropvalue = crop == null ? false : crop;
     return new Promise((resolve, reject) => {
       ImagePicker.openPicker({
-        // width: 200,
-        // height: 200,
+        width: 500,
+        height: 500,
         cropping: cropvalue,
+        cropperCircleOverlay:cropvalue,
         includeBase64: true,
         includeExif: true,
         // compressImageQuality: 0.4,

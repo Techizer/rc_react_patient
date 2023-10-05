@@ -38,6 +38,7 @@ import StarRating from "react-native-star-rating";
 import { useDispatch, useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { setNoInternet, setVideoCall, setVideoCallData, setVideoCallStatus } from "../Redux/Actions";
+import { get_notification } from "../Provider/APIFunctions";
 
 var videoCallButton = false;
 
@@ -852,7 +853,7 @@ const AppointmentContainer = ({
                     }))
                     setTimeout(() => {
                         msgProvider.showError(obj.message);
-                        msgProvider.alert('', obj.message, false);
+                        // msgProvider.alert('', obj.message, false);
                     }, 700);
 
                     return false;
@@ -860,7 +861,7 @@ const AppointmentContainer = ({
             })
             .catch((error) => {
                 console.log("bookTime-error ------- " + error);
-            });
+            })
     };
 
     const rateProvider = async () => {
@@ -893,7 +894,7 @@ const AppointmentContainer = ({
                     // } else {
 
                     setTimeout(() => {
-                        msgProvider.alert("", obj.message, false);
+                        msgProvider.showError(obj.message);
                     }, 700);
                     // }
                     return false;
@@ -2017,6 +2018,7 @@ const AppointmentContainer = ({
                                         />
 
                                     </View>
+
                                 </View>
                             </View>
 

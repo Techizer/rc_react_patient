@@ -60,7 +60,6 @@ const Past = (props) => {
       // console.log({ newArr });
       // return
       if (lastIndex.currentpage === 1) {
-        console.log('if...');
         setTotalPage(lastIndex.lastpage === 1)
         for (const iterator of newArr) {
           var currentTime = moment().unix();

@@ -19,6 +19,7 @@ import {
   windowWidth,
   LangProvider,
   apifuntion,
+  msgProvider,
 } from "../Provider/Utils/Utils";
 import HTMLView from "react-native-htmlview";
 import messaging from "@react-native-firebase/messaging";
@@ -264,15 +265,15 @@ const Splash = ({ navigation }) => {
   }
 
   const LoginNewSession = () => {
+
     let url = config.baseURL + "api-patient-login";
     var data = new FormData();
 
-    data.append("email_phone", credentials.email);
-    data.append("password", credentials.password);
+    data.append("email_phone", credentials.phone);
     data.append("device_type", deviceType);
     data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
     data.append("fcm_token", deviceToken);
-
+    data.append("code", '');
 
     apifuntion
       .postApi(url, data)
@@ -359,7 +360,7 @@ const Splash = ({ navigation }) => {
         <SvgXml xml={PatternLogo} />
       </View>
 
-      <View style={{ marginTop: windowWidth / 2.2 }}>
+      <View style={{ marginTop: vs(110) }}>
         <SvgXml xml={SplashLogo} style={{ alignSelf: 'center' }} />
       </View>
 
@@ -370,23 +371,23 @@ const Splash = ({ navigation }) => {
       {/* <View style={{ width: '50%', height: 1.5, backgroundColor: Colors.backgroundcolor, marginTop: vs(40) }}></View> */}
 
 
-      <View style={{ width: '65%', alignSelf: 'center', marginTop: windowWidth * 3 / 100 }}>
-        <Text style={{ marginTop: windowWidth / 10, fontSize: 24, color: Colors.Black, fontFamily: Font.Medium, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext1[languageIndex]} </Text>
+      <View style={{ width: '65%', alignSelf: 'center', marginTop: vs(25) }}>
+        <Text style={{ marginTop: windowWidth / 10, fontSize: 24, color: Colors.Black, fontFamily: Font.Medium, alignSelf: 'center', textAlign: 'center', lineHeight: 36 }}>{LangProvider.Splashtext1[languageIndex]} </Text>
       </View>
 
 
-      <View style={{ width: '63%', alignSelf: 'center', marginTop: windowWidth * 4 / 100 }}>
-        <Text style={{ marginTop: windowWidth / 10, fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, alignSelf: 'center', textAlign: 'center' }}>{LangProvider.Splashtext2[languageIndex]} </Text>
+      <View style={{ width: '52%', alignSelf: 'center', marginTop: vs(20) }}>
+        <Text style={{ marginTop: windowWidth / 10, fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, alignSelf: 'center', textAlign: 'center', lineHeight: 22 }}>{LangProvider.Splashtext2[languageIndex]} </Text>
       </View>
 
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', position: 'absolute', bottom: windowWidth / 10 }}>
-        <Image style={{ height: windowWidth * 20 / 100, width: windowWidth * 20 / 100, resizeMode: 'contain', alignSelf: 'center', marginTop: windowWidth * 5 / 100 }}
+      <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', position: 'absolute', bottom: vs(40) }}>
+        <Image style={{ height: windowWidth * 20 / 100, width: windowWidth * 20 / 100, resizeMode: 'contain', alignSelf: 'center' }}
           source={Icons.SplashStamp} />
 
         <View style={{ marginLeft: windowWidth / 20 }}>
-          <Text style={{ fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, }}>{LangProvider.Splashtext3[languageIndex]} </Text>
-          <Text style={{ marginTop: 3, fontSize: Font.xlarge, color: Colors.Black, fontFamily: Font.Regular, }}>{LangProvider.Splashtext4[languageIndex]} </Text>
+          <Text style={{ fontSize: Font.medium, color: Colors.Black, fontFamily: Font.Regular, lineHeight:20}}>{LangProvider.Splashtext3[languageIndex]} </Text>
+          <Text style={{ marginTop: 3, fontSize: Font.medium, color: Colors.Black, fontFamily: Font.Regular, lineHeight:20}}>{LangProvider.Splashtext4[languageIndex]} </Text>
         </View>
       </View>
 

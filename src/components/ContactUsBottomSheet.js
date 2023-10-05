@@ -262,7 +262,7 @@ const ContactUsBottomSheet = ({
                                             />
 
                                             <AuthInputBoxSec
-                                                mainContainer={{ width: '100%' }}
+                                                mainContainer={{ width: '100%', marginTop: vs(5.5) }}
                                                 inputFieldStyle={{ height: vs(35) }}
                                                 lableText={LangProvider.PhoneNumber[languageIndex]}
                                                 inputRef={phoneRef}

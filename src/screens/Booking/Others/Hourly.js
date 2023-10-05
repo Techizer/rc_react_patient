@@ -188,7 +188,7 @@ const Hourly = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", selectedProvider.providerType);
 
@@ -277,7 +277,7 @@ const Hourly = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("date", selectedDate);
     data.append("task_type", 'hour_base');
     data.append("service_type", selectedProvider.providerType);
@@ -459,7 +459,7 @@ const Hourly = ({ navigation, route }) => {
     data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("currency_symbol", statesData.currency_symbol);
     data.append("family_member_id", selectedProvider.family_member_id);
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("task_id", statesData.selectedHour?.id);
     data.append("task_price", statesData.selectedHour?.price);
     data.append("task_type", "hour_base");
@@ -1142,7 +1142,7 @@ const Hourly = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1171,7 +1171,7 @@ const Hourly = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1195,31 +1195,35 @@ const Hourly = ({ navigation, route }) => {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems:'center',
-                justifyContent: "space-between",
-                borderColor: Colors.bordercolor,
-                marginBottom: (windowWidth * 2) / 100,
-              }}>
-              <Text
+            {
+              statesData.vatPrice != '0' &&
+              <View
                 style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
+                  flexDirection: "row",
+                  alignItems: 'center',
+                  justifyContent: "space-between",
+                  borderColor: Colors.bordercolor,
+                  marginBottom: (windowWidth * 2) / 100,
                 }}>
-                {Details?.vat_text}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
-                }}>
-                {`${(statesData.selectedHour != '' && statesData.selectedHour != null) ? statesData.vatPrice : ''} ${statesData.currency_symbol}`}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {Details?.vat_text}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {`${(statesData.selectedHour != '' && statesData.selectedHour != null) ? statesData.vatPrice : ''} ${statesData.currency_symbol}`}
+                </Text>
+              </View>
+
+            }
 
             <View
               style={{
@@ -1261,7 +1265,7 @@ const Hourly = ({ navigation, route }) => {
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
             paddingTop: (windowWidth * 2) / 100,
-            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - vs(5) : (windowWidth * 2) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,

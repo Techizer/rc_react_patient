@@ -146,7 +146,7 @@ const Chat = ({ navigation, route }) => {
     const Galleryopen = () => {
         let tempArr = []
         mediaprovider
-            .launchGellery(true)
+            .launchGellery(false)
             .then((obj) => {
                 // console.log('Galleryopen..............', obj);
                 setMediaOptions(false)
@@ -172,7 +172,7 @@ const Chat = ({ navigation, route }) => {
     const Camerapopen = async () => {
         let tempArr = []
         mediaprovider
-            .launchCamera(true)
+            .launchCamera(false)
             .then((obj) => {
                 // console.log('Camerapopen..............', obj);
                 setMediaOptions(false)

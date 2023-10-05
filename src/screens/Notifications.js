@@ -39,9 +39,9 @@ const Notifications = ({ navigation }) => {
     modalVisible: false,
     body_name: "",
     message: "",
-    isReadAll: true
+    isReadAll: false
   })
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
 
   const setState = payload => {
@@ -76,20 +76,23 @@ const Notifications = ({ navigation }) => {
                 console.log('unread');
                 setState({ isReadAll: false })
                 return
+              } else {
+                // setState({ isReadAll: true })
               }
             }
           } else {
             setState({ isReadAll: false })
           }
         } else {
-          setState({ notificationdata: obj.result, message: obj.message});
+          setState({ notificationdata: obj.result, message: obj.message });
           return false;
         }
       }).catch((error) => {
         setState({ notificationdata: [], isLoading: false });
         console.log("get_notification-error ------- " + error);
-      }).finally(()=>{
-        setState({isLoading: false });
+      }).finally(() => {
+        // if(statesData.isReadAll)  ReadAll()
+        setState({ isLoading: false });
       })
   };
 
@@ -103,7 +106,6 @@ const Notifications = ({ navigation }) => {
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
-
         get_notification(1);
         if (obj.status == true) {
           // setTimeout(() => {
@@ -129,11 +131,11 @@ const Notifications = ({ navigation }) => {
     data.append("login_user_id", loggedInUserDetails?.user_id);
     apifuntion
       .postApi(url, data)
-      .then((obj) => { 
+      .then((obj) => {
 
         if (obj.status == true) {
           dispatch(UnReadNotifications('0'))
-          msgProvider.showSuccess(obj.message)
+          // msgProvider.showSuccess(obj.message)
           setState({ isReadAll: true })
         } else {
           msgProvider.showError(obj.message)
@@ -269,7 +271,7 @@ const Notifications = ({ navigation }) => {
               statesData.notificationdata != null && (
                 <FlatList
                   data={statesData.notificationdata}
-                  contentContainerStyle={{  paddingBottom: insets.bottom }}
+                  contentContainerStyle={{ paddingBottom: insets.bottom }}
                   renderItem={({ item, index }) => {
                     return (
                       <TouchableOpacity

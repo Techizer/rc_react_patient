@@ -27,7 +27,7 @@ const TabbyPayment = ({ navigation, route }) => {
         navigation.pop();
     };
 
-
+    // sk_test_97326f18-c970-46f3-83e2-a23799e60df2
     const CapturePayment = async () => {
         // console.log('././././././././././././.', capturePayment);
         let url = `https://api.tabby.ai/api/v1/payments/${transactionId}/captures`
@@ -35,7 +35,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
+                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
             },
@@ -67,7 +67,7 @@ const TabbyPayment = ({ navigation, route }) => {
         fetch(url, {
             method: "POST",
             headers: {
-                'Authorization': `Bearer sk_test_97326f18-c970-46f3-83e2-a23799e60df2`,
+                'Authorization': `Bearer pk_94369327-33a2-4a25-bdf3-cb04ad59be2f`,
                 'Accept': "application/json",
                 "Content-Type": "application/json",
                 'X-Merchant-Code': loggedInUserDetails?.currency_symbol === 'AED' ? 'rootscareuae' : 'rootscare'

@@ -313,7 +313,7 @@ const SupportandMore = ({ navigation }) => {
             justifyContent: "space-between",
             alignItems: 'center',
             alignSelf: 'flex-end',
-            marginTop: vs(10),
+            marginTop: vs(20),
             flexDirection: "row",
             borderBottomWidth: 1.5,
             borderBottomColor: Colors.backgroundcolor,

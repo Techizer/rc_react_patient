@@ -75,8 +75,7 @@ const Personal = ({ navigation }) => {
     }, [deviceConnection])
 
     const Camerapopen = async () => {
-        mediaprovider
-            .launchCamera(true)
+        mediaprovider.launchCamera(true)
             .then((obj) => {
                 console.log(obj);
                 setUserDetails(prevState => ({ ...prevState, profile_img: obj.path }))
@@ -428,7 +427,7 @@ const Personal = ({ navigation }) => {
                                     emailRef.current.focus()
                                 }}
                                 blurOnSubmit={Platform.OS === 'ios' ? true : false}
-                                editable
+                                editable={false}
                             />
                             <Text
                                 style={{

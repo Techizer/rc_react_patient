@@ -240,7 +240,7 @@ const RescheduleBottomSheet = ({
             .then((obj) => {
                 if (obj.status == true) {
                     onRequestClose()
-                    // setTimeout(() => {
+                    // setTimeout(() => { 
                     //     this.get_Services(1);
                     //     msgProvider.showSuccess(obj.message);
                     // }, 700);

@@ -227,7 +227,7 @@ const PackageBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-lab-booking-init-details";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("lgoin_user_id", loggedInUserDetails?.user_id);
     data.append("service_type", selectedProvider.providerType);
 
@@ -316,7 +316,7 @@ const PackageBase = ({ navigation, route }) => {
     let url = config.baseURL + "api-patient-lab-next-date-time";
 
     var data = new FormData();
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("date", selectedDate);
     data.append("task_type", 'task_base');
     data.append("service_type", selectedProvider.providerType);
@@ -489,7 +489,7 @@ const PackageBase = ({ navigation, route }) => {
     data.append("login_user_id", loggedInUserDetails?.user_id);
     data.append("currency_symbol", statesData.currency_symbol);
     data.append("family_member_id", selectedProvider.family_member_id);
-    data.append("provider_id", selectedProvider ?selectedProvider?.providerId: '');
+    data.append("provider_id", selectedProvider ? selectedProvider?.providerId : '');
     data.append("task_id", statesData.selectedPackage.pid);
     data.append("task_price", statesData.selectedPackage.price);
     data.append("task_type", "package_base");
@@ -589,7 +589,7 @@ const PackageBase = ({ navigation, route }) => {
                     fontFamily: Font.Medium,
                     fontSize: Font.xxlarge,
                     color: Colors.detailTitles,
-                    alignSelf:'flex-start'
+                    alignSelf: 'flex-start'
                   }}>
                   {Details?.provider_name}
                 </Text>
@@ -1151,11 +1151,12 @@ const PackageBase = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: "row",
-                  alignItems:'center',
+                  alignItems: 'center',
                   width: "100%",
                   paddingTop: (windowWidth * 1.3) / 100,
                   justifyContent: "space-between",
                   alignSelf: "center",
+
                 }}>
                 <Text
                   style={{
@@ -1170,7 +1171,6 @@ const PackageBase = ({ navigation, route }) => {
                     fontFamily: Font.Regular,
                     fontSize: Font.small,
                     color: Colors.detailTitles,
-                    width: "20%",
                   }}>
                   {statesData.selectedPackage.price}{" "}
                   {statesData.currency_symbol}
@@ -1182,7 +1182,7 @@ const PackageBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1211,7 +1211,7 @@ const PackageBase = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: "row",
-                alignItems:'center',
+                alignItems: 'center',
                 justifyContent: "space-between",
                 paddingVertical: (windowWidth * 2) / 100,
                 borderTopWidth: 1.5,
@@ -1235,31 +1235,35 @@ const PackageBase = ({ navigation, route }) => {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems:'center',
-                justifyContent: "space-between",
-                borderColor: Colors.bordercolor,
-                marginBottom: (windowWidth * 2) / 100,
-              }}>
-              <Text
+            {
+              statesData.vatPrice != '0' &&
+              <View
                 style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
+                  flexDirection: "row",
+                  alignItems: 'center',
+                  justifyContent: "space-between",
+                  borderColor: Colors.bordercolor,
+                  marginBottom: (windowWidth * 2) / 100,
                 }}>
-                {Details?.vat_text}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.small,
-                  color: Colors.detailTitles,
-                }}>
-                {`${(statesData.selectedPackage != null && statesData.selectedPackage != '') ? statesData.vatPrice : ''} ${statesData.currency_symbol}`}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {Details?.vat_text}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Font.Regular,
+                    fontSize: Font.small,
+                    color: Colors.detailTitles,
+                  }}>
+                  {`${(statesData.selectedPackage != null && statesData.selectedPackage != '') ? statesData.vatPrice : ''} ${statesData.currency_symbol}`}
+                </Text>
+              </View>
+
+            }
 
             <View
               style={{
@@ -1302,7 +1306,7 @@ const PackageBase = ({ navigation, route }) => {
             justifyContent: 'space-between',
             backgroundColor: Colors.White,
             paddingTop: (windowWidth * 2) / 100,
-            paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
+            paddingBottom: Platform.OS == 'ios' ? insets.bottom - vs(5) : (windowWidth * 2) / 100,
             alignItems: "center",
             paddingHorizontal: '10%',
             borderTopWidth: 1,

@@ -25,7 +25,7 @@ const Tabs = createMaterialTopTabNavigator()
 
 const ConsultIndex = ({ navigation, route }) => {
 
-  const { todayConsultations, languageIndex } = useSelector(state => state.StorageReducer)
+  const { todayConsultations, languageIndex, guest } = useSelector(state => state.StorageReducer)
 
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
@@ -46,7 +46,7 @@ const ConsultIndex = ({ navigation, route }) => {
           routes: [{ name: 'Home' }],
         })}
         leftIcon
-        rightIcon
+        rightIcon={!guest}
       />
 
       {/* <View style={{

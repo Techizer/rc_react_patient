@@ -28,7 +28,7 @@ const Tabs = createMaterialTopTabNavigator()
 
 const LabTestIndex = ({ navigation, route }) => {
 
-  const { todayLabTests, appLanguage } = useSelector(state => state.StorageReducer)
+  const { todayLabTests, appLanguage, guest } = useSelector(state => state.StorageReducer)
 
 
   let headerHeight = (deviceHeight - windowHeight) + StatusbarHeight;
@@ -49,7 +49,7 @@ const LabTestIndex = ({ navigation, route }) => {
           routes: [{ name: 'Home' }],
         })}
         leftIcon
-        rightIcon
+        rightIcon={!guest}
       />
 
       {/* <View style={{
@@ -93,9 +93,9 @@ const LabTestIndex = ({ navigation, route }) => {
             fontFamily: Font.Medium
           }
         }}>
-        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming}  />
-        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing}  />
-        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past}  />
+        <Tabs.Screen name={LangProvider.Upcoming[appLanguage == 'en' ? 0 : 1]} component={Upcoming} />
+        <Tabs.Screen name={LangProvider.Ongoing[appLanguage == 'en' ? 0 : 1]} component={OnGoing} />
+        <Tabs.Screen name={LangProvider.Past[appLanguage == 'en' ? 0 : 1]} component={Past} />
 
       </Tabs.Navigator>
 
