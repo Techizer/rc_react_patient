@@ -18,9 +18,10 @@ import AppointmentContainer from "../../Components/AppointmentContainer";
 import { vs } from "react-native-size-matters";
 import moment from "moment-timezone";
 import { useIsFocused } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoInternet from "../../Components/NoInternet";
 import { SkypeIndicator } from "react-native-indicators";
+import { setCustomBooking, setIsMultiBooking } from "../../Redux/Actions";
 
 let onEndReachedCalledDuringMomentum = true
 
@@ -36,15 +37,19 @@ const OnGoing = (props) => {
   const [pageCount, setPageCount] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const isFocused = useIsFocused()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!guest && deviceConnection && isFocused) {
+      dispatch(setCustomBooking(null))
+      dispatch(setIsMultiBooking(false))
       getAppointments(pageCount)
     }
   }, [isFocused, deviceConnection])
 
   useEffect(() => {
     if (!guest && deviceConnection && isRefreshing) {
+      
       getAppointments(pageCount)
     }
   }, [isRefreshing])

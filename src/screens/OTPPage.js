@@ -31,19 +31,13 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { s, vs } from "react-native-size-matters";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
-import { Address, Guest, UserDetails } from "../Redux/Actions";
+import { Address, Guest, UserDetails, UserProfile } from "../Redux/Actions";
 
 const OTPPage = ({ navigation, route }) => {
 
   const {
-    id_number,
-    password,
-    confirm_password,
     phone_number,
-    name,
-    email,
-    work_area,
-    country_name
+    code
   } = route?.params
 
   const { appLanguage, deviceToken, deviceType, contentAlign, languageIndex, address } = useSelector(state => state.StorageReducer)
@@ -51,6 +45,7 @@ const OTPPage = ({ navigation, route }) => {
   const [otpData, setOtpData] = useState({
     otpSuccessModal: false,
     message: "",
+    status: '',
     otp: '',
     status: false,
     isLoading: false
@@ -104,19 +99,15 @@ const OTPPage = ({ navigation, route }) => {
     }))
     let url = config.baseURL + "api-patient-registration-otp-check";
     var data = new FormData();
-    data.append("first_name", name);
-    data.append("email", email);
+
+    data.append("countrycode", code);
     data.append("phone_number", phone_number);
-    data.append("id_number", id_number);
-    data.append("work_area", country_name);
-    data.append("code", otpData.otp);
-    data.append("password", password);
-    data.append("last_name", "");
-    data.append("confirm_password", confirm_password);
     data.append("device_type", deviceType);
-    data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
+    data.append("device_lang", appLanguage);
     data.append("fcm_token", deviceToken);
-    console.log("otpVerify-------", data);
+    data.append("code", otpData.otp);
+
+    // console.log("otpVerify-------", data);
     // return
     apifuntion
       .postApi(url, data)
@@ -125,15 +116,17 @@ const OTPPage = ({ navigation, route }) => {
           ...prevState,
           isLoading: false
         }))
-        console.log("otpVerify-------", obj);
+        // console.log("otpVerify-------", obj);
         if (obj.status == true) {
           UpdateAddress(obj?.result?.user_id)
           dispatch(UserDetails(obj?.result))
+          dispatch(UserProfile(obj?.result))
           setTimeout(() => {
             setOtpData(prevState => ({
               ...prevState,
               otpSuccessModal: true,
-              message: obj?.message
+              message: obj?.message,
+              status: obj?.result.profilecomplete
             }))
           }, 500);
         } else {
@@ -200,12 +193,21 @@ const OTPPage = ({ navigation, route }) => {
       ...prevState,
       otpSuccessModal: false,
     }))
+   if(otpData.status=='0'){
+    setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "EditProfile" }],
+      });
+    }, 700);
+   }else{
     setTimeout(() => {
       navigation.reset({
         index: 0,
         routes: [{ name: "DashboardStack" }],
       });
     }, 700);
+   }
   }
   const sendagain = async () => {
 
@@ -381,6 +383,8 @@ const OTPPage = ({ navigation, route }) => {
         </View>
 
       </KeyboardAwareScrollView>
+
+
 
       <Modal
         animationType="fade"

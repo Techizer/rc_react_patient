@@ -39,6 +39,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { setNoInternet, setVideoCall, setVideoCallData, setVideoCallStatus } from "../Redux/Actions";
 import { get_notification } from "../Provider/APIFunctions";
+import useBooking from "../APIs/useBooking";
 
 var videoCallButton = false;
 
@@ -51,6 +52,8 @@ const AppointmentContainer = ({
 }) => {
     const { loggedInUserDetails, guest, appLanguage, languageIndex, deviceConnection } = useSelector(state => state.StorageReducer)
     const dispatch = useDispatch()
+
+    const { RepeatBooking } = useBooking()
 
     var videoDetails = {
         fromUserId: loggedInUserDetails?.user_id,
@@ -1279,7 +1282,60 @@ const AppointmentContainer = ({
                                                 flexDirection: "row",
                                                 alignItems: "center",
                                             }}>
-                                            <Text
+
+                                            <View style={{
+                                                paddingHorizontal: s(10),
+                                                backgroundColor: Colors.White,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                                <View style={{
+                                                    paddingHorizontal: s(5),
+                                                    paddingVertical: vs(5),
+                                                    backgroundColor: Colors.Highlight,
+                                                    borderRadius: 5,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    flexDirection: 'row',
+                                                }}>
+                                                    <Image source={Icons.fillStar} style={{ height: s(15), width: s(15), marginRight: s(5) }} />
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.SemiBold,
+                                                            color: Colors.Black,
+                                                            fontSize: Font.small,
+                                                        }}>
+                                                        {`${parseInt(Item.avg_rating)}.0`}
+                                                    </Text>
+                                                </View>
+                                            </View>
+
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    RepeatBooking(Item.provider_type, Item.provider_id, Item.task_id, Item.booking_type)
+                                                }}
+                                                activeOpacity={0.8}
+                                                style={{
+                                                    paddingHorizontal: s(14),
+                                                    paddingVertical: vs(5),
+                                                    backgroundColor: Colors.Blue,
+                                                    borderRadius: 5,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }} >
+
+                                                <Text
+                                                    style={{
+                                                        fontSize: Font.small,
+                                                        fontFamily: Font.SemiBold,
+                                                        color: Colors.White
+                                                    }}
+                                                >{'RE-BOOK'}</Text>
+                                            </TouchableOpacity>
+
+
+
+                                            {/* <Text
                                                 style={{
                                                     fontFamily: Font.Regular,
                                                     color: Colors.DarkGrey,
@@ -1295,37 +1351,78 @@ const AppointmentContainer = ({
                                                 maxStars={5}
                                                 starSize={15}
                                                 rating={parseInt(Item.avg_rating)}
-                                            />
+                                            /> */}
+
+
                                         </View>
                                     )
                                         :
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setRatingData(prevState => ({
-                                                    ...prevState,
-                                                    modalVisiblerating: true
-                                                }))
-                                            }}
-                                            activeOpacity={0.8}
+                                        <View
                                             style={{
-                                                paddingHorizontal: s(8),
-                                                paddingVertical: vs(4),
-                                                backgroundColor: Colors.Yellow,
-                                                borderRadius: 5,
-                                                flexDirection: 'row',
-                                                alignItems: 'center'
-                                            }} >
-                                            <SvgXml xml={whiteStar} />
-                                            <Text
-                                                style={{
-                                                    fontSize: Font.small,
-                                                    fontFamily: Font.SemiBold,
-                                                    color: Colors.White,
-                                                    marginLeft: s(7)
-                                                }}
-                                            >{LangProvider.Rate_Appointment[languageIndex]}</Text>
-                                        </TouchableOpacity>
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}>
 
+                                            <View style={{
+                                                paddingHorizontal: s(10),
+                                                backgroundColor: Colors.White,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                                <TouchableOpacity
+                                                    activeOpacity={0.8}
+                                                    onPress={() => {
+                                                        setRatingData(prevState => ({
+                                                            ...prevState,
+                                                            modalVisiblerating: true
+                                                        }))
+                                                    }}
+                                                    style={{
+                                                        paddingHorizontal: s(5),
+                                                        paddingVertical: vs(5),
+                                                        backgroundColor: Colors.Highlight,
+                                                        borderRadius: 5,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        flexDirection: 'row',
+                                                    }}>
+                                                    <Image source={Icons.Rate} style={{ height: s(15), width: s(15), marginRight: s(5) }} />
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: Font.SemiBold,
+                                                            color: Colors.Black,
+                                                            fontSize: Font.small,
+                                                        }}>
+                                                        {`RATE`}
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                            </View>
+
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    RepeatBooking(Item.provider_type, Item.provider_id, Item.task_id, Item.booking_type)
+                                                }}
+                                                activeOpacity={0.8}
+                                                style={{
+                                                    paddingHorizontal: s(14),
+                                                    paddingVertical: vs(5),
+                                                    backgroundColor: Colors.Blue,
+                                                    borderRadius: 5,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }} >
+
+                                                <Text
+                                                    style={{
+                                                        fontSize: Font.small,
+                                                        fontFamily: Font.SemiBold,
+                                                        color: Colors.White
+                                                    }}
+                                                >{'RE-BOOK'}</Text>
+                                            </TouchableOpacity>
+
+                                        </View>
 
                                 }
 

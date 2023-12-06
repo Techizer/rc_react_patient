@@ -32,7 +32,9 @@ import {
     VIDEO_CALL_DATA,
     INCOMING_VIDEO_CALL,
     VIDEO_CALL_STATUS,
-    NO_INTERNET
+    NO_INTERNET,
+    CUSTOM_BOOKING,
+    IS_MULTI_BOOKING
 } from './Types';
 
 const initialState = {
@@ -67,7 +69,9 @@ const initialState = {
     isVideoCall: false,
     videoDetails: null,
     callStatus: 0,
-    noInternet: false
+    noInternet: false,
+    customBookingDates: [],
+    isMultiBooking: false,
 };
 
 export const ReducerCases = (state = initialState, action = {}) => {
@@ -253,6 +257,19 @@ export const ReducerCases = (state = initialState, action = {}) => {
                 ...state,
                 noInternet: action.payload,
             };
+
+        case CUSTOM_BOOKING:
+            return {
+                ...state,
+                customBookingDates: action.payload,
+            };
+
+        case IS_MULTI_BOOKING:
+            return {
+                ...state,
+                isMultiBooking: action.payload,
+            };
+
         default:
             return state;
     }

@@ -19,7 +19,8 @@ import { ScreenHeader } from "../../Components/ScreenHeader";
 import Upcoming from "./Upcoming";
 import OnGoing from "./OnGoing";
 import Past from "./Past";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCustomBooking, setIsMultiBooking } from "../../Redux/Actions";
 
 const Tabs = createMaterialTopTabNavigator()
 
@@ -32,6 +33,12 @@ const ConsultIndex = ({ navigation, route }) => {
   headerHeight += (Platform.OS === 'ios') ? (windowWidth * 3.5) / 100 : -50
   let finalPosition = headerHeight + (windowWidth * 13) / 100
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setCustomBooking(null))
+    dispatch(setIsMultiBooking(false))
+  }, [])
 
 
   return (

@@ -32,6 +32,7 @@ import { UserDetails, UserProfile } from "../../Redux/Actions";
 import { SvgXml } from "react-native-svg";
 import { rightArrow } from "../../Icons/Index";
 import NoInternet from "../../Components/NoInternet";
+import { StickyButton } from "../../Components/StickyButton";
 
 
 
@@ -231,7 +232,7 @@ const LifeStyle = ({ navigation }) => {
 
     const saveLifeStyle = async () => {
         Keyboard.dismiss()
-       
+
 
         if (lifeStyleDetails.smoking === '') {
             msgProvider.showError(LangProvider.smoking_msg[languageIndex]);
@@ -737,25 +738,12 @@ const LifeStyle = ({ navigation }) => {
 
             </KeyboardAwareScrollView>
 
-            <View
-                style={{
-                    width: "100%",
-                    position: 'absolute',
-                    bottom: 0,
-                    paddingHorizontal: s(13),
-                    backgroundColor: Colors.White,
-                    paddingTop: (windowWidth * 2) / 100,
-                    paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
-                    alignItems: "center",
-                    borderTopWidth: 1,
-                    borderTopColor: Colors.Border,
-                }}>
-                <Button
-                    text={LangProvider.submitbtntext[languageIndex]}
-                    onPress={() => saveLifeStyle()}
-                    onLoading={lifeStyleDetails.isLoading}
-                />
-            </View>
+            <StickyButton
+                text={LangProvider.submitbtntext[languageIndex]}
+                onPress={() => saveLifeStyle()}
+                onLoading={lifeStyleDetails.isLoading}
+                btnStyle={{ width: '90%' }}
+            />
 
             <ListBottomSheet
                 visible={lifeStyleDetails.smokingPopup || lifeStyleDetails.alcoholPopup || lifeStyleDetails.bloodGroupPopup || lifeStyleDetails.activityPopup || lifeStyleDetails.foodPopup || lifeStyleDetails.occupationPopup}

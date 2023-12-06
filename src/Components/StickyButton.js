@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { vs } from "react-native-size-matters";
 export const StickyButton = ({
     text,
-    customStyles,
+    container,
     onPress,
     image,
     onLoading,
@@ -28,16 +28,16 @@ export const StickyButton = ({
 
     return (
         <View
-            style={{
+            style={[{
                 width: "100%",
                 position: 'absolute',
                 bottom: 0,
-                backgroundColor: Colors.white_color,
                 paddingTop: (windowWidth * 2) / 100,
                 paddingBottom: Platform.OS == 'ios' ? insets.bottom - vs(5) : (windowWidth * 2) / 100,
                 alignItems: "center",
                 zIndex: 99999,
-            }}>
+                backgroundColor:Colors.White
+            },container]}>
             <TouchableOpacity
                 disabled={disable}
                 onPress={onPress}

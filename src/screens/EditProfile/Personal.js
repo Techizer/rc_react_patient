@@ -34,6 +34,7 @@ import NationalityBottomSheet from "../../Components/ListBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails, UserProfile } from "../../Redux/Actions";
 import NoInternet from "../../Components/NoInternet";
+import { StickyButton } from "../../Components/StickyButton";
 
 
 const Personal = ({ navigation }) => {
@@ -671,26 +672,15 @@ const Personal = ({ navigation }) => {
 
             </KeyboardAwareScrollView>
 
-            <View
-                style={{
-                    width: "100%",
-                    position: 'absolute',
-                    bottom: 0,
-                    paddingHorizontal: s(13),
-                    backgroundColor: Colors.White,
-                    paddingTop: (windowWidth * 2) / 100,
-                    paddingBottom: Platform.OS == 'ios' ? insets.bottom - 15 : (windowWidth * 2) / 100,
-                    alignItems: "center",
-                    borderTopWidth: 1,
-                    borderTopColor: Colors.Border,
-                }}>
 
-                <Button
-                    text={LangProvider.submitbtntext[languageIndex]}
-                    onPress={() => saveInfo()}
-                    onLoading={userDetails.isLoading}
-                />
-            </View>
+
+
+            <StickyButton
+                text={LangProvider.submitbtntext[languageIndex]}
+                onPress={() => saveInfo()}
+                onLoading={userDetails.isLoading}
+                btnStyle={{ width: '90%' }}
+            />
 
             <Cameragallery
                 mediamodal={mediamodal}

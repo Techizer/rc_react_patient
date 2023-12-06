@@ -37,6 +37,7 @@ class mediaProvider {
         cropperCircleOverlay:cropvalue,
         includeBase64: true,
         includeExif: true,
+        freeStyleCropEnabled
         // compressImageQuality: 0.4,
       })
         .then((res) => {

@@ -29,10 +29,10 @@ const ManageAddress = ({ navigation }) => {
   const sheetRef = React.useRef(null);
 
   useEffect(() => {
-    if (deviceConnection) {
+    if (deviceConnection && isFocused) {
       getAddresses()
     }
-  }, [isFocused, deviceConnection])
+  }, [deviceConnection])
 
   const getAddresses = async () => {
     let url = config.baseURL + "api-patient-list-address";

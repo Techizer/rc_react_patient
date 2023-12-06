@@ -41,7 +41,7 @@ import SuccessPopup from "../Components/SuccessPopup";
 import moment from "moment";
 import SimpleToast from "react-native-simple-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { CartTime, TabbyPaymentStatus, TodaysAppointments, TodaysConsultations, TodaysLabTests } from "../Redux/Actions";
+import { CartTime, TabbyPaymentStatus, TodaysAppointments, TodaysConsultations, TodaysLabTests, setCustomBooking, setIsMultiBooking } from "../Redux/Actions";
 import LoadingSkeleton from "../Components/LoadingSkeleton";
 import PaymentOptionBottomSheet from "../Components/PaymentOptionBottomSheet";
 import { useIsFocused } from "@react-navigation/native";
@@ -50,6 +50,7 @@ import NoInternet from "../Components/NoInternet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Message, MessageRoom } from "../Schemas/MessageRoomSchema";
 import Coupons from "../Components/Coupons";
+import CustomBookingSlot from "../Components/CustomBookingSlot";
 
 
 let startTime = null
@@ -60,10 +61,10 @@ const { Languages, PaymentTypes, AllowedCadTypes, TrxMode, SDKMode } =
 const appCredentials = {
   production_secrete_key:
     Platform.OS == "ios"
-      ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
-      : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
-      // ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
-      // : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
+      // ? "sk_live_Ectf8odVHCWTl3ymhz9IM6vD"
+      // : "sk_live_6GPzSurWAK9ng1C7yUq8wOeh",
+      ? "sk_test_wvbqQkEMJCSXTDrt9Pay2pFg"
+      : "sk_test_KOfdbVzDXW7JreslyPL2g1nN",
   language: Languages.EN,
   sandbox_secrete_key:
     Platform.OS == "ios"
@@ -132,11 +133,12 @@ const CartDetails = ({ navigation }) => {
   // '500000001'
   const customerPayment = {
     payment: {
-      amount: statesData.cartDetails?.total_price,
+      amount: statesData.cartDetails[0]?.total_price,
       currency: statesData.currency_symbol,
       buyer: {
-        email: '',
-        phone: loggedInUserDetails.phone_number,
+        email: 'card.success@tabby.ai',
+        phone: '500000001',
+        // phone: loggedInUserDetails.phone_number,
         name: loggedInUserDetails.first_name,
         dob: loggedInUserDetails.dob,
       },
@@ -231,7 +233,7 @@ const CartDetails = ({ navigation }) => {
     AppointmentID: '',
     Created: new Date(),
     Expired: false,
-    ID: statesData.cartDetails.order_id,
+    ID: statesData?.cartDetails[0]?.order_id,
     LastOpened: new Date(),
     Messages: [
       new Message({
@@ -419,6 +421,7 @@ const CartDetails = ({ navigation }) => {
 
   const StartTabbySdk = async () => {
     try {
+      console.log({customerPayment});
       const { sessionId, paymentId, availableProducts } = await Tabby.createSession(myTestPayment);
       // console.log({
       //   sessionId,
@@ -429,6 +432,15 @@ const CartDetails = ({ navigation }) => {
       // console.log({
       //   availableProducts
       // });
+      let idsArray = [];
+      let commaSeparatedIds = '';
+
+      if (statesData.slots) {
+        idsArray = Object.values(statesData.slots).map(entry => entry.id);
+
+        commaSeparatedIds = idsArray.join(', ');
+      }
+
       setState({ tabbyPaymentId: paymentId, })
       // return
       setTimeout(() => {
@@ -436,7 +448,7 @@ const CartDetails = ({ navigation }) => {
           {
             url: availableProducts[0].webUrl,
             serviceType: statesData.service_type,
-            cartId: statesData.cartId,
+            cartId: statesData.slots ? commaSeparatedIds : statesData.cartId,
             transactionId: paymentId,
             capturePayment: CapturePayment,
             newRoom: newRoom,
@@ -554,14 +566,25 @@ const CartDetails = ({ navigation }) => {
   }
 
   const TapPayment = async (paymentId) => {
+
+    let idsArray = [];
+    let commaSeparatedIds = '';
+
+    if (statesData.slots) {
+      idsArray = Object.values(statesData.slots).map(entry => entry.id);
+
+      commaSeparatedIds = idsArray.join(', ');
+    }
+    console.log({ commaSeparatedIds });
     let url = config.baseURL + "api-patient-insert-appointment";
     var data = new FormData();
 
     data.append("service_type", statesData.service_type);
     data.append("login_user_id", loggedInUserDetails?.user_id);
-    data.append("cart_id", statesData.cartId);
+    data.append("cart_id", commaSeparatedIds);
     data.append("trid", paymentId);
 
+    console.log(data._parts);
     apifuntion
       .postApi(url, data, 1)
       .then((obj) => {
@@ -598,7 +621,9 @@ const CartDetails = ({ navigation }) => {
       .catch((error) => {
         console.log("TapPayment-error ------- " + error);
         setState({ isLoading: false });
-      });
+      }).finally(() => {
+
+      })
   };
 
   const printSDKResult = (result) => {
@@ -655,12 +680,28 @@ const CartDetails = ({ navigation }) => {
     apifuntion
       .postApi(url, data)
       .then((obj) => {
-        console.log("get_cart-response...", obj.result);
+        // console.log("get_cart-response...", obj.result);
         if (obj.status == true) {
+          const transformedData = obj.result.reduce((result, item) => {
+
+            const key = item.from_date;
+            const value = {
+              dotColor: '',
+              marked: true,
+              selected: true,
+              time: item.from_time,
+              id: item.id
+            };
+
+            result[key] = value;
+            return result;
+          }, {});
+
           AsyncStorage.setItem('cartId', obj.result[0].id)
           setState({
             family_member_id: obj.result[0].family_member_id,
-            cartDetails: obj.result[0],
+            cartDetails: obj.result,
+            slots: transformedData,
             service_type: obj.result[0].service_type,
             booking_type: obj.result[0].booking_type,
             cartId: obj.result[0].id,
@@ -718,7 +759,8 @@ const CartDetails = ({ navigation }) => {
       })
       .catch((error) => {
         AsyncStorage.removeItem('cartId')
-        setState({ modalVisible3: false, isRemovingCart: false })
+        setState({ modalVisible3: false, isRemovingCart: false, isGoingBack: false })
+        msgProvider.showError('Something went wrong')
         console.log("remove_cart-error ------- " + error);
       });
   };
@@ -823,6 +865,10 @@ const CartDetails = ({ navigation }) => {
   };
 
   var show_data = statesData.cartDetails;
+  let keys = [];
+  if (statesData.slots) {
+    keys = Object.keys(statesData.slots);
+  }
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;
   const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -911,7 +957,7 @@ const CartDetails = ({ navigation }) => {
                           color: Colors.detailTitles,
                           marginLeft: vs(12)
                         }}>
-                        {show_data?.service_display_type}
+                        {show_data[0]?.service_display_type}
                       </Text>
                     </View>
 
@@ -932,87 +978,44 @@ const CartDetails = ({ navigation }) => {
 
 
                 <View style={{ marginTop: vs(13), paddingHorizontal: s(13) }}>
-                  <Text
-                    style={{
-                      fontFamily: Font.Medium,
-                      fontSize: Font.large,
-                      color: Colors.detailTitles,
-                      alignSelf: 'flex-start'
-                    }}>
-                    {LangProvider.Appointment_footer[languageIndex]}
-                  </Text>
 
-                  <View style={{ flexDirection: 'row', marginTop: vs(15) }}>
-                    <View style={{ flex: 1 }}>
+                  <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Medium,
+                        fontSize: Font.large,
+                        color: Colors.detailTitles,
+                        alignSelf: 'flex-start'
+                      }}>
+                      {LangProvider.Appointment_footer[languageIndex]}
+                    </Text>
+                    <View style={{ marginHorizontal: s(10), paddingHorizontal: s(10), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
                       <Text
                         style={{
                           fontFamily: Font.Medium,
                           fontSize: Font.small,
-                          color: Colors.DarkGrey,
-                          alignSelf: 'flex-start'
+                          color: Colors.Theme,
+                          textAlign: 'left'
                         }}>
-                        {LangProvider.Date[languageIndex]}
+                        {show_data[0]?.display_task_type}
                       </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.small,
-                          color: Colors.DarkGrey,
-                          alignSelf: 'flex-start',
-                          marginTop: vs(2)
-                        }}>
-                        {show_data?.display_app_date}
-                      </Text>
-                      <View style={{ width: '60%', marginTop: vs(5), justifyContent: 'center', alignItems: 'center', paddingVertical: vs(2), backgroundColor: Colors.White, borderWidth: 1, borderColor: Colors.Theme, borderRadius: 4 }}>
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            color: Colors.Theme,
-                            textAlign: 'left'
-                          }}>
-                          {show_data?.display_task_type}
-                        </Text>
-                      </View>
                     </View>
-
-                    <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.small,
-                          color: Colors.DarkGrey,
-                          alignSelf: 'flex-start'
-                        }}>
-                        {LangProvider.Time[languageIndex]}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: Font.Medium,
-                          fontSize: Font.small,
-                          color: Colors.DarkGrey,
-                          alignSelf: 'flex-start',
-                          marginTop: vs(2)
-                        }}>
-                        {show_data?.from_time} - {show_data?.to_time}
-                      </Text>
-                      <View style={{ marginTop: vs(5), alignItems: 'center', flexDirection: 'row' }}>
-                        <SvgXml xml={clockBlue} height={vs(16)} width={s(16)} />
-                        <Text
-                          style={{
-                            fontFamily: Font.Medium,
-                            fontSize: Font.small,
-                            color: Colors.Theme,
-                            marginLeft: s(6)
-                          }}>
-                          {show_data?.display_task_time}
-                        </Text>
-                      </View>
-
-                    </View>
-
-                    {/* --------------------------------- */}
                   </View>
+
+
+                  {keys.map((date, index) => (
+                    <CustomBookingSlot
+                      length={keys.length}
+                      data={date}
+                      key={date}
+                      index={index}
+                      nonEdit
+                    />
+
+                  ))}
+
+
+
                 </View>
 
                 {/* ---------------------------------------- */}
@@ -1028,7 +1031,7 @@ const CartDetails = ({ navigation }) => {
                   </Text>
 
                   <FlatList
-                    data={show_data?.task_details}
+                    data={show_data[0]?.task_details}
                     renderItem={({ item, index }) => {
                       if (item.task_details != "") {
                         return (
@@ -1145,7 +1148,7 @@ const CartDetails = ({ navigation }) => {
                       borderBottomWidth: 1,
                       borderColor: '#00000029',
                     }}>
-                    {show_data?.display_task_type !== "Online consultation" && (
+                    {show_data[0]?.display_task_type !== "Online consultation" && (
                       <View
                         style={{
                           flexDirection: "row",
@@ -1158,8 +1161,8 @@ const CartDetails = ({ navigation }) => {
                             fontSize: Font.small,
                             color: Colors.detailTitles,
                           }}>
-                          {/* {show_data?.distance_fare_text} */}
-                          {`${show_data.distance_fare_text} ${show_data?.distancetext == '' ? '' : `(${show_data.distancetext})`}`}
+                          {/* {show_data[0]?.distance_fare_text} */}
+                          {`${show_data[0].distance_fare_text} ${show_data[0]?.distancetext == '' ? '' : `(${show_data[0].distancetext})`}`}
 
                         </Text>
                         <Text
@@ -1168,13 +1171,13 @@ const CartDetails = ({ navigation }) => {
                             fontSize: Font.small,
                             color: Colors.detailTitles,
                           }}>
-                          {show_data?.distance_fare}
+                          {show_data[0]?.distance_fare}
                         </Text>
                       </View>
                     )}
 
                     {
-                      show_data?.vat_percent_used != '0' &&
+                      show_data[0]?.vat_percent_used != '0' &&
                       <View
                         style={{
                           flexDirection: "row",
@@ -1188,7 +1191,7 @@ const CartDetails = ({ navigation }) => {
                             fontSize: Font.small,
                             color: Colors.detailTitles,
                           }}>
-                          {show_data?.vat_text}
+                          {show_data[0]?.vat_text}
                         </Text>
                         <Text
                           style={{
@@ -1197,7 +1200,7 @@ const CartDetails = ({ navigation }) => {
                             color: Colors.detailTitles,
                           }}
                         >
-                          {show_data?.vat_price}
+                          {show_data[0]?.vat_price}
                         </Text>
                       </View>
 
@@ -1227,7 +1230,7 @@ const CartDetails = ({ navigation }) => {
                         fontSize: Font.medium,
                         color: Colors.Theme,
                       }}>
-                      {show_data?.total_price + ' ' + statesData.currency_symbol}
+                      {show_data[0]?.total_price + ' ' + statesData.currency_symbol}
                     </Text>
                   </View>
 
@@ -1277,7 +1280,7 @@ const CartDetails = ({ navigation }) => {
                 <TabbyCheckoutSnippet
                   lang={languageIndex == 0 ? 'en' : "ar"}
                   currency={loggedInUserDetails?.currency_symbol}
-                  price={(show_data?.total_price != '' && show_data?.total_price != null) ? show_data?.total_price : '0'}
+                  price={(show_data[0]?.total_price != '' && show_data[0]?.total_price != null) ? show_data[0]?.total_price : '0'}
                   circleFillColor={[Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme, Colors.Theme]}
                 // containerStyle={{ marginTop: vs(7) }}
                 />
@@ -1366,7 +1369,7 @@ const CartDetails = ({ navigation }) => {
                 fontSize: Font.xxlarge,
                 color: Colors.Theme,
               }}>
-              {show_data?.total_price + ' ' + statesData.currency_symbol}
+              {show_data[0]?.total_price + ' ' + statesData.currency_symbol}
             </Text>
             <Text
               style={{
@@ -1565,7 +1568,7 @@ const CartDetails = ({ navigation }) => {
           }
 
         }}
-        data={show_data?.total_price + ' ' + statesData.currency_symbol}
+        data={show_data[0]?.total_price + ' ' + statesData.currency_symbol}
         selectedPaymentMethod={(val) => {
           if (val == 1) {
             startSDK()

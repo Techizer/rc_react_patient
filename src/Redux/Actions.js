@@ -32,6 +32,8 @@ import {
     INCOMING_VIDEO_CALL,
     VIDEO_CALL_STATUS,
     NO_INTERNET,
+    CUSTOM_BOOKING,
+    IS_MULTI_BOOKING,
 } from './Types'
 
 const Guest = (payload) => ({
@@ -205,6 +207,16 @@ const setNoInternet = payload => ({
     payload
 })
 
+const setCustomBooking = payload => ({
+    type: CUSTOM_BOOKING,
+    payload
+})
+
+const setIsMultiBooking = payload => ({
+    type: IS_MULTI_BOOKING,
+    payload
+})
+
 export {
     Guest,
     UserDetails,
@@ -238,5 +250,7 @@ export {
     setVideoCall,
     setVideoCallData,
     setVideoCallStatus,
-    setNoInternet
+    setNoInternet,
+    setIsMultiBooking,
+    setCustomBooking
 }

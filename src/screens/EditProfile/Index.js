@@ -16,13 +16,15 @@ import Personal from "./Personal";
 import Medical from "./Medical";
 import LifeStyle from "./LifeStyle";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 const Tabs = createMaterialTopTabNavigator()
 
-const Index = ({ navigation }) => {
+const Index = () => {
 
   const { appLanguage } = useSelector(state => state.StorageReducer)
-
+  const { canGoBack, goBack, reset } = useNavigation()
+  const navigation = useNavigation()
   return (
     //
     <View style={{ flex: 1, backgroundColor: Colors.backgroundcolor }}>
@@ -31,7 +33,13 @@ const Index = ({ navigation }) => {
         <ScreenHeader
           title={LangProvider.Editprofile[appLanguage == 'en' ? 0 : 1]}
           navigation={navigation}
-          onBackPress={() => navigation.pop()}
+          onBackPress={
+            () => canGoBack() ? goBack() :
+              reset({
+                index: 0,
+                routes: [{ name: "DashboardStack" }],
+              })
+          }
           leftIcon
         />
 

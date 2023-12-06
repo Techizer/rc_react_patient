@@ -32,13 +32,16 @@ import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSkeleton from "../../../Components/LoadingSkeleton";
-import { TabbyPaymentStatus } from "../../../Redux/Actions";
+import { TabbyPaymentStatus, setCustomBooking } from "../../../Redux/Actions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import FullScreenModal from "../../../modalViews/FullScreenModal";
+import CustomRepeatBooking from "../../../ModalContent/CustomRepeatBooking";
+import CustomBookingSlot from "../../../Components/CustomBookingSlot";
 
 const TaskBase = ({ navigation, route }) => {
 
 
-  const { selectedProvider, loggedInUserDetails, languageIndex, appLanguage } = useSelector(state => state.StorageReducer)
+  const { selectedProvider, loggedInUserDetails, languageIndex, appLanguage, customBookingDates, isMultiBooking } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
 
   const [statesData, setStatesData] = useState({
@@ -62,7 +65,8 @@ const TaskBase = ({ navigation, route }) => {
     subTotal: '',
     isLoadingDetails: true,
     isAddingToCart: false,
-    isLoadingDates: false
+    isLoadingDates: false,
+    isCutomRepeat: false
   })
   const isFocused = useIsFocused()
   const insets = useSafeAreaInsets()
@@ -121,7 +125,8 @@ const TaskBase = ({ navigation, route }) => {
       subTotal: '',
       isLoadingDetails: true,
       isAddingToCart: false,
-      isLoadingDates: false
+      isLoadingDates: false,
+      isCutomRepeat: false
     })
   }
   const getDay = () => {
@@ -149,7 +154,24 @@ const TaskBase = ({ navigation, route }) => {
     }
     let date1_show = year_show + "-" + show_month1 + "-" + show_get_date;
     setState({ todayDate: date1_show, set_date: date1_show, check_currentdate: date1_show });
-    // getTimeDate(date1_show, date1_show)
+
+    // dispatch(setCustomBooking({
+    //   [date1_show]: {
+    //     selected: true,
+    //     marked: true,
+    //     dotColor: Colors.White,
+    //     time: '',
+    //     customStyles: {
+    //       container: {
+    //         height: 40,
+    //         width: 46,
+    //         borderRadius: 0,
+    //         backgroundColor: (customBookingDates && customBookingDates[date1_show]?.time) ? Colors.Theme : Colors.Highlight,
+    //       },
+    //     }
+    //   }
+    // }))
+
     for (
       var arr = [], dt = new Date(today);
       dt <= new Date(nextweek);
@@ -283,6 +305,7 @@ const TaskBase = ({ navigation, route }) => {
       time_Arr: [],
       final_one: [],
       final_arr2: [],
+      selectedTime: '',
     })
     let url = config.baseURL + "api-patient-next-date-time";
 
@@ -478,7 +501,7 @@ const TaskBase = ({ navigation, route }) => {
       return false;
     }
 
-    if (statesData.selectedTime.length <= 0) {
+    if (!isMultiBooking && statesData.selectedTime.length <= 0) {
       msgProvider.showError(LangProvider.EmptyTime[languageIndex]);
       return false;
     }
@@ -487,6 +510,24 @@ const TaskBase = ({ navigation, route }) => {
     //   msgProvider.showError('Please recheck your address or book a different provider.');
     //   return false;
     // }
+
+    let datesArray = []
+    let timesArray = []
+
+    let commaSeparatedDates = '';
+    let commaSeparatedTimes = '';
+
+    if (isMultiBooking) {
+      datesArray = Object.keys(customBookingDates);
+      timesArray = Object.values(customBookingDates).map(entry => entry.time);
+
+      commaSeparatedDates = datesArray.join(', ');
+      commaSeparatedTimes = timesArray.join(', ');
+    }
+
+    // console.log('Dates:', commaSeparatedDates);
+    // console.log('Times:', commaSeparatedTimes);
+
     setState({ isAddingToCart: true })
     let url = config.baseURL + "api-patient-insert-cart";
     var data = new FormData();
@@ -500,8 +541,8 @@ const TaskBase = ({ navigation, route }) => {
     data.append('task_id', statesData.selectedTasksIds);
     data.append('task_price', statesData.selectedTasksPrices);
     data.append("task_type", "task_base");
-    data.append("from_date", statesData.set_date);
-    data.append("from_time", statesData.selectedTime);
+    data.append("from_date", isMultiBooking ? commaSeparatedDates : statesData.set_date);
+    data.append("from_time", isMultiBooking ? commaSeparatedTimes : statesData.selectedTime);
     data.append("appointment_type", "online");
     data.append("vat_percent_used", statesData.bookingDetails.vat_price);
     data.append("vat_price", statesData.vatPrice);
@@ -509,6 +550,7 @@ const TaskBase = ({ navigation, route }) => {
     data.append("task_price_total", statesData.tasksTotalPrice);
     data.append("sub_total_price", statesData.subTotal);
     data.append("total_price", statesData.totalPrice);
+    data.append("recurring", isMultiBooking);
 
     if (statesData.bookingDetails.distancetext != '' && statesData.bookingDetails.distancetext != null && statesData.bookingDetails.distancetext != undefined) {
       data.append('distance', statesData.bookingDetails.distancetext)
@@ -516,7 +558,7 @@ const TaskBase = ({ navigation, route }) => {
       data.append('distance', '')
     }
 
-    // console.log('AddToCart...', data);
+    console.log('AddToCart...', data._parts);
     // return
     apifuntion
       .postApi(url, data)
@@ -542,7 +584,57 @@ const TaskBase = ({ navigation, route }) => {
       });
   };
 
+  const addNextSlotsToCalender = (time) => {
+    const existingObject = {
+      customBookingDates: {
+        [statesData.set_date]: {
+          time: time,
+          customStyles: {
+            container: {
+              height: 40,
+              width: 46,
+              borderRadius: 0,
+              // backgroundColor: Colors.Theme
+            },
+          }
+        }
+      }
+    };
+
+    const firstDate = statesData.set_date;
+
+    const startDate = moment(firstDate);
+    const nextWeek = moment(startDate).add(1, 'weeks');
+    const nextTwoWeeks = moment(startDate).add(2, 'weeks');
+
+    const nextTwoWeeksDates = [nextWeek, nextTwoWeeks].map(date => date.format('YYYY-MM-DD'));
+    nextTwoWeeksDates.forEach(date => {
+      existingObject.customBookingDates[date] = {
+        selected: true,
+        marked: true,
+        dotColor: Colors.White,
+        time: time,
+        customStyles: {
+          container: {
+            height: 40,
+            width: 46,
+            borderRadius: 0,
+            backgroundColor: Colors.Theme
+          },
+        }
+      };
+    });
+    dispatch(setCustomBooking({
+      ...existingObject.customBookingDates
+    }))
+
+  }
+
   var Details = statesData.bookingDetails;
+  let keys = [];
+  if (customBookingDates) {
+    keys = Object.keys(customBookingDates);
+  }
 
   if (statesData.isLoadingDetails) {
     return (
@@ -929,6 +1021,7 @@ const TaskBase = ({ navigation, route }) => {
               paddingVertical: vs(9),
               backgroundColor: Colors.White
             }} >
+
             <View style={{
               borderBottomWidth: 1.5,
               borderBottomColor: Colors.backgroundcolor,
@@ -958,264 +1051,352 @@ const TaskBase = ({ navigation, route }) => {
                 >
                   {LangProvider.Appointmentschedule[languageIndex]}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "35%",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <View style={{ width: "20%", alignSelf: "center" }}>
-                    <Image
-                      style={{
-                        width: (windowWidth * 5) / 100,
-                        height: (windowWidth * 5) / 100,
-                        alignSelf: "center",
-                      }}
-                      source={Icons.Calendar}
-                    />
-                  </View>
 
-                  <Text
+                {
+                  !isMultiBooking &&
+                  <View
                     style={{
-                      color: Colors.Theme,
-                      fontFamily: Font.Medium,
-                      fontSize: Font.medium,
-                      alignSelf: "center",
-                      marginLeft: (windowWidth * 1) / 100,
-                      textAlign: "right",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "35%",
+                      justifyContent: "flex-end",
                     }}
                   >
-                    {statesData.set_date}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            <View
-              style={{
-                width: "93%",
-                alignSelf: "center",
-                paddingBottom: (windowWidth * 3) / 100,
-                borderBottomWidth: 1.5,
-                borderBottomColor: Colors.backgroundcolor
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.medium,
-                  alignSelf: 'flex-start',
-                  color: Colors.detailTitles,
-                }}
-              >
-                {LangProvider.SelectDate[languageIndex]}
-              </Text>
-
-              <View style={{ width: "100%" }}>
-                <FlatList
-                  horizontal={true}
-                  data={statesData.date_array}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setState({
-                            set_date: item.date1,
-                          })
-                          getTimeDate(item.date1, statesData.check_currentdate),
-                            checkDate(item, index)
-                        }}
-                        style={{ width: (windowWidth * 15) / 100, }}
-                      >
-                        <Text
-                          style={{
-                            marginRight: (windowWidth * 3) / 100,
-                            marginTop: (windowWidth * 3) / 100,
-                            backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
-                            color: item.tick == 1 ? Colors.White : Colors.Black,
-                            textAlign: "center",
-                            paddingVertical: (windowWidth * 2) / 100,
-                            fontFamily: Font.Regular,
-                            fontSize: Font.small,
-                            lineHeight: (windowWidth * 5) / 100,
-                          }}
-                        >
-                          {item.day}
-                          {"\n"}
-
-                          {item.datenew}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-
-            </View>
-
-            <View
-              style={{
-                width: "100%",
-                alignSelf: "center",
-                paddingTop: vs(7),
-                paddingHorizontal: s(11)
-              }}>
-              <Text
-                style={{
-                  fontFamily: Font.Regular,
-                  fontSize: Font.medium,
-                  color: Colors.detailTitles,
-                  alignSelf: 'flex-start',
-                }}
-              >
-                {LangProvider.Select_start_time[languageIndex]}
-              </Text>
-
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                <View style={{ width: "100%", alignItems: "center" }}>
-
-                  <View style={{ width: "100%", alignItems: "center" }}>
-                    {statesData.time_Arr.length > 0 ? (
-                      <View
+                    <View style={{ width: "20%", alignSelf: "center" }}>
+                      <Image
                         style={{
-                          width: "100%",
-                          alignItems: "center",
+                          width: (windowWidth * 5) / 100,
+                          height: (windowWidth * 5) / 100,
+                          alignSelf: "center",
                         }}
-                      >
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            data={statesData.final_one}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setState({
-                                      selectedTime: item.time,
-                                    });
-                                  }}>
-                                  <Text
-                                    style={[
-                                      {
-                                        marginRight:
-                                          (windowWidth * 3) / 100,
-                                        marginTop:
-                                          (windowWidth * 3) / 100,
+                        source={Icons.Calendar}
+                      />
+                    </View>
 
-                                        fontFamily:
-                                          Font.Regular,
-                                        fontSize: Font.small,
-                                        padding: (windowWidth * 2) / 100,
-                                        paddingHorizontal:
-                                          (windowWidth * 3.3) / 100,
-                                      },
-                                      item.time ==
-                                        statesData.selectedTime
-                                        ? {
-                                          backgroundColor:
-                                            Colors.Blue,
-                                          color: Colors.White,
-                                        }
-                                        : {
-                                          backgroundColor:
-                                            '#E5E5E5',
-                                          color: Colors.Black,
-                                        },
-                                    ]}
-                                  >
-                                    {item.time}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                        <View style={{ width: "100%" }}>
-                          <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            data={statesData.final_arr2}
-                            renderItem={({ item, index }) => {
-                              return (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setState({
-                                      selectedTime: item.time,
-                                    });
-                                  }}
-                                >
-                                  <Text
-                                    style={[
-                                      {
-                                        marginRight:
-                                          (windowWidth * 3) / 100,
-                                        marginTop:
-                                          (windowWidth * 3) / 100,
+                    <Text
+                      style={{
+                        color: Colors.Theme,
+                        fontFamily: Font.Medium,
+                        fontSize: Font.medium,
+                        alignSelf: "center",
+                        marginLeft: (windowWidth * 1) / 100,
+                        textAlign: "right",
+                      }}
+                    >
+                      {statesData.set_date}
+                    </Text>
+                  </View>
+                }
+              </View>
 
-                                        fontFamily:
-                                          Font.Regular,
-                                        fontSize:
-                                          Font.small,
-                                        padding: (windowWidth * 2) / 100,
-                                        paddingHorizontal:
-                                          (windowWidth * 3.3) / 100,
-                                      },
-                                      item.time ==
-                                        statesData.selectedTime
-                                        ? {
-                                          backgroundColor:
-                                            Colors.Blue,
-                                          color: Colors.White,
-                                        }
-                                        : {
-                                          backgroundColor:
-                                            '#E5E5E5',
-                                          color: Colors.Black,
-                                        },
-                                    ]}
-                                  >
-                                    {item.time}
-                                  </Text>
-                                </TouchableOpacity>
-                              );
-                            }}
-                          />
-                        </View>
-                      </View>
-                    ) :
-                      statesData.isLoadingDates ?
-                        (
-                          <View style={{ width: windowWidth, paddingVertical: (windowWidth * 3) / 100 }}>
-                            <SkypeIndicator color={Colors.Theme} size={20} />
-                          </View>
-                        )
-                        : (
-                          <Text
-                            style={{
-                              fontFamily: Font.MediumItalic,
-                              fontSize: Font.medium,
-                              alignSelf: "center",
-                              paddingVertical: (windowWidth * 3) / 100,
-                              textAlign: "center",
-                              marginLeft: (windowWidth * 25) / 100,
-                            }}
-                          >
-                            {LangProvider.noTime[languageIndex]}
-                          </Text>
-                        )}
+            </View>
+
+            {
+              isMultiBooking ?
+                <View style={{ width: '90%', alignSelf: 'center' }}>
+                  {keys.map((date, index) => (
+                    <CustomBookingSlot
+                      length={keys.length}
+                      data={date}
+                      key={date}
+                      index={index}
+                      onEdit={() => {
+                        setState({ isCutomRepeat: true })
+                      }}
+                    />
+
+                  ))}
+                </View>
+                :
+                <>
+                  <View
+                    style={{
+                      width: "93%",
+                      alignSelf: "center",
+                      paddingBottom: (windowWidth * 3) / 100,
+                      borderBottomWidth: 1.5,
+                      borderBottomColor: Colors.backgroundcolor
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.medium,
+                        alignSelf: 'flex-start',
+                        color: Colors.detailTitles,
+                      }}
+                    >
+                      {LangProvider.SelectDate[languageIndex]}
+                    </Text>
+
+                    <View style={{ width: "100%" }}>
+                      <FlatList
+                        horizontal={true}
+                        data={statesData.date_array}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setState({
+                                  set_date: item.date1,
+                                })
+                                getTimeDate(item.date1, statesData.check_currentdate)
+                                checkDate(item, index)
+
+                              }}
+                              style={{ width: (windowWidth * 15) / 100, }}
+                            >
+                              <Text
+                                style={{
+                                  marginRight: (windowWidth * 3) / 100,
+                                  marginTop: (windowWidth * 3) / 100,
+                                  backgroundColor: item.tick == 1 ? Colors.Blue : '#E5E5E5',
+                                  color: item.tick == 1 ? Colors.White : Colors.Black,
+                                  textAlign: "center",
+                                  paddingVertical: (windowWidth * 2) / 100,
+                                  fontFamily: Font.Regular,
+                                  fontSize: Font.small,
+                                  lineHeight: (windowWidth * 5) / 100,
+                                }}
+                              >
+                                {item.day}
+                                {"\n"}
+
+                                {item.datenew}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                    </View>
+
                   </View>
 
+                  <View
+                    style={{
+                      width: "100%",
+                      alignSelf: "center",
+                      paddingTop: vs(7),
+                      paddingHorizontal: s(11)
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Font.Regular,
+                        fontSize: Font.medium,
+                        color: Colors.detailTitles,
+                        alignSelf: 'flex-start',
+                      }}
+                    >
+                      {LangProvider.Select_start_time[languageIndex]}
+                    </Text>
 
-                </View>
-              </ScrollView>
-            </View>
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      <View style={{ width: "100%", alignItems: "center" }}>
+
+                        <View style={{ width: "100%", alignItems: "center" }}>
+
+                          {statesData.time_Arr.length > 0 ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                alignItems: "center",
+                              }}
+                            >
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={statesData.final_one}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+
+                                          if (statesData.set_date) {
+                                            addNextSlotsToCalender(item.time)
+                                          }
+
+                                          setState({
+                                            selectedTime: item.time,
+                                          });
+                                        }}>
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+
+                                              fontFamily:
+                                                Font.Regular,
+                                              fontSize: Font.small,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              statesData.selectedTime
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+                              <View style={{ width: "100%" }}>
+                                <FlatList
+                                  horizontal={true}
+                                  showsHorizontalScrollIndicator={false}
+                                  data={statesData.final_arr2}
+                                  renderItem={({ item, index }) => {
+                                    return (
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          if (statesData.set_date) {
+                                            addNextSlotsToCalender(item.time)
+                                          }
+                                          setState({
+                                            selectedTime: item.time,
+                                          });
+                                        }}
+                                      >
+                                        <Text
+                                          style={[
+                                            {
+                                              marginRight:
+                                                (windowWidth * 3) / 100,
+                                              marginTop:
+                                                (windowWidth * 3) / 100,
+
+                                              fontFamily:
+                                                Font.Regular,
+                                              fontSize:
+                                                Font.small,
+                                              padding: (windowWidth * 2) / 100,
+                                              paddingHorizontal:
+                                                (windowWidth * 3.3) / 100,
+                                            },
+                                            item.time ==
+                                              statesData.selectedTime
+                                              ? {
+                                                backgroundColor:
+                                                  Colors.Blue,
+                                                color: Colors.White,
+                                              }
+                                              : {
+                                                backgroundColor:
+                                                  '#E5E5E5',
+                                                color: Colors.Black,
+                                              },
+                                          ]}
+                                        >
+                                          {item.time}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  }}
+                                />
+                              </View>
+                            </View>
+                          ) :
+                            statesData.isLoadingDates ?
+                              (
+                                <View style={{ width: windowWidth, paddingVertical: (windowWidth * 3) / 100 }}>
+                                  <SkypeIndicator color={Colors.Theme} size={20} />
+                                </View>
+                              )
+                              : (
+                                <Text
+                                  style={{
+                                    fontFamily: Font.MediumItalic,
+                                    fontSize: Font.medium,
+                                    alignSelf: "center",
+                                    paddingVertical: (windowWidth * 3) / 100,
+                                    textAlign: "center",
+                                    marginLeft: (windowWidth * 25) / 100,
+                                  }}
+                                >
+                                  {LangProvider.noTime[languageIndex]}
+                                </Text>
+                              )}
+
+
+
+                        </View>
+                      </View>
+                    </ScrollView>
+
+                    <View
+                      style={{
+                        width: "100%",
+                        alignSelf: "center",
+                        paddingBottom: (windowWidth * 3) / 100,
+                        borderBottomWidth: 1.5,
+                        borderBottomColor: Colors.backgroundcolor
+                      }}
+                    />
+                    {/* ----------------Custom Repeat------------------- */}
+
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 7 }}>
+                      <Text
+                        style={{
+                          fontFamily: Font.SemiBold,
+                          fontSize: 12,
+                          paddingTop: (windowWidth * 3) / 100,
+                          color: Colors.detailTitles
+                        }}
+                      >
+                        {'Want to Custom Repeat this Booking?'}
+                      </Text>
+
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          if (!!!statesData.selectedTime) {
+                            msgProvider.showError('Please select a slot to first to set custom bookings')
+                          } else {
+                            setState({ isCutomRepeat: true })
+                          }
+                        }}
+                        style={{
+                          paddingHorizontal: 15,
+                          paddingVertical: 8,
+                          borderRadius: 4,
+                          backgroundColor: Colors.Yellow
+                        }} >
+                        <Text
+                          style={{
+                            fontFamily: Font.Bold,
+                            fontSize: 10,
+                            color: Colors.White
+                          }}
+                        >
+                          {'SETUP'}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                  </View>
+                </>
+            }
+
           </View>
 
           {/* ----------------Promo------------------- */}
@@ -1455,6 +1636,18 @@ const TaskBase = ({ navigation, route }) => {
           />
 
         </View>
+
+        <FullScreenModal
+          isVisible={statesData.isCutomRepeat}
+          onClose={() => setState({ isCutomRepeat: false })}
+        >
+
+          <CustomRepeatBooking
+            onClose={() => setState({ isCutomRepeat: false })}
+            onReset={() => setState({ selectedTime: '' })}
+          />
+
+        </FullScreenModal>
       </View>
 
     )

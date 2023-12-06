@@ -19,6 +19,7 @@ import { dummyUser, Star, Location, Clock, Capsule } from "../Icons/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectedProvider } from "../Redux/Actions";
 import BookingTypePopup from "./BookingTypePopup";
+import Alert from "../ModalContent/Alert";
 
 
 const ServiceProviderContainer = ({
@@ -29,9 +30,10 @@ const ServiceProviderContainer = ({
   docType,
   Index
 }) => {
-  const { guest, languageIndex, contentAlign, } = useSelector(state => state.StorageReducer)
+  const { guest, languageIndex, contentAlign, loggedInUserDetails } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
   const [isBookingModal, setIsBookingModal] = useState(false)
+  const [isAlert, setIsAlert] = useState(false)
 
 
   return (
@@ -440,24 +442,28 @@ const ServiceProviderContainer = ({
                         navigation.navigate("AuthStack")
                       }, 250);
                     } else {
-                      if (providerType == 'nurse' || providerType == 'lab') {
-                        setIsBookingModal(true)
+                      if (loggedInUserDetails.profilecomplete == '1') {
+                        if (providerType == 'nurse' || providerType == 'lab') {
+                          setIsBookingModal(true)
+                        } else {
+                          dispatch(SelectedProvider({
+                            currentScreen: 'providerList',
+                            providerType: providerType,
+                            providerName: Item.provider_name,
+                            providerId: Item.user_id,
+                            isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
+                            hospitalId: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined) ? Item?.hospital_id : '',
+                            bookingType: providerType == 'physiotherapy' ? 'task' : 'hour',
+                            docType: docType ? docType : '',
+                            packageId: '',
+                            providerImg: Item?.image
+                          }))
+                          setTimeout(() => {
+                            navigation.navigate("HealthRecord")
+                          }, 250);
+                        }
                       } else {
-                        dispatch(SelectedProvider({
-                          currentScreen: 'providerList',
-                          providerType: providerType,
-                          providerName: Item.provider_name,
-                          providerId: Item.user_id,
-                          isFromHospital: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined),
-                          hospitalId: (Item?.hospital_id != '' && Item?.hospital_id != null && Item?.hospital_id != undefined) ? Item?.hospital_id : '',
-                          bookingType: providerType == 'physiotherapy' ? 'task' : 'hour',
-                          docType: docType ? docType : '',
-                          packageId: '',
-                          providerImg: Item?.image
-                        }))
-                        setTimeout(() => {
-                          navigation.navigate("HealthRecord")
-                        }, 250);
+                        setIsAlert(true)
                       }
                     }
                   }}
@@ -512,6 +518,27 @@ const ServiceProviderContainer = ({
               }, 250);
             }}
           />
+
+          <Alert
+            isVisible={isAlert}
+            onclose={() => {
+              setIsAlert(false)
+            }}
+            title={'Alert!'}
+            message={'Please complete your profile first'}
+            positiveBtn={'Continue'}
+            negativeBtn={'Cancel'}
+            onPositivePress={() => {
+              setIsAlert(false)
+              setTimeout(() => {
+                navigation.navigate('EditProfile')
+              }, 250);
+            }}
+            onNegativePress={() => {
+              setIsAlert(false)
+            }}
+          />
+
         </>
       )
   )

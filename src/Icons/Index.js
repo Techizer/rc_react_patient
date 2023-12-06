@@ -812,6 +812,18 @@ c6.3-3.1,10.5-9.4,10.5-17c0-7.6-4.2-13.8-10.5-17v-8.6h25.4v7.2h7.2v-7.2C-19.6,10
 h-7.2V117.3z M21.5,131.5h7.2v7.2h-7.2V131.5z"/>
 </svg>`
 
+export const Tick=`<svg xmlns="http://www.w3.org/2000/svg" width="15.084" height="10.127" viewBox="0 0 15.084 10.127">
+<path id="Subtraction_60" data-name="Subtraction 60" d="M12915.632,13669.928a.779.779,0,0,1-.564-.243l-4.032-4.21a.867.867,0,0,1,0-1.186.779.779,0,0,1,1.131,0l3.513,3.667,8.85-7.921-.165-.2.18.188a.785.785,0,0,1,.54-.219.793.793,0,0,1,.258.043.83.83,0,0,1,.531.648.851.851,0,0,1-.293.8l-9.426,8.437A.78.78,0,0,1,12915.632,13669.928Z" transform="translate(-12910.801 -13659.801)" fill="#fff"/>
+</svg>`
+
+export const CrossWhite=`<svg xmlns="http://www.w3.org/2000/svg" width="12.889" height="12.889" viewBox="0 0 12.889 12.889">
+<path id="close" d="M7.625,6.581l5.019-5.019A.835.835,0,0,0,11.464.381L6.445,5.4,1.426.381A.835.835,0,0,0,.245,1.562L5.264,6.581.245,11.6A.835.835,0,1,0,1.426,12.78L6.445,7.761l5.019,5.019A.835.835,0,1,0,12.644,11.6Zm0,0" transform="translate(0 -0.136)" fill="#fff"/>
+</svg>`
+
+
+export const Pencil=`<svg xmlns="http://www.w3.org/2000/svg" width="12.2" height="12.2" viewBox="0 0 12.2 12.2">
+<path id="ic_mode_edit_24px" d="M3,12.656V15.2H5.541l7.5-7.5L10.5,5.161ZM15,5.737a.675.675,0,0,0,0-.956L13.416,3.2a.675.675,0,0,0-.956,0l-1.24,1.24,2.541,2.541L15,5.737Z" transform="translate(-3 -2.997)" fill="#354052"/>
+</svg>`
 
 
 export const Icons = {
@@ -861,6 +873,7 @@ export const Icons = {
   Calendar: require('./calendar.png'),
   fillStar: require('./fillStar.png'),
   outlineStar: require('./outlineStar.png'),
+  Rate: require('./rate.png'),
   Attachment: require('./attachment.png'),
   Camera: require('./camera.png'),
   Audio: require('./audio.png'),

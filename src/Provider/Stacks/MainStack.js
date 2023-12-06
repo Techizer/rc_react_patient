@@ -170,7 +170,7 @@ const MainStack = () => {
     };
 
     const showNotification = (remoteMessage) => {
-        console.log({remoteMessage});
+        console.log({ remoteMessage });
         PushNotification.localNotification({
             channelId: "rootscares1",
             title: remoteMessage.data.title,
@@ -470,6 +470,12 @@ const MainStack = () => {
                 <Stack.Screen
                     name="FileView"
                     component={FileView}
+                />
+
+                <Stack.Screen
+                    name="CalenderBooking"
+                    component={FileView}
+                    options={{presentation:'card', animationTypeForReplace:'push'}}
                 />
 
             </Stack.Navigator>

@@ -18,7 +18,7 @@ import { apifuntion } from "../Provider/APIProvider";
 import { msgProvider } from "../Provider/messageProvider";
 import { windowHeight, windowWidth } from "../Provider/Utils/Utils";
 import { leftArrow } from "../Icons/Index";
-import { Address, Guest, UserCredentials, UserDetails } from "../Redux/Actions";
+import { Address, Guest, UserCredentials, UserDetails, UserProfile } from "../Redux/Actions";
 
 
 const OTP = ({
@@ -39,7 +39,6 @@ const OTP = ({
         deviceToken,
         deviceType,
         address,
-        rememberMe,
     } = useSelector(state => state.StorageReducer)
 
     const styles = useMemo(() => {
@@ -305,7 +304,6 @@ const OTP = ({
             let url = config.baseURL + "api-patient-login";
             var data = new FormData();
 
-
             data.append("email_phone", contact);
             data.append("device_type", deviceType);
             data.append("device_lang", appLanguage == 'en' ? 'ENG' : 'AR');
@@ -316,6 +314,8 @@ const OTP = ({
 
             apifuntion.postApi(url, data, 1).then((obj) => {
                 setState({ isVerifying: false })
+                // console.log('login response...', obj);
+                // return
                 if (obj.status == true) {
 
                     AsyncStorage.setItem('userId', obj?.result?.user_id)
@@ -338,13 +338,24 @@ const OTP = ({
                     dispatch(UserCredentials(credentials))
 
                     dispatch(UserDetails(obj?.result))
+                    dispatch(UserProfile(obj?.result))
                     resetState()
-                    setTimeout(() => {
-                        reset({
-                            index: 0,
-                            routes: [{ name: "DashboardStack" }],
-                        });
-                    }, 700);
+                    if (obj.result.profilecomplete == '1') {
+                        setTimeout(() => {
+                            reset({
+                                index: 0,
+                                routes: [{ name: "DashboardStack" }],
+                            });
+                        }, 700);
+                    } else {
+                        setTimeout(() => {
+                            reset({
+                                index: 0,
+                                routes: [{ name: "EditProfile" }],
+                            });
+                        }, 700);
+                    }
+
                 } else {
                     setTimeout(() => {
                         msgProvider.showError(obj.message);

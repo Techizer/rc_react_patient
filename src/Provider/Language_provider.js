@@ -70,7 +70,7 @@ class Language_provider {
   confirmpassword1 = ["Confirm Password", "تأكيد كلمة المرور "];
   btntext = ["CREATE ACCOUNT", " إنشاء حساب  "];
   termsandconditiontext1 = [
-    "By creating an account, You agree to our  ",
+    "By creating an account, you agree to our  ",
     "من خلال إنشاء حساب ، فإنك توافق على  ",
   ];
   termsandconditiontext2 = ["Terms of Service", "شروط الخدمة  "];

@@ -12,7 +12,8 @@ import {
   Platform,
   PermissionsAndroid,
   TouchableHighlight,
-  Modal
+  Modal,
+  ActivityIndicator
 } from "react-native";
 import firestore from '@react-native-firebase/firestore'
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -48,12 +49,14 @@ import Loader from "../Components/Loader";
 import { getISChatImplemented } from "../Provider/AppFunctions";
 import { setVideoCall, setVideoCallData, setVideoCallStatus } from "../Redux/Actions";
 import { get_notification } from "../Provider/APIFunctions";
+import useBooking from "../APIs/useBooking";
 
 
 export default AppointmentDetails = ({ navigation, route }) => {
 
   const { loggedInUserDetails, languageIndex, deviceConnection, contentAlign, selectedProvider, guest } = useSelector(state => state.StorageReducer)
   const dispatch = useDispatch()
+  const { RepeatBooking } = useBooking()
 
 
   const { appointment_id, send_id, booking_type, status } = route?.params
@@ -80,6 +83,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
     isPlay: false,
     isLoadingDetails: true,
     isChat: false,
+    isRebook: false,
   })
   const [isDownloading, setIsDownloading] = useState(false)
   const insets = useSafeAreaInsets()
@@ -1298,6 +1302,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     </Text>
                   )}
                 </View>
+
                 <Text
                   style={{
                     fontFamily: Font.Medium,
@@ -1319,6 +1324,9 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 >
                   {item.speciality}
                 </Text>
+
+
+
               </View>
             </View>
 
@@ -2274,7 +2282,7 @@ export default AppointmentDetails = ({ navigation, route }) => {
               </View>
             </View>
 
-            {/* Amount and ReSchedule */}
+            {/* Amount */}
             <View
               style={[
                 {
@@ -2332,6 +2340,42 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 </Text>
               </View>
 
+
+              {item.acceptance_status == "Rejected" &&
+                item.rf_text != "" && (
+
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: Colors.Red,
+                      fontFamily: Font.Medium,
+                      fontSize: Font.xsmall,
+                      marginLeft: s(8)
+                    }}>
+                    {LangProvider.Refunded[languageIndex]}
+                  </Text>
+
+                )}
+            </View>
+
+            <View
+              style={[
+                {
+                  width: "100%",
+                  alignSelf: "center",
+                  flexDirection: "row",
+                  backgroundColor: Colors.White,
+                  paddingTop: (windowWidth * 2.5) / 100,
+                  paddingBottom: (windowWidth * 1) / 100,
+                  alignItems: "center",
+                  paddingHorizontal: '4%'
+                },
+              ]}
+            >
+              {/* -----------------Actions------------ */}
+
+              {/* ------------------ReSchedule----------------- */}
+
               {item.acceptance_status == "Pending" && (
 
                 classStateData.isScheduleagain ?
@@ -2344,36 +2388,43 @@ export default AppointmentDetails = ({ navigation, route }) => {
                     <SkypeIndicator color={Colors.Theme} size={20} />
                   </View>
                   :
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      rescdule_click(),
-                        // get_day(),
-                        setState({
-                          order_id: item.id,
-                          time_take_data: "",
-                        });
-                    }}
-                    activeOpacity={0.8}
+                  <View
                     style={{
-                      paddingHorizontal: s(8),
-                      paddingVertical: vs(4),
-                      borderWidth: 0.8,
-                      borderColor: Colors.Green,
-                      borderRadius: 5
-                    }} >
-
-                    <Text
-                      style={{
-                        fontSize: Font.small,
-                        fontFamily: Font.Regular,
-                        color: Colors.Green
+                      paddingHorizontal: s(0),
+                      backgroundColor: Colors.White,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        rescdule_click(),
+                          // get_day(),
+                          setState({
+                            order_id: item.id,
+                            time_take_data: "",
+                          });
                       }}
-                    >{LangProvider.Reschedule[languageIndex]}</Text>
-                  </TouchableOpacity>
+                      activeOpacity={0.8}
+                      style={{
+                        paddingHorizontal: s(8),
+                        paddingVertical: vs(4),
+                        borderWidth: 0.8,
+                        borderColor: Colors.Green,
+                        borderRadius: 5
+                      }} >
 
+                      <Text
+                        style={{
+                          fontSize: Font.small,
+                          fontFamily: Font.Regular,
+                          color: Colors.Green
+                        }}
+                      >{LangProvider.Reschedule[languageIndex]}</Text>
+                    </TouchableOpacity>
+                  </View>
               )}
 
+              {/* --------------------Video Call---------------- */}
               {(
                 item.acceptance_status == "Accepted"
                 &&
@@ -2382,7 +2433,13 @@ export default AppointmentDetails = ({ navigation, route }) => {
                 item.task_type == LangProvider.OnlineConsultation[languageIndex]
                 &&
                 videoCallButton == true) && (
-                  <>
+                  <View
+                    style={{
+                      paddingHorizontal: s(0),
+                      backgroundColor: Colors.White,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
@@ -2423,84 +2480,159 @@ export default AppointmentDetails = ({ navigation, route }) => {
                       >{LangProvider.VIDEO_CALL[languageIndex]}</Text>
                     </TouchableOpacity>
 
-                  </>
+                  </View>
                 )}
 
+
+              {/* --------------------Rating-------------------- */}
+
               {item.acceptance_status == "Completed" && (
-                <View style={{ alignItems: "flex-end" }}>
+                <View style={{}}>
                   {
                     item.avg_rating != "" && item.avg_rating != 0 ? (
                       <View
                         style={{
                           flexDirection: "row",
                           alignItems: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: Font.Regular,
-                            color: "#000",
-                            fontSize: (windowWidth * 3.5) / 100,
-                            marginRight: (windowWidth * 2) / 100,
+                        }}>
+
+                        <View style={{
+                          paddingRight: s(10),
+                          backgroundColor: Colors.White,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <View style={{
+                            paddingHorizontal: s(5),
+                            paddingVertical: vs(5),
+                            backgroundColor: Colors.Highlight,
+                            borderRadius: 5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                          }}>
+                            <Image source={Icons.fillStar} style={{ height: s(15), width: s(15), marginRight: s(5) }} />
+                            <Text
+                              style={{
+                                fontFamily: Font.SemiBold,
+                                color: Colors.Black,
+                                fontSize: Font.small,
+                              }}>
+                              {`${parseInt(item.avg_rating)}.0`}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            // console.log(item.service_type, item.provider_id, item.task_id, item.task_type);
+                            RepeatBooking(item.service_type, item.provider_id, item.task_id, item.task_type)
+
                           }}
-                        >
-                          {LangProvider.rated[languageIndex]}
-                        </Text>
-                        <StarRating
-                          disabled={false}
-                          fullStar={Icons.fillStar}
-                          emptyStar={Icons.outlineStar}
-                          maxStars={5}
-                          starSize={15}
-                          rating={parseInt(item.avg_rating)}
-                        />
+                          activeOpacity={0.8}
+                          style={{
+                            paddingHorizontal: s(14),
+                            paddingVertical: vs(5),
+                            backgroundColor: Colors.Blue,
+                            borderRadius: 5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }} >
+
+                          {
+                            classStateData.isRebook ?
+                              <ActivityIndicator size={'small'} color={Colors.White} />
+                              :
+                              <Text
+                                style={{
+                                  fontSize: Font.small,
+                                  fontFamily: Font.SemiBold,
+                                  color: Colors.White
+                                }}
+                              >{'RE-BOOK'}</Text>
+                          }
+                        </TouchableOpacity>
+
                       </View>
                     ) : (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setState({ modalVisiblerating: true, set_order: item?.order_id })
-                        }}
-                        activeOpacity={0.8}
+
+                      <View
                         style={{
-                          paddingHorizontal: s(8),
-                          paddingVertical: vs(4),
-                          backgroundColor: Colors.Yellow,
-                          borderRadius: 5,
-                          flexDirection: 'row',
-                          alignItems: 'center'
-                        }} >
-                        <SvgXml xml={whiteStar} />
-                        <Text
-                          style={{
-                            fontSize: Font.small,
-                            fontFamily: Font.SemiBold,
-                            color: Colors.White,
-                            marginLeft: s(7)
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}>
+
+                        <View style={{
+                          paddingRight: s(10),
+                          backgroundColor: Colors.White,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              setState({ isRebook: true })
+                              setState({ modalVisiblerating: true, set_order: item?.order_id })
+                            }}
+                            style={{
+                              paddingHorizontal: s(5),
+                              paddingVertical: vs(5),
+                              backgroundColor: Colors.Highlight,
+                              borderRadius: 5,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              flexDirection: 'row',
+                            }}>
+                            <Image source={Icons.Rate} style={{ height: s(15), width: s(15), marginRight: s(5) }} />
+                            <Text
+                              style={{
+                                fontFamily: Font.SemiBold,
+                                color: Colors.Black,
+                                fontSize: Font.small,
+                              }}>
+                              {`RATE`}
+                            </Text>
+                          </TouchableOpacity>
+
+                        </View>
+
+                        <TouchableOpacity
+                          onPress={() => {
+                            // console.log(item.provider_type, item.provider_id, item.task_id, item.booking_type);
+                            RepeatBooking(item.service_type, item.provider_id, item.task_id, item.task_type)
                           }}
-                        >{LangProvider.Rate_Appointment[languageIndex]}</Text>
-                      </TouchableOpacity>
+                          activeOpacity={0.8}
+                          style={{
+                            paddingHorizontal: s(14),
+                            paddingVertical: vs(5),
+                            backgroundColor: Colors.Blue,
+                            borderRadius: 5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }} >
+
+                          {
+                            classStateData.isRebook ?
+                              <ActivityIndicator size={'small'} color={Colors.White} />
+                              :
+                              <Text
+                                style={{
+                                  fontSize: Font.small,
+                                  fontFamily: Font.SemiBold,
+                                  color: Colors.White
+                                }}
+                              >{'RE-BOOK'}</Text>
+                          }
+                        </TouchableOpacity>
+
+                      </View>
+
                     )}
                 </View>
               )}
+              {/* --------------------------------------------- */}
 
-              {item.acceptance_status == "Rejected" &&
-                item.rf_text != "" && (
-
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: Colors.Red,
-                      fontFamily: Font.Medium,
-                      fontSize: Font.xsmall,
-                      marginLeft: s(8)
-                    }}>
-                    {LangProvider.Refunded[languageIndex]}
-                  </Text>
-
-                )}
             </View>
-
-
             <View
               style={{
                 width: "90%",
